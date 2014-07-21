@@ -1,0 +1,1 @@
+OVERRIDE(KEYFRAMES,function(){"use strict";global.KEYFRAMES=KEYFRAMES=CLASS({init:function(t,n,i){var E,e,r,u,o,S="__KEYFRAMES_"+n.id;EACH(i,function(t,n){"from"===n||"0%"===n?E=t:("to"===n||"100%"===n)&&(e=t)}),n.getName=r=function(){return S},n.getStartStyle=u=function(){return E},n.getFinalStyle=o=function(){return e}}})});

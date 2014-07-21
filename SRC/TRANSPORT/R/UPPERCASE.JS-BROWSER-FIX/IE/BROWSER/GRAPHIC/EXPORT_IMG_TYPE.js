@@ -1,0 +1,1 @@
+OVERRIDE(EXPORT_IMG_TYPE,function(){"use strict";global.EXPORT_IMG_TYPE=EXPORT_IMG_TYPE=METHOD({run:function(n,E){var e=new Image;e.onload=function(){E(e.mimeType.toLowerCase().split(" ")[0])},e.src=n.getSrc()}})});

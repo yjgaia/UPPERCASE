@@ -1,0 +1,1 @@
+INIT_OBJECTS(),FOR_BOX(function(e){void 0!==e.MAIN&&e.MAIN()}),CONNECT_TO_ROOM_SERVER({port:CONFIG.webSocketServerPort,fixServerPort:CONFIG.webSocketFixServerPort});

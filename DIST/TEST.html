@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+		<title>UPPERCASE.IO TESTCASE</title>
+		<style>
+			div {
+				margin-left: 20px;
+			}
+			footer {
+				margin-top: 20px;
+				padding: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>UPPERCASE.IO TESTCASE</h1>
+		<p>
+			Check JavaScript Console.
+		</p>
+		<div>
+			<h3>TRANSPORT</h3>
+			<button onclick="test('TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER');">
+				CONNECT_TO_WEB_SOCKET_SERVER TEST
+			</button>
+		</div>
+		<div>
+			<h3>ROOM</h3>
+			<button onclick="test('ROOM/CLIENT/ROOM');">
+				ROOM TEST
+			</button>
+		</div>
+		<div>
+			<h3>MODEL</h3>
+			<button onclick="test('MODEL/CLIENT/MODEL');">
+				MODEL TEST
+			</button>
+		</div>
+		<footer>
+			<div>
+				UPPERCASE.IO TEST CASE by <a href="http://hanul.me" target="_blank">YOUNG JAE SIM</a> @ <a href="http://www.btncafe.com" target="_blank">BTNcafe Co</a>.
+			</div>
+			<div>
+				<a href="https://bitbucket.org/uppercaseio/uppercase.io" target="_blank">UPPERCASE.IO @ Bitbucket</a>
+			</div>
+		</footer>
+		<pre id="source"></pre>
+		<!-- JS WORLD -->
+		<script>
+			global = window;
+		</script>
+
+		<!-- import UPPERCASE.JS -->
+		<script src="UPPERCASE.JS-COMMON.js"></script>
+		<script src="UPPERCASE.JS-BROWSER.js"></script>
+
+		<!-- import UPPERCASE.IO-BOX -->
+		<script src="UPPERCASE.IO-BOX/CORE.js"></script>
+		<script src="UPPERCASE.IO-BOX/BROWSER.js"></script>
+
+		<script>
+			// create test box.
+			BOX('TestBox');
+		</script>
+
+		<!-- import UPPERCASE.IO-TRANSPORT -->
+		<script src="UPPERCASE.IO-TRANSPORT/R/UPPERCASE.JS-BROWSER-FIX/FIX.js"></script>
+		<script src="UPPERCASE.IO-TRANSPORT/BROWSER.js"></script>
+		<script src="UPPERCASE.IO-TRANSPORT/R/FIX.js"></script>
+
+		<!-- import UPPERCASE.IO-ROOM -->
+		<script src="UPPERCASE.IO-ROOM/BROWSER.js"></script>
+		<script src="UPPERCASE.IO-ROOM/CLIENT.js"></script>
+		
+		<!-- import UPPERCASE.IO-MODEL -->
+		<script src="UPPERCASE.IO-MODEL/COMMON.js"></script>
+		<script src="UPPERCASE.IO-MODEL/CLIENT.js"></script>
+
+		<script>
+			global.onload = function() {
+
+				// init all singleton classes.
+				INIT_OBJECTS();
+
+				var
+				// source element
+				sourceEl = document.getElementById('source');
+
+				global.test = function(path) {
+					GET({
+						uri : 'TEST/' + path + '.js'
+					}, function(source) {
+						sourceEl.innerText = source;
+						eval(source);
+					});
+				};
+			};
+		</script>
+	</body>
+</html>

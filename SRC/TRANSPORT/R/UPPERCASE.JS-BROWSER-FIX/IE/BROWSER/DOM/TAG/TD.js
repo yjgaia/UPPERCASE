@@ -1,0 +1,1 @@
+OVERRIDE(TD,function(n){"use strict";global.TD=TD=CLASS({preset:function(){return n},init:function(n,i){IE.version<=8&&ADD_STYLE({node:i,style:{verticalAlign:"middle"}})}})});

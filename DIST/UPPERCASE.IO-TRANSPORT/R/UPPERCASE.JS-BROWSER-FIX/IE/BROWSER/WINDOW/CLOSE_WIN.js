@@ -1,0 +1,1 @@
+OVERRIDE(CLOSE_WIN,function(){"use strict";global.CLOSE_WIN=CLOSE_WIN=METHOD({run:function(){opener=self,self.close()}})});

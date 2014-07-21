@@ -1,0 +1,11 @@
+<script>
+	var
+	// href
+	href = decodeURIComponent(location.search).substring(1);
+	
+	if (href.indexOf('http://') === 0 || href.indexOf('https://') === 0) {
+		location.href = href;
+	} else {
+		location.href = '/' + href;
+	}
+</script>
