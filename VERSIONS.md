@@ -1,7 +1,7 @@
 VERSIONS
 ========
 1.4 (preview)
-- MIT License로 변경
+- Adopted MIT License.
 
 1.3 (2014. 4. 17)
 
@@ -10,4 +10,4 @@ VERSIONS
 1.1 (2013. 8)
 
 1.0 (2013. 3)
-- BTNcafe의 가상현실 SNS인 Bigtown의 소스코드로부터 Full-stack Framework 부분이 분리됨
+- Branched from Full-stack Framework part of Bigtown, a Virtual Reality SNS of BTNcafe.
