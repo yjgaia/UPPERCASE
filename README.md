@@ -23,7 +23,6 @@ TODO
 ----
 - Cache management based on versions
 - Upload to distributed servers
-- Support for other languages such as CoffeeScript
 
 License
 -------

@@ -8,6 +8,9 @@ global.BOOT = BOOT = function(params) {'use strict';
 	//IMPORT: fs
 	fs = require('fs'),
 
+	//IMPORT: path
+	path = require('path'),
+
 	// version
 	version = Date.now(),
 
@@ -23,25 +26,67 @@ global.BOOT = BOOT = function(params) {'use strict';
 	// index page content
 	indexPageContent = '',
 
-	// load for node.
-	loadForNode = function(path) {
+	// load js for node.
+	loadJSForNode = function(path) {
 		require(path);
 	},
 
-	// load for browser.
-	loadForBrowser = function(path) {
+	// load js for browser.
+	loadJSForBrowser = function(path) {
 		browserScript += fs.readFileSync(path).toString() + '\n';
 	},
 
-	// load for client.
-	loadForClient = function(path) {
-		loadForBrowser(path);
+	// load js for client.
+	loadJSForClient = function(path) {
+		loadJSForBrowser(path);
 	},
 
-	// load for common.
-	loadForCommon = function(path) {
-		loadForNode(path);
-		loadForBrowser(path);
+	// load js for common.
+	loadJSForCommon = function(path) {
+		loadJSForNode(path);
+		loadJSForBrowser(path);
+	},
+
+	// load coffeescript for node.
+	loadCoffeeForNode = function(path) {
+		RUN_COFFEE(fs.readFileSync(path).toString());
+	},
+
+	// load coffeescript for browser.
+	loadCoffeeForBrowser = function(path) {
+		browserScript += COMPILE_COFFEE_TO_JS(fs.readFileSync(path).toString()) + '\n';
+	},
+
+	// load coffeescript for client.
+	loadCoffeeForClient = function(path) {
+		loadCoffeeForBrowser(path);
+	},
+
+	// load coffeescript for common.
+	loadCoffeeForCommon = function(path) {
+		loadCoffeeForNode(path);
+		loadCoffeeForBrowser(path);
+	},
+
+	// load literate coffeescript for node.
+	loadLiterateCoffeeForNode = function(path) {
+		RUN_LITCOFFEE(fs.readFileSync(path).toString());
+	},
+
+	// load literate coffeescript for browser.
+	loadLiterateCoffeeForBrowser = function(path) {
+		browserScript += COMPILE_LITCOFFEE_TO_JS(fs.readFileSync(path).toString()) + '\n';
+	},
+
+	// load literate coffeescript for client.
+	loadLiterateCoffeeForClient = function(path) {
+		loadLiterateCoffeeForBrowser(path);
+	},
+
+	// load literate coffeescript for common.
+	loadLiterateCoffeeForCommon = function(path) {
+		loadLiterateCoffeeForNode(path);
+		loadLiterateCoffeeForBrowser(path);
 	},
 
 	// check is allowed folder name.
@@ -96,13 +141,13 @@ global.BOOT = BOOT = function(params) {'use strict';
 	loadUJS = function() {
 
 		// load UPPERCASE.JS.
-		loadForCommon(__dirname + '/UPPERCASE.JS-COMMON.js');
-		loadForNode(__dirname + '/UPPERCASE.JS-NODE.js');
-		loadForBrowser(__dirname + '/UPPERCASE.JS-BROWSER.js');
+		loadJSForCommon(__dirname + '/UPPERCASE.JS-COMMON.js');
+		loadJSForNode(__dirname + '/UPPERCASE.JS-NODE.js');
+		loadJSForBrowser(__dirname + '/UPPERCASE.JS-BROWSER.js');
 
 		// load UPPERCASE.JS-BROWSER-FIX.
 		browserScript += 'BROWSER_CONFIG.fixScriptsFolderPath = \'/UPPERCASE.IO/UPPERCASE.JS-BROWSER-FIX\';\n';
-		loadForBrowser(__dirname + '/UPPERCASE.IO-TRANSPORT/R/UPPERCASE.JS-BROWSER-FIX/FIX.js');
+		loadJSForBrowser(__dirname + '/UPPERCASE.IO-TRANSPORT/R/UPPERCASE.JS-BROWSER-FIX/FIX.js');
 	};
 
 	configuration = function() {
@@ -131,7 +176,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 		};
 
 		// init CONFIG.
-		loadForCommon(__dirname + '/CONFIG.js');
+		loadJSForCommon(__dirname + '/CONFIG.js');
 
 		// set version.
 		CONFIG.version = version;
@@ -196,8 +241,8 @@ global.BOOT = BOOT = function(params) {'use strict';
 	initBoxes = function(next) {
 
 		// load UPPERCASE.IO-BOX.
-		loadForCommon(__dirname + '/UPPERCASE.IO-BOX/CORE.js');
-		loadForBrowser(__dirname + '/UPPERCASE.IO-BOX/BROWSER.js');
+		loadJSForCommon(__dirname + '/UPPERCASE.IO-BOX/CORE.js');
+		loadJSForBrowser(__dirname + '/UPPERCASE.IO-BOX/BROWSER.js');
 
 		fs.readdirSync(rootPath).forEach(function(folderName) {
 
@@ -220,7 +265,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 	initDatabase = function() {
 
 		// load UPPERCASE.IO-DB.
-		loadForNode(__dirname + '/UPPERCASE.IO-DB/NODE.js');
+		loadJSForNode(__dirname + '/UPPERCASE.IO-DB/NODE.js');
 
 		if (NODE_CONFIG.dbName !== undefined) {
 
@@ -237,17 +282,17 @@ global.BOOT = BOOT = function(params) {'use strict';
 	initModelSystem = function() {
 
 		// load UPPERCASE.IO-TRANSPORT.
-		loadForNode(__dirname + '/UPPERCASE.IO-TRANSPORT/NODE.js');
-		loadForBrowser(__dirname + '/UPPERCASE.IO-TRANSPORT/BROWSER.js');
+		loadJSForNode(__dirname + '/UPPERCASE.IO-TRANSPORT/NODE.js');
+		loadJSForBrowser(__dirname + '/UPPERCASE.IO-TRANSPORT/BROWSER.js');
 
 		// load UPPERCASE.IO-TRANSPORT-FIX.
 		browserScript += 'BROWSER_CONFIG.transportFixScriptsFolderPath = \'/UPPERCASE.IO\';\n';
-		loadForBrowser(__dirname + '/UPPERCASE.IO-TRANSPORT/R/FIX.js');
+		loadJSForBrowser(__dirname + '/UPPERCASE.IO-TRANSPORT/R/FIX.js');
 
 		// load UPPERCASE.IO-ROOM.
-		loadForNode(__dirname + '/UPPERCASE.IO-ROOM/NODE.js');
-		loadForClient(__dirname + '/UPPERCASE.IO-ROOM/CLIENT.js');
-		loadForBrowser(__dirname + '/UPPERCASE.IO-ROOM/BROWSER.js');
+		loadJSForNode(__dirname + '/UPPERCASE.IO-ROOM/NODE.js');
+		loadJSForClient(__dirname + '/UPPERCASE.IO-ROOM/CLIENT.js');
+		loadJSForBrowser(__dirname + '/UPPERCASE.IO-ROOM/BROWSER.js');
 
 		LAUNCH_ROOM_SERVER({
 
@@ -258,46 +303,53 @@ global.BOOT = BOOT = function(params) {'use strict';
 		});
 
 		// load UPPERCASE.IO-MODEL.
-		loadForCommon(__dirname + '/UPPERCASE.IO-MODEL/COMMON.js');
-		loadForNode(__dirname + '/UPPERCASE.IO-MODEL/NODE.js');
-		loadForClient(__dirname + '/UPPERCASE.IO-MODEL/CLIENT.js');
+		loadJSForCommon(__dirname + '/UPPERCASE.IO-MODEL/COMMON.js');
+		loadJSForNode(__dirname + '/UPPERCASE.IO-MODEL/NODE.js');
+		loadJSForClient(__dirname + '/UPPERCASE.IO-MODEL/CLIENT.js');
 	};
 
 	loadAllScripts = function() {
 
 		var
 		// scan all box folders.
-		scanAllBoxFolders = function(folderName, func) {
+		scanAllBoxFolders = function(folderName, funcForJS, funcForCoffee, funcForLiterateCoffee) {
 
 			var
 			// scan folder
-			scanFolder = function(path) {
+			scanFolder = function(folderPath) {
 
 				var
-				// folder paths
-				folderPaths;
+				// full paths
+				fullPaths;
 
-				if (fs.existsSync(path) === true) {
+				if (fs.existsSync(folderPath) === true) {
 
-					folderPaths = [];
+					fullPaths = [];
 
-					fs.readdirSync(path).forEach(function(folderName) {
+					fs.readdirSync(folderPath).forEach(function(fileName) {
 
 						var
 						// full path
-						fullPath = path + '/' + folderName;
+						fullPath = folderPath + '/' + fileName,
+
+						// extname
+						extname = path.extname(fileName).toLowerCase();
 
 						if (fs.statSync(fullPath).isDirectory() === true) {
-							if (checkIsAllowedFolderName(folderName) === true) {
-								folderPaths.push(fullPath);
+							if (checkIsAllowedFolderName(fileName) === true) {
+								fullPaths.push(fullPath);
 							}
-						} else {
-							func(fullPath);
+						} else if (extname === '.js') {
+							funcForJS(fullPath);
+						} else if (extname === '.coffee') {
+							funcForCoffee(fullPath);
+						} else if (extname === '.litcoffee') {
+							funcForLiterateCoffee(fullPath);
 						}
 					});
 
-					EACH(folderPaths, function(folderPath) {
-						scanFolder(folderPath);
+					EACH(fullPaths, function(fullPath) {
+						scanFolder(fullPath);
 					});
 				}
 			};
@@ -307,9 +359,9 @@ global.BOOT = BOOT = function(params) {'use strict';
 			});
 		};
 
-		scanAllBoxFolders('COMMON', loadForCommon);
-		scanAllBoxFolders('NODE', loadForNode);
-		scanAllBoxFolders('BROWSER', loadForBrowser);
+		scanAllBoxFolders('COMMON', loadJSForCommon, loadCoffeeForCommon, loadLiterateCoffeeForCommon);
+		scanAllBoxFolders('NODE', loadJSForNode, loadCoffeeForNode, loadLiterateCoffeeForNode);
+		scanAllBoxFolders('BROWSER', loadJSForBrowser, loadCoffeeForBrowser, loadLiterateCoffeeForBrowser);
 	};
 
 	generateIndexPage = function() {
@@ -392,21 +444,26 @@ global.BOOT = BOOT = function(params) {'use strict';
 				// index
 				i;
 
+				// serve browser script.
 				if (uri === '__SCRIPT') {
 
 					response({
 						contentType : 'text/javascript',
 						content : browserScript
 					});
+				}
 
-				} else if (uri === '__CSS') {
+				// serve base style css.
+				else if (uri === '__CSS') {
 
 					response({
 						contentType : 'text/css',
 						content : baseStyleCSS
 					});
+				}
 
-				} else if (requestInfo.isResponsed !== true) {
+				// serve others.
+				else if (requestInfo.isResponsed !== true) {
 
 					i = uri.indexOf('/');
 
@@ -456,7 +513,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 	clustering(function(workerData) {
 
 		// load UPPERCASE.IO-UTIL.
-		loadForNode(__dirname + '/UPPERCASE.IO-UTIL/NODE.js');
+		loadJSForNode(__dirname + '/UPPERCASE.IO-UTIL/NODE.js');
 
 		// init boxes.
 		initBoxes();

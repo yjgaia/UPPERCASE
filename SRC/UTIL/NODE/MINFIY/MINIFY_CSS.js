@@ -12,7 +12,7 @@ global.MINIFY_CSS = MINIFY_CSS = METHOD(function() {'use strict';
 		run : function(cssContent) {
 			//REQUIRED: cssContent
 
-			return sqwish.minify(cssContent);
+			return sqwish.minify(String(cssContent));
 		}
 	};
 });
