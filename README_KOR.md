@@ -15,9 +15,9 @@ Browser-side:
 - IE 5.5를 포함한 현존하는 거의 모든 브라우저
 
 Server-side:
-- Node.js (http://nodejs.org)
-- MongoDB (http://www.mongodb.org)
-- ImageMagick (http://www.imagemagick.org)
+- [Node.js](http://nodejs.org)
+- [MongoDB](http://www.mongodb.org)
+- [ImageMagick](http://www.imagemagick.org)
 
 TODO
 ----
@@ -33,4 +33,4 @@ Contact
 -------
 - Official Web Site: http://UPPERCASE.IO
 
-Author: Sim Young Jae (http://hanul.me)
+Author: Young Jae Sim (http://hanul.me)

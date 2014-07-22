@@ -15,9 +15,9 @@ Browser-side:
 - Almost all the web browsers including IE 5.5
 
 Server-side:
-- Node.js (http://nodejs.org)
-- MongoDB (http://www.mongodb.org)
-- ImageMagick (http://www.imagemagick.org)
+- [Node.js](http://nodejs.org)
+- [MongoDB](http://www.mongodb.org)
+- [ImageMagick](http://www.imagemagick.org)
 
 TODO
 ----
@@ -27,10 +27,10 @@ TODO
 
 License
 -------
-MIT License
+[MIT License](https://github.com/UPPERCASEIO/UPPERCASE.IO/blob/master/LICENSE)
 
 Contact
 -------
 - Official Web Site: http://UPPERCASE.IO
 
-Author: Sim Young Jae (http://hanul.me)
+Author: Young Jae Sim (http://hanul.me)
