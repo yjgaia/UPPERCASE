@@ -59,13 +59,12 @@ TestBox.TestModel.create({
 	}
 });
 
-TestBox.TestModel.get('test', {
-	notValid : function(r) {
-		console.log(r);
-	},
-	success : function(r) {
-		console.log(r);
-	}
+TestBox.TestModel.find({}, function(r) {
+	console.log(r);
+});
+
+TestBox.TestModel.get('test', function(r) {
+	console.log(r);
 });
 
 TestBox.TestModel.onNew(function(savedData) {

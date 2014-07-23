@@ -4,8 +4,8 @@
 RUN(function() {'use strict';
 
 	var
-	// transport fix scripts folder path
-	transportFixScriptsFolderPath = BROWSER_CONFIG.transportFixScriptsFolderPath,
+	// fix scripts folder path
+	fixScriptsFolderPath,
 
 	// current script
 	currentScript,
@@ -16,23 +16,18 @@ RUN(function() {'use strict';
 	// load fix script.
 	loadFixScript;
 
-	if (transportFixScriptsFolderPath === undefined) {
+	currentScript = document.currentScript;
 
-		currentScript = document.currentScript;
-
-		if (currentScript === undefined) {
-			scriptEls = document.getElementsByTagName('script');
-			currentScript = scriptEls[scriptEls.length - 1];
-		}
-
-		transportFixScriptsFolderPath = currentScript.getAttribute('src');
-		transportFixScriptsFolderPath = transportFixScriptsFolderPath.substring(0, transportFixScriptsFolderPath.indexOf('/FIX.js'));
-
-		BROWSER_CONFIG.transportFixScriptsFolderPath = transportFixScriptsFolderPath;
+	if (currentScript === undefined) {
+		scriptEls = document.getElementsByTagName('script');
+		currentScript = scriptEls[scriptEls.length - 1];
 	}
 
+	fixScriptsFolderPath = currentScript.getAttribute('src');
+	fixScriptsFolderPath = fixScriptsFolderPath.substring(0, fixScriptsFolderPath.indexOf('/FIX.js'));
+
 	loadFixScript = function(name) {
-		LOAD(transportFixScriptsFolderPath + '/' + name + '.js');
+		LOAD(fixScriptsFolderPath + '/' + name + '.js');
 	};
 
 	/**

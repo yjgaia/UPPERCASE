@@ -7,4 +7,8 @@ TestBox.MAIN = function() {
 	}, function(data) {
 		console.log(data);
 	});
+	
+	TestBox.TestModel.find(function(data) {
+		console.log(data);
+	});
 };

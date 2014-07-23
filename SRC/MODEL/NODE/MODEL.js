@@ -1256,8 +1256,11 @@ FOR_BOX(function(box) {'use strict';
 								value : findRole
 							}) === true) {
 
-								// delete isFindAll.
-								delete params.isFindAll;
+								if (params !== undefined) {
+
+									// delete isFindAll.
+									delete params.isFindAll;
+								}
 
 								innerFind(params, ret, clientInfo);
 

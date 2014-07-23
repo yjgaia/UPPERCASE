@@ -1,12 +1,21 @@
-INIT_OBJECTS();
+// load UPPERCASE.JS-BROWSER-FIX.
+LOAD('/UPPERCASE.IO/UPPERCASE.JS-BROWSER-FIX/FIX.js');
 
-FOR_BOX(function(box) {
-	if (box.MAIN !== undefined) {
-		box.MAIN();
-	}
-});
+// load UPPERCASE.IO-TRANSPORT-FIX.
+LOAD('/UPPERCASE.IO/FIX.js');
 
-CONNECT_TO_ROOM_SERVER({
-	port : CONFIG.webSocketServerPort,
-	fixServerPort : CONFIG.webSocketFixServerPort
-});
+global.onload = function() {'use strict';
+
+	INIT_OBJECTS();
+
+	FOR_BOX(function(box) {
+		if (box.MAIN !== undefined) {
+			box.MAIN();
+		}
+	});
+
+	CONNECT_TO_ROOM_SERVER({
+		port : CONFIG.webSocketServerPort,
+		fixServerPort : CONFIG.webSocketFixServerPort
+	});
+};

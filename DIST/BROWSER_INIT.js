@@ -1,1 +1,1 @@
-INIT_OBJECTS(),FOR_BOX(function(e){void 0!==e.MAIN&&e.MAIN()}),CONNECT_TO_ROOM_SERVER({port:CONFIG.webSocketServerPort,fixServerPort:CONFIG.webSocketFixServerPort});
+LOAD("/UPPERCASE.IO/UPPERCASE.JS-BROWSER-FIX/FIX.js"),LOAD("/UPPERCASE.IO/FIX.js"),global.onload=function(){"use strict";INIT_OBJECTS(),FOR_BOX(function(O){void 0!==O.MAIN&&O.MAIN()}),CONNECT_TO_ROOM_SERVER({port:CONFIG.webSocketServerPort,fixServerPort:CONFIG.webSocketFixServerPort})};

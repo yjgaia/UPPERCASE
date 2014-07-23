@@ -144,10 +144,6 @@ global.BOOT = BOOT = function(params) {'use strict';
 		loadJSForCommon(__dirname + '/UPPERCASE.JS-COMMON.js');
 		loadJSForNode(__dirname + '/UPPERCASE.JS-NODE.js');
 		loadJSForBrowser(__dirname + '/UPPERCASE.JS-BROWSER.js');
-
-		// load UPPERCASE.JS-BROWSER-FIX.
-		browserScript += 'BROWSER_CONFIG.fixScriptsFolderPath = \'/UPPERCASE.IO/UPPERCASE.JS-BROWSER-FIX\';\n';
-		loadJSForBrowser(__dirname + '/UPPERCASE.IO-TRANSPORT/R/UPPERCASE.JS-BROWSER-FIX/FIX.js');
 	};
 
 	configuration = function() {
@@ -284,10 +280,6 @@ global.BOOT = BOOT = function(params) {'use strict';
 		// load UPPERCASE.IO-TRANSPORT.
 		loadJSForNode(__dirname + '/UPPERCASE.IO-TRANSPORT/NODE.js');
 		loadJSForBrowser(__dirname + '/UPPERCASE.IO-TRANSPORT/BROWSER.js');
-
-		// load UPPERCASE.IO-TRANSPORT-FIX.
-		browserScript += 'BROWSER_CONFIG.transportFixScriptsFolderPath = \'/UPPERCASE.IO\';\n';
-		loadJSForBrowser(__dirname + '/UPPERCASE.IO-TRANSPORT/R/FIX.js');
 
 		// load UPPERCASE.IO-ROOM.
 		loadJSForNode(__dirname + '/UPPERCASE.IO-ROOM/NODE.js');
