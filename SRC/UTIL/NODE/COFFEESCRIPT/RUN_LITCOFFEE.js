@@ -12,7 +12,7 @@ global.RUN_LITCOFFEE = RUN_LITCOFFEE = METHOD(function() {'use strict';
 		run : function(code) {
 			//REQUIRED: code
 
-			return CoffeeScript.eval(code, {
+			return CoffeeScript.run(code, {
 				literate : true
 			});
 		}

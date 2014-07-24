@@ -12,7 +12,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 	path = require('path'),
 
 	// version
-	version = Date.now(),
+	version = 'V' + Date.now(),
 
 	// root path
 	rootPath = process.cwd(),
@@ -176,7 +176,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 		// set version.
 		CONFIG.version = version;
-		browserScript += 'CONFIG.version = ' + version + '\n';
+		browserScript += 'CONFIG.version = \'' + version + '\'\n';
 
 		if (params !== undefined) {
 			_CONFIG = params.CONFIG;
@@ -420,7 +420,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 			rootPath : rootPath,
 
-			version : version
+			version : CONFIG.isDevMode === true ? undefined : version
 
 		}, {
 
