@@ -21,7 +21,6 @@ Server-side:
 
 TODO
 ----
-- Cache management based on version
 - Upload to distributed servers
 
 License
