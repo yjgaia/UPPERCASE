@@ -42,10 +42,4 @@ UPPERCASE.IO에서는 상대적으로 트래픽이 적은 API 서버들이 자�
 - uploadServerHosts - 업로드 파일 서버들의 호스트를 지정한다. (2번의 경우에는 apiServerHosts와 완전히 동일하다.)
 
 
-Copyright ⓒ 2014 BTNcafe & Hanul.
-
-contact@btncafe.com / hanul@hanul.me
-
-
-
-
+Copyright ⓒ 2014 Young Jae Sim (http://hanul.me)

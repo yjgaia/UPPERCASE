@@ -78,6 +78,23 @@ FOR_BOX(function(box) {'use strict';
 				console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '` ERROR: ' + errorMsg);
 			},
 
+			// log not exists.
+			logNotExists = function() {
+				console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '` NOT EXISTS!');
+			},
+
+			// log not valid.
+			logNotValid = function(errors) {
+				//REQUIRED: errors
+
+				console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '` NOT VALID!: ', errors);
+			},
+
+			// log not authed.
+			logNotAuthed = function() {
+				console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '` NOT AUTHED!');
+			},
+
 			// get name.
 			getName,
 
@@ -262,10 +279,14 @@ FOR_BOX(function(box) {'use strict';
 							} else if (validErrors !== undefined) {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validErrors);
+								} else {
+									logNotValid(validErrors);
 								}
 							} else if (isNotAuthed === true) {
 								if (notAuthedHandler !== undefined) {
 									notAuthedHandler();
+								} else {
+									logNotAuthed();
 								}
 							} else {
 								if (callback !== undefined) {
@@ -343,10 +364,14 @@ FOR_BOX(function(box) {'use strict';
 						} else if (isNotAuthed === true) {
 							if (notAuthedHandler !== undefined) {
 								notAuthedHandler();
+							} else {
+								logNotAuthed();
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
+							} else {
+								logNotExists();
 							}
 						} else {
 							if (callback !== undefined) {
@@ -523,14 +548,20 @@ FOR_BOX(function(box) {'use strict';
 							} else if (validErrors !== undefined) {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validErrors);
+								} else {
+									logNotValid(validErrors);
 								}
 							} else if (isNotAuthed === true) {
 								if (notAuthedHandler !== undefined) {
 									notAuthedHandler();
+								} else {
+									logNotAuthed();
 								}
 							} else if (savedData === undefined) {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler();
+								} else {
+									logNotExists();
 								}
 							} else {
 								if (callback !== undefined) {
@@ -601,10 +632,14 @@ FOR_BOX(function(box) {'use strict';
 						} else if (isNotAuthed === true) {
 							if (notAuthedHandler !== undefined) {
 								notAuthedHandler();
+							} else {
+								logNotAuthed();
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
+							} else {
+								logNotExists();
 							}
 						} else {
 							if (callback !== undefined) {
@@ -677,6 +712,8 @@ FOR_BOX(function(box) {'use strict';
 						} else if (isNotAuthed === true) {
 							if (notAuthedHandler !== undefined) {
 								notAuthedHandler();
+							} else {
+								logNotAuthed();
 							}
 						} else {
 							if (callback !== undefined) {
@@ -837,6 +874,8 @@ FOR_BOX(function(box) {'use strict';
 						} else if (isNotAuthed === true) {
 							if (notAuthedHandler !== undefined) {
 								notAuthedHandler();
+							} else {
+								logNotAuthed();
 							}
 						} else {
 							if (callback !== undefined) {
@@ -904,6 +943,8 @@ FOR_BOX(function(box) {'use strict';
 						} else if (isNotAuthed === true) {
 							if (notAuthedHandler !== undefined) {
 								notAuthedHandler();
+							} else {
+								logNotAuthed();
 							}
 						} else {
 							if (callback !== undefined) {

@@ -236,9 +236,8 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 	initBoxes = function(next) {
 
-		// load UPPERCASE.IO-BOX.
+		// load UPPERCASE.IO-BOX/CORE.
 		loadJSForCommon(__dirname + '/UPPERCASE.IO-BOX/CORE.js');
-		loadJSForBrowser(__dirname + '/UPPERCASE.IO-BOX/BROWSER.js');
 
 		fs.readdirSync(rootPath).forEach(function(folderName) {
 
@@ -256,6 +255,9 @@ global.BOOT = BOOT = function(params) {'use strict';
 				browserScript += 'BOX(\'' + folderName + '\');\n';
 			}
 		});
+
+		// load UPPERCASE.IO-BOX/BROWSER.
+		loadJSForBrowser(__dirname + '/UPPERCASE.IO-BOX/BROWSER.js');
 	};
 
 	initDatabase = function() {
