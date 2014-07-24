@@ -21,7 +21,6 @@ Server-side:
 
 TODO
 ----
-- version으로 작동하는 캐싱 처리
 - 분산 서버 업로드 기능
 
 License
