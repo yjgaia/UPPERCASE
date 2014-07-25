@@ -1,0 +1,16 @@
+{
+	"name": "uppercase.io",
+	"version": "1.4.0",
+	"description": "UPPERCASE.IO is a easy, clear, and powerful full-stack (server-to-client) MVC middleware for dynamic web site or mobile application development.",
+	"main": "BOOT.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/UPPERCASEIO/UPPERCASE.IO"
+	},
+	"keywords": ["UPPERCASE.IO", "JavaScript", "MVC", "middleware", "framework", "library", "Hanul"],
+	"author": "hanul",
+	"license": "https://github.com/UPPERCASEIO/UPPERCASE.IO/blob/master/LICENSE",
+	"bugs": {
+		"email": "hanul@hanul.me"
+	}
+}

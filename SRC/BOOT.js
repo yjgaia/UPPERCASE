@@ -482,7 +482,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 				}
 			},
 
-			notExists : function(path, requestInfo, response) {
+			notExistsResource : function(resourcePath, requestInfo, response) {
 
 				if (requestInfo.uri === CONFIG.defaultBoxName + '/R') {
 

@@ -4,12 +4,12 @@
 global.IMAGEMAGICK_EXPORT_METADATA = IMAGEMAGICK_EXPORT_METADATA = METHOD(function() {'use strict';
 
 	var
-	// sqwish
-	sqwish = require('imagemagick');
+	// imagemagick
+	imagemagick = require('imagemagick');
 
 	return {
 
-		run : function(path, callback) {
+		run : function(path, callbackOrHandlers) {
 			//REQUIRED: path
 			//REQUIRED: callbackOrHandlers
 
@@ -29,8 +29,19 @@ global.IMAGEMAGICK_EXPORT_METADATA = IMAGEMAGICK_EXPORT_METADATA = METHOD(functi
 
 			imagemagick.readMetadata(path, function(error, metadata) {
 
+				var
+				// error msg
+				errorMsg;
+
 				if (error !== TO_DELETE) {
-					errorHandler(error.toString());
+
+					errorMsg = error.toString();
+
+					if (errorHandler !== undefined) {
+						errorHandler(errorMsg);
+					} else {
+						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_EXPORT_METADATA] ERROR: ' + errorMsg));
+					}
 				} else {
 					callback(metadata);
 				}

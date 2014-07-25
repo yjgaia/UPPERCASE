@@ -4,8 +4,8 @@
 global.IMAGEMAGICK_CONVERT = IMAGEMAGICK_CONVERT = METHOD(function() {'use strict';
 
 	var
-	// sqwish
-	sqwish = require('imagemagick');
+	// imagemagick
+	imagemagick = require('imagemagick');
 
 	return {
 
@@ -29,8 +29,19 @@ global.IMAGEMAGICK_CONVERT = IMAGEMAGICK_CONVERT = METHOD(function() {'use stric
 
 			imagemagick.convert(params, function(error) {
 
+				var
+				// error msg
+				errorMsg;
+
 				if (error !== TO_DELETE) {
-					errorHandler(error.toString());
+
+					errorMsg = error.toString();
+
+					if (errorHandler !== undefined) {
+						errorHandler(errorMsg);
+					} else {
+						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_CONVERT] ERROR: ' + errorMsg));
+					}
 				} else {
 					callback();
 				}

@@ -37,6 +37,14 @@
 				MODEL TEST
 			</button>
 		</div>
+		<div>
+			<h3>UPLOAD</h3>
+			<iframe name="__UPLOAD_FORM"></iframe>
+			<form action="http://localhost:8124" target="__UPLOAD_FORM" method="POST" enctype="multipart/form-data">
+				<input name="file" type="file">
+				<input type="submit">
+			</form>
+		</div>
 		<footer>
 			<div>
 				UPPERCASE.IO TEST CASE by <a href="http://hanul.me" target="_blank">YOUNG JAE SIM</a> @ <a href="http://www.btncafe.com" target="_blank">BTNcafe Co</a>.
@@ -72,7 +80,7 @@
 		<!-- import UPPERCASE.IO-ROOM -->
 		<script src="UPPERCASE.IO-ROOM/BROWSER.js"></script>
 		<script src="UPPERCASE.IO-ROOM/CLIENT.js"></script>
-		
+
 		<!-- import UPPERCASE.IO-MODEL -->
 		<script src="UPPERCASE.IO-MODEL/COMMON.js"></script>
 		<script src="UPPERCASE.IO-MODEL/CLIENT.js"></script>
