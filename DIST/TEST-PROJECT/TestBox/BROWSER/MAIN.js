@@ -19,4 +19,8 @@ TestBox.MAIN = function() {
 	TestBox.TestModel.find(function(data) {
 		console.log(data);
 	});
+
+	GET('__GET_UPLOAD_SERVER_URL', function(source) {
+		console.log(source);
+	});
 };

@@ -96,9 +96,7 @@
 				sourceEl = document.getElementById('source');
 
 				global.test = function(path) {
-					GET({
-						uri : 'TEST/' + path + '.js'
-					}, function(source) {
+					GET('TEST/' + path + '.js', function(source) {
 						sourceEl.innerText = source;
 						eval(source);
 					});

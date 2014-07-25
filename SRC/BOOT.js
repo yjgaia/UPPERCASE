@@ -288,13 +288,16 @@ global.BOOT = BOOT = function(params) {'use strict';
 		loadJSForClient(__dirname + '/UPPERCASE.IO-ROOM/CLIENT.js');
 		loadJSForBrowser(__dirname + '/UPPERCASE.IO-ROOM/BROWSER.js');
 
-		LAUNCH_ROOM_SERVER({
+		if (CONFIG.socketServerPort !== undefined || CONFIG.webSocketServerPort !== undefined) {
 
-			socketServerPort : CONFIG.socketServerPort,
+			LAUNCH_ROOM_SERVER({
 
-			webSocketServerPort : CONFIG.webSocketServerPort,
-			webSocketFixServerPort : CONFIG.webSocketFixServerPort
-		});
+				socketServerPort : CONFIG.socketServerPort,
+
+				webSocketServerPort : CONFIG.webSocketServerPort,
+				webSocketFixServerPort : CONFIG.webSocketFixServerPort
+			});
+		}
 
 		// load UPPERCASE.IO-MODEL.
 		loadJSForCommon(__dirname + '/UPPERCASE.IO-MODEL/COMMON.js');
@@ -412,87 +415,116 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 		browserScript += fs.readFileSync(__dirname + '/BROWSER_INIT.js').toString();
 
-		RESOURCE_SERVER({
+		if (CONFIG.webServerPort !== undefined || CONFIG.sercuredWebServerPort !== undefined) {
 
-			port : CONFIG.webServerPort,
+			RESOURCE_SERVER({
 
-			securedPort : CONFIG.sercuredWebServerPort,
-			securedKeyFilePath : rootPath + '/' + NODE_CONFIG.securedKeyFilePath,
-			securedCertFilePath : rootPath + '/' + NODE_CONFIG.securedCertFilePath,
+				port : CONFIG.webServerPort,
 
-			rootPath : rootPath,
+				securedPort : CONFIG.sercuredWebServerPort,
+				securedKeyFilePath : rootPath + '/' + NODE_CONFIG.securedKeyFilePath,
+				securedCertFilePath : rootPath + '/' + NODE_CONFIG.securedCertFilePath,
 
-			version : CONFIG.isDevMode === true ? undefined : version
+				rootPath : rootPath,
 
-		}, {
+				version : CONFIG.isDevMode === true ? undefined : version
 
-			requestListener : function(requestInfo, response, onDisconnected, replaceRootPath) {
+			}, {
 
-				var
-				// uri
-				uri = requestInfo.uri,
+				requestListener : function(requestInfo, response, onDisconnected, replaceRootPath) {
 
-				// box name
-				boxName,
+					var
+					// uri
+					uri = requestInfo.uri,
 
-				// index
-				i;
+					// box name
+					boxName,
 
-				// serve browser script.
-				if (uri === '__SCRIPT') {
+					// index
+					i;
 
-					response({
-						contentType : 'text/javascript',
-						content : browserScript
-					});
-				}
+					// serve browser script.
+					if (uri === '__SCRIPT') {
 
-				// serve base style css.
-				else if (uri === '__CSS') {
+						response({
+							contentType : 'text/javascript',
+							content : browserScript,
+							version : CONFIG.isDevMode === true ? undefined : version
+						});
+					}
 
-					response({
-						contentType : 'text/css',
-						content : baseStyleCSS
-					});
-				}
+					// serve base style css.
+					else if (uri === '__CSS') {
 
-				// serve others.
-				else if (requestInfo.isResponsed !== true) {
+						response({
+							contentType : 'text/css',
+							content : baseStyleCSS,
+							version : CONFIG.isDevMode === true ? undefined : version
+						});
+					}
 
-					i = uri.indexOf('/');
+					// serve upload server host.
+					else if (uri === '__UPLOAD_SERVER_HOST') {
 
-					if (i === -1) {
-						boxName = CONFIG.defaultBoxName;
-					} else {
-						boxName = uri.substring(0, i);
+						response({
+							content : 'test'
+						});
+					}
 
-						if (boxName === 'UPPERCASE.IO' || BOX.getBoxes()[boxName] !== undefined) {
-							uri = uri.substring(i + 1);
-						} else {
+					// serve socket server host.
+					else if (uri === '__SOCKET_SERVER_HOST') {
+
+						response({
+							content : 'test'
+						});
+					}
+
+					// serve web socket server host.
+					else if (uri === '__WEB_SOCKET_SERVER_HOST') {
+
+						response({
+							content : 'test'
+						});
+					}
+
+					// serve others.
+					else if (requestInfo.isResponsed !== true) {
+
+						i = uri.indexOf('/');
+
+						if (i === -1) {
 							boxName = CONFIG.defaultBoxName;
+						} else {
+							boxName = uri.substring(0, i);
+
+							if (boxName === 'UPPERCASE.IO' || BOX.getBoxes()[boxName] !== undefined) {
+								uri = uri.substring(i + 1);
+							} else {
+								boxName = CONFIG.defaultBoxName;
+							}
+						}
+
+						if (boxName === 'UPPERCASE.IO') {
+							replaceRootPath(__dirname + '/UPPERCASE.IO-TRANSPORT/R');
+							requestInfo.uri = uri;
+						} else {
+							requestInfo.uri = boxName + '/R' + (uri === '' ? '' : ('/' + uri));
 						}
 					}
+				},
 
-					if (boxName === 'UPPERCASE.IO') {
-						replaceRootPath(__dirname + '/UPPERCASE.IO-TRANSPORT/R');
-						requestInfo.uri = uri;
-					} else {
-						requestInfo.uri = boxName + '/R' + (uri === '' ? '' : ('/' + uri));
+				notExistsResource : function(resourcePath, requestInfo, response) {
+
+					if (requestInfo.uri === CONFIG.defaultBoxName + '/R') {
+
+						response({
+							contentType : 'text/html',
+							content : indexPageContent
+						});
 					}
 				}
-			},
-
-			notExistsResource : function(resourcePath, requestInfo, response) {
-
-				if (requestInfo.uri === CONFIG.defaultBoxName + '/R') {
-
-					response({
-						contentType : 'text/html',
-						content : indexPageContent
-					});
-				}
-			}
-		});
+			});
+		}
 
 		console.log('[UPPERCASE.IO] `' + CONFIG.defaultTitle + '` WORKER #' + workerData.id + ' (PID:' + workerData.pid + ') BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};

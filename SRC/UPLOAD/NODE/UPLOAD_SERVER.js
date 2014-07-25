@@ -4,14 +4,8 @@
 global.UPLOAD_SERVER = UPLOAD_SERVER = METHOD(function(m) {'use strict';
 
 	var
-	//IMPORT: http
-	http = require('http'),
-
 	//IMPORT: fs
 	fs = require('fs'),
-
-	//IMPORT: querystring
-	querystring = require('querystring'),
 
 	//IMPORT: IncomingForm
 	IncomingForm = require('formidable').IncomingForm;
@@ -48,8 +42,8 @@ global.UPLOAD_SERVER = UPLOAD_SERVER = METHOD(function(m) {'use strict';
 			// secured cert file path
 			securedCertFilePath = params.securedCertFilePath,
 
-			// origin upload path
-			originUploadPath = params.uploadPath,
+			// upload path
+			uploadPath = params.uploadPath,
 
 			// upload handlers
 			uploadHandlers,
@@ -73,10 +67,7 @@ global.UPLOAD_SERVER = UPLOAD_SERVER = METHOD(function(m) {'use strict';
 			serveErrorHandler,
 
 			// serve not exists resource handler
-			serveNotExistsResourceHandler,
-
-			// serve.
-			serve;
+			serveNotExistsResourceHandler;
 
 			if (CHECK_IS_DATA(handlerMap) !== true) {
 				uploadSuccessHandler = handlerMap;
@@ -103,337 +94,165 @@ global.UPLOAD_SERVER = UPLOAD_SERVER = METHOD(function(m) {'use strict';
 				}
 			}
 
-			fs.exists(originUploadPath, function(isExists) {
+			fs.exists(uploadPath, function(isExists) {
 
 				if (isExists === false) {
-					console.log(CONSOLE_RED('[UPPERCASE.IO-UPLOAD_REQUEST] NOT EXISTS FOLDER!: ' + originUploadPath));
+					console.log(CONSOLE_RED('[UPPERCASE.IO-UPLOAD_REQUEST] NOT EXISTS FOLDER!: ' + uploadPath));
 				} else {
 
-					serve = function(nativeReq, nativeRes) {
-
-						var
-						// upload path
-						uploadPath = originUploadPath,
-
-						// is going on
-						isGoingOn,
-
-						// headers
-						headers = nativeReq.headers,
-
-						// uri
-						uri = nativeReq.url,
-
-						// method
-						method = nativeReq.method.toUpperCase(),
-
-						// ip
-						ip = headers['X-Forwarded-For'],
-
-						// param str
-						paramStr,
-
-						// form
-						form,
-
-						// file data set
-						fileDataSet,
-
-						// field data
-						fieldData,
-
-						// request info
-						requestInfo,
-
-						// response.
-						response,
-
-						// response not found.
-						responseNotFound,
-
-						// response error.
-						responseError;
-
-						if (ip === undefined) {
-							ip = nativeReq.connection.remoteAddress;
-						}
-
-						if (uri.indexOf('?') != -1) {
-							paramStr = uri.substring(uri.indexOf('?') + 1);
-							uri = uri.substring(0, uri.indexOf('?'));
-						}
-
-						uri = uri.substring(1);
-
-						requestInfo = {
-
-							headers : headers,
-
-							uri : uri,
-
-							method : method,
-
-							params : querystring.parse(paramStr),
-
-							ip : ip,
-
-							cookies : PARSE_COOKIE_STR(headers.cookie),
-
-							nativeReq : nativeReq
-						};
-
-						response = function(params) {
-							//REQUIRED: params
-							//OPTIONAL: params.statusCode
-							//OPTIONAL: params.headers
-							//OPTIONAL: params.contentType
-							//REQUIRED: params.content
-							//OPTIONAL: params.encoding
-							//OPTIONAL: params.cacheTime
+					RESOURCE_SERVER({
+						port : port,
+						securedPort : securedPort,
+						securedKeyFilePath : securedKeyFilePath,
+						securedCertFilePath : securedCertFilePath,
+						rootPath : uploadPath,
+						version : 'FINAL',
+						isNotParsingNativeReq : true
+					}, {
+						errorHandler : serveErrorHandler,
+						notExistsResource : serveNotExistsResourceHandler,
+						requestListener : function(requestInfo, response, onDisconnected, changeRootPath, setDefaultContentType, addHeader) {
 
 							var
-							// status code
-							statusCode,
+							// method
+							method = requestInfo.method,
 
-							// headers
-							headers,
+							// ip
+							ip = requestInfo.ip,
 
-							// content type
-							contentType,
+							// native req
+							nativeReq = requestInfo.nativeReq,
 
-							// content
-							content,
+							// form
+							form,
 
-							// encoding
-							encoding,
+							// file data set
+							fileDataSet,
 
-							// cache time
-							cacheTime;
+							// field data
+							fieldData;
 
-							if (params !== undefined) {
+							// serve upload.
+							if (method === 'POST') {
 
-								statusCode = params.statusCode;
-								headers = params.headers;
-								contentType = params.contentType;
-								content = params.content;
-								encoding = params.encoding;
-								cacheTime = params.cacheTime;
-							}
+								form = new IncomingForm();
+								fileDataSet = [];
+								fieldData = {};
 
-							if (statusCode === undefined) {
-								statusCode = 200;
-							}
+								form.uploadDir = uploadPath;
 
-							if (headers === undefined) {
-								headers = {};
-							}
+								form.on('field', function(fieldName, value) {
 
-							if (contentType !== undefined) {
-								headers['Content-Type'] = contentType;
+									console.log(fieldName, value);
 
-								if (encoding === undefined) {
-									encoding = WEB_SERVER.getEncodingFromContentType(contentType);
-								}
-							}
+									fieldData[fieldName] = value;
 
-							if (cacheTime !== undefined) {
-								headers['ETag'] = cacheTime;
-								headers['Last-Modified'] = new Date(cacheTime).toUTCString();
-							}
+								}).on('file', function(fieldName, file) {
 
-							nativeRes.writeHead(statusCode, headers);
-							nativeRes.end(content, encoding);
-						};
+									console.log(fieldName, file);
 
-						// serve upload.
-						if (method === 'POST') {
-
-							form = new IncomingForm();
-							fileDataSet = [];
-							fieldData = {};
-
-							form.uploadDir = uploadPath;
-
-							form.on('field', function(fieldName, value) {
-
-								fieldData[fieldName] = value;
-
-							}).on('file', function(fieldName, file) {
-
-								fileDataSet.push({
-									tempPath : file.path,
-									size : file.size,
-									name : file.name,
-									type : file.type,
-									lastModifiedTime : file.lastModifiedDate
-								});
-
-							}).on('end', function() {
-
-								NEXT(fileDataSet, [
-								function(fileData, next) {
-
-									var
-									// temp path
-									tempPath = fileData.tempPath,
-
-									// file size
-									fileSize = fileData.size;
-
-									// delete temp path.
-									delete fileData.tempPath;
-
-									fileData.ip = ip;
-
-									if (fileSize > NODE_CONFIG.maxUploadFileMB * 1024 * 1024) {
-
-										if (uploadOverFileSizeHandler !== undefined) {
-											uploadOverFileSizeHandler(tempPath, fileSize);
-										} else {
-											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-UPLOAD_REQUEST] FILE SIZE IS TOO BIG!(' + fileSize + '):' + tempPath));
-										}
-
-										return false;
-									}
-
-									EACH(fieldData, function(value, name) {
-										if (value.trim() !== '') {
-											fileData[name] = value;
-										}
+									fileDataSet.push({
+										tempPath : file.path,
+										size : file.size,
+										name : file.name,
+										type : file.type,
+										lastModifiedTime : file.lastModifiedDate
 									});
 
-									var
-									// file type
-									fileType = fileData.type;
+								}).on('end', function() {
 
-									if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
+									NEXT(fileDataSet, [
+									function(fileData, next) {
 
-										IMAGEMAGICK_EXPORT_METADATA(tempPath, {
-											error : function() {
-												next(fileData);
-											},
-											success : function(metadata) {
+										var
+										// temp path
+										tempPath = fileData.tempPath,
 
-												if (metadata.exif !== undefined) {
+										// file size
+										fileSize = fileData.size;
 
-													fileData.exif = metadata.exif;
+										// delete temp path.
+										delete fileData.tempPath;
 
-													IMAGEMAGICK_CONVERT([tempPath, '-auto-orient', tempPath], {
-														error : errorHandler,
-														success : next
-													});
+										fileData.ip = ip;
 
-												} else {
-													next();
-												}
+										if (fileSize > NODE_CONFIG.maxUploadFileMB * 1024 * 1024) {
+
+											if (uploadOverFileSizeHandler !== undefined) {
+												uploadOverFileSizeHandler(tempPath, fileSize);
+											} else {
+												console.log(CONSOLE_YELLOW('[UPPERCASE.IO-UPLOAD_REQUEST] FILE SIZE IS TOO BIG!(' + fileSize + '):' + tempPath));
+											}
+
+											return false;
+										}
+
+										EACH(fieldData, function(value, name) {
+											if (value.trim() !== '') {
+												fileData[name] = value;
 											}
 										});
 
-									} else {
-										next();
+										var
+										// file type
+										fileType = fileData.type;
+
+										if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
+
+											IMAGEMAGICK_EXPORT_METADATA(tempPath, {
+												error : function() {
+													next(fileData);
+												},
+												success : function(metadata) {
+
+													if (metadata.exif !== undefined) {
+
+														fileData.exif = metadata.exif;
+
+														IMAGEMAGICK_CONVERT([tempPath, '-auto-orient', tempPath], {
+															error : errorHandler,
+															success : next
+														});
+
+													} else {
+														next();
+													}
+												}
+											});
+
+										} else {
+											next();
+										}
+									},
+
+									function() {
+										return function() {
+											uploadSuccessHandler(fileDataSet, requestInfo, response);
+										};
+									}]);
+
+								}).on('error', function(error) {
+
+									var
+									// error msg
+									errorMsg = error.toString();
+
+									console.log('[UPPERCASE.IO-UPLOAD_REQUEST] ERROR: ' + errorMsg);
+
+									if (uploadErrorHandler !== undefined) {
+										uploadErrorHandler(errorMsg);
 									}
-								},
-
-								function() {
-									return function() {
-										uploadSuccessHandler(fileDataSet, requestInfo, response);
-									};
-								}]);
-
-							}).on('error', function(error) {
-
-								var
-								// error msg
-								errorMsg = error.toString();
-
-								console.log('[UPPERCASE.IO-UPLOAD_REQUEST] ERROR: ' + errorMsg);
-
-								if (uploadErrorHandler !== undefined) {
-									uploadErrorHandler(errorMsg);
-								}
-							});
-
-							form.parse(nativeReq);
-						}
-
-						// serve uploaded resource.
-						else if (method === 'GET') {
-
-							if (serveRequestListener !== undefined) {
-
-								isGoingOn = serveRequestListener(requestInfo, response, onDisconnected, function(newUploadPath) {
-									uploadPath = newUploadPath;
 								});
 
-								// init properties again.
-								uri = requestInfo.uri;
-								method = requestInfo.method;
-								params = requestInfo.params;
-								headers = requestInfo.headers;
+								form.parse(nativeReq);
+
+								return false;
+
+							} else if (serveRequestListener !== undefined) {
+								return serveRequestListener(requestInfo, response, onDisconnected, changeRootPath, setDefaultContentType, addHeader);
 							}
-
-							responseNotFound = function(resourcePath) {
-
-								if (serveNotExistsResourceHandler !== undefined) {
-									serveNotExistsResourceHandler(resourcePath, requestInfo, response);
-								}
-
-								if (requestInfo.isResponsed !== true) {
-
-									response({
-										statusCode : 404
-									});
-								}
-							};
-
-							responseError = function(errorMsg) {
-
-								console.log(CONSOLE_RED('[UPPERCASE.JS-RESOURCE_SERVER] ERROR: ' + errorMsg));
-
-								if (serveErrorHandler !== undefined) {
-									serveErrorHandler(errorMsg, requestInfo, response);
-								}
-
-								if (requestInfo.isResponsed !== true) {
-
-									response({
-										statusCode : 500
-									});
-								}
-							};
-
-							// serve file.
-							READ_FILE(uploadPath + '/' + uri, {
-
-								notExists : responseNotFound,
-								error : responseError,
-
-								success : function(content) {
-
-									response({
-										content : content,
-										headers : {
-											//'ETag' : version
-										}
-									});
-								}
-							});
 						}
-					};
-
-					// init sever.
-					if (port !== undefined) {
-						http.createServer(serve).listen(port);
-					}
-
-					// init secured sever.
-					if (securedPort !== undefined) {
-
-						https.createServer({
-							key : fs.readFileSync(securedKeyFilePath),
-							cert : fs.readFileSync(securedCertFilePath)
-						}, serve).listen(securedPort);
-					}
+					});
 
 					console.log('[UPPERCASE.IO-UPLOAD_SERVER] RUNNING UPLOAD SERVER...' + (port === undefined ? '' : (' (PORT:' + port + ')')) + (securedPort === undefined ? '' : (' (SECURED PORT:' + securedPort + ')')));
 				}
