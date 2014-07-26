@@ -12,7 +12,9 @@ BOOT({
 		socketServerPort : 8889,
 
 		webSocketServerPort : 8810,
-		webSocketFixServerPort : 8811
+		webSocketFixServerPort : 8811,
+
+		uploadServerPort : 8812
 	},
 
 	NODE_CONFIG : {

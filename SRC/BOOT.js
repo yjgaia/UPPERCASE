@@ -526,6 +526,19 @@ global.BOOT = BOOT = function(params) {'use strict';
 			});
 		}
 
+		// load UPPERCASE.IO-UPLOAD.
+		loadJSForNode(__dirname + '/UPPERCASE.IO-UPLOAD/NODE.js');
+
+		if (CONFIG.uploadServerPort !== undefined) {
+
+			UPLOAD_SERVER({
+				port : CONFIG.uploadServerPort,
+				uploadPath : rootPath + '/__RF'
+			}, function(fileDataSet, requestInfo, response) {
+				console.log(fileDataSet, requestInfo, response);
+			});
+		}
+
 		console.log('[UPPERCASE.IO] `' + CONFIG.defaultTitle + '` WORKER #' + workerData.id + ' (PID:' + workerData.pid + ') BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
 

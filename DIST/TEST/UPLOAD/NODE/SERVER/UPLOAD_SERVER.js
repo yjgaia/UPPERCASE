@@ -16,6 +16,6 @@ INIT_OBJECTS();
 UPLOAD_SERVER({
 	port : 8124,
 	uploadPath : __dirname + '/UPLOAD_FILES'
-}, function(fileData) {
-	console.log(fileData);
+}, function(fileDataSet) {
+	console.log(fileDataSet);
 });

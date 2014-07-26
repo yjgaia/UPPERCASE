@@ -20,7 +20,12 @@ TestBox.MAIN = function() {
 		console.log(data);
 	});
 
-	GET('__GET_UPLOAD_SERVER_URL', function(source) {
-		console.log(source);
+	GET('__GET_UPLOAD_SERVER_URL', {
+		success : function(source) {
+			console.log(source);
+		},
+		error : function() {
+			console.log('test');
+		}
 	});
 };

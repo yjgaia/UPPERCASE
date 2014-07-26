@@ -154,10 +154,10 @@ global.DIST = function() {'use strict';
 	distModule('MODEL');
 	distModule('UPLOAD');
 	distModule('UTIL');
+	distModule('BOOT');
 
 	fs.writeFileSync('../DIST/BASE_STYLE.css', MINIFY_CSS(fs.readFileSync('BASE_STYLE.css')));
 	fs.writeFileSync('../DIST/BROWSER_INIT.js', MINIFY_JS(fs.readFileSync('BROWSER_INIT.js')));
-	fs.writeFileSync('../DIST/CONFIG.js', MINIFY_JS(fs.readFileSync('CONFIG.js')));
 	fs.writeFileSync('../DIST/BOOT.js', MINIFY_JS(fs.readFileSync('BOOT.js')));
 
 	log('DONE.');
