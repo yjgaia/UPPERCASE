@@ -6,6 +6,14 @@ Version
 -------
 1.4 preview
 
+Install
+-------
+MAC
+```
+open -e .profile
+export UPPERCASE_IO_PATH="/Users/hanul/Documents/UPPERCASE WORKSPACE/UPPERCASE.IO/DIST"
+```
+
 Based On
 --------
 - JavaScript 1.5 (ECMA-262, 3rd edition)
@@ -18,10 +26,6 @@ Server-side:
 - [Node.js](http://nodejs.org)
 - [MongoDB](http://www.mongodb.org)
 - [ImageMagick](http://www.imagemagick.org)
-
-TODO
-----
-- Upload to distributed servers
 
 License
 -------

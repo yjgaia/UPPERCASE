@@ -67,7 +67,7 @@ FOR_BOX(function(box) {'use strict';
 				// check is exists role
 				checkIsExistsRole,
 
-				// _init data.
+				// init data.
 				_initData,
 
 				// before create listeners
@@ -241,7 +241,7 @@ FOR_BOX(function(box) {'use strict';
 					return db;
 				};
 
-				inner.on = on = function(methodName, funcs) {
+				inner.on = on = function(methodName, funcOrFuncs) {
 					//REQUIRED: methodName
 					//REQUIRED: funcOrFuncs
 					//OPTIONAL: funcOrFuncs.before
@@ -435,6 +435,10 @@ FOR_BOX(function(box) {'use strict';
 							});
 						},
 
+						notExists : function() {
+							ret({});
+						},
+
 						success : function(savedData) {
 
 							// run get listeners.
@@ -442,7 +446,7 @@ FOR_BOX(function(box) {'use strict';
 
 								var
 								// b
-								b = getListener(data, ret, clientInfo);
+								b = getListener(savedData, ret, clientInfo);
 
 								if (isNotRunNext !== true && b === false) {
 									isNotRunNext = true;
@@ -523,6 +527,10 @@ FOR_BOX(function(box) {'use strict';
 										});
 									},
 
+									notExists : function() {
+										ret({});
+									},
+
 									success : function(savedData) {
 
 										if (savedData !== undefined) {
@@ -598,6 +606,10 @@ FOR_BOX(function(box) {'use strict';
 									ret({
 										errorMsg : errorMsg
 									});
+								},
+
+								notExists : function() {
+									ret({});
 								},
 
 								success : function(savedData) {
@@ -772,8 +784,8 @@ FOR_BOX(function(box) {'use strict';
 						// callback
 						callback,
 
-						// fail handler
-						failHandler,
+						// not valid handler
+						notValidHandler,
 
 						// error handler
 						errorHandler;
@@ -783,7 +795,7 @@ FOR_BOX(function(box) {'use strict';
 								callback = callbackOrHandlers;
 							} else {
 								callback = callbackOrHandlers.success;
-								failHandler = callbackOrHandlers.fail;
+								notValidHandler = callbackOrHandlers.notValid;
 								errorHandler = callbackOrHandlers.error;
 							}
 						}
@@ -805,8 +817,8 @@ FOR_BOX(function(box) {'use strict';
 									errorHandler(errorMsg);
 								}
 							} else if (validErrors !== undefined) {
-								if (failHandler !== undefined) {
-									failHandler(validErrors);
+								if (notValidHandler !== undefined) {
+									notValidHandler(validErrors);
 								}
 							} else {
 								if (callback !== undefined) {
@@ -831,8 +843,8 @@ FOR_BOX(function(box) {'use strict';
 						// callback
 						callback,
 
-						// fail handler
-						failHandler,
+						// not exists handler
+						notExistsHandler,
 
 						// error handler
 						errorHandler;
@@ -847,7 +859,7 @@ FOR_BOX(function(box) {'use strict';
 							callback = callbackOrHandlers;
 						} else {
 							callback = callbackOrHandlers.success;
-							failHandler = callbackOrHandlers.fail;
+							notExistsHandler = callbackOrHandlers.notExists;
 							errorHandler = callbackOrHandlers.error;
 						}
 
@@ -865,13 +877,11 @@ FOR_BOX(function(box) {'use strict';
 									errorHandler(errorMsg);
 								}
 							} else if (savedData === undefined) {
-								if (failHandler !== undefined) {
-									failHandler();
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
 								}
 							} else {
-								if (callback !== undefined) {
-									callback(savedData);
-								}
+								callback(savedData);
 							}
 						});
 					};
@@ -889,8 +899,11 @@ FOR_BOX(function(box) {'use strict';
 						// callback
 						callback,
 
-						// fail handler
-						failHandler,
+						// not exists handler
+						notExistsHandler,
+
+						// not valid handler
+						notValidHandler,
 
 						// error handler
 						errorHandler;
@@ -900,7 +913,8 @@ FOR_BOX(function(box) {'use strict';
 								callback = callbackOrHandlers;
 							} else {
 								callback = callbackOrHandlers.success;
-								failHandler = callbackOrHandlers.fail;
+								notExistsHandler = callbackOrHandlers.notExists;
+								notValidHandler = callbackOrHandlers.notValid;
 								errorHandler = callbackOrHandlers.error;
 							}
 						}
@@ -921,9 +935,13 @@ FOR_BOX(function(box) {'use strict';
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								}
-							} else if (validErrors !== undefined || savedData === undefined) {
-								if (failHandler !== undefined) {
-									failHandler(validErrors);
+							} else if (validErrors !== undefined) {
+								if (notValidHandler !== undefined) {
+									notValidHandler(validErrors);
+								}
+							} else if (savedData === undefined) {
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(validErrors);
 								}
 							} else {
 								if (callback !== undefined) {
@@ -945,8 +963,8 @@ FOR_BOX(function(box) {'use strict';
 						// callback
 						callback,
 
-						// fail handler
-						failHandler,
+						// not exists handler
+						notExistsHandler,
 
 						// error handler
 						errorHandler;
@@ -956,7 +974,7 @@ FOR_BOX(function(box) {'use strict';
 								callback = callbackOrHandlers;
 							} else {
 								callback = callbackOrHandlers.success;
-								failHandler = callbackOrHandlers.fail;
+								notExistsHandler = callbackOrHandlers.notExists;
 								errorHandler = callbackOrHandlers.error;
 							}
 						}
@@ -975,8 +993,8 @@ FOR_BOX(function(box) {'use strict';
 									errorHandler(errorMsg);
 								}
 							} else if (savedData === undefined) {
-								if (failHandler !== undefined) {
-									failHandler();
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
 								}
 							} else {
 								if (callback !== undefined) {
@@ -1035,9 +1053,7 @@ FOR_BOX(function(box) {'use strict';
 									errorHandler(errorMsg);
 								}
 							} else {
-								if (callback !== undefined) {
-									callback(savedDataSet);
-								}
+								callback(savedDataSet);
 							}
 						});
 					};
@@ -1086,9 +1102,7 @@ FOR_BOX(function(box) {'use strict';
 									errorHandler(errorMsg);
 								}
 							} else {
-								if (callback !== undefined) {
-									callback(count);
-								}
+								callback(count);
 							}
 						});
 					};
@@ -1137,9 +1151,7 @@ FOR_BOX(function(box) {'use strict';
 									errorHandler(errorMsg);
 								}
 							} else {
-								if (callback !== undefined) {
-									callback(isExists);
-								}
+								callback(isExists);
 							}
 						});
 					};

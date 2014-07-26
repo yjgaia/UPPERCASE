@@ -1,7 +1,7 @@
 /**
- * ImageMagick® export metadata.
+ * ImageMagick® resize.
  */
-global.IMAGEMAGICK_EXPORT_METADATA = IMAGEMAGICK_EXPORT_METADATA = METHOD(function() {'use strict';
+global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {'use strict';
 
 	var
 	// imagemagick
@@ -9,8 +9,8 @@ global.IMAGEMAGICK_EXPORT_METADATA = IMAGEMAGICK_EXPORT_METADATA = METHOD(functi
 
 	return {
 
-		run : function(path, callbackOrHandlers) {
-			//REQUIRED: path
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params
 			//REQUIRED: callbackOrHandlers
 
 			var
@@ -27,7 +27,7 @@ global.IMAGEMAGICK_EXPORT_METADATA = IMAGEMAGICK_EXPORT_METADATA = METHOD(functi
 				errorHandler = callbackOrHandlers.error;
 			}
 
-			imagemagick.readMetadata(path, function(error, metadata) {
+			imagemagick.resize(params, function(error) {
 
 				var
 				// error msg
@@ -40,10 +40,10 @@ global.IMAGEMAGICK_EXPORT_METADATA = IMAGEMAGICK_EXPORT_METADATA = METHOD(functi
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
 					} else {
-						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_EXPORT_METADATA] ERROR: ' + errorMsg));
+						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_RESIZE] ERROR: ' + errorMsg));
 					}
 				} else {
-					callback(metadata);
+					callback();
 				}
 			});
 		}

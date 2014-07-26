@@ -199,7 +199,7 @@ global.UPLOAD_SERVER = UPLOAD_SERVER = METHOD(function(m) {'use strict';
 
 										if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
 
-											IMAGEMAGICK_EXPORT_METADATA(tempPath, {
+											IMAGEMAGICK_READ_METADATA(tempPath, {
 												error : function() {
 													next(fileData);
 												},

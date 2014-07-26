@@ -360,7 +360,9 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 
 					// client info
 					{
-						ip : requestInfo.ip
+						ip : requestInfo.ip,
+
+						headers : requestInfo.headers
 					},
 
 					// on.

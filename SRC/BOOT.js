@@ -177,6 +177,9 @@ global.BOOT = BOOT = function(params) {'use strict';
 		// set version.
 		CONFIG.version = version;
 		browserScript += 'CONFIG.version = \'' + version + '\'\n';
+		
+		// set root path.
+		NODE_CONFIG.rootPath = rootPath;
 
 		if (params !== undefined) {
 			_CONFIG = params.CONFIG;
@@ -533,7 +536,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 			UPLOAD_SERVER({
 				port : CONFIG.uploadServerPort,
-				uploadPath : rootPath + '/__RF'
+				uploadPath : rootPath + '/__RF/__TEMP'
 			}, function(fileDataSet, requestInfo, response) {
 				console.log(fileDataSet, requestInfo, response);
 			});

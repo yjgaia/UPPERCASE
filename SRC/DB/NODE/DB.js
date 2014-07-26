@@ -421,6 +421,9 @@ FOR_BOX(function(box) {'use strict';
 					// callback
 					callback,
 
+					// not exists handler
+					notExistsHandler,
+
 					// error handler
 					errorHandler,
 
@@ -435,6 +438,7 @@ FOR_BOX(function(box) {'use strict';
 							callback = callbackOrHandlers;
 						} else {
 							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
 							errorHandler = callbackOrHandlers.error;
 						}
 
@@ -452,9 +456,12 @@ FOR_BOX(function(box) {'use strict';
 
 									// clean saved data before callback.
 									cleanData(savedData);
-								}
 
-								callback(savedData);
+									callback(savedData);
+
+								} else {
+									notExistsHandler();
+								}
 							}
 
 							// if error is not TO_DELETE
@@ -506,6 +513,9 @@ FOR_BOX(function(box) {'use strict';
 					// callback
 					callback,
 
+					// not exists handler
+					notExistsHandler,
+
 					// error handler
 					errorHandler,
 
@@ -524,6 +534,7 @@ FOR_BOX(function(box) {'use strict';
 						callback = callbackOrHandlers;
 					} else {
 						callback = callbackOrHandlers.success;
+						notExistsHandler = callbackOrHandlers.notExists;
 						errorHandler = callbackOrHandlers.error;
 					}
 
@@ -573,6 +584,7 @@ FOR_BOX(function(box) {'use strict';
 								sort : sort
 							}, {
 								error : errorHandler,
+								notExists : notExistsHandler,
 								success : function(savedData) {
 
 									if (savedData === undefined) {
@@ -635,6 +647,9 @@ FOR_BOX(function(box) {'use strict';
 					// callback
 					callback,
 
+					// not exists handler
+					notExistsHandler,
+
 					// error handler
 					errorHandler,
 
@@ -653,6 +668,7 @@ FOR_BOX(function(box) {'use strict';
 								callback = callbackOrHandlers;
 							} else {
 								callback = callbackOrHandlers.success;
+								notExistsHandler = callbackOrHandlers.notExists;
 								errorHandler = callbackOrHandlers.error;
 							}
 						}
@@ -673,10 +689,7 @@ FOR_BOX(function(box) {'use strict';
 
 									if (savedData === TO_DELETE) {
 
-										// return undefined.
-										if (callback !== undefined) {
-											callback();
-										}
+										notExistsHandler();
 
 									} else {
 
@@ -804,6 +817,9 @@ FOR_BOX(function(box) {'use strict';
 					// callback
 					callback,
 
+					// not exists handler
+					notExistsHandler,
+
 					// error handler
 					errorHandler,
 
@@ -822,6 +838,7 @@ FOR_BOX(function(box) {'use strict';
 								callback = callbackOrHandlers;
 							} else {
 								callback = callbackOrHandlers.success;
+								notExistsHandler = callbackOrHandlers.notExists;
 								errorHandler = callbackOrHandlers.error;
 							}
 						}
@@ -836,10 +853,7 @@ FOR_BOX(function(box) {'use strict';
 
 								if (savedData === TO_DELETE) {
 
-									// return undefined.
-									if (callback !== undefined) {
-										callback();
-									}
+									notExistsHandler();
 
 								} else {
 
@@ -880,7 +894,6 @@ FOR_BOX(function(box) {'use strict';
 											}
 										}
 									});
-
 								}
 							}
 
@@ -1214,43 +1227,43 @@ FOR_BOX(function(box) {'use strict';
 				// run all waiting infos.
 
 				EACH(waitingCreateInfos, function(info) {
-					create(info.data, info.callback);
+					create(info.data, info.callbackOrHandlers);
 				});
 
 				waitingCreateInfos = undefined;
 
 				EACH(waitingGetInfos, function(info) {
-					get(info.idOrParams, info.callback);
+					get(info.idOrParams, info.callbackOrHandlers);
 				});
 
 				waitingGetInfos = undefined;
 
 				EACH(waitingUpdateInfos, function(info) {
-					update(info.data, info.callback);
+					update(info.data, info.callbackOrHandlers);
 				});
 
 				waitingUpdateInfos = undefined;
 
 				EACH(waitingRemoveInfos, function(info) {
-					remove(info.id, info.callback);
+					remove(info.id, info.callbackOrHandlers);
 				});
 
 				waitingRemoveInfos = undefined;
 
 				EACH(waitingFindInfos, function(info) {
-					find(info.params, info.callback);
+					find(info.params, info.callbackOrHandlers);
 				});
 
 				waitingFindInfos = undefined;
 
 				EACH(waitingCountInfos, function(info) {
-					count(info.filter, info.callback);
+					count(info.filter, info.callbackOrHandlers);
 				});
 
 				waitingCountInfos = undefined;
 
 				EACH(waitingCheckIsExistsInfos, function(info) {
-					checkIsExists(info.filter, info.callback);
+					checkIsExists(info.filter, info.callbackOrHandlers);
 				});
 
 				waitingCheckIsExistsInfos = undefined;

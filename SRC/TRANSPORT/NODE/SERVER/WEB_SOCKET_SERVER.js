@@ -40,6 +40,9 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 		server.on('connection', function(conn) {
 
 			var
+			// headers
+			headers = conn.upgradeReq.headers,
+
 			// method map
 			methodMap = {},
 
@@ -112,7 +115,7 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 				runMethods('__ERROR', error);
 			});
 
-			ip = conn.upgradeReq.headers['x-forwarded-for'];
+			ip = headers['x-forwarded-for'];
 
 			if (ip === undefined) {
 				ip = conn.upgradeReq.connection.remoteAddress;
@@ -122,7 +125,9 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 
 			// info
 			{
-				ip : ip
+				ip : ip,
+
+				headers : headers
 			},
 
 			// on.
