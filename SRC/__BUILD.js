@@ -1,14 +1,14 @@
 /*
  * distribute UPPERCASE.IO.
  */
-global.DIST = function() {'use strict';
+global.BUILD = function() {'use strict';
 
 	// load UPPERCASE.JS.
-	require('../DIST/UPPERCASE.JS-COMMON.js');
-	require('../DIST/UPPERCASE.JS-NODE.js');
+	require('../UPPERCASE.JS-COMMON.js');
+	require('../UPPERCASE.JS-NODE.js');
 
 	// load UPPERCASE.IO-UTIL.
-	require('../DIST/UPPERCASE.IO-UTIL/NODE.js');
+	require('../UPPERCASE.IO-UTIL/NODE.js');
 
 	var
 	//IMPORT: fs
@@ -19,7 +19,7 @@ global.DIST = function() {'use strict';
 
 	// log.
 	log = function(msg) {
-		console.log('UPPERCASE.IO DIST: ' + msg);
+		console.log('UPPERCASE.IO BUILD: ' + msg);
 	},
 
 	// scan folder.
@@ -61,7 +61,7 @@ global.DIST = function() {'use strict';
 
 	// save.
 	save = function(modulePath, script, path) {
-		fs.writeFileSync('../DIST/UPPERCASE.IO-' + modulePath + '/' + path, script);
+		fs.writeFileSync('../UPPERCASE.IO-' + modulePath + '/' + path, script);
 	},
 
 	// copy.
@@ -74,7 +74,7 @@ global.DIST = function() {'use strict';
 
 		var
 		// real to
-		realTo = '../DIST/UPPERCASE.IO-' + modulePath + '/' + to;
+		realTo = '../UPPERCASE.IO-' + modulePath + '/' + to;
 
 		if (fs.existsSync(modulePath + '/' + from) === true) {
 
@@ -118,7 +118,7 @@ global.DIST = function() {'use strict';
 		// script
 		script = '';
 
-		log('DISTRIBUTE [' + name + ']');
+		log('BUILD [' + name + ']');
 
 		distFolder(name, 'COMMON');
 		distFolder(name, 'BROWSER');
@@ -129,10 +129,10 @@ global.DIST = function() {'use strict';
 
 	// START!
 
-	copy('UPPERCASE.JS-COMMON.js', '../DIST/UPPERCASE.JS-COMMON.js');
-	copy('UPPERCASE.JS-BROWSER.js', '../DIST/UPPERCASE.JS-BROWSER.js');
-	copy('UPPERCASE.JS-NODE.js', '../DIST/UPPERCASE.JS-NODE.js');
-	copy('UPPERCASE.JS-PHANTOM.js', '../DIST/UPPERCASE.JS-PHANTOM.js');
+	copy('UPPERCASE.JS-COMMON.js', '../UPPERCASE.JS-COMMON.js');
+	copy('UPPERCASE.JS-BROWSER.js', '../UPPERCASE.JS-BROWSER.js');
+	copy('UPPERCASE.JS-NODE.js', '../UPPERCASE.JS-NODE.js');
+	copy('UPPERCASE.JS-PHANTOM.js', '../UPPERCASE.JS-PHANTOM.js');
 
 	distModule('BOX');
 
@@ -156,10 +156,10 @@ global.DIST = function() {'use strict';
 	distModule('UTIL');
 	distModule('BOOT');
 
-	fs.writeFileSync('../DIST/BASE_STYLE.css', MINIFY_CSS(fs.readFileSync('BASE_STYLE.css')));
-	fs.writeFileSync('../DIST/BROWSER_INIT.js', MINIFY_JS(fs.readFileSync('BROWSER_INIT.js')));
-	fs.writeFileSync('../DIST/BOOT.js', MINIFY_JS(fs.readFileSync('BOOT.js')));
+	fs.writeFileSync('../BASE_STYLE.css', MINIFY_CSS(fs.readFileSync('BASE_STYLE.css')));
+	fs.writeFileSync('../BROWSER_INIT.js', MINIFY_JS(fs.readFileSync('BROWSER_INIT.js')));
+	fs.writeFileSync('../BOOT.js', MINIFY_JS(fs.readFileSync('BOOT.js')));
 
 	log('DONE.');
 };
-DIST();
+BUILD();
