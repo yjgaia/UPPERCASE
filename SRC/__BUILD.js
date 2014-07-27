@@ -129,11 +129,6 @@ global.BUILD = function() {'use strict';
 
 	// START!
 
-	copy('UPPERCASE.JS-COMMON.js', '../UPPERCASE.JS-COMMON.js');
-	copy('UPPERCASE.JS-BROWSER.js', '../UPPERCASE.JS-BROWSER.js');
-	copy('UPPERCASE.JS-NODE.js', '../UPPERCASE.JS-NODE.js');
-	copy('UPPERCASE.JS-PHANTOM.js', '../UPPERCASE.JS-PHANTOM.js');
-
 	distModule('BOX');
 
 	(function() {

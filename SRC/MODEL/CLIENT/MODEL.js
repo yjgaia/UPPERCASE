@@ -346,13 +346,19 @@ FOR_BOX(function(box) {'use strict';
 
 						var
 						// error msg
-						errorMsg = result.errorMsg,
+						errorMsg,
 
 						// is not authed
-						isNotAuthed = result.isNotAuthed,
+						isNotAuthed,
 
 						// saved data
-						savedData = result.savedData;
+						savedData;
+
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							isNotAuthed = result.isNotAuthed;
+							savedData = result.savedData;
+						}
 
 						if (errorMsg !== undefined) {
 
@@ -527,16 +533,23 @@ FOR_BOX(function(box) {'use strict';
 
 							var
 							// error msg
-							errorMsg = result.errorMsg,
+							errorMsg,
 
 							// valid errors
-							validErrors = result.validErrors,
+							validErrors,
 
 							// is not authed
-							isNotAuthed = result.isNotAuthed,
+							isNotAuthed,
 
 							// saved data
-							savedData = result.savedData;
+							savedData;
+
+							if (result !== undefined) {
+								errorMsg = result.errorMsg;
+								validErrors = result.validErrors;
+								isNotAuthed = result.isNotAuthed;
+								savedData = result.savedData;
+							}
 
 							if (errorMsg !== undefined) {
 
@@ -614,13 +627,19 @@ FOR_BOX(function(box) {'use strict';
 
 						var
 						// error msg
-						errorMsg = result.errorMsg,
+						errorMsg,
 
 						// is not authed
-						isNotAuthed = result.isNotAuthed,
+						isNotAuthed,
 
 						// saved data
-						savedData = result.savedData;
+						savedData;
+
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							isNotAuthed = result.isNotAuthed;
+							savedData = result.savedData;
+						}
 
 						if (errorMsg !== undefined) {
 

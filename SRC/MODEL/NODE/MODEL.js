@@ -436,7 +436,7 @@ FOR_BOX(function(box) {'use strict';
 						},
 
 						notExists : function() {
-							ret({});
+							ret();
 						},
 
 						success : function(savedData) {
@@ -528,7 +528,7 @@ FOR_BOX(function(box) {'use strict';
 									},
 
 									notExists : function() {
-										ret({});
+										ret();
 									},
 
 									success : function(savedData) {
@@ -609,7 +609,7 @@ FOR_BOX(function(box) {'use strict';
 								},
 
 								notExists : function() {
-									ret({});
+									ret();
 								},
 
 								success : function(savedData) {
@@ -871,6 +871,11 @@ FOR_BOX(function(box) {'use strict';
 
 							// saved data
 							savedData = result.savedData;
+							
+							if (result !== undefined) {
+								errorMsg = result.errorMsg;
+								savedData = result.savedData;
+							}
 
 							if (errorMsg !== undefined) {
 								if (errorHandler !== undefined) {
@@ -923,13 +928,19 @@ FOR_BOX(function(box) {'use strict';
 
 							var
 							// error msg
-							errorMsg = result.errorMsg,
+							errorMsg,
 
 							// valid errors
-							validErrors = result.validErrors,
+							validErrors,
 
 							// saved data
-							savedData = result.savedData;
+							savedData;
+
+							if (result !== undefined) {
+								errorMsg = result.errorMsg;
+								validErrors = result.validErrors;
+								savedData = result.savedData;
+							}
 
 							if (errorMsg !== undefined) {
 								if (errorHandler !== undefined) {
@@ -987,6 +998,11 @@ FOR_BOX(function(box) {'use strict';
 
 							// saved data
 							savedData = result.savedData;
+
+							if (result !== undefined) {
+								errorMsg = result.errorMsg;
+								savedData = result.savedData;
+							}
 
 							if (errorMsg !== undefined) {
 								if (errorHandler !== undefined) {
