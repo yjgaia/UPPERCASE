@@ -20,8 +20,8 @@ global.BOOT = BOOT = function(params) {'use strict';
 	// browser script
 	browserScript = 'global = window;\n',
 
-	// base style css
-	baseStyleCSS = fs.readFileSync(__dirname + '/BASE_STYLE.css').toString(),
+	// init style css
+	initStyleCSS = fs.readFileSync(__dirname + '/INIT_STYLE.css').toString(),
 
 	// index page content
 	indexPageContent = '',
@@ -114,14 +114,14 @@ global.BOOT = BOOT = function(params) {'use strict';
 	// load UPPERCASE.JS.
 	loadUJS,
 
+	// init boxes.
+	initBoxes,
+
 	// configuration.
 	configuration,
 
 	// clustering cpus and servers.
 	clustering,
-
-	// init boxes.
-	initBoxes,
 
 	// init database.
 	initDatabase,
@@ -177,7 +177,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 		// set version.
 		CONFIG.version = version;
 		browserScript += 'CONFIG.version = \'' + version + '\'\n';
-		
+
 		// set root path.
 		NODE_CONFIG.rootPath = rootPath;
 
@@ -218,25 +218,6 @@ global.BOOT = BOOT = function(params) {'use strict';
 		}
 	};
 
-	clustering = function(work) {
-
-		CPU_CLUSTERING(function(workerData, on, off, broadcast) {
-
-			if (NODE_CONFIG.serverClusteringHosts !== undefined && NODE_CONFIG.serverClusteringPort !== undefined) {
-
-				SERVER_CLUSTERING({
-					hosts : NODE_CONFIG.serverClusteringHosts,
-					port : NODE_CONFIG.serverClusteringPort
-				}, function() {
-					work(workerData);
-				});
-
-			} else {
-				work(workerData);
-			}
-		});
-	};
-
 	initBoxes = function(next) {
 
 		// load UPPERCASE.IO-BOX/CORE.
@@ -261,6 +242,25 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 		// load UPPERCASE.IO-BOX/BROWSER.
 		loadJSForBrowser(__dirname + '/UPPERCASE.IO-BOX/BROWSER.js');
+	};
+
+	clustering = function(work) {
+
+		CPU_CLUSTERING(function(workerData, on, off, broadcast) {
+
+			if (NODE_CONFIG.serverClusteringHosts !== undefined && NODE_CONFIG.serverClusteringPort !== undefined) {
+
+				SERVER_CLUSTERING({
+					hosts : NODE_CONFIG.serverClusteringHosts,
+					port : NODE_CONFIG.serverClusteringPort
+				}, function() {
+					work(workerData);
+				});
+
+			} else {
+				work(workerData);
+			}
+		});
 	};
 
 	initDatabase = function() {
@@ -387,7 +387,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 		indexPageContent += '<title>' + CONFIG.defaultTitle + '</title>';
 
 		// load css.
-		indexPageContent += '<link rel="stylesheet" type="text/css" href="__CSS?' + CONFIG.version + '" />';
+		indexPageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?' + CONFIG.version + '" />';
 		indexPageContent += '</head>';
 		indexPageContent += '<body>';
 
@@ -399,7 +399,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 		indexPageContent += '</noscript>';
 
 		// load js.
-		indexPageContent += '<script type="text/javascript" src="__SCRIPT?' + CONFIG.version + '"></script>';
+		indexPageContent += '<script type="text/javascript" src="/__SCRIPT?' + CONFIG.version + '"></script>';
 		indexPageContent += '</body>';
 		indexPageContent += '</html>';
 	};
@@ -430,7 +430,9 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 				rootPath : rootPath,
 
-				version : CONFIG.isDevMode === true ? undefined : version
+				version : CONFIG.isDevMode === true ? undefined : version,
+
+				isNotUsingResourceCache : CONFIG.isDevMode === true
 
 			}, {
 
@@ -461,7 +463,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 						response({
 							contentType : 'text/css',
-							content : baseStyleCSS,
+							content : initStyleCSS,
 							version : CONFIG.isDevMode === true ? undefined : version
 						});
 					}
@@ -548,17 +550,21 @@ global.BOOT = BOOT = function(params) {'use strict';
 	// load UPPERCASE.JS.
 	loadUJS();
 
+	// init boxes.
+	initBoxes();
+
+	// load UPPERCASE.IO-BOOT.
+	loadJSForCommon(__dirname + '/UPPERCASE.IO-BOOT/COMMON.js');
+	loadJSForClient(__dirname + '/UPPERCASE.IO-BOOT/CLIENT.js');
+
+	// load UPPERCASE.IO-UTIL.
+	loadJSForNode(__dirname + '/UPPERCASE.IO-UTIL/NODE.js');
+
 	// configuration.
 	configuration();
 
 	// clustering cpus and servers.
 	clustering(function(workerData) {
-
-		// load UPPERCASE.IO-UTIL.
-		loadJSForNode(__dirname + '/UPPERCASE.IO-UTIL/NODE.js');
-
-		// init boxes.
-		initBoxes();
 
 		// init database.
 		initDatabase();

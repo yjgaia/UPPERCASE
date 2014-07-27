@@ -1,0 +1,1 @@
+FOR_BOX(function(n){"use strict";n.R=METHOD({run:function(r,i){var o=n.boxName+"/"+r+"?"+CONFIG.version;return void 0!==i&&GET(o,i),"/"+o}})});

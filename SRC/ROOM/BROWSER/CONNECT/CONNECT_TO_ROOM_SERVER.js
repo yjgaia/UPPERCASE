@@ -190,7 +190,7 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {'us
 					});
 
 					if (connectionListener !== undefined) {
-						connectionListener();
+						connectionListener(on, off, send);
 					}
 				}
 			});

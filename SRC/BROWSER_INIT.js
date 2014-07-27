@@ -17,5 +17,27 @@ global.onload = function() {'use strict';
 	CONNECT_TO_ROOM_SERVER({
 		port : CONFIG.webSocketServerPort,
 		fixServerPort : CONFIG.webSocketFixServerPort
+	}, function(on) {
+
+		on('__DISCONNECTED', function() {
+
+			var
+			// reload.
+			reload = RAR(function() {
+
+				GET('', {
+					error : function() {
+
+						// retry.
+						DELAY(1, function() {
+							reload();
+						});
+					},
+					success : function() {
+						location.reload();
+					}
+				});
+			});
+		});
 	});
 };

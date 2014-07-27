@@ -151,7 +151,7 @@ global.BUILD = function() {'use strict';
 	distModule('UTIL');
 	distModule('BOOT');
 
-	fs.writeFileSync('../BASE_STYLE.css', MINIFY_CSS(fs.readFileSync('BASE_STYLE.css')));
+	fs.writeFileSync('../INIT_STYLE.css', MINIFY_CSS(fs.readFileSync('INIT_STYLE.css')));
 	fs.writeFileSync('../BROWSER_INIT.js', MINIFY_JS(fs.readFileSync('BROWSER_INIT.js')));
 	fs.writeFileSync('../BOOT.js', MINIFY_JS(fs.readFileSync('BOOT.js')));
 
