@@ -330,6 +330,9 @@ FOR_BOX(function(box) {'use strict';
 					// init data.
 					initData(data);
 
+					// remove TO_DELETE properties.
+					REMOVE_TO_DELETE(data);
+
 					// valid data.
 					if (createValid !== undefined) {
 
@@ -871,7 +874,7 @@ FOR_BOX(function(box) {'use strict';
 
 							// saved data
 							savedData = result.savedData;
-							
+
 							if (result !== undefined) {
 								errorMsg = result.errorMsg;
 								savedData = result.savedData;
@@ -912,6 +915,9 @@ FOR_BOX(function(box) {'use strict';
 
 						// error handler
 						errorHandler;
+
+						// remove TO_DELETE properties.
+						REMOVE_TO_DELETE(data);
 
 						if (callbackOrHandlers !== undefined) {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {

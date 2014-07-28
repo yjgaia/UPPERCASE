@@ -226,6 +226,9 @@ FOR_BOX(function(box) {'use strict';
 						initData(data);
 					}
 
+					// remove TO_DELETE properties.
+					REMOVE_TO_DELETE(data);
+
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
@@ -510,6 +513,9 @@ FOR_BOX(function(box) {'use strict';
 							errorHandler = callbackOrHandlers.error;
 						}
 					}
+
+					// remove TO_DELETE properties.
+					REMOVE_TO_DELETE(data);
 
 					if (updateValid !== undefined) {
 						validResult = updateValid.check({
