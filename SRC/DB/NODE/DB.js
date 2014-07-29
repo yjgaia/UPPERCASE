@@ -584,24 +584,18 @@ FOR_BOX(function(box) {'use strict';
 								sort : sort
 							}, {
 								error : errorHandler,
-								notExists : notExistsHandler,
-								success : function(savedData) {
+								notExists : function() {
 
-									if (savedData === undefined) {
+									filter.__RANDOM_KEY = {
+										$lte : randomKey
+									};
 
-										filter.__RANDOM_KEY = {
-											$lte : randomKey
-										};
-
-										innerGet({
-											filter : filter,
-											sort : sort
-										}, callbackOrHandlers);
-
-									} else {
-										callback(savedData);
-									}
-								}
+									innerGet({
+										filter : filter,
+										sort : sort
+									}, callbackOrHandlers);
+								},
+								success : callback
 							});
 
 						} else {
