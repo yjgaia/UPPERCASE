@@ -88,174 +88,173 @@ global.UPLOAD_SERVER = UPLOAD_SERVER = METHOD(function(m) {'use strict';
 				if (CHECK_IS_DATA(serveHandlers) !== true) {
 					serveRequestListener = serveHandlers;
 				} else {
-					serveRequestListener = uploadHandlers.requestListener;
-					serveErrorHandler = uploadHandlers.error;
-					serveNotExistsResourceHandler = uploadHandlers.notExistsResource;
+					serveRequestListener = serveHandlers.requestListener;
+					serveErrorHandler = serveHandlers.error;
+					serveNotExistsResourceHandler = serveHandlers.notExistsResource;
 				}
 			}
 
-			fs.exists(uploadPath, function(isExists) {
+			CREATE_FOLDER(uploadPath, function() {
 
-				if (isExists === false) {
-					console.log(CONSOLE_RED('[UPPERCASE.IO-UPLOAD_REQUEST] NOT EXISTS FOLDER!: ' + uploadPath));
-				} else {
+				RESOURCE_SERVER({
+					port : port,
+					securedPort : securedPort,
+					securedKeyFilePath : securedKeyFilePath,
+					securedCertFilePath : securedCertFilePath,
+					rootPath : uploadPath,
+					version : 'FINAL',
+					isNotParsingNativeReq : true
+				}, {
+					errorHandler : serveErrorHandler,
+					notExistsResource : serveNotExistsResourceHandler,
+					requestListener : function(requestInfo, response, onDisconnected, changeRootPath, setDefaultContentType, addHeader) {
 
-					RESOURCE_SERVER({
-						port : port,
-						securedPort : securedPort,
-						securedKeyFilePath : securedKeyFilePath,
-						securedCertFilePath : securedCertFilePath,
-						rootPath : uploadPath,
-						version : 'FINAL',
-						isNotParsingNativeReq : true
-					}, {
-						errorHandler : serveErrorHandler,
-						notExistsResource : serveNotExistsResourceHandler,
-						requestListener : function(requestInfo, response, onDisconnected, changeRootPath, setDefaultContentType, addHeader) {
+						var
+						// method
+						method = requestInfo.method,
 
-							var
-							// method
-							method = requestInfo.method,
+						// ip
+						ip = requestInfo.ip,
 
-							// ip
-							ip = requestInfo.ip,
+						// native req
+						nativeReq = requestInfo.nativeReq,
 
-							// native req
-							nativeReq = requestInfo.nativeReq,
+						// form
+						form,
 
-							// form
-							form,
+						// file data set
+						fileDataSet,
 
-							// file data set
-							fileDataSet,
+						// field data
+						fieldData;
 
-							// field data
-							fieldData;
+						// serve upload.
+						if (method === 'POST') {
 
-							// serve upload.
-							if (method === 'POST') {
+							form = new IncomingForm();
+							fileDataSet = [];
+							fieldData = {};
 
-								form = new IncomingForm();
-								fileDataSet = [];
-								fieldData = {};
+							form.uploadDir = uploadPath;
 
-								form.uploadDir = uploadPath;
+							form.on('field', function(fieldName, value) {
 
-								form.on('field', function(fieldName, value) {
+								fieldData[fieldName] = value;
 
-									console.log(fieldName, value);
+							}).on('file', function(fieldName, file) {
 
-									fieldData[fieldName] = value;
+								fileDataSet.push({
+									path : file.path,
+									size : file.size,
+									name : file.name,
+									type : file.type,
+									lastModifiedTime : file.lastModifiedDate
+								});
 
-								}).on('file', function(fieldName, file) {
+							}).on('end', function() {
 
-									console.log(fieldName, file);
+								NEXT(fileDataSet, [
+								function(fileData, next) {
 
-									fileDataSet.push({
-										tempPath : file.path,
-										size : file.size,
-										name : file.name,
-										type : file.type,
-										lastModifiedTime : file.lastModifiedDate
-									});
+									var
+									// path
+									path = fileData.path,
 
-								}).on('end', function() {
+									// file size
+									fileSize = fileData.size;
 
-									NEXT(fileDataSet, [
-									function(fileData, next) {
+									fileData.ip = ip;
 
-										var
-										// temp path
-										tempPath = fileData.tempPath,
+									if (fileSize > NODE_CONFIG.maxUploadFileMB * 1024 * 1024) {
 
-										// file size
-										fileSize = fileData.size;
+										if (uploadOverFileSizeHandler !== undefined) {
 
-										// delete temp path.
-										delete fileData.tempPath;
+											NEXT(fileDataSet, [
+											function(fileData, next) {
+												REMOVE_FILE(fileData.path, next);
+											},
 
-										fileData.ip = ip;
+											function() {
+												return function() {
+													uploadOverFileSizeHandler(requestInfo, response);
+												};
+											}]);
 
-										if (fileSize > NODE_CONFIG.maxUploadFileMB * 1024 * 1024) {
-
-											if (uploadOverFileSizeHandler !== undefined) {
-												uploadOverFileSizeHandler(tempPath, fileSize);
-											} else {
-												console.log(CONSOLE_YELLOW('[UPPERCASE.IO-UPLOAD_REQUEST] FILE SIZE IS TOO BIG!(' + fileSize + '):' + tempPath));
-											}
-
-											return false;
+										} else {
+											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-UPLOAD_REQUEST] FILE SIZE IS TOO BIG!(' + fileSize + '):' + path));
 										}
 
-										EACH(fieldData, function(value, name) {
-											if (value.trim() !== '') {
-												fileData[name] = value;
+										return false;
+									}
+
+									EACH(fieldData, function(value, name) {
+										if (value.trim() !== '') {
+											fileData[name] = value;
+										}
+									});
+
+									var
+									// file type
+									fileType = fileData.type;
+
+									if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
+
+										IMAGEMAGICK_READ_METADATA(path, {
+											error : function() {
+												next(fileData);
+											},
+											success : function(metadata) {
+
+												if (metadata.exif !== undefined) {
+
+													fileData.exif = metadata.exif;
+
+													IMAGEMAGICK_CONVERT([path, '-auto-orient', path], {
+														error : uploadErrorHandler,
+														success : next
+													});
+
+												} else {
+													next();
+												}
 											}
 										});
 
-										var
-										// file type
-										fileType = fileData.type;
-
-										if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
-
-											IMAGEMAGICK_READ_METADATA(tempPath, {
-												error : function() {
-													next(fileData);
-												},
-												success : function(metadata) {
-
-													if (metadata.exif !== undefined) {
-
-														fileData.exif = metadata.exif;
-
-														IMAGEMAGICK_CONVERT([tempPath, '-auto-orient', tempPath], {
-															error : errorHandler,
-															success : next
-														});
-
-													} else {
-														next();
-													}
-												}
-											});
-
-										} else {
-											next();
-										}
-									},
-
-									function() {
-										return function() {
-											uploadSuccessHandler(fileDataSet, requestInfo, response);
-										};
-									}]);
-
-								}).on('error', function(error) {
-
-									var
-									// error msg
-									errorMsg = error.toString();
-
-									console.log('[UPPERCASE.IO-UPLOAD_REQUEST] ERROR: ' + errorMsg);
-
-									if (uploadErrorHandler !== undefined) {
-										uploadErrorHandler(errorMsg);
+									} else {
+										next();
 									}
-								});
+								},
 
-								form.parse(nativeReq);
+								function() {
+									return function() {
+										uploadSuccessHandler(fileDataSet, requestInfo, response);
+									};
+								}]);
 
-								return false;
+							}).on('error', function(error) {
 
-							} else if (serveRequestListener !== undefined) {
-								return serveRequestListener(requestInfo, response, onDisconnected, changeRootPath, setDefaultContentType, addHeader);
-							}
+								var
+								// error msg
+								errorMsg = error.toString();
+
+								console.log('[UPPERCASE.IO-UPLOAD_REQUEST] ERROR: ' + errorMsg);
+
+								if (uploadErrorHandler !== undefined) {
+									uploadErrorHandler(errorMsg);
+								}
+							});
+
+							form.parse(nativeReq);
+
+							return false;
+
+						} else if (serveRequestListener !== undefined) {
+							return serveRequestListener(requestInfo, response, onDisconnected, changeRootPath, setDefaultContentType, addHeader);
 						}
-					});
+					}
+				});
 
-					console.log('[UPPERCASE.IO-UPLOAD_SERVER] RUNNING UPLOAD SERVER...' + (port === undefined ? '' : (' (PORT:' + port + ')')) + (securedPort === undefined ? '' : (' (SECURED PORT:' + securedPort + ')')));
-				}
+				console.log('[UPPERCASE.IO-UPLOAD_SERVER] RUNNING UPLOAD SERVER...' + (port === undefined ? '' : (' (PORT:' + port + ')')) + (securedPort === undefined ? '' : (' (SECURED PORT:' + securedPort + ')')));
 			});
 		}
 	};

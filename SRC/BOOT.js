@@ -442,6 +442,9 @@ global.BOOT = BOOT = function(params) {'use strict';
 					// uri
 					uri = requestInfo.uri,
 
+					// params
+					params = requestInfo.params,
+
 					// box name
 					boxName,
 
@@ -472,15 +475,32 @@ global.BOOT = BOOT = function(params) {'use strict';
 					else if (uri === '__UPLOAD_SERVER_HOST') {
 
 						response({
-							content : 'test'
+							content : ''
 						});
+					}
+
+					// serve upload callback.
+					else if (uri === '__UPLOAD_CALLBACK') {
+
+						if (params.maxUploadFileMB !== undefined) {
+
+							response({
+								content : '<script>maxUploadFileMB=' + params.maxUploadFileMB + '</script>'
+							});
+
+						} else {
+
+							response({
+								content : '<script>fileDataSetStr=\'' + params.fileDataSetStr + '\'</script>'
+							});
+						}
 					}
 
 					// serve socket server host.
 					else if (uri === '__SOCKET_SERVER_HOST') {
 
 						response({
-							content : 'test'
+							content : ''
 						});
 					}
 
@@ -488,7 +508,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 					else if (uri === '__WEB_SOCKET_SERVER_HOST') {
 
 						response({
-							content : 'test'
+							content : ''
 						});
 					}
 
@@ -539,8 +559,75 @@ global.BOOT = BOOT = function(params) {'use strict';
 			UPLOAD_SERVER({
 				port : CONFIG.uploadServerPort,
 				uploadPath : rootPath + '/__RF/__TEMP'
-			}, function(fileDataSet, requestInfo, response) {
-				console.log(fileDataSet, requestInfo, response);
+			}, {
+				upload : {
+					overFileSize : function(requestInfo, response) {
+
+						response({
+							statusCode : 302,
+							headers : {
+								'Location' : requestInfo.params.callbackURL + '?maxUploadFileMB=' + NODE_CONFIG.maxUploadFileMB
+							}
+						});
+					},
+					success : function(fileDataSet, requestInfo, response) {
+
+						var
+						// box name
+						boxName = requestInfo.params.boxName,
+
+						// box
+						box = BOX.getBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName],
+
+						// upload file database
+						uploadFileDB;
+
+						if (box !== undefined) {
+
+							uploadFileDB = box.DB('__UPLOAD_FILE');
+
+							NEXT(fileDataSet, [
+
+							function(fileData, next) {
+
+								var
+								// temp path
+								tempPath = fileData.path;
+
+								// delete temp path.
+								delete fileData.path;
+
+								fileData.serverId = 1;
+
+								uploadFileDB.create(fileData, function(savedData) {
+
+									MOVE_FILE({
+										srcPath : tempPath,
+										distPath : rootPath + '/__RF/' + boxName + '/' + savedData.id
+									}, next);
+								});
+							},
+
+							function() {
+								return function() {
+
+									response({
+										statusCode : 302,
+										headers : {
+											'Location' : requestInfo.params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet))
+										}
+									});
+								};
+							}]);
+						}
+					}
+				},
+
+				serve : {
+					requestListener : function(requestInfo, response, onDisconnected, changeRootPath, setDefaultContentType, addHeader) {
+						changeRootPath(rootPath + '/__RF');
+					}
+				}
 			});
 		}
 

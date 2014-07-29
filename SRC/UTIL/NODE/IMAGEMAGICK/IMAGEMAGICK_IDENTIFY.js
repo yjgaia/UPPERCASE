@@ -4,7 +4,7 @@
 global.IMAGEMAGICK_IDENTIFY = IMAGEMAGICK_IDENTIFY = METHOD(function() {'use strict';
 
 	var
-	// imagemagick
+	//IMPORT: imagemagick
 	imagemagick = require('imagemagick');
 
 	return {

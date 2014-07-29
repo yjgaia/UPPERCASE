@@ -14,28 +14,32 @@ global.onload = function() {'use strict';
 		}
 	});
 
-	CONNECT_TO_ROOM_SERVER({
-		port : CONFIG.webSocketServerPort,
-		fixServerPort : CONFIG.webSocketFixServerPort
-	}, function(on) {
+	GET('__WEB_SOCKET_SERVER_HOST', function(host) {
 
-		on('__DISCONNECTED', function() {
+		CONNECT_TO_ROOM_SERVER({
+			host : host === '' ? undefined : host,
+			port : CONFIG.webSocketServerPort,
+			fixServerPort : CONFIG.webSocketFixServerPort
+		}, function(on) {
 
-			var
-			// reload.
-			reload = RAR(function() {
+			on('__DISCONNECTED', function() {
 
-				GET('', {
-					error : function() {
+				var
+				// reload.
+				reload = RAR(function() {
 
-						// retry.
-						DELAY(1, function() {
-							reload();
-						});
-					},
-					success : function() {
-						location.reload();
-					}
+					GET('', {
+						error : function() {
+
+							// retry.
+							DELAY(1, function() {
+								reload();
+							});
+						},
+						success : function() {
+							location.reload();
+						}
+					});
 				});
 			});
 		});

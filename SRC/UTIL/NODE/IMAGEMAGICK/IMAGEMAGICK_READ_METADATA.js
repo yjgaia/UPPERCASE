@@ -4,7 +4,7 @@
 global.IMAGEMAGICK_READ_METADATA = IMAGEMAGICK_READ_METADATA = METHOD(function() {'use strict';
 
 	var
-	// imagemagick
+	//IMPORT: imagemagick
 	imagemagick = require('imagemagick');
 
 	return {

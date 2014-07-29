@@ -870,10 +870,10 @@ FOR_BOX(function(box) {'use strict';
 
 							var
 							// error msg
-							errorMsg = result.errorMsg,
+							errorMsg,
 
 							// saved data
-							savedData = result.savedData;
+							savedData;
 
 							if (result !== undefined) {
 								errorMsg = result.errorMsg;
@@ -1000,11 +1000,11 @@ FOR_BOX(function(box) {'use strict';
 
 							var
 							// error msg
-							errorMsg = result.errorMsg,
-
+							errorMsg,
+							
 							// saved data
-							savedData = result.savedData;
-
+							savedData;
+							
 							if (result !== undefined) {
 								errorMsg = result.errorMsg;
 								savedData = result.savedData;

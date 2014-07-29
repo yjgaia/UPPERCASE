@@ -250,6 +250,8 @@ FOR_BOX(function(box) {'use strict';
 
 						if (notValidHandler !== undefined) {
 							notValidHandler(validResult.getErrors());
+						} else {
+							logNotValid(validResult.getErrors());
 						}
 
 					} else {
@@ -528,6 +530,8 @@ FOR_BOX(function(box) {'use strict';
 
 						if (notValidHandler !== undefined) {
 							notValidHandler(validResult.getErrors());
+						} else {
+							logNotValid(validResult.getErrors());
 						}
 
 					} else {

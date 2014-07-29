@@ -1,1 +1,1 @@
-FOR_BOX(function(n){"use strict";n.R=METHOD({run:function(r,i){var o=n.boxName+"/"+r+"?"+CONFIG.version;return void 0!==i&&GET(o,i),"/"+o}})});
+FOR_BOX(function(o){"use strict";o.R=METHOD({run:function(n,t){var r=o.boxName+"/"+n+"?"+CONFIG.version;return void 0!==t&&GET(r,t),"/"+r}})}),FOR_BOX(function(o){"use strict";o.RF=METHOD({run:function(n){return global.location.protocol+"//"+global.location.hostname+":"+CONFIG.uploadServerPort+"/"+o.boxName+"/"+n}})});

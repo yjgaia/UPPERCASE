@@ -1,6 +1,6 @@
 VERSIONS
 ========
-1.4 (preview)
+1.4 (2014. 4. 29)
 - Adopted MIT License.
 
 1.3 (2014. 4. 17)

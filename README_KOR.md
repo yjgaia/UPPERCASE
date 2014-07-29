@@ -4,7 +4,7 @@ UPPERCASE.IO 1.4 OCTOPUS
 
 Version
 -------
-1.4 preview
+1.4.0
 
 Install
 -------

@@ -4,16 +4,34 @@
 global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {'use strict';
 
 	var
-	// imagemagick
+	//IMPORT: path
+	_path = require('path'),
+
+	//IMPORT: imagemagick
 	imagemagick = require('imagemagick');
 
 	return {
 
 		run : function(params, callbackOrHandlers) {
-			//REQUIRED: params
+			//REQUIRED: params.srcPath
+			//REQUIRED: params.distPath
+			//OPTIONAL: params.width
+			//OPTIONAL: params.height
 			//REQUIRED: callbackOrHandlers
 
 			var
+			// src path
+			srcPath = params.srcPath,
+
+			// dist path
+			distPath = params.distPath,
+
+			// width
+			width = params.width,
+
+			// height
+			height = params.height,
+
 			// callback.
 			callback,
 
@@ -27,24 +45,33 @@ global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {'use strict'
 				errorHandler = callbackOrHandlers.error;
 			}
 
-			imagemagick.resize(params, function(error) {
+			CREATE_FOLDER(_path.dirname(distPath), function() {
 
-				var
-				// error msg
-				errorMsg;
+				imagemagick.resize({
+					srcPath : srcPath,
+					// different!
+					dstPath : distPath,
+					width : width,
+					height : height
+				}, function(error) {
 
-				if (error !== TO_DELETE) {
+					var
+					// error msg
+					errorMsg;
 
-					errorMsg = error.toString();
+					if (error !== TO_DELETE) {
 
-					if (errorHandler !== undefined) {
-						errorHandler(errorMsg);
+						errorMsg = error.toString();
+
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						} else {
+							console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_RESIZE] ERROR: ' + errorMsg));
+						}
 					} else {
-						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_RESIZE] ERROR: ' + errorMsg));
+						callback();
 					}
-				} else {
-					callback();
-				}
+				});
 			});
 		}
 	};

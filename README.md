@@ -4,7 +4,7 @@ Easy, Clear, and Powerful Full-stack (server-to-client) MVC Middleware for Dynam
 
 Version
 -------
-1.4 preview
+1.4.0
 
 Install
 -------
