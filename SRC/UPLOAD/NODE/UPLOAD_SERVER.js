@@ -102,7 +102,7 @@ global.UPLOAD_SERVER = UPLOAD_SERVER = METHOD(function(m) {'use strict';
 					securedKeyFilePath : securedKeyFilePath,
 					securedCertFilePath : securedCertFilePath,
 					rootPath : uploadPath,
-					version : 'FINAL',
+					isFinalResource : true,
 					isNotParsingNativeReq : true
 				}, {
 					errorHandler : serveErrorHandler,

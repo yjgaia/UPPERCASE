@@ -23,6 +23,9 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 			// method maps
 			methodMaps = {},
 
+			// send key
+			sendKey = 0,
+
 			// inner sends
 			innerSends = {},
 
@@ -94,7 +97,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 			},
 
 			// run methods.
-			runMethods = function(clientId, methodName, data) {
+			runMethods = function(clientId, methodName, data, sendKey) {
 
 				var
 				// methods
@@ -110,10 +113,13 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 						// ret.
 						function(retData) {
 
-							send(clientId, {
-								methodName : '__CALLBACK_' + methodName,
-								data : retData
-							});
+							if (sendKey !== undefined) {
+
+								send(clientId, {
+									methodName : '__CALLBACK_' + sendKey,
+									data : retData
+								});
+							}
 						});
 					});
 				}
@@ -232,7 +238,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 					clientId = params.clientId;
 
 					if (methodMaps[clientId] !== undefined) {
-						runMethods(clientId, params.methodName, params.data);
+						runMethods(clientId, params.methodName, params.data, params.sendKey);
 					}
 				});
 
@@ -320,7 +326,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 				off,
 
 				// run methods or broadcast.
-				runMethodsOrBroadcast = function(methodName, data) {
+				runMethodsOrBroadcast = function(methodName, data, sendKey) {
 
 					// when exists methodMap
 					if (methodMaps[clientId] !== undefined) {
@@ -336,7 +342,8 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 							data : {
 								clientId : clientId,
 								methodName : methodName,
-								data : data
+								data : data,
+								sendKey : sendKey
 							}
 						});
 					}
@@ -413,21 +420,25 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 						//OPTIONAL: callback
 
 						var
-						// method name
-						methodName = params.methodName;
+						// callback name
+						callbackName = '__CALLBACK_' + sendKey;
+
+						params.sendKey = sendKey;
+
+						sendKey += 1;
 
 						send(clientId, params);
 
 						if (callback !== undefined) {
 
 							// on callback.
-							on('__CALLBACK_' + methodName, function(data) {
+							on('__CALLBACK_' + sendKey, function(data) {
 
 								// run callback.
 								callback(data);
 
 								// off callback.
-								off('__CALLBACK_' + methodName);
+								off('__CALLBACK_' + sendKey);
 							});
 						}
 					},
@@ -463,6 +474,9 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 						// data
 						data = params === undefined ? undefined : params.data,
 
+						// send key
+						sendKey = params === undefined ? undefined : params.sendKey,
+
 						// connection info
 						connectionInfo,
 
@@ -472,7 +486,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 						// run methods or broadcast.
 						if (methodName !== undefined) {
 
-							runMethodsOrBroadcast(methodName, data);
+							runMethodsOrBroadcast(methodName, data, sendKey);
 
 							// response empty.
 							response({

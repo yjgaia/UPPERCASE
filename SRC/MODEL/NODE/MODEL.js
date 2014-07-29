@@ -336,9 +336,7 @@ FOR_BOX(function(box) {'use strict';
 					// valid data.
 					if (createValid !== undefined) {
 
-						validResult = createValid.check({
-							data : data
-						});
+						validResult = createValid.check(data);
 					}
 
 					// when has error
@@ -478,10 +476,7 @@ FOR_BOX(function(box) {'use strict';
 					// valid data.
 					if (updateValid !== undefined) {
 
-						validResult = updateValid.check({
-							data : data,
-							isExceptUndefined : true
-						});
+						validResult = updateValid.checkExceptUndefined(data);
 					}
 
 					// when has error
@@ -1001,10 +996,10 @@ FOR_BOX(function(box) {'use strict';
 							var
 							// error msg
 							errorMsg,
-							
+
 							// saved data
 							savedData;
-							
+
 							if (result !== undefined) {
 								errorMsg = result.errorMsg;
 								savedData = result.savedData;
@@ -1313,23 +1308,19 @@ FOR_BOX(function(box) {'use strict';
 						// on count.
 						on('count', function(filter, ret) {
 
-							// on remove.
-							on('remove', function(id, ret) {
+							if (countRole === undefined || CHECK_IS_EXISTS({
+								data : roles,
+								value : countRole
+							}) === true) {
 
-								if (countRole === undefined || CHECK_IS_EXISTS({
-									data : roles,
-									value : countRole
-								}) === true) {
+								innerCount(filter, ret, clientInfo);
 
-									innerCount(filter, ret, clientInfo);
+							} else {
 
-								} else {
-
-									ret({
-										isNotAuthed : true
-									});
-								}
-							});
+								ret({
+									isNotAuthed : true
+								});
+							}
 						});
 					}
 

@@ -241,9 +241,7 @@ FOR_BOX(function(box) {'use strict';
 					}
 
 					if (createValid !== undefined) {
-						validResult = createValid.check({
-							data : data
-						});
+						validResult = createValid.check(data);
 					}
 
 					if (validResult !== undefined && validResult.checkHasError() === true) {
@@ -520,10 +518,7 @@ FOR_BOX(function(box) {'use strict';
 					REMOVE_TO_DELETE(data);
 
 					if (updateValid !== undefined) {
-						validResult = updateValid.check({
-							data : data,
-							isExceptUndefined : true
-						});
+						validResult = updateValid.checkExceptUndefined(data);
 					}
 
 					if (updateValid !== undefined && validResult.checkHasError() === true) {

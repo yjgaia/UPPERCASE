@@ -34,6 +34,9 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		// method map
 		methodMap = {},
 
+		// send key
+		sendKey = 0,
+
 		// is force disconnecting
 		isForceDisconnecting,
 
@@ -56,7 +59,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			errorListener = connectionListenerOrListeners.error;
 		}
 
-		runMethods = function(methodName, data) {
+		runMethods = function(methodName, data, sendKey) {
 
 			var
 			// methods
@@ -72,10 +75,10 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 					// ret.
 					function(retData) {
 
-						if (send !== undefined) {
+						if (send !== undefined && sendKey !== undefined) {
 
 							send({
-								methodName : '__CALLBACK_' + methodName,
+								methodName : '__CALLBACK_' + sendKey,
 								data : retData
 							});
 						}
@@ -140,21 +143,25 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 				//OPTIONAL: callback
 
 				var
-				// method name
-				methodName = params.methodName;
+				// callback name
+				callbackName = '__CALLBACK_' + sendKey;
+
+				params.sendKey = sendKey;
+
+				sendKey += 1;
 
 				conn.send(STRINGIFY(params));
 
 				if (callback !== undefined) {
 
 					// on callback.
-					on('__CALLBACK_' + methodName, function(data) {
+					on(callbackName, function(data) {
 
 						// run callback.
 						callback(data);
 
 						// off callback.
-						off('__CALLBACK_' + methodName);
+						off(callbackName);
 					});
 				}
 			},
@@ -176,7 +183,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			params = PARSE_STR(e.data);
 
 			if (params !== undefined) {
-				runMethods(params.methodName, params.data);
+				runMethods(params.methodName, params.data, params.sendKey);
 			}
 		};
 

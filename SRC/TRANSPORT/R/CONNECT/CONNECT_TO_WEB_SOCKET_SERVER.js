@@ -150,6 +150,9 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 				// method map
 				methodMap = {},
 
+				// send key
+				sendKey = 0,
+
 				// is disconnected
 				isDisconnected,
 
@@ -202,7 +205,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 				send,
 
 				// run methods.
-				runMethods = function(methodName, data) {
+				runMethods = function(methodName, data, sendKey) {
 
 					var
 					// methods
@@ -222,10 +225,10 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 								// ret.
 								function(retData) {
 
-									if (send !== undefined) {
+									if (send !== undefined && sendKey !== undefined) {
 
 										send({
-											methodName : '__CALLBACK_' + methodName,
+											methodName : '__CALLBACK_' + sendKey,
 											data : retData
 										});
 									}
@@ -323,21 +326,25 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 							//OPTIONAL: callback
 
 							var
-							// method name
-							methodName = params.methodName;
+							// callback name
+							callbackName = '__CALLBACK_' + sendKey;
+
+							params.sendKey = sendKey;
+
+							sendKey += 1;
 
 							innerSend(clientId, connectionKey, params);
 
 							if (callback !== undefined) {
 
 								// on callback.
-								on('__CALLBACK_' + methodName, function(data) {
+								on('__CALLBACK_' + sendKey, function(data) {
 
 									// run callback.
 									callback(data);
 
 									// off callback.
-									off('__CALLBACK_' + methodName);
+									off('__CALLBACK_' + sendKey);
 								});
 							}
 						},
@@ -355,7 +362,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 
 					// when not first time, run methods.
 					else if (params !== undefined) {
-						runMethods(params.methodName, params.data);
+						runMethods(params.methodName, params.data, params.sendKey);
 					}
 
 					// remove response error delay.
