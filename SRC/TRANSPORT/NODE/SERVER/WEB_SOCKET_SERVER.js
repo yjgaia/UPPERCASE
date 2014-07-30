@@ -3,10 +3,8 @@
  */
 global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 
-	run : function(portOrPorts, connectionListener) {'use strict';
-		//REQUIRED: portOrPorts
-		//OPTIONAL: portOrPorts.port
-		//OPTIONAL: portOrPorts.fixServerPort
+	run : function(portOrWebServer, connectionListener) {'use strict';
+		//REQUIRED: portOrWebServer
 		//REQUIRED: connectionListener
 
 		var
@@ -16,25 +14,21 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 		// port
 		port,
 
-		// fix server port
-		fixServerPort,
+		// web server
+		webServer,
 
 		// server
 		server;
 
-		// run with fix server.
-		if (CHECK_IS_DATA(portOrPorts) === true) {
-			port = portOrPorts.port;
-			fixServerPort = portOrPorts.fixServerPort;
-		}
-
-		// only run web socket server.
-		else {
-			port = portOrPorts;
+		if (CHECK_IS_DATA(portOrWebServer) !== true) {
+			port = portOrWebServer;
+		} else {
+			webServer = portOrWebServer;
 		}
 
 		server = new WebSocketServer({
-			port : port
+			port : port,
+			server : webServer === undefined ? undefined : webServer.getNativeHTTPServer()
 		});
 
 		server.on('connection', function(conn) {
@@ -216,12 +210,6 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 			});
 		});
 
-		console.log('[UPPERCASE.IO-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER... (PORT:' + port + ')');
-
-		if (fixServerPort !== undefined) {
-
-			// run fix server.
-			WEB_SOCKET_FIX_SERVER(fixServerPort, connectionListener);
-		}
+		console.log('[UPPERCASE.IO-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...' + (port === undefined ? '' : ' (PORT:' + port + ')'));
 	}
 });

@@ -18,8 +18,8 @@ global.onload = function() {'use strict';
 
 		CONNECT_TO_ROOM_SERVER({
 			host : host === '' ? undefined : host,
-			port : CONFIG.webSocketServerPort,
-			fixServerPort : CONFIG.webSocketFixServerPort
+			port : CONFIG.webServerPort,
+			fixServerPort : CONFIG.webServerPort
 		}, function(on) {
 
 			on('__DISCONNECTED', function() {

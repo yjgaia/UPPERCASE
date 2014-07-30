@@ -3,30 +3,33 @@
  */
 global.MULTI_PROTOCOL_SOCKET_SERVER = MULTI_PROTOCOL_SOCKET_SERVER = METHOD({
 
-	run : function(ports, connectionListener) {'use strict';
-		//REQUIRED: ports
-		//REQUIRED: ports.socketServerPort
-		//REQUIRED: ports.webSocketServerPort
-		//OPTIONAL: ports.webSocketFixServerPort
+	run : function(params, connectionListener) {'use strict';
+		//REQUIRED: params
+		//OPTIONAL: params.socketServerPort
+		//OPTIONAL: params.webSocketServerPort
+		//OPTIONAL: params.webServer
 		//REQUIRED: connectionListener
 
 		var
 		// socket server port
-		socketServerPort = ports.socketServerPort,
+		socketServerPort = params.socketServerPort,
 
 		// web socket server port
-		webSocketServerPort = ports.webSocketServerPort,
+		webSocketServerPort = params.webSocketServerPort,
 
-		// web socket fix server port
-		webSocketFixServerPort = ports.webSocketFixServerPort;
+		// web server
+		webServer = params.webServer;
 
-		// create socket server.
-		SOCKET_SERVER(socketServerPort, connectionListener);
+		if (socketServerPort !== undefined) {
 
-		// create web socket server.
-		WEB_SOCKET_SERVER({
-			port : webSocketServerPort,
-			fixServerPort : webSocketFixServerPort
-		}, connectionListener);
+			// create socket server.
+			SOCKET_SERVER(socketServerPort, connectionListener);
+		}
+
+		if (webSocketServerPort !== undefined || webServer !== undefined) {
+
+			// create web socket server.
+			WEB_SOCKET_SERVER(webSocketServerPort !== undefined ? webSocketServerPort : webServer, connectionListener);
+		}
 	}
 });

@@ -291,17 +291,6 @@ global.BOOT = BOOT = function(params) {'use strict';
 		loadJSForClient(__dirname + '/UPPERCASE.IO-ROOM/CLIENT.js');
 		loadJSForBrowser(__dirname + '/UPPERCASE.IO-ROOM/BROWSER.js');
 
-		if (CONFIG.socketServerPort !== undefined || CONFIG.webSocketServerPort !== undefined) {
-
-			LAUNCH_ROOM_SERVER({
-
-				socketServerPort : CONFIG.socketServerPort,
-
-				webSocketServerPort : CONFIG.webSocketServerPort,
-				webSocketFixServerPort : CONFIG.webSocketFixServerPort
-			});
-		}
-
 		// load UPPERCASE.IO-MODEL.
 		loadJSForCommon(__dirname + '/UPPERCASE.IO-MODEL/COMMON.js');
 		loadJSForNode(__dirname + '/UPPERCASE.IO-MODEL/NODE.js');
@@ -406,6 +395,10 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 	run = function(workerData) {
 
+		var
+		// web server
+		webServer;
+
 		// init objects.
 		INIT_OBJECTS();
 
@@ -420,7 +413,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 		if (CONFIG.webServerPort !== undefined || CONFIG.sercuredWebServerPort !== undefined) {
 
-			RESOURCE_SERVER({
+			webServer = RESOURCE_SERVER({
 
 				port : CONFIG.webServerPort,
 
@@ -548,6 +541,11 @@ global.BOOT = BOOT = function(params) {'use strict';
 						});
 					}
 				}
+			});
+
+			LAUNCH_ROOM_SERVER({
+				socketServerPort : CONFIG.socketServerPort,
+				webServer : webServer
 			});
 		}
 

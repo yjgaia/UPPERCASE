@@ -54,11 +54,11 @@ global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = METHOD(function(m) {'use strict
 
 	return {
 
-		run : function(ports) {
-			//REQUIRED: ports
-			//REQUIRED: ports.socketServerPort
-			//REQUIRED: ports.webSocketServerPort
-			//OPTIONAL: ports.webSocketFixServerPort
+		run : function(params) {
+			//REQUIRED: params
+			//OPTIONAL: params.socketServerPort
+			//OPTIONAL: params.webSocketServerPort
+			//OPTIONAL: params.webServer
 
 			if (CPU_CLUSTERING.on !== undefined) {
 
@@ -81,7 +81,7 @@ global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = METHOD(function(m) {'use strict
 				});
 			}
 
-			MULTI_PROTOCOL_SOCKET_SERVER(ports, function(clientInfo, on, off, send) {
+			MULTI_PROTOCOL_SOCKET_SERVER(params, function(clientInfo, on, off, send) {
 
 				var
 				// room counts
