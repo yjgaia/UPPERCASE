@@ -1,4 +1,4 @@
-UPPERCASE.IO 1.4 OCTOPUS
+[UPPERCASE.IO](http://UPPERCASE.IO)
 =========
 동적인 웹 사이트 및 모바일 애플리케이션 개발을 위한 쉽고, 명확하면서도 강력한 풀스택 (server-to-client) MVC 미들웨어
 

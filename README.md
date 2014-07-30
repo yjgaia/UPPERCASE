@@ -1,4 +1,4 @@
-UPPERCASE.IO 1.4 OCTOPUS
+[UPPERCASE.IO](http://UPPERCASE.IO)
 =========
 Easy, Clear, and Powerful Full-stack (server-to-client) MVC Middleware for Dynamic Web Site or Mobile Application Development
 

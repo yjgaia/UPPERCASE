@@ -112,7 +112,7 @@ FOR_BOX(function(box) {'use strict';
 								if (view === undefined) {
 
 									view = target();
-									view.onChangeParams(params);
+									view.onParamsChange(params);
 									target.lastView = view;
 
 									preParams = params;
@@ -122,7 +122,7 @@ FOR_BOX(function(box) {'use strict';
 									data2 : params
 								}) !== true) {
 
-									view.onChangeParams(params);
+									view.onParamsChange(params);
 									preParams = params;
 								}
 							});
