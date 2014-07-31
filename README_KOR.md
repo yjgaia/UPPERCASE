@@ -4,15 +4,11 @@
 
 Version
 -------
-1.4.0
+1.4.1
 
 Install
 -------
-MAC
-```
-open -e .profile
-export UPPERCASE_IO_PATH="/Users/hanul/Documents/UPPERCASE WORKSPACE/UPPERCASE.IO/DIST"
-```
+[![NPM](https://nodei.co/npm/uppercase.io.png)](https://nodei.co/npm/uppercase.io/)
 
 Based On
 --------
@@ -20,7 +16,7 @@ Based On
 - CommonJS Modules/1.0
 
 Browser-side:
-- IE 5.5를 포함한 현존하는 거의 모든 브라우저
+- IE 5.5를 포함한 거의 모든 브라우저
 
 Server-side:
 - [Node.js](http://nodejs.org)

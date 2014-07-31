@@ -4,15 +4,11 @@ Easy, Clear, and Powerful Full-stack (server-to-client) MVC Middleware for Dynam
 
 Version
 -------
-1.4.0
+1.4.1
 
 Install
 -------
-MAC
-```
-open -e .profile
-export UPPERCASE_IO_PATH="/Users/hanul/Documents/UPPERCASE WORKSPACE/UPPERCASE.IO/DIST"
-```
+[![NPM](https://nodei.co/npm/uppercase.io.png)](https://nodei.co/npm/uppercase.io/)
 
 Based On
 --------
