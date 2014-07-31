@@ -1,7 +1,7 @@
 {
 	"name": "uppercase.io",
-	"version": "1.4.0",
-	"description": "UPPERCASE.IO is a easy, clear, and powerful full-stack (server-to-client) MVC middleware for dynamic web site or mobile application development.",
+	"version": "1.4.1",
+	"description": "Easy, Clear, and Powerful Full-stack (server-to-client) MVC Middleware for Dynamic Web Site or Mobile Application Development",
 	"main": "BOOT.js",
 	"repository": {
 		"type": "git",

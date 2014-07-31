@@ -8,7 +8,11 @@ Version
 
 Install
 -------
-[![NPM](https://nodei.co/npm/uppercase.io.png)](https://nodei.co/npm/uppercase.io/)
+MAC
+```
+open -e .profile
+export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
+```
 
 Based On
 --------
