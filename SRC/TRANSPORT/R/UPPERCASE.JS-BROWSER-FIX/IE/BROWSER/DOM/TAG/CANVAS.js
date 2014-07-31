@@ -1,1 +1,0 @@
-OVERRIDE(CANVAS,function(n){"use strict";global.CANVAS=CANVAS=CLASS({preset:function(){return n},init:function(n,t){FlashCanvas.initElement(t.getEl())}})});

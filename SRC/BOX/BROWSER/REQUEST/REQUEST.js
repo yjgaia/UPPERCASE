@@ -16,12 +16,9 @@ FOR_BOX(function(box) {'use strict';
 			//OPTIONAL: params.data
 			//REQUIRED: responseListenerOrListeners
 
-			REQUEST(COMBINE_DATA({
-				origin : params,
-				extend : {
-					uri : box.boxName + '/' + params.uri
-				}
-			}), responseListenerOrListeners);
+			REQUEST(COMBINE([params, {
+				uri : box.boxName + '/' + params.uri
+			}]), responseListenerOrListeners);
 		}
 	});
 });

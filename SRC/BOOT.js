@@ -191,20 +191,20 @@ global.BOOT = BOOT = function(params) {'use strict';
 		if (_CONFIG !== undefined) {
 
 			// extend CONFIG.
-			EXTEND_DATA({
+			EXTEND({
 				origin : CONFIG,
 				extend : _CONFIG
 			});
 
 			// add to browser script.
-			browserScript += 'EXTEND_DATA({ origin : CONFIG, extend : ' + stringifyJSONWithFunction(_CONFIG) + ' });\n';
+			browserScript += 'EXTEND({ origin : CONFIG, extend : ' + stringifyJSONWithFunction(_CONFIG) + ' });\n';
 		}
 
 		// override NODE_CONFIG.
 		if (_NODE_CONFIG !== undefined) {
 
 			// extend NODE_CONFIG.
-			EXTEND_DATA({
+			EXTEND({
 				origin : NODE_CONFIG,
 				extend : _NODE_CONFIG
 			});
@@ -214,7 +214,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 		if (_BROWSER_CONFIG !== undefined) {
 
 			// add to browser script.
-			browserScript += 'EXTEND_DATA({ origin : BROWSER_CONFIG, extend : ' + stringifyJSONWithFunction(_BROWSER_CONFIG) + ' });\n';
+			browserScript += 'EXTEND({ origin : BROWSER_CONFIG, extend : ' + stringifyJSONWithFunction(_BROWSER_CONFIG) + ' });\n';
 		}
 	};
 

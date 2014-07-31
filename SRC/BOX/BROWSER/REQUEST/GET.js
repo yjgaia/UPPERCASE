@@ -15,12 +15,9 @@ FOR_BOX(function(box) {'use strict';
 			//OPTIONAL: params.data
 			//REQUIRED: responseListenerOrListeners
 
-			box.REQUEST(COMBINE_DATA({
-				origin : params,
-				extend : {
-					method : 'GET'
-				}
-			}), responseListenerOrListeners);
+			box.REQUEST(COMBINE([params, {
+				method : 'GET'
+			}]), responseListenerOrListeners);
 		}
 	});
 });

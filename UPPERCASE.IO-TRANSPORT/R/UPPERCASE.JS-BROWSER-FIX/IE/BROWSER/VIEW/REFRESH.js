@@ -1,1 +1,1 @@
-OVERRIDE(REFRESH,function(){"use strict";global.REFRESH=REFRESH=METHOD({run:function(){var n=location.hash,E=EVENT({name:"hashchange"},function(){DELAY(function(){location.href=""===n?"#":n}),E.remove()});location.href="#__REFRESING"}})});
+OVERRIDE(REFRESH,function(){"use strict";global.REFRESH=REFRESH=METHOD({run:function(){var E=location.hash;EVENT_ONCE({name:"hashchange"},function(){DELAY(function(){location.href=""===E?"#":E})}),location.href="#__REFRESING"}})});
