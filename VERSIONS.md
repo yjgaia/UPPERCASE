@@ -1,7 +1,9 @@
 VERSIONS
 ========
 1.4.1 (2014. 7. 31)
-
+- Added a unified port for webServerPort (required), webSocketServerPort, and webSocketFixServerPort.
+- Fixed a bug that later requests are not handled properly in case of multiple requests.
+- Applied UPPERCASE.JS 1.4.10.
 
 1.4 (2014. 7. 29)
 - Adopted MIT License.
