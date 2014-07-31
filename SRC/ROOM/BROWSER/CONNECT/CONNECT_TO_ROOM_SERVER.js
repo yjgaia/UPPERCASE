@@ -134,6 +134,7 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {'us
 			//OPTIONAL: params.host
 			//REQUIRED: params.port
 			//OPTIONAL: params.fixServerPort
+			//OPTIONAL: params.fixRequestURI
 			//REQUIRED: connectionListenerOrListeners
 
 			var

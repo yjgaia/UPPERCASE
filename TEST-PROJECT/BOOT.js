@@ -9,9 +9,7 @@ BOOT({
 
 		socketServerPort : 8887,
 
-		webServerPort : 8888,
-
-		webSocketFixServerPort : 8889
+		webServerPort : 8888
 	},
 
 	NODE_CONFIG : {

@@ -1,7 +1,7 @@
 /*
- * create web socket fix server (using jsonp long-polling).
+ * create web socket fix request manager (using jsonp long-polling).
  */
-global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use strict';
+global.WEB_SOCKET_FIX_REQUEST_MANAGER = WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {'use strict';
 
 	var
 	// HANDSHAKE_DELAY_TIME
@@ -12,8 +12,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 
 	return {
 
-		run : function(port, connectionListener) {
-			//REQUIRED: port
+		init : function(inner, self, connectionListener) {
 			//REQUIRED: connectionListener
 
 			var
@@ -53,7 +52,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 
 				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
 					CPU_CLUSTERING.broadcast({
-						methodName : '__WEB_SOCKET_FIX_SERVER__ADD_CONTENT',
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__ADD_CONTENT',
 						data : {
 							clientId : clientId,
 							requestKey : requestKey,
@@ -73,7 +72,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 				// broadcast.
 				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
 					CPU_CLUSTERING.broadcast({
-						methodName : '__WEB_SOCKET_FIX_SERVER__REMOVE_CONTENT',
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_CONTENT',
 						data : {
 							clientId : clientId,
 							requestKey : requestKey
@@ -150,7 +149,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 				// broadcast send.
 				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
 					CPU_CLUSTERING.broadcast({
-						methodName : '__WEB_SOCKET_FIX_SERVER__SEND',
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__SEND',
 						data : {
 							clientId : clientId,
 							params : params
@@ -174,7 +173,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 				// broadcast.
 				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
 					CPU_CLUSTERING.broadcast({
-						methodName : '__WEB_SOCKET_FIX_SERVER__REMOVE_FIRST_WATING_PARAMS',
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_FIRST_WATING_PARAMS',
 						data : clientId
 					});
 				}
@@ -191,7 +190,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 				// broadcast.
 				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
 					CPU_CLUSTERING.broadcast({
-						methodName : '__WEB_SOCKET_FIX_SERVER__REMOVE_LIFE_DELAY',
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_LIFE_DELAY',
 						data : clientId
 					});
 				}
@@ -223,15 +222,18 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 				// broadcast.
 				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
 					CPU_CLUSTERING.broadcast({
-						methodName : '__WEB_SOCKET_FIX_SERVER__REMOVE_ALL',
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_ALL',
 						data : clientId
 					});
 				}
-			};
+			},
+
+			// request.
+			request;
 
 			if (CPU_CLUSTERING.on !== undefined) {
 
-				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_SERVER__RUN_METHODS', function(params) {
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__RUN_METHODS', function(params) {
 
 					var
 					// client id
@@ -242,14 +244,14 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 					}
 				});
 
-				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_SERVER__REMOVE_FIRST_WATING_PARAMS', function(clientId) {
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_FIRST_WATING_PARAMS', function(clientId) {
 
 					if (waitingParamMap[clientId] !== undefined) {
 						removeFirstWaitingParams(clientId);
 					}
 				});
 
-				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_SERVER__SEND', function(_params) {
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__SEND', function(_params) {
 
 					var
 					// client id
@@ -266,7 +268,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 						// broadcast remove first waiting params.
 						if (CPU_CLUSTERING.broadcast !== undefined) {
 							CPU_CLUSTERING.broadcast({
-								methodName : '__WEB_SOCKET_FIX_SERVER__REMOVE_FIRST_WATING_PARAMS',
+								methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_FIRST_WATING_PARAMS',
 								data : clientId
 							});
 						}
@@ -278,24 +280,28 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 					}
 				});
 
-				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_SERVER__REMOVE_LIFE_DELAY', function(clientId) {
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_LIFE_DELAY', function(clientId) {
 					removeLifeDelay(clientId);
 				});
 
-				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_SERVER__REMOVE_ALL', function(clientId) {
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_ALL', function(clientId) {
 					removeAll(clientId);
 				});
 
-				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_SERVER__ADD_CONTENT', function(params) {
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__ADD_CONTENT', function(params) {
 					addContent(params.clientId, params.requestKey, params.content);
 				});
 
-				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_SERVER__REMOVE_CONTENT', function(params) {
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_CONTENT', function(params) {
 					removeContent(params.clientId, params.requestKey);
 				});
 			}
 
-			WEB_SERVER(port, function(requestInfo, response, onDisconnected) {
+			self.request = request = function(requestInfo, funcs) {
+				//REQUIRED: requsetInfo
+				//REQUIRED: funcs
+				//REQUIRED: funcs.response
+				//REQUIRED: funcs.onDisconnected
 
 				var
 				// params
@@ -316,6 +322,12 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 				// is end (boolean)
 				isEnd = params.isEnd === 'true',
 
+				// response.
+				response = funcs.response,
+
+				// on disconnected.
+				onDisconnected = funcs.onDisconnected,
+
 				// method map
 				methodMap,
 
@@ -330,7 +342,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 
 					// when exists methodMap
 					if (methodMaps[clientId] !== undefined) {
-						runMethods(clientId, methodName, data);
+						runMethods(clientId, methodName, data, sendKey);
 					}
 
 					// when not exists methodMap
@@ -338,7 +350,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 
 						// pass other cpus.
 						CPU_CLUSTERING.broadcast({
-							methodName : '__WEB_SOCKET_FIX_SERVER__RUN_METHODS',
+							methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__RUN_METHODS',
 							data : {
 								clientId : clientId,
 								methodName : methodName,
@@ -432,13 +444,13 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 						if (callback !== undefined) {
 
 							// on callback.
-							on('__CALLBACK_' + sendKey, function(data) {
+							on(callbackName, function(data) {
 
 								// run callback.
 								callback(data);
 
 								// off callback.
-								off('__CALLBACK_' + sendKey);
+								off(callbackName);
 							});
 						}
 					},
@@ -450,12 +462,12 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 
 					// response.
 					response({
-						contentType : 'application/javascript',
-						content : 'CONNECT_TO_WEB_SOCKET_SERVER.response(\'' + STRINGIFY({
+						contentType : 'text/javascript',
+						content : 'CONNECT_TO_WEB_SOCKET_SERVER.response(\'' + encodeURIComponent(STRINGIFY({
 							clientId : clientId,
 							connectionKey : connectionKey,
 							requestKey : requestKey
-						}) + '\')'
+						})) + '\')'
 					});
 				}
 
@@ -490,7 +502,7 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 
 							// response empty.
 							response({
-								contentType : 'application/javascript',
+								contentType : 'text/javascript',
 								content : 'CONNECT_TO_WEB_SOCKET_SERVER.removeRequestInfo(' + requestKey + ')'
 							});
 						}
@@ -514,13 +526,13 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 
 								// response.
 								response({
-									contentType : 'application/javascript',
-									content : 'CONNECT_TO_WEB_SOCKET_SERVER.response(\'' + STRINGIFY({
+									contentType : 'text/javascript',
+									content : 'CONNECT_TO_WEB_SOCKET_SERVER.response(\'' + encodeURIComponent(STRINGIFY({
 										connectionKey : connectionKey,
 										clientId : clientId,
 										params : params,
 										requestKey : requestKey
-									}) + '\')'
+									})) + '\')'
 								});
 
 								removeSend(clientId);
@@ -559,13 +571,13 @@ global.WEB_SOCKET_FIX_SERVER = WEB_SOCKET_FIX_SERVER = METHOD(function(m) {'use 
 
 					// response.
 					response({
-						contentType : 'application/javascript',
+						contentType : 'text/javascript',
 						content : 'CONNECT_TO_WEB_SOCKET_SERVER.request(' + requestKey + ')'
 					});
 				}
-			});
+			};
 
-			console.log('[UPPERCASE.IO-WEB_SOCKET_FIX_SERVER] RUNNING WEB SOCKET FIX SERVER... (PORT:' + port + ')');
+			console.log('[UPPERCASE.IO-WEB_SOCKET_FIX_REQUEST_MANAGER] RUNNING WEB SOCKET FIX REQUEST MANAGER...');
 		}
 	};
 });

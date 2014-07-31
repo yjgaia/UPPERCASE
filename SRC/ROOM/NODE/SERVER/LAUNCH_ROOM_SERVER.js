@@ -1,7 +1,7 @@
 /*
  * launch room server.
  */
-global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = METHOD(function(m) {'use strict';
+global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = CLASS(function(cls) {'use strict';
 
 	var
 	// init room func map
@@ -16,7 +16,7 @@ global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = METHOD(function(m) {'use strict
 	// broadcast.
 	broadcast;
 
-	m.addInitRoomFunc = addInitRoomFunc = function(roomName, initRoomFunc) {
+	cls.addInitRoomFunc = addInitRoomFunc = function(roomName, initRoomFunc) {
 		//REQUIRED: roomName
 		//REQUIRED: initRoomFunc
 
@@ -27,7 +27,7 @@ global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = METHOD(function(m) {'use strict
 		initRoomFuncMap[roomName].push(initRoomFunc);
 	};
 
-	m.broadcast = broadcast = function(params) {
+	cls.broadcast = broadcast = function(params) {
 		//REQUIRED: params
 		//REQUIRED: params.roomName
 		//REQUIRED: params.methodName
@@ -54,11 +54,19 @@ global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = METHOD(function(m) {'use strict
 
 	return {
 
-		run : function(params) {
+		init : function(inner, self, params) {
 			//REQUIRED: params
 			//OPTIONAL: params.socketServerPort
 			//OPTIONAL: params.webSocketServerPort
 			//OPTIONAL: params.webServer
+			//OPTIONAL: params.isCreateWebSocketFixRequestManager
+
+			var
+			// multi protocol socket server
+			multiProtocolSocketServer,
+
+			// get web socket fix request.
+			getWebSocketFixRequest;
 
 			if (CPU_CLUSTERING.on !== undefined) {
 
@@ -81,7 +89,7 @@ global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = METHOD(function(m) {'use strict
 				});
 			}
 
-			MULTI_PROTOCOL_SOCKET_SERVER(params, function(clientInfo, on, off, send) {
+			multiProtocolSocketServer = MULTI_PROTOCOL_SOCKET_SERVER(params, function(clientInfo, on, off, send) {
 
 				var
 				// room counts
@@ -183,6 +191,10 @@ global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = METHOD(function(m) {'use strict
 					roomCounts = undefined;
 				});
 			});
+
+			self.getWebSocketFixRequest = getWebSocketFixRequest = function() {
+				return multiProtocolSocketServer.getWebSocketFixRequest();
+			};
 		}
 	};
 });

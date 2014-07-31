@@ -35,7 +35,7 @@ RUN(function() {'use strict';
 	 */
 
 	// fix CONNECT_TO_WEB_SOCKET_SERVER.
-	if (global.WebSocket === undefined) {
-		loadFixScript('CONNECT/CONNECT_TO_WEB_SOCKET_SERVER');
-	}
+	//if (global.WebSocket === undefined) {
+	loadFixScript('CONNECT/CONNECT_TO_WEB_SOCKET_SERVER');
+	//}
 });

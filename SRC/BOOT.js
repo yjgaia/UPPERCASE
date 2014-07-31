@@ -394,7 +394,10 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 		var
 		// web server
-		webServer;
+		webServer,
+
+		// web socket fix reqeust.
+		webSocketFixRequest;
 
 		// init objects.
 		INIT_OBJECTS();
@@ -405,8 +408,6 @@ global.BOOT = BOOT = function(params) {'use strict';
 				box.MAIN(workerData);
 			}
 		});
-
-		browserScript += fs.readFileSync(__dirname + '/BROWSER_INIT.js').toString();
 
 		if (CONFIG.webServerPort !== undefined || CONFIG.sercuredWebServerPort !== undefined) {
 
@@ -477,7 +478,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 						return false;
 					}
 
-					// serve upload.
+					// serve upload request.
 					else if (uri === '__UPLOAD') {
 
 						UPLOAD_REQUEST({
@@ -619,6 +620,17 @@ global.BOOT = BOOT = function(params) {'use strict';
 						return false;
 					}
 
+					// serve web socket fix request
+					else if (uri === '__WEB_SOCKET_FIX') {
+
+						webSocketFixRequest(requestInfo, {
+							response : response,
+							onDisconnected : onDisconnected
+						});
+
+						return false;
+					}
+
 					// serve others.
 					else {
 
@@ -657,10 +669,11 @@ global.BOOT = BOOT = function(params) {'use strict';
 				}
 			});
 
-			LAUNCH_ROOM_SERVER({
+			webSocketFixRequest = LAUNCH_ROOM_SERVER({
 				socketServerPort : CONFIG.socketServerPort,
-				webServer : webServer
-			});
+				webServer : webServer,
+				isCreateWebSocketFixRequestManager : true
+			}).getWebSocketFixRequest();
 		}
 
 		console.log('[UPPERCASE.IO] `' + CONFIG.defaultTitle + '` WORKER #' + workerData.id + ' (PID:' + workerData.pid + ') BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));

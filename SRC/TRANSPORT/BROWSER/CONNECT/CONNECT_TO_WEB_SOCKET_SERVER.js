@@ -8,6 +8,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		//OPTIONAL: params.host
 		//REQUIRED: params.port
 		//OPTIONAL: params.fixServerPort
+		//OPTIONAL: params.fixRequestURI
 		//REQUIRED: connectionListenerOrListeners
 		//REQUIRED: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error

@@ -45,7 +45,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 			contentPieces = requestInfo.contentPieces,
 
 			// path
-			path = 'http://' + requestInfo.host + ':' + requestInfo.port + (requestInfo.clientId === undefined ? '?' : '?clientId=' + requestInfo.clientId + '&') + 'connectionKey=' + requestInfo.connectionKey + '&requestKey=' + requestKey;
+			path = 'http://' + requestInfo.host + ':' + requestInfo.port + '/' + requestInfo.uri + (requestInfo.clientId === undefined ? '?' : '?clientId=' + requestInfo.clientId + '&') + 'connectionKey=' + requestInfo.connectionKey + '&requestKey=' + requestKey;
 
 			// remove existed script.
 			if (requestInfo.script !== undefined) {
@@ -63,7 +63,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 			else {
 
 				// with content piece
-				path += '&content=' + contentPieces[0];
+				path += '&content=' + encodeURIComponent(contentPieces[0]);
 
 				// remove first content piece.
 				REMOVE({
@@ -107,7 +107,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 
 			var
 			// params
-			params = PARSE_STR(paramsStr);
+			params = PARSE_STR(decodeURIComponent(paramsStr));
 
 			// run response listener.
 			responseListeners[params.connectionKey](params.clientId, params.params);
@@ -123,6 +123,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 				//OPTIONAL: params.host
 				//OPTIONAL: params.port
 				//REQUIRED: params.fixServerPort
+				//REQUIRED: params.fixRequestURI
 				//REQUIRED: connectionListenerOrListeners
 
 				var
@@ -131,6 +132,9 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 
 				// port
 				port = params.fixServerPort,
+
+				// uri
+				uri = params.fixRequestURI,
 
 				// connection listener
 				connectionListener,
@@ -170,6 +174,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 					requestInfos[requestCount] = {
 						host : host,
 						port : port,
+						uri : uri,
 						clientId : clientId,
 						connectionKey : connectionKey,
 						contentPieces : contentPieces = []
@@ -178,7 +183,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 					if (data !== undefined) {
 
 						// create content (data string).
-						content = encodeURIComponent(STRINGIFY(data));
+						content = STRINGIFY(data);
 
 						// split content pieces.
 						while (content !== '') {
@@ -338,13 +343,13 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 							if (callback !== undefined) {
 
 								// on callback.
-								on('__CALLBACK_' + sendKey, function(data) {
+								on(callbackName, function(data) {
 
 									// run callback.
 									callback(data);
 
 									// off callback.
-									off('__CALLBACK_' + sendKey);
+									off(callbackName);
 								});
 							}
 						},
