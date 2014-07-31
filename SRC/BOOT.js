@@ -171,9 +171,6 @@ global.BOOT = BOOT = function(params) {'use strict';
 			});
 		};
 
-		// init CONFIG.
-		loadJSForCommon(__dirname + '/CONFIG.js');
-
 		// set version.
 		CONFIG.version = version;
 		browserScript += 'CONFIG.version = \'' + version + '\'\n';
@@ -413,6 +410,9 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 		if (CONFIG.webServerPort !== undefined || CONFIG.sercuredWebServerPort !== undefined) {
 
+			// load UPPERCASE.IO-UPLOAD.
+			loadJSForNode(__dirname + '/UPPERCASE.IO-UPLOAD/NODE.js');
+
 			webServer = RESOURCE_SERVER({
 
 				port : CONFIG.webServerPort,
@@ -421,15 +421,14 @@ global.BOOT = BOOT = function(params) {'use strict';
 				securedKeyFilePath : rootPath + '/' + NODE_CONFIG.securedKeyFilePath,
 				securedCertFilePath : rootPath + '/' + NODE_CONFIG.securedCertFilePath,
 
+				notParsingNativeReqURIs : ['__UPLOAD'],
+
 				rootPath : rootPath,
 
-				version : CONFIG.isDevMode === true ? undefined : version,
-
-				isNotUsingResourceCache : CONFIG.isDevMode === true
-
+				version : version
 			}, {
 
-				requestListener : function(requestInfo, response, onDisconnected, replaceRootPath) {
+				requestListener : function(requestInfo, response, onDisconnected, replaceRootPath, next) {
 
 					var
 					// uri
@@ -450,8 +449,10 @@ global.BOOT = BOOT = function(params) {'use strict';
 						response({
 							contentType : 'text/javascript',
 							content : browserScript,
-							version : CONFIG.isDevMode === true ? undefined : version
+							version : version
 						});
+
+						return false;
 					}
 
 					// serve base style css.
@@ -460,8 +461,10 @@ global.BOOT = BOOT = function(params) {'use strict';
 						response({
 							contentType : 'text/css',
 							content : initStyleCSS,
-							version : CONFIG.isDevMode === true ? undefined : version
+							version : version
 						});
+
+						return false;
 					}
 
 					// serve upload server host.
@@ -470,6 +473,111 @@ global.BOOT = BOOT = function(params) {'use strict';
 						response({
 							content : ''
 						});
+
+						return false;
+					}
+
+					// serve upload.
+					else if (uri === '__UPLOAD') {
+
+						UPLOAD_REQUEST({
+							requestInfo : requestInfo,
+							uploadPath : rootPath + '/__RF/__TEMP'
+						}, {
+							overFileSize : function() {
+
+								response({
+									statusCode : 302,
+									headers : {
+										'Location' : params.callbackURL + '?maxUploadFileMB=' + NODE_CONFIG.maxUploadFileMB
+									}
+								});
+							},
+							success : function(fileDataSet) {
+
+								var
+								// box name
+								boxName = params.boxName,
+
+								// box
+								box = BOX.getBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName],
+
+								// upload file database
+								uploadFileDB;
+
+								if (box !== undefined) {
+
+									uploadFileDB = box.DB('__UPLOAD_FILE');
+
+									NEXT(fileDataSet, [
+									function(fileData, next) {
+
+										var
+										// path
+										tempPath = fileData.path;
+
+										// delete temp path.
+										delete fileData.path;
+
+										fileData.serverId = 1;
+
+										uploadFileDB.create(fileData, function(savedData) {
+
+											MOVE_FILE({
+												srcPath : tempPath,
+												distPath : rootPath + '/__RF/' + boxName + '/' + savedData.id
+											}, next);
+										});
+									},
+
+									function() {
+										return function() {
+
+											response({
+												statusCode : 302,
+												headers : {
+													'Location' : params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet))
+												}
+											});
+										};
+									}]);
+								}
+							}
+						});
+
+						return false;
+					}
+
+					// serve uploaded final resource.
+					else if (uri.substring(0, 5) === '__RF/') {
+
+						uri = uri.substring(5);
+
+						i = uri.indexOf('/');
+
+						if (i !== -1) {
+
+							boxName = uri.substring(0, i);
+
+							if (boxName === 'UPPERCASE.IO' || BOX.getBoxes()[boxName] !== undefined) {
+								uri = uri.substring(i + 1);
+							} else {
+								boxName = CONFIG.defaultBoxName;
+							}
+
+							BOX.getBoxes()[boxName].DB('__UPLOAD_FILE').get(uri, function(savedData) {
+
+								next({
+									contentType : savedData.type,
+									headers : {
+										'Content-Disposition' : 'attachment; filename="' + savedData.name + '"'
+									},
+									isFinal : true
+								});
+							});
+						}
+
+						return false;
 					}
 
 					// serve upload callback.
@@ -487,6 +595,8 @@ global.BOOT = BOOT = function(params) {'use strict';
 								content : '<script>fileDataSetStr=\'' + params.fileDataSetStr + '\'</script>'
 							});
 						}
+
+						return false;
 					}
 
 					// serve socket server host.
@@ -495,6 +605,8 @@ global.BOOT = BOOT = function(params) {'use strict';
 						response({
 							content : ''
 						});
+
+						return false;
 					}
 
 					// serve web socket server host.
@@ -503,10 +615,12 @@ global.BOOT = BOOT = function(params) {'use strict';
 						response({
 							content : ''
 						});
+
+						return false;
 					}
 
 					// serve others.
-					else if (requestInfo.isResponsed !== true) {
+					else {
 
 						i = uri.indexOf('/');
 
@@ -549,86 +663,6 @@ global.BOOT = BOOT = function(params) {'use strict';
 			});
 		}
 
-		// load UPPERCASE.IO-UPLOAD.
-		loadJSForNode(__dirname + '/UPPERCASE.IO-UPLOAD/NODE.js');
-
-		if (CONFIG.uploadServerPort !== undefined) {
-
-			UPLOAD_SERVER({
-				port : CONFIG.uploadServerPort,
-				uploadPath : rootPath + '/__RF/__TEMP'
-			}, {
-				upload : {
-					overFileSize : function(requestInfo, response) {
-
-						response({
-							statusCode : 302,
-							headers : {
-								'Location' : requestInfo.params.callbackURL + '?maxUploadFileMB=' + NODE_CONFIG.maxUploadFileMB
-							}
-						});
-					},
-					success : function(fileDataSet, requestInfo, response) {
-
-						var
-						// box name
-						boxName = requestInfo.params.boxName,
-
-						// box
-						box = BOX.getBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName],
-
-						// upload file database
-						uploadFileDB;
-
-						if (box !== undefined) {
-
-							uploadFileDB = box.DB('__UPLOAD_FILE');
-
-							NEXT(fileDataSet, [
-
-							function(fileData, next) {
-
-								var
-								// temp path
-								tempPath = fileData.path;
-
-								// delete temp path.
-								delete fileData.path;
-
-								fileData.serverId = 1;
-
-								uploadFileDB.create(fileData, function(savedData) {
-
-									MOVE_FILE({
-										srcPath : tempPath,
-										distPath : rootPath + '/__RF/' + boxName + '/' + savedData.id
-									}, next);
-								});
-							},
-
-							function() {
-								return function() {
-
-									response({
-										statusCode : 302,
-										headers : {
-											'Location' : requestInfo.params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet))
-										}
-									});
-								};
-							}]);
-						}
-					}
-				},
-
-				serve : {
-					requestListener : function(requestInfo, response, onDisconnected, changeRootPath, setDefaultContentType, addHeader) {
-						changeRootPath(rootPath + '/__RF');
-					}
-				}
-			});
-		}
-
 		console.log('[UPPERCASE.IO] `' + CONFIG.defaultTitle + '` WORKER #' + workerData.id + ' (PID:' + workerData.pid + ') BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
 
@@ -640,6 +674,7 @@ global.BOOT = BOOT = function(params) {'use strict';
 
 	// load UPPERCASE.IO-BOOT.
 	loadJSForCommon(__dirname + '/UPPERCASE.IO-BOOT/COMMON.js');
+	loadJSForClient(__dirname + '/UPPERCASE.IO-BOOT/BROWSER.js');
 	loadJSForClient(__dirname + '/UPPERCASE.IO-BOOT/CLIENT.js');
 
 	// load UPPERCASE.IO-UTIL.

@@ -8,7 +8,7 @@ FOR_BOX(function(box) {'use strict';
 		run : function(path) {
 			//REQUIRED: path
 
-			return global.location.protocol + '//' + global.location.hostname + ':' + CONFIG.uploadServerPort + '/' + box.boxName + '/' + path;
+			return global.location.protocol + '//' + global.location.hostname + ':' + CONFIG.webServerPort + '/__RF/' + box.boxName + '/' + path;
 		}
 	});
 });

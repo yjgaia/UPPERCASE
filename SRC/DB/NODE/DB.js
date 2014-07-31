@@ -460,7 +460,9 @@ FOR_BOX(function(box) {'use strict';
 									callback(savedData);
 
 								} else {
-									notExistsHandler();
+									if (notExistsHandler !== undefined) {
+										notExistsHandler();
+									}
 								}
 							}
 
@@ -475,7 +477,9 @@ FOR_BOX(function(box) {'use strict';
 									errorMsg : errorMsg
 								});
 
-								errorHandler(errorMsg);
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								}
 							}
 						});
 					}
@@ -491,7 +495,9 @@ FOR_BOX(function(box) {'use strict';
 							errorMsg : errorMsg
 						});
 
-						errorHandler(errorMsg);
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						}
 					}
 				};
 
@@ -618,7 +624,9 @@ FOR_BOX(function(box) {'use strict';
 							errorMsg : errorMsg
 						});
 
-						errorHandler(errorMsg);
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						}
 					}
 				};
 
@@ -1036,7 +1044,9 @@ FOR_BOX(function(box) {'use strict';
 									errorMsg : errorMsg
 								});
 
-								errorHandler(errorMsg);
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								}
 							}
 						};
 
@@ -1062,7 +1072,9 @@ FOR_BOX(function(box) {'use strict';
 							errorMsg : errorMsg
 						});
 
-						errorHandler(errorMsg);
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						}
 					}
 				};
 
@@ -1117,7 +1129,9 @@ FOR_BOX(function(box) {'use strict';
 									errorMsg : errorMsg
 								});
 
-								errorHandler(errorMsg);
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								}
 							}
 						});
 					}
@@ -1133,7 +1147,9 @@ FOR_BOX(function(box) {'use strict';
 							errorMsg : errorMsg
 						});
 
-						errorHandler(errorMsg);
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						}
 					}
 				};
 
@@ -1198,7 +1214,9 @@ FOR_BOX(function(box) {'use strict';
 									errorMsg : errorMsg
 								});
 
-								errorHandler(errorMsg);
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								}
 							}
 						});
 					}
@@ -1214,7 +1232,9 @@ FOR_BOX(function(box) {'use strict';
 							errorMsg : errorMsg
 						});
 
-						errorHandler(errorMsg);
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						}
 					}
 				};
 

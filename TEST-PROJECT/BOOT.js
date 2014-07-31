@@ -7,14 +7,11 @@ BOOT({
 
 		defaultBoxName : 'TestBox',
 
+		socketServerPort : 8887,
+
 		webServerPort : 8888,
 
-		socketServerPort : 8889,
-
-		webSocketServerPort : 8810,
-		webSocketFixServerPort : 8811,
-
-		uploadServerPort : 8812
+		webSocketFixServerPort : 8889
 	},
 
 	NODE_CONFIG : {
