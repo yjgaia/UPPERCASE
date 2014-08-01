@@ -641,12 +641,7 @@ global.BOOT = BOOT = function(params) {
 							boxName = CONFIG.defaultBoxName;
 						} else {
 							boxName = uri.substring(0, i);
-
-							if (boxName === 'UPPERCASE.IO' || BOX.getBoxes()[boxName] !== undefined) {
-								uri = uri.substring(i + 1);
-							} else {
-								boxName = CONFIG.defaultBoxName;
-							}
+							uri = uri.substring(i + 1);
 						}
 
 						if (boxName === 'UPPERCASE.IO-TRANSPORT') {
