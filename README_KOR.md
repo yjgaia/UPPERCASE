@@ -20,7 +20,7 @@ Install
 	
 	Linux
 	```
-	open -e .profile
+	open -e .bash_profile
 	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
 	```
 

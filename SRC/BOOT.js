@@ -1,4 +1,5 @@
-global.BOOT = BOOT = function(params) {'use strict';
+global.BOOT = BOOT = function(params) {
+	'use strict';
 	//OPTIONAL: params
 	//OPTIONAL: params.CONFIG
 	//OPTIONAL: params.NODE_CONFIG
@@ -648,8 +649,11 @@ global.BOOT = BOOT = function(params) {'use strict';
 							}
 						}
 
-						if (boxName === 'UPPERCASE.IO') {
+						if (boxName === 'UPPERCASE.IO-TRANSPORT') {
 							replaceRootPath(__dirname + '/UPPERCASE.IO-TRANSPORT/R');
+							requestInfo.uri = uri;
+						} else if (boxName === 'UPPERCASE.JS-BROWSER-FIX') {
+							replaceRootPath(__dirname + '/UPPERCASE.JS-BROWSER-FIX');
 							requestInfo.uri = uri;
 						} else {
 							requestInfo.uri = boxName + '/R' + (uri === '' ? '' : ('/' + uri));
