@@ -1,4 +1,4 @@
-[UPPERCASE.IO](http://UPPERCASE.IO)
+![ScreenShot](https://raw.githubusercontent.com/UPPERCASEIO/UPPERCASE.IO/master/LOGO.png)
 =========
 동적인 웹 사이트 및 모바일 애플리케이션 개발을 위한 쉽고, 명확하면서도 강력한 풀스택 (server-to-client) MVC 미들웨어
 
@@ -8,20 +8,32 @@ Version
 
 Install
 -------
-MAC
-```
-open -e .profile
-export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
-```
+1. UPPERCASE.IO를 설치한다.
 
-Project.js
-```
-require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
+2. UPPERCASE.IO의 경로를 환경변수에 등록한다.
 
-BOOT({
-	...
-});
-```
+	MAC
+	```
+	open -e .profile
+	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
+	```
+	
+	Linux
+	```
+	open -e .profile
+	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
+	```
+
+3. 프로젝트를 실행한다.
+
+    Project.js
+    ```js
+    require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
+
+    BOOT({
+        ...
+    });
+    ```
 
 Based On
 --------
@@ -38,7 +50,7 @@ Server-side:
 
 License
 -------
-MIT License
+[MIT License](https://github.com/UPPERCASEIO/UPPERCASE.IO/blob/master/LICENSE)
 
 Contact
 -------
