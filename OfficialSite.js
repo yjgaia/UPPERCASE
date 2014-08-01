@@ -7,6 +7,6 @@ CONFIG.isDevMode = true;
 INIT_OBJECTS();
 
 RESOURCE_SERVER({
-	port : 8123,
+	port : 8810,
 	rootPath : __dirname
 });
