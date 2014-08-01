@@ -14,6 +14,15 @@ open -e .profile
 export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
 ```
 
+Project.js
+```
+require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
+
+BOOT({
+	...
+});
+```
+
 Based On
 --------
 - JavaScript 1.5 (ECMA-262, 3rd edition)

@@ -1,7 +1,8 @@
 /**
  * Fix codes for UPPERCASE.IO-TRANSPORT.
  */
-RUN(function() {'use strict';
+RUN(function() {
+	'use strict';
 
 	var
 	// fix scripts folder path
