@@ -11,7 +11,7 @@ FOR_BOX(function(box) {'use strict';
 
 			var
 			// uri
-			uri = box.boxName + '/' + path + '?' + CONFIG.version;
+			uri = box.boxName + '/' + path + '?version=' + CONFIG.version;
 
 			if (callback !== undefined) {
 				GET(uri, callback);

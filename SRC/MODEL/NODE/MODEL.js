@@ -1,4 +1,5 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	OVERRIDE(box.MODEL, function(origin) {
 
@@ -910,9 +911,6 @@ FOR_BOX(function(box) {'use strict';
 
 						// error handler
 						errorHandler;
-
-						// remove TO_DELETE properties.
-						REMOVE_TO_DELETE(data);
 
 						if (callbackOrHandlers !== undefined) {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {

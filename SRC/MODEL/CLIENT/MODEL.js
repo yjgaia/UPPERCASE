@@ -298,9 +298,6 @@ FOR_BOX(function(box) {'use strict';
 							}
 						});
 					}
-
-					// remove TO_DELETE properties.
-					REMOVE_TO_DELETE(data);
 				};
 			}
 
@@ -514,9 +511,6 @@ FOR_BOX(function(box) {'use strict';
 						}
 					}
 
-					// remove TO_DELETE properties.
-					REMOVE_TO_DELETE(data);
-
 					if (updateValid !== undefined) {
 						validResult = updateValid.checkExceptUndefined(data);
 					}
@@ -588,9 +582,6 @@ FOR_BOX(function(box) {'use strict';
 							}
 						});
 					}
-
-					// remove TO_DELETE properties.
-					REMOVE_TO_DELETE(data);
 				};
 			}
 

@@ -567,15 +567,32 @@ global.BOOT = BOOT = function(params) {
 								boxName = CONFIG.defaultBoxName;
 							}
 
-							BOX.getBoxes()[boxName].DB('__UPLOAD_FILE').get(uri, function(savedData) {
+							BOX.getBoxes()[boxName].DB('__UPLOAD_FILE').get(uri.lastIndexOf('/') === -1 ? uri : uri.substring(uri.lastIndexOf('/') + 1), {
 
-								next({
-									contentType : savedData.type,
-									headers : {
-										'Content-Disposition' : 'attachment; filename="' + savedData.name + '"'
-									},
-									isFinal : true
-								});
+								error : function() {
+
+									next({
+										isFinal : true
+									});
+								},
+								
+								notExists : function() {
+
+									next({
+										isFinal : true
+									});
+								},
+
+								success : function(savedData) {
+
+									next({
+										contentType : savedData.type,
+										headers : {
+											'Content-Disposition' : 'attachment; filename="' + savedData.name + '"'
+										},
+										isFinal : true
+									});
+								}
 							});
 						}
 
@@ -641,7 +658,12 @@ global.BOOT = BOOT = function(params) {
 							boxName = CONFIG.defaultBoxName;
 						} else {
 							boxName = uri.substring(0, i);
-							uri = uri.substring(i + 1);
+
+							if (boxName === 'UPPERCASE.IO-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX' || BOX.getBoxes()[boxName] !== undefined) {
+								uri = uri.substring(i + 1);
+							} else {
+								boxName = CONFIG.defaultBoxName;
+							}
 						}
 
 						if (boxName === 'UPPERCASE.IO-TRANSPORT') {
