@@ -671,7 +671,9 @@ FOR_BOX(function(box) {
 
 									if (savedData === TO_DELETE) {
 
-										notExistsHandler();
+										if (notExistsHandler !== undefined) {
+											notExistsHandler();
+										}
 
 									} else {
 
@@ -687,13 +689,17 @@ FOR_BOX(function(box) {
 
 										if ($inc !== undefined) {
 
-											collection.save(savedData, function(error) {
+											collection.save(savedData, {
+												safe : true
+											}, function(error) {
 												next(savedData, error);
 											});
 
 										} else {
 
-											collection.save(savedData, function(error) {
+											collection.save(savedData, {
+												safe : true
+											}, function(error) {
 												next.next(savedData, error);
 											});
 										}
@@ -817,7 +823,9 @@ FOR_BOX(function(box) {
 
 								if (savedData === TO_DELETE) {
 
-									notExistsHandler();
+									if (notExistsHandler !== undefined) {
+										notExistsHandler();
+									}
 
 								} else {
 
@@ -825,7 +833,9 @@ FOR_BOX(function(box) {
 
 									savedData.removeTime = new Date();
 
-									collection.save(savedData, function(error) {
+									collection.save(savedData, {
+										safe : true
+									}, function(error) {
 
 										if (error === TO_DELETE) {
 
