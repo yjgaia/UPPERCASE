@@ -342,13 +342,35 @@ global.BOOT = BOOT = function(params) {
 			};
 
 			FOR_BOX(function(box) {
+
 				scanFolder(rootPath + '/' + box.boxName + '/' + folderName);
+
+				fs.readdirSync(rootPath + '/' + box.boxName).forEach(function(fileName) {
+
+					var
+					// full path
+					fullPath = rootPath + '/' + box.boxName + '/' + fileName,
+
+					// extname
+					extname = path.extname(fileName).toLowerCase();
+
+					if (fileName === folderName + extname && fs.statSync(fullPath).isDirectory() !== true) {
+						if (extname === '.js') {
+							funcForJS(fullPath);
+						} else if (extname === '.coffee') {
+							funcForCoffee(fullPath);
+						} else if (extname === '.litcoffee') {
+							funcForLiterateCoffee(fullPath);
+						}
+					}
+				});
 			});
 		};
 
 		scanAllBoxFolders('COMMON', loadJSForCommon, loadCoffeeForCommon, loadLiterateCoffeeForCommon);
 		scanAllBoxFolders('NODE', loadJSForNode, loadCoffeeForNode, loadLiterateCoffeeForNode);
 		scanAllBoxFolders('BROWSER', loadJSForBrowser, loadCoffeeForBrowser, loadLiterateCoffeeForBrowser);
+		scanAllBoxFolders('CLIENT', loadJSForClient, loadCoffeeForClient, loadLiterateCoffeeForClient);
 	};
 
 	generateIndexPage = function() {

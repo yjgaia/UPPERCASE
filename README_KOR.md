@@ -4,7 +4,7 @@
 
 Version
 -------
-1.4.1
+1.4.2
 
 Install
 -------
@@ -27,7 +27,7 @@ Install
 3. 프로젝트를 실행한다.
 
     Project.js
-    ```js
+    ```javascript
     require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
 
     BOOT({

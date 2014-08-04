@@ -4,7 +4,7 @@ Easy, Clear, and Powerful Full-stack (server-to-client) MVC Middleware for Dynam
 
 Version
 -------
-1.4.1
+1.4.2
 
 Install
 -------
@@ -15,7 +15,7 @@ export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
 ```
 
 Project.js
-```
+```javascript
 require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
 
 BOOT({
