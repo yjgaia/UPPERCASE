@@ -394,6 +394,15 @@ global.BOOT = BOOT = function(params) {
 	run = function(workerData) {
 
 		var
+		// next upload server host index
+		nextUploadServerHostIndex = 0,
+
+		// next socket server host index
+		nextSocketServerHostIndex = 0,
+
+		// next web socket server host index
+		nextWebSocketServerHostIndex = 0,
+
 		// web server
 		webServer,
 
@@ -472,9 +481,24 @@ global.BOOT = BOOT = function(params) {
 					// serve upload server host.
 					else if (uri === '__UPLOAD_SERVER_HOST') {
 
-						response({
-							content : ''
-						});
+						if (CONFIG.uploadServerHosts === undefined) {
+
+							response({
+								content : ''
+							});
+
+						} else {
+
+							response({
+								content : CONFIG.uploadServerHosts[nextUploadServerHostIndex]
+							});
+
+							nextUploadServerHostIndex += 1;
+
+							if (nextUploadServerHostIndex === CONFIG.uploadServerHosts.length) {
+								nextUploadServerHostIndex = 0;
+							}
+						}
 
 						return false;
 					}
@@ -575,7 +599,7 @@ global.BOOT = BOOT = function(params) {
 										isFinal : true
 									});
 								},
-								
+
 								notExists : function() {
 
 									next({
@@ -621,9 +645,24 @@ global.BOOT = BOOT = function(params) {
 					// serve socket server host.
 					else if (uri === '__SOCKET_SERVER_HOST') {
 
-						response({
-							content : ''
-						});
+						if (CONFIG.socketServerHosts === undefined) {
+
+							response({
+								content : ''
+							});
+
+						} else {
+
+							response({
+								content : CONFIG.socketServerHosts[nextSocketServerHostIndex]
+							});
+
+							nextSocketServerHostIndex += 1;
+
+							if (nextSocketServerHostIndex === CONFIG.socketServerHosts.length) {
+								nextSocketServerHostIndex = 0;
+							}
+						}
 
 						return false;
 					}
@@ -631,9 +670,24 @@ global.BOOT = BOOT = function(params) {
 					// serve web socket server host.
 					else if (uri === '__WEB_SOCKET_SERVER_HOST') {
 
-						response({
-							content : ''
-						});
+						if (CONFIG.webSocketServerHosts === undefined) {
+
+							response({
+								content : ''
+							});
+
+						} else {
+
+							response({
+								content : CONFIG.webSocketServerHosts[nextWebSocketServerHostIndex]
+							});
+
+							nextWebSocketServerHostIndex += 1;
+
+							if (nextWebSocketServerHostIndex === CONFIG.webSocketServerHosts.length) {
+								nextWebSocketServerHostIndex = 0;
+							}
+						}
 
 						return false;
 					}
