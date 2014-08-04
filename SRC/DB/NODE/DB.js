@@ -1,4 +1,5 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	var
 	//IMPORT: MongoDB ObjectID
@@ -112,7 +113,8 @@ FOR_BOX(function(box) {'use strict';
 	 */
 	box.DB = CLASS({
 
-		init : function(inner, self, name) {'use strict';
+		init : function(inner, self, name) {
+			'use strict';
 			//REQUIRED: name
 
 			var
@@ -288,8 +290,8 @@ FOR_BOX(function(box) {'use strict';
 						data : data
 					};
 
-					backupCollection.save(info, function() {
-						// ignore.
+					backupCollection.save(info, {
+						w : 0
 					});
 
 					if (NODE_CONFIG.isDBLogMode === true) {
@@ -298,17 +300,23 @@ FOR_BOX(function(box) {'use strict';
 				},
 
 				// log error.
-				logError = function(errorInfo) {
+				logError = function(errorInfo, errorHandler) {
 					//REQUIRED: errorInfo
+					//REQUIRED: errorInfo.errorMsg
+					//OPTIONAL: errorHandler
 
 					// now
 					errorInfo.time = new Date();
 
-					errorLogCollection.save(errorInfo, function() {
-						// ignore.
+					errorLogCollection.save(errorInfo, {
+						w : 0
 					});
 
-					console.log('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` ERROR:', errorInfo);
+					if (errorHandler !== undefined) {
+						errorHandler(errorInfo.errorMsg);
+					} else {
+						console.log('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` ERROR:', errorInfo);
+					}
 				},
 
 				// inner get.
@@ -353,7 +361,9 @@ FOR_BOX(function(box) {'use strict';
 							}
 						}
 
-						collection.save(data, function(error, savedData) {
+						collection.save(data, {
+							safe : true
+						}, function(error, savedData) {
 
 							if (error === TO_DELETE) {
 
@@ -373,17 +383,11 @@ FOR_BOX(function(box) {'use strict';
 							// if error is not TO_DELETE
 							else {
 
-								errorMsg = error.toString();
-
 								logError({
 									method : 'create',
 									data : data,
-									errorMsg : errorMsg
-								});
-
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								}
+									errorMsg : error.toString()
+								}, errorHandler);
 							}
 						});
 					}
@@ -391,17 +395,11 @@ FOR_BOX(function(box) {'use strict';
 					// if catch error
 					catch (error) {
 
-						errorMsg = error.toString();
-
 						logError({
 							method : 'create',
 							data : data,
-							errorMsg : errorMsg
-						});
-
-						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
-						}
+							errorMsg : error.toString()
+						}, errorHandler);
 					}
 				};
 
@@ -469,17 +467,11 @@ FOR_BOX(function(box) {'use strict';
 							// if error is not TO_DELETE
 							else {
 
-								errorMsg = error.toString();
-
 								logError({
 									method : 'get',
 									params : params,
-									errorMsg : errorMsg
-								});
-
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								}
+									errorMsg : error.toString()
+								}, errorHandler);
 							}
 						});
 					}
@@ -487,17 +479,11 @@ FOR_BOX(function(box) {'use strict';
 					// if catch error
 					catch (error) {
 
-						errorMsg = error.toString();
-
 						logError({
 							method : 'get',
 							params : params,
-							errorMsg : errorMsg
-						});
-
-						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
-						}
+							errorMsg : error.toString()
+						}, errorHandler);
 					}
 				};
 
@@ -616,17 +602,11 @@ FOR_BOX(function(box) {'use strict';
 					// if catch error
 					catch (error) {
 
-						errorMsg = error.toString();
-
 						logError({
 							method : 'get',
 							idOrParams : idOrParams,
-							errorMsg : errorMsg
-						});
-
-						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
-						}
+							errorMsg : error.toString()
+						}, errorHandler);
 					}
 				};
 
@@ -723,17 +703,11 @@ FOR_BOX(function(box) {'use strict';
 								// if error is not TO_DELETE
 								else {
 
-									errorMsg = error.toString();
-
 									logError({
 										method : 'update',
 										data : data,
-										errorMsg : errorMsg
-									});
-
-									if (errorHandler !== undefined) {
-										errorHandler(errorMsg);
-									}
+										errorMsg : error.toString()
+									}, errorHandler);
 								}
 							};
 						},
@@ -775,17 +749,11 @@ FOR_BOX(function(box) {'use strict';
 								// if error is not TO_DELETE
 								else {
 
-									errorMsg = error.toString();
-
 									logError({
 										method : 'update',
 										data : data,
-										errorMsg : errorMsg
-									});
-
-									if (errorHandler !== undefined) {
-										errorHandler(errorMsg);
-									}
+										errorMsg : error.toString()
+									}, errorHandler);
 								}
 							};
 						}]);
@@ -794,17 +762,11 @@ FOR_BOX(function(box) {'use strict';
 					// if catch error
 					catch (error) {
 
-						errorMsg = error.toString();
-
 						logError({
 							method : 'update',
 							data : data,
-							errorMsg : errorMsg
-						});
-
-						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
-						}
+							errorMsg : error.toString()
+						}, errorHandler);
 					}
 				};
 
@@ -883,17 +845,11 @@ FOR_BOX(function(box) {'use strict';
 										// if error is not TO_DELETE
 										else {
 
-											errorMsg = error.toString();
-
 											logError({
 												method : 'remove',
 												id : id,
-												errorMsg : errorMsg
-											});
-
-											if (errorHandler !== undefined) {
-												errorHandler(errorMsg);
-											}
+												errorMsg : error.toString()
+											}, errorHandler);
 										}
 									});
 								}
@@ -902,17 +858,11 @@ FOR_BOX(function(box) {'use strict';
 							// if error is not TO_DELETE
 							else {
 
-								errorMsg = error.toString();
-
 								logError({
 									method : 'remove',
 									id : id,
-									errorMsg : errorMsg
-								});
-
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								}
+									errorMsg : error.toString()
+								}, errorHandler);
 							}
 						});
 					}
@@ -920,17 +870,11 @@ FOR_BOX(function(box) {'use strict';
 					// if catch error
 					catch (error) {
 
-						errorMsg = error.toString();
-
 						logError({
 							method : 'remove',
 							id : id,
-							errorMsg : errorMsg
-						});
-
-						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
-						}
+							errorMsg : error.toString()
+						}, errorHandler);
 					}
 				};
 
@@ -1036,17 +980,11 @@ FOR_BOX(function(box) {'use strict';
 							// if error is not TO_DELETE
 							else {
 
-								errorMsg = error.toString();
-
 								logError({
 									method : 'find',
 									params : params,
-									errorMsg : errorMsg
-								});
-
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								}
+									errorMsg : error.toString()
+								}, errorHandler);
 							}
 						};
 
@@ -1064,17 +1002,11 @@ FOR_BOX(function(box) {'use strict';
 					// if catch error
 					catch (error) {
 
-						errorMsg = error.toString();
-
 						logError({
 							method : 'find',
 							params : params,
-							errorMsg : errorMsg
-						});
-
-						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
-						}
+							errorMsg : error.toString()
+						}, errorHandler);
 					}
 				};
 
@@ -1121,17 +1053,11 @@ FOR_BOX(function(box) {'use strict';
 							// if error is not TO_DELETE
 							else {
 
-								errorMsg = error.toString();
-
 								logError({
 									method : 'count',
 									filter : filter,
-									errorMsg : errorMsg
-								});
-
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								}
+									errorMsg : error.toString()
+								}, errorHandler);
 							}
 						});
 					}
@@ -1139,17 +1065,11 @@ FOR_BOX(function(box) {'use strict';
 					// if catch error
 					catch (error) {
 
-						errorMsg = error.toString();
-
 						logError({
 							method : 'count',
 							filter : filter,
-							errorMsg : errorMsg
-						});
-
-						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
-						}
+							errorMsg : error.toString()
+						}, errorHandler);
 					}
 				};
 
@@ -1206,17 +1126,11 @@ FOR_BOX(function(box) {'use strict';
 							// if error is not TO_DELETE
 							else {
 
-								errorMsg = error.toString();
-
 								logError({
 									method : 'checkIsExists',
 									filter : filter,
-									errorMsg : errorMsg
-								});
-
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								}
+									errorMsg : error.toString()
+								}, errorHandler);
 							}
 						});
 					}
@@ -1224,17 +1138,11 @@ FOR_BOX(function(box) {'use strict';
 					// if catch error
 					catch (error) {
 
-						errorMsg = error.toString();
-
 						logError({
 							method : 'checkIsExists',
 							filter : filter,
-							errorMsg : errorMsg
-						});
-
-						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
-						}
+							errorMsg : error.toString()
+						}, errorHandler);
 					}
 				};
 

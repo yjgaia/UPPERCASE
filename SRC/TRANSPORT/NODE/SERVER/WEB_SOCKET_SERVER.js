@@ -3,7 +3,8 @@
  */
 global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 
-	run : function(portOrWebServer, connectionListener) {'use strict';
+	run : function(portOrWebServer, connectionListener) {
+		'use strict';
 		//REQUIRED: portOrWebServer
 		//REQUIRED: connectionListener
 

@@ -1,4 +1,5 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	/**
 	 * Match view.
@@ -112,14 +113,14 @@ FOR_BOX(function(box) {'use strict';
 								if (view === undefined) {
 
 									view = target();
-									view.onParamsChange(params);
+									view.changeParams(params);
 									target.lastView = view;
 
 									preParams = params;
 
 								} else if (CHECK_ARE_SAME([preParams, params]) !== true) {
 
-									view.onParamsChange(params);
+									view.changeParams(params);
 									preParams = params;
 								}
 							});
@@ -130,7 +131,9 @@ FOR_BOX(function(box) {'use strict';
 				}
 
 				if (isNotFound === true && view !== undefined) {
+
 					view.close();
+
 					view = undefined;
 					target.lastView = undefined;
 				}
