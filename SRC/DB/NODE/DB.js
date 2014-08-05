@@ -665,8 +665,6 @@ FOR_BOX(function(box) {
 							}
 						});
 
-						removeToDeleteValues(data);
-
 						data.lastUpdateTime = new Date();
 
 						collection.update(filter, $inc === undefined ? {
