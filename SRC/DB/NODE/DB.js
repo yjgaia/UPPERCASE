@@ -667,6 +667,7 @@ FOR_BOX(function(box) {
 								delete data[name];
 							} else if (value === TO_DELETE) {
 								$unset[name] = '';
+								delete data[name];
 							}
 						});
 
