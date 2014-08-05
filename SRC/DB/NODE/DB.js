@@ -666,7 +666,7 @@ FOR_BOX(function(box) {
 							if (name === 'id' || name === '_id' || name === '__IS_ENABLED' || name === 'createTime' || name === '$inc') {
 								delete data[name];
 							} else if (value === TO_DELETE) {
-								$unset[name] = 1;
+								$unset[name] = '';
 							}
 						});
 
