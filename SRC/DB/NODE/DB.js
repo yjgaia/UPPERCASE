@@ -700,7 +700,10 @@ FOR_BOX(function(box) {
 									},
 
 									notExists : function() {
-										console.log(filter, 'test');
+
+										if (notExistsHandler !== undefined) {
+											notExistsHandler();
+										}
 									},
 
 									success : function(savedData) {
