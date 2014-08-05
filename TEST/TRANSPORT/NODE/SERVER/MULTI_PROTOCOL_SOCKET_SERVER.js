@@ -49,7 +49,7 @@ CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 
 		on('checkRole', function(role) {
 
-			if (CHECK_IS_EXISTS({
+			if (CHECK_IS_IN({
 				data : roles,
 				value : role
 			}) === true) {

@@ -1190,7 +1190,7 @@ FOR_BOX(function(box) {
 						// on create.
 						on('create', function(data, ret) {
 
-							if (createRole === undefined || CHECK_IS_EXISTS({
+							if (createRole === undefined || CHECK_IS_IN({
 								data : roles,
 								value : createRole
 							}) === true) {
@@ -1212,7 +1212,7 @@ FOR_BOX(function(box) {
 						// on get.
 						on('get', function(idOrParams, ret) {
 
-							if (getRole === undefined || CHECK_IS_EXISTS({
+							if (getRole === undefined || CHECK_IS_IN({
 								data : roles,
 								value : getRole
 							}) === true) {
@@ -1234,7 +1234,7 @@ FOR_BOX(function(box) {
 						// on update.
 						on('update', function(data, ret) {
 
-							if (updateRole === undefined || CHECK_IS_EXISTS({
+							if (updateRole === undefined || CHECK_IS_IN({
 								data : roles,
 								value : updateRole
 							}) === true) {
@@ -1256,7 +1256,7 @@ FOR_BOX(function(box) {
 						// on remove.
 						on('remove', function(id, ret) {
 
-							if (removeRole === undefined || CHECK_IS_EXISTS({
+							if (removeRole === undefined || CHECK_IS_IN({
 								data : roles,
 								value : removeRole
 							}) === true) {
@@ -1278,7 +1278,7 @@ FOR_BOX(function(box) {
 						// on find.
 						on('find', function(params, ret) {
 
-							if (findRole === undefined || CHECK_IS_EXISTS({
+							if (findRole === undefined || CHECK_IS_IN({
 								data : roles,
 								value : findRole
 							}) === true) {
@@ -1306,7 +1306,7 @@ FOR_BOX(function(box) {
 						// on count.
 						on('count', function(filter, ret) {
 
-							if (countRole === undefined || CHECK_IS_EXISTS({
+							if (countRole === undefined || CHECK_IS_IN({
 								data : roles,
 								value : countRole
 							}) === true) {
@@ -1328,7 +1328,7 @@ FOR_BOX(function(box) {
 						// on check is exists.
 						on('checkIsExists', function(filter, ret) {
 
-							if (checkIsExistsRole === undefined || CHECK_IS_EXISTS({
+							if (checkIsExistsRole === undefined || CHECK_IS_IN({
 								data : roles,
 								value : checkIsExistsRole
 							}) === true) {
