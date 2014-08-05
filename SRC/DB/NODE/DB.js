@@ -33,8 +33,8 @@ FOR_BOX(function(box) {
 		return data;
 	},
 
-	// remove to delete params.
-	removeToDeleteParams = function(data) {
+	// remove to delete values.
+	removeToDeleteValues = function(data) {
 		//REQUIRED: data
 
 		EACH(data, function(value, key) {
@@ -48,7 +48,7 @@ FOR_BOX(function(box) {
 
 			} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
 
-				removeToDeleteParams(value);
+				removeToDeleteValues(value);
 			}
 		});
 	},
@@ -290,7 +290,7 @@ FOR_BOX(function(box) {
 						data : data
 					};
 
-					backupCollection.save(info, {
+					backupCollection.insert(info, {
 						w : 0
 					});
 
@@ -308,7 +308,7 @@ FOR_BOX(function(box) {
 					// now
 					errorInfo.time = new Date();
 
-					errorLogCollection.save(errorInfo, {
+					errorLogCollection.insert(errorInfo, {
 						w : 0
 					});
 
@@ -350,7 +350,7 @@ FOR_BOX(function(box) {
 						// set create time.
 						data.createTime = new Date();
 
-						removeToDeleteParams(data);
+						removeToDeleteValues(data);
 
 						if (callbackOrHandlers !== undefined) {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -361,9 +361,13 @@ FOR_BOX(function(box) {
 							}
 						}
 
-						collection.save(data, {
+						collection.insert(data, {
 							safe : true
-						}, function(error, savedData) {
+						}, function(error, savedDataSet) {
+
+							var
+							// saved data
+							savedData = savedDataSet[0];
 
 							if (error === TO_DELETE) {
 
@@ -655,114 +659,80 @@ FOR_BOX(function(box) {
 							}
 						}
 
-						NEXT([
-						function(next) {
-							collection.findOne(filter, next);
-						},
+						EACH(data, function(value, name) {
+							if (name === 'id' || name === '_id' || name === '__IS_ENABLED' || name === 'createTime' || name === '$inc') {
+								delete data[name];
+							}
+						});
 
-						function(next) {
-							return function(error, savedData) {
+						removeToDeleteValues(data);
 
-								var
-								// others
-								f;
+						data.lastUpdateTime = new Date();
 
-								if (error === TO_DELETE) {
+						collection.update(filter, $inc === undefined ? {
+							$set : data
+						} : {
+							$set : data,
+							$inc : $inc
+						}, {
+							safe : true
+						}, function(error, result) {
 
-									if (savedData === TO_DELETE) {
+							if (result === 0) {
 
-										if (notExistsHandler !== undefined) {
-											notExistsHandler();
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
+								}
+
+							} else if (error === TO_DELETE) {
+
+								get({
+									filter : filter
+								}, {
+
+									error : function(errorMsg) {
+
+										logError({
+											method : 'update',
+											data : data,
+											errorMsg : errorMsg
+										}, errorHandler);
+									},
+
+									notExists : function() {
+										console.log(filter, 'test');
+									},
+
+									success : function(savedData) {
+
+										if (CHECK_IS_EMPTY_DATA(data) !== true) {
+
+											backup({
+												method : 'update',
+												data : savedData
+											});
 										}
 
-									} else {
+										// clean saved data before callback.
+										cleanData(savedData);
 
-										EACH(data, function(value, name) {
-											if (name !== 'id' && name !== '_id' && name !== '__IS_ENABLED' && name !== 'createTime' && name !== '$inc') {
-												savedData[name] = value;
-											}
-										});
-
-										removeToDeleteParams(savedData);
-
-										savedData.lastUpdateTime = new Date();
-
-										if ($inc !== undefined) {
-
-											collection.save(savedData, {
-												safe : true
-											}, function(error) {
-												next(savedData, error);
-											});
-
-										} else {
-
-											collection.save(savedData, {
-												safe : true
-											}, function(error) {
-												next.next(savedData, error);
-											});
+										if (callback !== undefined) {
+											callback(savedData);
 										}
 									}
-								}
-
-								// if error is not TO_DELETE
-								else {
-
-									logError({
-										method : 'update',
-										data : data,
-										errorMsg : error.toString()
-									}, errorHandler);
-								}
-							};
-						},
-
-						function(next) {
-							return function(savedData, error) {
-
-								collection.update(filter, {
-									$inc : $inc
-								}, function(error) {
-
-									EACH($inc, function(value, name) {
-										savedData[name] += value;
-									});
-
-									next(savedData, error);
 								});
-							};
-						},
+							}
 
-						function(next) {
-							return function(savedData, error) {
+							// if error is not TO_DELETE
+							else {
 
-								if (error === TO_DELETE) {
-
-									backup({
-										method : 'update',
-										data : savedData
-									});
-
-									// clean saved data before callback.
-									cleanData(savedData);
-
-									if (callback !== undefined) {
-										callback(savedData);
-									}
-								}
-
-								// if error is not TO_DELETE
-								else {
-
-									logError({
-										method : 'update',
-										data : data,
-										errorMsg : error.toString()
-									}, errorHandler);
-								}
-							};
-						}]);
+								logError({
+									method : 'update',
+									data : data,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
 					}
 
 					// if catch error
@@ -813,66 +783,68 @@ FOR_BOX(function(box) {
 							}
 						}
 
-						collection.findOne(filter, function(error, savedData) {
+						get({
+							filter : filter
+						}, {
 
-							var
-							// others
-							f;
-
-							if (error === TO_DELETE) {
-
-								if (savedData === TO_DELETE) {
-
-									if (notExistsHandler !== undefined) {
-										notExistsHandler();
-									}
-
-								} else {
-
-									savedData.__IS_ENABLED = false;
-
-									savedData.removeTime = new Date();
-
-									collection.save(savedData, {
-										safe : true
-									}, function(error) {
-
-										if (error === TO_DELETE) {
-
-											backup({
-												method : 'remove',
-												data : savedData
-											});
-
-											// clean saved data before callback.
-											cleanData(savedData);
-
-											if (callback !== undefined) {
-												callback(savedData);
-											}
-										}
-
-										// if error is not TO_DELETE
-										else {
-
-											logError({
-												method : 'remove',
-												id : id,
-												errorMsg : error.toString()
-											}, errorHandler);
-										}
-									});
-								}
-							}
-
-							// if error is not TO_DELETE
-							else {
+							error : function(errorMsg) {
 
 								logError({
 									method : 'remove',
 									id : id,
-									errorMsg : error.toString()
+									errorMsg : errorMsg
 								}, errorHandler);
+							},
+
+							notExists : function() {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
+								}
+							},
+
+							success : function(savedData) {
+
+								collection.update(filter, {
+									$set : {
+										__IS_ENABLED : false,
+										removeTime : new Date()
+									}
+								}, {
+									safe : true
+								}, function(error, result) {
+
+									if (result === 0) {
+
+										if (notExistsHandler !== undefined) {
+											notExistsHandler();
+										}
+
+									} else if (error === TO_DELETE) {
+
+										backup({
+											method : 'remove',
+											data : savedData
+										});
+
+										// clean saved data before callback.
+										cleanData(savedData);
+
+										if (callback !== undefined) {
+											callback(savedData);
+										}
+									}
+
+									// if error is not TO_DELETE
+									else {
+
+										logError({
+											method : 'remove',
+											id : id,
+											errorMsg : error.toString()
+										}, errorHandler);
+									}
+								});
 							}
 						});
 					}

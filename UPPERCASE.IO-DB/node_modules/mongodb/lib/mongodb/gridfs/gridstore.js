@@ -98,6 +98,7 @@ var GridStore = function GridStore(db, id, filename, mode, options) {
   this.position = 0;
   this.readPreference = this.options.readPreference || 'primary';
   this.writeConcern = _getWriteConcern(db, this.options);
+
   // Set default chunk size
   this.internalChunkSize = this.options['chunkSize'] == null ? Chunk.DEFAULT_CHUNK_SIZE : this.options['chunkSize'];
 }
@@ -143,13 +144,13 @@ GridStore.prototype.open = function(callback) {
     var collection = self.collection();
     // Put index on filename
     collection.ensureIndex([['filename', 1]], writeConcern, function(err, index) {
-      if(err) return callback(err);
+      // if(err) return callback(err);
 
       // Get chunk collection
       var chunkCollection = self.chunkCollection();
       // Ensure index on chunk collection
       chunkCollection.ensureIndex([['files_id', 1], ['n', 1]], writeConcern, function(err, index) {
-        if(err) return callback(err);
+        // if(err) return callback(err);
         _open(self, writeConcern, callback);
       });
     });

@@ -1,4 +1,5 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	/**
 	 * MongoDB collection wrapper for log class
@@ -24,8 +25,8 @@ FOR_BOX(function(box) {'use strict';
 				// now
 				data.time = new Date();
 
-				collection.save(data, function() {
-					// ignore.
+				collection.insert(data, {
+					w : 0
 				});
 			};
 		}
