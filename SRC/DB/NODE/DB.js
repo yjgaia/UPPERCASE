@@ -627,6 +627,9 @@ FOR_BOX(function(box) {
 					// $inc
 					$inc = data.$inc,
 
+					// $unset
+					$unset = {},
+
 					// filter
 					filter,
 
@@ -662,15 +665,19 @@ FOR_BOX(function(box) {
 						EACH(data, function(value, name) {
 							if (name === 'id' || name === '_id' || name === '__IS_ENABLED' || name === 'createTime' || name === '$inc') {
 								delete data[name];
+							} else if (value === TO_DELETE) {
+								$unset[name] = 1;
 							}
 						});
 
 						data.lastUpdateTime = new Date();
 
 						collection.update(filter, $inc === undefined ? {
-							$set : data
+							$set : data,
+							$unset : $unset
 						} : {
 							$set : data,
+							$unset : $unset,
 							$inc : $inc
 						}, {
 							safe : true
