@@ -367,9 +367,11 @@ FOR_BOX(function(box) {
 
 							var
 							// saved data
-							savedData = savedDataSet[0];
+							savedData;
 
 							if (error === TO_DELETE) {
+
+								savedData = savedDataSet[0];
 
 								backup({
 									method : 'create',
