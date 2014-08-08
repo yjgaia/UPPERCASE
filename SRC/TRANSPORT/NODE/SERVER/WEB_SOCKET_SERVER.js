@@ -113,7 +113,14 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 
 			// when error
 			conn.on('error', function(error) {
-				runMethods('__ERROR', error);
+
+				var
+				// error msg
+				errorMsg = error.toString();
+
+				console.log('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:', errorMsg);
+
+				runMethods('__ERROR', errorMsg);
 			});
 
 			ip = headers['x-forwarded-for'];
@@ -161,7 +168,7 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 					if (method !== undefined) {
 
 						REMOVE({
-							data : methods,
+							array : methods,
 							value : method
 						});
 
@@ -186,7 +193,11 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 
 				sendKey += 1;
 
-				conn.send(STRINGIFY(params));
+				try {
+					conn.send(STRINGIFY(params));
+				} catch(error) {
+					console.log('[UPPERCASE.JS-SOCEKT_SERVER] ERROR:', error.toString());
+				}
 
 				if (callback !== undefined) {
 

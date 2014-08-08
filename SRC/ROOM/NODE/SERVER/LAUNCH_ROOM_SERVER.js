@@ -162,7 +162,7 @@ global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = CLASS(function(cls) {'use stric
 						if (roomCounts[roomName] === 0) {
 
 							REMOVE({
-								data : sendMap[roomName],
+								array : sendMap[roomName],
 								value : send
 							});
 
@@ -179,7 +179,7 @@ global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = CLASS(function(cls) {'use stric
 					EACH(roomCounts, function(roomCount, roomName) {
 
 						REMOVE({
-							data : sendMap[roomName],
+							array : sendMap[roomName],
 							value : send
 						});
 

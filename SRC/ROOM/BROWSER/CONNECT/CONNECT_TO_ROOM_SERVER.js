@@ -114,7 +114,7 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {'us
 		if (waitingEnterRoomNames !== undefined) {
 
 			REMOVE({
-				data : waitingEnterRoomNames,
+				array : waitingEnterRoomNames,
 				value : roomName
 			});
 

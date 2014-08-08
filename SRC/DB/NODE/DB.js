@@ -37,13 +37,13 @@ FOR_BOX(function(box) {
 	removeToDeleteValues = function(data) {
 		//REQUIRED: data
 
-		EACH(data, function(value, key) {
+		EACH(data, function(value, name) {
 
 			if (value === TO_DELETE) {
 
 				REMOVE({
 					data : data,
-					key : key
+					name : name
 				});
 
 			} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {

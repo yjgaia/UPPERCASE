@@ -67,7 +67,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 
 				// remove first content piece.
 				REMOVE({
-					data : contentPieces,
+					array : contentPieces,
 					key : 0
 				});
 			}
@@ -313,7 +313,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 								if (method !== undefined) {
 
 									REMOVE({
-										data : methods,
+										array : methods,
 										value : method
 									});
 

@@ -457,7 +457,7 @@ FOR_BOX(function(box) {
 								closeWatching = function() {
 
 									REMOVE({
-										data : subRooms,
+										array : subRooms,
 										value : subRoom
 									});
 
@@ -816,7 +816,7 @@ FOR_BOX(function(box) {
 									if (innerSubRooms[id] !== undefined) {
 
 										REMOVE({
-											data : subRooms,
+											array : subRooms,
 											value : innerSubRooms[id]
 										});
 
@@ -1054,7 +1054,7 @@ FOR_BOX(function(box) {
 						subRoom.exit();
 
 						REMOVE({
-							data : subRooms,
+							array : subRooms,
 							value : subRoom
 						});
 					});
@@ -1112,7 +1112,7 @@ FOR_BOX(function(box) {
 						subRoom.exit();
 
 						REMOVE({
-							data : subRooms,
+							array : subRooms,
 							value : subRoom
 						});
 					});
@@ -1133,7 +1133,7 @@ FOR_BOX(function(box) {
 							subRoom.exit();
 
 							REMOVE({
-								data : subRooms,
+								array : subRooms,
 								value : subRoom
 							});
 						});

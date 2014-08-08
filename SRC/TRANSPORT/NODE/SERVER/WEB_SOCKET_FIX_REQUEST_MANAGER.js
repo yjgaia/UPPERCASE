@@ -162,7 +162,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(f
 			removeFirstWaitingParams = function(clientId, isToBroadcast) {
 
 				REMOVE({
-					data : waitingParamMap[clientId],
+					array : waitingParamMap[clientId],
 					key : 0
 				});
 
@@ -414,7 +414,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(f
 							if (method !== undefined) {
 
 								REMOVE({
-									data : methods,
+									array : methods,
 									value : method
 								});
 

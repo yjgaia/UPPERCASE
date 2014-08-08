@@ -2,10 +2,6 @@
 =========
 Easy, Clear, and Powerful Full-stack (server-to-client) MVC Middleware for Dynamic Web Site or Mobile Application Development
 
-Version
--------
-1.4.2
-
 Install
 -------
 MAC

@@ -60,7 +60,7 @@ FOR_BOX(function(box) {'use strict';
 						CONNECT_TO_ROOM_SERVER.off(roomName + '/' + methodName, method);
 
 						REMOVE({
-							data : methods,
+							array : methods,
 							value : method
 						});
 
