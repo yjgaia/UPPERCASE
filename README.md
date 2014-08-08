@@ -40,8 +40,9 @@ License
 -------
 [MIT License](https://github.com/UPPERCASEIO/UPPERCASE.IO/blob/master/LICENSE)
 
-Contact
--------
+Link
+----
 - Official Web Site: http://UPPERCASE.IO
+- UPPERCASE.IO 1.3: http://1.3.UPPERCASE.IO
 
 Author: Young Jae Sim (http://hanul.me)
