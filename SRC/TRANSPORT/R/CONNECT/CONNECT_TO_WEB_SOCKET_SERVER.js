@@ -122,7 +122,6 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 				//REQUIRED: params
 				//OPTIONAL: params.host
 				//OPTIONAL: params.port
-				//REQUIRED: params.fixServerPort
 				//REQUIRED: params.fixRequestURI
 				//REQUIRED: connectionListenerOrListeners
 
@@ -131,7 +130,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 				host = params.host === undefined ? global.location.hostname : host,
 
 				// port
-				port = params.fixServerPort,
+				port = params.port,
 
 				// uri
 				uri = params.fixRequestURI,

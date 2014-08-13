@@ -429,7 +429,10 @@ global.BOOT = BOOT = function(params) {
 		webServer,
 
 		// web socket fix reqeust.
-		webSocketFixRequest;
+		webSocketFixRequest,
+
+		// cal
+		cal = CALENDAR();
 
 		// init objects.
 		INIT_OBJECTS();
@@ -735,7 +738,7 @@ global.BOOT = BOOT = function(params) {
 						} else {
 							boxName = uri.substring(0, i);
 
-							if (boxName === 'UPPERCASE.IO-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX' || BOX.getBoxes()[boxName] !== undefined) {
+							if (uri.substring(i + 1, i + 7) === 'FIX.js' && (boxName === 'UPPERCASE.IO-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX' || BOX.getBoxes()[boxName] !== undefined)) {
 								uri = uri.substring(i + 1);
 							} else {
 								boxName = CONFIG.defaultBoxName;
@@ -773,7 +776,7 @@ global.BOOT = BOOT = function(params) {
 			}).getWebSocketFixRequest();
 		}
 
-		console.log('[UPPERCASE.IO] `' + CONFIG.defaultTitle + '` WORKER #' + workerData.id + ' (PID:' + workerData.pid + ') BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
+		console.log('[UPPERCASE.IO] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.defaultTitle + '` WORKER #' + workerData.id + ' (PID:' + workerData.pid + ') BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
 
 	// load UPPERCASE.JS.

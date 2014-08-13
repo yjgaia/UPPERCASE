@@ -1,16 +1,17 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	/**
 	 * Browser store class.
 	 */
 	box.STORE = CLASS({
 
-		init : function(inner, self, name) {
-			//REQUIRED: name
+		init : function(inner, self, storeName) {
+			//REQUIRED: storeName
 
 			var
 			// store
-			store = STORE(box.boxName + '.' + name),
+			store = STORE(box.boxName + '.' + storeName),
 
 			// save.
 			save,

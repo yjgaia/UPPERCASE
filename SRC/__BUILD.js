@@ -124,6 +124,7 @@ global.BUILD = function() {'use strict';
 		distFolder(name, 'BROWSER');
 		distFolder(name, 'CLIENT');
 		distFolder(name, 'NODE');
+		distFolder(name, 'TITANIUM');
 		copyFolder(name, 'R', 'R');
 	};
 

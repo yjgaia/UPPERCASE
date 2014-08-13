@@ -1,7 +1,8 @@
 /*
  * connect to room server.
  */
-global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {'use strict';
+global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
+	'use strict';
 
 	var
 	// waiting enter room names
@@ -131,17 +132,20 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {'us
 
 		run : function(params, connectionListenerOrListeners) {
 			//REQUIRED: params
-			//OPTIONAL: params.host
-			//REQUIRED: params.port
-			//OPTIONAL: params.fixRequestURI
+			//REQUIRED: params.host
+			//REQUIRED: params.socketServerPort
+			//REQUIRED: params.webSocketServerPort
 			//REQUIRED: connectionListenerOrListeners
 
 			var
-			// connection listener
+			// connection listener.
 			connectionListener,
 
-			// error listener
-			errorListener;
+			// error listener.
+			errorListener,
+
+			// success.
+			success;
 
 			if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
 				connectionListener = connectionListenerOrListeners;
@@ -150,50 +154,69 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {'us
 				errorListener = connectionListenerOrListeners.error;
 			}
 
-			CONNECT_TO_WEB_SOCKET_SERVER(params, {
+			success = function(on, off, send) {
 
-				error : errorListener,
+				innerOn = on;
+				innerOff = off;
+				innerSend = send;
 
-				success : function(on, off, send) {
+				EACH(waitingEnterRoomNames, function(roomName) {
 
-					innerOn = on;
-					innerOff = off;
-					innerSend = send;
-
-					EACH(waitingEnterRoomNames, function(roomName) {
-
-						innerSend({
-							methodName : '__ENTER_ROOM',
-							data : roomName
-						});
+					innerSend({
+						methodName : '__ENTER_ROOM',
+						data : roomName
 					});
+				});
 
-					waitingEnterRoomNames = undefined;
+				waitingEnterRoomNames = undefined;
 
-					EACH(waitingOnInfos, function(onInfo) {
-						innerOn(onInfo.methodName, onInfo.method);
-					});
+				EACH(waitingOnInfos, function(onInfo) {
+					innerOn(onInfo.methodName, onInfo.method);
+				});
 
-					waitingOnInfos = undefined;
+				waitingOnInfos = undefined;
 
-					EACH(waitingSendInfos, function(sendInfo) {
-						innerSend(sendInfo.params, sendInfo.callback);
-					});
+				EACH(waitingSendInfos, function(sendInfo) {
+					innerSend(sendInfo.params, sendInfo.callback);
+				});
 
-					waitingSendInfos = undefined;
+				waitingSendInfos = undefined;
 
-					innerOn('__DISCONNECTED', function() {
+				innerOn('__DISCONNECTED', function() {
 
-						innerOn = undefined;
-						innerOff = undefined;
-						innerSend = undefined;
-					});
+					innerOn = undefined;
+					innerOff = undefined;
+					innerSend = undefined;
+				});
 
-					if (connectionListener !== undefined) {
-						connectionListener(on, off, send);
-					}
+				if (connectionListener !== undefined) {
+					connectionListener(on, off, send);
 				}
-			});
+			};
+
+			// when mobile web
+			if (Ti.Platform.name === 'mobileweb') {
+
+				CONNECT_TO_WEB_SOCKET_SERVER({
+					host : params.host,
+					port : params.webSocketServerPort
+				}, {
+					error : errorListener,
+					success : success
+				});
+			}
+
+			// when native app
+			else {
+
+				CONNECT_TO_SOCKET_SERVER({
+					host : params.host,
+					port : params.socketServerPort
+				}, {
+					error : errorListener,
+					success : success
+				});
+			}
 		}
 	};
 });

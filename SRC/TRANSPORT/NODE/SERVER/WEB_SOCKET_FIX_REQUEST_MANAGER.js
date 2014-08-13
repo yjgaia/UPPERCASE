@@ -1,7 +1,8 @@
 /*
  * create web socket fix request manager (using jsonp long-polling).
  */
-global.WEB_SOCKET_FIX_REQUEST_MANAGER = WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {'use strict';
+global.WEB_SOCKET_FIX_REQUEST_MANAGER = WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
+	'use strict';
 
 	var
 	// HANDSHAKE_DELAY_TIME
@@ -481,19 +482,26 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(f
 						params = contentMap[clientId] === undefined ? undefined : PARSE_STR(contentMap[clientId][requestKey]),
 
 						// method name
-						methodName = params === undefined ? undefined : params.methodName,
+						methodName,
 
 						// data
-						data = params === undefined ? undefined : params.data,
+						data,
 
 						// send key
-						sendKey = params === undefined ? undefined : params.sendKey,
+						sendKey,
 
 						// connection info
 						connectionInfo,
 
 						// die.
 						die;
+
+						// init params.
+						if (params !== undefined) {
+							methodName = params.methodName;
+							data = params.data;
+							sendKey = params.sendKey;
+						}
 
 						// run methods or broadcast.
 						if (methodName !== undefined) {

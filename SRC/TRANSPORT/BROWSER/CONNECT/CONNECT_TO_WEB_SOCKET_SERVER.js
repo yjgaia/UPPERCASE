@@ -3,11 +3,11 @@
  */
 global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
-	run : function(params, connectionListenerOrListeners) {'use strict';
+	run : function(params, connectionListenerOrListeners) {
+		'use strict';
 		//REQUIRED: params
 		//OPTIONAL: params.host
 		//REQUIRED: params.port
-		//OPTIONAL: params.fixServerPort
 		//OPTIONAL: params.fixRequestURI
 		//REQUIRED: connectionListenerOrListeners
 		//REQUIRED: connectionListenerOrListeners.success
@@ -15,7 +15,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
 		var
 		// host
-		host = params.host === undefined ? global.location.hostname : host,
+		host = params.host === undefined ? global.location.hostname : params.host,
 
 		// port
 		port = params.port,
