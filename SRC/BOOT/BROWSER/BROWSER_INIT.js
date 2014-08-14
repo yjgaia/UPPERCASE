@@ -4,7 +4,8 @@ LOAD('/UPPERCASE.JS-BROWSER-FIX/FIX.js');
 // load UPPERCASE.IO-TRANSPORT FIX.
 LOAD('/UPPERCASE.IO-TRANSPORT/FIX.js');
 
-global.onload = function() {'use strict';
+global.onload = function() {
+	'use strict';
 
 	INIT_OBJECTS();
 
@@ -14,7 +15,7 @@ global.onload = function() {'use strict';
 		}
 	});
 
-	GET('__WEB_SOCKET_SERVER_HOST', function(host) {
+	GET('__WEB_SOCKET_SERVER_HOST?defaultHost=' + global.location.hostname, function(host) {
 
 		CONNECT_TO_ROOM_SERVER({
 			host : host === '' ? undefined : host,

@@ -87,6 +87,8 @@ global.BOX = BOX = METHOD(function(m) {'use strict';
 					beforeBoxSplit[boxNameSplit] = box;
 				}
 			});
+			
+			return box;
 		}
 	};
 });

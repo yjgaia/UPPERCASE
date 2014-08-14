@@ -509,7 +509,7 @@ global.BOOT = BOOT = function(params) {
 						if (CONFIG.uploadServerHosts === undefined) {
 
 							response({
-								content : ''
+								content : params.defaultHost
 							});
 
 						} else {
@@ -673,7 +673,7 @@ global.BOOT = BOOT = function(params) {
 						if (CONFIG.socketServerHosts === undefined) {
 
 							response({
-								content : ''
+								content : params.defaultHost
 							});
 
 						} else {
@@ -698,7 +698,7 @@ global.BOOT = BOOT = function(params) {
 						if (CONFIG.webSocketServerHosts === undefined) {
 
 							response({
-								content : ''
+								content : params.defaultHost
 							});
 
 						} else {
