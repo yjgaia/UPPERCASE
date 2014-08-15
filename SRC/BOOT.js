@@ -197,24 +197,10 @@ global.BOOT = BOOT = function(params) {
 			browserScript += 'EXTEND({ origin : CONFIG, extend : ' + stringifyJSONWithFunction(_CONFIG) + ' });\n';
 		}
 
-		READ_FILE({
-			path : rootPath + '/V',
-			isSync : true
-		}, {
-
-			notExists : function() {
-				version = 0;
-			},
-
-			success : function(content) {
-				version = INTEGER(content);
-			}
-		});
-
 		// when master and dev mode, write version file.
 		if (CONFIG.isDevMode === true && cluster.isMaster === true) {
 
-			version += 1;
+			version = 'V' + Date.now();
 
 			WRITE_FILE({
 				path : rootPath + '/V',
@@ -223,7 +209,20 @@ global.BOOT = BOOT = function(params) {
 			});
 		}
 
-		version = 'V' + version;
+		READ_FILE({
+			path : rootPath + '/V',
+			isSync : true
+		}, {
+
+			notExists : function() {
+				console.log(CONSOLE_RED('[UPPERCASE.IO] NOT EXISTS `V` VERSION FILE!'));
+				version = 'V__NOT_EXISTS';
+			},
+
+			success : function(buffer) {
+				version = buffer.toString();
+			}
+		});
 
 		// set version.
 		CONFIG.version = version;
