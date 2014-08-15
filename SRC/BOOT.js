@@ -738,7 +738,7 @@ global.BOOT = BOOT = function(params) {
 						} else {
 							boxName = uri.substring(0, i);
 
-							if (uri.substring(i + 1, i + 7) === 'FIX.js' && (boxName === 'UPPERCASE.IO-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX' || BOX.getBoxes()[boxName] !== undefined)) {
+							if (BOX.getBoxes()[boxName] !== undefined || (uri.substring(i + 1, i + 7) === 'FIX.js' && (boxName === 'UPPERCASE.IO-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX'))) {
 								uri = uri.substring(i + 1);
 							} else {
 								boxName = CONFIG.defaultBoxName;

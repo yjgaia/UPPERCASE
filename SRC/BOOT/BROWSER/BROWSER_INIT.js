@@ -15,7 +15,10 @@ global.onload = function() {
 		}
 	});
 
-	GET('__WEB_SOCKET_SERVER_HOST?defaultHost=' + global.location.hostname, function(host) {
+	GET({
+		uri : '__WEB_SOCKET_SERVER_HOST',
+		paramStr : 'defaultHost=' + global.location.hostname
+	}, function(host) {
 
 		CONNECT_TO_ROOM_SERVER({
 			host : host === '' ? undefined : host,

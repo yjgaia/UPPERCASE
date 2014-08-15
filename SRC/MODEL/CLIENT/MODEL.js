@@ -262,40 +262,49 @@ FOR_BOX(function(box) {
 
 							var
 							// error msg
-							errorMsg = result.errorMsg,
+							errorMsg,
 
 							// valid errors
-							validErrors = result.validErrors,
+							validErrors,
 
 							// is not authed
-							isNotAuthed = result.isNotAuthed,
+							isNotAuthed,
 
 							// saved data
-							savedData = result.savedData;
+							savedData;
 
-							if (errorMsg !== undefined) {
+							if (result !== undefined) {
 
-								logError(errorMsg);
+								errorMsg = result.errorMsg;
+								validErrors = result.validErrors;
+								isNotAuthed = result.isNotAuthed;
+								savedData = result.savedData;
 
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								}
-							} else if (validErrors !== undefined) {
-								if (notValidHandler !== undefined) {
-									notValidHandler(validErrors);
-								} else {
-									logNotValid(validErrors);
-								}
-							} else if (isNotAuthed === true) {
-								if (notAuthedHandler !== undefined) {
-									notAuthedHandler();
-								} else {
-									logNotAuthed();
-								}
-							} else {
-								if (callback !== undefined) {
+								if (errorMsg !== undefined) {
+
+									logError(errorMsg);
+
+									if (errorHandler !== undefined) {
+										errorHandler(errorMsg);
+									}
+								} else if (validErrors !== undefined) {
+									if (notValidHandler !== undefined) {
+										notValidHandler(validErrors);
+									} else {
+										logNotValid(validErrors);
+									}
+								} else if (isNotAuthed === true) {
+									if (notAuthedHandler !== undefined) {
+										notAuthedHandler();
+									} else {
+										logNotAuthed();
+									}
+								} else if (callback !== undefined) {
 									callback(savedData);
 								}
+
+							} else {
+								callback();
 							}
 						});
 					}
@@ -380,10 +389,8 @@ FOR_BOX(function(box) {
 							} else {
 								logNotExists();
 							}
-						} else {
-							if (callback !== undefined) {
-								callback(savedData);
-							}
+						} else if (callback !== undefined) {
+							callback(savedData);
 						}
 					});
 				};
@@ -576,10 +583,8 @@ FOR_BOX(function(box) {
 								} else {
 									logNotExists();
 								}
-							} else {
-								if (callback !== undefined) {
-									callback(savedData);
-								}
+							} else if (callback !== undefined) {
+								callback(savedData);
 							}
 						});
 					}
@@ -657,10 +662,8 @@ FOR_BOX(function(box) {
 							} else {
 								logNotExists();
 							}
-						} else {
-							if (callback !== undefined) {
-								callback(savedData);
-							}
+						} else if (callback !== undefined) {
+							callback(savedData);
 						}
 					});
 				};
@@ -731,10 +734,8 @@ FOR_BOX(function(box) {
 							} else {
 								logNotAuthed();
 							}
-						} else {
-							if (callback !== undefined) {
-								callback(savedDataSet);
-							}
+						} else if (callback !== undefined) {
+							callback(savedDataSet);
 						}
 					});
 				};
@@ -893,10 +894,8 @@ FOR_BOX(function(box) {
 							} else {
 								logNotAuthed();
 							}
-						} else {
-							if (callback !== undefined) {
-								callback(count);
-							}
+						} else if (callback !== undefined) {
+							callback(count);
 						}
 					});
 				};
@@ -962,10 +961,8 @@ FOR_BOX(function(box) {
 							} else {
 								logNotAuthed();
 							}
-						} else {
-							if (callback !== undefined) {
-								callback(isExists);
-							}
+						} else if (callback !== undefined) {
+							callback(isExists);
 						}
 					});
 				};
