@@ -12,8 +12,11 @@ global.BOOT = BOOT = function(params) {
 	//IMPORT: path
 	path = require('path'),
 
+	//IMPORT: cluster
+	cluster = require('cluster'),
+
 	// version
-	version = 'V' + Date.now(),
+	version,
 
 	// root path
 	rootPath = process.cwd(),
@@ -115,11 +118,11 @@ global.BOOT = BOOT = function(params) {
 	// load UPPERCASE.JS.
 	loadUJS,
 
-	// init boxes.
-	initBoxes,
-
 	// configuration.
 	configuration,
+
+	// init boxes.
+	initBoxes,
 
 	// clustering cpus and servers.
 	clustering,
@@ -172,10 +175,6 @@ global.BOOT = BOOT = function(params) {
 			});
 		};
 
-		// set version.
-		CONFIG.version = version;
-		browserScript += 'CONFIG.version = \'' + version + '\'\n';
-
 		// set root path.
 		NODE_CONFIG.rootPath = rootPath;
 
@@ -197,6 +196,38 @@ global.BOOT = BOOT = function(params) {
 			// add to browser script.
 			browserScript += 'EXTEND({ origin : CONFIG, extend : ' + stringifyJSONWithFunction(_CONFIG) + ' });\n';
 		}
+
+		READ_FILE({
+			path : rootPath + '/V',
+			isSync : true
+		}, {
+
+			notExists : function() {
+				version = 0;
+			},
+
+			success : function(content) {
+				version = INTEGER(content);
+			}
+		});
+
+		// when master and dev mode, write version file.
+		if (CONFIG.isDevMode === true && cluster.isMaster === true) {
+
+			version += 1;
+
+			WRITE_FILE({
+				path : rootPath + '/V',
+				content : version,
+				isSync : true
+			});
+		}
+
+		version = 'V' + version;
+
+		// set version.
+		CONFIG.version = version;
+		browserScript += 'CONFIG.version = \'' + version + '\'\n';
 
 		// override NODE_CONFIG.
 		if (_NODE_CONFIG !== undefined) {
@@ -470,6 +501,9 @@ global.BOOT = BOOT = function(params) {
 					// uri
 					uri = requestInfo.uri,
 
+					// headers
+					headers = requestInfo.headers,
+
 					// params
 					params = requestInfo.params,
 
@@ -482,25 +516,46 @@ global.BOOT = BOOT = function(params) {
 					// serve browser script.
 					if (uri === '__SCRIPT') {
 
-						response({
-							contentType : 'text/javascript',
-							content : browserScript,
-							version : version
-						});
+						// check ETag.
+						if (CONFIG.isDevMode !== true &&
+
+						// check version.
+						headers['if-none-match'] === version) {
+
+							// response cached.
+							response({
+								statusCode : 304
+							});
+						}
+
+						// redirect correct version uri.
+						else if (CONFIG.isDevMode !== true && params.version !== version) {
+
+							response({
+								statusCode : 302,
+								headers : {
+									'Location' : '/__SCRIPT?version=' + version
+								}
+							});
+						}
+
+						// response browser script.
+						else {
+
+							response({
+								contentType : 'text/javascript',
+								content : browserScript,
+								version : version
+							});
+						}
 
 						return false;
 					}
 
 					// serve base style css.
 					else if (uri === '__CSS') {
-
-						response({
-							contentType : 'text/css',
-							content : initStyleCSS,
-							version : version
-						});
-
-						return false;
+						replaceRootPath(__dirname);
+						requestInfo.uri = 'INIT_STYLE.css';
 					}
 
 					// serve upload server host.
@@ -782,6 +837,9 @@ global.BOOT = BOOT = function(params) {
 	// load UPPERCASE.JS.
 	loadUJS();
 
+	// configuration.
+	configuration();
+
 	// init boxes.
 	initBoxes();
 
@@ -792,9 +850,6 @@ global.BOOT = BOOT = function(params) {
 
 	// load UPPERCASE.IO-UTIL.
 	loadJSForNode(__dirname + '/UPPERCASE.IO-UTIL/NODE.js');
-
-	// configuration.
-	configuration();
 
 	// clustering cpus and servers.
 	clustering(function(workerData) {

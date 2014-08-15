@@ -2,6 +2,8 @@
 =========
 동적인 웹 사이트 및 모바일 애플리케이션 개발을 위한 쉽고, 명확하면서도 강력한 풀스택 (server-to-client) MVC 미들웨어
 
+UPPERCASE.JS를 포함하고 있습니다.
+
 Install
 -------
 1. UPPERCASE.IO를 설치한다.
