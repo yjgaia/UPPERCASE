@@ -3,7 +3,8 @@ VERSIONS
 1.4.2 (working)
 - UPPERCASE.JS 1.4.11 반영
 - 버그 개선
-- BOX 내부의 NODE.js COMMON.js BROWSER.js 등도 각각 가져올 수 있도록 기능 추가
+- BOX 내부의 NODE.js COMMON.js BROWSER.js 등도 각각 가져올 수 있도록 기능 추가 
+- 버젼 정보를 V 파일에 자동으로 생성
 
 1.4.1 (2014. 7. 31)
 - 나뉘어져 있던 포트들을 하나로 공유
