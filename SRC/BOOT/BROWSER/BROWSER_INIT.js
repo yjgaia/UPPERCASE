@@ -1,10 +1,10 @@
 // load UPPERCASE.JS-BROWSER-FIX.
-LOAD('/UPPERCASE.JS-BROWSER-FIX/FIX.js');
+LOAD(BROWSER_CONFIG.fixScriptsFolderPath + '/FIX.js');
 
 // load UPPERCASE.IO-TRANSPORT FIX.
-LOAD('/UPPERCASE.IO-TRANSPORT/FIX.js');
+LOAD(BROWSER_CONFIG.fixTransportScriptsFolderPath + '/FIX.js');
 
-global.onload = function() {
+READY(function() {
 	'use strict';
 
 	INIT_OBJECTS();
@@ -49,4 +49,4 @@ global.onload = function() {
 			});
 		});
 	});
-};
+});

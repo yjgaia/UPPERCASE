@@ -1,7 +1,8 @@
 /*
  * distribute UPPERCASE.IO.
  */
-global.BUILD = function() {'use strict';
+global.BUILD = function() {
+	'use strict';
 
 	// load UPPERCASE.JS.
 	require('../UPPERCASE.JS-COMMON.js');

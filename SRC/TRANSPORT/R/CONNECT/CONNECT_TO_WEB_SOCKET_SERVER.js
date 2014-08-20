@@ -1,4 +1,5 @@
-OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
+OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
+	'use strict';
 
 	/*
 	 * connect to web socket fix server (using jsonp long-polling).
@@ -72,7 +73,10 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 				});
 			}
 
-			requestInfo.script = LOAD(path);
+			requestInfo.script = LOAD({
+				path : path,
+				isNoCache : true
+			});
 
 			try {
 				requestInfo.script.getEl().onerror = errorListener;
@@ -127,7 +131,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {'use strict';
 
 				var
 				// host
-				host = params.host === undefined ? global.location.hostname : host,
+				host = params.host === undefined ? global.location.hostname : params.host,
 
 				// port
 				port = params.port,

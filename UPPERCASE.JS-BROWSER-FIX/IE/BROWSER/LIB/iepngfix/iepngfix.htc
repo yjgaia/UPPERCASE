@@ -16,7 +16,7 @@ IEPNGFix.data = IEPNGFix.data || {};
 // * An absolute path like:  '/images/blank.gif'
 // * A path relative to this HTC file like:  thisFolder + 'blank.gif'
 var thisFolder = document.URL.replace(/(\\|\/)[^\\\/]*$/, '/');
-IEPNGFix.blankImg = window.BROWSER_CONFIG.fixScriptsFolderPath + '/IE/BROWSER-UTIL/DOM/LIB/iepngfix/blank.gif?' + (window.CONFIG.version !== undefined ? window.CONFIG.version : (new Date()).getTime());
+IEPNGFix.blankImg = window.BROWSER_CONFIG.fixScriptsFolderPath + '/IE/BROWSER/LIB/iepngfix/blank.gif?' + (window.CONFIG.version !== undefined ? window.CONFIG.version : (new Date()).getTime());
 
 
 IEPNGFix.fix = function(elm, src, t) {

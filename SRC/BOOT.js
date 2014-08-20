@@ -244,6 +244,10 @@ global.BOOT = BOOT = function(params) {
 			// add to browser script.
 			browserScript += 'EXTEND({ origin : BROWSER_CONFIG, extend : ' + stringifyJSONWithFunction(_BROWSER_CONFIG) + ' });\n';
 		}
+
+		// set fix scripts folder path.
+		browserScript += 'BROWSER_CONFIG.fixScriptsFolderPath = \'/UPPERCASE.JS-BROWSER-FIX\'\n';
+		browserScript += 'BROWSER_CONFIG.fixTransportScriptsFolderPath = \'/UPPERCASE.IO-TRANSPORT\'\n';
 	};
 
 	initBoxes = function(next) {
@@ -792,7 +796,7 @@ global.BOOT = BOOT = function(params) {
 						} else {
 							boxName = uri.substring(0, i);
 
-							if (BOX.getBoxes()[boxName] !== undefined || (uri.substring(i + 1, i + 7) === 'FIX.js' && (boxName === 'UPPERCASE.IO-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX'))) {
+							if (BOX.getBoxes()[boxName] !== undefined || boxName === 'UPPERCASE.IO-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX') {
 								uri = uri.substring(i + 1);
 							} else {
 								boxName = CONFIG.defaultBoxName;
