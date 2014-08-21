@@ -10,11 +10,8 @@ FOR_BOX(function(box) {
 			//REQUIRED: name
 
 			var
-			// native db
-			nativeDB = CONNECT_TO_DB_SERVER.getNativeDB(),
-
-			// MongoDB collection
-			collection = nativeDB.collection(box.boxName + '.' + name),
+			// waiting log data set
+			waitingLogDataSet = [],
 
 			// log.
 			log;
@@ -22,13 +19,32 @@ FOR_BOX(function(box) {
 			self.log = log = function(data) {
 				//REQUIRED: data
 
-				// now
-				data.time = new Date();
-
-				collection.insert(data, {
-					w : 0
-				});
+				waitingLogDataSet.push(data);
 			};
+
+			CONNECT_TO_DB_SERVER.addInitDBFunc(function(nativeDB) {
+
+				var
+				// MongoDB collection
+				collection = nativeDB.collection(box.boxName + '.' + name);
+
+				self.log = log = function(data) {
+					//REQUIRED: data
+
+					// now
+					data.time = new Date();
+
+					collection.insert(data, {
+						w : 0
+					});
+				};
+
+				EACH(waitingLogDataSet, function(data) {
+					log(data);
+				});
+
+				waitingLogDataSet = undefined;
+			});
 		}
 	});
 });
