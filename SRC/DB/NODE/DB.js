@@ -188,7 +188,7 @@ FOR_BOX(function(box) {
 			};
 
 			self.get = get = function(idOrParams, callbackOrHandlers) {
-				//REQUIRED: idOrParams
+				//OPTIONAL: idOrParams
 				//OPTIONAL: idOrParams.isRandom
 				//REQUIRED: callbackOrHandlers
 
@@ -552,11 +552,6 @@ FOR_BOX(function(box) {
 							filter = {
 								_id : gen_id(idOrParams)
 							};
-						}
-
-						// when undefined
-						else {
-							filter = {};
 						}
 
 						if (filter === undefined) {

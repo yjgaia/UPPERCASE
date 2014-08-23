@@ -62,6 +62,7 @@
 		<!-- import UPPERCASE.JS -->
 		<script src="UPPERCASE.JS-COMMON.js"></script>
 		<script src="UPPERCASE.JS-BROWSER.js"></script>
+		<script src="UPPERCASE.JS-BROWSER-FIX/FIX.js"></script>
 
 		<!-- import UPPERCASE.IO-BOX -->
 		<script src="UPPERCASE.IO-BOX/CORE.js"></script>
@@ -73,7 +74,6 @@
 		</script>
 
 		<!-- import UPPERCASE.IO-TRANSPORT -->
-		<script src="UPPERCASE.IO-TRANSPORT/R/UPPERCASE.JS-BROWSER-FIX/FIX.js"></script>
 		<script src="UPPERCASE.IO-TRANSPORT/BROWSER.js"></script>
 		<script src="UPPERCASE.IO-TRANSPORT/R/FIX.js"></script>
 
@@ -96,7 +96,7 @@
 				sourceEl = document.getElementById('source');
 
 				global.test = function(path) {
-					GET('TEST/' + path + '.js', function(source) {
+					GET('EXAMPLES/' + path + '.js', function(source) {
 						sourceEl.innerText = source;
 						eval(source);
 					});

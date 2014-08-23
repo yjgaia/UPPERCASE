@@ -280,10 +280,11 @@ global.BOOT = BOOT = function(params) {
 
 		CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 
-			if (NODE_CONFIG.serverClusteringHosts !== undefined && NODE_CONFIG.serverClusteringPort !== undefined) {
+			if (NODE_CONFIG.serverClusteringHosts !== undefined && NODE_CONFIG.thisServerHost !== undefined && NODE_CONFIG.serverClusteringPort !== undefined) {
 
 				SERVER_CLUSTERING({
 					hosts : NODE_CONFIG.serverClusteringHosts,
+					thisServerHost : NODE_CONFIG.thisServerHost,
 					port : NODE_CONFIG.serverClusteringPort
 				}, function() {
 					work(workerData);
@@ -491,7 +492,7 @@ global.BOOT = BOOT = function(params) {
 				securedKeyFilePath : rootPath + '/' + NODE_CONFIG.securedKeyFilePath,
 				securedCertFilePath : rootPath + '/' + NODE_CONFIG.securedCertFilePath,
 
-				notParsingNativeReqURIs : ['__UPLOAD'],
+				noParsingNativeReqURIs : ['__UPLOAD'],
 
 				rootPath : rootPath,
 

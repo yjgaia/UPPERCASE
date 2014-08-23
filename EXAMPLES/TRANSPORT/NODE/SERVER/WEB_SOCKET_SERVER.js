@@ -9,13 +9,7 @@ INIT_OBJECTS();
 
 CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 
-	// if you want to run just web socket server, not fix server.
-	// WEB_SOCKET_SERVER(8125, function(clientInfo, on, off, send) {...
-
-	WEB_SOCKET_SERVER({
-		port : 8125,
-		fixServerPort : 8126
-	}, function(clientInfo, on, off, send, disconnect) {
+	WEB_SOCKET_SERVER(8125, function(clientInfo, on, off, send, disconnect) {
 
 		var
 		// roles
@@ -48,8 +42,8 @@ CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 
 		on('checkRole', function(role) {
 
-			if (CHECK_IS_EXISTS({
-				data : roles,
+			if (CHECK_IS_IN({
+				array : roles,
 				value : role
 			}) === true) {
 
