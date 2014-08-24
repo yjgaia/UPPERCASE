@@ -77,7 +77,7 @@ FOR_BOX(function(box) {
 					filter._id = filter.id;
 
 				} else {
-					filter._id = gen_id(id);
+					filter._id = gen_id(filter.id);
 				}
 				delete filter.id;
 			}
@@ -190,7 +190,7 @@ FOR_BOX(function(box) {
 			};
 
 			self.get = get = function(idOrParams, callbackOrHandlers) {
-				//OPTIONAL: idOrParams
+				//REQUIRED: idOrParams
 				//OPTIONAL: idOrParams.id
 				//OPTIONAL: idOrParams.filter
 				//OPTIONAL: idOrParams.sort
@@ -404,10 +404,10 @@ FOR_BOX(function(box) {
 
 								savedData = savedDataSet[0];
 
-								addHistory('create', savedData._id.toString(), data, data.createTime);
-
 								// clean saved data before callback.
 								cleanData(savedData);
+
+								addHistory('create', savedData.id, savedData, savedData.createTime);
 
 								if (callback !== undefined) {
 									callback(savedData);
@@ -529,7 +529,7 @@ FOR_BOX(function(box) {
 				};
 
 				self.get = get = function(idOrParams, callbackOrHandlers) {
-					//OPTIONAL: idOrParams
+					//REQUIRED: idOrParams
 					//OPTIONAL: idOrParams.id
 					//OPTIONAL: idOrParams.filter
 					//OPTIONAL: idOrParams.sort
@@ -568,38 +568,25 @@ FOR_BOX(function(box) {
 					// error message
 					errorMsg;
 
-					if (callbackOrHandlers === undefined) {
-						callbackOrHandlers = idOrParams;
-						idOrParams = undefined;
-					}
-
-					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-						callback = callbackOrHandlers;
-					} else {
-						callback = callbackOrHandlers.success;
-						notExistsHandler = callbackOrHandlers.notExists;
-						errorHandler = callbackOrHandlers.error;
-					}
-
 					try {
 
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
+							errorHandler = callbackOrHandlers.error;
+						}
+
 						// init params.
-						if (CHECK_IS_DATA(idOrParams) === true) {
+						if (CHECK_IS_DATA(idOrParams) !== true) {
+							id = idOrParams;
+						} else {
 							id = idOrParams.id;
 							filter = idOrParams.filter;
 							sort = idOrParams.sort;
 							isRandom = idOrParams.isRandom;
 							isIncludeRemoved = idOrParams.isIncludeRemoved;
-						} else if (idOrParams !== undefined) {
-							id = idOrParams;
-						}
-
-						if (filter === undefined) {
-							filter = {};
-
-							if (id !== undefined) {
-								filter._id = gen_id(id);
-							}
 						}
 
 						if (sort === undefined) {
@@ -609,6 +596,10 @@ FOR_BOX(function(box) {
 						}
 
 						if (isRandom === true) {
+
+							if (filter === undefined) {
+								filter = {};
+							}
 
 							filter.__RANDOM_KEY = {
 								$gte : randomKey = Math.random()
@@ -638,6 +629,12 @@ FOR_BOX(function(box) {
 							});
 
 						} else {
+
+							if (filter === undefined) {
+								filter = {
+									_id : gen_id(id)
+								};
+							}
 
 							innerGet({
 								filter : filter,
@@ -801,7 +798,7 @@ FOR_BOX(function(box) {
 												});
 											}
 
-											addHistory('update', id, updateData, data.lastUpdateTime);
+											addHistory('update', id, updateData, savedData.lastUpdateTime);
 										}
 
 										// clean saved data before callback.
@@ -921,7 +918,9 @@ FOR_BOX(function(box) {
 
 									} else if (error === TO_DELETE) {
 
-										addHistory('remove', savedData.id, removeData, removeData.removeTime);
+										addHistory('remove', savedData.id, {
+											removeTime : removeData.removeTime
+										}, removeData.removeTime);
 
 										// clean saved data before callback.
 										cleanData(savedData);

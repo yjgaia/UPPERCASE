@@ -843,7 +843,8 @@ FOR_BOX(function(box) {
 				if (getConfig !== false) {
 
 					self.get = get = function(idOrParams, callbackOrHandlers) {
-						//OPTIONAL: idOrParams
+						//REQUIRED: idOrParams
+						//OPTIONAL: idOrParams.id
 						//OPTIONAL: idOrParams.filter
 						//OPTIONAL: idOrParams.sort
 						//OPTIONAL: idOrParams.isRandom
