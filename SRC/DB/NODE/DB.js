@@ -54,7 +54,7 @@ FOR_BOX(function(box) {
 	},
 
 	// make up filter.
-	makeUpFilter = function(filter, isIncludeRemovedData) {
+	makeUpFilter = function(filter, isIncludeRemoved) {
 
 		var
 		// f.
@@ -82,7 +82,7 @@ FOR_BOX(function(box) {
 				delete filter.id;
 			}
 
-			if (isIncludeRemovedData !== true) {
+			if (isIncludeRemoved !== true) {
 				filter.__IS_ENABLED = true;
 			}
 
@@ -191,8 +191,11 @@ FOR_BOX(function(box) {
 
 			self.get = get = function(idOrParams, callbackOrHandlers) {
 				//OPTIONAL: idOrParams
+				//OPTIONAL: idOrParams.id
+				//OPTIONAL: idOrParams.filter
+				//OPTIONAL: idOrParams.sort
 				//OPTIONAL: idOrParams.isRandom
-				//OPTIONAL: idOrParams.isIncludeRemovedData
+				//OPTIONAL: idOrParams.isIncludeRemoved
 				//REQUIRED: callbackOrHandlers
 
 				waitingGetInfos.push({
@@ -213,14 +216,12 @@ FOR_BOX(function(box) {
 				});
 			};
 
-			self.remove = remove = function(idOrParams, callbackOrHandlers) {
-				//REQUIRED: idOrParams
-				//REQUIRED: idOrParams.id
-				//OPTIONAL: idOrParams.isRemoveForever
+			self.remove = remove = function(id, callbackOrHandlers) {
+				//REQUIRED: id
 				//OPTIONAL: callbackOrHandlers
 
 				waitingRemoveInfos.push({
-					idOrParams : idOrParams,
+					id : id,
 					callbackOrHandlers : callbackOrHandlers
 				});
 			};
@@ -232,7 +233,7 @@ FOR_BOX(function(box) {
 				//OPTIONAL: params.start
 				//OPTIONAL: params.count
 				//OPTIONAL: params.isFindAll
-				//OPTIONAL: params.isIncludeRemovedData
+				//OPTIONAL: params.isIncludeRemoved
 				//REQUIRED: callbackOrHandlers
 
 				waitingFindInfos.push({
@@ -244,7 +245,7 @@ FOR_BOX(function(box) {
 			self.count = count = function(filterOrParams, callbackOrHandlers) {
 				//OPTIONAL: filterOrParams
 				//OPTIONAL: filterOrParams.filter
-				//OPTIONAL: filterOrParams.isIncludeRemovedData
+				//OPTIONAL: filterOrParams.isIncludeRemoved
 				//REQUIRED: callbackOrHandlers
 
 				waitingCountInfos.push({
@@ -256,7 +257,7 @@ FOR_BOX(function(box) {
 			self.checkIsExists = checkIsExists = function(filterOrParams, callbackOrHandlers) {
 				//OPTIONAL: filterOrParams
 				//OPTIONAL: filterOrParams.filter
-				//OPTIONAL: filterOrParams.isIncludeRemovedData
+				//OPTIONAL: filterOrParams.isIncludeRemoved
 				//REQUIRED: callbackOrHandlers
 
 				waitingCheckIsExistsInfos.push({
@@ -440,7 +441,7 @@ FOR_BOX(function(box) {
 					//REQUIRED: params
 					//REQUIRED: params.filter
 					//REQUIRED: params.sort
-					//OPTIONAL: params.isIncludeRemovedData
+					//OPTIONAL: params.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -450,8 +451,8 @@ FOR_BOX(function(box) {
 					// sort
 					sort = params.sort,
 
-					// is include removed data
-					isIncludeRemovedData = params.isIncludeRemovedData,
+					// is include removed
+					isIncludeRemoved = params.isIncludeRemoved,
 
 					// callback
 					callback,
@@ -467,7 +468,7 @@ FOR_BOX(function(box) {
 
 					try {
 
-						makeUpFilter(filter, isIncludeRemovedData);
+						makeUpFilter(filter, isIncludeRemoved);
 
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
@@ -495,8 +496,11 @@ FOR_BOX(function(box) {
 									callback(savedData);
 
 								} else {
+
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
+									} else {
+										console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
 									}
 								}
 							}
@@ -526,11 +530,17 @@ FOR_BOX(function(box) {
 
 				self.get = get = function(idOrParams, callbackOrHandlers) {
 					//OPTIONAL: idOrParams
+					//OPTIONAL: idOrParams.id
+					//OPTIONAL: idOrParams.filter
+					//OPTIONAL: idOrParams.sort
 					//OPTIONAL: idOrParams.isRandom
-					//OPTIONAL: idOrParams.isIncludeRemovedData
+					//OPTIONAL: idOrParams.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
 
 					var
+					// id
+					id,
+
 					// filter
 					filter,
 
@@ -540,8 +550,8 @@ FOR_BOX(function(box) {
 					// is random
 					isRandom,
 
-					// is include removed data
-					isIncludeRemovedData,
+					// is include removed
+					isIncludeRemoved,
 
 					// callback
 					callback,
@@ -573,25 +583,23 @@ FOR_BOX(function(box) {
 
 					try {
 
-						// when params
+						// init params.
 						if (CHECK_IS_DATA(idOrParams) === true) {
-
+							id = idOrParams.id;
 							filter = idOrParams.filter;
 							sort = idOrParams.sort;
 							isRandom = idOrParams.isRandom;
-							isIncludeRemovedData = idOrParams.isIncludeRemovedData;
-						}
-
-						// when id
-						else if (idOrParams !== undefined) {
-
-							filter = {
-								_id : gen_id(idOrParams)
-							};
+							isIncludeRemoved = idOrParams.isIncludeRemoved;
+						} else if (idOrParams !== undefined) {
+							id = idOrParams;
 						}
 
 						if (filter === undefined) {
 							filter = {};
+
+							if (id !== undefined) {
+								filter._id = gen_id(id);
+							}
 						}
 
 						if (sort === undefined) {
@@ -611,7 +619,7 @@ FOR_BOX(function(box) {
 							innerGet({
 								filter : filter,
 								sort : sort,
-								isIncludeRemovedData : isIncludeRemovedData
+								isIncludeRemoved : isIncludeRemoved
 							}, {
 								error : errorHandler,
 								notExists : function() {
@@ -623,7 +631,7 @@ FOR_BOX(function(box) {
 									innerGet({
 										filter : filter,
 										sort : sort,
-										isIncludeRemovedData : isIncludeRemovedData
+										isIncludeRemoved : isIncludeRemoved
 									}, callbackOrHandlers);
 								},
 								success : callback
@@ -634,7 +642,7 @@ FOR_BOX(function(box) {
 							innerGet({
 								filter : filter,
 								sort : sort,
-								isIncludeRemovedData : isIncludeRemovedData
+								isIncludeRemoved : isIncludeRemoved
 							}, callbackOrHandlers);
 						}
 					}
@@ -743,6 +751,8 @@ FOR_BOX(function(box) {
 
 								if (notExistsHandler !== undefined) {
 									notExistsHandler();
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 								}
 
 							} else if (error === TO_DELETE) {
@@ -764,6 +774,8 @@ FOR_BOX(function(box) {
 
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
+										} else {
+											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 										}
 									},
 
@@ -825,19 +837,11 @@ FOR_BOX(function(box) {
 					}
 				};
 
-				self.remove = remove = function(idOrParams, callbackOrHandlers) {
-					//REQUIRED: idOrParams
-					//REQUIRED: idOrParams.id
-					//OPTIONAL: idOrParams.isRemoveForever
+				self.remove = remove = function(id, callbackOrHandlers) {
+					//REQUIRED: id
 					//OPTIONAL: callbackOrHandlers
 
 					var
-					// id
-					id,
-
-					// is remove forever
-					isRemoveForever,
-
 					// filter
 					filter,
 
@@ -854,13 +858,6 @@ FOR_BOX(function(box) {
 					errorMsg;
 
 					try {
-
-						if (CHECK_IS_DATA(idOrParams) !== true) {
-							id = idOrParams;
-						} else {
-							id = idOrParams.id;
-							isRemoveForever = idOrParams.isRemoveForever;
-						}
 
 						filter = {
 							_id : gen_id(id),
@@ -894,6 +891,8 @@ FOR_BOX(function(box) {
 
 								if (notExistsHandler !== undefined) {
 									notExistsHandler();
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
 								}
 							},
 
@@ -916,6 +915,8 @@ FOR_BOX(function(box) {
 
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
+										} else {
+											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
 										}
 
 									} else if (error === TO_DELETE) {
@@ -962,7 +963,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params.start
 					//OPTIONAL: params.count
 					//OPTIONAL: params.isFindAll
-					//OPTIONAL: params.isIncludeRemovedData
+					//OPTIONAL: params.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -982,7 +983,7 @@ FOR_BOX(function(box) {
 					isFindAll,
 
 					// is include remove data
-					isIncludeRemovedData,
+					isIncludeRemoved,
 
 					// callback
 					callback,
@@ -1009,7 +1010,7 @@ FOR_BOX(function(box) {
 							start = INTEGER(params.start);
 							count = INTEGER(params.count);
 							isFindAll = params.isFindAll;
-							isIncludeRemovedData = params.isIncludeRemovedData;
+							isIncludeRemoved = params.isIncludeRemoved;
 						}
 
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -1094,7 +1095,7 @@ FOR_BOX(function(box) {
 				self.count = count = function(filterOrParams, callbackOrHandlers) {
 					//OPTIONAL: filterOrParams
 					//OPTIONAL: filterOrParams.filter
-					//OPTIONAL: filterOrParams.isIncludeRemovedData
+					//OPTIONAL: filterOrParams.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -1102,7 +1103,7 @@ FOR_BOX(function(box) {
 					filter,
 
 					// is include remove data
-					isIncludeRemovedData,
+					isIncludeRemoved,
 
 					// callback
 					callback,
@@ -1119,7 +1120,7 @@ FOR_BOX(function(box) {
 							filter = filterOrParams;
 						} else {
 							filter = filterOrParams.filter;
-							isIncludeRemovedData = filterOrParams.isIncludeRemovedData;
+							isIncludeRemoved = filterOrParams.isIncludeRemoved;
 						}
 
 						if (callbackOrHandlers === undefined) {
@@ -1172,7 +1173,7 @@ FOR_BOX(function(box) {
 				self.checkIsExists = checkIsExists = function(filterOrParams, callbackOrHandlers) {
 					//OPTIONAL: filterOrParams
 					//OPTIONAL: filterOrParams.filter
-					//OPTIONAL: filterOrParams.isIncludeRemovedData
+					//OPTIONAL: filterOrParams.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -1180,7 +1181,7 @@ FOR_BOX(function(box) {
 					filter,
 
 					// is include remove data
-					isIncludeRemovedData,
+					isIncludeRemoved,
 
 					// callback
 					callback,
@@ -1197,7 +1198,7 @@ FOR_BOX(function(box) {
 							filter = filterOrParams;
 						} else {
 							filter = filterOrParams.filter;
-							isIncludeRemovedData = filterOrParams.isIncludeRemovedData;
+							isIncludeRemoved = filterOrParams.isIncludeRemoved;
 						}
 
 						if (callbackOrHandlers === undefined) {
@@ -1278,7 +1279,7 @@ FOR_BOX(function(box) {
 				waitingUpdateInfos = undefined;
 
 				EACH(waitingRemoveInfos, function(info) {
-					remove(info.idOrParams, info.callbackOrHandlers);
+					remove(info.id, info.callbackOrHandlers);
 				});
 
 				waitingRemoveInfos = undefined;

@@ -6,6 +6,7 @@ VERSIONS
 - BOX 내부의 NODE.js COMMON.js BROWSER.js 등도 각각 가져올 수 있도록 기능 추가 
 - 버젼 정보를 V 파일에 자동으로 생성
 - 기존 DB 백업 시스템을 제거하고, __HISTORY를 만들어 1개의 데이터에 대해 시간별로 저장
+- DB: isIncludeRemoved로 삭제된 데이터를 가져오는 설정 추가
 
 1.4.1 (2014. 7. 31)
 - 나뉘어져 있던 포트들을 하나로 공유
