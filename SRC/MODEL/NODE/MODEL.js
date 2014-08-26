@@ -421,13 +421,45 @@ FOR_BOX(function(box) {
 				};
 
 				innerGet = function(idOrParams, ret, clientInfo) {
+					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams.id
+					//OPTIONAL: idOrParams.filter
+					//OPTIONAL: idOrParams.sort
+					//OPTIONAL: idOrParams.isRandom
 
 					var
+					// id
+					id,
+
+					// filter
+					filter,
+
+					// sort
+					sort,
+
+					// is random
+					isRandom,
+
 					// is not run next
 					isNotRunNext;
 
+					// init params.
+					if (CHECK_IS_DATA(idOrParams) !== true) {
+						id = idOrParams;
+					} else {
+						id = idOrParams.id;
+						filter = idOrParams.filter;
+						sort = idOrParams.sort;
+						isRandom = idOrParams.isRandom;
+					}
+
 					// get data in database.
-					db.get(idOrParams, {
+					db.get({
+						id : id,
+						filter : filter,
+						sort : sort,
+						isRandom : isRandom
+					}, {
 
 						error : function(errorMsg) {
 
@@ -648,13 +680,48 @@ FOR_BOX(function(box) {
 				};
 
 				innerFind = function(params, ret, clientInfo) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//OPTIONAL: params.isFindAll
 
 					var
+					// filter
+					filter,
+
+					// sort
+					sort,
+
+					// start
+					start,
+
+					// count
+					count,
+
+					// is find all
+					isFindAll,
+
 					// is not run next
 					isNotRunNext;
 
+					if (params !== undefined) {
+						filter = params.filter;
+						sort = params.sort;
+						start = INTEGER(params.start);
+						count = INTEGER(params.count);
+						isFindAll = params.isFindAll;
+					}
+
 					// find data set in database.
-					db.find(params, {
+					db.find({
+						filter : filter,
+						sort : sort,
+						start : start,
+						count : count,
+						isFindAll : isFindAll
+					}, {
 
 						error : function(errorMsg) {
 
@@ -689,14 +756,25 @@ FOR_BOX(function(box) {
 					});
 				};
 
-				innerCount = function(filter, ret, clientInfo) {
+				innerCount = function(params, ret, clientInfo) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
 
 					var
+					// filter
+					filter,
+
 					// is not run next
 					isNotRunNext;
 
+					if (params !== undefined) {
+						filter = params.filter;
+					}
+
 					// count data in database.
-					db.count(filter, {
+					db.count({
+						filter : filter
+					}, {
 
 						error : function(errorMsg) {
 
@@ -731,14 +809,23 @@ FOR_BOX(function(box) {
 					});
 				};
 
-				innerCheckIsExists = function(filter, ret, clientInfo) {
+				innerCheckIsExists = function(params, ret, clientInfo) {
 
 					var
+					// filter
+					filter,
+
 					// is not run next
 					isNotRunNext;
 
+					if (params !== undefined) {
+						filter = params.filter;
+					}
+
 					// check is exists data in database.
-					db.checkIsExists(filter, {
+					db.checkIsExists({
+						filter : filter
+					}, {
 
 						error : function(errorMsg) {
 
@@ -859,12 +946,6 @@ FOR_BOX(function(box) {
 
 						// error handler
 						errorHandler;
-
-						// init params.
-						if (callbackOrHandlers === undefined) {
-							callbackOrHandlers = idOrParams;
-							idOrParams = undefined;
-						}
 
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
@@ -1093,8 +1174,9 @@ FOR_BOX(function(box) {
 				// count.
 				if (countConfig !== false) {
 
-					self.count = count = function(filter, callbackOrHandlers) {
-						//OPTIONAL: filter
+					self.count = count = function(params, callbackOrHandlers) {
+						//OPTIONAL: params
+						//OPTIONAL: params.filter
 						//REQUIRED: callbackOrHandlers
 
 						var
@@ -1106,8 +1188,8 @@ FOR_BOX(function(box) {
 
 						// init params.
 						if (callbackOrHandlers === undefined) {
-							callbackOrHandlers = filter;
-							filter = undefined;
+							callbackOrHandlers = params;
+							params = undefined;
 						}
 
 						if (callbackOrHandlers !== undefined) {
@@ -1119,7 +1201,7 @@ FOR_BOX(function(box) {
 							}
 						}
 
-						innerCount(filter, function(result) {
+						innerCount(params, function(result) {
 
 							var
 							// error msg
@@ -1142,8 +1224,9 @@ FOR_BOX(function(box) {
 				// check is exists.
 				if (checkIsExistsConfig !== false) {
 
-					self.checkIsExists = checkIsExists = function(filter, callbackOrHandlers) {
-						//OPTIONAL: filter
+					self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+						//OPTIONAL: params
+						//OPTIONAL: params.filter
 						//REQUIRED: callbackOrHandlers
 
 						var
@@ -1155,8 +1238,8 @@ FOR_BOX(function(box) {
 
 						// init params.
 						if (callbackOrHandlers === undefined) {
-							callbackOrHandlers = filter;
-							filter = undefined;
+							callbackOrHandlers = params;
+							params = undefined;
 						}
 
 						if (callbackOrHandlers !== undefined) {
@@ -1168,7 +1251,7 @@ FOR_BOX(function(box) {
 							}
 						}
 
-						innerCheckIsExists(filter, function(result) {
+						innerCheckIsExists(params, function(result) {
 
 							var
 							// error msg
@@ -1320,14 +1403,14 @@ FOR_BOX(function(box) {
 					if (countConfig !== false) {
 
 						// on count.
-						on('count', function(filter, ret) {
+						on('count', function(params, ret) {
 
 							if (countRole === undefined || CHECK_IS_IN({
 								data : roles,
 								value : countRole
 							}) === true) {
 
-								innerCount(filter, ret, clientInfo);
+								innerCount(params, ret, clientInfo);
 
 							} else {
 
@@ -1342,14 +1425,14 @@ FOR_BOX(function(box) {
 					if (checkIsExistsConfig !== false) {
 
 						// on check is exists.
-						on('checkIsExists', function(filter, ret) {
+						on('checkIsExists', function(params, ret) {
 
 							if (checkIsExistsRole === undefined || CHECK_IS_IN({
 								data : roles,
 								value : checkIsExistsRole
 							}) === true) {
 
-								innerCheckIsExists(filter, ret, clientInfo);
+								innerCheckIsExists(params, ret, clientInfo);
 
 							} else {
 

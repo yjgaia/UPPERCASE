@@ -335,12 +335,6 @@ FOR_BOX(function(box) {
 					// error handler
 					errorHandler;
 
-					// init params.
-					if (callbackOrHandlers === undefined) {
-						callbackOrHandlers = idOrParams;
-						idOrParams = undefined;
-					}
-
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 						callback = callbackOrHandlers;
 					} else {
@@ -416,12 +410,6 @@ FOR_BOX(function(box) {
 
 					// error handler
 					errorHandler;
-
-					// init params.
-					if (callbackOrHandlers === undefined) {
-						callbackOrHandlers = idOrParams;
-						idOrParams = undefined;
-					}
 
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 						callback = callbackOrHandlers;
@@ -838,8 +826,9 @@ FOR_BOX(function(box) {
 
 			if (countConfig !== false) {
 
-				self.count = count = function(filter, callbackOrHandlers) {
-					//OPTIONAL: filter
+				self.count = count = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -854,8 +843,8 @@ FOR_BOX(function(box) {
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
-						callbackOrHandlers = filter;
-						filter = undefined;
+						callbackOrHandlers = params;
+						params = undefined;
 					}
 
 					if (callbackOrHandlers !== undefined) {
@@ -870,7 +859,7 @@ FOR_BOX(function(box) {
 
 					room.send({
 						methodName : 'count',
-						data : filter
+						data : params
 					}, function(result) {
 
 						var
@@ -905,8 +894,9 @@ FOR_BOX(function(box) {
 
 			if (checkIsExistsConfig !== false) {
 
-				self.checkIsExists = checkIsExists = function(filter, callbackOrHandlers) {
-					//OPTIONAL: filter
+				self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -921,8 +911,8 @@ FOR_BOX(function(box) {
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
-						callbackOrHandlers = filter;
-						filter = undefined;
+						callbackOrHandlers = params;
+						params = undefined;
 					}
 
 					if (callbackOrHandlers !== undefined) {
@@ -937,7 +927,7 @@ FOR_BOX(function(box) {
 
 					room.send({
 						methodName : 'checkIsExists',
-						data : filter
+						data : params
 					}, function(result) {
 
 						var
