@@ -332,9 +332,6 @@ FOR_BOX(function(box) {
 					// init data.
 					initData(data);
 
-					// remove TO_DELETE properties.
-					REMOVE_TO_DELETE(data);
-
 					// valid data.
 					if (createValid !== undefined) {
 

@@ -2,10 +2,18 @@
 =========
 동적인 웹 사이트 및 모바일 애플리케이션 개발을 위한 쉽고, 명확하면서도 강력한 풀스택 (server-to-client) MVC 미들웨어
 
-UPPERCASE.JS를 포함하고 있습니다.
+[UPPERCASE.JS](http://uppercaseseries.org/#JS)를 기반으로 하고 있습니다.
 
-Install
--------
+## 용어
+
+#### BOX
+BOX는 UPPERCASE.IO에서의 모듈을 칭합니다.
+
+UPPERCASE.IO의 공식 BOX 저장소는 다음 링크에 있습니다.
+* [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)
+
+## 설치
+
 1. UPPERCASE.IO를 설치한다.
 
 2. UPPERCASE.IO의 경로를 환경변수에 등록한다.
@@ -42,24 +50,12 @@ Based On
 - JavaScript 1.5 (ECMA-262, 3rd edition)
 - CommonJS Modules/1.0
 
-Browser-side:
-- IE 5.5를 포함한 거의 모든 브라우저
-
 Server-side:
 - [Node.js](http://nodejs.org)
 - [MongoDB](http://www.mongodb.org)
 - [ImageMagick](http://www.imagemagick.org)
 
-License
--------
-[MIT License](https://github.com/UPPERCASEIO/UPPERCASE.IO/blob/master/LICENSE)
-
-Link
-----
-- Official Web Site: http://UPPERCASE.IO
-- UPPERCASE.IO 1.3: http://1.3.UPPERCASE.IO
-
-# UPPERCASE.IO의 분산 처리 전략
+## UPPERCASE.IO의 분산 처리 전략
 
 UPPERCASE.IO 기반 프로젝트의 주축을 이루는 서버의 기능별 파트는
 1. 대문 서버 - 유저들에게 웹 페이지나 분산된 서버들의 정보를 제공하는 서버이다.
@@ -95,8 +91,17 @@ UPPERCASE.IO에서는 상대적으로 트래픽이 적은 API 서버들이 자�
 여기에 더불어 UPPERCASE.IO의 R 기능을 이용하여 대문 서버가 제공할 이미지들 또한 분산처리한다면 대문 서버가 감당하는 부하가 많이 줄어들게 된다.
 UPPERCASE.IO에서는 상대적으로 트래픽이 적은 API 서버들이 자동으로 이 역할을 담당한다.
 
+## License
+[MIT](LICENSE)
 
-## 설정 방법
-포트는 모든 서버가 동일하기 때문에, 호스트 정보만을 다룬다.
+## Author
+[Young Jae Sim](https://github.com/Hanul)
 
-Author: Young Jae Sim (http://hanul.me)
+## Contact
+* [Facebook User Group](https://www.facebook.com/groups/uppercase/)
+* [GitHub Issues](https://github.com/UPPERCASE-Series/UPPERCASE.IO/issues)
+
+## Other Link
+* [Official Web Site](http://UPPERCASE.IO)
+* [1.3 version](http://1.3.UPPERCASE.IO)
+* [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)

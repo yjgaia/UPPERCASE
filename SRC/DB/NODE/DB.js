@@ -33,13 +33,13 @@ FOR_BOX(function(box) {
 		return data;
 	},
 
-	// remove to delete values.
-	removeToDeleteValues = function(data) {
+	// remove empty values.
+	removeEmptyValues = function(data) {
 		//REQUIRED: data
 
 		EACH(data, function(value, name) {
 
-			if (value === TO_DELETE) {
+			if (value === undefined || value === TO_DELETE) {
 
 				REMOVE({
 					data : data,
@@ -48,7 +48,7 @@ FOR_BOX(function(box) {
 
 			} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
 
-				removeToDeleteValues(value);
+				removeEmptyValues(value);
 			}
 		});
 	},
@@ -381,7 +381,7 @@ FOR_BOX(function(box) {
 						// set create time.
 						data.createTime = new Date();
 
-						removeToDeleteValues(data);
+						removeEmptyValues(data);
 
 						if (callbackOrHandlers !== undefined) {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -719,7 +719,6 @@ FOR_BOX(function(box) {
 								}
 
 								$unset[name] = '';
-								delete data[name];
 
 							} else {
 								isSetData = true;
@@ -727,6 +726,8 @@ FOR_BOX(function(box) {
 						});
 
 						data.lastUpdateTime = new Date();
+
+						removeEmptyValues(data);
 
 						updateData = {
 							$set : data

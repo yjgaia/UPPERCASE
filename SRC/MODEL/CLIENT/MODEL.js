@@ -227,9 +227,6 @@ FOR_BOX(function(box) {
 						initData(data);
 					}
 
-					// remove TO_DELETE properties.
-					REMOVE_TO_DELETE(data);
-
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
