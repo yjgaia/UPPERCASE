@@ -1,6 +1,9 @@
 // load UPPERCASE.JS.
-require('../UPPERCASE.JS-COMMON.js');
-require('../UPPERCASE.JS-NODE.js');
+require(process.env['UPPERCASE_IO_PATH'] + '/UPPERCASE.JS-COMMON.js');
+require(process.env['UPPERCASE_IO_PATH'] + '/UPPERCASE.JS-NODE.js');
+
+// load UPPERCASE.IO-UTIL.
+require(process.env['UPPERCASE_IO_PATH'] + '/UPPERCASE.IO-UTIL/NODE.js');
 
 /*
  * pack UPPERCASE.IO BOX.
@@ -15,9 +18,6 @@ RUN(function() {
 	//IMPORT: path
 	path = require('path'),
 
-	// UPPERCASE.IO path
-	UPPERCASE_IO_PATH = process.env['UPPERCASE_IO_PATH'],
-
 	// root path
 	rootPath = __dirname,
 
@@ -27,9 +27,6 @@ RUN(function() {
 	// browser script
 	browserScript = '',
 
-	// secured browser script
-	securedBrowserScript = '',
-
 	// common script
 	commonScript = '',
 
@@ -38,7 +35,7 @@ RUN(function() {
 
 	// log.
 	log = function(msg) {
-		console.log('PACKER: ' + msg);
+		console.log('PACK: ' + msg);
 	},
 
 	// check is allowed folder.
@@ -55,10 +52,6 @@ RUN(function() {
 		name = params.name;
 
 		return (
-
-			// is directory
-			fs.statSync(rootPath + '/' + path).isDirectory() === true &&
-
 			// hide folder
 			name[0] !== '.' &&
 
@@ -77,23 +70,29 @@ RUN(function() {
 	},
 
 	// copy.
-	copy = function(path, to) {
+	copy = function(from, to) {
 
-		if (fs.statSync(path).isDirectory() === true) {
-			fs.mkdirSync(to);
-			fs.readdirSync(path).forEach(function(name) {
-				if (name[0] !== '.') {
-					copy(path + '/' + name, to + '/' + name);
-				}
+		FIND_FILE_NAMES({
+			path : from,
+			isSync : true
+		}, function(fileNames) {
+			EACH(fileNames, function(fileName) {
+				COPY_FILE({
+					from : from + '/' + fileName,
+					to : to + '/' + fileName,
+					isSync : true
+				});
 			});
-		} else {
-			fs.createReadStream(path).pipe(fs.createWriteStream(to));
-		}
-	},
+		});
 
-	// write.
-	write = function(to, content) {
-		fs.writeFileSync(to, content);
+		FIND_FOLDER_NAMES({
+			path : from,
+			isSync : true
+		}, function(folderNames) {
+			EACH(folderNames, function(folderName) {
+				copy(from + '/' + folderName, to + '/' + folderName);
+			});
+		});
 	},
 
 	// scan folder.
@@ -101,45 +100,47 @@ RUN(function() {
 		//REQUIRED: path
 		//REQUIRED: func
 
-		var
-		// folder paths
-		folderPaths,
-
-		// extra
-		i;
-
-		if (fs.existsSync(path) === true) {
-
-			folderPaths = [];
-
-			fs.readdirSync(path).forEach(function(name) {
-
-				var fullPath = path + '/' + name;
-
-				if (checkIsAllowedFolder({
-					path : fullPath,
-					name : name
-				}) === true) {
-					folderPaths.push(fullPath);
-				} else if (fs.statSync(rootPath + '/' + fullPath).isDirectory() !== true) {
-					func(fullPath);
-				}
+		FIND_FILE_NAMES({
+			path : path,
+			isSync : true
+		}, function(fileNames) {
+			EACH(fileNames, function(fileName) {
+				func(path + '/' + fileName);
 			});
+		});
 
-			for ( i = 0; i < folderPaths.length; i += 1) {
-				scanFolder(folderPaths[i], func);
-			}
-		}
+		FIND_FOLDER_NAMES({
+			path : path,
+			isSync : true
+		}, function(folderNames) {
+			EACH(folderNames, function(folderName) {
+				scanFolder(path + '/' + folderName, func);
+			});
+		});
 	},
 
 	// scan box folder.
 	scanBoxFolder = function(func) {
 		//REQUIRED: func
 
-		fs.readdirSync(boxName).forEach(function(name) {
-			if (name[0] !== '.' && name !== 'BROWSER' && name !== 'BROWSER_SECURED' && name !== 'COMMON' && name !== 'NODE') {
-				func(boxName + '/' + name);
-			}
+		FIND_FILE_NAMES({
+			path : boxName,
+			isSync : true
+		}, function(fileNames) {
+			EACH(fileNames, function(fileName) {
+				func(boxName + '/' + fileName);
+			});
+		});
+
+		FIND_FOLDER_NAMES({
+			path : boxName,
+			isSync : true
+		}, function(folderNames) {
+			EACH(folderNames, function(folderName) {
+				if (folderName !== 'BROWSER' && folderName !== 'COMMON' && folderName !== 'NODE' && folderName !== 'TITANIUM') {
+					func(boxName + '/' + folderName);
+				}
+			});
 		});
 	},
 
@@ -147,51 +148,13 @@ RUN(function() {
 	loadForBrowser = function(relativePath) {
 		//REQUIRED: relativePath
 
-		var
-		// absolute path
-		absolutePath = rootPath + '/' + relativePath,
-
-		// extname
-		extname = path.extname(relativePath),
-
-		// content
-		content = fs.readFileSync(absolutePath);
-
-		if (extname === '.js') {
+		if (path.extname(relativePath) === '.js') {
 
 			// add to browser script.
-			browserScript += content + '\n';
-
-		} else if (extname === '.__UPPERCASE_IO_COMPILED') {
-
-			// add to browser script.
-			browserScript += content + '\n';
-		}
-	},
-
-	// load for browser secured.
-	loadForBrowserSecured = function(relativePath) {
-		//REQUIRED: relativePath
-
-		var
-		// absolute path
-		absolutePath = rootPath + '/' + relativePath,
-
-		// extname
-		extname = path.extname(relativePath),
-
-		// content
-		content = fs.readFileSync(absolutePath);
-
-		if (extname === '.js') {
-
-			// add to secured browser script.
-			securedBrowserScript += content + '\n';
-
-		} else if (extname === '.__UPPERCASE_IO_COMPILED') {
-
-			// add to secured browser script.
-			securedBrowserScript += content + '\n';
+			browserScript += READ_FILE({
+				path : rootPath + '/' + relativePath,
+				isSync : true
+			}) + '\n';
 		}
 	},
 
@@ -199,51 +162,27 @@ RUN(function() {
 	loadForCommon = function(relativePath) {
 		//REQUIRED: relativePath
 
-		var
-		// absolute path
-		absolutePath = rootPath + '/' + relativePath,
-
-		// extname
-		extname = path.extname(relativePath),
-
-		// content
-		content = fs.readFileSync(absolutePath);
-
-		if (extname === '.js') {
+		if (path.extname(relativePath) === '.js') {
 
 			// add to common script.
-			commonScript += content + '\n';
-
-		} else if (extname === '.__UPPERCASE_IO_COMPILED') {
-
-			// add to common script.
-			commonScript += content + '\n';
+			commonScript += READ_FILE({
+				path : rootPath + '/' + relativePath,
+				isSync : true
+			}) + '\n';
 		}
 	},
 
-	// load for sever.
-	loadForServer = function(relativePath) {
+	// load for node.
+	loadForNode = function(relativePath) {
 		//REQUIRED: relativePath
 
-		var
-		// absolute path
-		absolutePath = rootPath + '/' + relativePath,
-
-		// extname
-		extname = path.extname(relativePath),
-
-		// content
-		content = fs.readFileSync(absolutePath);
-
-		if (extname === '.js') {
+		if (path.extname(relativePath) === '.js') {
 
 			// add to node script.
-			nodeScript += content + '\n';
-
-		} else if (extname === '.__UPPERCASE_IO_COMPILED') {
-
-			// add to node script.
-			nodeScript += content + '\n';
+			nodeScript += READ_FILE({
+				path : rootPath + '/' + relativePath,
+				isSync : true
+			}) + '\n';
 		}
 	},
 
@@ -253,9 +192,6 @@ RUN(function() {
 		// minify browser script.
 		browserScript = MINIFY_JS(browserScript);
 
-		// minify secured browser script.
-		securedBrowserScript = MINIFY_JS(securedBrowserScript);
-
 		// minify common script.
 		commonScript = MINIFY_JS(commonScript);
 
@@ -263,20 +199,8 @@ RUN(function() {
 		nodeScript = MINIFY_JS(nodeScript);
 	};
 
-	// load UPPERCASE.JS.
-	require(UPPERCASE_IO_PATH + '/UPPERCASE.JS-COMMON.js');
-	require(UPPERCASE_IO_PATH + '/UPPERCASE.JS-NODE.js');
-
-	// load UPPERCASE.IO-UTIL.
-	require(UPPERCASE_IO_PATH + '/UPPERCASE.IO-UTIL/NODE.js');
-
 	// pack box.
 	log('PACKING BOX [' + boxName + ']...');
-
-	// create folder.
-	log('CREATING FOLDER...');
-	fs.mkdirSync('__PACK/' + boxName);
-	log('CREATED FOLDER!');
 
 	// load box.
 	log('LOADING BOX...');
@@ -286,11 +210,6 @@ RUN(function() {
 	scanFolder(boxName + '/BROWSER', loadForBrowser);
 	log('LOADED FOR BROWSER!');
 
-	// load for browser secured.
-	log('LOADING FOR BROWSER SECURED...');
-	scanFolder(boxName + '/BROWSER_SECURED', loadForBrowserSecured);
-	log('LOADED FOR BROWSER SECURED!');
-
 	// load for common.
 	log('LOADING FOR COMMON...');
 	scanFolder(boxName + '/COMMON', loadForCommon);
@@ -298,7 +217,7 @@ RUN(function() {
 
 	// load for node.
 	log('LOADING FOR NODE...');
-	scanFolder(boxName + '/NODE', loadForServer);
+	scanFolder(boxName + '/NODE', loadForNode);
 	log('LOADED FOR NODE!');
 
 	log('LOADED BOX!');
@@ -316,43 +235,50 @@ RUN(function() {
 
 	// save browser script.
 	if (browserScript !== '') {
-		log('SAVING BROWSER SCRIPT...');
-		fs.mkdirSync('__PACK/' + boxName + '/BROWSER');
-		write('__PACK/' + boxName + '/BROWSER/BROWSER.js', browserScript);
-		log('SAVED BROWSER SCRIPT!');
-	}
 
-	// save browser secured script.
-	if (securedBrowserScript !== '') {
-		log('SAVING BROWSER SECURED SCRIPT...');
-		fs.mkdirSync('__PACK/' + boxName + '/BROWSER_SECURED');
-		write('__PACK/' + boxName + '/BROWSER_SECURED/BROWSER_SECURED.js', securedBrowserScript);
-		log('SAVED BROWSER SECURED SCRIPT!');
+		log('SAVING BROWSER SCRIPT...');
+
+		WRITE_FILE({
+			path : '__PACK/' + boxName + '/BROWSER.js',
+			content : browserScript,
+			isSync : true
+		});
+
+		log('SAVED BROWSER SCRIPT!');
 	}
 
 	// save common script.
 	if (commonScript !== '') {
+
 		log('SAVING COMMON SCRIPT...');
-		fs.mkdirSync('__PACK/' + boxName + '/COMMON');
-		write('__PACK/' + boxName + '/COMMON/COMMON.js', commonScript);
+
+		WRITE_FILE({
+			path : '__PACK/' + boxName + '/COMMON.js',
+			content : commonScript,
+			isSync : true
+		});
+
 		log('SAVED COMMON SCRIPT!');
 	}
 
 	// save node script.
 	if (nodeScript !== '') {
+
 		log('SAVING NODE SCRIPT...');
-		fs.mkdirSync('__PACK/' + boxName + '/NODE');
-		write('__PACK/' + boxName + '/NODE/NODE.js', nodeScript);
+
+		WRITE_FILE({
+			path : '__PACK/' + boxName + '/NODE.js',
+			content : nodeScript,
+			isSync : true
+		});
+
 		log('SAVED NODE SCRIPT!');
 	}
 
 	// save node module.
 	if (fs.existsSync(boxName + '/NODE/node_modules') === true) {
 		log('SAVING NODE MODULES...');
-		if (fs.existsSync('__PACK/' + boxName + '/NODE') === false) {
-			fs.mkdirSync('__PACK/' + boxName + '/NODE');
-		}
-		copy(boxName + '/NODE/node_modules', '__PACK/' + boxName + '/NODE/node_modules');
+		copy(boxName + '/NODE/node_modules', '__PACK/' + boxName + '/node_modules');
 		log('SAVED NODE MODULES!');
 	}
 
@@ -360,5 +286,4 @@ RUN(function() {
 
 	// done!
 	log('PACKED BOX [' + boxName + ']!');
-
 });
