@@ -104,14 +104,6 @@ FOR_BOX(function(box) {
 				// db
 				db = box.DB(name),
 
-				// log error.
-				logError = function(methodName, errorMsg) {
-					//REQUIRED: methodName
-					//REQUIRED: errorMsg
-
-					console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.' + methodName + '` ERROR: ' + errorMsg));
-				},
-
 				// get name.
 				getName,
 
@@ -376,9 +368,6 @@ FOR_BOX(function(box) {
 								db.create(data, {
 
 									error : function(errorMsg) {
-
-										logError('create', errorMsg);
-
 										ret({
 											errorMsg : errorMsg
 										});
@@ -459,9 +448,6 @@ FOR_BOX(function(box) {
 					}, {
 
 						error : function(errorMsg) {
-
-							logError('get', errorMsg);
-
 							ret({
 								errorMsg : errorMsg
 							});
@@ -548,9 +534,6 @@ FOR_BOX(function(box) {
 								db.update(data, {
 
 									error : function(errorMsg) {
-
-										logError('update', errorMsg);
-
 										ret({
 											errorMsg : errorMsg
 										});
@@ -629,9 +612,6 @@ FOR_BOX(function(box) {
 							db.remove(id, {
 
 								error : function(errorMsg) {
-
-									logError('remove', errorMsg);
-
 									ret({
 										errorMsg : errorMsg
 									});
@@ -721,9 +701,6 @@ FOR_BOX(function(box) {
 					}, {
 
 						error : function(errorMsg) {
-
-							logError('find', errorMsg);
-
 							ret({
 								errorMsg : errorMsg
 							});
@@ -774,9 +751,6 @@ FOR_BOX(function(box) {
 					}, {
 
 						error : function(errorMsg) {
-
-							logError('count', errorMsg);
-
 							ret({
 								errorMsg : errorMsg
 							});
@@ -825,9 +799,6 @@ FOR_BOX(function(box) {
 					}, {
 
 						error : function(errorMsg) {
-
-							logError('checkIsExists', errorMsg);
-
 							ret({
 								errorMsg : errorMsg
 							});
@@ -905,6 +876,8 @@ FOR_BOX(function(box) {
 								if (errorMsg !== undefined) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
+									} else {
+										console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.create` ERROR: ' + errorMsg));
 									}
 								} else if (validErrors !== undefined) {
 									if (notValidHandler !== undefined) {
@@ -969,6 +942,8 @@ FOR_BOX(function(box) {
 							if (errorMsg !== undefined) {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.get` ERROR: ' + errorMsg));
 								}
 							} else if (savedData === undefined) {
 								if (notExistsHandler !== undefined) {
@@ -1036,6 +1011,8 @@ FOR_BOX(function(box) {
 							if (errorMsg !== undefined) {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.update` ERROR: ' + errorMsg));
 								}
 							} else if (validErrors !== undefined) {
 								if (notValidHandler !== undefined) {
@@ -1100,6 +1077,8 @@ FOR_BOX(function(box) {
 							if (errorMsg !== undefined) {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.remove` ERROR: ' + errorMsg));
 								}
 							} else if (savedData === undefined) {
 								if (notExistsHandler !== undefined) {
@@ -1160,6 +1139,8 @@ FOR_BOX(function(box) {
 							if (errorMsg !== undefined) {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.find` ERROR: ' + errorMsg));
 								}
 							} else {
 								callback(savedDataSet);
@@ -1210,6 +1191,8 @@ FOR_BOX(function(box) {
 							if (errorMsg !== undefined) {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.count` ERROR: ' + errorMsg));
 								}
 							} else {
 								callback(count);
@@ -1260,6 +1243,8 @@ FOR_BOX(function(box) {
 							if (errorMsg !== undefined) {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.checkIsExists` ERROR: ' + errorMsg));
 								}
 							} else {
 								callback(isExists);

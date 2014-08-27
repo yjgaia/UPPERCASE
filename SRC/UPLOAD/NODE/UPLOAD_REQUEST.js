@@ -1,7 +1,8 @@
 /*
  * create upload request.
  */
-global.UPLOAD_REQUEST = UPLOAD_REQUEST = METHOD(function(m) {'use strict';
+global.UPLOAD_REQUEST = UPLOAD_REQUEST = METHOD(function(m) {
+	'use strict';
 
 	var
 	//IMPORT: fs
@@ -12,7 +13,8 @@ global.UPLOAD_REQUEST = UPLOAD_REQUEST = METHOD(function(m) {'use strict';
 
 	return {
 
-		run : function(params, callbackOrHandlers) {'use strict';
+		run : function(params, callbackOrHandlers) {
+			'use strict';
 			//REQUIRED: params
 			//OPTIONAL: params.requestInfo
 			//REQUIRED: params.uploadPath
@@ -171,10 +173,10 @@ global.UPLOAD_REQUEST = UPLOAD_REQUEST = METHOD(function(m) {'use strict';
 						// error msg
 						errorMsg = error.toString();
 
-						console.log('[UPPERCASE.IO-UPLOAD_REQUEST] ERROR: ' + errorMsg);
-
 						if (errorHandler !== undefined) {
 							errorHandler(errorMsg);
+						} else {
+							console.log('[UPPERCASE.IO-UPLOAD_REQUEST] ERROR: ' + errorMsg);
 						}
 					});
 

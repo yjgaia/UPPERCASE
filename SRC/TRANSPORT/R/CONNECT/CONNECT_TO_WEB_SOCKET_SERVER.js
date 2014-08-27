@@ -266,10 +266,10 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
 				// create connection error delay.
 				connectionErrorDelay = DELAY(5, function() {
 
-					console.log('[UPPERCASE.IO-CONNECT_TO_WEB_SOCKET_SERVER (FIX)] CONNECT TO WEB SOCKET FIX SERVER FAILED.');
-
 					if (errorListener !== undefined) {
 						errorListener('CONNECT TO WEB SOCKET FIX SERVER FAILED.');
+					} else {
+						console.log('[UPPERCASE.IO-CONNECT_TO_WEB_SOCKET_SERVER (FIX)] CONNECT TO WEB SOCKET FIX SERVER FAILED.');
 					}
 				});
 

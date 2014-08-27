@@ -1,7 +1,8 @@
 /**
  * ImageMagick® resize.
  */
-global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {'use strict';
+global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {
+	'use strict';
 
 	var
 	//IMPORT: path

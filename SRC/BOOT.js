@@ -6,9 +6,6 @@ global.BOOT = BOOT = function(params) {
 	//OPTIONAL: params.BROWSER_CONFIG
 
 	var
-	//IMPORT: fs
-	fs = require('fs'),
-
 	//IMPORT: path
 	path = require('path'),
 
@@ -24,9 +21,6 @@ global.BOOT = BOOT = function(params) {
 	// browser script
 	browserScript = 'global = window;\n',
 
-	// init style css
-	initStyleCSS = fs.readFileSync(__dirname + '/INIT_STYLE.css').toString(),
-
 	// index page content
 	indexPageContent = '',
 
@@ -37,7 +31,10 @@ global.BOOT = BOOT = function(params) {
 
 	// load js for browser.
 	loadJSForBrowser = function(path) {
-		browserScript += fs.readFileSync(path).toString() + '\n';
+		browserScript += READ_FILE({
+			path : path,
+			isSync : true
+		}).toString() + '\n';
 	},
 
 	// load js for client.
@@ -53,12 +50,18 @@ global.BOOT = BOOT = function(params) {
 
 	// load coffeescript for node.
 	loadCoffeeForNode = function(path) {
-		RUN_COFFEE(fs.readFileSync(path).toString());
+		RUN_COFFEE(READ_FILE({
+			path : path,
+			isSync : true
+		}).toString());
 	},
 
 	// load coffeescript for browser.
 	loadCoffeeForBrowser = function(path) {
-		browserScript += COMPILE_COFFEE_TO_JS(fs.readFileSync(path).toString()) + '\n';
+		browserScript += COMPILE_COFFEE_TO_JS(READ_FILE({
+			path : path,
+			isSync : true
+		}).toString()) + '\n';
 	},
 
 	// load coffeescript for client.
@@ -74,12 +77,18 @@ global.BOOT = BOOT = function(params) {
 
 	// load literate coffeescript for node.
 	loadLiterateCoffeeForNode = function(path) {
-		RUN_LITCOFFEE(fs.readFileSync(path).toString());
+		RUN_LITCOFFEE(READ_FILE({
+			path : path,
+			isSync : true
+		}).toString());
 	},
 
 	// load literate coffeescript for browser.
 	loadLiterateCoffeeForBrowser = function(path) {
-		browserScript += COMPILE_LITCOFFEE_TO_JS(fs.readFileSync(path).toString()) + '\n';
+		browserScript += COMPILE_LITCOFFEE_TO_JS(READ_FILE({
+			path : path,
+			isSync : true
+		}).toString()) + '\n';
 	},
 
 	// load literate coffeescript for client.
@@ -97,9 +106,6 @@ global.BOOT = BOOT = function(params) {
 	checkIsAllowedFolderName = function(name) {
 
 		return (
-
-			// hide folder
-			name[0] !== '.' &&
 
 			// node.js module
 			name !== 'node_modules' &&
@@ -144,9 +150,12 @@ global.BOOT = BOOT = function(params) {
 
 	loadUJS = function() {
 
-		// load UPPERCASE.JS.
-		loadJSForCommon(__dirname + '/UPPERCASE.JS-COMMON.js');
+		// load for node.
+		loadJSForNode(__dirname + '/UPPERCASE.JS-COMMON.js');
 		loadJSForNode(__dirname + '/UPPERCASE.JS-NODE.js');
+
+		// load for browser.
+		loadJSForBrowser(__dirname + '/UPPERCASE.JS-COMMON.js');
 		loadJSForBrowser(__dirname + '/UPPERCASE.JS-BROWSER.js');
 	};
 
@@ -255,21 +264,22 @@ global.BOOT = BOOT = function(params) {
 		// load UPPERCASE.IO-BOX/CORE.
 		loadJSForCommon(__dirname + '/UPPERCASE.IO-BOX/CORE.js');
 
-		fs.readdirSync(rootPath).forEach(function(folderName) {
+		FIND_FOLDER_NAMES({
+			path : rootPath,
+			isSync : true
+		}, function(folderNames) {
 
-			if (
-			// is folder
-			fs.statSync(rootPath + '/' + folderName).isDirectory() === true &&
+			EACH(folderNames, function(folderName) {
 
-			// is allowd folder name
-			checkIsAllowedFolderName(folderName) === true) {
+				if (checkIsAllowedFolderName(folderName) === true) {
 
-				// create box.
-				BOX(folderName);
+					// create box.
+					BOX(folderName);
 
-				// add to browser script.
-				browserScript += 'BOX(\'' + folderName + '\');\n';
-			}
+					// add to browser script.
+					browserScript += 'BOX(\'' + folderName + '\');\n';
+				}
+			});
 		});
 
 		// load UPPERCASE.IO-BOX/BROWSER.
@@ -340,63 +350,91 @@ global.BOOT = BOOT = function(params) {
 			// scan folder
 			scanFolder = function(folderPath) {
 
-				var
-				// full paths
-				fullPaths;
+				FIND_FILE_NAMES({
+					path : folderPath,
+					isSync : true
+				}, {
 
-				if (fs.existsSync(folderPath) === true) {
+					error : function() {
+						// ignore.
+					},
 
-					fullPaths = [];
+					success : function(fileNames) {
 
-					fs.readdirSync(folderPath).forEach(function(fileName) {
+						EACH(fileNames, function(fileName) {
 
-						var
-						// full path
-						fullPath = folderPath + '/' + fileName,
+							var
+							// full path
+							fullPath = folderPath + '/' + fileName,
 
-						// extname
-						extname = path.extname(fileName).toLowerCase();
+							// extname
+							extname = path.extname(fileName).toLowerCase();
 
-						if (fs.statSync(fullPath).isDirectory() === true) {
-							if (checkIsAllowedFolderName(fileName) === true) {
-								fullPaths.push(fullPath);
+							if (extname === '.js') {
+								funcForJS(fullPath);
+							} else if (extname === '.coffee') {
+								funcForCoffee(fullPath);
+							} else if (extname === '.litcoffee') {
+								funcForLiterateCoffee(fullPath);
 							}
-						} else if (extname === '.js') {
-							funcForJS(fullPath);
-						} else if (extname === '.coffee') {
-							funcForCoffee(fullPath);
-						} else if (extname === '.litcoffee') {
-							funcForLiterateCoffee(fullPath);
-						}
-					});
+						});
+					}
+				});
 
-					EACH(fullPaths, function(fullPath) {
-						scanFolder(fullPath);
-					});
-				}
+				FIND_FOLDER_NAMES({
+					path : folderPath,
+					isSync : true
+				}, {
+
+					error : function() {
+						// ignore.
+					},
+
+					success : function(folderNames) {
+
+						EACH(folderNames, function(folderName) {
+							if (checkIsAllowedFolderName(folderName) === true) {
+								scanFolder(folderPath + '/' + folderName);
+							}
+						});
+					}
+				});
 			};
 
 			FOR_BOX(function(box) {
 
 				scanFolder(rootPath + '/' + box.boxName + '/' + folderName);
 
-				fs.readdirSync(rootPath + '/' + box.boxName).forEach(function(fileName) {
+				FIND_FILE_NAMES({
+					path : rootPath + '/' + box.boxName,
+					isSync : true
+				}, {
 
-					var
-					// full path
-					fullPath = rootPath + '/' + box.boxName + '/' + fileName,
+					error : function() {
+						// ignore.
+					},
 
-					// extname
-					extname = path.extname(fileName).toLowerCase();
+					success : function(fileNames) {
 
-					if (fileName === folderName + extname && fs.statSync(fullPath).isDirectory() !== true) {
-						if (extname === '.js') {
-							funcForJS(fullPath);
-						} else if (extname === '.coffee') {
-							funcForCoffee(fullPath);
-						} else if (extname === '.litcoffee') {
-							funcForLiterateCoffee(fullPath);
-						}
+						EACH(fileNames, function(fileName) {
+
+							var
+							// full path
+							fullPath = rootPath + '/' + box.boxName + '/' + fileName,
+
+							// extname
+							extname = path.extname(fileName).toLowerCase();
+
+							if (fileName === folderName + extname) {
+								if (extname === '.js') {
+									funcForJS(fullPath);
+								} else if (extname === '.coffee') {
+									funcForCoffee(fullPath);
+								} else if (extname === '.litcoffee') {
+									funcForLiterateCoffee(fullPath);
+								}
+							}
+						});
 					}
 				});
 			});

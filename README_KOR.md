@@ -4,6 +4,15 @@
 
 [UPPERCASE.JS](http://uppercaseseries.org/#JS)를 기반으로 하고 있습니다.
 
+## Based On
+- JavaScript 1.5 (ECMA-262, 3rd edition)
+- CommonJS Modules/1.0
+
+Server-side:
+- [Node.js](http://nodejs.org)
+- [MongoDB](http://www.mongodb.org)
+- [ImageMagick](http://www.imagemagick.org)
+
 ## 용어
 
 #### BOX
@@ -11,6 +20,12 @@ BOX는 UPPERCASE.IO에서의 모듈을 칭합니다.
 
 UPPERCASE.IO의 공식 BOX 저장소는 다음 링크에 있습니다.
 * [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)
+
+###### BOX 패키징
+1. PACK.js 다운로드 (오른쪽 클릭 후 다른 이름으로 저장)
+	https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/PACK.js
+2. PACK.js 실행
+	`node PACK {{BOX 이름}}`
 
 ## 설치
 
@@ -44,16 +59,6 @@ UPPERCASE.IO의 공식 BOX 저장소는 다음 링크에 있습니다.
     ```
 
 * DB: update를 동시에 여러번 할 경우 모든 update의 callback은 같은 데이터(수정된)를 반환합니다.
-
-Based On
---------
-- JavaScript 1.5 (ECMA-262, 3rd edition)
-- CommonJS Modules/1.0
-
-Server-side:
-- [Node.js](http://nodejs.org)
-- [MongoDB](http://www.mongodb.org)
-- [ImageMagick](http://www.imagemagick.org)
 
 ## UPPERCASE.IO의 분산 처리 전략
 
