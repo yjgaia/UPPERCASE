@@ -634,8 +634,8 @@ global.BOOT = BOOT = function(params) {
 										uploadFileDB.create(fileData, function(savedData) {
 
 											MOVE_FILE({
-												srcPath : tempPath,
-												distPath : rootPath + '/__RF/' + boxName + '/' + savedData.id
+												from : tempPath,
+												to : rootPath + '/__RF/' + boxName + '/' + savedData.id
 											}, next);
 										});
 									},
