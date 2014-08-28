@@ -13,6 +13,12 @@ Server-side:
 - [MongoDB](http://www.mongodb.org)
 - [ImageMagick](http://www.imagemagick.org)
 
+Client-side:
+- Web Browsers or
+- [Titanium](http://www.appcelerator.com/titanium/) or
+- [Swift Client](https://github.com/UPPERCASE-Series/UPPERCASE.IO-Swift-Client) or
+- [Java Client](https://github.com/UPPERCASE-Series/UPPERCASE.IO-Java-Client)
+
 ## 용어
 
 #### BOX

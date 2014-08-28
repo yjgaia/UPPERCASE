@@ -1256,25 +1256,16 @@ FOR_BOX(function(box) {
 				// init room for create, get, find.
 				box.ROOM(name, function(clientInfo, on) {
 
-					var
-					// roles
-					roles = clientInfo.roles;
-
-					// init roles.
-					if (roles === undefined) {
-						roles = clientInfo.roles = [];
-					}
-
 					// init create.
 					if (createConfig !== false) {
 
 						// on create.
 						on('create', function(data, ret) {
 
-							if (createRole === undefined || CHECK_IS_IN({
-								data : roles,
+							if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
 								value : createRole
-							}) === true) {
+							}) === true)) {
 
 								innerCreate(data, ret, clientInfo);
 
@@ -1293,10 +1284,10 @@ FOR_BOX(function(box) {
 						// on get.
 						on('get', function(idOrParams, ret) {
 
-							if (getRole === undefined || CHECK_IS_IN({
-								data : roles,
+							if (getRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
 								value : getRole
-							}) === true) {
+							}) === true)) {
 
 								innerGet(idOrParams, ret, clientInfo);
 
@@ -1315,10 +1306,10 @@ FOR_BOX(function(box) {
 						// on update.
 						on('update', function(data, ret) {
 
-							if (updateRole === undefined || CHECK_IS_IN({
-								data : roles,
+							if (updateRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
 								value : updateRole
-							}) === true) {
+							}) === true)) {
 
 								innerUpdate(data, ret, clientInfo);
 
@@ -1337,10 +1328,10 @@ FOR_BOX(function(box) {
 						// on remove.
 						on('remove', function(id, ret) {
 
-							if (removeRole === undefined || CHECK_IS_IN({
-								data : roles,
+							if (removeRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
 								value : removeRole
-							}) === true) {
+							}) === true)) {
 
 								innerRemove(id, ret, clientInfo);
 
@@ -1359,10 +1350,10 @@ FOR_BOX(function(box) {
 						// on find.
 						on('find', function(params, ret) {
 
-							if (findRole === undefined || CHECK_IS_IN({
-								data : roles,
+							if (findRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
 								value : findRole
-							}) === true) {
+							}) === true)) {
 
 								if (params !== undefined) {
 
@@ -1387,10 +1378,10 @@ FOR_BOX(function(box) {
 						// on count.
 						on('count', function(params, ret) {
 
-							if (countRole === undefined || CHECK_IS_IN({
-								data : roles,
+							if (countRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
 								value : countRole
-							}) === true) {
+							}) === true)) {
 
 								innerCount(params, ret, clientInfo);
 
@@ -1409,10 +1400,10 @@ FOR_BOX(function(box) {
 						// on check is exists.
 						on('checkIsExists', function(params, ret) {
 
-							if (checkIsExistsRole === undefined || CHECK_IS_IN({
-								data : roles,
+							if (checkIsExistsRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
 								value : checkIsExistsRole
-							}) === true) {
+							}) === true)) {
 
 								innerCheckIsExists(params, ret, clientInfo);
 

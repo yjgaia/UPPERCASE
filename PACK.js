@@ -69,8 +69,8 @@ RUN(function() {
 		);
 	},
 
-	// copy.
-	copy = function(from, to) {
+	// copy folder.
+	copyFolder = function(from, to) {
 
 		FIND_FILE_NAMES({
 			path : from,
@@ -90,7 +90,7 @@ RUN(function() {
 			isSync : true
 		}, function(folderNames) {
 			EACH(folderNames, function(folderName) {
-				copy(from + '/' + folderName, to + '/' + folderName);
+				copyFolder(from + '/' + folderName, to + '/' + folderName);
 			});
 		});
 	},
@@ -103,32 +103,47 @@ RUN(function() {
 		FIND_FILE_NAMES({
 			path : path,
 			isSync : true
-		}, function(fileNames) {
-			EACH(fileNames, function(fileName) {
-				func(path + '/' + fileName);
-			});
+		}, {
+
+			error : function() {
+				// ignore.
+			},
+
+			success : function(fileNames) {
+				EACH(fileNames, function(fileName) {
+					func(path + '/' + fileName);
+				});
+			}
 		});
 
 		FIND_FOLDER_NAMES({
 			path : path,
 			isSync : true
-		}, function(folderNames) {
-			EACH(folderNames, function(folderName) {
-				scanFolder(path + '/' + folderName, func);
-			});
+		}, {
+
+			error : function() {
+				// ignore.
+			},
+
+			success : function(folderNames) {
+				EACH(folderNames, function(folderName) {
+					scanFolder(path + '/' + folderName, func);
+				});
+			}
 		});
 	},
 
 	// scan box folder.
-	scanBoxFolder = function(func) {
-		//REQUIRED: func
+	scanBoxFolder = function(fileFunc, folderFunc) {
+		//REQUIRED: fileFunc
+		//REQUIRED: folderFunc
 
 		FIND_FILE_NAMES({
 			path : boxName,
 			isSync : true
 		}, function(fileNames) {
 			EACH(fileNames, function(fileName) {
-				func(boxName + '/' + fileName);
+				fileFunc(boxName + '/' + fileName);
 			});
 		});
 
@@ -138,7 +153,7 @@ RUN(function() {
 		}, function(folderNames) {
 			EACH(folderNames, function(folderName) {
 				if (folderName !== 'BROWSER' && folderName !== 'COMMON' && folderName !== 'NODE' && folderName !== 'TITANIUM') {
-					func(boxName + '/' + folderName);
+					folderFunc(boxName + '/' + folderName);
 				}
 			});
 		});
@@ -230,7 +245,13 @@ RUN(function() {
 	// save box.
 	log('SAVING BOX...');
 	scanBoxFolder(function(path) {
-		copy(path, '__PACK/' + boxName + '/' + path.substring(boxName.length + 1));
+		COPY_FILE({
+			from : path,
+			to : '__PACK/' + boxName + '/' + path.substring(boxName.length + 1),
+			isSync : true
+		});
+	}, function(path) {
+		copyFolder(path, '__PACK/' + boxName + '/' + path.substring(boxName.length + 1));
 	});
 
 	// save browser script.
@@ -278,7 +299,7 @@ RUN(function() {
 	// save node module.
 	if (fs.existsSync(boxName + '/NODE/node_modules') === true) {
 		log('SAVING NODE MODULES...');
-		copy(boxName + '/NODE/node_modules', '__PACK/' + boxName + '/node_modules');
+		copyFolder(boxName + '/NODE/node_modules', '__PACK/' + boxName + '/node_modules');
 		log('SAVED NODE MODULES!');
 	}
 
