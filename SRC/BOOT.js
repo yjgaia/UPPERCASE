@@ -24,6 +24,9 @@ global.BOOT = BOOT = function(params) {
 	// index page content
 	indexPageContent = '',
 
+	// box names in BOX folder
+	boxNamesInBOXFolder = [],
+
 	// load js for node.
 	loadJSForNode = function(path) {
 		require(path);
@@ -106,6 +109,9 @@ global.BOOT = BOOT = function(params) {
 	checkIsAllowedFolderName = function(name) {
 
 		return (
+
+			// BOX folder
+			name !== 'BOX' &&
 
 			// node.js module
 			name !== 'node_modules' &&
@@ -264,6 +270,7 @@ global.BOOT = BOOT = function(params) {
 		// load UPPERCASE.IO-BOX/CORE.
 		loadJSForCommon(__dirname + '/UPPERCASE.IO-BOX/CORE.js');
 
+		// init boxes in root folder.
 		FIND_FOLDER_NAMES({
 			path : rootPath,
 			isSync : true
@@ -278,6 +285,28 @@ global.BOOT = BOOT = function(params) {
 
 					// add to browser script.
 					browserScript += 'BOX(\'' + folderName + '\');\n';
+				}
+			});
+		});
+
+		// init boxes is BOX folder.
+		FIND_FOLDER_NAMES({
+			path : rootPath + '/BOX',
+			isSync : true
+		}, function(folderNames) {
+
+			EACH(folderNames, function(folderName) {
+
+				if (checkIsAllowedFolderName(folderName) === true) {
+
+					// create box.
+					BOX(folderName);
+
+					// add to browser script.
+					browserScript += 'BOX(\'' + folderName + '\');\n';
+
+					// save box name.
+					boxNamesInBOXFolder.push(folderName);
 				}
 			});
 		});
@@ -403,10 +432,17 @@ global.BOOT = BOOT = function(params) {
 
 			FOR_BOX(function(box) {
 
-				scanFolder(rootPath + '/' + box.boxName + '/' + folderName);
+				var
+				// box root path
+				boxRootPath = CHECK_IS_IN({
+					array : boxNamesInBOXFolder,
+					value : box.boxName
+				}) === true ? rootPath + '/BOX' : rootPath;
+
+				scanFolder(boxRootPath + '/' + box.boxName + '/' + folderName);
 
 				FIND_FILE_NAMES({
-					path : rootPath + '/' + box.boxName,
+					path : boxRootPath + '/' + box.boxName,
 					isSync : true
 				}, {
 
@@ -420,7 +456,7 @@ global.BOOT = BOOT = function(params) {
 
 							var
 							// full path
-							fullPath = rootPath + '/' + box.boxName + '/' + fileName,
+							fullPath = boxRootPath + '/' + box.boxName + '/' + fileName,
 
 							// extname
 							extname = path.extname(fileName).toLowerCase();
@@ -849,14 +885,22 @@ global.BOOT = BOOT = function(params) {
 							replaceRootPath(__dirname + '/UPPERCASE.JS-BROWSER-FIX');
 							requestInfo.uri = uri;
 						} else {
-							requestInfo.uri = boxName + '/R' + (uri === '' ? '' : ('/' + uri));
+
+							if (CHECK_IS_IN({
+								array : boxNamesInBOXFolder,
+								value : boxName
+							}) === true) {
+								requestInfo.uri = 'BOX/' + boxName + '/R' + (uri === '' ? '' : ('/' + uri));
+							} else {
+								requestInfo.uri = boxName + '/R' + (uri === '' ? '' : ('/' + uri));
+							}
 						}
 					}
 				},
 
 				notExistsResource : function(resourcePath, requestInfo, response) {
 
-					if (requestInfo.uri === CONFIG.defaultBoxName + '/R') {
+					if (requestInfo.uri === CONFIG.defaultBoxName + '/R' || requestInfo.uri === 'BOX/' + CONFIG.defaultBoxName + '/R') {
 
 						response({
 							contentType : 'text/html',
