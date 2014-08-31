@@ -289,27 +289,33 @@ global.BOOT = BOOT = function(params) {
 			});
 		});
 
-		// init boxes is BOX folder.
-		FIND_FOLDER_NAMES({
+		if (CHECK_IS_EXISTS_FILE({
 			path : rootPath + '/BOX',
 			isSync : true
-		}, function(folderNames) {
+		}) === true) {
 
-			EACH(folderNames, function(folderName) {
+			// init boxes is BOX folder.
+			FIND_FOLDER_NAMES({
+				path : rootPath + '/BOX',
+				isSync : true
+			}, function(folderNames) {
 
-				if (checkIsAllowedFolderName(folderName) === true) {
+				EACH(folderNames, function(folderName) {
 
-					// create box.
-					BOX(folderName);
+					if (checkIsAllowedFolderName(folderName) === true) {
 
-					// add to browser script.
-					browserScript += 'BOX(\'' + folderName + '\');\n';
+						// create box.
+						BOX(folderName);
 
-					// save box name.
-					boxNamesInBOXFolder.push(folderName);
-				}
+						// add to browser script.
+						browserScript += 'BOX(\'' + folderName + '\');\n';
+
+						// save box name.
+						boxNamesInBOXFolder.push(folderName);
+					}
+				});
 			});
-		});
+		}
 
 		// load UPPERCASE.IO-BOX/BROWSER.
 		loadJSForBrowser(__dirname + '/UPPERCASE.IO-BOX/BROWSER.js');

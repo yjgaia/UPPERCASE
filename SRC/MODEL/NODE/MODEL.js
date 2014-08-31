@@ -326,7 +326,6 @@ FOR_BOX(function(box) {
 
 					// valid data.
 					if (createValid !== undefined) {
-
 						validResult = createValid.check(data);
 					}
 
@@ -484,6 +483,9 @@ FOR_BOX(function(box) {
 				innerUpdate = function(data, ret, clientInfo) {
 
 					var
+					// id
+					id = data.id,
+
 					// valid result
 					validResult,
 
@@ -492,9 +494,10 @@ FOR_BOX(function(box) {
 
 					// valid data.
 					if (updateValid !== undefined) {
-
 						validResult = updateValid.checkExceptUndefined(data);
 					}
+
+					data.id = id;
 
 					// when has error
 					if (validResult !== undefined && validResult.checkHasError() === true) {

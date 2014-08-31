@@ -450,6 +450,9 @@ FOR_BOX(function(box) {
 					//OPTIONAL: callbackOrHandlers
 
 					var
+					// id
+					id = data.id,
+
 					// callback
 					callback,
 
@@ -483,6 +486,8 @@ FOR_BOX(function(box) {
 					if (updateValid !== undefined) {
 						validResult = updateValid.checkExceptUndefined(data);
 					}
+
+					data.id = id;
 
 					if (updateValid !== undefined && validResult.checkHasError() === true) {
 
