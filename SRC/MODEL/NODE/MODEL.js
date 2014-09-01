@@ -68,6 +68,12 @@ FOR_BOX(function(box) {
 				// check is exists role
 				checkIsExistsRole,
 
+				// update auth key
+				updateAuthKey,
+
+				// remove auth key
+				removeAuthKey,
+
 				// init data.
 				_initData,
 
@@ -194,10 +200,12 @@ FOR_BOX(function(box) {
 					if (updateConfig !== undefined) {
 						updateValid = updateConfig.valid;
 						updateRole = updateConfig.role;
+						updateAuthKey = updateConfig.authKey;
 					}
 
 					if (removeConfig !== undefined) {
 						removeRole = removeConfig.role;
+						removeAuthKey = removeConfig.authKey;
 					}
 
 					if (findConfig !== undefined) {
@@ -1314,7 +1322,40 @@ FOR_BOX(function(box) {
 								value : updateRole
 							}) === true)) {
 
-								innerUpdate(data, ret, clientInfo);
+								if (updateAuthKey !== undefined) {
+
+									// get data in database.
+									db.get(data.id, {
+
+										error : function(errorMsg) {
+											ret({
+												errorMsg : errorMsg
+											});
+										},
+
+										notExists : function() {
+											ret();
+										},
+
+										success : function(savedData) {
+
+											// check auth key.
+											if (savedData[updateAuthKey] === clientInfo.authKey) {
+												innerUpdate(data, ret, clientInfo);
+											}
+
+											// not authed
+											else {
+												ret({
+													isNotAuthed : true
+												});
+											}
+										}
+									});
+
+								} else {
+									innerUpdate(data, ret, clientInfo);
+								}
 
 							} else {
 
@@ -1336,7 +1377,40 @@ FOR_BOX(function(box) {
 								value : removeRole
 							}) === true)) {
 
-								innerRemove(id, ret, clientInfo);
+								if (removeAuthKey !== undefined) {
+
+									// get data in database.
+									db.get(data.id, {
+
+										error : function(errorMsg) {
+											ret({
+												errorMsg : errorMsg
+											});
+										},
+
+										notExists : function() {
+											ret();
+										},
+
+										success : function(savedData) {
+
+											// check auth key.
+											if (savedData[removeAuthKey] === clientInfo.authKey) {
+												innerRemove(id, ret, clientInfo);
+											}
+
+											// not authed
+											else {
+												ret({
+													isNotAuthed : true
+												});
+											}
+										}
+									});
+
+								} else {
+									innerRemove(id, ret, clientInfo);
+								}
 
 							} else {
 
