@@ -323,7 +323,7 @@ global.BOOT = BOOT = function(params) {
 
 	clustering = function(work) {
 
-		CPU_CLUSTERING(function(workerData, on, off, broadcast) {
+		CPU_CLUSTERING(function() {
 
 			if (NODE_CONFIG.serverClusteringHosts !== undefined && NODE_CONFIG.thisServerHost !== undefined && NODE_CONFIG.serverClusteringPort !== undefined) {
 
@@ -332,11 +332,11 @@ global.BOOT = BOOT = function(params) {
 					thisServerHost : NODE_CONFIG.thisServerHost,
 					port : NODE_CONFIG.serverClusteringPort
 				}, function() {
-					work(workerData);
+					work();
 				});
 
 			} else {
-				work(workerData);
+				work();
 			}
 		});
 	};
@@ -528,7 +528,7 @@ global.BOOT = BOOT = function(params) {
 		indexPageContent += '</html>';
 	};
 
-	run = function(workerData) {
+	run = function() {
 
 		var
 		// next upload server host index
@@ -555,7 +555,7 @@ global.BOOT = BOOT = function(params) {
 		// run all MAINs.
 		FOR_BOX(function(box) {
 			if (box.MAIN !== undefined) {
-				box.MAIN(workerData);
+				box.MAIN();
 			}
 		});
 
@@ -923,7 +923,7 @@ global.BOOT = BOOT = function(params) {
 			}).getWebSocketFixRequest();
 		}
 
-		console.log('[UPPERCASE.IO] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.defaultTitle + '` WORKER #' + workerData.id + ' (PID:' + workerData.pid + ') BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
+		console.log('[UPPERCASE.IO] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.defaultTitle + '` WORKER #' + CPU_CLUSTERING.getWorkerId() + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
 
 	// load UPPERCASE.JS.
@@ -944,7 +944,7 @@ global.BOOT = BOOT = function(params) {
 	loadJSForNode(__dirname + '/UPPERCASE.IO-UTIL/NODE.js');
 
 	// clustering cpus and servers.
-	clustering(function(workerData) {
+	clustering(function() {
 
 		// init database.
 		initDatabase();
@@ -965,6 +965,6 @@ global.BOOT = BOOT = function(params) {
 		generateIndexPage();
 
 		// run.
-		run(workerData);
+		run();
 	});
 };

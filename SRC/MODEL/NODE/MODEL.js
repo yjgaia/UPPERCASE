@@ -216,23 +216,33 @@ FOR_BOX(function(box) {
 					}
 				}
 
-				// init not inited data set.
-				if (initData !== undefined) {
+				// init not inited data set. (when not cpu clustering or worker id is 1)
+				if ((CPU_CLUSTERING.getWorkerId() === undefined || CPU_CLUSTERING.getWorkerId() === 1) && initData !== undefined) {
 
 					RUN(function() {
 
 						var
-						// filter
-						filter = {};
+						// or
+						$or = [];
 
 						EACH(initData, function(value, name) {
+
+							var
+							// filter
+							filter = {};
+
 							filter[name] = TO_DELETE;
+
+							$or.push(filter);
 						});
 
 						db.find({
-							filter : filter,
+							filter : {
+								$or : $or
+							},
 							isFindAll : true
 						}, EACH(function(notInitedData) {
+							console.log(notInitedData);
 
 							EACH(initData, function(value, name) {
 								if (notInitedData[name] === undefined) {
