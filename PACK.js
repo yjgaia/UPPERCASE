@@ -100,37 +100,43 @@ RUN(function() {
 		//REQUIRED: path
 		//REQUIRED: func
 
-		FIND_FILE_NAMES({
+		if (CHECK_IS_EXISTS_FILE({
 			path : path,
 			isSync : true
-		}, {
+		}) === true) {
 
-			error : function() {
-				// ignore.
-			},
+			FIND_FILE_NAMES({
+				path : path,
+				isSync : true
+			}, {
 
-			success : function(fileNames) {
-				EACH(fileNames, function(fileName) {
-					func(path + '/' + fileName);
-				});
-			}
-		});
+				error : function() {
+					// ignore.
+				},
 
-		FIND_FOLDER_NAMES({
-			path : path,
-			isSync : true
-		}, {
+				success : function(fileNames) {
+					EACH(fileNames, function(fileName) {
+						func(path + '/' + fileName);
+					});
+				}
+			});
 
-			error : function() {
-				// ignore.
-			},
+			FIND_FOLDER_NAMES({
+				path : path,
+				isSync : true
+			}, {
 
-			success : function(folderNames) {
-				EACH(folderNames, function(folderName) {
-					scanFolder(path + '/' + folderName, func);
-				});
-			}
-		});
+				error : function() {
+					// ignore.
+				},
+
+				success : function(folderNames) {
+					EACH(folderNames, function(folderName) {
+						scanFolder(path + '/' + folderName, func);
+					});
+				}
+			});
+		}
 	},
 
 	// scan box folder.
