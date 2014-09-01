@@ -11,14 +11,18 @@ FOR_BOX(function(box) {
 			init : function(inner, self, params) {
 				//REQUIRED: params
 				//REQUIRED: params.name
-				//OPTIONAL: params.config
+				//OPTIONAL: params.initData
+				//OPTIONAL: params.methodConfig
 
 				var
 				// name
 				name = params.name,
 
-				// config
-				config = params.config,
+				// init data.
+				initData = params.initData,
+
+				// method config
+				methodConfig = params.methodConfig,
 
 				// create config
 				createConfig,
@@ -74,9 +78,6 @@ FOR_BOX(function(box) {
 				// remove auth key
 				removeAuthKey,
 
-				// init data.
-				_initData,
-
 				// before create listeners
 				beforeCreateListeners = [],
 
@@ -113,14 +114,14 @@ FOR_BOX(function(box) {
 				// get name.
 				getName,
 
+				// get init data.
+				getInitData,
+
 				// get create valid.
 				getCreateValid,
 
 				// get update valid.
 				getUpdateValid,
-
-				// init data.
-				initData,
 
 				// get db.
 				getDB,
@@ -170,27 +171,21 @@ FOR_BOX(function(box) {
 				// check is exists.
 				checkIsExists;
 
-				self.getName = getName = function() {
-					return name;
-				};
+				// init method config.
+				if (methodConfig !== undefined) {
 
-				// init configs.
-				if (config !== undefined) {
-
-					createConfig = config.create;
-					getConfig = config.get;
-					updateConfig = config.update;
-					removeConfig = config.remove;
-					findConfig = config.find;
-					countConfig = config.count;
-					checkIsExistsConfig = config.checkIsExists;
+					createConfig = methodConfig.create;
+					getConfig = methodConfig.get;
+					updateConfig = methodConfig.update;
+					removeConfig = methodConfig.remove;
+					findConfig = methodConfig.find;
+					countConfig = methodConfig.count;
+					checkIsExistsConfig = methodConfig.checkIsExists;
 
 					if (createConfig !== undefined) {
 
 						createValid = createConfig.valid;
 						createRole = createConfig.role;
-
-						_initData = createConfig.initData;
 					}
 
 					if (getConfig !== undefined) {
@@ -221,22 +216,49 @@ FOR_BOX(function(box) {
 					}
 				}
 
+				// init not inited data set.
+				if (initData !== undefined) {
+
+					RUN(function() {
+
+						var
+						// filter
+						filter = {};
+
+						EACH(initData, function(value, name) {
+							filter[name] = TO_DELETE;
+						});
+
+						db.find({
+							filter : filter,
+							isFindAll : true
+						}, EACH(function(notInitedData) {
+
+							EACH(initData, function(value, name) {
+								if (notInitedData[name] === undefined) {
+									notInitedData[name] = value;
+								}
+							});
+
+							db.update(notInitedData);
+						}));
+					});
+				}
+
+				self.getName = getName = function() {
+					return name;
+				};
+
+				inner.getInitData = getInitData = function() {
+					return initData;
+				};
+
 				inner.getCreateValid = getCreateValid = function() {
 					return createValid;
 				};
 
 				inner.getUpdateValid = getUpdateValid = function() {
 					return updateValid;
-				};
-
-				inner.initData = initData = function(data) {
-					//REQUIRED: data
-
-					if (_initData !== undefined) {
-						_initData(data);
-					}
-
-					return data;
 				};
 
 				self.getDB = getDB = function() {
@@ -330,7 +352,13 @@ FOR_BOX(function(box) {
 					isNotRunNext;
 
 					// init data.
-					initData(data);
+					if (initData !== undefined) {
+						EACH(initData, function(value, name) {
+							if (data[name] === undefined) {
+								data[name] = value;
+							}
+						});
+					}
 
 					// valid data.
 					if (createValid !== undefined) {

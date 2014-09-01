@@ -10,6 +10,7 @@ VERSIONS
 - 라이브러리용 박스는 프로젝트 폴더/BOX에 넣어도 작동
 - PACK.js 추가
 - MODEL update와 remove 시 authKey 인증 기능 추가 clientInfo.authKey와 비교
+- MODEL 설정 변경
 
 1.4.1 (2014. 7. 31)
 - 나뉘어져 있던 포트들을 하나로 공유

@@ -9,14 +9,18 @@ FOR_BOX(function(box) {
 		init : function(inner, self, params) {
 			//REQUIRED: params
 			//REQUIRED: params.name
-			//OPTIONAL: params.config
+			//OPTIONAL: params.initData
+			//OPTIONAL: params.methodConfig
 
 			var
 			// name
 			name = params.name,
 
-			// config
-			config = params.config,
+			// init data.
+			initData = params.initData,
+
+			// method config
+			methodConfig = params.methodConfig,
 
 			// create config
 			createConfig,
@@ -45,9 +49,6 @@ FOR_BOX(function(box) {
 			// update valid
 			updateValid,
 
-			// _init data.
-			_initData,
-
 			// room
 			room = box.ROOM(name),
 
@@ -75,14 +76,14 @@ FOR_BOX(function(box) {
 			// get name.
 			getName,
 
+			// get init data.
+			getInitData,
+
 			// get create valid.
 			getCreateValid,
 
 			// get update valid.
 			getUpdateValid,
-
-			// init data.
-			initData,
 
 			// get room.
 			getRoom,
@@ -129,24 +130,19 @@ FOR_BOX(function(box) {
 			// close on remove.
 			closeOnRemove;
 
-			self.getName = getName = function() {
-				return name;
-			};
+			// init method config.
+			if (methodConfig !== undefined) {
 
-			// init configs.
-			if (config !== undefined) {
-
-				createConfig = config.create;
-				getConfig = config.get;
-				updateConfig = config.update;
-				removeConfig = config.remove;
-				findConfig = config.find;
-				countConfig = config.count;
-				checkIsExistsConfig = config.checkIsExists;
+				createConfig = methodConfig.create;
+				getConfig = methodConfig.get;
+				updateConfig = methodConfig.update;
+				removeConfig = methodConfig.remove;
+				findConfig = methodConfig.find;
+				countConfig = methodConfig.count;
+				checkIsExistsConfig = methodConfig.checkIsExists;
 
 				if (createConfig !== undefined) {
 					createValid = createConfig.valid;
-					_initData = createConfig.initData;
 				}
 
 				if (updateConfig !== undefined) {
@@ -154,22 +150,20 @@ FOR_BOX(function(box) {
 				}
 			}
 
+			self.getName = getName = function() {
+				return name;
+			};
+
+			inner.getInitData = getInitData = function() {
+				return initData;
+			};
+
 			inner.getCreateValid = getCreateValid = function() {
 				return createValid;
 			};
 
 			inner.getUpdateValid = getUpdateValid = function() {
 				return updateValid;
-			};
-
-			inner.initData = initData = function(data) {
-				//REQUIRED: data
-
-				if (_initData !== undefined) {
-					_initData(data);
-				}
-
-				return data;
 			};
 
 			self.getRoom = getRoom = function() {
@@ -199,8 +193,13 @@ FOR_BOX(function(box) {
 					// valid result.
 					validResult;
 
+					// init data.
 					if (initData !== undefined) {
-						initData(data);
+						EACH(initData, function(value, name) {
+							if (data[name] === undefined) {
+								data[name] = value;
+							}
+						});
 					}
 
 					if (callbackOrHandlers !== undefined) {

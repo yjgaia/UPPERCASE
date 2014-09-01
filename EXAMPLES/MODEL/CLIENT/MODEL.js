@@ -6,11 +6,13 @@ CONNECT_TO_ROOM_SERVER({
 // Example Model
 TestBox.TestModel = OBJECT({
 
-	preset : function() {'use strict';
+	preset : function() {
+		'use strict';
 		return TestBox.MODEL;
 	},
 
-	params : function() {'use strict';
+	params : function() {
+		'use strict';
 
 		var
 		// valid data set
@@ -35,7 +37,7 @@ TestBox.TestModel = OBJECT({
 
 		return {
 			name : 'Test',
-			config : {
+			methodConfig : {
 				create : {
 					valid : VALID(validDataSet)
 				},
