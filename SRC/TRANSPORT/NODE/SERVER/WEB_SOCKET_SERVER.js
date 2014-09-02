@@ -131,7 +131,7 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 
 			connectionListener(
 
-			// info
+			// client info
 			{
 				ip : ip,
 

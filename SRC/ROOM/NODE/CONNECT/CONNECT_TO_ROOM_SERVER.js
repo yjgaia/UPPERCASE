@@ -1,7 +1,8 @@
 /*
  * connect to room server.
  */
-global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {'use strict';
+global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
+	'use strict';
 
 	var
 	// waiting enter room names
@@ -180,13 +181,6 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {'us
 					});
 
 					waitingSendInfos = undefined;
-
-					innerOn('__DISCONNECTED', function() {
-
-						innerOn = undefined;
-						innerOff = undefined;
-						innerSend = undefined;
-					});
 
 					if (connectionListener !== undefined) {
 						connectionListener(on, off, send);

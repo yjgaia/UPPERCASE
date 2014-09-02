@@ -15,36 +15,25 @@ READY(function() {
 		}
 	});
 
-	GET({
-		uri : '__WEB_SOCKET_SERVER_HOST',
-		paramStr : 'defaultHost=' + global.location.hostname
-	}, function(host) {
+	CONNECT_TO_IO_SERVER(function(on) {
 
-		CONNECT_TO_ROOM_SERVER({
-			host : host === '' ? undefined : host,
-			port : CONFIG.webServerPort,
-			fixServerPort : CONFIG.webServerPort,
-			fixRequestURI : '__WEB_SOCKET_FIX'
-		}, function(on) {
+		on('__DISCONNECTED', function() {
 
-			on('__DISCONNECTED', function() {
+			var
+			// reload.
+			reload = RAR(function() {
 
-				var
-				// reload.
-				reload = RAR(function() {
+				GET('', {
+					error : function() {
 
-					GET('', {
-						error : function() {
-
-							// retry.
-							DELAY(1, function() {
-								reload();
-							});
-						},
-						success : function() {
-							location.reload();
-						}
-					});
+						// retry.
+						DELAY(1, function() {
+							reload();
+						});
+					},
+					success : function() {
+						location.reload();
+					}
 				});
 			});
 		});

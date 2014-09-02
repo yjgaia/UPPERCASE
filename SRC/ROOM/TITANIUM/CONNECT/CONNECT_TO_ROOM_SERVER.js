@@ -182,13 +182,6 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 				waitingSendInfos = undefined;
 
-				innerOn('__DISCONNECTED', function() {
-
-					innerOn = undefined;
-					innerOff = undefined;
-					innerSend = undefined;
-				});
-
 				if (connectionListener !== undefined) {
 					connectionListener(on, off, send);
 				}
