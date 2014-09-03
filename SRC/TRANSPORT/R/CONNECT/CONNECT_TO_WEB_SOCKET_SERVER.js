@@ -45,8 +45,8 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
 			// content pieces
 			contentPieces = requestInfo.contentPieces,
 
-			// path
-			path = 'http://' + requestInfo.host + ':' + requestInfo.port + '/' + requestInfo.uri + (requestInfo.clientId === undefined ? '?' : '?clientId=' + requestInfo.clientId + '&') + 'connectionKey=' + requestInfo.connectionKey + '&requestKey=' + requestKey;
+			// param str
+			paramStr = (requestInfo.clientId === undefined ? '' : 'clientId=' + requestInfo.clientId + '&') + 'connectionKey=' + requestInfo.connectionKey + '&requestKey=' + requestKey;
 
 			// remove existed script.
 			if (requestInfo.script !== undefined) {
@@ -57,14 +57,14 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
 			if (contentPieces.length === 0) {
 
 				// with end flag.
-				path += '&isEnd=true';
+				paramStr += '&isEnd=true';
 			}
 
 			// when exists content piece.
 			else {
 
 				// with content piece
-				path += '&content=' + encodeURIComponent(contentPieces[0]);
+				paramStr += '&content=' + encodeURIComponent(contentPieces[0]);
 
 				// remove first content piece.
 				REMOVE({
@@ -74,7 +74,10 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
 			}
 
 			requestInfo.script = LOAD({
-				path : path,
+				host : requestInfo.host,
+				port : requestInfo.port,
+				uri : requestInfo.uri,
+				paramStr : paramStr,
 				isNoCache : true
 			});
 

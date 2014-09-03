@@ -53,22 +53,27 @@ global.CONNECT_TO_IO_SERVER = CONNECT_TO_IO_SERVER = METHOD({
 		// when mobile web
 		if (Ti.Platform.name === 'mobileweb') {
 
-			global[ hostCallbackName = 'F' + RANDOM_STR(20)] = hostCallback;
+			window[ hostCallbackName = 'F' + RANDOM_STR(20)] = hostCallback;
 
 			LOAD({
-				path : '//' + doorServerHost + ':' + webServerPort + '/__WEB_SOCKET_SERVER_HOST?defaultHost=' + doorServerHost + '&callback=' + hostCallbackName,
+				host : doorServerHost,
+				port : webServerPort,
+				uri : '__WEB_SOCKET_SERVER_HOST',
+				paramStr : 'defaultHost=' + doorServerHost + '&callback=' + hostCallbackName,
 				isNoCache : true
 			});
-		}
 
-		GET({
-			host : doorServerHost,
-			port : webServerPort,
-			uri : '__WEB_SOCKET_SERVER_HOST',
-			paramStr : 'defaultHost=' + doorServerHost
-		}, {
-			error : errorListener,
-			success : hostCallback
-		});
+		} else {
+
+			GET({
+				host : doorServerHost,
+				port : webServerPort,
+				uri : '__WEB_SOCKET_SERVER_HOST',
+				paramStr : 'defaultHost=' + doorServerHost
+			}, {
+				error : errorListener,
+				success : hostCallback
+			});
+		}
 	}
 });
