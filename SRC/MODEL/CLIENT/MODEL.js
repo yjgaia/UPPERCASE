@@ -274,7 +274,7 @@ FOR_BOX(function(box) {
 									callback(savedData);
 								}
 
-							} else {
+							} else if (callback !== undefined) {
 								callback();
 							}
 						});
@@ -390,7 +390,7 @@ FOR_BOX(function(box) {
 						errorHandler = callbackOrHandlers.error;
 					}
 
-					get(idOrParams, {
+					self.get(idOrParams, {
 
 						success : function(savedData) {
 
@@ -659,14 +659,12 @@ FOR_BOX(function(box) {
 						params = undefined;
 					}
 
-					if (callbackOrHandlers !== undefined) {
-						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-							callback = callbackOrHandlers;
-						} else {
-							callback = callbackOrHandlers.success;
-							notAuthedHandler = callbackOrHandlers.notAuthed;
-							errorHandler = callbackOrHandlers.error;
-						}
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
 					}
 
 					room.send({
@@ -726,17 +724,15 @@ FOR_BOX(function(box) {
 						params = undefined;
 					}
 
-					if (callbackOrHandlers !== undefined) {
-						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-							callback = callbackOrHandlers;
-						} else {
-							callback = callbackOrHandlers.success;
-							notAuthedHandler = callbackOrHandlers.notAuthed;
-							errorHandler = callbackOrHandlers.error;
-						}
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
 					}
 
-					find(params, {
+					self.find(params, {
 
 						success : function(savedDataSet) {
 
@@ -819,14 +815,12 @@ FOR_BOX(function(box) {
 						params = undefined;
 					}
 
-					if (callbackOrHandlers !== undefined) {
-						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-							callback = callbackOrHandlers;
-						} else {
-							callback = callbackOrHandlers.success;
-							notAuthedHandler = callbackOrHandlers.notAuthed;
-							errorHandler = callbackOrHandlers.error;
-						}
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
 					}
 
 					room.send({
@@ -886,14 +880,12 @@ FOR_BOX(function(box) {
 						params = undefined;
 					}
 
-					if (callbackOrHandlers !== undefined) {
-						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-							callback = callbackOrHandlers;
-						} else {
-							callback = callbackOrHandlers.success;
-							notAuthedHandler = callbackOrHandlers.notAuthed;
-							errorHandler = callbackOrHandlers.error;
-						}
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
 					}
 
 					room.send({

@@ -318,6 +318,7 @@ global.BOOT = BOOT = function(params) {
 		}
 
 		// load UPPERCASE.IO-BOX/BROWSER.
+		loadJSForBrowser(__dirname + '/UPPERCASE.IO-BOX/CLIENT.js');
 		loadJSForBrowser(__dirname + '/UPPERCASE.IO-BOX/BROWSER.js');
 	};
 
@@ -373,6 +374,7 @@ global.BOOT = BOOT = function(params) {
 		loadJSForCommon(__dirname + '/UPPERCASE.IO-MODEL/COMMON.js');
 		loadJSForNode(__dirname + '/UPPERCASE.IO-MODEL/NODE.js');
 		loadJSForClient(__dirname + '/UPPERCASE.IO-MODEL/CLIENT.js');
+		loadJSForClient(__dirname + '/UPPERCASE.IO-MODEL/BROWSER.js');
 	};
 
 	loadAllScripts = function() {
@@ -595,7 +597,12 @@ global.BOOT = BOOT = function(params) {
 					boxName,
 
 					// index
-					i;
+					i,
+
+					// wrap callback.
+					wrapCallback = function(str) {
+						return params.callback !== undefined ? params.callback + '(\'' + str + '\')' : str;
+					};
 
 					// serve browser script.
 					if (uri === '__SCRIPT') {
@@ -648,13 +655,13 @@ global.BOOT = BOOT = function(params) {
 						if (CONFIG.uploadServerHosts === undefined) {
 
 							response({
-								content : params.defaultHost
+								content : wrapCallback(params.defaultHost)
 							});
 
 						} else {
 
 							response({
-								content : CONFIG.uploadServerHosts[nextUploadServerHostIndex]
+								content : wrapCallback(CONFIG.uploadServerHosts[nextUploadServerHostIndex])
 							});
 
 							nextUploadServerHostIndex += 1;
@@ -812,13 +819,13 @@ global.BOOT = BOOT = function(params) {
 						if (CONFIG.socketServerHosts === undefined) {
 
 							response({
-								content : params.defaultHost
+								content : wrapCallback(params.defaultHost)
 							});
 
 						} else {
 
 							response({
-								content : CONFIG.socketServerHosts[nextSocketServerHostIndex]
+								content : wrapCallback(CONFIG.socketServerHosts[nextSocketServerHostIndex])
 							});
 
 							nextSocketServerHostIndex += 1;
@@ -837,13 +844,13 @@ global.BOOT = BOOT = function(params) {
 						if (CONFIG.webSocketServerHosts === undefined) {
 
 							response({
-								content : params.defaultHost
+								content : wrapCallback(params.defaultHost)
 							});
 
 						} else {
 
 							response({
-								content : CONFIG.webSocketServerHosts[nextWebSocketServerHostIndex]
+								content : wrapCallback(CONFIG.webSocketServerHosts[nextWebSocketServerHostIndex])
 							});
 
 							nextWebSocketServerHostIndex += 1;
