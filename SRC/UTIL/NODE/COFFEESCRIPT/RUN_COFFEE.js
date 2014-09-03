@@ -1,7 +1,8 @@
 /**
  * run CoffeeScript.
  */
-global.RUN_COFFEE = RUN_COFFEE = METHOD(function() {'use strict';
+global.RUN_COFFEE = RUN_COFFEE = METHOD(function() {
+	'use strict';
 
 	var
 	//IMPORT: CoffeeScript
@@ -12,7 +13,7 @@ global.RUN_COFFEE = RUN_COFFEE = METHOD(function() {'use strict';
 		run : function(code) {
 			//REQUIRED: code
 
-			return CoffeeScript.eval(code);
+			return CoffeeScript.run(code);
 		}
 	};
 });

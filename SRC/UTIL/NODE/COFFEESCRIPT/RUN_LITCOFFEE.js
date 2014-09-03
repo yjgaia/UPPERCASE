@@ -1,7 +1,8 @@
 /**
  * run literate CoffeeScript.
  */
-global.RUN_LITCOFFEE = RUN_LITCOFFEE = METHOD(function() {'use strict';
+global.RUN_LITCOFFEE = RUN_LITCOFFEE = METHOD(function() {
+	'use strict';
 
 	var
 	//IMPORT: CoffeeScript
