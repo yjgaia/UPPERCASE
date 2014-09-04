@@ -196,7 +196,7 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// done handler.
-					doneHanler,
+					doneHandler,
 
 					// valid result
 					validResult;
@@ -218,7 +218,7 @@ FOR_BOX(function(box) {
 							notValidHandler = callbackOrHandlers.notValid;
 							notAuthedHandler = callbackOrHandlers.notAuthed;
 							errorHandler = callbackOrHandlers.error;
-							doneHanler = callbackOrHandlers.done;
+							doneHandler = callbackOrHandlers.done;
 						}
 					}
 
@@ -287,8 +287,8 @@ FOR_BOX(function(box) {
 								callback();
 							}
 
-							if (doneHanler !== undefined) {
-								doneHanler();
+							if (doneHandler !== undefined) {
+								doneHandler();
 							}
 						});
 					}
@@ -320,7 +320,7 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// done handler.
-					doneHanler;
+					doneHandler;
 
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 						callback = callbackOrHandlers;
@@ -329,7 +329,7 @@ FOR_BOX(function(box) {
 						notExistsHandler = callbackOrHandlers.notExists;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHanler = callbackOrHandlers.done;
+						doneHandler = callbackOrHandlers.done;
 					}
 
 					room.send({
@@ -375,8 +375,8 @@ FOR_BOX(function(box) {
 							callback(savedData);
 						}
 
-						if (doneHanler !== undefined) {
-							doneHanler();
+						if (doneHandler !== undefined) {
+							doneHandler();
 						}
 					});
 				};
@@ -403,7 +403,7 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// done handler.
-					doneHanler;
+					doneHandler;
 
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 						callback = callbackOrHandlers;
@@ -412,7 +412,7 @@ FOR_BOX(function(box) {
 						notExistsHandler = callbackOrHandlers.notExists;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHanler = callbackOrHandlers.done;
+						doneHandler = callbackOrHandlers.done;
 					}
 
 					self.get(idOrParams, {
@@ -494,7 +494,7 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// done handler.
-					doneHanler,
+					doneHandler,
 
 					// valid result
 					validResult;
@@ -508,7 +508,7 @@ FOR_BOX(function(box) {
 							notExistsHandler = callbackOrHandlers.notExists;
 							notAuthedHandler = callbackOrHandlers.notAuthed;
 							errorHandler = callbackOrHandlers.error;
-							doneHanler = callbackOrHandlers.done;
+							doneHandler = callbackOrHandlers.done;
 						}
 					}
 
@@ -581,8 +581,8 @@ FOR_BOX(function(box) {
 								callback(savedData);
 							}
 
-							if (doneHanler !== undefined) {
-								doneHanler();
+							if (doneHandler !== undefined) {
+								doneHandler();
 							}
 						});
 					}
@@ -610,7 +610,7 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// done handler.
-					doneHanler;
+					doneHandler;
 
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -620,7 +620,7 @@ FOR_BOX(function(box) {
 							notExistsHandler = callbackOrHandlers.notExists;
 							notAuthedHandler = callbackOrHandlers.notAuthed;
 							errorHandler = callbackOrHandlers.error;
-							doneHanler = callbackOrHandlers.done;
+							doneHandler = callbackOrHandlers.done;
 						}
 					}
 
@@ -667,8 +667,8 @@ FOR_BOX(function(box) {
 							callback(savedData);
 						}
 
-						if (doneHanler !== undefined) {
-							doneHanler();
+						if (doneHandler !== undefined) {
+							doneHandler();
 						}
 					});
 				};
@@ -696,7 +696,7 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// done handler.
-					doneHanler;
+					doneHandler;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -710,7 +710,7 @@ FOR_BOX(function(box) {
 						callback = callbackOrHandlers.success;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHanler = callbackOrHandlers.done;
+						doneHandler = callbackOrHandlers.done;
 					}
 
 					room.send({
@@ -744,8 +744,8 @@ FOR_BOX(function(box) {
 							callback(savedDataSet);
 						}
 
-						if (doneHanler !== undefined) {
-							doneHanler();
+						if (doneHandler !== undefined) {
+							doneHandler();
 						}
 					});
 				};
@@ -769,7 +769,7 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// done handler.
-					doneHanler;
+					doneHandler;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -783,7 +783,7 @@ FOR_BOX(function(box) {
 						callback = callbackOrHandlers.success;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHanler = callbackOrHandlers.done;
+						doneHandler = callbackOrHandlers.done;
 					}
 
 					self.find(params, {
@@ -842,7 +842,7 @@ FOR_BOX(function(box) {
 
 						notAuthed : notAuthedHandler,
 						error : errorHandler,
-						done : doneHanler
+						done : doneHandler
 					});
 				};
 			}
@@ -865,7 +865,7 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// done handler.
-					doneHanler;
+					doneHandler;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -879,7 +879,7 @@ FOR_BOX(function(box) {
 						callback = callbackOrHandlers.success;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHanler = callbackOrHandlers.done;
+						doneHandler = callbackOrHandlers.done;
 					}
 
 					room.send({
@@ -913,8 +913,8 @@ FOR_BOX(function(box) {
 							callback(count);
 						}
 
-						if (doneHanler !== undefined) {
-							doneHanler();
+						if (doneHandler !== undefined) {
+							doneHandler();
 						}
 					});
 				};
@@ -938,7 +938,7 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// done handler.
-					doneHanler;
+					doneHandler;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -952,7 +952,7 @@ FOR_BOX(function(box) {
 						callback = callbackOrHandlers.success;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHanler = callbackOrHandlers.done;
+						doneHandler = callbackOrHandlers.done;
 					}
 
 					room.send({
@@ -986,8 +986,8 @@ FOR_BOX(function(box) {
 							callback(isExists);
 						}
 
-						if (doneHanler !== undefined) {
-							doneHanler();
+						if (doneHandler !== undefined) {
+							doneHandler();
 						}
 					});
 				};
