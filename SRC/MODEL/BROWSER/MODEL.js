@@ -36,189 +36,86 @@ FOR_BOX(function(box) {
 				// check is exists.
 				checkIsExists;
 
-				OVERRIDE(self.create, function(origin) {
+				if (self.create !== undefined) {
 
-					self.create = create = function(data, callbackOrHandlers) {
+					OVERRIDE(self.create, function(origin) {
 
-						var
-						// loading bar
-						loadingBar = LOADING_BAR(),
+						self.create = create = function(data, callbackOrHandlers) {
 
-						// callback.
-						callback,
+							var
+							// loading bar
+							loadingBar = LOADING_BAR(),
 
-						// not valid handler.
-						notValidHandler,
+							// callback.
+							callback,
 
-						// not valid handler.
-						notAuthedHandler,
+							// not valid handler.
+							notValidHandler,
 
-						// error handler.
-						errorHandler,
+							// not valid handler.
+							notAuthedHandler,
 
-						// done handler.
-						doneHandler;
+							// error handler.
+							errorHandler,
 
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
-							} else {
-								callback = callbackOrHandlers.success;
-								notValidHandler = callbackOrHandlers.notValid;
-								notAuthedHandler = callbackOrHandlers.notAuthed;
-								errorHandler = callbackOrHandlers.error;
-								doneHandler = callbackOrHandlers.done;
-							}
-						}
+							// done handler.
+							doneHandler;
 
-						origin(data, {
-							success : callback,
-							notValid : notValidHandler,
-							notAuthed : notAuthedHandler,
-							error : errorHandler,
-							done : function(savedData) {
-
-								if (doneHandler !== undefined) {
-									doneHandler(savedData);
+							if (callbackOrHandlers !== undefined) {
+								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+									callback = callbackOrHandlers;
+								} else {
+									callback = callbackOrHandlers.success;
+									notValidHandler = callbackOrHandlers.notValid;
+									notAuthedHandler = callbackOrHandlers.notAuthed;
+									errorHandler = callbackOrHandlers.error;
+									doneHandler = callbackOrHandlers.done;
 								}
-
-								loadingBar.done();
 							}
-						});
-					};
-				});
 
-				OVERRIDE(self.get, function(origin) {
+							origin(data, {
+								success : callback,
+								notValid : notValidHandler,
+								notAuthed : notAuthedHandler,
+								error : errorHandler,
+								done : function(savedData) {
 
-					self.get = get = function(idOrParams, callbackOrHandlers) {
+									if (doneHandler !== undefined) {
+										doneHandler(savedData);
+									}
 
-						var
-						// loading bar
-						loadingBar = LOADING_BAR(),
-
-						// callback.
-						callback,
-
-						// not exists handler
-						notExistsHandler,
-
-						// not valid handler.
-						notAuthedHandler,
-
-						// error handler.
-						errorHandler,
-
-						// done handler.
-						doneHandler;
-
-						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-							callback = callbackOrHandlers;
-						} else {
-							callback = callbackOrHandlers.success;
-							notExistsHandler = callbackOrHandlers.notExists;
-							notAuthedHandler = callbackOrHandlers.notAuthed;
-							errorHandler = callbackOrHandlers.error;
-							doneHandler = callbackOrHandlers.done;
-						}
-
-						origin(idOrParams, {
-							success : callback,
-							notExists : notExistsHandler,
-							notAuthed : notAuthedHandler,
-							error : errorHandler,
-							done : function(savedData) {
-
-								if (doneHandler !== undefined) {
-									doneHandler(savedData);
+									loadingBar.done();
 								}
+							});
+						};
+					});
+				}
 
-								loadingBar.done();
-							}
-						});
-					};
-				});
+				if (self.get !== undefined) {
 
-				OVERRIDE(self.update, function(origin) {
+					OVERRIDE(self.get, function(origin) {
 
-					self.update = update = function(data, callbackOrHandlers) {
+						self.get = get = function(idOrParams, callbackOrHandlers) {
 
-						var
-						// loading bar
-						loadingBar = LOADING_BAR(),
+							var
+							// loading bar
+							loadingBar = LOADING_BAR(),
 
-						// callback.
-						callback,
+							// callback.
+							callback,
 
-						// not valid handler.
-						notValidHandler,
+							// not exists handler
+							notExistsHandler,
 
-						// not exists handler
-						notExistsHandler,
+							// not valid handler.
+							notAuthedHandler,
 
-						// not valid handler.
-						notAuthedHandler,
+							// error handler.
+							errorHandler,
 
-						// error handler.
-						errorHandler,
+							// done handler.
+							doneHandler;
 
-						// done handler.
-						doneHandler;
-
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
-							} else {
-								callback = callbackOrHandlers.success;
-								notValidHandler = callbackOrHandlers.notValid;
-								notExistsHandler = callbackOrHandlers.notExists;
-								notAuthedHandler = callbackOrHandlers.notAuthed;
-								errorHandler = callbackOrHandlers.error;
-								doneHandler = callbackOrHandlers.done;
-							}
-						}
-
-						origin(data, {
-							success : callback,
-							notValid : notValidHandler,
-							notExists : notExistsHandler,
-							notAuthed : notAuthedHandler,
-							error : errorHandler,
-							done : function(savedData) {
-
-								if (doneHandler !== undefined) {
-									doneHandler(savedData);
-								}
-
-								loadingBar.done();
-							}
-						});
-					};
-				});
-
-				OVERRIDE(self.remove, function(origin) {
-
-					self.remove = remove = function(id, callbackOrHandlers) {
-
-						var
-						// loading bar
-						loadingBar = LOADING_BAR(),
-
-						// callback
-						callback,
-
-						// not exists handler
-						notExistsHandler,
-
-						// not valid handler.
-						notAuthedHandler,
-
-						// error handler.
-						errorHandler,
-
-						// done handler.
-						doneHandler;
-
-						if (callbackOrHandlers !== undefined) {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
@@ -228,177 +125,301 @@ FOR_BOX(function(box) {
 								errorHandler = callbackOrHandlers.error;
 								doneHandler = callbackOrHandlers.done;
 							}
-						}
 
-						origin(id, {
-							success : callback,
-							notExists : notExistsHandler,
-							notAuthed : notAuthedHandler,
-							error : errorHandler,
-							done : function(savedData) {
+							origin(idOrParams, {
+								success : callback,
+								notExists : notExistsHandler,
+								notAuthed : notAuthedHandler,
+								error : errorHandler,
+								done : function(savedData) {
 
-								if (doneHandler !== undefined) {
-									doneHandler(savedData);
+									if (doneHandler !== undefined) {
+										doneHandler(savedData);
+									}
+
+									loadingBar.done();
 								}
+							});
+						};
+					});
+				}
 
-								loadingBar.done();
-							}
-						});
-					};
-				});
+				if (self.update !== undefined) {
 
-				OVERRIDE(self.find, function(origin) {
+					OVERRIDE(self.update, function(origin) {
 
-					self.find = find = function(params, callbackOrHandlers) {
+						self.update = update = function(data, callbackOrHandlers) {
 
-						var
-						// loading bar
-						loadingBar = LOADING_BAR(),
+							var
+							// loading bar
+							loadingBar = LOADING_BAR(),
 
-						// callback
-						callback,
+							// callback.
+							callback,
 
-						// not valid handler.
-						notAuthedHandler,
+							// not valid handler.
+							notValidHandler,
 
-						// error handler.
-						errorHandler,
+							// not exists handler
+							notExistsHandler,
 
-						// done handler.
-						doneHandler;
+							// not valid handler.
+							notAuthedHandler,
 
-						// init params.
-						if (callbackOrHandlers === undefined) {
-							callbackOrHandlers = params;
-							params = undefined;
-						}
+							// error handler.
+							errorHandler,
 
-						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-							callback = callbackOrHandlers;
-						} else {
-							callback = callbackOrHandlers.success;
-							notAuthedHandler = callbackOrHandlers.notAuthed;
-							errorHandler = callbackOrHandlers.error;
-							doneHandler = callbackOrHandlers.done;
-						}
+							// done handler.
+							doneHandler;
 
-						origin(params, {
-							success : callback,
-							notAuthed : notAuthedHandler,
-							error : errorHandler,
-							done : function(savedData) {
-
-								if (doneHandler !== undefined) {
-									doneHandler(savedData);
+							if (callbackOrHandlers !== undefined) {
+								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+									callback = callbackOrHandlers;
+								} else {
+									callback = callbackOrHandlers.success;
+									notValidHandler = callbackOrHandlers.notValid;
+									notExistsHandler = callbackOrHandlers.notExists;
+									notAuthedHandler = callbackOrHandlers.notAuthed;
+									errorHandler = callbackOrHandlers.error;
+									doneHandler = callbackOrHandlers.done;
 								}
-
-								loadingBar.done();
 							}
-						});
-					};
-				});
 
-				OVERRIDE(self.count, function(origin) {
+							origin(data, {
+								success : callback,
+								notValid : notValidHandler,
+								notExists : notExistsHandler,
+								notAuthed : notAuthedHandler,
+								error : errorHandler,
+								done : function(savedData) {
 
-					self.count = count = function(params, callbackOrHandlers) {
+									if (doneHandler !== undefined) {
+										doneHandler(savedData);
+									}
 
-						var
-						// loading bar
-						loadingBar = LOADING_BAR(),
-
-						// callback
-						callback,
-
-						// not valid handler.
-						notAuthedHandler,
-
-						// error handler.
-						errorHandler,
-
-						// done handler.
-						doneHandler;
-
-						// init params.
-						if (callbackOrHandlers === undefined) {
-							callbackOrHandlers = params;
-							params = undefined;
-						}
-
-						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-							callback = callbackOrHandlers;
-						} else {
-							callback = callbackOrHandlers.success;
-							notAuthedHandler = callbackOrHandlers.notAuthed;
-							errorHandler = callbackOrHandlers.error;
-							doneHandler = callbackOrHandlers.done;
-						}
-
-						origin(params, {
-							success : callback,
-							notAuthed : notAuthedHandler,
-							error : errorHandler,
-							done : function(savedData) {
-
-								if (doneHandler !== undefined) {
-									doneHandler(savedData);
+									loadingBar.done();
 								}
+							});
+						};
+					});
+				}
 
-								loadingBar.done();
-							}
-						});
-					};
-				});
+				if (self.remove !== undefined) {
 
-				OVERRIDE(self.checkIsExists, function(origin) {
+					OVERRIDE(self.remove, function(origin) {
 
-					self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+						self.remove = remove = function(id, callbackOrHandlers) {
 
-						var
-						// loading bar
-						loadingBar = LOADING_BAR(),
+							var
+							// loading bar
+							loadingBar = LOADING_BAR(),
 
-						// callback
-						callback,
+							// callback
+							callback,
 
-						// not valid handler.
-						notAuthedHandler,
+							// not exists handler
+							notExistsHandler,
 
-						// error handler.
-						errorHandler,
+							// not valid handler.
+							notAuthedHandler,
 
-						// done handler.
-						doneHandler;
+							// error handler.
+							errorHandler,
 
-						// init params.
-						if (callbackOrHandlers === undefined) {
-							callbackOrHandlers = params;
-							params = undefined;
-						}
+							// done handler.
+							doneHandler;
 
-						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-							callback = callbackOrHandlers;
-						} else {
-							callback = callbackOrHandlers.success;
-							notAuthedHandler = callbackOrHandlers.notAuthed;
-							errorHandler = callbackOrHandlers.error;
-							doneHandler = callbackOrHandlers.done;
-						}
-
-						origin(params, {
-							success : callback,
-							notAuthed : notAuthedHandler,
-							error : errorHandler,
-							done : function(savedData) {
-
-								if (doneHandler !== undefined) {
-									doneHandler(savedData);
+							if (callbackOrHandlers !== undefined) {
+								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+									callback = callbackOrHandlers;
+								} else {
+									callback = callbackOrHandlers.success;
+									notExistsHandler = callbackOrHandlers.notExists;
+									notAuthedHandler = callbackOrHandlers.notAuthed;
+									errorHandler = callbackOrHandlers.error;
+									doneHandler = callbackOrHandlers.done;
 								}
-
-								loadingBar.done();
 							}
-						});
-					};
-				});
+
+							origin(id, {
+								success : callback,
+								notExists : notExistsHandler,
+								notAuthed : notAuthedHandler,
+								error : errorHandler,
+								done : function(savedData) {
+
+									if (doneHandler !== undefined) {
+										doneHandler(savedData);
+									}
+
+									loadingBar.done();
+								}
+							});
+						};
+					});
+				}
+
+				if (self.find !== undefined) {
+
+					OVERRIDE(self.find, function(origin) {
+
+						self.find = find = function(params, callbackOrHandlers) {
+
+							var
+							// loading bar
+							loadingBar = LOADING_BAR(),
+
+							// callback
+							callback,
+
+							// not valid handler.
+							notAuthedHandler,
+
+							// error handler.
+							errorHandler,
+
+							// done handler.
+							doneHandler;
+
+							// init params.
+							if (callbackOrHandlers === undefined) {
+								callbackOrHandlers = params;
+								params = undefined;
+							}
+
+							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+								callback = callbackOrHandlers;
+							} else {
+								callback = callbackOrHandlers.success;
+								notAuthedHandler = callbackOrHandlers.notAuthed;
+								errorHandler = callbackOrHandlers.error;
+								doneHandler = callbackOrHandlers.done;
+							}
+
+							origin(params, {
+								success : callback,
+								notAuthed : notAuthedHandler,
+								error : errorHandler,
+								done : function(savedData) {
+
+									if (doneHandler !== undefined) {
+										doneHandler(savedData);
+									}
+
+									loadingBar.done();
+								}
+							});
+						};
+					});
+				}
+
+				if (self.count !== undefined) {
+
+					OVERRIDE(self.count, function(origin) {
+
+						self.count = count = function(params, callbackOrHandlers) {
+
+							var
+							// loading bar
+							loadingBar = LOADING_BAR(),
+
+							// callback
+							callback,
+
+							// not valid handler.
+							notAuthedHandler,
+
+							// error handler.
+							errorHandler,
+
+							// done handler.
+							doneHandler;
+
+							// init params.
+							if (callbackOrHandlers === undefined) {
+								callbackOrHandlers = params;
+								params = undefined;
+							}
+
+							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+								callback = callbackOrHandlers;
+							} else {
+								callback = callbackOrHandlers.success;
+								notAuthedHandler = callbackOrHandlers.notAuthed;
+								errorHandler = callbackOrHandlers.error;
+								doneHandler = callbackOrHandlers.done;
+							}
+
+							origin(params, {
+								success : callback,
+								notAuthed : notAuthedHandler,
+								error : errorHandler,
+								done : function(savedData) {
+
+									if (doneHandler !== undefined) {
+										doneHandler(savedData);
+									}
+
+									loadingBar.done();
+								}
+							});
+						};
+					});
+				}
+
+				if (self.checkIsExists !== undefined) {
+
+					OVERRIDE(self.checkIsExists, function(origin) {
+
+						self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+
+							var
+							// loading bar
+							loadingBar = LOADING_BAR(),
+
+							// callback
+							callback,
+
+							// not valid handler.
+							notAuthedHandler,
+
+							// error handler.
+							errorHandler,
+
+							// done handler.
+							doneHandler;
+
+							// init params.
+							if (callbackOrHandlers === undefined) {
+								callbackOrHandlers = params;
+								params = undefined;
+							}
+
+							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+								callback = callbackOrHandlers;
+							} else {
+								callback = callbackOrHandlers.success;
+								notAuthedHandler = callbackOrHandlers.notAuthed;
+								errorHandler = callbackOrHandlers.error;
+								doneHandler = callbackOrHandlers.done;
+							}
+
+							origin(params, {
+								success : callback,
+								notAuthed : notAuthedHandler,
+								error : errorHandler,
+								done : function(savedData) {
+
+									if (doneHandler !== undefined) {
+										doneHandler(savedData);
+									}
+
+									loadingBar.done();
+								}
+							});
+						};
+					});
+				}
 			}
 		});
 	});
