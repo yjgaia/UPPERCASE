@@ -6,7 +6,7 @@ FOR_BOX(function(box) {'use strict';
 	box.GO = METHOD({
 
 		run : function(uri) {
-			//REQUIRED: uri
+			//OPTIONAL: uri
 
 			location.href = box.HREF(uri);
 		}

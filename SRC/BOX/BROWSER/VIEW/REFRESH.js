@@ -6,7 +6,7 @@ FOR_BOX(function(box) {'use strict';
 	box.REFRESH = METHOD({
 
 		run : function(uri) {
-			//REQUIRED: uri
+			//OPTIONAL: uri
 
 			var
 			// hashchange event

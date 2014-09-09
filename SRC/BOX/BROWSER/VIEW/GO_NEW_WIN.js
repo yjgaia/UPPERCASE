@@ -6,7 +6,7 @@ FOR_BOX(function(box) {'use strict';
 	box.GO_NEW_WIN = METHOD({
 
 		run : function(uri) {
-			//REQUIRED: uri
+			//OPTIONAL: uri
 
 			global.open(box.HREF(uri));
 		}

@@ -79,13 +79,9 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
 				uri : requestInfo.uri,
 				paramStr : paramStr,
 				isNoCache : true
+			}, {
+				error : errorListener
 			});
-
-			try {
-				requestInfo.script.getEl().onerror = errorListener;
-			} catch (e) {
-				// ignore.
-			}
 		};
 
 		m.removeRequestInfo = removeRequestInfo = function(requestKey) {
