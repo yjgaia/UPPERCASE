@@ -5,8 +5,8 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	'use strict';
 
 	var
-	// waiting enter room names
-	waitingEnterRoomNames = [],
+	// enter room names
+	enterRoomNames = [],
 
 	// waiting on infos
 	waitingOnInfos = [],
@@ -44,12 +44,9 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	m.enterRoom = enterRoom = function(roomName) {
 		//REQUIRED: roomName
 
-		if (innerSend === undefined) {
+		enterRoomNames.push(roomName);
 
-			waitingEnterRoomNames.push(roomName);
-
-		} else {
-
+		if (innerSend !== undefined) {
 			innerSend({
 				methodName : '__ENTER_ROOM',
 				data : roomName
@@ -112,20 +109,17 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 	m.exitRoom = exitRoom = function(roomName) {
 
-		if (waitingEnterRoomNames !== undefined) {
-
-			REMOVE({
-				array : waitingEnterRoomNames,
-				value : roomName
-			});
-
-		} else {
-
+		if (innerSend !== undefined) {
 			innerSend({
 				methodName : '__EXIT_ROOM',
 				data : roomName
 			});
 		}
+
+		REMOVE({
+			array : enterRoomNames,
+			value : roomName
+		});
 	};
 
 	return {
@@ -160,15 +154,13 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 				innerOff = off;
 				innerSend = send;
 
-				EACH(waitingEnterRoomNames, function(roomName) {
+				EACH(enterRoomNames, function(roomName) {
 
 					innerSend({
 						methodName : '__ENTER_ROOM',
 						data : roomName
 					});
 				});
-
-				waitingEnterRoomNames = undefined;
 
 				EACH(waitingOnInfos, function(onInfo) {
 					innerOn(onInfo.methodName, onInfo.method);
@@ -185,6 +177,17 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 				if (connectionListener !== undefined) {
 					connectionListener(on, off, send);
 				}
+
+				// when disconnected, rewait.
+				on('__DISCONNECTED', function() {
+
+					innerOn = undefined;
+					innerOff = undefined;
+					innerSend = undefined;
+
+					waitingOnInfos = [];
+					waitingSendInfos = [];
+				});
 			};
 
 			// when mobile web

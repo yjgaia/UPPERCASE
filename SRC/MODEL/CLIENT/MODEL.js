@@ -180,7 +180,6 @@ FOR_BOX(function(box) {
 					//OPTIONAL: callbackOrHandlers.notValid
 					//OPTIONAL: callbackOrHandlers.notAuthed
 					//OPTIONAL: callbackOrHandlers.error
-					//OPTIONAL: callbackOrHandlers.done
 
 					var
 					// callback.
@@ -194,9 +193,6 @@ FOR_BOX(function(box) {
 
 					// error handler.
 					errorHandler,
-
-					// done handler.
-					doneHandler,
 
 					// valid result
 					validResult;
@@ -218,7 +214,6 @@ FOR_BOX(function(box) {
 							notValidHandler = callbackOrHandlers.notValid;
 							notAuthedHandler = callbackOrHandlers.notAuthed;
 							errorHandler = callbackOrHandlers.error;
-							doneHandler = callbackOrHandlers.done;
 						}
 					}
 
@@ -286,10 +281,6 @@ FOR_BOX(function(box) {
 							} else if (callback !== undefined) {
 								callback();
 							}
-
-							if (doneHandler !== undefined) {
-								doneHandler();
-							}
 						});
 					}
 				};
@@ -317,10 +308,7 @@ FOR_BOX(function(box) {
 					notAuthedHandler,
 
 					// error handler.
-					errorHandler,
-
-					// done handler.
-					doneHandler;
+					errorHandler;
 
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 						callback = callbackOrHandlers;
@@ -329,7 +317,6 @@ FOR_BOX(function(box) {
 						notExistsHandler = callbackOrHandlers.notExists;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHandler = callbackOrHandlers.done;
 					}
 
 					room.send({
@@ -374,10 +361,6 @@ FOR_BOX(function(box) {
 						} else if (callback !== undefined) {
 							callback(savedData);
 						}
-
-						if (doneHandler !== undefined) {
-							doneHandler();
-						}
 					});
 				};
 
@@ -400,10 +383,7 @@ FOR_BOX(function(box) {
 					notAuthedHandler,
 
 					// error handler.
-					errorHandler,
-
-					// done handler.
-					doneHandler;
+					errorHandler;
 
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 						callback = callbackOrHandlers;
@@ -412,7 +392,6 @@ FOR_BOX(function(box) {
 						notExistsHandler = callbackOrHandlers.notExists;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHandler = callbackOrHandlers.done;
 					}
 
 					self.get(idOrParams, {
@@ -460,8 +439,7 @@ FOR_BOX(function(box) {
 
 						notExists : notExistsHandler,
 						notAuthed : notAuthedHandler,
-						error : errorHandler,
-						done : doneHandler
+						error : errorHandler
 					});
 				};
 			}
@@ -493,9 +471,6 @@ FOR_BOX(function(box) {
 					// error handler.
 					errorHandler,
 
-					// done handler.
-					doneHandler,
-
 					// valid result
 					validResult;
 
@@ -508,7 +483,6 @@ FOR_BOX(function(box) {
 							notExistsHandler = callbackOrHandlers.notExists;
 							notAuthedHandler = callbackOrHandlers.notAuthed;
 							errorHandler = callbackOrHandlers.error;
-							doneHandler = callbackOrHandlers.done;
 						}
 					}
 
@@ -580,10 +554,6 @@ FOR_BOX(function(box) {
 							} else if (callback !== undefined) {
 								callback(savedData);
 							}
-
-							if (doneHandler !== undefined) {
-								doneHandler();
-							}
 						});
 					}
 				};
@@ -607,10 +577,7 @@ FOR_BOX(function(box) {
 					notAuthedHandler,
 
 					// error handler.
-					errorHandler,
-
-					// done handler.
-					doneHandler;
+					errorHandler;
 
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -620,7 +587,6 @@ FOR_BOX(function(box) {
 							notExistsHandler = callbackOrHandlers.notExists;
 							notAuthedHandler = callbackOrHandlers.notAuthed;
 							errorHandler = callbackOrHandlers.error;
-							doneHandler = callbackOrHandlers.done;
 						}
 					}
 
@@ -666,10 +632,6 @@ FOR_BOX(function(box) {
 						} else if (callback !== undefined) {
 							callback(savedData);
 						}
-
-						if (doneHandler !== undefined) {
-							doneHandler();
-						}
 					});
 				};
 			}
@@ -693,10 +655,7 @@ FOR_BOX(function(box) {
 					notAuthedHandler,
 
 					// error handler.
-					errorHandler,
-
-					// done handler.
-					doneHandler;
+					errorHandler;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -710,7 +669,6 @@ FOR_BOX(function(box) {
 						callback = callbackOrHandlers.success;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHandler = callbackOrHandlers.done;
 					}
 
 					room.send({
@@ -743,10 +701,6 @@ FOR_BOX(function(box) {
 						} else if (callback !== undefined) {
 							callback(savedDataSet);
 						}
-
-						if (doneHandler !== undefined) {
-							doneHandler();
-						}
 					});
 				};
 
@@ -766,10 +720,7 @@ FOR_BOX(function(box) {
 					notAuthedHandler,
 
 					// error handler.
-					errorHandler,
-
-					// done handler.
-					doneHandler;
+					errorHandler;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -783,7 +734,6 @@ FOR_BOX(function(box) {
 						callback = callbackOrHandlers.success;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHandler = callbackOrHandlers.done;
 					}
 
 					self.find(params, {
@@ -841,8 +791,7 @@ FOR_BOX(function(box) {
 						},
 
 						notAuthed : notAuthedHandler,
-						error : errorHandler,
-						done : doneHandler
+						error : errorHandler
 					});
 				};
 			}
@@ -862,10 +811,7 @@ FOR_BOX(function(box) {
 					notAuthedHandler,
 
 					// error handler
-					errorHandler,
-
-					// done handler.
-					doneHandler;
+					errorHandler;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -879,7 +825,6 @@ FOR_BOX(function(box) {
 						callback = callbackOrHandlers.success;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHandler = callbackOrHandlers.done;
 					}
 
 					room.send({
@@ -912,10 +857,6 @@ FOR_BOX(function(box) {
 						} else if (callback !== undefined) {
 							callback(count);
 						}
-
-						if (doneHandler !== undefined) {
-							doneHandler();
-						}
 					});
 				};
 			}
@@ -935,10 +876,7 @@ FOR_BOX(function(box) {
 					notAuthedHandler,
 
 					// error handler
-					errorHandler,
-
-					// done handler.
-					doneHandler;
+					errorHandler;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -952,7 +890,6 @@ FOR_BOX(function(box) {
 						callback = callbackOrHandlers.success;
 						notAuthedHandler = callbackOrHandlers.notAuthed;
 						errorHandler = callbackOrHandlers.error;
-						doneHandler = callbackOrHandlers.done;
 					}
 
 					room.send({
@@ -984,10 +921,6 @@ FOR_BOX(function(box) {
 							}
 						} else if (callback !== undefined) {
 							callback(isExists);
-						}
-
-						if (doneHandler !== undefined) {
-							doneHandler();
 						}
 					});
 				};

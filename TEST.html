@@ -5,8 +5,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 		<title>UPPERCASE.IO TESTCASE</title>
 		<style>
-			div {
+			#container div {
 				margin-left: 20px;
+			}
+			button {
+				display: block;
 			}
 			footer {
 				margin-top: 20px;
@@ -19,31 +22,36 @@
 		<p>
 			Check JavaScript Console.
 		</p>
-		<div>
-			<h3>TRANSPORT</h3>
-			<button onclick="test('TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER');">
-				CONNECT_TO_WEB_SOCKET_SERVER TEST
-			</button>
-		</div>
-		<div>
-			<h3>ROOM</h3>
-			<button onclick="test('ROOM/CLIENT/ROOM');">
-				ROOM TEST
-			</button>
-		</div>
-		<div>
-			<h3>MODEL</h3>
-			<button onclick="test('MODEL/CLIENT/MODEL');">
-				MODEL TEST
-			</button>
-		</div>
-		<div>
-			<h3>UPLOAD</h3>
-			<iframe name="__UPLOAD_FORM"></iframe>
-			<form action="http://localhost:8124" target="__UPLOAD_FORM" method="POST" enctype="multipart/form-data">
-				<input name="file" type="file">
-				<input type="submit">
-			</form>
+		<div id="container">
+			<div>
+				<h3>TRANSPORT</h3>
+				<button onclick="test('TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER');">
+					CONNECT_TO_WEB_SOCKET_SERVER TEST
+				</button>
+			</div>
+			<div>
+				<h3>ROOM</h3>
+				<button onclick="test('ROOM/CLIENT/ROOM');">
+					ROOM TEST
+				</button>
+				<button onclick="test('ROOM/CLIENT/ROOM2');">
+					ROOM reconnect TEST
+				</button>
+			</div>
+			<div>
+				<h3>MODEL</h3>
+				<button onclick="test('MODEL/CLIENT/MODEL');">
+					MODEL TEST
+				</button>
+			</div>
+			<div>
+				<h3>UPLOAD</h3>
+				<iframe name="__UPLOAD_FORM"></iframe>
+				<form action="http://localhost:8124" target="__UPLOAD_FORM" method="POST" enctype="multipart/form-data">
+					<input name="file" type="file">
+					<input type="submit">
+				</form>
+			</div>
 		</div>
 		<footer>
 			<div>
@@ -61,8 +69,15 @@
 
 		<!-- import UPPERCASE.JS -->
 		<script src="UPPERCASE.JS-COMMON.js"></script>
+		<script>
+			CONFIG.version = 'V' + (new Date()).getTime();
+		</script>
 		<script src="UPPERCASE.JS-BROWSER.js"></script>
-		<script src="UPPERCASE.JS-BROWSER-FIX/FIX.js"></script>
+		<script>
+			BROWSER_CONFIG.isUsingFlashCanvasPro = true;
+			BROWSER_CONFIG.fixScriptsFolderPath = 'UPPERCASE.JS-BROWSER-FIX';
+			LOAD('UPPERCASE.JS-BROWSER-FIX/FIX.js');
+		</script>
 
 		<!-- import UPPERCASE.IO-BOX -->
 		<script src="UPPERCASE.IO-BOX/CORE.js"></script>
@@ -92,15 +107,14 @@
 				INIT_OBJECTS();
 
 				var
-				// source element
-				sourceEl = document.getElementById('source');
+				// test.
+				test;
 
-				global.test = function(path) {
-					GET('EXAMPLES/' + path + '.js', function(source) {
-						sourceEl.innerText = source;
-						eval(source);
-					});
+				global.test = test = function(path) {
+					LOAD('EXAMPLES/' + path + '.js');
 				};
+
+				console.log('[UPPERCASE.IO TEST START] BROWSER: ' + INFO.getBrowserInfo().name + ' ' + INFO.getBrowserInfo().version);
 			};
 		</script>
 	</body>
