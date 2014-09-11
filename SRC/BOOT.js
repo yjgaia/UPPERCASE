@@ -374,7 +374,6 @@ global.BOOT = BOOT = function(params) {
 		loadJSForCommon(__dirname + '/UPPERCASE.IO-MODEL/COMMON.js');
 		loadJSForNode(__dirname + '/UPPERCASE.IO-MODEL/NODE.js');
 		loadJSForClient(__dirname + '/UPPERCASE.IO-MODEL/CLIENT.js');
-		loadJSForClient(__dirname + '/UPPERCASE.IO-MODEL/BROWSER.js');
 	};
 
 	loadAllScripts = function() {
