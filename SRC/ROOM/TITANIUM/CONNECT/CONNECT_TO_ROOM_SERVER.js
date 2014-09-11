@@ -8,8 +8,8 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	// enter room names
 	enterRoomNames = [],
 
-	// waiting on infos
-	waitingOnInfos = [],
+	// on infos
+	onInfos = [],
 
 	// waiting send infos
 	waitingSendInfos = [],
@@ -56,39 +56,33 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 	m.on = on = function(methodName, method) {
 
-		if (innerOn === undefined) {
+		onInfos.push({
+			methodName : methodName,
+			method : method
+		});
 
-			waitingOnInfos.push({
-				methodName : methodName,
-				method : method
-			});
-
-		} else {
-
+		if (innerOn !== undefined) {
 			innerOn(methodName, method);
 		}
 	};
 
 	m.off = off = function(methodName, method) {
 
-		if (waitingOnInfos !== undefined) {
+		if (innerOff !== undefined) {
+			innerOff(methodName, method);
+		}
 
-			if (method !== undefined) {
+		if (method !== undefined) {
 
-				REMOVE(waitingOnInfos, function(waitingOnInfo) {
-					return waitingOnInfo.methodName === methodName && waitingOnInfo.method === method;
-				});
-
-			} else {
-
-				REMOVE(waitingOnInfos, function(waitingOnInfo) {
-					return waitingOnInfo.methodName === methodName;
-				});
-			}
+			REMOVE(onInfos, function(onInfo) {
+				return onInfo.methodName === methodName && onInfo.method === method;
+			});
 
 		} else {
 
-			innerOff(methodName, method);
+			REMOVE(onInfos, function(onInfo) {
+				return onInfo.methodName === methodName;
+			});
 		}
 	};
 
@@ -162,11 +156,9 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 					});
 				});
 
-				EACH(waitingOnInfos, function(onInfo) {
+				EACH(onInfos, function(onInfo) {
 					innerOn(onInfo.methodName, onInfo.method);
 				});
-
-				waitingOnInfos = undefined;
 
 				EACH(waitingSendInfos, function(sendInfo) {
 					innerSend(sendInfo.params, sendInfo.callback);
@@ -185,7 +177,6 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 					innerOff = undefined;
 					innerSend = undefined;
 
-					waitingOnInfos = [];
 					waitingSendInfos = [];
 				});
 			};
