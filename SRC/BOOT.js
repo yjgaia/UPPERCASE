@@ -557,32 +557,32 @@ global.BOOT = BOOT = function(params) {
 		// cal
 		cal = CALENDAR();
 
-		if (CONFIG.uploadServers !== undefined) {
+		if (NODE_CONFIG.uploadServers !== undefined) {
 
 			uploadServerHosts = [];
 			nextUploadServerHostIndex = 0;
 
-			EACH(CONFIG.uploadServers, function(host) {
+			EACH(NODE_CONFIG.uploadServers, function(host) {
 				uploadServerHosts.push(host);
 			});
 		}
 
-		if (CONFIG.socketServers !== undefined) {
+		if (NODE_CONFIG.socketServers !== undefined) {
 
 			socketServerHosts = [];
 			nextSocketServerHostIndex = 0;
 
-			EACH(CONFIG.socketServers, function(host) {
+			EACH(NODE_CONFIG.socketServers, function(host) {
 				socketServerHosts.push(host);
 			});
 		}
 
-		if (CONFIG.webSocketServers !== undefined) {
+		if (NODE_CONFIG.webSocketServers !== undefined) {
 
 			webSocketServerHosts = [];
 			nextWebSocketServerHostIndex = 0;
 
-			EACH(CONFIG.webSocketServers, function(host) {
+			EACH(NODE_CONFIG.webSocketServers, function(host) {
 				webSocketServerHosts.push(host);
 			});
 		}
