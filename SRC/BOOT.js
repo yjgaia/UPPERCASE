@@ -326,15 +326,13 @@ global.BOOT = BOOT = function(params) {
 
 		CPU_CLUSTERING(function() {
 
-			if (NODE_CONFIG.serverClusteringHosts !== undefined && NODE_CONFIG.thisServerHost !== undefined && NODE_CONFIG.serverClusteringPort !== undefined) {
+			if (NODE_CONFIG.clusteringServers !== undefined && NODE_CONFIG.thisServerName !== undefined && NODE_CONFIG.clusteringPort !== undefined) {
 
 				SERVER_CLUSTERING({
-					hosts : NODE_CONFIG.serverClusteringHosts,
-					thisServerHost : NODE_CONFIG.thisServerHost,
-					port : NODE_CONFIG.serverClusteringPort
-				}, function() {
-					work();
-				});
+					servers : NODE_CONFIG.clusteringServers,
+					thisServerName : NODE_CONFIG.thisServerName,
+					port : NODE_CONFIG.clusteringPort
+				}, work);
 
 			} else {
 				work();
@@ -532,14 +530,23 @@ global.BOOT = BOOT = function(params) {
 	run = function() {
 
 		var
+		// upload server hosts
+		uploadServerHosts,
+
+		// socket server hosts
+		socketServerHosts,
+
+		// web socket server hosts
+		webSocketServerHosts,
+
 		// next upload server host index
-		nextUploadServerHostIndex = 0,
+		nextUploadServerHostIndex,
 
 		// next socket server host index
-		nextSocketServerHostIndex = 0,
+		nextSocketServerHostIndex,
 
 		// next web socket server host index
-		nextWebSocketServerHostIndex = 0,
+		nextWebSocketServerHostIndex,
 
 		// web server
 		webServer,
@@ -549,6 +556,36 @@ global.BOOT = BOOT = function(params) {
 
 		// cal
 		cal = CALENDAR();
+
+		if (CONFIG.uploadServers !== undefined) {
+
+			uploadServerHosts = [];
+			nextUploadServerHostIndex = 0;
+
+			EACH(CONFIG.uploadServers, function(host) {
+				uploadServerHosts.push(host);
+			});
+		}
+
+		if (CONFIG.socketServers !== undefined) {
+
+			socketServerHosts = [];
+			nextSocketServerHostIndex = 0;
+
+			EACH(CONFIG.socketServers, function(host) {
+				socketServerHosts.push(host);
+			});
+		}
+
+		if (CONFIG.webSocketServers !== undefined) {
+
+			webSocketServerHosts = [];
+			nextWebSocketServerHostIndex = 0;
+
+			EACH(CONFIG.webSocketServers, function(host) {
+				webSocketServerHosts.push(host);
+			});
+		}
 
 		// init objects.
 		INIT_OBJECTS();
@@ -594,6 +631,9 @@ global.BOOT = BOOT = function(params) {
 
 					// box name
 					boxName,
+
+					// upload file database
+					uploadFileDB,
 
 					// index
 					i,
@@ -651,7 +691,7 @@ global.BOOT = BOOT = function(params) {
 					// serve upload server host.
 					else if (uri === '__UPLOAD_SERVER_HOST') {
 
-						if (CONFIG.uploadServerHosts === undefined) {
+						if (uploadServerHosts === undefined) {
 
 							response({
 								content : wrapCallback(params.defaultHost)
@@ -660,12 +700,12 @@ global.BOOT = BOOT = function(params) {
 						} else {
 
 							response({
-								content : wrapCallback(CONFIG.uploadServerHosts[nextUploadServerHostIndex])
+								content : wrapCallback(uploadServerHosts[nextUploadServerHostIndex])
 							});
 
 							nextUploadServerHostIndex += 1;
 
-							if (nextUploadServerHostIndex === CONFIG.uploadServerHosts.length) {
+							if (nextUploadServerHostIndex === uploadServerHosts.length) {
 								nextUploadServerHostIndex = 0;
 							}
 						}
@@ -715,7 +755,8 @@ global.BOOT = BOOT = function(params) {
 										// delete temp path.
 										delete fileData.path;
 
-										fileData.serverId = 1;
+										fileData.serverName = NODE_CONFIG.thisServerName;
+										fileData.downloadCount = 0;
 
 										uploadFileDB.create(fileData, function(savedData) {
 
@@ -761,7 +802,9 @@ global.BOOT = BOOT = function(params) {
 								boxName = CONFIG.defaultBoxName;
 							}
 
-							BOX.getBoxes()[boxName].DB('__UPLOAD_FILE').get(uri.lastIndexOf('/') === -1 ? uri : uri.substring(uri.lastIndexOf('/') + 1), {
+							uploadFileDB = BOX.getBoxes()[boxName].DB('__UPLOAD_FILE');
+
+							uploadFileDB.get(uri.lastIndexOf('/') === -1 ? uri : uri.substring(uri.lastIndexOf('/') + 1), {
 
 								error : function() {
 
@@ -779,13 +822,32 @@ global.BOOT = BOOT = function(params) {
 
 								success : function(savedData) {
 
-									next({
-										contentType : savedData.type,
-										headers : {
-											'Content-Disposition' : 'attachment; filename="' + savedData.name + '"'
-										},
-										isFinal : true
-									});
+									if (savedData.serverName === NODE_CONFIG.thisServerName) {
+
+										next({
+											contentType : savedData.type,
+											headers : {
+												'Content-Disposition' : 'attachment; filename="' + savedData.name + '"'
+											},
+											isFinal : true
+										});
+
+										uploadFileDB.update({
+											id : savedData.id,
+											$inc : {
+												downloadCount : 1
+											}
+										});
+
+									} else {
+
+										response({
+											statusCode : 302,
+											headers : {
+												'Location' : NODE_CONFIG.clusteringServers[savedData.serverName] + '/' + boxName + '/' + uri
+											}
+										});
+									}
 								}
 							});
 						}
@@ -815,7 +877,7 @@ global.BOOT = BOOT = function(params) {
 					// serve socket server host.
 					else if (uri === '__SOCKET_SERVER_HOST') {
 
-						if (CONFIG.socketServerHosts === undefined) {
+						if (socketServerHosts === undefined) {
 
 							response({
 								content : wrapCallback(params.defaultHost)
@@ -824,12 +886,12 @@ global.BOOT = BOOT = function(params) {
 						} else {
 
 							response({
-								content : wrapCallback(CONFIG.socketServerHosts[nextSocketServerHostIndex])
+								content : wrapCallback(socketServerHosts[nextSocketServerHostIndex])
 							});
 
 							nextSocketServerHostIndex += 1;
 
-							if (nextSocketServerHostIndex === CONFIG.socketServerHosts.length) {
+							if (nextSocketServerHostIndex === socketServerHosts.length) {
 								nextSocketServerHostIndex = 0;
 							}
 						}
@@ -840,7 +902,7 @@ global.BOOT = BOOT = function(params) {
 					// serve web socket server host.
 					else if (uri === '__WEB_SOCKET_SERVER_HOST') {
 
-						if (CONFIG.webSocketServerHosts === undefined) {
+						if (webSocketServerHosts === undefined) {
 
 							response({
 								content : wrapCallback(params.defaultHost)
@@ -849,12 +911,12 @@ global.BOOT = BOOT = function(params) {
 						} else {
 
 							response({
-								content : wrapCallback(CONFIG.webSocketServerHosts[nextWebSocketServerHostIndex])
+								content : wrapCallback(webSocketServerHosts[nextWebSocketServerHostIndex])
 							});
 
 							nextWebSocketServerHostIndex += 1;
 
-							if (nextWebSocketServerHostIndex === CONFIG.webSocketServerHosts.length) {
+							if (nextWebSocketServerHostIndex === webSocketServerHosts.length) {
 								nextWebSocketServerHostIndex = 0;
 							}
 						}
