@@ -3,7 +3,7 @@ require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
 BOOT({
 	CONFIG : {
 		defaultBoxName : 'UploadSample',
-		webServerPort : 8812
+		webServerPort : 8894
 	},
 
 	NODE_CONFIG : {

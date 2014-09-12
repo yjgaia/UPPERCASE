@@ -844,7 +844,7 @@ global.BOOT = BOOT = function(params) {
 										response({
 											statusCode : 302,
 											headers : {
-												'Location' : NODE_CONFIG.clusteringServers[savedData.serverName] + '/' + boxName + '/' + uri
+												'Location' : 'http://' + NODE_CONFIG.uploadServers[savedData.serverName] + ':' + CONFIG.webServerPort + '/__RF/' + boxName + '/' + uri
 											}
 										});
 									}
