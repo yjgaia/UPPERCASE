@@ -1418,7 +1418,7 @@ FOR_BOX(function(box) {
 								if (removeAuthKey !== undefined) {
 
 									// get data in database.
-									db.get(data.id, {
+									db.get(id, {
 
 										error : function(errorMsg) {
 											ret({
