@@ -196,7 +196,7 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 				try {
 					conn.send(STRINGIFY(params));
 				} catch(error) {
-					console.log('[UPPERCASE.JS-SOCEKT_SERVER] ERROR:', error.toString());
+					console.log('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:', error.toString());
 				}
 
 				if (callback !== undefined) {
