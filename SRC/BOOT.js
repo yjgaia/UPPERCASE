@@ -1005,8 +1005,8 @@ global.BOOT = BOOT = function(params) {
 
 	// load UPPERCASE.IO-BOOT.
 	loadJSForCommon(__dirname + '/UPPERCASE.IO-BOOT/COMMON.js');
-	loadJSForClient(__dirname + '/UPPERCASE.IO-BOOT/BROWSER.js');
 	loadJSForClient(__dirname + '/UPPERCASE.IO-BOOT/CLIENT.js');
+	loadJSForClient(__dirname + '/UPPERCASE.IO-BOOT/BROWSER.js');
 
 	// load UPPERCASE.IO-UTIL.
 	loadJSForNode(__dirname + '/UPPERCASE.IO-UTIL/NODE.js');

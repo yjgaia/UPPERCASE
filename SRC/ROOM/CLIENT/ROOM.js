@@ -1,4 +1,5 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	/**
 	 * Connection room class
@@ -18,6 +19,12 @@ FOR_BOX(function(box) {'use strict';
 			// is exited
 			isExited,
 
+			// get room name.
+			getRoomName,
+
+			// check is exited.
+			checkIsExited,
+
 			// on.
 			on,
 
@@ -31,6 +38,14 @@ FOR_BOX(function(box) {'use strict';
 			exit;
 
 			CONNECT_TO_ROOM_SERVER.enterRoom(roomName);
+
+			inner.getRoomName = getRoomName = function() {
+				return roomName;
+			};
+
+			inner.checkIsExited = checkIsExited = function() {
+				return isExited;
+			};
 
 			self.on = on = function(methodName, method) {
 
