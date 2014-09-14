@@ -623,6 +623,9 @@ global.BOOT = BOOT = function(params) {
 					// uri
 					uri = requestInfo.uri,
 
+					// method
+					method = requestInfo.method,
+
 					// headers
 					headers = requestInfo.headers,
 

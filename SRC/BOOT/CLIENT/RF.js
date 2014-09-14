@@ -1,4 +1,5 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	/**
 	 * Get final resource's real path.
@@ -8,7 +9,7 @@ FOR_BOX(function(box) {'use strict';
 		run : function(path) {
 			//REQUIRED: path
 
-			return global.location.protocol + '//' + global.location.hostname + ':' + CONFIG.webServerPort + '/__RF/' + box.boxName + '/' + path;
+			return '/__RF/' + box.boxName + '/' + path;
 		}
 	});
 });
