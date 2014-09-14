@@ -827,7 +827,8 @@ global.BOOT = BOOT = function(params) {
 										next({
 											contentType : savedData.type,
 											headers : {
-												'Content-Disposition' : 'attachment; filename="' + savedData.name + '"'
+												'Content-Disposition' : 'attachment; filename="' + savedData.name + '"',
+												'Access-Control-Allow-Origin' : '*'
 											},
 											isFinal : true
 										});
