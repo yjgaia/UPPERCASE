@@ -507,7 +507,7 @@ global.BOOT = BOOT = function(params) {
 		}
 
 		indexPageContent += '<link href="/favicon.ico" rel="shortcut icon">';
-		indexPageContent += '<title>' + CONFIG.defaultTitle + '</title>';
+		indexPageContent += '<title>' + CONFIG.title + '</title>';
 
 		// load css.
 		indexPageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?' + CONFIG.version + '" />';
@@ -995,7 +995,7 @@ global.BOOT = BOOT = function(params) {
 			}).getWebSocketFixRequest();
 		}
 
-		console.log('[UPPERCASE.IO] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.defaultTitle + '` WORKER #' + CPU_CLUSTERING.getWorkerId() + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
+		console.log('[UPPERCASE.IO] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.title + '` WORKER #' + CPU_CLUSTERING.getWorkerId() + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
 
 	// load UPPERCASE.JS.

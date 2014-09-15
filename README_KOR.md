@@ -3,14 +3,60 @@
 
 [UPPERCASE.JS](http://uppercaseseries.org/#JS)를 기반으로 하고 있습니다.
 
-### 기반 시스템
-- [Node.js](http://nodejs.org)
-- [MongoDB](http://www.mongodb.org)
-- [ImageMagick](http://www.imagemagick.org)
+#### 기반 시스템
+* [Node.js](http://nodejs.org)
+* [MongoDB](http://www.mongodb.org)
+* [ImageMagick](http://www.imagemagick.org)
 
-### 지원 플랫폼
-- 웹 브라우저 (최신 브라우저 및 인터넷 익스플로러 5.5 이상부터 지원)
-- [Titanium](http://www.appcelerator.com/titanium/)
+#### 지원 플랫폼
+* 웹 브라우저 (최신 브라우저 및 인터넷 익스플로러 5.5 이상부터 지원)
+* [Titanium](http://www.appcelerator.com/titanium/)
+
+
+## 설치
+1. UPPERCASE.IO를 원하는 경로에 설치합니다.
+2. UPPERCASE.IO의 경로를 환경변수에 등록합니다.
+	* PC
+	내 컴퓨터 - 속성 - 고급 시스템 설정 - 환경 변수에서 UPPERCASE_IO_PATH를 등록합니다.
+	* MAC
+	```
+	vi .profile
+	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
+	```
+	* Linux
+	```
+	vi .bash_profile
+	or
+	vi .profile
+	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
+	```
+3. 프로젝트를 실행한다.
+    Project.js
+    ```javascript
+    require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
+
+    BOOT({
+        ...
+    });
+    ```
+
+
+## 설정
+각 설정은 `CONFIG.defaultBoxName = 'Sample';` 과 같이 설정합니다.
+
+###### CONFIG
+* `defaultBoxName` 기본 BOX의 이름을 설정합니다. 기본값은 `'UPPERCASE.IO'` 입니다.
+* `title` 프로젝트 제목을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
+* `description` 프로젝트에 대한 설명을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
+
+###### NODE_CONFIG
+* `isDBLogMode` 데이터베이스 로그 모드를 켜고자 할 때 `true`로 설정합니다. 데이터가 수정 될 경우 console 로그를 띄어줍니다. 기본값은 `false`입니다.
+* `maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000`입니다.
+* `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10`입니다.
+
+###### BROWSER_CONFIG
+UPPERCASE.JS의 BROWSER_CONFIG 설정과 같습니다.
+
 
 ## BOX
 BOX는 UPPERCASE.IO에서의 모듈을 칭합니다.
@@ -47,7 +93,7 @@ store.remove(name)
 로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/POST.js)
 * `PUT(uri:, responseListenerOrListeners)` `PUT({uri:, paramStr:}, responseListenerOrListeners)` `PUT({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax PUT request.
 로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/PUT.js)
-* `DELETE(uri:, responseListenerOrListeners)` `DELETE({uri:, paramStr:}, responseListenerOrListeners)` `DELETE({host:, port:, isSec[^]ure:, uri:, data:}, responseListenerOrListeners)` ajax DELETE request.
+* `DELETE(uri:, responseListenerOrListeners)` `DELETE({uri:, paramStr:}, responseListenerOrListeners)` `DELETE({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax DELETE request.
 로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/DELETE.js)
 
 ###### 브라우저 패키지
@@ -56,54 +102,63 @@ store.remove(name)
 * `GO()` `GO(uri)` go another view. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO.js)
 * `GO_NEW_WIN()` `GO_NEW_WIN(uri)` go another view on new window. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO_NEW_WIN.js)
 
-## 설치
-
-1. UPPERCASE.IO를 원하는 경로에 설치합니다.
-
-2. UPPERCASE.IO의 경로를 환경변수에 등록합니다.
-
-	* PC
-	내 컴퓨터 - 속성 - 고급 시스템 설정 - 환경 변수에서 UPPERCASE_IO_PATH를 등록합니다.
-
-	* MAC
-	```
-	vi .profile
-	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
-	```
-
-	* Linux
-	```
-	vi .bash_profile
-	or
-	vi .profile
-	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
-	```
-
-3. 프로젝트를 실행한다.
-
-    Project.js
-    ```javascript
-    require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
-
-    BOOT({
-        ...
-    });
-    ```
-
-* DB: update를 동시에 여러번 할 경우 모든 update의 callback은 같은 데이터(수정된)를 반환합니다.
 
 ## API
 기본적으로 사용되는 API들입니다.
 
-###### 통신 관련
-
 ###### 데이터베이스 관련
+`주의사항` DB의 update명령어가 동시에 여러번 호출 될 경우 모든 update는 같은 데이터(수정된)를 반환합니다.
+* DB
+* LOG_DB
 
 ###### ROOM
+* ROOM
+* BROADCAST
 
 ###### MODEL
+* MODEL
 
-## 고급 유저들을 위한 설정
+###### 리소스 경로 관련
+클라이언트에서 사용 가능한 리소스 경로 관련 API입니다.
+* R
+* RF
+
+
+## 고급 유저들을 위한 API
+일반적인 UPPERCASE.IO의 설정을 따르지 않고, 직접 UPPERCASE.IO의 각 파트를 사용해 프레임워크를 구축하고자 하는 고급 유저들을 위해, UPPERCASE.IO는 여러가지 API들을 제공합니다.
+
+###### 통신 관련
+* WEB_SOCKET_SERVER
+* WEB_SOCKET_FIX_REQUEST_MANAGER
+* `MULTI_PROTOCOL_SOCKET_SERVER` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다.
+* CONNECT_TO_WEB_SOCKET_SERVER
+
+###### 데이터베이스 관련
+* CONNECT_TO_DB_SERVER
+
+###### ROOM
+* LAUNCH_ROOM_SERVER
+* CONNECT_TO_ROOM_SERVER
+
+###### UPLOAD
+* UPLOAD_REQUEST
+
+###### UTIL
+* MINIFY_CSS
+* MINIFY_JS
+* IMAGEMAGICK_CONVERT
+* IMAGEMAGICK_IDENTIFY
+* IMAGEMAGICK_READ_METADATA
+* IMAGEMAGICK_RESIZE
+* COMPILE_COFFEE_TO_JS
+* COMPILE_LITCOFFEE_TO_JS
+* RUN_COFFEE
+* RUN_LITCOFFEE
+
+###### BOOT
+* CONNECT_TO_IO_SERVER
+* BROWSER_INIT
+
 
 ## UPPERCASE.IO의 분산 처리 전략
 
@@ -140,6 +195,7 @@ UPPERCASE.IO에서는 상대적으로 트래픽이 적은 API 서버들이 자�
 
 여기에 더불어 UPPERCASE.IO의 R 기능을 이용하여 대문 서버가 제공할 이미지들 또한 분산처리한다면 대문 서버가 감당하는 부하가 많이 줄어들게 된다.
 UPPERCASE.IO에서는 상대적으로 트래픽이 적은 API 서버들이 자동으로 이 역할을 담당한다.
+
 
 ## License
 [MIT](LICENSE)
