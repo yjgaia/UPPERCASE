@@ -2,7 +2,7 @@ FOR_BOX(function(box) {
 	'use strict';
 
 	/**
-	 * Match view.
+	 * match view.
 	 */
 	box.MATCH_VIEW = METHOD({
 

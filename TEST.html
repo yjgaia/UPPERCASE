@@ -24,6 +24,18 @@
 		</p>
 		<div id="container">
 			<div>
+				<h3>BOX</h3>
+				<button onclick="test('BOX/CLIENT/REQUEST/REQUEST2');">
+					REQUEST when isNotUsingLoadingBar is true TEST
+				</button>
+				<button onclick="test('BOX/BROWSER/VIEW/MATCH_VIEW');">
+					MATCH_VIEW TEST
+				</button>
+				<button onclick="test('BOX/BROWSER/VIEW/GO_NEW_WIN');">
+					GO_NEW_WIN TEST
+				</button>
+			</div>
+			<div>
 				<h3>TRANSPORT</h3>
 				<button onclick="test('TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER');">
 					CONNECT_TO_WEB_SOCKET_SERVER TEST
@@ -81,20 +93,20 @@
 
 		<!-- import UPPERCASE.IO-BOX -->
 		<script src="UPPERCASE.IO-BOX/CORE.js"></script>
-		<script src="UPPERCASE.IO-BOX/BROWSER.js"></script>
-
 		<script>
 			// create test box.
 			BOX('TestBox');
 		</script>
+		<script src="UPPERCASE.IO-BOX/CLIENT.js"></script>
+		<script src="UPPERCASE.IO-BOX/BROWSER.js"></script>
 
 		<!-- import UPPERCASE.IO-TRANSPORT -->
 		<script src="UPPERCASE.IO-TRANSPORT/BROWSER.js"></script>
 		<script src="UPPERCASE.IO-TRANSPORT/R/FIX.js"></script>
 
 		<!-- import UPPERCASE.IO-ROOM -->
-		<script src="UPPERCASE.IO-ROOM/BROWSER.js"></script>
 		<script src="UPPERCASE.IO-ROOM/CLIENT.js"></script>
+		<script src="UPPERCASE.IO-ROOM/BROWSER.js"></script>
 
 		<!-- import UPPERCASE.IO-MODEL -->
 		<script src="UPPERCASE.IO-MODEL/COMMON.js"></script>
@@ -115,6 +127,16 @@
 				};
 
 				console.log('[UPPERCASE.IO TEST START] BROWSER: ' + INFO.getBrowserInfo().name + ' ' + INFO.getBrowserInfo().version);
+
+				console.log('[BOX TEST]');
+				test('BOX/CLIENT/STORE');
+				test('BOX/CLIENT/REQUEST/REQUEST');
+				test('BOX/CLIENT/REQUEST/GET');
+				test('BOX/CLIENT/REQUEST/POST');
+				test('BOX/CLIENT/REQUEST/PUT');
+				test('BOX/CLIENT/REQUEST/DELETE');
+				test('BOX/BROWSER/VIEW/HREF');
+				test('BOX/BROWSER/VIEW/GO');
 			};
 		</script>
 	</body>

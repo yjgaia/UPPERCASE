@@ -1,116 +1,51 @@
-var
-// port
-port = 8811,
+// load UPPERCASE.JS.
+require('./UPPERCASE.JS-COMMON.js');
+require('./UPPERCASE.JS-NODE.js');
 
-// fs
-fs = require('fs'),
-
-// path
-path = require('path'),
-
-// querystring
-qs = require('querystring'),
-
-// server
-server = require('http').createServer(function(req, res) {
+RUN(function() {
+	'use strict';
 
 	var
-	// url
-	url = req.url,
+	// port
+	port = 8811;
 
-	// param str
-	paramStr,
+	INIT_OBJECTS();
 
-	// filepath
-	filepath,
+	// don't resource caching.
+	CONFIG.isDevMode = true;
 
-	// extname
-	extname,
+	RESOURCE_SERVER({
+		port : port,
+		rootPath : __dirname
+	}, function(requestInfo, response, onDisconnected, replaceRootPath, next) {
 
-	// content type
-	contentType;
+		var
+		// uri
+		uri = requestInfo.uri,
 
-	if (url.indexOf('?') != -1) {
-		paramStr = url.substring(url.indexOf('?') + 1);
-		url = url.substring(0, url.indexOf('?'));
-	}
+		// method
+		method = requestInfo.method,
 
-	if (url === '/') {
-		url = '/TEST.html';
-	}
+		// params
+		params = requestInfo.params;
 
-	filepath = './' + url;
-	extname = path.extname(filepath);
+		if (uri === '') {
 
-	switch (extname) {
+			requestInfo.uri = 'TEST.html';
 
-		case '.js':
-			contentType = 'text/javascript';
-			break;
+		} else if (uri === 'TestBox/AJAX_TEST') {
 
-		case '.css':
-			contentType = 'text/css';
-			break;
+			console.log(method, params);
 
-		case '.jpg':
-		case '.jpeg':
-			contentType = 'image/jpeg';
-			break;
+			response('Request DONE!');
 
-		case '.png':
-			contentType = 'image/png';
-			break;
+		} else if (uri === 'TestBox/AJAX_JSON_TEST') {
 
-		case '.swf':
-			contentType = 'application/x-shockwave-flash';
-			break;
+			console.log(method, params);
 
-		case '.html':
-			contentType = 'text/html';
-			break;
-
-		case '.mp3':
-			contentType = 'audio/mpeg';
-			break;
-
-		default :
-			contentType = 'application/octet-stream';
-			break;
-	}
-
-	fs.exists(filepath, function(exists) {
-
-		if (exists === true) {
-
-			fs.readFile(filepath, 'binary', function(error, data) {
-
-				if (error === null) {
-
-					res.writeHead(200, {
-						'Content-Type' : contentType
-					});
-					res.write(data, 'binary');
-					res.end();
-
-				} else {
-					res.writeHead(500, {
-						'Content-Type' : 'text/plain'
-					});
-					res.write(error);
-					res.end();
-				}
-			});
-
-		} else {
-			res.writeHead(404, {
-				'Content-Type' : 'text/plain'
-			});
-			res.write('404 Not Found.');
-			res.end();
+			response('{ "thisis" : "JSON" }');
 		}
 	});
+
+	console.log('UPPERCASE.IO test server running. - http://localhost:' + port);
 });
-
-server.listen(port);
-
-console.log('UPPERCASE.IO test server running. - http://localhost:' + port);

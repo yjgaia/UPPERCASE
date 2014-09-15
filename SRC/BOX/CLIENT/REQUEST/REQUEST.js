@@ -1,4 +1,5 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	/**
 	 * ajax request.
@@ -12,8 +13,9 @@ FOR_BOX(function(box) {'use strict';
 			//OPTIONAL: params.isSecure
 			//REQUIRED: params.method
 			//REQUIRED: params.uri
-			//OPTIONAL: params.paramstr
+			//OPTIONAL: params.paramStr
 			//OPTIONAL: params.data
+			//OPTIONAL: params.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			REQUEST(COMBINE([params, {

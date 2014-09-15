@@ -2,7 +2,7 @@ FOR_BOX(function(box) {
 	'use strict';
 
 	/**
-	 * Browser store class.
+	 * Browser store class
 	 */
 	box.STORE = CLASS({
 

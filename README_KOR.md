@@ -1,51 +1,77 @@
-![ScreenShot](https://raw.githubusercontent.com/UPPERCASEIO/UPPERCASE.IO/master/LOGO.png)
-=========
-동적인 웹 사이트 및 모바일 애플리케이션 개발을 위한 쉽고, 명확하면서도 강력한 풀스택 (server-to-client) MVC 미들웨어
+# ![ScreenShot](https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/LOGO.png)
+동적인 웹 사이트 및 모바일 애플리케이션 개발을 위한 쉽고, 명확하면서도 강력한 풀스택 (server-to-client) MVC 미들웨어입니다.
 
 [UPPERCASE.JS](http://uppercaseseries.org/#JS)를 기반으로 하고 있습니다.
 
-## Based On
-- JavaScript 1.5 (ECMA-262, 3rd edition)
-- CommonJS Modules/1.0
-
-Server-side:
+### 기반 시스템
 - [Node.js](http://nodejs.org)
 - [MongoDB](http://www.mongodb.org)
 - [ImageMagick](http://www.imagemagick.org)
 
-Client-side:
-- Web Browsers or
-- [Titanium](http://www.appcelerator.com/titanium/) or
-- [Swift Client](https://github.com/UPPERCASE-Series/UPPERCASE.IO-Swift-Client) or
-- [Java Client](https://github.com/UPPERCASE-Series/UPPERCASE.IO-Java-Client)
+### 지원 플랫폼
+- 웹 브라우저 (최신 브라우저 및 인터넷 익스플로러 5.5 이상부터 지원)
+- [Titanium](http://www.appcelerator.com/titanium/)
 
-## 용어
-
-#### BOX
+## BOX
 BOX는 UPPERCASE.IO에서의 모듈을 칭합니다.
+프로젝트 폴더와 BOX폴더 내부의 각 폴더들의 이름으로 BOX들이 생성됩니다.
+예를 들어, 아래와 같이 폴더가 구성되어 있다면 `UUI`, `UANI`, `Yogurt`, `Sample` BOX들이 생성됩니다.
+![ScreenShot](https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/SampleBOXes.png)
 
-UPPERCASE.IO의 공식 BOX 저장소는 다음 링크에 있습니다.
+`UUI`, `UANI` 등의 UPPERCASE.IO의 공식 BOX 저장소는 다음 경로에 있습니다.
 * [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)
 
-###### BOX 패키징
+#### BOX 패키징
 1. PACK.js 다운로드 (오른쪽 클릭 후 다른 이름으로 저장)
 	https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/PACK.js
 2. PACK.js 실행
 	`node PACK {{BOX 이름}}`
 
+#### UPPERCASE.JS 확장
+BOX에 맞추어 UPPERCASE.JS의 기능을 확장합니다.
+확장된 기능은 {{BOX 이름}}.MATCH_VIEW 와 같은 형식으로 사용합니다.
+
+###### 클라이언트 패키지
+* `STORE(name)` Browser store class [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/STORE.js)
+```javascript
+store = TestBox.STORE('testStore');
+store.save({ name:, value:, isToSession: })
+store.get(name)
+store.remove(name)
+```
+* `REQUEST({method:, uri:}, responseListenerOrListeners)` `REQUEST({method:, uri:, paramStr:}, responseListenerOrListeners)` `REQUEST({host:, port:, isSecure:, method:, uri:, data:}, responseListenerOrListeners)` ajax request.
+로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/REQUEST.js)
+* `GET(uri, responseListenerOrListeners)` `GET({uri:, paramStr:}, responseListenerOrListeners)` `GET({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax GET request.
+로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/GET.js)
+* `POST(uri:, responseListenerOrListeners)` `POST({uri:, paramStr:}, responseListenerOrListeners)` `POST({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax POST request.
+로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/POST.js)
+* `PUT(uri:, responseListenerOrListeners)` `PUT({uri:, paramStr:}, responseListenerOrListeners)` `PUT({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax PUT request.
+로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/PUT.js)
+* `DELETE(uri:, responseListenerOrListeners)` `DELETE({uri:, paramStr:}, responseListenerOrListeners)` `DELETE({host:, port:, isSec[^]ure:, uri:, data:}, responseListenerOrListeners)` ajax DELETE request.
+로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/DELETE.js)
+
+###### 브라우저 패키지
+* `MATCH_VIEW({uri:, target:})` match view. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/VIEW.js)
+* `HREF(uri)` get href. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/HREF.js)
+* `GO()` `GO(uri)` go another view. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO.js)
+* `GO_NEW_WIN()` `GO_NEW_WIN(uri)` go another view on new window. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO_NEW_WIN.js)
+
 ## 설치
 
-1. UPPERCASE.IO를 설치한다.
+1. UPPERCASE.IO를 원하는 경로에 설치합니다.
 
-2. UPPERCASE.IO의 경로를 환경변수에 등록한다.
+2. UPPERCASE.IO의 경로를 환경변수에 등록합니다.
 
-	MAC
+	* PC
+	내 컴퓨터 - 속성 - 고급 시스템 설정 - 환경 변수에서 UPPERCASE_IO_PATH를 등록합니다.
+
+	* MAC
 	```
 	vi .profile
 	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
 	```
-	
-	Linux
+
+	* Linux
 	```
 	vi .bash_profile
 	or
@@ -65,6 +91,19 @@ UPPERCASE.IO의 공식 BOX 저장소는 다음 링크에 있습니다.
     ```
 
 * DB: update를 동시에 여러번 할 경우 모든 update의 callback은 같은 데이터(수정된)를 반환합니다.
+
+## API
+기본적으로 사용되는 API들입니다.
+
+###### 통신 관련
+
+###### 데이터베이스 관련
+
+###### ROOM
+
+###### MODEL
+
+## 고급 유저들을 위한 설정
 
 ## UPPERCASE.IO의 분산 처리 전략
 
@@ -109,10 +148,10 @@ UPPERCASE.IO에서는 상대적으로 트래픽이 적은 API 서버들이 자�
 [Young Jae Sim](https://github.com/Hanul)
 
 ## Contact
-* [Facebook User Group](https://www.facebook.com/groups/uppercase/)
+* [Facebook UPPERCASE.IO User Group](https://www.facebook.com/groups/uppercase/)
 * [GitHub Issues](https://github.com/UPPERCASE-Series/UPPERCASE.IO/issues)
 
-## Other Link
+## 기타 링크
 * [Official Web Site](http://UPPERCASE.IO)
 * [1.3 version](http://1.3.UPPERCASE.IO)
 * [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)

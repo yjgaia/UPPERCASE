@@ -1,7 +1,8 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	/**
-	 * Go another view.
+	 * go another view.
 	 */
 	box.GO = METHOD({
 

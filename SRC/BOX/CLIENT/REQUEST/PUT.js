@@ -1,4 +1,5 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	/**
 	 * ajax PUT request.
@@ -6,13 +7,14 @@ FOR_BOX(function(box) {'use strict';
 	box.PUT = METHOD({
 
 		run : function(params, responseListenerOrListeners) {
-			//REQUIRED: params
-			//OPTIONAL: params.host
-			//OPTIONAL: params.port
-			//OPTIONAL: params.isSecure
-			//REQUIRED: params.uri
-			//OPTIONAL: params.paramStr
-			//OPTIONAL: params.data
+			//REQUIRED: uriOrParams
+			//OPTIONAL: uriOrParams.host
+			//OPTIONAL: uriOrParams.port
+			//OPTIONAL: uriOrParams.isSecure
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.paramStr
+			//OPTIONAL: uriOrParams.data
+			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {

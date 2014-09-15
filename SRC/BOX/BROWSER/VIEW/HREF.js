@@ -2,7 +2,7 @@ FOR_BOX(function(box) {
 	'use strict';
 
 	/**
-	 * Get href.
+	 * get href.
 	 */
 	box.HREF = METHOD({
 
