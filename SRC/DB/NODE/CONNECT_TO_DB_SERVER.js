@@ -24,7 +24,8 @@ global.CONNECT_TO_DB_SERVER = CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 	return {
 
-		run : function(params, callback) {'use strict';
+		run : function(params, callback) {
+			'use strict';
 			//REQUIRED: params
 			//OPTIONAL: params.username
 			//OPTIONAL: params.password

@@ -2,7 +2,7 @@ FOR_BOX(function(box) {
 	'use strict';
 
 	/**
-	 * MongoDB collection wrapper for log class
+	 * MongoDB collection wrapper class for logging
 	 */
 	box.LOG_DB = CLASS({
 

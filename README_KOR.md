@@ -30,8 +30,8 @@
 	vi .profile
 	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
 	```
-3. 프로젝트를 실행한다.
-    Project.js
+3. BOOT 스크립트로 프로젝트를 실행합니다.
+    예) Project.js
     ```javascript
     require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
 
@@ -45,17 +45,38 @@
 각 설정은 `CONFIG.defaultBoxName = 'Sample';` 과 같이 설정합니다.
 
 ###### CONFIG
+* `isDevMode` 개발자 모드를 활성화합니다. 기본값은 `false`입니다. 이 모드가 활성화되면, 코드 압축이나 캐싱등의 작업을 건너뛰게 됩니다. 개발을 할 때에는 `true`로 설정하는것이 좋습니다.
+* `webServerPort` 웹 서버 및 웹 소켓 서버의 포트를 설정합니다. 설정하지 않으면, 웹 서버 및 웹 소켓 서버를 구동시키지 않습니다.
+* `sercuredWebServerPort` 보안 웹 서버의 포트를 설정합니다. 설정하지 않으면, 보안 웹 서버를 구동시키지 않습니다.
+* `socketServerPort` 소켓 서버의 포트를 설정합니다.
 * `defaultBoxName` 기본 BOX의 이름을 설정합니다. 기본값은 `'UPPERCASE.IO'` 입니다.
 * `title` 프로젝트 제목을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
 * `description` 프로젝트에 대한 설명을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
+* `isMobileFullScreen` 모바일 브라우저에서 full screen으로 화면을 표시할지를 결정합니다. 기본값은 `false`입니다.
+* `googleSiteVerificationKey` google site verification key를 설정합니다.
 
 ###### NODE_CONFIG
-* `isDBLogMode` 데이터베이스 로그 모드를 켜고자 할 때 `true`로 설정합니다. 데이터가 수정 될 경우 console 로그를 띄어줍니다. 기본값은 `false`입니다.
-* `maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000`입니다.
-* `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10`입니다.
+* `securedKeyFilePath` 보안 웹 서버를 위한 key file의 경로를 설정합니다.
+* `securedCertFilePath` 보안 웹 서버를 위한 cert file의 경로를 설정합니다.
+* `dbName` 사용할 데이터베이스의 이름을 설정합니다.
+* `dbHost` MongoDB 데이터베이스 서버의 호스트를 설정합니다. 기본값은 `'127.0.0.1'` 입니다.
+* `dbPort` MongoDB 데이터베이스 서버의 포트를 설정합니다. 기본값은 `27017` 입니다.
+* `dbUsername` MongoDB 데이터베이스 서버의 접속 아이디를 설정합니다.
+* `dbPassword` MongoDB 데이터베이스 서버의 접속 비밀번호를 설정합니다.
+* `isDBLogMode` 데이터베이스 로그 모드를 켜고자 할 때 `true`로 설정합니다. 데이터가 수정 될 경우 console 로그를 띄어줍니다. 기본값은 `false` 입니다.
+* `maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000` 입니다.
+* `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
+
+이하는 분산 서버 관련 설정들입니다.
+* `thisServerName` 현재 서버의 이름을 지정합니다. 이는 분산서버 구성에 사용됩니다.
+* `clusteringServers` 분산 서버들의 정보를 설정합니다.
+* `clusteringPort` 분산 서버 포트를 설정합니다.
+* `socketServers` 소켓 서버들의 정보를 설정합니다.
+* `webSocketServers` 웹 소켓 서버들의 정보를 설정합니다.
+* `uploadServers` 업로드 서버들의 정보를 설정합니다.
 
 ###### BROWSER_CONFIG
-UPPERCASE.JS의 BROWSER_CONFIG 설정과 같습니다.
+[UPPERCASE.JS의 BROWSER_CONFIG 설정](https://github.com/UPPERCASE-Series/UPPERCASE.JS/blob/master/README_KOR.md#configuration)과 같습니다.
 
 
 ## BOX
@@ -67,10 +88,18 @@ BOX는 UPPERCASE.IO에서의 모듈을 칭합니다.
 `UUI`, `UANI` 등의 UPPERCASE.IO의 공식 BOX 저장소는 다음 경로에 있습니다.
 * [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)
 
+#### BOX의 일반적인 구성요소
+아래 내용들은 필수가 아닙니다. 프로젝트의 성격에 따라 선택적으로 구성할 수 있습니다.
+* `BROWSER` 웹 브라우저에서 구동되는 소스들을 저장하는 폴더입니다.
+* `COMMON` 웹 브라우저와 node.js에서 동시에 구동되는 소스들을 저장하는 폴더입니다.
+* `NODE` node.js 위에서 구동되는 소스들을 저장하는 폴더입니다.
+* `R` 리소스 파일들을 저장하는 폴더입니다.
+
 #### BOX 패키징
-1. PACK.js 다운로드 (오른쪽 클릭 후 다른 이름으로 저장)
+패키징을 하게되면 각 폴더들의 js 파일들이 하나로 합쳐집니다. 이를테면 BROWSER 폴더의 내용들은 BROWSER.js로 합쳐집니다. 기타 폴더 및 파일들은 그대로 복사됩니다.
+1. PACK.js를 다운로드합니다. (오른쪽 클릭 후 다른 이름으로 저장)
 	https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/PACK.js
-2. PACK.js 실행
+2. PACK.js를 아래와 같이 실행합니다.
 	`node PACK {{BOX 이름}}`
 
 #### UPPERCASE.JS 확장
@@ -104,12 +133,34 @@ store.remove(name)
 
 
 ## API
-기본적으로 사용되는 API들입니다.
+기본적으로 프로젝트 구성 시 사용되는 API들입니다.
 
 ###### 데이터베이스 관련
 `주의사항` DB의 update명령어가 동시에 여러번 호출 될 경우 모든 update는 같은 데이터(수정된)를 반환합니다.
-* DB
-* LOG_DB
+* `DB(name)` MongoDB collection wrapper [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
+```javascript
+db = TestBox.DB('test');
+db.create(data, function() {...})
+db.create(data, {success:, error:})
+db.get(id, function() {...})
+db.get(id, {success:, notExists:, error:})
+db.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
+db.update(data, function() {...})
+db.update(data, {success:, notExists:, error:})
+db.remove(id, function() {...})
+db.remove(id, {success:, notExists:, error:})
+db.find({filter:, sort:, start:, count:}, function() {...})
+db.find({filter:, sort:, start:, count:}, {success:, error:})
+db.count({filter:}, function() {...})
+db.count({filter:}, {success:, error:})
+db.checkIsExists({filter:}, function() {...})
+db.checkIsExists({filter:}, {success:, error:})
+```
+* `LOG_DB(name)` MongoDB collection wrapper class for logging
+```javascript
+logDB = TestBox.LOG_DB('testLog');
+logDB.log(data)
+```
 
 ###### ROOM
 * ROOM
@@ -128,13 +179,13 @@ store.remove(name)
 일반적인 UPPERCASE.IO의 설정을 따르지 않고, 직접 UPPERCASE.IO의 각 파트를 사용해 프레임워크를 구축하고자 하는 고급 유저들을 위해, UPPERCASE.IO는 여러가지 API들을 제공합니다.
 
 ###### 통신 관련
-* WEB_SOCKET_SERVER
-* WEB_SOCKET_FIX_REQUEST_MANAGER
-* `MULTI_PROTOCOL_SOCKET_SERVER` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다.
-* CONNECT_TO_WEB_SOCKET_SERVER
+* `WEB_SOCKET_SERVER(portOrWebServer, connectionListener)` create web socket server.
+* `WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener)` create web socket fix request manager (using jsonp long-polling).
+* `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:}, connectionListener)` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다.
+* `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:, fixRequestURI:}, {success:, error:})` connect to web socket server.
 
 ###### 데이터베이스 관련
-* CONNECT_TO_DB_SERVER
+* `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
 
 ###### ROOM
 * LAUNCH_ROOM_SERVER
@@ -162,39 +213,27 @@ store.remove(name)
 
 ## UPPERCASE.IO의 분산 처리 전략
 
-UPPERCASE.IO 기반 프로젝트의 주축을 이루는 서버의 기능별 파트는
-1. 대문 서버 - 유저들에게 웹 페이지나 분산된 서버들의 정보를 제공하는 서버이다.
-2. API 서버 - 각종 기능들을 프로토콜의 제약 없이 JSON 양식으로 통신하는 서버이다.
-3. 업로드 파일 서버 - 프로젝트에서 업로드 된 파일들을 관리하는 서버이다.
-4. MongoDB 기반 데이터베이스 서버
+UPPERCASE.IO의 분산 처리 전략을 설명합니다.
+UPPERCASE.IO 기반 프로젝트의 기능별 서버 파트는 다음과 같습니다.
+1. `대문 서버` 유저들에게 웹 페이지나 분산 서버들의 정보를 제공하는 서버입니다.
+2. `API 서버` 각종 기능들을 프로토콜의 제약 없이 JSON 양식으로 통신하는 서버들입니다.
+3. `업로드 파일 서버` 프로젝트에서 업로드 된 파일들을 관리하는 서버들입니다.
+4. `MongoDB 데이터베이스 서버` MongoDB를 기반으로 데이터베이스를 관리하는 서버들입니다.
 
-어차피 MongoDB는 자체로 분산 처리를 하기 때문에, 분산 처리 전략에서 DB 서버는 제외한다. 그렇다면 다음과 같이 세가지 경우의 수가 생긴다.
+MongoDB는 그 자체로 분산 서버 기능을 제공하기 때문에, 이 문서의 분산 처리 전략에서 MongoDB 서버는 제외합니다. 그렇다면 다음과 같이 세가지 경우의 수가 생깁니다.
 
 1. L4 스위치를 이용해 물리적으로 서버가 분산되어 있을 경우
-2. 특정 도메인 주소를 담당하는 대문 서버가 있고, 나머지 서버들로 분산하는 경우
-3. 대문 서버가 있고, 또한 API서버들이 있으며 업로드 파일을 분산하여 저장하는 서버가 있는 경우
-
+2. 특정 도메인 주소를 담당하는 `대문 서버`가 있고, 나머지 서버들이 분산하는 경우
+3. `대문 서버`가 있고, 또한 `API 서버들`이 있으며 업로드 파일을 분산하여 저장하는 `업로드 파일 서버들`도 있는 경우
 
 #### 1. L4 스위치를 이용해 물리적으로 서버가 분산되어 있을 경우
+이 경우에는 각 서버들이 동등하게 분배되어 모든 일을 담당할 수 있습니다.
 
-이 경우에는 각 서버들이 동등하게 분배되어 모든 일을 담당하여 하면 된다.
+#### 2. 특정 도메인 주소를 담당하는 `대문 서버`가 있고, 나머지 서버들이 분산하는 경우
+이 경우에는 대문 서버가 모든 유저들의 처음 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우에만 대문 서버가 역할을 수행하고, API 또는 업로드 파일 제공 등의 기능들은 모두 다른 서버들로 분산하는 전략을 취할 수 있습니다.
 
-
-#### 2. 특정 도메인 주소를 담당하는 대문 서버가 있고, 나머지 서버들로 분산하는 경우
-
-이 경우에는 대문 서버가 모든 유저들의 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우를 제외하고는 API 또는 업로드 파일 제공 등의 기능을 최대한 다른 서버들로 분산하는 전략을 취한다.
-BTNcafe의 서버 전략은 여기에 해당한다.
-
-여기에 더불어 UPPERCASE.IO의 R 기능을 이용하여 대문 서버가 제공할 이미지들 또한 분산처리한다면 대문 서버가 감당하는 부하가 많이 줄어들게 된다.
-UPPERCASE.IO에서는 상대적으로 트래픽이 적은 API 서버들이 자동으로 이 역할을 담당한다.
-따라서 여기서는 대문 서버를 제외한 모든 서버들이 담당하게 된다.
-
-
-#### 3. 대문 서버가 있고, 또한 API서버들이 있으며 업로드 파일을 분산하여 저장하는 서버가 있는 경우
-이 경우 또한 마찬가지로 대문 서버가 모든 유저들의 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우를 제외한 기능들은 최대한 다른 서버들로 분산한다. 하지만 API 서버들과 업로드 서버군 또한 나뉘어져 있기 때문에, 각각 기능에 맞추어 분산하는 전략을 취한다.
-
-여기에 더불어 UPPERCASE.IO의 R 기능을 이용하여 대문 서버가 제공할 이미지들 또한 분산처리한다면 대문 서버가 감당하는 부하가 많이 줄어들게 된다.
-UPPERCASE.IO에서는 상대적으로 트래픽이 적은 API 서버들이 자동으로 이 역할을 담당한다.
+#### 3. `대문 서버`가 있고, 또한 `API 서버들`이 있으며 업로드 파일을 분산하여 저장하는 `업로드 파일 서버들`도 있는 경우
+이 경우 또한 마찬가지로 대문 서버가 모든 유저들의 처음 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우를 제외한 기능들은 최대한 다른 서버들로 분산합니다. 하지만 API 서버들과 업로드 서버군 또한 나뉘어져 있기 때문에, 각각 기능에 맞추어 분산하는 전략을 취할 수 있습니다.
 
 
 ## License

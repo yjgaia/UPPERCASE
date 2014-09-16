@@ -182,6 +182,8 @@ FOR_BOX(function(box) {
 			self.create = create = function(data, callbackOrHandlers) {
 				//REQUIRED: data
 				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
 
 				waitingCreateInfos.push({
 					data : data,
@@ -197,6 +199,9 @@ FOR_BOX(function(box) {
 				//OPTIONAL: idOrParams.isRandom
 				//OPTIONAL: idOrParams.isIncludeRemoved
 				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.error
 
 				waitingGetInfos.push({
 					idOrParams : idOrParams,
@@ -209,6 +214,9 @@ FOR_BOX(function(box) {
 				//REQUIRED: data.id
 				//OPTIONAL: data.$inc
 				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.error
 
 				waitingUpdateInfos.push({
 					data : data,
@@ -219,6 +227,9 @@ FOR_BOX(function(box) {
 			self.remove = remove = function(id, callbackOrHandlers) {
 				//REQUIRED: id
 				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.error
 
 				waitingRemoveInfos.push({
 					id : id,
@@ -235,6 +246,8 @@ FOR_BOX(function(box) {
 				//OPTIONAL: params.isFindAll
 				//OPTIONAL: params.isIncludeRemoved
 				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
 
 				waitingFindInfos.push({
 					params : params,
@@ -247,6 +260,8 @@ FOR_BOX(function(box) {
 				//OPTIONAL: params.filter
 				//OPTIONAL: params.isIncludeRemoved
 				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
 
 				waitingCountInfos.push({
 					params : params,
@@ -259,6 +274,8 @@ FOR_BOX(function(box) {
 				//OPTIONAL: params.filter
 				//OPTIONAL: params.isIncludeRemoved
 				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
 
 				waitingCheckIsExistsInfos.push({
 					params : params,
@@ -356,6 +373,8 @@ FOR_BOX(function(box) {
 				self.create = create = function(data, callbackOrHandlers) {
 					//REQUIRED: data
 					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
 
 					var
 					// callback
@@ -443,6 +462,9 @@ FOR_BOX(function(box) {
 					//REQUIRED: params.sort
 					//OPTIONAL: params.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
 
 					var
 					// filter
@@ -536,6 +558,9 @@ FOR_BOX(function(box) {
 					//OPTIONAL: idOrParams.isRandom
 					//OPTIONAL: idOrParams.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
 
 					var
 					// id
@@ -660,6 +685,9 @@ FOR_BOX(function(box) {
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
 					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
 
 					var
 					// id
@@ -838,6 +866,9 @@ FOR_BOX(function(box) {
 				self.remove = remove = function(id, callbackOrHandlers) {
 					//REQUIRED: id
 					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
 
 					var
 					// filter
@@ -965,6 +996,8 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params.isFindAll
 					//OPTIONAL: params.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
 
 					var
 					// filter
@@ -1097,6 +1130,8 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
 
 					var
 					// filter
@@ -1178,6 +1213,8 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.isIncludeRemoved
 					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
 
 					var
 					// filter

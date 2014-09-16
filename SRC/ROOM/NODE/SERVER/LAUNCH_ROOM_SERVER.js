@@ -1,7 +1,8 @@
 /*
  * launch room server.
  */
-global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = CLASS(function(cls) {'use strict';
+global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = CLASS(function(cls) {
+	'use strict';
 
 	var
 	// init room func map
