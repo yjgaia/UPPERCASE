@@ -8,7 +8,7 @@
 
 CONNECT_TO_WEB_SOCKET_SERVER({
 	port : 8125,
-	fixServerPort : 8126
+	fixRequestURI : '__WEB_SOCKET_FIX'
 }, {
 	error : function(error) {
 		console.log('ERROR!');

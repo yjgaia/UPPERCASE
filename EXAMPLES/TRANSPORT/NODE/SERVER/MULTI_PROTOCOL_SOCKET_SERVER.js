@@ -7,15 +7,34 @@ require('../../../../UPPERCASE.IO-TRANSPORT/NODE.js');
 
 INIT_OBJECTS();
 
-CPU_CLUSTERING(function(workerData, on, off, broadcast) {
+CPU_CLUSTERING(function() {
 
-	MULTI_PROTOCOL_SOCKET_SERVER({
+	var
+	// web server
+	webServer,
 
+	// socket server
+	socketServer,
+
+	// web socket fix request
+	webSocketFixRequest;
+
+	webServer = WEB_SERVER(8125, function(requestInfo, response, onDisconnected) {
+
+		// serve web socket fix request
+		if (requestInfo.uri === '__WEB_SOCKET_FIX') {
+
+			webSocketFixRequest(requestInfo, {
+				response : response,
+				onDisconnected : onDisconnected
+			});
+		}
+	});
+
+	socketServer = MULTI_PROTOCOL_SOCKET_SERVER({
 		socketServerPort : 8124,
-
-		webSocketServerPort : 8125,
-		webSocketFixServerPort : 8126
-
+		webServer : webServer,
+		isCreateWebSocketFixRequestManager : true
 	}, function(clientInfo, on, off, send) {
 
 		var
@@ -26,7 +45,7 @@ CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 
 		on('message', function(data, ret) {
 
-			console.log('SERVER!', data, workerData.id);
+			console.log('SERVER!', data, CPU_CLUSTERING.getWorkerId());
 
 			ret('Thanks!');
 		});
@@ -34,7 +53,7 @@ CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 		send({
 			methodName : 'message',
 			data : {
-				msg : 'message from server. ' + workerData.id
+				msg : 'message from server. ' + CPU_CLUSTERING.getWorkerId()
 			}
 		}, function(retMsg) {
 
@@ -63,4 +82,6 @@ CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 			console.log('DISCONNECTED!');
 		});
 	});
+
+	webSocketFixRequest = socketServer.getWebSocketFixRequest();
 });

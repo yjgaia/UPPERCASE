@@ -7,9 +7,16 @@ require('../../../../UPPERCASE.IO-TRANSPORT/NODE.js');
 
 INIT_OBJECTS();
 
-CPU_CLUSTERING(function(workerData, on, off, broadcast) {
+CPU_CLUSTERING(function() {
 
-	WEB_SOCKET_SERVER(8125, function(clientInfo, on, off, send, disconnect) {
+	var
+	// connection listener
+	connectionListener,
+
+	// web socket fix request manager
+	webSocketFixRequestManager;
+
+	connectionListener = function(clientInfo, on, off, send, disconnect) {
 
 		var
 		// roles
@@ -19,7 +26,7 @@ CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 
 		on('message', function(data, ret) {
 
-			console.log('SERVER!', data, workerData.id);
+			console.log('SERVER!', data, CPU_CLUSTERING.getWorkerId());
 
 			ret('Thanks!');
 		});
@@ -27,7 +34,7 @@ CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 		send({
 			methodName : 'message',
 			data : {
-				msg : 'message from server. ' + workerData.id
+				msg : 'message from server. ' + CPU_CLUSTERING.getWorkerId()
 			}
 		}, function(retMsg) {
 
@@ -47,13 +54,29 @@ CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 				value : role
 			}) === true) {
 
-				console.log('SINGED!', role, workerData.id);
+				console.log('SINGED!', role, CPU_CLUSTERING.getWorkerId());
 			}
 		});
 
 		// when disconnected
 		on('__DISCONNECTED', function() {
-			console.log('DISCONNECTED!', workerData.id);
+			console.log('DISCONNECTED!', CPU_CLUSTERING.getWorkerId());
 		});
+	};
+
+	webSocketFixRequestManager = WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener);
+
+	webServer = WEB_SERVER(8125, function(requestInfo, response, onDisconnected) {
+
+		// serve web socket fix request
+		if (requestInfo.uri === '__WEB_SOCKET_FIX') {
+
+			webSocketFixRequestManager.request(requestInfo, {
+				response : response,
+				onDisconnected : onDisconnected
+			});
+		}
 	});
+
+	WEB_SOCKET_SERVER(webServer, connectionListener);
 });

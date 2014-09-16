@@ -179,10 +179,10 @@ logDB.log(data)
 일반적인 UPPERCASE.IO의 설정을 따르지 않고, 직접 UPPERCASE.IO의 각 파트를 사용해 프레임워크를 구축하고자 하는 고급 유저들을 위해, UPPERCASE.IO는 여러가지 API들을 제공합니다.
 
 ###### 통신 관련
-* `WEB_SOCKET_SERVER(portOrWebServer, connectionListener)` create web socket server.
-* `WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener)` create web socket fix request manager (using jsonp long-polling).
-* `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:}, connectionListener)` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다.
-* `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:, fixRequestURI:}, {success:, error:})` connect to web socket server.
+* `WEB_SOCKET_SERVER(portOrWebServer, connectionListener)` create web socket server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
+* `WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener)` create web socket fix request manager (using jsonp long-polling). [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
+* `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:}, connectionListener)` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js)
+* `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:, fixRequestURI:}, {success:, error:})` connect to web socket server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER.js)
 
 ###### 데이터베이스 관련
 * `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)

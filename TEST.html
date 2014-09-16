@@ -37,6 +37,17 @@
 			</div>
 			<div>
 				<h3>TRANSPORT</h3>
+				<p>
+					run
+					<br>
+					EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js
+					<br>
+					or
+					<br>
+					EXAMPLES/TRANSPORT/NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js
+					<br>
+					before test.
+				</p>
 				<button onclick="test('TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER');">
 					CONNECT_TO_WEB_SOCKET_SERVER TEST
 				</button>
@@ -102,6 +113,12 @@
 
 		<!-- import UPPERCASE.IO-TRANSPORT -->
 		<script src="UPPERCASE.IO-TRANSPORT/BROWSER.js"></script>
+		<script>
+			BROWSER_CONFIG.fixTransportScriptsFolderPath = 'UPPERCASE.IO-TRANSPORT/R';
+
+			// simulate WebSocket not exists.
+			global.WebSocket = undefined;
+		</script>
 		<script src="UPPERCASE.IO-TRANSPORT/R/FIX.js"></script>
 
 		<!-- import UPPERCASE.IO-ROOM -->
@@ -113,7 +130,7 @@
 		<script src="UPPERCASE.IO-MODEL/CLIENT.js"></script>
 
 		<script>
-			global.onload = function() {
+			READY(function() {
 
 				// init all singleton classes.
 				INIT_OBJECTS();
@@ -137,7 +154,7 @@
 				test('BOX/CLIENT/REQUEST/DELETE');
 				test('BOX/BROWSER/VIEW/HREF');
 				test('BOX/BROWSER/VIEW/GO');
-			};
+			});
 		</script>
 	</body>
 </html>
