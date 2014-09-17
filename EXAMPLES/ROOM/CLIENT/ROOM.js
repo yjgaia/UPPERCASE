@@ -7,7 +7,7 @@ room2 = TestBox.ROOM('testRoom');
 
 CONNECT_TO_ROOM_SERVER({
 	port : 9127,
-	fixServerPort : 9128
+	fixRequestURI : '__WEB_SOCKET_FIX'
 }, function() {
 
 	var

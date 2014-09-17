@@ -20,13 +20,28 @@ CPU_CLUSTERING(function(workerData) {
 	// load UPPERCASE.IO-ROOM.
 	require('../../../../UPPERCASE.IO-ROOM/NODE.js');
 
-	LAUNCH_ROOM_SERVER({
+	var
+	// web socket fix request
+	webSocketFixRequest,
 
-		socketServerPort : 9126,
+	// web server
+	webServer = WEB_SERVER(9127, function(requestInfo, response, onDisconnected) {
 
-		webSocketServerPort : 9127,
-		webSocketFixServerPort : 9128
+		// serve web socket fix request
+		if (requestInfo.uri === '__WEB_SOCKET_FIX') {
+
+			webSocketFixRequest(requestInfo, {
+				response : response,
+				onDisconnected : onDisconnected
+			});
+		}
 	});
+
+	webSocketFixRequest = LAUNCH_ROOM_SERVER({
+		socketServerPort : 9126,
+		webServer : webServer,
+		isCreateWebSocketFixRequestManager : true
+	}).getWebSocketFixRequest();
 
 	TestBox.ROOM('testRoom', function(clientInfo, on, off) {
 

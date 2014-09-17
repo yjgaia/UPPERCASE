@@ -1,4 +1,5 @@
-FOR_BOX(function(box) {'use strict';
+FOR_BOX(function(box) {
+	'use strict';
 
 	/**
 	 * create room.

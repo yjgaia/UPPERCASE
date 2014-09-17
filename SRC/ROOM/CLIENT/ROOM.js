@@ -48,6 +48,8 @@ FOR_BOX(function(box) {
 			};
 
 			self.on = on = function(methodName, method) {
+				//REQUIRED: methodName
+				//REQUIRED: method
 
 				var
 				// methods
@@ -63,6 +65,8 @@ FOR_BOX(function(box) {
 			};
 
 			self.off = off = function(methodName, method) {
+				//REQUIRED: methodName
+				//OPTIONAL: method
 
 				var
 				// methods

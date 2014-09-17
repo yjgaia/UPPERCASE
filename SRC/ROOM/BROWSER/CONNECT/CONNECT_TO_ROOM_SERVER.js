@@ -55,6 +55,8 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	};
 
 	m.on = on = function(methodName, method) {
+		//REQUIRED: methodName
+		//REQUIRED: method
 
 		onInfos.push({
 			methodName : methodName,
@@ -67,6 +69,8 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	};
 
 	m.off = off = function(methodName, method) {
+		//REQUIRED: methodName
+		//OPTIONAL: method
 
 		if (innerOff !== undefined) {
 			innerOff(methodName, method);
@@ -130,6 +134,7 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	};
 
 	m.exitRoom = exitRoom = function(roomName) {
+		//REQUIRED: roomName
 
 		if (innerSend !== undefined) {
 			innerSend({

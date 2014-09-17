@@ -156,15 +156,32 @@ db.count({filter:}, {success:, error:})
 db.checkIsExists({filter:}, function() {...})
 db.checkIsExists({filter:}, {success:, error:})
 ```
-* `LOG_DB(name)` MongoDB collection wrapper class for logging
+* `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/LOG_DB.js)
 ```javascript
 logDB = TestBox.LOG_DB('testLog');
 logDB.log(data)
 ```
 
 ###### ROOM
-* ROOM
-* BROADCAST
+* `ROOM(name)` Connection room class (for clients) [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/CLIENT/ROOM.js)
+```javascript
+room = TestBox.ROOM('testRoom');
+room.on(methodName, function(data) {...})
+room.off(methodName)
+room.send(methodName, function(data) {...})
+room.exit()
+```
+* `ROOM(name, connectionListener)` create room. (for node.js) [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
+```javascript
+TestBox.ROOM('testRoom', function(clientInfo, on, off) {
+    on(methodName, function(data, ret) {
+    	...
+        ret(resultData);
+    });
+    off(methodName);
+});
+```
+* `BROADCAST({roomName:, methodName:, data:})` broadcast to rooms. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
 
 ###### MODEL
 * MODEL
@@ -188,8 +205,7 @@ logDB.log(data)
 * `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
 
 ###### ROOM
-* LAUNCH_ROOM_SERVER
-* CONNECT_TO_ROOM_SERVER
+* `LAUNCH_ROOM_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:})` Launch room server class [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
 
 ###### UPLOAD
 * UPLOAD_REQUEST
