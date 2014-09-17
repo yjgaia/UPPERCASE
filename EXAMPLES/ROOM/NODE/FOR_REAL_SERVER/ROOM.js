@@ -2,23 +2,23 @@
 require('../../../../UPPERCASE.JS-COMMON.js');
 require('../../../../UPPERCASE.JS-NODE.js');
 
+// load UPPERCASE.IO-BOX.
+require('../../../../UPPERCASE.IO-BOX/CORE.js');
+
+// load UPPERCASE.IO-TRANSPORT.
+require('../../../../UPPERCASE.IO-TRANSPORT/NODE.js');
+
+// load UPPERCASE.IO-ROOM.
+require('../../../../UPPERCASE.IO-ROOM/NODE.js');
+
 CPU_CLUSTERING(function(workerData) {
+
+	BOX('TestBox');
 
 	SERVER_CLUSTERING({
 		hosts : ['1.226.84.92', '58.229.105.35'],
 		port : 9125
 	});
-
-	// load UPPERCASE.IO-BOX.
-	require('../../../../UPPERCASE.IO-BOX/CORE.js');
-
-	BOX('TestBox');
-
-	// load UPPERCASE.IO-TRANSPORT.
-	require('../../../../UPPERCASE.IO-TRANSPORT/NODE.js');
-
-	// load UPPERCASE.IO-ROOM.
-	require('../../../../UPPERCASE.IO-ROOM/NODE.js');
 
 	var
 	// web socket fix request

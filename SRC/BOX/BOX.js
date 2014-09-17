@@ -1,7 +1,8 @@
 /**
- * Create box.
+ * create box.
  */
-global.BOX = BOX = METHOD(function(m) {'use strict';
+global.BOX = BOX = METHOD(function(m) {
+	'use strict';
 
 	var
 	// boxes
@@ -87,7 +88,9 @@ global.BOX = BOX = METHOD(function(m) {'use strict';
 					beforeBoxSplit[boxNameSplit] = box;
 				}
 			});
-			
+
+			FOR_BOX.inject(box);
+
 			return box;
 		}
 	};

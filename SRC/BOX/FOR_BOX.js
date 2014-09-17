@@ -1,13 +1,32 @@
 /**
- * Insert method or class to box.
+ * inject method or class to box.
  */
-global.FOR_BOX = FOR_BOX = METHOD({
+global.FOR_BOX = FOR_BOX = METHOD(function(m) {
+	'use strict';
 
-	run : function(func) {'use strict';
-		//REQUIRED: func
+	var
+	// funcs
+	funcs = [],
 
-		EACH(BOX.getBoxes(), function(box) {
+	// inject.
+	inject;
+
+	m.inject = inject = function(box) {
+		EACH(funcs, function(func) {
 			func(box);
 		});
-	}
+	};
+
+	return {
+
+		run : function(func) {
+			//REQUIRED: func
+
+			EACH(BOX.getBoxes(), function(box) {
+				func(box);
+			});
+
+			funcs.push(func);
+		}
+	};
 });
