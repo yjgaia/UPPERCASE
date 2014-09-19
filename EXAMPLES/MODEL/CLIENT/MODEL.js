@@ -1,6 +1,6 @@
 CONNECT_TO_ROOM_SERVER({
-	port : 8128,
-	fixServerPort : 8129
+	port : 9127,
+	fixRequestURI : '__WEB_SOCKET_FIX'
 });
 
 // Example Model

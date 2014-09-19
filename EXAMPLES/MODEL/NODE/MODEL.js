@@ -20,65 +20,88 @@ require('../../../UPPERCASE.IO-TRANSPORT/NODE.js');
 // load UPPERCASE.IO-ROOM.
 require('../../../UPPERCASE.IO-ROOM/NODE.js');
 
-LAUNCH_ROOM_SERVER({
-
-	socketServerPort : 8127,
-
-	webSocketServerPort : 8128,
-	webSocketFixServerPort : 8129
-});
-
 // load UPPERCASE.IO-MODEL.
 require('../../../UPPERCASE.IO-MODEL/COMMON.js');
 require('../../../UPPERCASE.IO-MODEL/NODE.js');
 
-// Example Model
-TestBox.TestModel = OBJECT({
+CPU_CLUSTERING(function(workerData) {
 
-	preset : function() {
-		'use strict';
-		return TestBox.MODEL;
-	},
+	var
+	// web socket fix request
+	webSocketFixRequest,
 
-	params : function() {
-		'use strict';
+	// web server
+	webServer = WEB_SERVER(9127, function(requestInfo, response, onDisconnected) {
 
-		var
-		// valid data set
-		validDataSet;
+		// serve web socket fix request
+		if (requestInfo.uri === '__WEB_SOCKET_FIX') {
 
-		validDataSet = {
-			name : {
-				notEmpty : true,
-				size : {
-					min : 0,
-					max : 255
-				}
-			},
-			age : {
-				notEmpty : true,
-				integer : true
-			},
-			isMan : {
-				bool : true
-			}
-		};
+			webSocketFixRequest(requestInfo, {
+				response : response,
+				onDisconnected : onDisconnected
+			});
+		}
+	});
 
-		return {
-			name : 'Test',
-			methodConfig : {
-				create : {
-					valid : VALID(validDataSet)
+	webSocketFixRequest = LAUNCH_ROOM_SERVER({
+		socketServerPort : 9126,
+		webServer : webServer,
+		isCreateWebSocketFixRequestManager : true
+	}).getWebSocketFixRequest();
+
+	NODE_CONFIG.isDBLogMode = true;
+
+	BOX('TestBox');
+
+	// Example Model
+	TestBox.TestModel = OBJECT({
+
+		preset : function() {
+			'use strict';
+
+			return TestBox.MODEL;
+		},
+
+		params : function() {
+			'use strict';
+
+			var
+			// valid data set
+			validDataSet;
+
+			validDataSet = {
+				name : {
+					notEmpty : true,
+					size : {
+						min : 0,
+						max : 255
+					}
 				},
-				update : {
-					valid : VALID(validDataSet)
+				age : {
+					notEmpty : true,
+					integer : true
 				},
-				remove : {
-					role : 'Test'
+				isMan : {
+					bool : true
 				}
-			}
-		};
-	}
+			};
+
+			return {
+				name : 'Test',
+				methodConfig : {
+					create : {
+						valid : VALID(validDataSet)
+					},
+					update : {
+						valid : VALID(validDataSet)
+					},
+					remove : {
+						role : 'Test'
+					}
+				}
+			};
+		}
+	});
+
+	INIT_OBJECTS();
 });
-
-INIT_OBJECTS();

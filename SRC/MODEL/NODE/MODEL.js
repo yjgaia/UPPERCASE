@@ -877,95 +877,214 @@ FOR_BOX(function(box) {
 					});
 				};
 
-				// create.
-				if (createConfig !== false) {
+				self.create = create = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//OPTIONAL: callbackOrHandlers
 
-					self.create = create = function(data, callbackOrHandlers) {
-						//REQUIRED: data
-						//OPTIONAL: callbackOrHandlers
+					var
+					// callback
+					callback,
+
+					// not valid handler
+					notValidHandler,
+
+					// error handler
+					errorHandler;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notValidHandler = callbackOrHandlers.notValid;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerCreate(data, function(result) {
 
 						var
-						// callback
-						callback,
+						// error msg
+						errorMsg,
 
-						// not valid handler
-						notValidHandler,
+						// valid errors
+						validErrors,
 
-						// error handler
-						errorHandler;
+						// saved data
+						savedData;
 
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
-							} else {
-								callback = callbackOrHandlers.success;
-								notValidHandler = callbackOrHandlers.notValid;
-								errorHandler = callbackOrHandlers.error;
+						if (result !== undefined) {
+
+							errorMsg = result.errorMsg;
+							validErrors = result.validErrors;
+							savedData = result.savedData;
+
+							if (errorMsg !== undefined) {
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.create` ERROR: ' + errorMsg));
+								}
+							} else if (validErrors !== undefined) {
+								if (notValidHandler !== undefined) {
+									notValidHandler(validErrors);
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.create` NOT VALID.'), validErrors);
+								}
+							} else if (callback !== undefined) {
+								callback(savedData);
 							}
+
+						} else if (callback !== undefined) {
+							callback();
+						}
+					});
+				};
+
+				self.get = get = function(idOrParams, callbackOrHandlers) {
+					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams.id
+					//OPTIONAL: idOrParams.filter
+					//OPTIONAL: idOrParams.sort
+					//OPTIONAL: idOrParams.isRandom
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// error handler
+					errorHandler;
+
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notExistsHandler = callbackOrHandlers.notExists;
+						errorHandler = callbackOrHandlers.error;
+					}
+
+					innerGet(idOrParams, function(result) {
+
+						var
+						// error msg
+						errorMsg,
+
+						// saved data
+						savedData;
+
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							savedData = result.savedData;
 						}
 
-						innerCreate(data, function(result) {
-
-							var
-							// error msg
-							errorMsg,
-
-							// valid errors
-							validErrors,
-
-							// saved data
-							savedData;
-
-							if (result !== undefined) {
-
-								errorMsg = result.errorMsg;
-								validErrors = result.validErrors;
-								savedData = result.savedData;
-
-								if (errorMsg !== undefined) {
-									if (errorHandler !== undefined) {
-										errorHandler(errorMsg);
-									} else {
-										console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.create` ERROR: ' + errorMsg));
-									}
-								} else if (validErrors !== undefined) {
-									if (notValidHandler !== undefined) {
-										notValidHandler(validErrors);
-									} else {
-										console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.create` NOT VALID.'), validErrors);
-									}
-								} else if (callback !== undefined) {
-									callback(savedData);
-								}
-
-							} else if (callback !== undefined) {
-								callback();
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.get` ERROR: ' + errorMsg));
 							}
-						});
-					};
-				}
+						} else if (savedData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), idOrParams);
+							}
+						} else {
+							callback(savedData);
+						}
+					});
+				};
 
-				// get.
-				if (getConfig !== false) {
+				self.update = update = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//REQUIRED: data.id
+					//OPTIONAL: callbackOrHandlers
 
-					self.get = get = function(idOrParams, callbackOrHandlers) {
-						//REQUIRED: idOrParams
-						//OPTIONAL: idOrParams.id
-						//OPTIONAL: idOrParams.filter
-						//OPTIONAL: idOrParams.sort
-						//OPTIONAL: idOrParams.isRandom
-						//REQUIRED: callbackOrHandlers
+					var
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// not valid handler
+					notValidHandler,
+
+					// error handler
+					errorHandler;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
+							notValidHandler = callbackOrHandlers.notValid;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerUpdate(data, function(result) {
 
 						var
-						// callback
-						callback,
+						// error msg
+						errorMsg,
 
-						// not exists handler
-						notExistsHandler,
+						// valid errors
+						validErrors,
 
-						// error handler
-						errorHandler;
+						// saved data
+						savedData;
 
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							validErrors = result.validErrors;
+							savedData = result.savedData;
+						}
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.update` ERROR: ' + errorMsg));
+							}
+						} else if (validErrors !== undefined) {
+							if (notValidHandler !== undefined) {
+								notValidHandler(validErrors);
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.update` NOT VALID.'), validErrors);
+							}
+						} else if (savedData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), data);
+							}
+						} else if (callback !== undefined) {
+							callback(savedData);
+						}
+					});
+				};
+
+				self.remove = remove = function(id, callbackOrHandlers) {
+					//REQUIRED: id
+					//OPTIONAL: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// error handler
+					errorHandler;
+
+					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
 						} else {
@@ -973,334 +1092,187 @@ FOR_BOX(function(box) {
 							notExistsHandler = callbackOrHandlers.notExists;
 							errorHandler = callbackOrHandlers.error;
 						}
+					}
 
-						innerGet(idOrParams, function(result) {
-
-							var
-							// error msg
-							errorMsg,
-
-							// saved data
-							savedData;
-
-							if (result !== undefined) {
-								errorMsg = result.errorMsg;
-								savedData = result.savedData;
-							}
-
-							if (errorMsg !== undefined) {
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.get` ERROR: ' + errorMsg));
-								}
-							} else if (savedData === undefined) {
-								if (notExistsHandler !== undefined) {
-									notExistsHandler();
-								} else {
-									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), idOrParams);
-								}
-							} else {
-								callback(savedData);
-							}
-						});
-					};
-				}
-
-				// update.
-				if (updateConfig !== false) {
-
-					self.update = update = function(data, callbackOrHandlers) {
-						//REQUIRED: data
-						//REQUIRED: data.id
-						//OPTIONAL: callbackOrHandlers
+					innerRemove(id, function(result) {
 
 						var
-						// callback
-						callback,
+						// error msg
+						errorMsg,
 
-						// not exists handler
-						notExistsHandler,
+						// saved data
+						savedData;
 
-						// not valid handler
-						notValidHandler,
-
-						// error handler
-						errorHandler;
-
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
-							} else {
-								callback = callbackOrHandlers.success;
-								notExistsHandler = callbackOrHandlers.notExists;
-								notValidHandler = callbackOrHandlers.notValid;
-								errorHandler = callbackOrHandlers.error;
-							}
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							savedData = result.savedData;
 						}
 
-						innerUpdate(data, function(result) {
-
-							var
-							// error msg
-							errorMsg,
-
-							// valid errors
-							validErrors,
-
-							// saved data
-							savedData;
-
-							if (result !== undefined) {
-								errorMsg = result.errorMsg;
-								validErrors = result.validErrors;
-								savedData = result.savedData;
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.remove` ERROR: ' + errorMsg));
 							}
-
-							if (errorMsg !== undefined) {
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.update` ERROR: ' + errorMsg));
-								}
-							} else if (validErrors !== undefined) {
-								if (notValidHandler !== undefined) {
-									notValidHandler(validErrors);
-								} else {
-									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.update` NOT VALID.'), validErrors);
-								}
-							} else if (savedData === undefined) {
-								if (notExistsHandler !== undefined) {
-									notExistsHandler();
-								} else {
-									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), data);
-								}
-							} else if (callback !== undefined) {
-								callback(savedData);
+						} else if (savedData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), id);
 							}
-						});
-					};
-				}
+						} else if (callback !== undefined) {
+							callback(savedData);
+						}
+					});
+				};
 
-				// remove.
-				if (removeConfig !== false) {
+				self.find = find = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//OPTIONAL: params.isFindAll
+					//REQUIRED: callbackOrHandlers
 
-					self.remove = remove = function(id, callbackOrHandlers) {
-						//REQUIRED: id
-						//OPTIONAL: callbackOrHandlers
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler;
+
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerFind(params, function(result) {
 
 						var
-						// callback
-						callback,
+						// error msg
+						errorMsg = result.errorMsg,
 
-						// not exists handler
-						notExistsHandler,
+						// saved data set
+						savedDataSet = result.savedDataSet;
 
-						// error handler
-						errorHandler;
-
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
 							} else {
-								callback = callbackOrHandlers.success;
-								notExistsHandler = callbackOrHandlers.notExists;
-								errorHandler = callbackOrHandlers.error;
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.find` ERROR: ' + errorMsg));
 							}
+						} else {
+							callback(savedDataSet);
 						}
+					});
+				};
 
-						innerRemove(id, function(result) {
+				self.count = count = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//REQUIRED: callbackOrHandlers
 
-							var
-							// error msg
-							errorMsg,
+					var
+					// callback
+					callback,
 
-							// saved data
-							savedData;
+					// error handler
+					errorHandler;
 
-							if (result !== undefined) {
-								errorMsg = result.errorMsg;
-								savedData = result.savedData;
-							}
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
 
-							if (errorMsg !== undefined) {
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.remove` ERROR: ' + errorMsg));
-								}
-							} else if (savedData === undefined) {
-								if (notExistsHandler !== undefined) {
-									notExistsHandler();
-								} else {
-									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), id);
-								}
-							} else if (callback !== undefined) {
-								callback(savedData);
-							}
-						});
-					};
-				}
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
 
-				// find.
-				if (findConfig !== false) {
-
-					self.find = find = function(params, callbackOrHandlers) {
-						//OPTIONAL: params
-						//OPTIONAL: params.filter
-						//OPTIONAL: params.sort
-						//OPTIONAL: params.start
-						//OPTIONAL: params.count
-						//OPTIONAL: params.isFindAll
-						//REQUIRED: callbackOrHandlers
+					innerCount(params, function(result) {
 
 						var
-						// callback
-						callback,
+						// error msg
+						errorMsg = result.errorMsg,
 
-						// error handler
-						errorHandler;
+						// count
+						count = result.count;
 
-						// init params.
-						if (callbackOrHandlers === undefined) {
-							callbackOrHandlers = params;
-							params = undefined;
-						}
-
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
 							} else {
-								callback = callbackOrHandlers.success;
-								errorHandler = callbackOrHandlers.error;
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.count` ERROR: ' + errorMsg));
 							}
+						} else {
+							callback(count);
 						}
+					});
+				};
 
-						innerFind(params, function(result) {
+				self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//REQUIRED: callbackOrHandlers
 
-							var
-							// error msg
-							errorMsg = result.errorMsg,
+					var
+					// callback
+					callback,
 
-							// saved data set
-							savedDataSet = result.savedDataSet;
+					// error handler
+					errorHandler;
 
-							if (errorMsg !== undefined) {
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.find` ERROR: ' + errorMsg));
-								}
-							} else {
-								callback(savedDataSet);
-							}
-						});
-					};
-				}
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
 
-				// count.
-				if (countConfig !== false) {
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
 
-					self.count = count = function(params, callbackOrHandlers) {
-						//OPTIONAL: params
-						//OPTIONAL: params.filter
-						//REQUIRED: callbackOrHandlers
+					innerCheckIsExists(params, function(result) {
 
 						var
-						// callback
-						callback,
+						// error msg
+						errorMsg = result.errorMsg,
 
-						// error handler
-						errorHandler;
+						// is exists
+						isExists = result.isExists;
 
-						// init params.
-						if (callbackOrHandlers === undefined) {
-							callbackOrHandlers = params;
-							params = undefined;
-						}
-
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
 							} else {
-								callback = callbackOrHandlers.success;
-								errorHandler = callbackOrHandlers.error;
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.checkIsExists` ERROR: ' + errorMsg));
 							}
+						} else {
+							callback(isExists);
 						}
-
-						innerCount(params, function(result) {
-
-							var
-							// error msg
-							errorMsg = result.errorMsg,
-
-							// count
-							count = result.count;
-
-							if (errorMsg !== undefined) {
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.count` ERROR: ' + errorMsg));
-								}
-							} else {
-								callback(count);
-							}
-						});
-					};
-				}
-
-				// check is exists.
-				if (checkIsExistsConfig !== false) {
-
-					self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
-						//OPTIONAL: params
-						//OPTIONAL: params.filter
-						//REQUIRED: callbackOrHandlers
-
-						var
-						// callback
-						callback,
-
-						// error handler
-						errorHandler;
-
-						// init params.
-						if (callbackOrHandlers === undefined) {
-							callbackOrHandlers = params;
-							params = undefined;
-						}
-
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
-							} else {
-								callback = callbackOrHandlers.success;
-								errorHandler = callbackOrHandlers.error;
-							}
-						}
-
-						innerCheckIsExists(params, function(result) {
-
-							var
-							// error msg
-							errorMsg = result.errorMsg,
-
-							// is exists
-							isExists = result.isExists;
-
-							if (errorMsg !== undefined) {
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '.checkIsExists` ERROR: ' + errorMsg));
-								}
-							} else {
-								callback(isExists);
-							}
-						});
-					};
-				}
+					});
+				};
 
 				// init room for create, get, find.
 				box.ROOM(name, function(clientInfo, on) {
