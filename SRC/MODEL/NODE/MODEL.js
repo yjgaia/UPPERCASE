@@ -72,6 +72,9 @@ FOR_BOX(function(box) {
 				// check is exists role
 				checkIsExistsRole,
 
+				// create auth key
+				createAuthKey,
+
 				// update auth key
 				updateAuthKey,
 
@@ -183,9 +186,9 @@ FOR_BOX(function(box) {
 					checkIsExistsConfig = methodConfig.checkIsExists;
 
 					if (createConfig !== undefined) {
-
 						createValid = createConfig.valid;
 						createRole = createConfig.role;
+						createAuthKey = createConfig.authKey;
 					}
 
 					if (getConfig !== undefined) {
@@ -1288,6 +1291,11 @@ FOR_BOX(function(box) {
 								value : createRole
 							}) === true)) {
 
+								// inject auth key.
+								if (createAuthKey !== undefined) {
+									data[createAuthKey] = clientInfo.authKey;
+								}
+
 								innerCreate(data, ret, clientInfo);
 
 							} else {
@@ -1351,6 +1359,10 @@ FOR_BOX(function(box) {
 
 											// check auth key.
 											if (savedData[updateAuthKey] === clientInfo.authKey) {
+
+												// do not change auth key.
+												delete data[updateAuthKey];
+
 												innerUpdate(data, ret, clientInfo);
 											}
 
