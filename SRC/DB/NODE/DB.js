@@ -343,7 +343,7 @@ FOR_BOX(function(box) {
 					});
 
 					if (NODE_CONFIG.isDBLogMode === true) {
-						console.log('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` DATA SAVED:', data);
+						console.log('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` DATA SAVED:', change);
 					}
 				},
 
