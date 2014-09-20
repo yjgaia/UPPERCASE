@@ -186,7 +186,25 @@ TestBox.ROOM('testRoom', function(clientInfo, on, off) {
 * `BROADCAST({roomName:, methodName:, data:})` broadcast to rooms. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
 
 ###### MODEL
-* MODEL
+* `MODEL(name)` `MODEL({name:, methodConfig:})` `MODEL({name:, initData:, methodConfig:})` Model(include CRUD functions) interface [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/MODEL/CLIENT/MODEL.js)
+```javascript
+TestBox.TestModel = OBJECT({...
+TestBox.TestModel.create(data, function() {...})
+TestBox.TestModel.create(data, {success:, error:})
+TestBox.TestModel.get(id, function() {...})
+TestBox.TestModel.get(id, {success:, notExists:, error:})
+TestBox.TestModel.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
+TestBox.TestModel.update(data, function() {...})
+TestBox.TestModel.update(data, {success:, notExists:, error:})
+TestBox.TestModel.remove(id, function() {...})
+TestBox.TestModel.remove(id, {success:, notExists:, error:})
+TestBox.TestModel.find({filter:, sort:, start:, count:}, function() {...})
+TestBox.TestModel.find({filter:, sort:, start:, count:}, {success:, error:})
+TestBox.TestModel.count({filter:}, function() {...})
+TestBox.TestModel.count({filter:}, {success:, error:})
+TestBox.TestModel.checkIsExists({filter:}, function() {...})
+TestBox.TestModel.checkIsExists({filter:}, {success:, error:})
+```
 
 ###### 리소스 경로 관련
 클라이언트에서 사용 가능한 리소스 경로 관련 API입니다.

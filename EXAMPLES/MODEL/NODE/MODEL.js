@@ -58,13 +58,10 @@ TEST('MODEL', function(ok) {
 		TestBox.TestModel = OBJECT({
 
 			preset : function() {
-				'use strict';
-
 				return TestBox.MODEL;
 			},
 
 			params : function() {
-				'use strict';
 
 				var
 				// valid data set
