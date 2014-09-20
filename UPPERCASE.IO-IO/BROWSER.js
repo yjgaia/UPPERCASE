@@ -1,0 +1,1 @@
+global.CONNECT_TO_IO_SERVER=CONNECT_TO_IO_SERVER=METHOD({run:function(_){"use strict";var E,r;CHECK_IS_DATA(_)!==!0?E=_:(E=_.success,r=_.error),GET({uri:"__WEB_SOCKET_SERVER_HOST",paramStr:"defaultHost="+global.location.hostname},{error:r,success:function(_){CONNECT_TO_ROOM_SERVER({host:_,port:CONFIG.webServerPort,fixRequestURI:"__WEB_SOCKET_FIX"},E)}})}});

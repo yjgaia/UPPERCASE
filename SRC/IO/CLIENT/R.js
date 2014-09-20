@@ -2,7 +2,7 @@ FOR_BOX(function(box) {
 	'use strict';
 
 	/**
-	 * Get resource's real path.
+	 * get resource's real path with version.
 	 */
 	box.R = METHOD({
 

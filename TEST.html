@@ -111,22 +111,18 @@
 
 		<!-- import UPPERCASE.IO-BOX -->
 		<script src="UPPERCASE.IO-BOX/CORE.js"></script>
-		<script>
-			// create test box.
-			BOX('TestBox');
-		</script>
 		<script src="UPPERCASE.IO-BOX/CLIENT.js"></script>
 		<script src="UPPERCASE.IO-BOX/BROWSER.js"></script>
 
 		<!-- import UPPERCASE.IO-TRANSPORT -->
 		<script src="UPPERCASE.IO-TRANSPORT/BROWSER.js"></script>
 		<script>
-			BROWSER_CONFIG.fixTransportScriptsFolderPath = 'UPPERCASE.IO-TRANSPORT/R';
-
 			// simulate WebSocket not exists.
 			global.WebSocket = undefined;
+
+			BROWSER_CONFIG.fixTransportScriptsFolderPath = 'UPPERCASE.IO-TRANSPORT/R';
+			LOAD('UPPERCASE.IO-TRANSPORT/R/FIX.js');
 		</script>
-		<script src="UPPERCASE.IO-TRANSPORT/R/FIX.js"></script>
 
 		<!-- import UPPERCASE.IO-ROOM -->
 		<script src="UPPERCASE.IO-ROOM/CLIENT.js"></script>
@@ -136,8 +132,16 @@
 		<script src="UPPERCASE.IO-MODEL/COMMON.js"></script>
 		<script src="UPPERCASE.IO-MODEL/CLIENT.js"></script>
 
+		<!-- import UPPERCASE.IO-IO -->
+		<script src="UPPERCASE.IO-IO/COMMON.js"></script>
+		<script src="UPPERCASE.IO-IO/CLIENT.js"></script>
+		<script src="UPPERCASE.IO-IO/BROWSER.js"></script>
+
 		<script>
 			READY(function() {
+
+				// create test box.
+				BOX('TestBox');
 
 				// init all singleton classes.
 				INIT_OBJECTS();
@@ -161,6 +165,10 @@
 				test('BOX/CLIENT/REQUEST/DELETE');
 				test('BOX/BROWSER/VIEW/HREF');
 				test('BOX/BROWSER/VIEW/GO');
+
+				console.log('[IO TEST]');
+				test('IO/CLIENT/R');
+				test('IO/CLIENT/RF');
 			});
 		</script>
 	</body>

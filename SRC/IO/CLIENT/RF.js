@@ -2,7 +2,7 @@ FOR_BOX(function(box) {
 	'use strict';
 
 	/**
-	 * Get final resource's real path.
+	 * get final resource's real path.
 	 */
 	box.RF = METHOD({
 
