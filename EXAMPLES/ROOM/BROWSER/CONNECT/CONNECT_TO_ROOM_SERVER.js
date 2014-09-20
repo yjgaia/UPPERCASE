@@ -1,4 +1,4 @@
-TEST('ROOM', function(ok) {
+TEST('CONNECT_TO_ROOM_SERVER', function(ok) {
 	'use strict';
 
 	var

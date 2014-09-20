@@ -1,7 +1,7 @@
 VERSIONS
 ========
-1.4.2 (working)
-- Applied UPPERCASE.JS 1.4.11.
+1.4.2 (2014. 9. 21)
+- Applied UPPERCASE.JS 1.4.12.
 - Fixed bugs.
 - Added a way to import NODE.js COMMON.js BROWSER.js within a BOX.
 - Generated a V file automatically as a version information.

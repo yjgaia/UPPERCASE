@@ -21,7 +21,7 @@ global.IMAGEMAGICK_CONVERT = IMAGEMAGICK_CONVERT = METHOD(function() {
 			// error handler.
 			errorHandler;
 
-			if (callback !== undefined) {
+			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {

@@ -36,7 +36,7 @@ global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {
 			// error handler.
 			errorHandler;
 
-			if (callback !== undefined) {
+			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {

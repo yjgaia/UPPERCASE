@@ -1,5 +1,5 @@
 /*
- * create web socket fix request manager (using jsonp long-polling).
+ * create web socket fix request handler. (using jsonp long-polling)
  */
 global.WEB_SOCKET_FIX_REQUEST_MANAGER = WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 	'use strict';

@@ -83,11 +83,28 @@
 			</div>
 			<div>
 				<h3>UPLOAD</h3>
+				<p>
+					run
+					<br>
+					EXAMPLES/UPLOAD/NODE/UPLOAD_REQUEST.js
+					<br>
+					before test.
+				</p>
 				<iframe name="__UPLOAD_FORM"></iframe>
-				<form action="http://localhost:8124" target="__UPLOAD_FORM" method="POST" enctype="multipart/form-data">
-					<input name="file" type="file">
-					<input type="submit">
-				</form>
+				<div>
+					<h4>UPLOAD 1</h4>
+					<form action="http://localhost:8124/__UPLOAD_1" target="__UPLOAD_FORM" method="POST" enctype="multipart/form-data">
+						<input name="file" type="file">
+						<input type="submit">
+					</form>
+				</div>
+				<div>
+					<h4>UPLOAD 2</h4>
+					<form action="http://localhost:8124/__UPLOAD_2" target="__UPLOAD_FORM" method="POST" enctype="multipart/form-data">
+						<input name="file" type="file">
+						<input type="submit">
+					</form>
+				</div>
 			</div>
 		</div>
 		<footer>

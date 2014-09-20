@@ -94,7 +94,7 @@ global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		//REQUIRED: params
 		//REQUIRED: params.methodName
 		//REQUIRED: params.data
-		//REQUIRED: params.isNotUsingLoadingBar
+		//OPTIONAL: params.isNotUsingLoadingBar
 		//OPTIONAL: _callback
 
 		var

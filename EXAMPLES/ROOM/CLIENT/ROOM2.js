@@ -1,34 +1,38 @@
-var
-// room
-room1 = TestBox.ROOM('testRoom'),
+TEST('ROOM', function(ok) {
+	'use strict';
 
-// connect.
-connect = RAR(function() {
+	var
+	// room
+	room1 = TestBox.ROOM('testRoom'),
 
-	CONNECT_TO_ROOM_SERVER({
-		port : 9127,
-		fixRequestURI : '__WEB_SOCKET_FIX'
-	}, function(on) {
+	// connect.
+	connect = RAR(function() {
 
-		console.log('connected.');
+		CONNECT_TO_ROOM_SERVER({
+			port : 9127,
+			fixRequestURI : '__WEB_SOCKET_FIX'
+		}, function(on) {
 
-		on('__DISCONNECTED', function() {
-			console.log('disconnected. trying to reconnect.');
-			connect();
+			console.log('connected.');
+
+			on('__DISCONNECTED', function() {
+				console.log('disconnected. trying to reconnect.');
+				connect();
+			});
 		});
 	});
-});
 
-INTERVAL(1, function() {
+	INTERVAL(1, function() {
 
-	room1.send({
-		methodName : 'msg',
-		data : {
-			test2 : 'Hello, Test!',
-			date : new Date()
-		}
-	}, function(result) {
-		console.log(result);
+		room1.send({
+			methodName : 'msg',
+			data : {
+				test2 : 'Hello, Test!',
+				date : new Date()
+			}
+		}, function(result) {
+			console.log(result);
+		});
 	});
 });
 

@@ -613,7 +613,7 @@ global.BOOT = BOOT = function(params) {
 				securedKeyFilePath : rootPath + '/' + NODE_CONFIG.securedKeyFilePath,
 				securedCertFilePath : rootPath + '/' + NODE_CONFIG.securedCertFilePath,
 
-				noParsingNativeReqURIs : ['__UPLOAD'],
+				noParsingParamsURI : '__UPLOAD',
 
 				rootPath : rootPath,
 

@@ -143,7 +143,7 @@ store.remove(name)
 ```javascript
 db = TestBox.DB('test');
 db.create(data, function() {...})
-db.create(data, {success:, error:})
+db.create(data, {error:, success:})
 db.get(id, function() {...})
 db.get(id, {success:, notExists:, error:})
 db.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
@@ -152,11 +152,11 @@ db.update(data, {success:, notExists:, error:})
 db.remove(id, function() {...})
 db.remove(id, {success:, notExists:, error:})
 db.find({filter:, sort:, start:, count:}, function() {...})
-db.find({filter:, sort:, start:, count:}, {success:, error:})
+db.find({filter:, sort:, start:, count:}, {error:, success:})
 db.count({filter:}, function() {...})
-db.count({filter:}, {success:, error:})
+db.count({filter:}, {error:, success:})
 db.checkIsExists({filter:}, function() {...})
-db.checkIsExists({filter:}, {success:, error:})
+db.checkIsExists({filter:}, {error:, success:})
 ```
 * `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/LOG_DB.js)
 ```javascript
@@ -186,11 +186,29 @@ TestBox.ROOM('testRoom', function(clientInfo, on, off) {
 * `BROADCAST({roomName:, methodName:, data:})` broadcast to rooms. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
 
 ###### MODEL
-* `MODEL(name)` `MODEL({name:, methodConfig:})` `MODEL({name:, initData:, methodConfig:})` Model(include CRUD functions) interface [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/MODEL/CLIENT/MODEL.js)
+* `MODEL` Model(include CRUD functions) interface [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/MODEL/CLIENT/MODEL.js)
 ```javascript
-TestBox.TestModel = OBJECT({...
+TestBox.TestModel = OBJECT({
+	preset : function() {
+		return TestBox.MODEL;
+	},
+	params : function() {
+		return {
+			name : 'Test',
+			methodConfig : {
+				create : ...,
+                get : ...,
+				update : ...,
+				remove : ...,
+                find : ...,
+                count : ...,
+                checkIsExists : ...
+			}
+		};
+	}
+});
 TestBox.TestModel.create(data, function() {...})
-TestBox.TestModel.create(data, {success:, error:})
+TestBox.TestModel.create(data, {error:, success:})
 TestBox.TestModel.get(id, function() {...})
 TestBox.TestModel.get(id, {success:, notExists:, error:})
 TestBox.TestModel.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
@@ -199,11 +217,11 @@ TestBox.TestModel.update(data, {success:, notExists:, error:})
 TestBox.TestModel.remove(id, function() {...})
 TestBox.TestModel.remove(id, {success:, notExists:, error:})
 TestBox.TestModel.find({filter:, sort:, start:, count:}, function() {...})
-TestBox.TestModel.find({filter:, sort:, start:, count:}, {success:, error:})
+TestBox.TestModel.find({filter:, sort:, start:, count:}, {error:, success:})
 TestBox.TestModel.count({filter:}, function() {...})
-TestBox.TestModel.count({filter:}, {success:, error:})
+TestBox.TestModel.count({filter:}, {error:, success:})
 TestBox.TestModel.checkIsExists({filter:}, function() {...})
-TestBox.TestModel.checkIsExists({filter:}, {success:, error:})
+TestBox.TestModel.checkIsExists({filter:}, {error:, success:})
 ```
 
 ###### 리소스 경로 관련
@@ -217,18 +235,20 @@ TestBox.TestModel.checkIsExists({filter:}, {success:, error:})
 
 ###### 통신 관련
 * `WEB_SOCKET_SERVER(portOrWebServer, connectionListener)` create web socket server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
-* `WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener)` create web socket fix request manager (using jsonp long-polling). [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
+* `WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener)` create web socket fix request handler. (using jsonp long-polling) [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
 * `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:}, connectionListener)` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js)
-* `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:, fixRequestURI:}, {success:, error:})` connect to web socket server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER.js)
+* `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:, fixRequestURI:}, {error:, success:})` connect to web socket server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER.js)
 
 ###### 데이터베이스 관련
 * `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
 
 ###### ROOM
 * `LAUNCH_ROOM_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:})` Launch room server class [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
+* `CONNECT_TO_ROOM_SERVER({methodName:, data:})` * `CONNECT_TO_ROOM_SERVER({methodName:, data:}, function(on, off, send) {...})` connect to room server. 로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/BROWSER/CONNECT/CONNECT_TO_ROOM_SERVER.js)
 
 ###### UPLOAD
-* UPLOAD_REQUEST
+* `UPLOAD_REQUEST({requestInfo:, uploadPath:}, function() {...})` `UPLOAD_REQUEST({requestInfo:, uploadPath:}, {overFileSize:, error:, success:})` create upload request handler. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UPLOAD/NODE/UPLOAD_REQUEST.js)
+	* UPLOAD_REQUEST가 업로드 파일을 처리할 수 있도록 반드시 웹 서버에 noParsingParamsURI 설정을 추가해야 합니다. 예제를 참고해주세요.
 
 ###### UTIL
 * `MINIFY_CSS(code)` minify css. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/MINIFY/MINIFY_CSS.js)
@@ -243,7 +263,7 @@ TestBox.TestModel.checkIsExists({filter:}, {success:, error:})
 * `RUN_LITCOFFEE(code)` run literate CoffeeScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/RUN_LITCOFFEE.js)
 
 ###### IO
-* CONNECT_TO_IO_SERVER
+* `CONNECT_TO_IO_SERVER(function(on, off, send) {...})` `CONNECT_TO_IO_SERVER({error:, success:})` connect to UPPERCASE.IO server.
 
 
 ## UPPERCASE.IO의 분산 처리 전략
