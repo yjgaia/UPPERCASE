@@ -1,7 +1,8 @@
 /**
  * minify css.
  */
-global.MINIFY_CSS = MINIFY_CSS = METHOD(function() {'use strict';
+global.MINIFY_CSS = MINIFY_CSS = METHOD(function() {
+	'use strict';
 
 	var
 	// sqwish
@@ -9,10 +10,10 @@ global.MINIFY_CSS = MINIFY_CSS = METHOD(function() {'use strict';
 
 	return {
 
-		run : function(cssContent) {
-			//REQUIRED: cssContent
+		run : function(code) {
+			//REQUIRED: code
 
-			return sqwish.minify(String(cssContent));
+			return sqwish.minify(String(code));
 		}
 	};
 });

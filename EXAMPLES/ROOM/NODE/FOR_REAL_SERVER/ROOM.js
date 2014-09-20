@@ -11,58 +11,62 @@ require('../../../../UPPERCASE.IO-TRANSPORT/NODE.js');
 // load UPPERCASE.IO-ROOM.
 require('../../../../UPPERCASE.IO-ROOM/NODE.js');
 
-CPU_CLUSTERING(function(workerData) {
+TEST('ROOM', function(ok) {
+	'use strict';
 
-	BOX('TestBox');
+	CPU_CLUSTERING(function(workerData) {
 
-	SERVER_CLUSTERING({
-		hosts : ['1.226.84.92', '58.229.105.35'],
-		port : 9125
-	});
+		SERVER_CLUSTERING({
+			hosts : ['1.226.84.92', '58.229.105.35'],
+			port : 9125
+		});
 
-	var
-	// web socket fix request
-	webSocketFixRequest,
+		var
+		// web socket fix request
+		webSocketFixRequest,
 
-	// web server
-	webServer = WEB_SERVER(9127, function(requestInfo, response, onDisconnected) {
+		// web server
+		webServer = WEB_SERVER(9127, function(requestInfo, response, onDisconnected) {
 
-		// serve web socket fix request
-		if (requestInfo.uri === '__WEB_SOCKET_FIX') {
+			// serve web socket fix request
+			if (requestInfo.uri === '__WEB_SOCKET_FIX') {
 
-			webSocketFixRequest(requestInfo, {
-				response : response,
-				onDisconnected : onDisconnected
-			});
-		}
-	});
+				webSocketFixRequest(requestInfo, {
+					response : response,
+					onDisconnected : onDisconnected
+				});
+			}
+		});
 
-	webSocketFixRequest = LAUNCH_ROOM_SERVER({
-		socketServerPort : 9126,
-		webServer : webServer,
-		isCreateWebSocketFixRequestManager : true
-	}).getWebSocketFixRequest();
+		webSocketFixRequest = LAUNCH_ROOM_SERVER({
+			socketServerPort : 9126,
+			webServer : webServer,
+			isCreateWebSocketFixRequestManager : true
+		}).getWebSocketFixRequest();
 
-	TestBox.ROOM('testRoom', function(clientInfo, on, off) {
+		BOX('TestBox');
 
-		on('msg', function(data, ret) {
+		TestBox.ROOM('testRoom', function(clientInfo, on, off) {
 
-			console.log(data);
+			on('msg', function(data, ret) {
 
-			TestBox.BROADCAST({
-				roomName : 'testRoom',
-				methodName : 'msg',
-				data : {
-					result : 'good!',
-					test : new Date()
-				}
-			});
+				console.log(data);
 
-			ret({
-				result : 'good!'
+				TestBox.BROADCAST({
+					roomName : 'testRoom',
+					methodName : 'msg',
+					data : {
+						result : 'good!',
+						test : new Date()
+					}
+				});
+
+				ret({
+					result : 'good!'
+				});
 			});
 		});
-	});
 
-	INIT_OBJECTS();
+		INIT_OBJECTS();
+	});
 });

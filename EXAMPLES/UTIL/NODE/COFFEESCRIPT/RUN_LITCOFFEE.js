@@ -5,12 +5,19 @@ require('../../../../UPPERCASE.JS-NODE.js');
 // load UPPERCASE.IO-UTIL.
 require('../../../../UPPERCASE.IO-UTIL/NODE.js');
 
-INIT_OBJECTS();
+TEST('RUN_LITCOFFEE', function(ok) {
+	'use strict';
 
-var
-// coffee code
-coffeeCode = 'TEST\n\n    number = 32';
+	INIT_OBJECTS();
 
-RUN_LITCOFFEE(coffeeCode);
+	READ_FILE('sample.litcoffee', function(content) {
 
-console.log(number);
+		var
+		// coffee code
+		coffeeCode = content.toString();
+
+		RUN_LITCOFFEE(coffeeCode);
+
+		ok(number === 32);
+	});
+});

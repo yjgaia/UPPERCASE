@@ -12,6 +12,8 @@
 * 웹 브라우저 (최신 브라우저 및 인터넷 익스플로러 5.5 이상부터 지원)
 * [Titanium](http://www.appcelerator.com/titanium/)
 
+#### 샘플 프로젝트
+* Sample
 
 ## 설치
 1. UPPERCASE.IO를 원하는 경로에 설치합니다.
@@ -211,16 +213,16 @@ TestBox.ROOM('testRoom', function(clientInfo, on, off) {
 * UPLOAD_REQUEST
 
 ###### UTIL
-* MINIFY_CSS
-* MINIFY_JS
-* IMAGEMAGICK_CONVERT
-* IMAGEMAGICK_IDENTIFY
-* IMAGEMAGICK_READ_METADATA
-* IMAGEMAGICK_RESIZE
-* COMPILE_COFFEE_TO_JS
-* COMPILE_LITCOFFEE_TO_JS
-* RUN_COFFEE
-* RUN_LITCOFFEE
+* `MINIFY_CSS(code)` minify css. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/MINIFY/MINIFY_CSS.js)
+* `MINIFY_JS(code)` minify js [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/MINIFY/MINIFY_JS.js)
+* `IMAGEMAGICK_CONVERT(params)` `IMAGEMAGICK_CONVERT(params, function() {...})` `IMAGEMAGICK_CONVERT(params, {error: function() {...}, success : function() {...}})`  ImageMagick® convert. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/IMAGEMAGICK/IMAGEMAGICK_CONVERT.js)
+* `IMAGEMAGICK_IDENTIFY(path, function() {...})` `IMAGEMAGICK_IDENTIFY(path, {error: function() {...}, success : function() {...}})` ImageMagick® identify. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/IMAGEMAGICK/IMAGEMAGICK_IDENTIFY.js)
+* `IMAGEMAGICK_READ_METADATA(path, function() {...})` `IMAGEMAGICK_READ_METADATA(path, {error: function() {...}, success : function() {...}})` ImageMagick® read metadata. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/IMAGEMAGICK/IMAGEMAGICK_READ_METADATA.js)
+* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:})` `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, function() {...})` `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, {error: function() {...}, success : function() {...}})` ImageMagick® resize. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/IMAGEMAGICK/.js)
+* `COMPILE_COFFEE_TO_JS(code)` compile CoffeeScript to JavaScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/COMPILE_COFFEE_TO_JS.js)
+* `COMPILE_LITCOFFEE_TO_JS(code)` compile literate CoffeeScript to JavaScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/COMPILE_LITCOFFEE_TO_JS.js)
+* `RUN_COFFEE(code)` run CoffeeScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/RUN_COFFEE.js)
+* `RUN_LITCOFFEE(code)` run literate CoffeeScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/RUN_LITCOFFEE.js)
 
 ###### IO
 * CONNECT_TO_IO_SERVER

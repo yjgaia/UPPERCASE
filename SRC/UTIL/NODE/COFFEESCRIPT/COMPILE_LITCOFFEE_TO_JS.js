@@ -13,7 +13,7 @@ global.COMPILE_LITCOFFEE_TO_JS = COMPILE_LITCOFFEE_TO_JS = METHOD(function() {
 		run : function(code) {
 			//REQUIRED: code
 
-			return CoffeeScript.compile(code, {
+			return CoffeeScript.compile(String(code), {
 				literate : true
 			});
 		}

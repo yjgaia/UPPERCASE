@@ -13,7 +13,7 @@ global.RUN_COFFEE = RUN_COFFEE = METHOD(function() {
 		run : function(code) {
 			//REQUIRED: code
 
-			return CoffeeScript.run(code);
+			return CoffeeScript.eval(String(code));
 		}
 	};
 });

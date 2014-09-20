@@ -1,7 +1,8 @@
 /**
  * minify js.
  */
-global.MINIFY_JS = MINIFY_JS = METHOD(function() {'use strict';
+global.MINIFY_JS = MINIFY_JS = METHOD(function() {
+	'use strict';
 
 	var
 	// uglify-js
@@ -9,10 +10,10 @@ global.MINIFY_JS = MINIFY_JS = METHOD(function() {'use strict';
 
 	return {
 
-		run : function(script) {
-			//REQUIRED: script
+		run : function(code) {
+			//REQUIRED: code
 
-			return uglifyJS.minify(String(script), {
+			return uglifyJS.minify(String(code), {
 				fromString : true,
 				mangle : true
 			}).code;

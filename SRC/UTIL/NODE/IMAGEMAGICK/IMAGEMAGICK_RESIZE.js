@@ -6,10 +6,7 @@ global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {
 
 	var
 	//IMPORT: path
-	_path = require('path'),
-
-	//IMPORT: imagemagick
-	imagemagick = require('imagemagick');
+	_path = require('path');
 
 	return {
 
@@ -18,7 +15,7 @@ global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {
 			//REQUIRED: params.distPath
 			//OPTIONAL: params.width
 			//OPTIONAL: params.height
-			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers
 
 			var
 			// src path
@@ -39,40 +36,35 @@ global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {
 			// error handler.
 			errorHandler;
 
-			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-				callback = callbackOrHandlers;
-			} else {
-				callback = callbackOrHandlers.success;
-				errorHandler = callbackOrHandlers.error;
+			if (callback !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
 			}
 
-			CREATE_FOLDER(_path.dirname(distPath), function() {
+			CREATE_FOLDER(_path.dirname(distPath), {
+				error : errorHandler,
+				success : function() {
 
-				imagemagick.resize({
-					srcPath : srcPath,
-					// different!
-					dstPath : distPath,
-					width : width,
-					height : height
-				}, function(error) {
+					IMAGEMAGICK_IDENTIFY(srcPath, {
+						error : errorHandler,
+						success : function(features) {
 
-					var
-					// error msg
-					errorMsg;
+							if (width === undefined) {
+								width = height / features.height * features.width;
+							}
 
-					if (error !== TO_DELETE) {
+							if (height === undefined) {
+								height = width / features.width * features.height;
+							}
 
-						errorMsg = error.toString();
-
-						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
-						} else {
-							console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_RESIZE] ERROR: ' + errorMsg));
+							IMAGEMAGICK_CONVERT([srcPath, '-resize', width + 'x' + height + '\!', distPath], callbackOrHandlers);
 						}
-					} else {
-						callback();
-					}
-				});
+					});
+				}
 			});
 		}
 	};

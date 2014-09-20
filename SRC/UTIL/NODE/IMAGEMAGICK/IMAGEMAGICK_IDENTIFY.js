@@ -1,7 +1,8 @@
 /**
  * ImageMagick® identify.
  */
-global.IMAGEMAGICK_IDENTIFY = IMAGEMAGICK_IDENTIFY = METHOD(function() {'use strict';
+global.IMAGEMAGICK_IDENTIFY = IMAGEMAGICK_IDENTIFY = METHOD(function() {
+	'use strict';
 
 	var
 	//IMPORT: imagemagick
@@ -42,6 +43,7 @@ global.IMAGEMAGICK_IDENTIFY = IMAGEMAGICK_IDENTIFY = METHOD(function() {'use str
 					} else {
 						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_IDENTIFY] ERROR: ' + errorMsg));
 					}
+
 				} else {
 					callback(features);
 				}

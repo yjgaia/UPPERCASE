@@ -5,9 +5,13 @@ require('../../../UPPERCASE.JS-NODE.js');
 // load UPPERCASE.IO-BOX
 require('../../../UPPERCASE.IO-BOX/CORE.js');
 
-// create test box.
-BOX('TestBox');
+TEST('BOX', function(ok) {
+	'use strict';
 
-INIT_OBJECTS();
+	// create test box.
+	BOX('TestBox');
 
-console.log(TestBox);
+	INIT_OBJECTS();
+
+	ok(TestBox.boxName === 'TestBox');
+});

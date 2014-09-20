@@ -1,0 +1,3 @@
+TEST
+
+    number = 32

@@ -5,83 +5,87 @@ require('../../../../UPPERCASE.JS-NODE.js');
 // load UPPERCASE.IO-TRANSPORT.
 require('../../../../UPPERCASE.IO-TRANSPORT/NODE.js');
 
-INIT_OBJECTS();
+TEST('MULTI_PROTOCOL_SOCKET_SERVER', function(ok) {
+	'use strict';
 
-CPU_CLUSTERING(function() {
+	INIT_OBJECTS();
 
-	var
-	// web server
-	webServer,
-
-	// socket server
-	socketServer,
-
-	// web socket fix request
-	webSocketFixRequest;
-
-	webServer = WEB_SERVER(8125, function(requestInfo, response, onDisconnected) {
-
-		// serve web socket fix request
-		if (requestInfo.uri === '__WEB_SOCKET_FIX') {
-
-			webSocketFixRequest(requestInfo, {
-				response : response,
-				onDisconnected : onDisconnected
-			});
-		}
-	});
-
-	socketServer = MULTI_PROTOCOL_SOCKET_SERVER({
-		socketServerPort : 8124,
-		webServer : webServer,
-		isCreateWebSocketFixRequestManager : true
-	}, function(clientInfo, on, off, send) {
+	CPU_CLUSTERING(function() {
 
 		var
-		// roles
-		roles = [];
+		// web server
+		webServer,
 
-		console.log('CONNECTED!', clientInfo);
+		// socket server
+		socketServer,
 
-		on('message', function(data, ret) {
+		// web socket fix request
+		webSocketFixRequest;
 
-			console.log('SERVER!', data, CPU_CLUSTERING.getWorkerId());
+		webServer = WEB_SERVER(8125, function(requestInfo, response, onDisconnected) {
 
-			ret('Thanks!');
-		});
+			// serve web socket fix request
+			if (requestInfo.uri === '__WEB_SOCKET_FIX') {
 
-		send({
-			methodName : 'message',
-			data : {
-				msg : 'message from server. ' + CPU_CLUSTERING.getWorkerId()
-			}
-		}, function(retMsg) {
-
-			console.log('RETURN MESSAGE:', retMsg);
-		});
-
-		on('login', function(data) {
-			if (data.username === 'test' && data.password === '1234') {
-				roles.push('USER');
+				webSocketFixRequest(requestInfo, {
+					response : response,
+					onDisconnected : onDisconnected
+				});
 			}
 		});
 
-		on('checkRole', function(role) {
+		socketServer = MULTI_PROTOCOL_SOCKET_SERVER({
+			socketServerPort : 8124,
+			webServer : webServer,
+			isCreateWebSocketFixRequestManager : true
+		}, function(clientInfo, on, off, send) {
 
-			if (CHECK_IS_IN({
-				data : roles,
-				value : role
-			}) === true) {
+			var
+			// roles
+			roles = [];
 
-				console.log('SINGED!', role);
-			}
+			console.log('CONNECTED!', clientInfo);
+
+			on('message', function(data, ret) {
+
+				console.log('SERVER!', data, CPU_CLUSTERING.getWorkerId());
+
+				ret('Thanks!');
+			});
+
+			send({
+				methodName : 'message',
+				data : {
+					msg : 'message from server. ' + CPU_CLUSTERING.getWorkerId()
+				}
+			}, function(retMsg) {
+
+				console.log('RETURN MESSAGE:', retMsg);
+			});
+
+			on('login', function(data) {
+				if (data.username === 'test' && data.password === '1234') {
+					roles.push('USER');
+				}
+			});
+
+			on('checkRole', function(role) {
+
+				if (CHECK_IS_IN({
+					data : roles,
+					value : role
+				}) === true) {
+
+					console.log('SINGED!', role);
+				}
+			});
+
+			// when disconnected
+			on('__DISCONNECTED', function() {
+				console.log('DISCONNECTED!');
+			});
 		});
 
-		// when disconnected
-		on('__DISCONNECTED', function() {
-			console.log('DISCONNECTED!');
-		});
+		webSocketFixRequest = socketServer.getWebSocketFixRequest();
 	});
-
-	webSocketFixRequest = socketServer.getWebSocketFixRequest();
 });

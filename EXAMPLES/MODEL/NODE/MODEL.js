@@ -5,14 +5,8 @@ require('../../../UPPERCASE.JS-NODE.js');
 // load UPPERCASE.IO-BOX.
 require('../../../UPPERCASE.IO-BOX/CORE.js');
 
-BOX('TestBox');
-
 // load UPPERCASE.IO-DB.
 require('../../../UPPERCASE.IO-DB/NODE.js');
-
-CONNECT_TO_DB_SERVER({
-	name : 'test'
-});
 
 // load UPPERCASE.IO-TRANSPORT.
 require('../../../UPPERCASE.IO-TRANSPORT/NODE.js');
@@ -24,84 +18,92 @@ require('../../../UPPERCASE.IO-ROOM/NODE.js');
 require('../../../UPPERCASE.IO-MODEL/COMMON.js');
 require('../../../UPPERCASE.IO-MODEL/NODE.js');
 
-CPU_CLUSTERING(function(workerData) {
+TEST('MODEL', function(ok) {
+	'use strict';
 
-	var
-	// web socket fix request
-	webSocketFixRequest,
+	CPU_CLUSTERING(function(workerData) {
 
-	// web server
-	webServer = WEB_SERVER(9127, function(requestInfo, response, onDisconnected) {
+		var
+		// web socket fix request
+		webSocketFixRequest,
 
-		// serve web socket fix request
-		if (requestInfo.uri === '__WEB_SOCKET_FIX') {
+		// web server
+		webServer = WEB_SERVER(9127, function(requestInfo, response, onDisconnected) {
 
-			webSocketFixRequest(requestInfo, {
-				response : response,
-				onDisconnected : onDisconnected
-			});
-		}
-	});
+			// serve web socket fix request
+			if (requestInfo.uri === '__WEB_SOCKET_FIX') {
 
-	webSocketFixRequest = LAUNCH_ROOM_SERVER({
-		socketServerPort : 9126,
-		webServer : webServer,
-		isCreateWebSocketFixRequestManager : true
-	}).getWebSocketFixRequest();
+				webSocketFixRequest(requestInfo, {
+					response : response,
+					onDisconnected : onDisconnected
+				});
+			}
+		});
 
-	NODE_CONFIG.isDBLogMode = true;
+		webSocketFixRequest = LAUNCH_ROOM_SERVER({
+			socketServerPort : 9126,
+			webServer : webServer,
+			isCreateWebSocketFixRequestManager : true
+		}).getWebSocketFixRequest();
 
-	BOX('TestBox');
+		NODE_CONFIG.isDBLogMode = true;
 
-	// Example Model
-	TestBox.TestModel = OBJECT({
+		CONNECT_TO_DB_SERVER({
+			name : 'test'
+		});
 
-		preset : function() {
-			'use strict';
+		BOX('TestBox');
 
-			return TestBox.MODEL;
-		},
+		// Example Model
+		TestBox.TestModel = OBJECT({
 
-		params : function() {
-			'use strict';
+			preset : function() {
+				'use strict';
 
-			var
-			// valid data set
-			validDataSet;
+				return TestBox.MODEL;
+			},
 
-			validDataSet = {
-				name : {
-					notEmpty : true,
-					size : {
-						min : 0,
-						max : 255
-					}
-				},
-				age : {
-					notEmpty : true,
-					integer : true
-				},
-				isMan : {
-					bool : true
-				}
-			};
+			params : function() {
+				'use strict';
 
-			return {
-				name : 'Test',
-				methodConfig : {
-					create : {
-						valid : VALID(validDataSet)
+				var
+				// valid data set
+				validDataSet;
+
+				validDataSet = {
+					name : {
+						notEmpty : true,
+						size : {
+							min : 0,
+							max : 255
+						}
 					},
-					update : {
-						valid : VALID(validDataSet)
+					age : {
+						notEmpty : true,
+						integer : true
 					},
-					remove : {
-						role : 'Test'
+					isMan : {
+						bool : true
 					}
-				}
-			};
-		}
-	});
+				};
 
-	INIT_OBJECTS();
+				return {
+					name : 'Test',
+					methodConfig : {
+						create : {
+							valid : VALID(validDataSet)
+						},
+						update : {
+							valid : VALID(validDataSet)
+						},
+						remove : {
+							role : 'Test'
+						}
+					}
+				};
+			}
+		});
+
+		INIT_OBJECTS();
+	});
 });

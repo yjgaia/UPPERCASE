@@ -5,17 +5,15 @@ require('../../../../UPPERCASE.JS-NODE.js');
 // load UPPERCASE.IO-UTIL.
 require('../../../../UPPERCASE.IO-UTIL/NODE.js');
 
-TEST('RUN_COFFEE', function(ok) {
+TEST('MINIFY_JS', function(ok) {
 	'use strict';
 
-	READ_FILE('sample.coffee', function(content) {
+	READ_FILE('MINIFY_JS.js', function(content) {
 
 		var
-		// coffee code
-		coffeeCode = content.toString();
+		// js code
+		jsCode = content.toString();
 
-		RUN_COFFEE(coffeeCode);
-
-		ok(number === -42);
+		console.log(MINIFY_JS(jsCode));
 	});
 });

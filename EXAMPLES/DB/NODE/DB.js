@@ -5,13 +5,13 @@ require('../../../UPPERCASE.JS-NODE.js');
 // load UPPERCASE.IO-BOX.
 require('../../../UPPERCASE.IO-BOX/CORE.js');
 
-BOX('TestBox');
-
 // load UPPERCASE.IO-DB.
 require('../../../UPPERCASE.IO-DB/NODE.js');
 
 TEST('DB', function(ok) {
 	'use strict';
+
+	BOX('TestBox');
 
 	INIT_OBJECTS();
 

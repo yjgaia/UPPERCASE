@@ -1,7 +1,8 @@
 /**
  * ImageMagick® read metadata.
  */
-global.IMAGEMAGICK_READ_METADATA = IMAGEMAGICK_READ_METADATA = METHOD(function() {'use strict';
+global.IMAGEMAGICK_READ_METADATA = IMAGEMAGICK_READ_METADATA = METHOD(function() {
+	'use strict';
 
 	var
 	//IMPORT: imagemagick
@@ -42,6 +43,7 @@ global.IMAGEMAGICK_READ_METADATA = IMAGEMAGICK_READ_METADATA = METHOD(function()
 					} else {
 						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_READ_METADATA] ERROR: ' + errorMsg));
 					}
+
 				} else {
 					callback(metadata);
 				}
