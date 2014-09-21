@@ -11,6 +11,7 @@ FOR_BOX(function(box) {
 			//REQUIRED: params.name
 			//OPTIONAL: params.initData
 			//OPTIONAL: params.methodConfig
+			//OPTIONAL: params.isNotUsingObjectId
 
 			var
 			// name
@@ -21,6 +22,9 @@ FOR_BOX(function(box) {
 
 			// method config
 			methodConfig = params.methodConfig,
+
+			// is not using object id
+			isNotUsingObjectId = params.isNotUsingObjectId,
 
 			// create config
 			createConfig,
@@ -48,6 +52,9 @@ FOR_BOX(function(box) {
 
 			// update valid
 			updateValid,
+
+			// is _id assignable
+			is_idAssignable,
 
 			// room
 			room = box.ROOM(name),
@@ -200,9 +207,7 @@ FOR_BOX(function(box) {
 					// init data.
 					if (initData !== undefined) {
 						EACH(initData, function(value, name) {
-							if (data[name] === undefined) {
-								data[name] = value;
-							}
+							data[name] = value;
 						});
 					}
 
@@ -560,7 +565,7 @@ FOR_BOX(function(box) {
 			}
 
 			// remove.
-			if (removeConfig !== false) {
+			if (removeConfig !== false && isNotUsingObjectId !== true) {
 
 				self.remove = remove = function(id, callbackOrHandlers) {
 					//REQUIRED: id
