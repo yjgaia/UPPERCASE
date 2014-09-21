@@ -56,18 +56,24 @@ global.BOOT = BOOT = function(params) {
 
 	// load coffeescript for node.
 	loadCoffeeForNode = function(path) {
-		RUN_COFFEE(READ_FILE({
-			path : path,
-			isSync : true
-		}).toString());
+		RUN_COFFEE({
+			code : READ_FILE({
+				path : path,
+				isSync : true
+			}).toString(),
+			fileName : path
+		});
 	},
 
 	// load coffeescript for browser.
 	loadCoffeeForBrowser = function(path) {
-		browserScript += COMPILE_COFFEE_TO_JS(READ_FILE({
-			path : path,
-			isSync : true
-		}).toString()) + '\n';
+		browserScript += COMPILE_COFFEE_TO_JS({
+			code : READ_FILE({
+				path : path,
+				isSync : true
+			}).toString(),
+			fileName : path
+		}) + '\n';
 	},
 
 	// load coffeescript for client.
@@ -83,18 +89,24 @@ global.BOOT = BOOT = function(params) {
 
 	// load literate coffeescript for node.
 	loadLiterateCoffeeForNode = function(path) {
-		RUN_LITCOFFEE(READ_FILE({
-			path : path,
-			isSync : true
-		}).toString());
+		RUN_LITCOFFEE({
+			code : READ_FILE({
+				path : path,
+				isSync : true
+			}).toString(),
+			fileName : path
+		});
 	},
 
 	// load literate coffeescript for browser.
 	loadLiterateCoffeeForBrowser = function(path) {
-		browserScript += COMPILE_LITCOFFEE_TO_JS(READ_FILE({
-			path : path,
-			isSync : true
-		}).toString()) + '\n';
+		browserScript += COMPILE_LITCOFFEE_TO_JS({
+			code : READ_FILE({
+				path : path,
+				isSync : true
+			}).toString(),
+			fileName : path
+		}) + '\n';
 	},
 
 	// load literate coffeescript for client.

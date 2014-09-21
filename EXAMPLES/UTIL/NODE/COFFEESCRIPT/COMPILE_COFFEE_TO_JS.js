@@ -18,4 +18,19 @@ TEST('COMPILE_COFFEE_TO_JS', function(ok) {
 
 		console.log(COMPILE_COFFEE_TO_JS(coffeeCode));
 	});
+
+	return;
+
+	// run error code.
+	READ_FILE('error.coffee', function(content) {
+
+		var
+		// coffee code
+		coffeeCode = content.toString();
+
+		RUN_COFFEE({
+			code : coffeeCode,
+			fileName : 'error.coffee'
+		});
+	});
 });

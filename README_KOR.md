@@ -257,10 +257,10 @@ TestBox.TestModel.checkIsExists({filter:}, {error:, success:})
 * `IMAGEMAGICK_IDENTIFY(path, function() {...})` `IMAGEMAGICK_IDENTIFY(path, {error: function() {...}, success : function() {...}})` ImageMagick® identify. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/IMAGEMAGICK/IMAGEMAGICK_IDENTIFY.js)
 * `IMAGEMAGICK_READ_METADATA(path, function() {...})` `IMAGEMAGICK_READ_METADATA(path, {error: function() {...}, success : function() {...}})` ImageMagick® read metadata. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/IMAGEMAGICK/IMAGEMAGICK_READ_METADATA.js)
 * `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:})` `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, function() {...})` `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, {error: function() {...}, success : function() {...}})` ImageMagick® resize. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/IMAGEMAGICK/.js)
-* `COMPILE_COFFEE_TO_JS(code)` compile CoffeeScript to JavaScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/COMPILE_COFFEE_TO_JS.js)
-* `COMPILE_LITCOFFEE_TO_JS(code)` compile literate CoffeeScript to JavaScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/COMPILE_LITCOFFEE_TO_JS.js)
-* `RUN_COFFEE(code)` run CoffeeScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/RUN_COFFEE.js)
-* `RUN_LITCOFFEE(code)` run literate CoffeeScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/RUN_LITCOFFEE.js)
+* `COMPILE_COFFEE_TO_JS(code)` `COMPILE_COFFEE_TO_JS({code:, fileName:})` compile CoffeeScript to JavaScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/COMPILE_COFFEE_TO_JS.js)
+* `COMPILE_LITCOFFEE_TO_JS(code)` `COMPILE_LITCOFFEE_TO_JS({code:, fileName:})` compile literate CoffeeScript to JavaScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/COMPILE_LITCOFFEE_TO_JS.js)
+* `RUN_COFFEE(code)` `RUN_COFFEE({code:, fileName:})` run CoffeeScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/RUN_COFFEE.js)
+* `RUN_LITCOFFEE(code)` `RUN_LITCOFFEE({code:, fileName:})` run literate CoffeeScript. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/UTIL/NODE/COFFEESCRIPT/RUN_LITCOFFEE.js)
 
 ###### IO
 * `CONNECT_TO_IO_SERVER(function(on, off, send) {...})` `CONNECT_TO_IO_SERVER({error:, success:})` connect to UPPERCASE.IO server.

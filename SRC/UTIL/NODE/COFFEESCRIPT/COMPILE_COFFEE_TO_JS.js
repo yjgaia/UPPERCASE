@@ -10,10 +10,28 @@ global.COMPILE_COFFEE_TO_JS = COMPILE_COFFEE_TO_JS = METHOD(function() {
 
 	return {
 
-		run : function(code) {
-			//REQUIRED: code
+		run : function(codeOrParams) {
+			//REQUIRED: codeOrParams
+			//REQUIRED: codeOrParams.code
+			//OPTIONAL: codeOrParams.fileName
 
-			return CoffeeScript.compile(String(code));
+			var
+			// code
+			code,
+
+			// file name
+			fileName;
+
+			if (CHECK_IS_DATA(codeOrParams) !== true) {
+				code = codeOrParams;
+			} else {
+				code = codeOrParams.code;
+				fileName = codeOrParams.fileName;
+			}
+
+			return CoffeeScript.compile(String(code), {
+				filename : fileName
+			});
 		}
 	};
 });

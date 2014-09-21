@@ -10,11 +10,28 @@ global.RUN_LITCOFFEE = RUN_LITCOFFEE = METHOD(function() {
 
 	return {
 
-		run : function(code) {
-			//REQUIRED: code
+		run : function(codeOrParams) {
+			//REQUIRED: codeOrParams
+			//REQUIRED: codeOrParams.code
+			//OPTIONAL: codeOrParams.fileName
 
-			return CoffeeScript.eval(String(code), {
-				literate : true
+			var
+			// code
+			code,
+
+			// file name
+			fileName;
+
+			if (CHECK_IS_DATA(codeOrParams) !== true) {
+				code = codeOrParams;
+			} else {
+				code = codeOrParams.code;
+				fileName = codeOrParams.fileName;
+			}
+
+			return CoffeeScript.run(String(code), {
+				literate : true,
+				filename : fileName
 			});
 		}
 	};
