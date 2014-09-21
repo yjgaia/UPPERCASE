@@ -29,7 +29,7 @@ global.RUN_COFFEE = RUN_COFFEE = METHOD(function() {
 				fileName = codeOrParams.fileName;
 			}
 
-			return CoffeeScript.run(String(code), {
+			return CoffeeScript.run(code.toString(), {
 				filename : fileName
 			});
 		}

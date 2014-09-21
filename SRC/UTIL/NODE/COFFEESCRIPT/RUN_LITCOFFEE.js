@@ -29,7 +29,7 @@ global.RUN_LITCOFFEE = RUN_LITCOFFEE = METHOD(function() {
 				fileName = codeOrParams.fileName;
 			}
 
-			return CoffeeScript.run(String(code), {
+			return CoffeeScript.run(code.toString(), {
 				literate : true,
 				filename : fileName
 			});

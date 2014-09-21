@@ -29,7 +29,7 @@ global.COMPILE_LITCOFFEE_TO_JS = COMPILE_LITCOFFEE_TO_JS = METHOD(function() {
 				fileName = codeOrParams.fileName;
 			}
 
-			return CoffeeScript.compile(String(code), {
+			return CoffeeScript.compile(code.toString(), {
 				literate : true,
 				filename : fileName
 			});

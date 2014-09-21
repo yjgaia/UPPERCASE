@@ -13,7 +13,7 @@ global.MINIFY_JS = MINIFY_JS = METHOD(function() {
 		run : function(code) {
 			//REQUIRED: code
 
-			return uglifyJS.minify(String(code), {
+			return uglifyJS.minify(code.toString(), {
 				fromString : true,
 				mangle : true
 			}).code;

@@ -13,7 +13,7 @@ global.MINIFY_CSS = MINIFY_CSS = METHOD(function() {
 		run : function(code) {
 			//REQUIRED: code
 
-			return sqwish.minify(String(code));
+			return sqwish.minify(code.toString());
 		}
 	};
 });
