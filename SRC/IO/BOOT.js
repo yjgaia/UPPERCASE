@@ -1001,6 +1001,9 @@ global.BOOT = BOOT = function(params) {
 								} else {
 									requestInfo.uri = boxName + '/R' + (uri === '' ? '' : ('/' + uri));
 								}
+
+							} else {
+								return isGoingOn;
 							}
 						}
 					}
