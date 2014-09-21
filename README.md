@@ -3,6 +3,9 @@ Easy, Clear, and Powerful Full-stack (server-to-client) MVC Middleware for Dynam
 
 Based on [UPPERCASE.JS](http://uppercaseseries.org/#JS)
 
+###### TRANSLATION
+* [한국어 문서](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/README_KOR.md)
+
 #### Dependencies
 * [Node.js](http://nodejs.org)
 * [MongoDB](http://www.mongodb.org)
