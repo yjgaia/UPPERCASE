@@ -563,6 +563,12 @@ global.BOOT = BOOT = function(params) {
 		// next web socket server host index
 		nextWebSocketServerHostIndex,
 
+		// box request listeners
+		boxRequestListeners = {},
+
+		// is going on
+		isGoingOn,
+
 		// web server
 		webServer,
 
@@ -608,7 +614,9 @@ global.BOOT = BOOT = function(params) {
 		// run all MAINs.
 		FOR_BOX(function(box) {
 			if (box.MAIN !== undefined) {
-				box.MAIN();
+				box.MAIN(function(requestListener) {
+					boxRequestListeners[box.boxName] = requestListener;
+				});
 			}
 		});
 
@@ -979,13 +987,20 @@ global.BOOT = BOOT = function(params) {
 							requestInfo.uri = uri;
 						} else {
 
-							if (CHECK_IS_IN({
-								array : boxNamesInBOXFolder,
-								value : boxName
-							}) === true) {
-								requestInfo.uri = 'BOX/' + boxName + '/R' + (uri === '' ? '' : ('/' + uri));
-							} else {
-								requestInfo.uri = boxName + '/R' + (uri === '' ? '' : ('/' + uri));
+							if (boxRequestListeners[boxName] !== undefined) {
+								isGoingOn = boxRequestListeners[boxName](requestInfo, response, onDisconnected, replaceRootPath, next);
+							}
+
+							if (isGoingOn !== true) {
+
+								if (CHECK_IS_IN({
+									array : boxNamesInBOXFolder,
+									value : boxName
+								}) === true) {
+									requestInfo.uri = 'BOX/' + boxName + '/R' + (uri === '' ? '' : ('/' + uri));
+								} else {
+									requestInfo.uri = boxName + '/R' + (uri === '' ? '' : ('/' + uri));
+								}
 							}
 						}
 					}
