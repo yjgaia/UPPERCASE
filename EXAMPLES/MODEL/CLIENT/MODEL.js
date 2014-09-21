@@ -65,7 +65,7 @@ TEST('MODEL', function(ok) {
 		}
 	});
 
-	TestBox.TestModel.find({}, function(r) {
+	TestBox.TestModel.find(function(r) {
 		console.log(r);
 	});
 
@@ -78,18 +78,18 @@ TEST('MODEL', function(ok) {
 	});
 
 	TestBox.TestModel.onNew({
-		factorCount : 1
+		age : 27
 	}, function(savedData) {
-		console.log('ON NEW when factorCount is 1: ', savedData);
+		console.log('ON NEW when age is 27: ', savedData);
 	});
 
 	TestBox.TestModel.onNewWatching({
-		factorCount : 2
+		age : 27
 	}, function(savedData, addUpdateHandler, addRemoveHandler, closeWatching) {
-		console.log('ON NEW when factorCount is 2: ', savedData);
+		console.log('ON NEW when age is 27: ', savedData);
 
 		addUpdateHandler(function(savedData) {
-			console.log('UPDATE! when factorCount is 2: ', savedData);
+			console.log('UPDATE! when age is 27: ', savedData);
 		});
 	});
 

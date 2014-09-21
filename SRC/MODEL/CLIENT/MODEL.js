@@ -930,17 +930,6 @@ FOR_BOX(function(box) {
 				//OPTIONAL: properties
 				//REQUIRED: func
 
-				var
-				// f.
-				f = function(savedData) {
-
-					var
-					// id
-					id = savedData.id;
-
-					func(savedData);
-				};
-
 				if (func === undefined) {
 					func = properties;
 
@@ -948,7 +937,7 @@ FOR_BOX(function(box) {
 						roomForCreate = box.ROOM(name + '/create');
 					}
 
-					roomForCreate.on('create', f);
+					roomForCreate.on('create', func);
 
 				} else {
 
@@ -962,7 +951,7 @@ FOR_BOX(function(box) {
 							room = roomsForCreate[propertyName + '/' + value] = box.ROOM(name + '/' + propertyName + '/' + value + '/create');
 						}
 
-						room.on('create', f);
+						room.on('create', func);
 					});
 				}
 			};
