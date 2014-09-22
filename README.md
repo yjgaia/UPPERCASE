@@ -35,7 +35,9 @@ Based on [UPPERCASE.JS](http://uppercaseseries.org/#JS)
 	vi .profile
 	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
 	```
-3. BOOT 스크립트로 프로젝트를 실행합니다.
+3. MongoDB를 실행합니다.
+	`mongod --fork --logpath /var/log/mongodb.log --logappend`
+4. BOOT 스크립트로 프로젝트를 실행합니다.
     예) Project.js
     ```javascript
     require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
