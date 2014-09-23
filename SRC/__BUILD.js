@@ -188,5 +188,43 @@ RUN(function() {
 	save('IO', ['IO/BOOT.js'], 'BOOT.js');
 	save('IO', ['IO/BROWSER_INIT.js'], 'BROWSER_INIT.js');
 
+	RUN(function() {
+
+		var
+		// copy.
+		copy = function(path) {
+
+			COPY_FILE({
+				from : '../' + path,
+				to : '../UPPERCASE.IO-TITANIUM-PACK/' + path,
+				isSync : true
+			});
+		};
+
+		log('MAKE [TITANIUM-PACK]');
+
+		// copy UPPERCASE.JS.
+		copy('UPPERCASE.JS-COMMON.js');
+		copy('UPPERCASE.JS-TITANIUM.js');
+		copy('UPPERCASE.JS-BROWSER.js');
+
+		// copy UPPERCASE.IO-BOX.
+		copy('UPPERCASE.IO-BOX/CORE.js');
+		copy('UPPERCASE.IO-BOX/CLIENT.js');
+		copy('UPPERCASE.IO-TRANSPORT/BROWSER.js');
+
+		// copy UPPERCASE.IO-ROOM.
+		copy('UPPERCASE.IO-ROOM/TITANIUM.js');
+		copy('UPPERCASE.IO-ROOM/CLIENT.js');
+
+		// copy UPPERCASE.IO-MODEL.
+		copy('UPPERCASE.IO-MODEL/COMMON.js');
+		copy('UPPERCASE.IO-MODEL/CLIENT.js');
+
+		// copy UPPERCASE.IO-IO.
+		copy('UPPERCASE.IO-IO/TITANIUM.js');
+		copy('UPPERCASE.IO-IO/CLIENT.js');
+	});
+
 	log('DONE.');
 });
