@@ -991,7 +991,7 @@ global.BOOT = BOOT = function(params) {
 								isGoingOn = boxRequestListeners[boxName](requestInfo, response, onDisconnected, replaceRootPath, next);
 							}
 
-							if (isGoingOn !== true) {
+							if (isGoingOn !== false) {
 
 								if (CHECK_IS_IN({
 									array : boxNamesInBOXFolder,
