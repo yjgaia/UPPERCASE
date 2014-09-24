@@ -57,7 +57,7 @@
 				<p>
 					run
 					<br>
-					EXAMPLES/ROOM/NODE/SERVER/LAUNCH_ROOM_SERVER.js
+					EXAMPLES/ROOM/NODE/RROM.js
 					<br>
 					before test.
 				</p>
@@ -164,15 +164,15 @@
 		<script>
 			READY(function() {
 
+				var
+				// test.
+				test;
+
 				// create test box.
 				BOX('TestBox');
 
 				// init all singleton classes.
 				INIT_OBJECTS();
-
-				var
-				// test.
-				test;
 
 				global.test = test = function(path) {
 					LOAD('EXAMPLES/' + path + '.js');

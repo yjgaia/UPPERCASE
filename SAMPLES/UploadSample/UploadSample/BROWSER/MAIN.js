@@ -4,13 +4,18 @@ UploadSample.MAIN = METHOD({
 		'use strict';
 
 		var
+		// preview
+		preview,
+
+		// wrapper
+		wrapper = DIV({
+			c : preview = DIV()
+		}).appendTo(BODY),
+
 		// iframe
 		iframe = IFRAME({
-			style : {
-				display : 'none'
-			},
 			name : '__UPLOAD_FORM'
-		}).appendTo(BODY);
+		}).appendTo(wrapper);
 
 		GET('__UPLOAD_SERVER_HOST?defaultHost=' + global.location.hostname, function(host) {
 
@@ -33,8 +38,6 @@ UploadSample.MAIN = METHOD({
 					type : 'file',
 					name : 'file',
 					isMultiple : true
-				}), INPUT({
-					type : 'submit'
 				})]
 			}));
 
@@ -42,10 +45,8 @@ UploadSample.MAIN = METHOD({
 				node : input,
 				name : 'change'
 			}, function(e) {
-				if (input.getValue() !== '') {
-					if (form !== undefined) {
-						form.submit(true);
-					}
+				if (form !== undefined) {
+					form.submit(true);
 				}
 			});
 
@@ -71,19 +72,22 @@ UploadSample.MAIN = METHOD({
 
 					console.log('over size:' + maxUploadFileMB);
 
-					input.setValue('');
-
 				} else if (fileDataSetStr !== undefined) {
 
 					fileDataSet = PARSE_STR(decodeURIComponent(fileDataSetStr));
 
+					preview.empty();
+
 					EACH(fileDataSet, function(fileData, i) {
+
 						fileDataSet[i] = UNPACK_DATA(fileData);
+
+						preview.append(IMG({
+							src : UploadSample.RF(fileData.id)
+						}));
 					});
 
 					console.log(fileDataSet);
-
-					input.setValue('');
 				}
 			});
 		});

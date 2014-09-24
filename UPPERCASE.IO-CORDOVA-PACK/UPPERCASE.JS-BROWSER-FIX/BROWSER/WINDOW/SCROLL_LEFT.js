@@ -1,0 +1,1 @@
+OVERRIDE(SCROLL_LEFT,function(){"use strict";global.SCROLL_LEFT=SCROLL_LEFT=METHOD({run:function(){var o=document.documentElement,l=document.body;return void 0!==o&&void 0!==o.scrollLeft&&o.scrollLeft>0?o.scrollLeft:void 0!==l&&void 0!==l.scrollLeft&&l.scrollLeft>0?l.scrollLeft:0}})});

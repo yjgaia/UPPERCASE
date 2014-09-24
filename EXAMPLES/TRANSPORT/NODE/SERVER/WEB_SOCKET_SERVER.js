@@ -13,6 +13,9 @@ TEST('WEB_SOCKET_SERVER', function(ok) {
 	CPU_CLUSTERING(function() {
 
 		var
+		// web server
+		webServer,
+		
 		// connection listener
 		connectionListener,
 
