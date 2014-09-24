@@ -130,7 +130,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
 
 				var
 				// host
-				host = params.host === undefined ? global.location.hostname : params.host,
+				host = params.host === undefined ? BROWSER_CONFIG.host : params.host,
 
 				// port
 				port = params.port,

@@ -711,7 +711,7 @@ global.BOOT = BOOT = function(params) {
 					// serve base style css.
 					else if (uri === '__CSS') {
 						replaceRootPath(UPPERCASE_IO_PATH);
-						requestInfo.uri = 'UPPERCASE.IO-IO/R/INIT_STYLE.css';
+						requestInfo.uri = 'UPPERCASE.IO-IO/R/BASE_STYLE.css';
 					}
 
 					// serve upload server host.

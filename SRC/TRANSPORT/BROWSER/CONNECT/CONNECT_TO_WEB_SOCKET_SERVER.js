@@ -15,7 +15,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
 		var
 		// host
-		host = params.host === undefined ? global.location.hostname : params.host,
+		host = params.host === undefined ? BROWSER_CONFIG.host : params.host,
 
 		// port
 		port = params.port,

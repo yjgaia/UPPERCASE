@@ -22,8 +22,10 @@ global.CONNECT_TO_IO_SERVER = CONNECT_TO_IO_SERVER = METHOD({
 		}
 
 		GET({
+			host : BROWSER_CONFIG.host,
+			port : BROWSER_CONFIG.port,
 			uri : '__WEB_SOCKET_SERVER_HOST',
-			paramStr : 'defaultHost=' + global.location.hostname
+			paramStr : 'defaultHost=' + BROWSER_CONFIG.host
 		}, {
 			error : errorListener,
 			success : function(host) {

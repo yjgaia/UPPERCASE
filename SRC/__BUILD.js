@@ -232,7 +232,7 @@ RUN(function() {
 
 		var
 		// init script
-		initScript = '',
+		initScript = 'global = window;\n',
 
 		// load.
 		load = function(path) {
@@ -280,6 +280,7 @@ RUN(function() {
 		// load UPPERCASE.IO-BOX.
 		load('UPPERCASE.IO-BOX/CORE.js');
 		load('UPPERCASE.IO-BOX/CLIENT.js');
+		load('UPPERCASE.IO-BOX/BROWSER.js');
 
 		// load UPPERCASE.IO-TRANSPORT.
 		load('UPPERCASE.IO-TRANSPORT/BROWSER.js');
@@ -287,6 +288,7 @@ RUN(function() {
 
 		// load UPPERCASE.IO-ROOM.
 		load('UPPERCASE.IO-ROOM/CLIENT.js');
+		load('UPPERCASE.IO-ROOM/BROWSER.js');
 
 		// load UPPERCASE.IO-MODEL.
 		load('UPPERCASE.IO-MODEL/COMMON.js');
@@ -294,11 +296,19 @@ RUN(function() {
 
 		// load UPPERCASE.IO-IO.
 		load('UPPERCASE.IO-IO/CLIENT.js');
+		load('UPPERCASE.IO-IO/BROWSER.js');
 
 		// write IMPORT.js
 		WRITE_FILE({
 			path : '../UPPERCASE.IO-CORDOVA-PACK/INIT.js',
 			content : initScript,
+			isSync : true
+		});
+		
+		// copy BASE_STYLE.css
+		COPY_FILE({
+			from : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
+			to : '../UPPERCASE.IO-CORDOVA-PACK/BASE_STYLE.css',
 			isSync : true
 		});
 	});
