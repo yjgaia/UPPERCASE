@@ -25,23 +25,7 @@ global.CONNECT_TO_IO_SERVER = CONNECT_TO_IO_SERVER = METHOD({
 		connectionListener,
 
 		// error listener
-		errorListener,
-
-		// host callback name
-		hostCallbackName,
-
-		// host callback.
-		hostCallback = function(host) {
-
-			CONNECT_TO_ROOM_SERVER({
-				host : host,
-				socketServerPort : socketServerPort,
-				webSocketServerPort : webServerPort
-			}, {
-				error : errorListener,
-				success : connectionListener
-			});
-		};
+		errorListener;
 
 		if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
 			connectionListener = connectionListenerOrListeners;
@@ -50,30 +34,24 @@ global.CONNECT_TO_IO_SERVER = CONNECT_TO_IO_SERVER = METHOD({
 			errorListener = connectionListenerOrListeners.error;
 		}
 
-		// when mobile web
-		if (Ti.Platform.name === 'mobileweb') {
+		GET({
+			host : doorServerHost,
+			port : webServerPort,
+			uri : Ti.Platform.name === 'mobileweb' ? '__WEB_SOCKET_SERVER_HOST' : '__SOCKET_SERVER_HOST',
+			paramStr : 'defaultHost=' + doorServerHost
+		}, {
+			error : errorListener,
+			success : function(host) {
 
-			window[ hostCallbackName = 'F' + RANDOM_STR(20)] = hostCallback;
-
-			LOAD({
-				host : doorServerHost,
-				port : webServerPort,
-				uri : '__WEB_SOCKET_SERVER_HOST',
-				paramStr : 'defaultHost=' + doorServerHost + '&callback=' + hostCallbackName,
-				isNoCache : true
-			});
-
-		} else {
-
-			GET({
-				host : doorServerHost,
-				port : webServerPort,
-				uri : '__WEB_SOCKET_SERVER_HOST',
-				paramStr : 'defaultHost=' + doorServerHost
-			}, {
-				error : errorListener,
-				success : hostCallback
-			});
-		}
+				CONNECT_TO_ROOM_SERVER({
+					host : host,
+					socketServerPort : socketServerPort,
+					webSocketServerPort : webServerPort
+				}, {
+					error : errorListener,
+					success : connectionListener
+				});
+			}
+		});
 	}
 });

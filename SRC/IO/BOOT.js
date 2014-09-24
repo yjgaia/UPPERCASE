@@ -720,13 +720,19 @@ global.BOOT = BOOT = function(params) {
 						if (uploadServerHosts === undefined) {
 
 							response({
-								content : wrapCallback(params.defaultHost)
+								content : wrapCallback(params.defaultHost),
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
 							});
 
 						} else {
 
 							response({
-								content : wrapCallback(uploadServerHosts[nextUploadServerHostIndex])
+								content : wrapCallback(uploadServerHosts[nextUploadServerHostIndex]),
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
 							});
 
 							nextUploadServerHostIndex += 1;
@@ -932,13 +938,19 @@ global.BOOT = BOOT = function(params) {
 						if (webSocketServerHosts === undefined) {
 
 							response({
-								content : wrapCallback(params.defaultHost)
+								content : wrapCallback(params.defaultHost),
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
 							});
 
 						} else {
 
 							response({
-								content : wrapCallback(webSocketServerHosts[nextWebSocketServerHostIndex])
+								content : wrapCallback(webSocketServerHosts[nextWebSocketServerHostIndex]),
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
 							});
 
 							nextWebSocketServerHostIndex += 1;
