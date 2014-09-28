@@ -22,7 +22,11 @@ READY(function() {
 			// retry.
 			INTERVAL(1, RAR(function() {
 
-				GET('__CHECK_ALIVE', function() {
+				GET({
+					host : BROWSER_CONFIG.host,
+					port : BROWSER_CONFIG.port,
+					uri : '__CHECK_ALIVE'
+				}, function() {
 					location.reload();
 				});
 			}));

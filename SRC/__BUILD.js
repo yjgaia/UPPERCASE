@@ -300,7 +300,7 @@ RUN(function() {
 
 		// write IMPORT.js
 		WRITE_FILE({
-			path : '../UPPERCASE.IO-CORDOVA-PACK/INIT.js',
+			path : '../UPPERCASE.IO-CORDOVA-PACK/IMPORT.js',
 			content : initScript,
 			isSync : true
 		});
@@ -309,6 +309,13 @@ RUN(function() {
 		COPY_FILE({
 			from : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
 			to : '../UPPERCASE.IO-CORDOVA-PACK/BASE_STYLE.css',
+			isSync : true
+		});
+		
+		// copy BASE_STYLE.css
+		COPY_FILE({
+			from : '../UPPERCASE.IO-IO/BROWSER_INIT.js',
+			to : '../UPPERCASE.IO-CORDOVA-PACK/INIT.js',
 			isSync : true
 		});
 	});
