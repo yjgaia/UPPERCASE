@@ -906,19 +906,13 @@ global.BOOT = BOOT = function(params) {
 						if (params.maxUploadFileMB !== undefined) {
 
 							response({
-								content : '<script>maxUploadFileMB=' + params.maxUploadFileMB + '</script>',
-								headers : {
-									'Access-Control-Allow-Origin' : '*'
-								}
+								content : '<script>' + params.overSizeCallback + '(' + params.maxUploadFileMB + ')</script>'
 							});
 
 						} else {
 
 							response({
-								content : '<script>fileDataSetStr=\'' + params.fileDataSetStr + '\'</script>',
-								headers : {
-									'Access-Control-Allow-Origin' : '*'
-								}
+								content : '<script>' + params.successCallback + '(' + params.fileDataSetStr + ')</script>'
 							});
 						}
 
