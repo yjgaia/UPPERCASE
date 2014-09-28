@@ -902,11 +902,8 @@ global.BOOT = BOOT = function(params) {
 
 					// serve upload callback.
 					else if (uri === '__UPLOAD_CALLBACK') {
-
 						replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.IO-UPLOAD/R');
 						requestInfo.uri = 'UPLOAD_CALLBACK.html';
-
-						return false;
 					}
 
 					// serve socket server host.
