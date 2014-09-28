@@ -19,23 +19,13 @@ READY(function() {
 
 		on('__DISCONNECTED', function() {
 
-			var
-			// reload.
-			reload = RAR(function() {
+			// retry.
+			INTERVAL(1, RAR(function() {
 
-				GET('__CHECK_ALIVE', {
-					error : function() {
-
-						// retry.
-						DELAY(1, function() {
-							reload();
-						});
-					},
-					success : function() {
-						location.reload();
-					}
+				GET('__CHECK_ALIVE', function() {
+					location.reload();
 				});
-			});
+			}));
 		});
 	});
 });
