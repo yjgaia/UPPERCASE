@@ -671,12 +671,25 @@ global.BOOT = BOOT = function(params) {
 
 					if (uri === '__CHECK_ALIVE') {
 
-						response({
-							content : '',
-							headers : {
-								'Access-Control-Allow-Origin' : '*'
-							}
-						});
+						// check version.
+						if (params.version !== version) {
+
+							response({
+								statusCode : 302,
+								headers : {
+									'Location' : '/__CHECK_ALIVE?version=' + version
+								}
+							});
+
+						} else {
+
+							response({
+								content : '',
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
+							});
+						}
 
 						return false;
 					}
