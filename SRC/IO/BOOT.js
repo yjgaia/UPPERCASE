@@ -817,7 +817,7 @@ global.BOOT = BOOT = function(params) {
 											response({
 												statusCode : 302,
 												headers : {
-													'Location' : params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet))
+													'Location' : params.callbackURL + '&fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet))
 												}
 											});
 										};
