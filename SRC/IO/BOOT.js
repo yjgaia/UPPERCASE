@@ -669,8 +669,20 @@ global.BOOT = BOOT = function(params) {
 						return params.callback !== undefined ? params.callback + '(\'' + str + '\')' : str;
 					};
 
+					if (uri === '__CHECK_ALIVE') {
+
+						response({
+							content : '',
+							headers : {
+								'Access-Control-Allow-Origin' : '*'
+							}
+						});
+
+						return false;
+					}
+
 					// serve browser script.
-					if (uri === '__SCRIPT') {
+					else if (uri === '__SCRIPT') {
 
 						// check ETag.
 						if (CONFIG.isDevMode !== true &&

@@ -23,7 +23,7 @@ READY(function() {
 			// reload.
 			reload = RAR(function() {
 
-				GET('', {
+				GET('__CHECK_ALIVE', {
 					error : function() {
 
 						// retry.
