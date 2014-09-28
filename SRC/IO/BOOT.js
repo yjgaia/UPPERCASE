@@ -815,8 +815,10 @@ global.BOOT = BOOT = function(params) {
 										return function() {
 
 											response({
-												content : '<script>location.href=\'' + params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet)) + '\'</script>',
-												contentType : 'text/html'
+												statusCode : 302,
+												headers : {
+													'Location' : params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet))
+												}
 											});
 										};
 									}]);
