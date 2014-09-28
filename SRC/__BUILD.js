@@ -285,6 +285,9 @@ RUN(function() {
 		// load UPPERCASE.IO-TRANSPORT.
 		load('UPPERCASE.IO-TRANSPORT/BROWSER.js');
 		copyFolder('UPPERCASE.IO-TRANSPORT/R');
+		
+		// load UPPERCASE.IO-UPLOAD.
+		copyFolder('UPPERCASE.IO-UPLOAD/R');
 
 		// load UPPERCASE.IO-ROOM.
 		load('UPPERCASE.IO-ROOM/CLIENT.js');
@@ -305,14 +308,14 @@ RUN(function() {
 			isSync : true
 		});
 		
-		// copy BASE_STYLE.css
+		// copy BASE_STYLE
 		COPY_FILE({
 			from : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
 			to : '../UPPERCASE.IO-CORDOVA-PACK/BASE_STYLE.css',
 			isSync : true
 		});
 		
-		// copy BASE_STYLE.css
+		// copy BROWSER_INIT
 		COPY_FILE({
 			from : '../UPPERCASE.IO-IO/BROWSER_INIT.js',
 			to : '../UPPERCASE.IO-CORDOVA-PACK/INIT.js',
