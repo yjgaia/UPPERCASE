@@ -817,7 +817,7 @@ global.BOOT = BOOT = function(params) {
 											response({
 												statusCode : 302,
 												headers : {
-													'Location' : params.callbackURL + '&fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet))
+													'Location' : params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet))
 												}
 											});
 										};
@@ -906,13 +906,13 @@ global.BOOT = BOOT = function(params) {
 						if (params.maxUploadFileMB !== undefined) {
 
 							response({
-								content : '<script>' + params.overSizeCallback + '(' + params.maxUploadFileMB + ')</script>'
+								content : '<script>maxUploadFileMB=' + params.maxUploadFileMB + '</script>'
 							});
 
 						} else {
 
 							response({
-								content : '<script>' + params.successCallback + '(' + params.fileDataSetStr + ')</script>'
+								content : '<script>fileDataSetStr=\'' + params.fileDataSetStr + '\'</script>'
 							});
 						}
 
