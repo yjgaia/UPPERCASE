@@ -204,13 +204,6 @@ FOR_BOX(function(box) {
 					// valid result
 					validResult;
 
-					// init data.
-					if (initData !== undefined) {
-						EACH(initData, function(value, name) {
-							data[name] = value;
-						});
-					}
-
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
@@ -235,6 +228,13 @@ FOR_BOX(function(box) {
 						}
 
 					} else {
+
+						// init data.
+						if (initData !== undefined) {
+							EACH(initData, function(value, name) {
+								data[name] = value;
+							});
+						}
 
 						room.send({
 							methodName : 'create',
