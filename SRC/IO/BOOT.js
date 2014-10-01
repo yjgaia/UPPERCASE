@@ -21,8 +21,11 @@ global.BOOT = BOOT = function(params) {
 	// root path
 	rootPath = process.cwd(),
 
+	// browser script content infos
+	browserScriptContentInfos = [],
+
 	// browser script
-	browserScript = 'global = window;\n',
+	browserScript = '',
 
 	// index page content
 	indexPageContent = '',
@@ -35,12 +38,29 @@ global.BOOT = BOOT = function(params) {
 		require(path);
 	},
 
+	// add content to browser script.
+	addContentToBrowserScript = function(content) {
+		browserScript += content;
+		browserScriptContentInfos.push({
+			type : 'content',
+			content : content
+		});
+	},
+
 	// load js for browser.
-	loadJSForBrowser = function(path) {
+	loadJSForBrowser = function(path, isNotToSavePath) {
+
 		browserScript += READ_FILE({
 			path : path,
 			isSync : true
 		}).toString() + '\n';
+
+		if (isNotToSavePath !== true) {
+			browserScriptContentInfos.push({
+				type : 'js',
+				path : path
+			});
+		}
 	},
 
 	// load js for client.
@@ -66,7 +86,8 @@ global.BOOT = BOOT = function(params) {
 	},
 
 	// load coffeescript for browser.
-	loadCoffeeForBrowser = function(path) {
+	loadCoffeeForBrowser = function(path, isNotToSavePath) {
+
 		browserScript += COMPILE_COFFEE_TO_JS({
 			code : READ_FILE({
 				path : path,
@@ -74,6 +95,13 @@ global.BOOT = BOOT = function(params) {
 			}).toString(),
 			fileName : path
 		}) + '\n';
+
+		if (isNotToSavePath !== true) {
+			browserScriptContentInfos.push({
+				type : 'coffee',
+				path : path
+			});
+		}
 	},
 
 	// load coffeescript for client.
@@ -99,7 +127,8 @@ global.BOOT = BOOT = function(params) {
 	},
 
 	// load literate coffeescript for browser.
-	loadLiterateCoffeeForBrowser = function(path) {
+	loadLiterateCoffeeForBrowser = function(path, isNotToSavePath) {
+
 		browserScript += COMPILE_LITCOFFEE_TO_JS({
 			code : READ_FILE({
 				path : path,
@@ -107,6 +136,13 @@ global.BOOT = BOOT = function(params) {
 			}).toString(),
 			fileName : path
 		}) + '\n';
+
+		if (isNotToSavePath !== true) {
+			browserScriptContentInfos.push({
+				type : 'litcoffee',
+				path : path
+			});
+		}
 	},
 
 	// load literate coffeescript for client.
@@ -118,6 +154,35 @@ global.BOOT = BOOT = function(params) {
 	loadLiterateCoffeeForCommon = function(path) {
 		loadLiterateCoffeeForNode(path);
 		loadLiterateCoffeeForBrowser(path);
+	},
+
+	// reload browser script.
+	reloadBrowserScript = function() {
+
+		browserScript = '';
+
+		EACH(browserScriptContentInfos, function(browserScriptContentInfo) {
+
+			// content
+			if (browserScriptContentInfo.type === 'content') {
+				browserScript += browserScriptContentInfo.content;
+			}
+
+			// js
+			else if (browserScriptContentInfo.type === 'js') {
+				loadJSForBrowser(browserScriptContentInfo.path, true);
+			}
+
+			// coffee
+			else if (browserScriptContentInfo.type === 'coffee') {
+				loadCoffeeForBrowser(browserScriptContentInfo.path, true);
+			}
+
+			// litcoffee
+			else if (browserScriptContentInfo.type === 'litcoffee') {
+				loadLiterateCoffeeForBrowser(browserScriptContentInfo.path, true);
+			}
+		});
 	},
 
 	// check is allowed folder name.
@@ -168,6 +233,8 @@ global.BOOT = BOOT = function(params) {
 
 	// run.
 	run;
+
+	addContentToBrowserScript('global = window;\n');
 
 	loadUJS = function() {
 
@@ -223,8 +290,8 @@ global.BOOT = BOOT = function(params) {
 				extend : _CONFIG
 			});
 
-			// add to browser script.
-			browserScript += 'EXTEND({ origin : CONFIG, extend : ' + stringifyJSONWithFunction(_CONFIG) + ' });\n';
+			// add CONFIG to browser script.
+			addContentToBrowserScript('EXTEND({ origin : CONFIG, extend : ' + stringifyJSONWithFunction(_CONFIG) + ' });\n');
 		}
 
 		// when master and dev mode, write version file.
@@ -256,7 +323,7 @@ global.BOOT = BOOT = function(params) {
 
 		// set version.
 		CONFIG.version = version;
-		browserScript += 'CONFIG.version = \'' + version + '\'\n';
+		addContentToBrowserScript('CONFIG.version = \'' + version + '\'\n');
 
 		// override NODE_CONFIG.
 		if (_NODE_CONFIG !== undefined) {
@@ -271,17 +338,17 @@ global.BOOT = BOOT = function(params) {
 		// override BROWSER_CONFIG.
 		if (_BROWSER_CONFIG !== undefined) {
 
-			// add to browser script.
-			browserScript += 'EXTEND({ origin : BROWSER_CONFIG, extend : ' + stringifyJSONWithFunction(_BROWSER_CONFIG) + ' });\n';
+			// add BROWSER_CONFIG to browser script.
+			addContentToBrowserScript('EXTEND({ origin : BROWSER_CONFIG, extend : ' + stringifyJSONWithFunction(_BROWSER_CONFIG) + ' });\n');
 		}
 
 		// set fix scripts folder path.
-		browserScript += 'BROWSER_CONFIG.fixScriptsFolderPath = \'/UPPERCASE.JS-BROWSER-FIX\';\n';
-		browserScript += 'BROWSER_CONFIG.fixTransportScriptsFolderPath = \'/UPPERCASE.IO-TRANSPORT\';\n';
+		addContentToBrowserScript('BROWSER_CONFIG.fixScriptsFolderPath = \'/UPPERCASE.JS-BROWSER-FIX\';\n');
+		addContentToBrowserScript('BROWSER_CONFIG.fixTransportScriptsFolderPath = \'/UPPERCASE.IO-TRANSPORT\';\n');
 
 		// add ignore attr $inc to VALID.
 		VALID.addIgnoreAttr('$inc');
-		browserScript += 'VALID.addIgnoreAttr(\'$inc\');\n';
+		addContentToBrowserScript('VALID.addIgnoreAttr(\'$inc\');\n');
 	};
 
 	initBoxes = function(next) {
@@ -302,8 +369,8 @@ global.BOOT = BOOT = function(params) {
 					// create box.
 					BOX(folderName);
 
-					// add to browser script.
-					browserScript += 'BOX(\'' + folderName + '\');\n';
+					// add box to browser script.
+					addContentToBrowserScript('BOX(\'' + folderName + '\');\n');
 				}
 			});
 		});
@@ -326,8 +393,8 @@ global.BOOT = BOOT = function(params) {
 						// create box.
 						BOX(folderName);
 
-						// add to browser script.
-						browserScript += 'BOX(\'' + folderName + '\');\n';
+						// add box to browser script.
+						addContentToBrowserScript('BOX(\'' + folderName + '\');\n');
 
 						// save box name.
 						boxNamesInBOXFolder.push(folderName);
@@ -688,37 +755,46 @@ global.BOOT = BOOT = function(params) {
 					// serve browser script.
 					else if (uri === '__SCRIPT') {
 
-						// check ETag.
-						if (CONFIG.isDevMode !== true &&
+						if (CONFIG.isDevMode === true) {
 
-						// check version.
-						headers['if-none-match'] === version) {
-
-							// response cached.
-							response({
-								statusCode : 304
-							});
-						}
-
-						// redirect correct version uri.
-						else if (CONFIG.isDevMode !== true && params.version !== version) {
-
-							response({
-								statusCode : 302,
-								headers : {
-									'Location' : '/__SCRIPT?version=' + version
-								}
-							});
-						}
-
-						// response browser script.
-						else {
+							reloadBrowserScript();
 
 							response({
 								contentType : 'text/javascript',
-								content : browserScript,
-								version : version
+								content : browserScript
 							});
+
+						} else {
+
+							// check ETag.
+							if (headers['if-none-match'] === version) {
+
+								// response cached.
+								response({
+									statusCode : 304
+								});
+							}
+
+							// redirect correct version uri.
+							else if (params.version !== version) {
+
+								response({
+									statusCode : 302,
+									headers : {
+										'Location' : '/__SCRIPT?version=' + version
+									}
+								});
+							}
+
+							// response browser script.
+							else {
+
+								response({
+									contentType : 'text/javascript',
+									content : browserScript,
+									version : version
+								});
+							}
 						}
 
 						return false;
