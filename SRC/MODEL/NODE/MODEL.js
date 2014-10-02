@@ -374,6 +374,13 @@ FOR_BOX(function(box) {
 					// is not run next
 					isNotRunNext;
 
+					// init data.
+					if (initData !== undefined) {
+						EACH(initData, function(value, name) {
+							data[name] = value;
+						});
+					}
+
 					// valid data.
 					if (createValid !== undefined) {
 						validResult = createValid.check(data);
@@ -389,13 +396,6 @@ FOR_BOX(function(box) {
 
 					// when has not error
 					else {
-
-						// init data.
-						if (initData !== undefined) {
-							EACH(initData, function(value, name) {
-								data[name] = value;
-							});
-						}
 
 						NEXT([
 						function(next) {

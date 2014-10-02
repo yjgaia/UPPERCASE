@@ -215,6 +215,13 @@ FOR_BOX(function(box) {
 						}
 					}
 
+					// init data.
+					if (initData !== undefined) {
+						EACH(initData, function(value, name) {
+							data[name] = value;
+						});
+					}
+
 					if (createValid !== undefined) {
 						validResult = createValid.check(data);
 					}
@@ -228,13 +235,6 @@ FOR_BOX(function(box) {
 						}
 
 					} else {
-
-						// init data.
-						if (initData !== undefined) {
-							EACH(initData, function(value, name) {
-								data[name] = value;
-							});
-						}
 
 						room.send({
 							methodName : 'create',
