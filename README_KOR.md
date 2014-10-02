@@ -10,7 +10,8 @@
 
 #### 지원 플랫폼
 * 웹 브라우저 (최신 브라우저 및 인터넷 익스플로러 5.5 이상부터 지원)
-* [Titanium](http://www.appcelerator.com/titanium/)
+* [Apache Cordova](http://cordova.apache.org/)
+* [Appcelerator Titanium](http://www.appcelerator.com/titanium/)
 
 #### 샘플 프로젝트
 * Sample

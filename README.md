@@ -13,7 +13,8 @@ Based on [UPPERCASE.JS](http://uppercaseseries.org/#JS)
 
 #### Supported platforms
 * Modern web browsers (including Internet explorers 5.5 and above)
-* [Titanium](http://www.appcelerator.com/titanium/)
+* [Apache Cordova](http://cordova.apache.org/)
+* [Appcelerator Titanium](http://www.appcelerator.com/titanium/)
 
 #### 샘플 프로젝트
 * Sample
