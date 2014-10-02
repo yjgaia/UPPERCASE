@@ -128,14 +128,14 @@ FOR_BOX(function(box) {
 			// on new watching.
 			onNewWatching,
 
-			// close on new.
-			closeOnNew,
+			// off new.
+			offNew,
 
 			// on remove.
 			onRemove,
 
-			// close on remove.
-			closeOnRemove;
+			// off remove.
+			offRemove;
 
 			// init method config.
 			if (methodConfig !== undefined) {
@@ -1046,8 +1046,9 @@ FOR_BOX(function(box) {
 				}
 			};
 
-			self.closeOnNew = closeOnNew = function(properties) {
+			self.offNew = offNew = function(properties, func) {
 				//OPTIONAL: properties
+				//OPTIONAL: func
 
 				if (properties === undefined) {
 
@@ -1132,8 +1133,9 @@ FOR_BOX(function(box) {
 				}
 			};
 
-			self.closeOnRemove = closeOnRemove = function(properties) {
+			self.offRemove = offRemove = function(properties, func) {
 				//OPTIONAL: properties
+				//OPTIONAL: func
 
 				if (properties === undefined) {
 
