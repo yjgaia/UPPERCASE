@@ -59,27 +59,6 @@ FOR_BOX(function(box) {
 			// room
 			room = box.ROOM(name),
 
-			// room for create
-			roomForCreate,
-
-			// rooms for create
-			roomsForCreate = {},
-
-			// room for remove
-			roomForRemove,
-
-			// rooms for remove
-			roomsForRemove = {},
-
-			// sub rooms
-			subRooms = [],
-
-			// sub rooms for create
-			subRoomsForCreate = [],
-
-			// sub room map for create
-			subRoomMapForCreate = {},
-
 			// get name.
 			getName,
 
@@ -128,14 +107,8 @@ FOR_BOX(function(box) {
 			// on new watching.
 			onNewWatching,
 
-			// off new.
-			offNew,
-
 			// on remove.
-			onRemove,
-
-			// off remove.
-			offRemove;
+			onRemove;
 
 			// init method config.
 			if (methodConfig !== undefined) {
@@ -306,7 +279,7 @@ FOR_BOX(function(box) {
 					// callback
 					callback,
 
-					// not exists handler
+					// not exists handler.
 					notExistsHandler,
 
 					// not valid handler.
@@ -378,17 +351,23 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
-					// not exists handler
+					// not exists handler.
 					notExistsHandler,
 
 					// not valid handler.
 					notAuthedHandler,
 
 					// error handler.
-					errorHandler;
+					errorHandler,
+
+					// is exited
+					isExited,
+
+					// sub room
+					subRoom;
 
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 						callback = callbackOrHandlers;
@@ -404,15 +383,12 @@ FOR_BOX(function(box) {
 						success : function(savedData) {
 
 							var
-							// sub room
-							subRoom,
+							// exit.
+							exit;
 
-							// close watching.
-							closeWatching;
+							if (isExited !== true && callback !== undefined) {
 
-							if (callback !== undefined) {
-
-								subRooms.push( subRoom = box.ROOM(name + '/' + savedData.id));
+								subRoom = box.ROOM(name + '/' + savedData.id);
 
 								callback(savedData,
 
@@ -425,19 +401,16 @@ FOR_BOX(function(box) {
 								function(callback) {
 									subRoom.on('remove', function(result) {
 										callback(result);
-										closeWatching();
+										exit();
 									});
 								},
 
-								// close watching.
-								closeWatching = function() {
-
-									REMOVE({
-										array : subRooms,
-										value : subRoom
-									});
-
-									subRoom.exit();
+								// exit.
+								exit = function() {
+									if (subRoom !== undefined) {
+										subRoom.exit();
+										subRoom = undefined;
+									}
 								});
 							}
 						},
@@ -445,6 +418,25 @@ FOR_BOX(function(box) {
 						notExists : notExistsHandler,
 						notAuthed : notAuthedHandler,
 						error : errorHandler
+					});
+
+					return OBJECT({
+
+						init : function(inner, self) {
+
+							var
+							// exit.
+							exit;
+
+							self.exit = exit = function() {
+
+								if (subRoom !== undefined) {
+									subRoom.exit();
+								}
+
+								isExited = true;
+							};
+						}
 					});
 				};
 			}
@@ -467,7 +459,7 @@ FOR_BOX(function(box) {
 					// not valid handler.
 					notValidHandler,
 
-					// not exists handler
+					// not exists handler.
 					notExistsHandler,
 
 					// not valid handler.
@@ -575,7 +567,7 @@ FOR_BOX(function(box) {
 					// callback
 					callback,
 
-					// not exists handler
+					// not exists handler.
 					notExistsHandler,
 
 					// not valid handler.
@@ -725,7 +717,13 @@ FOR_BOX(function(box) {
 					notAuthedHandler,
 
 					// error handler.
-					errorHandler;
+					errorHandler,
+
+					// is exited
+					isExited,
+
+					// sub rooms
+					subRooms = {};
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -746,13 +744,10 @@ FOR_BOX(function(box) {
 						success : function(savedDataSet) {
 
 							var
-							// inner sub rooms
-							innerSubRooms = {},
+							// exit.
+							exit;
 
-							// close watching.
-							closeWatching;
-
-							if (callback !== undefined) {
+							if (isExited !== true && callback !== undefined) {
 
 								EACH(savedDataSet, function(savedData, i) {
 
@@ -760,36 +755,29 @@ FOR_BOX(function(box) {
 									// id
 									id = savedData.id;
 
-									subRooms.push(innerSubRooms[id] = box.ROOM(name + '/' + id));
+									subRooms[id] = box.ROOM(name + '/' + id);
 								});
 
 								callback(savedDataSet,
 
 								// add update handler.
 								function(id, callback) {
-									innerSubRooms[id].on('update', callback);
+									subRooms[id].on('update', callback);
 								},
 
 								// add remove handler.
 								function(id, callback) {
-									innerSubRooms[id].on('remove', function(result) {
+									subRooms[id].on('remove', function(result) {
 										callback(result);
-										closeWatching(id);
+										exit(id);
 									});
 								},
 
-								// close watching.
-								closeWatching = function(id) {
-
-									if (innerSubRooms[id] !== undefined) {
-
-										REMOVE({
-											array : subRooms,
-											value : innerSubRooms[id]
-										});
-
-										innerSubRooms[id].exit();
-										delete innerSubRooms[id];
+								// exit.
+								exit = function(id) {
+									if (subRooms[id] !== undefined) {
+										subRooms[id].exit();
+										delete subRooms[id];
 									}
 								});
 							}
@@ -797,6 +785,25 @@ FOR_BOX(function(box) {
 
 						notAuthed : notAuthedHandler,
 						error : errorHandler
+					});
+
+					return OBJECT({
+
+						init : function(inner, self) {
+
+							var
+							// exit.
+							exit;
+
+							self.exit = exit = function() {
+
+								EACH(subRooms, function(subRoom) {
+									subRoom.exit();
+								});
+
+								isExited = true;
+							};
+						}
 					});
 				};
 			}
@@ -815,7 +822,7 @@ FOR_BOX(function(box) {
 					// not valid handler.
 					notAuthedHandler,
 
-					// error handler
+					// error handler.
 					errorHandler;
 
 					// init params.
@@ -880,7 +887,7 @@ FOR_BOX(function(box) {
 					// not valid handler.
 					notAuthedHandler,
 
-					// error handler
+					// error handler.
 					errorHandler;
 
 					// init params.
@@ -931,43 +938,67 @@ FOR_BOX(function(box) {
 				};
 			}
 
-			self.onNew = onNew = function(properties, func) {
+			self.onNew = onNew = function(properties, handler) {
 				//OPTIONAL: properties
-				//REQUIRED: func
+				//REQUIRED: handler
 
-				if (func === undefined) {
-					func = properties;
+				var
+				// room for create
+				roomForCreate;
 
-					if (roomForCreate === undefined) {
-						roomForCreate = box.ROOM(name + '/create');
-					}
+				if (handler === undefined) {
+					handler = properties;
 
-					roomForCreate.on('create', func);
+					( roomForCreate = box.ROOM(name + '/create')).on('create', handler);
 
 				} else {
 
 					EACH(properties, function(value, propertyName) {
 
-						var
-						// room
-						room = roomsForCreate[propertyName + '/' + value];
+						( roomForCreate = box.ROOM(name + '/' + propertyName + '/' + value + '/create')).on('create', function(savedData) {
 
-						if (room === undefined) {
-							room = roomsForCreate[propertyName + '/' + value] = box.ROOM(name + '/' + propertyName + '/' + value + '/create');
-						}
+							if (EACH(properties, function(value, propertyName) {
 
-						room.on('create', func);
+								if (savedData[propertyName] !== value) {
+									return false;
+								}
+							}) === true) {
+								handler(savedData);
+							}
+						});
+
+						return false;
 					});
 				}
+
+				return OBJECT({
+
+					init : function(inner, self) {
+
+						var
+						// exit.
+						exit;
+
+						self.exit = exit = function() {
+							roomForCreate.exit();
+						};
+					}
+				});
 			};
 
-			self.onNewWatching = onNewWatching = function(properties, func) {
-				//OPTIONAL: properties
-				//REQUIRED: func
+			self.onNewWatching = onNewWatching = function(properties, handler) {
+				//OPTIONAL: properties (or operation)
+				//REQUIRED: handler
 
 				var
-				// f.
-				f = function(savedData, subRoomsForCreate) {
+				// room for create
+				roomForCreate,
+
+				// sub rooms
+				subRooms = [],
+
+				// inner handler.
+				innerHandler = function(savedData) {
 
 					var
 					// id
@@ -980,9 +1011,8 @@ FOR_BOX(function(box) {
 					closeWatching;
 
 					subRooms.push( subRoom = box.ROOM(name + '/' + id));
-					subRoomsForCreate.push(subRoom);
 
-					func(savedData,
+					handler(savedData,
 
 					// add update handler.
 					function(callback) {
@@ -1009,151 +1039,109 @@ FOR_BOX(function(box) {
 					});
 				};
 
-				if (func === undefined) {
-					func = properties;
+				if (handler === undefined) {
+					handler = properties;
 
-					if (roomForCreate === undefined) {
-						roomForCreate = box.ROOM(name + '/create');
-					}
-
-					roomForCreate.on('create', function(savedData) {
-						f(savedData, subRoomsForCreate);
+					( roomForCreate = box.ROOM(name + '/create')).on('create', function(savedData) {
+						innerHandler(savedData);
 					});
 
 				} else {
 
 					EACH(properties, function(value, propertyName) {
+
+						( roomForCreate = box.ROOM(name + '/' + propertyName + '/' + value + '/create')).on('create', function(savedData) {
+
+							if (EACH(properties, function(value, propertyName) {
+
+								if (savedData[propertyName] !== value) {
+									return false;
+								}
+							}) === true) {
+								innerHandler(savedData);
+							}
+						});
+
+						return false;
+					});
+				}
+
+				return OBJECT({
+
+					init : function(inner, self) {
 
 						var
-						// room
-						room = roomsForCreate[propertyName + '/' + value],
+						// exit.
+						exit;
 
-						// sub rooms for create
-						subRoomsForCreate = subRoomMapForCreate[propertyName + '/' + value];
+						self.exit = exit = function() {
 
-						if (room === undefined) {
-							room = roomsForCreate[propertyName + '/' + value] = box.ROOM(name + '/' + propertyName + '/' + value + '/create');
-						}
+							roomForCreate.exit();
 
-						if (subRoomsForCreate === undefined) {
-							subRoomsForCreate = subRoomMapForCreate[propertyName + '/' + value] = [];
-						}
-
-						room.on('create', function(savedData) {
-							f(savedData, subRoomsForCreate);
-						});
-					});
-				}
-			};
-
-			self.offNew = offNew = function(properties, func) {
-				//OPTIONAL: properties
-				//OPTIONAL: func
-
-				if (properties === undefined) {
-
-					if (roomForCreate !== undefined) {
-						roomForCreate.exit();
-						roomForCreate = undefined;
-					}
-
-					EACH(subRoomsForCreate, function(subRoom) {
-
-						subRoom.exit();
-
-						REMOVE({
-							array : subRooms,
-							value : subRoom
-						});
-					});
-
-					subRoomsForCreate = [];
-
-				} else {
-
-					EACH(properties, function(value, propertyName) {
-
-						if (roomsForCreate[propertyName + '/' + value] !== undefined) {
-							roomsForCreate[propertyName + '/' + value].exit();
-							delete roomsForCreate[propertyName + '/' + value];
-						}
-
-						EACH(subRoomMapForCreate[propertyName + '/' + value], function(subRoom) {
-
-							subRoom.exit();
-
-							REMOVE({
-								array : subRooms,
-								value : subRoom
+							EACH(subRooms, function(subRoom) {
+								subRoom.exit();
 							});
-						});
-						delete subRoomMapForCreate[propertyName + '/' + value];
-					});
-				}
+						};
+					}
+				});
 			};
 
-			self.onRemove = onRemove = function(properties, func) {
-				//OPTIONAL: properties
-				//REQUIRED: func
+			self.onRemove = onRemove = function(properties, handler) {
+				//OPTIONAL: properties (or operation)
+				//REQUIRED: handler
 
 				var
-				// f.
-				f = function(savedData) {
+				// room for removes
+				roomForRemove,
+
+				// inner handler.
+				innerHandler = function(savedData) {
 
 					var
 					// id
 					id = savedData.id;
 
-					func(savedData);
+					handler(savedData);
 				};
 
-				if (func === undefined) {
-					func = properties;
+				if (handler === undefined) {
+					handler = properties;
 
-					if (roomForRemove === undefined) {
-						roomForRemove = box.ROOM(name + '/remove');
-					}
-
-					roomForRemove.on('remove', f);
+					( roomForRemove = box.ROOM(name + '/remove')).on('remove', innerHandler);
 
 				} else {
 
 					EACH(properties, function(value, propertyName) {
+
+						( roomForRemove = box.ROOM(name + '/' + propertyName + '/' + value + '/remove')).on('remove', function(savedData) {
+
+							if (EACH(properties, function(value, propertyName) {
+
+								if (savedData[propertyName] !== value) {
+									return false;
+								}
+							}) === true) {
+								innerHandler(savedData);
+							}
+						});
+
+						return false;
+					});
+				}
+
+				return OBJECT({
+
+					init : function(inner, self) {
 
 						var
-						// room
-						room = roomsForRemove[propertyName + '/' + value];
+						// exit.
+						exit;
 
-						if (room === undefined) {
-							room = roomsForRemove[propertyName + '/' + value] = box.ROOM(name + '/' + propertyName + '/' + value + '/remove');
-						}
-
-						room.on('remove', f);
-					});
-				}
-			};
-
-			self.offRemove = offRemove = function(properties, func) {
-				//OPTIONAL: properties
-				//OPTIONAL: func
-
-				if (properties === undefined) {
-
-					if (roomForRemove !== undefined) {
-						roomForRemove.exit();
-						roomForRemove = undefined;
+						self.exit = exit = function() {
+							roomForRemove.exit();
+						};
 					}
-
-				} else {
-
-					EACH(properties, function(value, propertyName) {
-
-						if (roomsForRemove[propertyName + '/' + value] !== undefined) {
-							roomsForRemove[propertyName + '/' + value].exit();
-							delete roomsForRemove[propertyName + '/' + value];
-						}
-					});
-				}
+				});
 			};
 		}
 	});
