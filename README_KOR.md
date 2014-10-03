@@ -1,7 +1,7 @@
 # ![ScreenShot](https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/LOGO.png)
 동적인 웹 사이트 및 모바일 애플리케이션 개발을 위한 쉽고, 명확하면서도 강력한 풀스택 (server-to-client) MVC 미들웨어입니다.
 
-[UPPERCASE.JS](http://uppercaseseries.org/#JS)를 기반으로 하고 있습니다.
+[UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)를 기반으로 하고 있습니다.
 
 #### 기반 시스템
 * [Node.js](http://nodejs.org)

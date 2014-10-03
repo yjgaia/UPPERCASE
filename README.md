@@ -1,7 +1,7 @@
 # ![ScreenShot](https://raw.githubusercontent.com/UPPERCASEIO/UPPERCASE.IO/master/LOGO.png)
 Easy, Clear, and Powerful Full-stack (server-to-client) MVC Middleware for Dynamic Web Site or Mobile Application Development
 
-Based on [UPPERCASE.JS](http://uppercaseseries.org/#JS)
+Based on [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)
 
 ###### TRANSLATION
 * [한국어 문서](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/README_KOR.md)
