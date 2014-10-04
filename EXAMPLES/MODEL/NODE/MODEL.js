@@ -94,7 +94,7 @@ TEST('MODEL', function(ok) {
 							valid : VALID(validDataSet)
 						},
 						remove : {
-							role : 'Test'
+							//role : 'Test'
 						}
 					}
 				};
