@@ -16,14 +16,14 @@ Based on [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)
 * [Apache Cordova](http://cordova.apache.org/)
 * [Appcelerator Titanium](http://www.appcelerator.com/titanium/)
 
-#### 샘플 프로젝트
+#### Sample project
 * Sample
 
-## 설치
-1. UPPERCASE.IO를 원하는 경로에 설치합니다.
-2. UPPERCASE.IO의 경로를 환경변수에 등록합니다.
+## Install
+1. Install UPPERCASE.IO on a directory you want.
+2. Add the path of UPPERCASE.IO to environment variables.
 	* PC
-	내 컴퓨터 - 속성 - 고급 시스템 설정 - 환경 변수에서 UPPERCASE_IO_PATH를 등록합니다.
+	My computer - Properties - Advanced system settings - Add UPPERCASE_IO_PATH to environment variables.
 	* MAC
 	```
 	vi .profile
@@ -36,10 +36,10 @@ Based on [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)
 	vi .profile
 	export UPPERCASE_IO_PATH="{{UPPERCASE.IO PATH}}"
 	```
-3. MongoDB를 실행합니다.
+3. Run MongoDB.
 	`mongod --fork --logpath /var/log/mongodb.log --logappend`
-4. BOOT 스크립트로 프로젝트를 실행합니다.
-    예) Project.js
+4. Execute a project with BOOT script.
+    ex) Project.js
     ```javascript
     require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
 
@@ -49,11 +49,11 @@ Based on [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)
     ```
 
 
-## 설정
-각 설정은 `CONFIG.defaultBoxName = 'Sample';` 과 같이 설정합니다.
+## Configuration
+Each item is formed as `CONFIG.defaultBoxName = 'Sample';`.
 
 ###### CONFIG
-* `isDevMode` 개발자 모드를 활성화합니다. 기본값은 `false`입니다. 이 모드가 활성화되면, 코드 압축이나 캐싱등의 작업을 건너뛰게 됩니다. 개발을 할 때에는 `true`로 설정하는것이 좋습니다.
+* `isDevMode` enables development mode. The default is `false`. If enabled, code compression, caching, and so on are skipped. `true` is recommended in development.
 * `webServerPort` 웹 서버 및 웹 소켓 서버의 포트를 설정합니다. 설정하지 않으면, 웹 서버 및 웹 소켓 서버를 구동시키지 않습니다.
 * `sercuredWebServerPort` 보안 웹 서버의 포트를 설정합니다. 설정하지 않으면, 보안 웹 서버를 구동시키지 않습니다.
 * `socketServerPort` 소켓 서버의 포트를 설정합니다.
@@ -84,7 +84,7 @@ Based on [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)
 * `uploadServers` 업로드 서버들의 정보를 설정합니다.
 
 ###### BROWSER_CONFIG
-[UPPERCASE.JS의 BROWSER_CONFIG 설정](https://github.com/UPPERCASE-Series/UPPERCASE.JS/blob/master/README_KOR.md#configuration)과 같습니다.
+The same as [BROWSER_CONFIG configuration of UPPERCASE.JS](https://github.com/UPPERCASE-Series/UPPERCASE.JS/blob/master/README.md#configuration).
 
 
 ## BOX
@@ -96,25 +96,25 @@ BOX는 UPPERCASE.IO에서의 모듈을 칭합니다.
 `UUI`, `UANI` 등의 UPPERCASE.IO의 공식 BOX 저장소는 다음 경로에 있습니다.
 * [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)
 
-#### BOX의 일반적인 구성요소
+#### Basic components of BOX
 아래 내용들은 필수가 아닙니다. 프로젝트의 성격에 따라 선택적으로 구성할 수 있습니다.
 * `BROWSER` 웹 브라우저에서 구동되는 소스들을 저장하는 폴더입니다.
 * `COMMON` 웹 브라우저와 node.js에서 동시에 구동되는 소스들을 저장하는 폴더입니다.
 * `NODE` node.js 위에서 구동되는 소스들을 저장하는 폴더입니다.
 * `R` 리소스 파일들을 저장하는 폴더입니다.
 
-#### BOX 패키징
+#### Packaging BOX
 패키징을 하게되면 각 폴더들의 js 파일들이 하나로 합쳐집니다. 이를테면 BROWSER 폴더의 내용들은 BROWSER.js로 합쳐집니다. 기타 폴더 및 파일들은 그대로 복사됩니다.
 1. PACK.js를 다운로드합니다. (오른쪽 클릭 후 다른 이름으로 저장)
 	https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/PACK.js
 2. PACK.js를 아래와 같이 실행합니다.
 	`node PACK {{BOX 이름}}`
 
-#### UPPERCASE.JS 확장
+#### Extending UPPERCASE.JS
 BOX에 맞추어 UPPERCASE.JS의 기능을 확장합니다.
 확장된 기능은 {{BOX 이름}}.MATCH_VIEW 와 같은 형식으로 사용합니다.
 
-###### 클라이언트 패키지
+###### Client package
 * `STORE(name)` Browser store class [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/STORE.js)
 ```javascript
 store = TestBox.STORE('testStore');
@@ -133,7 +133,7 @@ store.remove(name)
 * `DELETE(uri:, responseListenerOrListeners)` `DELETE({uri:, paramStr:}, responseListenerOrListeners)` `DELETE({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax DELETE request.
 로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/DELETE.js)
 
-###### 브라우저 패키지
+###### Browser package
 * `MATCH_VIEW({uri:, target:})` match view. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/VIEW.js)
 * `HREF(uri)` get href. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/HREF.js)
 * `GO()` `GO(uri)` go another view. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO.js)
@@ -143,7 +143,7 @@ store.remove(name)
 ## API
 기본적으로 프로젝트 구성 시 사용되는 API들입니다.
 
-###### 데이터베이스 관련
+###### Database
 `주의사항` DB의 update명령어가 동시에 여러번 호출 될 경우 모든 update는 같은 데이터(수정된)를 반환합니다.
 * `DB(name)` MongoDB collection wrapper [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
 ```javascript
@@ -230,22 +230,22 @@ TestBox.TestModel.checkIsExists({filter:}, function() {...})
 TestBox.TestModel.checkIsExists({filter:}, {error:, success:})
 ```
 
-###### 리소스 경로 관련
+###### Resources
 클라이언트에서 사용 가능한 리소스 경로 관련 API입니다.
 * `R(path)` `R(path, function(content) {...})` get resource's real path with version. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOOT/CLIENT/R.js)
 * `RF(path)` get final resource's real path. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOOT/CLIENT/RF.js)
 
 
-## 고급 유저들을 위한 API
+## Advanced APIs
 일반적인 UPPERCASE.IO의 설정을 따르지 않고, 직접 UPPERCASE.IO의 각 파트를 사용해 프레임워크를 구축하고자 하는 고급 유저들을 위해, UPPERCASE.IO는 여러가지 API들을 제공합니다.
 
-###### 통신 관련
+###### Networking
 * `WEB_SOCKET_SERVER(portOrWebServer, connectionListener)` create web socket server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
 * `WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener)` create web socket fix request handler. (using jsonp long-polling) [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
 * `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:}, connectionListener)` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js)
 * `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:, fixRequestURI:}, {error:, success:})` connect to web socket server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER.js)
 
-###### 데이터베이스 관련
+###### Database
 * `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
 
 ###### ROOM
@@ -272,7 +272,7 @@ TestBox.TestModel.checkIsExists({filter:}, {error:, success:})
 * `CONNECT_TO_IO_SERVER(function(on, off, send) {...})` `CONNECT_TO_IO_SERVER({error:, success:})` connect to UPPERCASE.IO server.
 
 
-## UPPERCASE.IO의 분산 처리 전략
+## Distributed processing in UPPERCASE.IO
 * 업로드 파일들을 분산 서버로 구성할 경우 CORS가 지원되지 않는 Internet Explorer 9 이하 버젼들과 같은 곳에서는 UPPERCASE.JS의 GRAPHIC API들을 사용할 수 없습니다.
 
 UPPERCASE.IO의 분산 처리 전략을 설명합니다.
