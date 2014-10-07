@@ -4,7 +4,7 @@ Easy, Clear, and Powerful Full-stack (server-to-client) MVC Middleware for Dynam
 Based on [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)
 
 ###### TRANSLATION
-* [한국어 문서](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/README_KOR.md)
+* [Korean](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/README_KOR.md)
 
 #### Dependencies
 * [Node.js](http://nodejs.org)
@@ -54,7 +54,7 @@ Each item is formed as `CONFIG.defaultBoxName = 'Sample';`.
 
 ###### CONFIG
 * `isDevMode` enables development mode. The default is `false`. If enabled, code compression, caching, and so on are skipped. `true` is recommended in development.
-* `webServerPort` 웹 서버 및 웹 소켓 서버의 포트를 설정합니다. 설정하지 않으면, 웹 서버 및 웹 소켓 서버를 구동시키지 않습니다.
+* `webServerPort` specifies a server port for web and web socket. If not, the server won't be booted.
 * `sercuredWebServerPort` 보안 웹 서버의 포트를 설정합니다. 설정하지 않으면, 보안 웹 서버를 구동시키지 않습니다.
 * `socketServerPort` 소켓 서버의 포트를 설정합니다.
 * `defaultBoxName` 기본 BOX의 이름을 설정합니다. 기본값은 `'UPPERCASE.IO'` 입니다.
