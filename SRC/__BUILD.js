@@ -232,7 +232,7 @@ RUN(function() {
 
 		var
 		// init script
-		initScript = 'global = window;\n',
+		initScript = 'global=window;',
 
 		// load.
 		load = function(path) {
