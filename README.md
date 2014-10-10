@@ -55,13 +55,13 @@ Each item is formed as `CONFIG.defaultBoxName = 'Sample';`.
 ###### CONFIG
 * `isDevMode` enables development mode. The default is `false`. If enabled, code compression, caching, and so on are skipped. `true` is recommended in development.
 * `webServerPort` specifies a server port for web and web socket. If not, the server won't be booted.
-* `sercuredWebServerPort` 보안 웹 서버의 포트를 설정합니다. 설정하지 않으면, 보안 웹 서버를 구동시키지 않습니다.
-* `socketServerPort` 소켓 서버의 포트를 설정합니다.
-* `defaultBoxName` 기본 BOX의 이름을 설정합니다. 기본값은 `'UPPERCASE.IO'` 입니다.
-* `title` 프로젝트 제목을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
-* `description` 프로젝트에 대한 설명을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
-* `isMobileFullScreen` 모바일 브라우저에서 full screen으로 화면을 표시할지를 결정합니다. 기본값은 `false`입니다.
-* `googleSiteVerificationKey` google site verification key를 설정합니다.
+* `sercuredWebServerPort` sets a server port for secured web. If not, the secured web server won't start up.
+* `socketServerPort` sets a server port for socket.
+* `defaultBoxName` defines the name of the default BOX. If not, `'UPPERCASE.IO'` is provided.
+* `title` indicates the title of a project. The default value is `'UPPERCASE.IO PROJECT'`.
+* `description` implies the description of a project. The default value is `'UPPERCASE.IO PROJECT'`.
+* `isMobileFullScreen` decides whether full screen mode is activated on a mobile browser. The default value is `false`.
+* `googleSiteVerificationKey` sets google site verification key.
 
 ###### NODE_CONFIG
 * `securedKeyFilePath` 보안 웹 서버를 위한 key file의 경로를 설정합니다.
