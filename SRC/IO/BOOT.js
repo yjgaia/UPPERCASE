@@ -894,10 +894,14 @@ global.BOOT = BOOT = function(params) {
 									function() {
 										return function() {
 
-											response({
+											var
+											// file data set str
+											fileDataSetStr = STRINGIFY(fileDataSet);
+
+											response(params.callbackURL === undefined ? fileDataSetStr : {
 												statusCode : 302,
 												headers : {
-													'Location' : params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(STRINGIFY(fileDataSet))
+													'Location' : params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(fileDataSetStr)
 												}
 											});
 										};
