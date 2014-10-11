@@ -64,24 +64,24 @@ Each item is formed as `CONFIG.defaultBoxName = 'Sample';`.
 * `googleSiteVerificationKey` sets google site verification key.
 
 ###### NODE_CONFIG
-* `securedKeyFilePath` 보안 웹 서버를 위한 key file의 경로를 설정합니다.
-* `securedCertFilePath` 보안 웹 서버를 위한 cert file의 경로를 설정합니다.
-* `dbName` 사용할 데이터베이스의 이름을 설정합니다.
-* `dbHost` MongoDB 데이터베이스 서버의 호스트를 설정합니다. 기본값은 `'127.0.0.1'` 입니다.
-* `dbPort` MongoDB 데이터베이스 서버의 포트를 설정합니다. 기본값은 `27017` 입니다.
-* `dbUsername` MongoDB 데이터베이스 서버의 접속 아이디를 설정합니다.
-* `dbPassword` MongoDB 데이터베이스 서버의 접속 비밀번호를 설정합니다.
-* `isDBLogMode` 데이터베이스 로그 모드를 켜고자 할 때 `true`로 설정합니다. 데이터가 수정 될 경우 console 로그를 띄어줍니다. 기본값은 `false` 입니다.
-* `maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000` 입니다.
-* `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
+* `securedKeyFilePath` specifies the path of a key file for a secured web server.
+* `securedCertFilePath` specifies the path of a cert file for a secured web server.
+* `dbName` defines name of a database to use.
+* `dbHost` defines host of a MongoDB server to connect. The default values is `'127.0.0.1'`.
+* `dbPort` defines port of a MongoDB server to connect. The default value is `27017`.
+* `dbUsername` sets username of a MongoDB server to connect.
+* `dbPassword` sets password of a MongoDB server to connect.
+* `isDBLogMode` sets `true` to turn on database log mode, which outputs data changes as console log. The default value is `false`.
+* `maxDataCount` sets the maximum size of data by find command. The default value is `1000`.
+* `maxUploadFileMB` sets the maximum file size of a uploadable file. The default value is `10`.
 
-이하는 분산 서버 관련 설정들입니다.
-* `thisServerName` 현재 서버의 이름을 지정합니다. 이는 분산서버 구성에 사용됩니다.
-* `clusteringServers` 분산 서버들의 정보를 설정합니다.
-* `clusteringPort` 분산 서버 포트를 설정합니다.
-* `socketServers` 소켓 서버들의 정보를 설정합니다.
-* `webSocketServers` 웹 소켓 서버들의 정보를 설정합니다.
-* `uploadServers` 업로드 서버들의 정보를 설정합니다.
+Configurations for distributed servers are below.
+* `thisServerName` specifies the current server name, which is used in distributed server configuration.
+* `clusteringServers` specifies information of distributed servers.
+* `clusteringPort` specifies ports of distributed servers.
+* `socketServers` defines information of socket servers.
+* `webSocketServers` defines information of Web socket servers.
+* `uploadServers` defines information of upload servers.
 
 ###### BROWSER_CONFIG
 The same as [BROWSER_CONFIG configuration of UPPERCASE.JS](https://github.com/UPPERCASE-Series/UPPERCASE.JS/blob/master/README.md#configuration).
