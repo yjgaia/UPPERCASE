@@ -88,31 +88,31 @@ The same as [BROWSER_CONFIG configuration of UPPERCASE.JS](https://github.com/UP
 
 
 ## BOX
-BOX는 UPPERCASE.IO에서의 모듈을 칭합니다.
-프로젝트 폴더와 BOX폴더 내부의 각 폴더들의 이름으로 BOX들이 생성됩니다.
-예를 들어, 아래와 같이 폴더가 구성되어 있다면 `UUI`, `UANI`, `Yogurt`, `Sample` BOX들이 생성됩니다.
+A BOX is a unit of a module in UPPERCASE.IO.
+BOXes are created with a project folder and folders for BOXes.
+For example, if folders are organized below, `UUI`, `UANI`, `Yogurt`, `Sample` BOXes are created.
 ![ScreenShot](https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/SampleBOXes.png)
 
-`UUI`, `UANI` 등의 UPPERCASE.IO의 공식 BOX 저장소는 다음 경로에 있습니다.
+The official BOXes such as `UUI`, `UANI` are managed by UIO-BOX.
 * [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)
 
 #### Basic components of BOX
-아래 내용들은 필수가 아닙니다. 프로젝트의 성격에 따라 선택적으로 구성할 수 있습니다.
-* `BROWSER` 웹 브라우저에서 구동되는 소스들을 저장하는 폴더입니다.
-* `COMMON` 웹 브라우저와 node.js에서 동시에 구동되는 소스들을 저장하는 폴더입니다.
-* `NODE` node.js 위에서 구동되는 소스들을 저장하는 폴더입니다.
-* `R` 리소스 파일들을 저장하는 폴더입니다.
+These components are optional, so can be chosen for your purpose.
+* `BROWSER` is a folder for code run on a web browser.
+* `COMMON` is a folder for code shared on both browser and node.js.
+* `NODE` is a folder for code run on node.js.
+* `R` is a folder for resources.
 
 #### Packaging BOX
-패키징을 하게되면 각 폴더들의 js 파일들이 하나로 합쳐집니다. 이를테면 BROWSER 폴더의 내용들은 BROWSER.js로 합쳐집니다. 기타 폴더 및 파일들은 그대로 복사됩니다.
-1. PACK.js를 다운로드합니다. (오른쪽 클릭 후 다른 이름으로 저장)
+Packaging results in one combined JS file in each component folder. For instance, all the code in BROWSER folder becomes BROWSER.js. The other artifacts are copied as they are.
+1. Download PACK.js. (Save as with the link below)
 	https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/PACK.js
-2. PACK.js를 아래와 같이 실행합니다.
-	`node PACK {{BOX 이름}}`
+2. Run PACK.js as below.
+	`node PACK {{BOX name}}`
 
 #### Extending UPPERCASE.JS
-BOX에 맞추어 UPPERCASE.JS의 기능을 확장합니다.
-확장된 기능은 {{BOX 이름}}.MATCH_VIEW 와 같은 형식으로 사용합니다.
+Extend functions of UPPERCASE.JS to work with a BOX.
+The extended functions are used as a form of {{BOX name}}.MATCH_VIEW.
 
 ###### Client package
 * `STORE(name)` Browser store class [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/STORE.js)
@@ -123,21 +123,21 @@ store.get(name)
 store.remove(name)
 ```
 * `REQUEST({method:, uri:}, responseListenerOrListeners)` `REQUEST({method:, uri:, paramStr:}, responseListenerOrListeners)` `REQUEST({host:, port:, isSecure:, method:, uri:, data:}, responseListenerOrListeners)` ajax request.
-로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/REQUEST.js)
+Not to use a loading bar, set `isNotUsingLoadingBar` to true. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/REQUEST.js)
 * `GET(uri, responseListenerOrListeners)` `GET({uri:, paramStr:}, responseListenerOrListeners)` `GET({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax GET request.
-로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/GET.js)
+Not to use a loading bar, set `isNotUsingLoadingBar` to true. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/GET.js)
 * `POST(uri:, responseListenerOrListeners)` `POST({uri:, paramStr:}, responseListenerOrListeners)` `POST({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax POST request.
-로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/POST.js)
+Not to use a loading bar, set `isNotUsingLoadingBar` to true. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/POST.js)
 * `PUT(uri:, responseListenerOrListeners)` `PUT({uri:, paramStr:}, responseListenerOrListeners)` `PUT({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax PUT request.
-로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/PUT.js)
+Not to use a loading bar, set `isNotUsingLoadingBar` to true. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/PUT.js)
 * `DELETE(uri:, responseListenerOrListeners)` `DELETE({uri:, paramStr:}, responseListenerOrListeners)` `DELETE({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)` ajax DELETE request.
-로딩 바를 사용하지 않으려면 `isNotUsingLoadingBar` 파라미터를 true로 설정합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/DELETE.js)
+Not to use a loading bar, set `isNotUsingLoadingBar` to true. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/REQUEST/DELETE.js)
 
 ###### Browser package
-* `MATCH_VIEW({uri:, target:})` match view. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/VIEW.js)
-* `HREF(uri)` get href. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/HREF.js)
-* `GO()` `GO(uri)` go another view. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO.js)
-* `GO_NEW_WIN()` `GO_NEW_WIN(uri)` go another view on new window. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO_NEW_WIN.js)
+* `MATCH_VIEW({uri:, target:})` match view. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/VIEW.js)
+* `HREF(uri)` get href. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/HREF.js)
+* `GO()` `GO(uri)` go another view. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO.js)
+* `GO_NEW_WIN()` `GO_NEW_WIN(uri)` go another view on new window. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO_NEW_WIN.js)
 
 
 ## API
