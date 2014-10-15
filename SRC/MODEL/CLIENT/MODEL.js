@@ -1092,22 +1092,12 @@ FOR_BOX(function(box) {
 
 				var
 				// room for removes
-				roomForRemove,
-
-				// inner handler.
-				innerHandler = function(savedData) {
-
-					var
-					// id
-					id = savedData.id;
-
-					handler(savedData);
-				};
+				roomForRemove;
 
 				if (handler === undefined) {
 					handler = properties;
 
-					( roomForRemove = box.ROOM(name + '/remove')).on('remove', innerHandler);
+					( roomForRemove = box.ROOM(name + '/remove')).on('remove', handler);
 
 				} else {
 
@@ -1121,7 +1111,7 @@ FOR_BOX(function(box) {
 									return false;
 								}
 							}) === true) {
-								innerHandler(savedData);
+								handler(savedData);
 							}
 						});
 
