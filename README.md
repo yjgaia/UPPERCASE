@@ -115,7 +115,7 @@ Extend functions of UPPERCASE.JS to work with a BOX.
 The extended functions are used as a form of {{BOX name}}.MATCH_VIEW.
 
 ###### Client package
-* `STORE(name)` Browser store class [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/STORE.js)
+* `STORE(name)` Browser store class [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/CLIENT/STORE.js)
 ```javascript
 store = TestBox.STORE('testStore');
 store.save({ name:, value:, isToSession: })
@@ -141,11 +141,11 @@ Not to use a loading bar, set `isNotUsingLoadingBar` to true. [Example](https://
 
 
 ## API
-기본적으로 프로젝트 구성 시 사용되는 API들입니다.
+Essential in an UPPERCASE project.
 
 ###### Database
-`주의사항` DB의 update명령어가 동시에 여러번 호출 될 경우 모든 update는 같은 데이터(수정된)를 반환합니다.
-* `DB(name)` MongoDB collection wrapper [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
+`Note` if update of DB commands are called simultaneously, all the updates return the same revised data.
+* `DB(name)` MongoDB collection wrapper [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
 ```javascript
 db = TestBox.DB('test');
 db.create(data, function() {...})
@@ -164,14 +164,14 @@ db.count({filter:}, {error:, success:})
 db.checkIsExists({filter:}, function() {...})
 db.checkIsExists({filter:}, {error:, success:})
 ```
-* `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/LOG_DB.js)
+* `LOG_DB(name)` MongoDB collection wrapper class for logging [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/LOG_DB.js)
 ```javascript
 logDB = TestBox.LOG_DB('testLog');
 logDB.log(data)
 ```
 
 ###### ROOM
-* `ROOM(name)` Connection room class (for clients) [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/CLIENT/ROOM.js)
+* `ROOM(name)` Connection room class (for clients) [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/CLIENT/ROOM.js)
 ```javascript
 room = TestBox.ROOM('testRoom');
 room.on(methodName, function(data) {...})
@@ -179,7 +179,7 @@ room.off(methodName)
 room.send(methodName, function(data) {...})
 room.exit()
 ```
-* `ROOM(name, connectionListener)` create room. (for node.js) [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
+* `ROOM(name, connectionListener)` create room. (for node.js) [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
 ```javascript
 TestBox.ROOM('testRoom', function(clientInfo, on, off) {
     on(methodName, function(data, ret) {
@@ -189,10 +189,10 @@ TestBox.ROOM('testRoom', function(clientInfo, on, off) {
     off(methodName);
 });
 ```
-* `BROADCAST({roomName:, methodName:, data:})` broadcast to rooms. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
+* `BROADCAST({roomName:, methodName:, data:})` broadcast to rooms. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
 
 ###### MODEL
-* `MODEL` Model(include CRUD functions) interface [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/MODEL/CLIENT/MODEL.js)
+* `MODEL` Model(include CRUD functions) interface [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/MODEL/CLIENT/MODEL.js)
 ```javascript
 TestBox.TestModel = OBJECT({
 	preset : function() {
@@ -231,13 +231,14 @@ TestBox.TestModel.checkIsExists({filter:}, {error:, success:})
 ```
 
 ###### Resources
-클라이언트에서 사용 가능한 리소스 경로 관련 API입니다.
-* `R(path)` `R(path, function(content) {...})` get resource's real path with version. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOOT/CLIENT/R.js)
-* `RF(path)` get final resource's real path. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOOT/CLIENT/RF.js)
+On resources used by clients.
+
+* `R(path)` `R(path, function(content) {...})` get resource's real path with version. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOOT/CLIENT/R.js)
+* `RF(path)` get final resource's real path. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOOT/CLIENT/RF.js)
 
 
 ## Advanced APIs
-일반적인 UPPERCASE.IO의 설정을 따르지 않고, 직접 UPPERCASE.IO의 각 파트를 사용해 프레임워크를 구축하고자 하는 고급 유저들을 위해, UPPERCASE.IO는 여러가지 API들을 제공합니다.
+For advanced users who want to build a framework on parts of UPPERCASE.IO.
 
 ###### Networking
 * `WEB_SOCKET_SERVER(portOrWebServer, connectionListener)` create web socket server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
@@ -314,7 +315,7 @@ node __BUILD.js
 * [Facebook UPPERCASE.IO User Group](https://www.facebook.com/groups/uppercase/)
 * [GitHub Issues](https://github.com/UPPERCASE-Series/UPPERCASE.IO/issues)
 
-## 기타 링크
+## Etc.
 * [Official Web Site](http://UPPERCASE.IO)
 * [1.3 version](http://1.3.UPPERCASE.IO)
 * [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)
