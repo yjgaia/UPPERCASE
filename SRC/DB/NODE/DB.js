@@ -44,6 +44,9 @@ FOR_BOX(function(box) {
 			// waiting check is exists infos
 			waitingCheckIsExistsInfos = [],
 
+			// waiting aggregate infos
+			waitingAggregateInfos = [],
+
 			// generate _id.
 			gen_id = function(id) {
 				//REQUIRED: id
@@ -189,7 +192,10 @@ FOR_BOX(function(box) {
 			// check is exists.
 			// if success, callback true or false.
 			// if error, run error handler.
-			checkIsExists;
+			checkIsExists,
+
+			// aggregate.
+			aggregate;
 
 			if (CHECK_IS_DATA(nameOrParams) !== true) {
 				name = nameOrParams;
@@ -300,6 +306,18 @@ FOR_BOX(function(box) {
 				//OPTIONAL: callbackOrHandlers.error
 
 				waitingCheckIsExistsInfos.push({
+					params : params,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+
+			self.aggregate = aggregate = function(params, callbackOrHandlers) {
+				//REQUIRED: params
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+
+				waitingAggregateInfos.push({
 					params : params,
 					callbackOrHandlers : callbackOrHandlers
 				});
@@ -1336,6 +1354,58 @@ FOR_BOX(function(box) {
 					}
 				};
 
+				self.aggregate = aggregate = function(params, callbackOrHandlers) {
+					//REQUIRED: params
+					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler;
+
+					try {
+
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+
+						collection.aggregate(params, function(error, result) {
+
+							if (error === TO_DELETE) {
+
+								callback(result);
+							}
+
+							// if error is not TO_DELETE
+							else {
+
+								logError({
+									method : 'aggregate',
+									params : params,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'aggregate',
+							params : params,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+
 				// run all waiting infos.
 
 				EACH(waitingCreateInfos, function(info) {
@@ -1379,6 +1449,12 @@ FOR_BOX(function(box) {
 				});
 
 				waitingCheckIsExistsInfos = undefined;
+
+				EACH(waitingAggregateInfos, function(info) {
+					aggregate(info.params, info.callbackOrHandlers);
+				});
+
+				waitingAggregateInfos = undefined;
 			});
 		}
 	});

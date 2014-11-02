@@ -120,5 +120,21 @@ TEST('DB', function(ok) {
 		}, function(isExists) {
 			console.log('Check is exists success!', isExists);
 		});
+
+		// aggregate test
+		db.aggregate([{
+			$sort : {
+				count : 1
+			}
+		}, {
+			$group : {
+				_id : '$msg',
+				highCount : {
+					$first : '$count'
+				}
+			}
+		}], function(result) {
+			console.log('Aggregate success!', result);
+		});
 	});
 });
