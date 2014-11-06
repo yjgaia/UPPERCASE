@@ -396,9 +396,17 @@ FOR_BOX(function(box) {
 					// now
 					errorInfo.time = new Date();
 
-					errorLogCollection.insert(errorInfo, {
-						w : 0
-					});
+					try {
+
+						errorLogCollection.insert(errorInfo, {
+							w : 0
+						});
+					}
+
+					// if catch error
+					catch (error) {
+						// this case, ignore.
+					}
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorInfo.errorMsg);
