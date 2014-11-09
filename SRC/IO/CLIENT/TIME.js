@@ -12,7 +12,7 @@ global.TIME = TIME = METHOD(function(m) {
 	setDiff;
 
 	m.setDiff = setDiff = function(_diff) {
-		diff = diff;
+		diff = _diff;
 	};
 
 	return {
