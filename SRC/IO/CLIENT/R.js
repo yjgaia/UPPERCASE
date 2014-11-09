@@ -12,13 +12,17 @@ FOR_BOX(function(box) {
 
 			var
 			// uri
-			uri = box.boxName + '/' + path + '?version=' + CONFIG.version;
+			uri = box.boxName + '/R/' + path;
+
+			if (CONFIG.version !== undefined) {
+				uri += '?version=' + CONFIG.version;
+			}
 
 			if (callback !== undefined) {
 				GET(uri, callback);
 			}
 
-			return '/' + uri;
+			return uri;
 		}
 	});
 });

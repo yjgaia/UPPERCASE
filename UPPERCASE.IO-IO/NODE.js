@@ -1,0 +1,1 @@
+global.TIME_SYNC=TIME_SYNC=OBJECT({init:function(){"use strict";UPPERCASE.IO.ROOM("timeSyncRoom",function(n,t){t("sync",function(n,t){t(n-new Date)})})}});

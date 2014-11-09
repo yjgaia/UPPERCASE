@@ -356,6 +356,12 @@ global.BOOT = BOOT = function(params) {
 		// load UPPERCASE.IO-BOX/CORE.
 		loadJSForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/CORE.js');
 
+		// create UPPERCASE.IO box.
+		BOX('UPPERCASE.IO');
+
+		// add UPPERCASE.IO box to browser script.
+		addContentToBrowserScript('BOX(\'UPPERCASE.IO\');\n');
+
 		// init boxes in root folder.
 		FIND_FOLDER_NAMES({
 			path : rootPath,
@@ -1092,9 +1098,9 @@ global.BOOT = BOOT = function(params) {
 									array : boxNamesInBOXFolder,
 									value : boxName
 								}) === true) {
-									requestInfo.uri = 'BOX/' + boxName + '/R' + (uri === '' ? '' : ('/' + uri));
+									requestInfo.uri = 'BOX/' + boxName + (uri.substring(0, 2) === 'R/' ? '/' : '/R') + (uri === '' ? '' : ('/' + uri));
 								} else {
-									requestInfo.uri = boxName + '/R' + (uri === '' ? '' : ('/' + uri));
+									requestInfo.uri = boxName + (uri.substring(0, 2) === 'R/' ? '/' : '/R') + (uri === '' ? '' : ('/' + uri));
 								}
 
 							} else {
@@ -1143,6 +1149,7 @@ global.BOOT = BOOT = function(params) {
 	loadJSForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/CLIENT.js');
 	loadJSForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER.js');
 	loadJSForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER_INIT.js');
+	loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/NODE.js');
 
 	// clustering cpus and servers.
 	clustering(function() {
