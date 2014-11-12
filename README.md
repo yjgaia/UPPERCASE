@@ -184,6 +184,7 @@ room.exit()
 TestBox.ROOM('testRoom', function(clientInfo, on, off) {
     on(methodName, function(data, ret) {
     	...
+    	// ret(..); is necessary.
         ret(resultData);
     });
     off(methodName);

@@ -76,6 +76,15 @@ FOR_BOX(function(box) {
 				// check is exists role
 				checkIsExistsRole,
 
+				// create admin role
+				createAdminRole,
+
+				// update admin role
+				updateAdminRole,
+
+				// remove admin role
+				removeAdminRole,
+
 				// create auth key
 				createAuthKey,
 
@@ -199,6 +208,7 @@ FOR_BOX(function(box) {
 						createValid = createConfig.valid;
 						createRole = createConfig.role;
 						createAuthKey = createConfig.authKey;
+						createAdminRole = createConfig.adminRole;
 					}
 
 					if (getConfig !== undefined) {
@@ -209,11 +219,13 @@ FOR_BOX(function(box) {
 						updateValid = updateConfig.valid;
 						updateRole = updateConfig.role;
 						updateAuthKey = updateConfig.authKey;
+						updateAdminRole = updateConfig.adminRole;
 					}
 
 					if (removeConfig !== undefined) {
 						removeRole = removeConfig.role;
 						removeAuthKey = removeConfig.authKey;
+						removeAdminRole = removeConfig.adminRole;
 					}
 
 					if (findConfig !== undefined) {
@@ -1297,23 +1309,42 @@ FOR_BOX(function(box) {
 						// on create.
 						on('create', function(data, ret) {
 
-							if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-								data : clientInfo.roles,
-								value : createRole
-							}) === true)) {
+							if (createAdminRole !== undefined) {
 
-								// inject auth key.
-								if (createAuthKey !== undefined) {
-									data[createAuthKey] = clientInfo.authKey;
+								if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : createAdminRole
+								}) === true)) {
+
+									innerCreate(data, ret, clientInfo);
+
+								} else {
+
+									ret({
+										isNotAuthed : true
+									});
 								}
-
-								innerCreate(data, ret, clientInfo);
 
 							} else {
 
-								ret({
-									isNotAuthed : true
-								});
+								if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : createRole
+								}) === true)) {
+
+									// inject auth key.
+									if (createAuthKey !== undefined) {
+										data[createAuthKey] = clientInfo.authKey;
+									}
+
+									innerCreate(data, ret, clientInfo);
+
+								} else {
+
+									ret({
+										isNotAuthed : true
+									});
+								}
 							}
 						});
 					}
@@ -1346,12 +1377,19 @@ FOR_BOX(function(box) {
 						// on update.
 						on('update', function(data, ret) {
 
-							if (updateRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+							if (updateRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
 								data : clientInfo.roles,
 								value : updateRole
-							}) === true)) {
+							}) === true || CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : updateAdminRole
+							}) === true))) {
 
-								if (updateAuthKey !== undefined) {
+								// check and inject auth key. (when not admin)
+								if (updateAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : updateAdminRole
+								}) === true) !== true) {
 
 									// get data in database.
 									db.get(data.id, {
@@ -1405,12 +1443,19 @@ FOR_BOX(function(box) {
 						// on remove.
 						on('remove', function(id, ret) {
 
-							if (removeRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+							if (removeRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
 								data : clientInfo.roles,
 								value : removeRole
-							}) === true)) {
+							}) === true || CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : removeAdminRole
+							}) === true))) {
 
-								if (removeAuthKey !== undefined) {
+								// check auth key. (when not admin)
+								if (removeAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : removeAdminRole
+								}) === true) !== true) {
 
 									// get data in database.
 									db.get(id, {
@@ -1440,6 +1485,22 @@ FOR_BOX(function(box) {
 											}
 										}
 									});
+
+								} else if (removeAuthKey === undefined && removeAdminRole !== undefined) {
+
+									if (clientInfo.roles !== undefined && CHECK_IS_IN({
+										data : clientInfo.roles,
+										value : removeAdminRole
+									}) === true) {
+
+										innerRemove(id, ret, clientInfo);
+
+									} else {
+
+										ret({
+											isNotAuthed : true
+										});
+									}
 
 								} else {
 									innerRemove(id, ret, clientInfo);
