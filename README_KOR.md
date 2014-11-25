@@ -309,10 +309,6 @@ node __BUILD.js
 [Young Jae Sim](https://github.com/Hanul)
 
 ## Contact
+* [Official Web Site](http://UPPERCASE.IO)
 * [Facebook UPPERCASE.IO User Group](https://www.facebook.com/groups/uppercase/)
 * [GitHub Issues](https://github.com/UPPERCASE-Series/UPPERCASE.IO/issues)
-
-## 기타 링크
-* [Official Web Site](http://UPPERCASE.IO)
-* [1.3 version](http://1.3.UPPERCASE.IO)
-* [UPPERCASE.IO Official BOX Repositories](https://github.com/UIO-BOX)
