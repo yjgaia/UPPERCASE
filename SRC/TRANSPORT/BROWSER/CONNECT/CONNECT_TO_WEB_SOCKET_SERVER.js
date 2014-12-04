@@ -38,9 +38,6 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		// send key
 		sendKey = 0,
 
-		// is force disconnecting
-		isForceDisconnecting,
-
 		// on.
 		on,
 
@@ -169,9 +166,6 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
 			// disconnect.
 			function() {
-
-				isForceDisconnecting = true;
-
 				conn.close();
 			});
 		};
@@ -190,10 +184,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
 		// when disconnected
 		conn.onclose = function() {
-
-			if (isForceDisconnecting !== true) {
-				runMethods('__DISCONNECTED');
-			}
+			runMethods('__DISCONNECTED');
 		};
 
 		// when error

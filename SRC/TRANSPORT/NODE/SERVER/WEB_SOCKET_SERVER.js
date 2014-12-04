@@ -46,10 +46,7 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 
 			// ip
 			ip,
-
-			// is force disconnecting
-			isForceDisconnecting,
-
+			
 			// on.
 			on,
 
@@ -103,9 +100,7 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 			// when disconnected
 			conn.on('close', function() {
 
-				if (isForceDisconnecting !== true) {
-					runMethods('__DISCONNECTED');
-				}
+				runMethods('__DISCONNECTED');
 
 				// free method map.
 				methodMap = undefined;
@@ -215,9 +210,6 @@ global.WEB_SOCKET_SERVER = WEB_SOCKET_SERVER = METHOD({
 
 			// disconnect.
 			function() {
-
-				isForceDisconnecting = true;
-
 				conn.close();
 			});
 		});

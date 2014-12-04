@@ -8,8 +8,8 @@ global.TIME_SYNC = TIME_SYNC = OBJECT({
 
 		UPPERCASE.IO.ROOM('timeSyncRoom', function(clientInfo, on) {
 
+			// return diff. (diff: client time - server time)
 			on('sync', function(clientNow, ret) {
-
 				ret(clientNow - new Date());
 			});
 		});
