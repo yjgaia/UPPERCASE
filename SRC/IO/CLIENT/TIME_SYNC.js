@@ -18,7 +18,13 @@ global.TIME_SYNC = TIME_SYNC = OBJECT({
 			data : now
 		},
 
-		// The local time = The server time + diff (diff: client time - server time)
-		TIME.setDiff);
+		function(diff) {
+			
+			// The local time = The server time + diff (diff: client time - server time)
+			TIME.setDiff(diff);
+			
+			// The server time = The local time - diff (diff: client time - server time)
+			SERVER_TIME.setDiff(diff);
+		});
 	}
 });
