@@ -1,8 +1,12 @@
 // load UPPERCASE.JS-BROWSER-FIX.
-LOAD(BROWSER_CONFIG.fixScriptsFolderPath + '/FIX.js');
+if (BROWSER_CONFIG.fixScriptsFolderPath !== undefined) {
+	LOAD(BROWSER_CONFIG.fixScriptsFolderPath + '/FIX.js');
+}
 
 // load UPPERCASE.IO-TRANSPORT FIX.
-LOAD(BROWSER_CONFIG.fixTransportScriptsFolderPath + '/FIX.js');
+if (BROWSER_CONFIG.fixTransportScriptsFolderPath !== undefined) {
+	LOAD(BROWSER_CONFIG.fixTransportScriptsFolderPath + '/FIX.js');
+}
 
 READY(function() {
 	'use strict';
