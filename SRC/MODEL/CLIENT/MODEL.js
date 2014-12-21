@@ -980,7 +980,9 @@ FOR_BOX(function(box) {
 						exit;
 
 						self.exit = exit = function() {
-							roomForCreate.exit();
+							if (roomForCreate !== undefined) {
+								roomForCreate.exit();
+							}
 						};
 					}
 				});
@@ -1076,7 +1078,9 @@ FOR_BOX(function(box) {
 
 						self.exit = exit = function() {
 
-							roomForCreate.exit();
+							if (roomForCreate !== undefined) {
+								roomForCreate.exit();
+							}
 
 							EACH(subRooms, function(subRoom) {
 								subRoom.exit();
@@ -1128,7 +1132,9 @@ FOR_BOX(function(box) {
 						exit;
 
 						self.exit = exit = function() {
-							roomForRemove.exit();
+							if (roomForRemove !== undefined) {
+								roomForRemove.exit();
+							}
 						};
 					}
 				});

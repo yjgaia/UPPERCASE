@@ -603,6 +603,15 @@ global.BOOT = BOOT = function(params) {
 
 		// load css.
 		indexPageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?' + CONFIG.version + '" />';
+		
+		// set base color.
+		indexPageContent += '<style>';
+		indexPageContent += 'html, body {';
+		indexPageContent += 'background-color : ' + CONFIG.baseBackgroundColor + ';';
+		indexPageContent += 'color : ' + CONFIG.baseColor + ';';
+		indexPageContent += '}';
+		indexPageContent += '</style>';
+		
 		indexPageContent += '</head>';
 		indexPageContent += '<body>';
 

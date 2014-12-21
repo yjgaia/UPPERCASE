@@ -39,20 +39,17 @@ input, textarea, select {
 	overflow-scrolling: touch;
 }
 html, body {
-	/* 기본 배경 및 글 색 */
-	background-color: #333;
+	background-color: #000;
 	color: #fff;
+	word-wrap: break-word;
+	font-family: helvetica;
+	font-size: 14px;
 	/* Prevent font scaling in landscape */
 	-webkit-text-size-adjust: none;
 	-moz-text-size-adjust: none;
 	-o-text-size-adjust: none;
 	-ms-text-size-adjust: none;
 	text-size-adjust: none;
-	/* word-wrap은 모두 break */
-	word-wrap: break-word;
-	/* 폰트의 기본 family는 helvetica, 크기는 14px로 고정 */
-	font-family: helvetica;
-	font-size: 14px;
 }
 html {
 	overflow-y: scroll;
@@ -73,10 +70,8 @@ textarea {
 	height: 5em;
 }
 a {
-	/* 링크 기본 색상을 #fff로 고정 */
 	color: inherit;
 }
 p {
-	/* paragraph 기본 line-height를 1.5em으로 고정 */
 	line-height: 1.5em;
 }

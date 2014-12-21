@@ -1,1 +1,1 @@
-OVERRIDE(CONFIG,function(E){"use strict";global.CONFIG=CONFIG=COMBINE([{defaultBoxName:"UPPERCASE.IO",title:"UPPERCASE.IO PROJECT",description:"UPPERCASE.IO PROJECT"},E])});
+OVERRIDE(CONFIG,function(C){"use strict";global.CONFIG=CONFIG=COMBINE([{defaultBoxName:"UPPERCASE.IO",title:"UPPERCASE.IO PROJECT",description:"UPPERCASE.IO PROJECT",baseBackgroundColor:"#000",baseColor:"#fff"},C])});

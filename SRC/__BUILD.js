@@ -168,7 +168,6 @@ RUN(function() {
 		distFolder(name, 'BROWSER');
 		distFolder(name, 'CLIENT');
 		distFolder(name, 'NODE');
-		distFolder(name, 'TITANIUM');
 		copyFolder(name, 'R', 'R');
 	};
 
@@ -188,47 +187,7 @@ RUN(function() {
 	save('IO', ['IO/BOOT.js'], 'BOOT.js');
 	save('IO', ['IO/BROWSER_INIT.js'], 'BROWSER_INIT.js');
 
-	RUN(function() {
-
-		var
-		// copy.
-		copy = function(path) {
-
-			COPY_FILE({
-				from : '../' + path,
-				to : '../UPPERCASE.IO-TITANIUM-PACK/' + path,
-				isSync : true
-			});
-		};
-
-		log('MAKE [TITANIUM-PACK]');
-
-		// copy UPPERCASE.JS.
-		copy('UPPERCASE.JS-COMMON.js');
-		copy('UPPERCASE.JS-TITANIUM.js');
-		copy('UPPERCASE.JS-BROWSER.js');
-
-		// copy UPPERCASE.IO-BOX.
-		copy('UPPERCASE.IO-BOX/CORE.js');
-		copy('UPPERCASE.IO-BOX/CLIENT.js');
-
-		// copy UPPERCASE.IO-TRANSPORT.
-		copy('UPPERCASE.IO-TRANSPORT/BROWSER.js');
-
-		// copy UPPERCASE.IO-ROOM.
-		copy('UPPERCASE.IO-ROOM/TITANIUM.js');
-		copy('UPPERCASE.IO-ROOM/CLIENT.js');
-
-		// copy UPPERCASE.IO-MODEL.
-		copy('UPPERCASE.IO-MODEL/COMMON.js');
-		copy('UPPERCASE.IO-MODEL/CLIENT.js');
-
-		// copy UPPERCASE.IO-IO.
-		copy('UPPERCASE.IO-IO/TITANIUM.js');
-		copy('UPPERCASE.IO-IO/CLIENT.js');
-	});
-
-	// make CORDOVA-PACK.
+	// make BROWSER-PACK.
 	RUN(function() {
 
 		var
@@ -255,7 +214,7 @@ RUN(function() {
 				EACH(fileNames, function(fileName) {
 					COPY_FILE({
 						from : '../' + path + '/' + fileName,
-						to : '../UPPERCASE.IO-CORDOVA-PACK/' + path + '/' + fileName,
+						to : '../UPPERCASE.IO-BROWSER-PACK/' + path + '/' + fileName,
 						isSync : true
 					});
 				});
@@ -271,12 +230,11 @@ RUN(function() {
 			});
 		};
 
-		log('MAKE [CORDOVA-PACK]');
+		log('MAKE [BROWSER-PACK]');
 
 		// load UPPERCASE.JS.
 		load('UPPERCASE.JS-COMMON.js');
 		load('UPPERCASE.JS-BROWSER.js');
-		load('UPPERCASE.JS-CORDOVA.js');
 		copyFolder('UPPERCASE.JS-BROWSER-FIX');
 
 		// load UPPERCASE.IO-BOX.
@@ -305,7 +263,7 @@ RUN(function() {
 
 		// write IMPORT.js
 		WRITE_FILE({
-			path : '../UPPERCASE.IO-CORDOVA-PACK/IMPORT.js',
+			path : '../UPPERCASE.IO-BROWSER-PACK/IMPORT.js',
 			content : initScript,
 			isSync : true
 		});
@@ -313,108 +271,14 @@ RUN(function() {
 		// copy BASE_STYLE
 		COPY_FILE({
 			from : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
-			to : '../UPPERCASE.IO-CORDOVA-PACK/BASE_STYLE.css',
+			to : '../UPPERCASE.IO-BROWSER-PACK/BASE_STYLE.css',
 			isSync : true
 		});
 
 		// copy BROWSER_INIT
 		COPY_FILE({
 			from : '../UPPERCASE.IO-IO/BROWSER_INIT.js',
-			to : '../UPPERCASE.IO-CORDOVA-PACK/INIT.js',
-			isSync : true
-		});
-	});
-	
-	// make TIZEN-PACK.
-	RUN(function() {
-
-		var
-		// init script
-		initScript = 'global=window;',
-
-		// load.
-		load = function(path) {
-
-			initScript += READ_FILE({
-				path : '../' + path,
-				isSync : true
-			});
-		},
-
-		// copy folder.
-		copyFolder = function(path) {
-
-			FIND_FILE_NAMES({
-				path : '../' + path,
-				isSync : true
-			}, function(fileNames) {
-
-				EACH(fileNames, function(fileName) {
-					COPY_FILE({
-						from : '../' + path + '/' + fileName,
-						to : '../UPPERCASE.IO-TIZEN-PACK/' + path + '/' + fileName,
-						isSync : true
-					});
-				});
-			});
-
-			FIND_FOLDER_NAMES({
-				path : '../' + path,
-				isSync : true
-			}, function(folderNames) {
-				EACH(folderNames, function(folderName) {
-					copyFolder(path + '/' + folderName);
-				});
-			});
-		};
-
-		log('MAKE [TIZEN-PACK]');
-
-		// load UPPERCASE.JS.
-		load('UPPERCASE.JS-COMMON.js');
-		load('UPPERCASE.JS-BROWSER.js');
-
-		// load UPPERCASE.IO-BOX.
-		load('UPPERCASE.IO-BOX/CORE.js');
-		load('UPPERCASE.IO-BOX/CLIENT.js');
-		load('UPPERCASE.IO-BOX/BROWSER.js');
-
-		// load UPPERCASE.IO-TRANSPORT.
-		load('UPPERCASE.IO-TRANSPORT/BROWSER.js');
-
-		// load UPPERCASE.IO-UPLOAD.
-		copyFolder('UPPERCASE.IO-UPLOAD/R');
-
-		// load UPPERCASE.IO-ROOM.
-		load('UPPERCASE.IO-ROOM/CLIENT.js');
-		load('UPPERCASE.IO-ROOM/BROWSER.js');
-
-		// load UPPERCASE.IO-MODEL.
-		load('UPPERCASE.IO-MODEL/COMMON.js');
-		load('UPPERCASE.IO-MODEL/CLIENT.js');
-
-		// load UPPERCASE.IO-IO.
-		load('UPPERCASE.IO-IO/CLIENT.js');
-		load('UPPERCASE.IO-IO/BROWSER.js');
-
-		// write IMPORT.js
-		WRITE_FILE({
-			path : '../UPPERCASE.IO-TIZEN-PACK/IMPORT.js',
-			content : initScript,
-			isSync : true
-		});
-
-		// copy BASE_STYLE
-		COPY_FILE({
-			from : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
-			to : '../UPPERCASE.IO-TIZEN-PACK/BASE_STYLE.css',
-			isSync : true
-		});
-
-		// copy BROWSER_INIT
-		COPY_FILE({
-			from : '../UPPERCASE.IO-IO/BROWSER_INIT.js',
-			to : '../UPPERCASE.IO-TIZEN-PACK/INIT.js',
+			to : '../UPPERCASE.IO-BROWSER-PACK/INIT.js',
 			isSync : true
 		});
 	});
