@@ -13,6 +13,13 @@
 * [Apache Cordova](http://cordova.apache.org/)
 * [Appcelerator Titanium](http://www.appcelerator.com/titanium/)
 
+#### 튜토리얼
+* SNS 만들기
+* 실시간 게시판 만들기
+* 메신저 만들기
+* 게임 만들기
+* 성능 향상시키기
+
 #### 샘플 프로젝트
 * Sample
 
@@ -303,7 +310,7 @@ node __BUILD.js
 ```
 
 ## License
-[MIT](LICENSE)
+[MIT](../../LICENSE)
 
 ## Author
 [Young Jae Sim](https://github.com/Hanul)

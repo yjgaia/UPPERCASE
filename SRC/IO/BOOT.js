@@ -33,8 +33,8 @@ global.BOOT = BOOT = function(params) {
 	// box names in BOX folder
 	boxNamesInBOXFolder = [],
 
-	// load js for node.
-	loadJSForNode = function(path) {
+	// load for node.
+	loadForNode = function(path) {
 		require(path);
 	},
 
@@ -47,8 +47,8 @@ global.BOOT = BOOT = function(params) {
 		});
 	},
 
-	// load js for browser.
-	loadJSForBrowser = function(path, isNotToSavePath) {
+	// load for browser.
+	loadForBrowser = function(path, isNotToSavePath) {
 
 		browserScript += READ_FILE({
 			path : path,
@@ -63,97 +63,15 @@ global.BOOT = BOOT = function(params) {
 		}
 	},
 
-	// load js for client.
-	loadJSForClient = function(path) {
-		loadJSForBrowser(path);
+	// load for client.
+	loadForClient = function(path) {
+		loadForBrowser(path);
 	},
 
-	// load js for common.
-	loadJSForCommon = function(path) {
-		loadJSForNode(path);
-		loadJSForBrowser(path);
-	},
-
-	// load coffeescript for node.
-	loadCoffeeForNode = function(path) {
-		RUN_COFFEE({
-			code : READ_FILE({
-				path : path,
-				isSync : true
-			}).toString(),
-			fileName : path
-		});
-	},
-
-	// load coffeescript for browser.
-	loadCoffeeForBrowser = function(path, isNotToSavePath) {
-
-		browserScript += COMPILE_COFFEE_TO_JS({
-			code : READ_FILE({
-				path : path,
-				isSync : true
-			}).toString(),
-			fileName : path
-		}) + '\n';
-
-		if (isNotToSavePath !== true) {
-			browserScriptContentInfos.push({
-				type : 'coffee',
-				path : path
-			});
-		}
-	},
-
-	// load coffeescript for client.
-	loadCoffeeForClient = function(path) {
-		loadCoffeeForBrowser(path);
-	},
-
-	// load coffeescript for common.
-	loadCoffeeForCommon = function(path) {
-		loadCoffeeForNode(path);
-		loadCoffeeForBrowser(path);
-	},
-
-	// load literate coffeescript for node.
-	loadLiterateCoffeeForNode = function(path) {
-		RUN_LITCOFFEE({
-			code : READ_FILE({
-				path : path,
-				isSync : true
-			}).toString(),
-			fileName : path
-		});
-	},
-
-	// load literate coffeescript for browser.
-	loadLiterateCoffeeForBrowser = function(path, isNotToSavePath) {
-
-		browserScript += COMPILE_LITCOFFEE_TO_JS({
-			code : READ_FILE({
-				path : path,
-				isSync : true
-			}).toString(),
-			fileName : path
-		}) + '\n';
-
-		if (isNotToSavePath !== true) {
-			browserScriptContentInfos.push({
-				type : 'litcoffee',
-				path : path
-			});
-		}
-	},
-
-	// load literate coffeescript for client.
-	loadLiterateCoffeeForClient = function(path) {
-		loadLiterateCoffeeForBrowser(path);
-	},
-
-	// load literate coffeescript for common.
-	loadLiterateCoffeeForCommon = function(path) {
-		loadLiterateCoffeeForNode(path);
-		loadLiterateCoffeeForBrowser(path);
+	// load for common.
+	loadForCommon = function(path) {
+		loadForNode(path);
+		loadForBrowser(path);
 	},
 
 	// reload browser script.
@@ -170,17 +88,7 @@ global.BOOT = BOOT = function(params) {
 
 			// js
 			else if (browserScriptContentInfo.type === 'js') {
-				loadJSForBrowser(browserScriptContentInfo.path, true);
-			}
-
-			// coffee
-			else if (browserScriptContentInfo.type === 'coffee') {
-				loadCoffeeForBrowser(browserScriptContentInfo.path, true);
-			}
-
-			// litcoffee
-			else if (browserScriptContentInfo.type === 'litcoffee') {
-				loadLiterateCoffeeForBrowser(browserScriptContentInfo.path, true);
+				loadForBrowser(browserScriptContentInfo.path, true);
 			}
 		});
 	},
@@ -239,12 +147,12 @@ global.BOOT = BOOT = function(params) {
 	loadUJS = function() {
 
 		// load for node.
-		loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.JS-COMMON.js');
-		loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.JS-NODE.js');
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.JS-COMMON.js');
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.JS-NODE.js');
 
 		// load for browser.
-		loadJSForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.JS-COMMON.js');
-		loadJSForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.JS-BROWSER.js');
+		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.JS-COMMON.js');
+		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.JS-BROWSER.js');
 	};
 
 	configuration = function() {
@@ -354,7 +262,7 @@ global.BOOT = BOOT = function(params) {
 	initBoxes = function(next) {
 
 		// load UPPERCASE.IO-BOX/CORE.
-		loadJSForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/CORE.js');
+		loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/CORE.js');
 
 		// create UPPERCASE.IO box.
 		BOX('UPPERCASE.IO');
@@ -410,8 +318,8 @@ global.BOOT = BOOT = function(params) {
 		}
 
 		// load UPPERCASE.IO-BOX/BROWSER.
-		loadJSForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/CLIENT.js');
-		loadJSForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/BROWSER.js');
+		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/CLIENT.js');
+		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/BROWSER.js');
 	};
 
 	clustering = function(work) {
@@ -435,7 +343,7 @@ global.BOOT = BOOT = function(params) {
 	initDatabase = function() {
 
 		// load UPPERCASE.IO-DB.
-		loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-DB/NODE.js');
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-DB/NODE.js');
 
 		if (NODE_CONFIG.dbName !== undefined) {
 
@@ -452,25 +360,25 @@ global.BOOT = BOOT = function(params) {
 	initModelSystem = function() {
 
 		// load UPPERCASE.IO-TRANSPORT.
-		loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-TRANSPORT/NODE.js');
-		loadJSForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-TRANSPORT/BROWSER.js');
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-TRANSPORT/NODE.js');
+		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-TRANSPORT/BROWSER.js');
 
 		// load UPPERCASE.IO-ROOM.
-		loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-ROOM/NODE.js');
-		loadJSForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-ROOM/CLIENT.js');
-		loadJSForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-ROOM/BROWSER.js');
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-ROOM/NODE.js');
+		loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-ROOM/CLIENT.js');
+		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-ROOM/BROWSER.js');
 
 		// load UPPERCASE.IO-MODEL.
-		loadJSForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/COMMON.js');
-		loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/NODE.js');
-		loadJSForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/CLIENT.js');
+		loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/COMMON.js');
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/NODE.js');
+		loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/CLIENT.js');
 	};
 
 	loadAllScripts = function() {
 
 		var
 		// scan all box folders.
-		scanAllBoxFolders = function(folderName, funcForJS, funcForCoffee, funcForLiterateCoffee) {
+		scanAllBoxFolders = function(folderName, funcForJS) {
 
 			var
 			// scan folder
@@ -498,10 +406,6 @@ global.BOOT = BOOT = function(params) {
 
 							if (extname === '.js') {
 								funcForJS(fullPath);
-							} else if (extname === '.coffee') {
-								funcForCoffee(fullPath);
-							} else if (extname === '.litcoffee') {
-								funcForLiterateCoffee(fullPath);
 							}
 						});
 					}
@@ -561,10 +465,6 @@ global.BOOT = BOOT = function(params) {
 							if (fileName === folderName + extname) {
 								if (extname === '.js') {
 									funcForJS(fullPath);
-								} else if (extname === '.coffee') {
-									funcForCoffee(fullPath);
-								} else if (extname === '.litcoffee') {
-									funcForLiterateCoffee(fullPath);
 								}
 							}
 						});
@@ -573,10 +473,10 @@ global.BOOT = BOOT = function(params) {
 			});
 		};
 
-		scanAllBoxFolders('COMMON', loadJSForCommon, loadCoffeeForCommon, loadLiterateCoffeeForCommon);
-		scanAllBoxFolders('NODE', loadJSForNode, loadCoffeeForNode, loadLiterateCoffeeForNode);
-		scanAllBoxFolders('BROWSER', loadJSForBrowser, loadCoffeeForBrowser, loadLiterateCoffeeForBrowser);
-		scanAllBoxFolders('CLIENT', loadJSForClient, loadCoffeeForClient, loadLiterateCoffeeForClient);
+		scanAllBoxFolders('COMMON', loadForCommon);
+		scanAllBoxFolders('NODE', loadForNode);
+		scanAllBoxFolders('BROWSER', loadForBrowser);
+		scanAllBoxFolders('CLIENT', loadForClient);
 	};
 
 	generateIndexPage = function() {
@@ -622,7 +522,7 @@ global.BOOT = BOOT = function(params) {
 		indexPageContent += '</p>';
 		indexPageContent += '</noscript>';
 
-		// load js.
+		// load script.
 		indexPageContent += '<script type="text/javascript" src="/__SCRIPT?' + CONFIG.version + '"></script>';
 		indexPageContent += '</body>';
 		indexPageContent += '</html>';
@@ -709,7 +609,7 @@ global.BOOT = BOOT = function(params) {
 		if (CONFIG.webServerPort !== undefined || CONFIG.sercuredWebServerPort !== undefined) {
 
 			// load UPPERCASE.IO-UPLOAD.
-			loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-UPLOAD/NODE.js');
+			loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-UPLOAD/NODE.js');
 
 			webServer = RESOURCE_SERVER({
 
@@ -1151,14 +1051,14 @@ global.BOOT = BOOT = function(params) {
 	initBoxes();
 
 	// load UPPERCASE.IO-UTIL.
-	loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-UTIL/NODE.js');
+	loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-UTIL/NODE.js');
 
 	// load UPPERCASE.IO-IO.
-	loadJSForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/COMMON.js');
-	loadJSForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/CLIENT.js');
-	loadJSForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER.js');
-	loadJSForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER_INIT.js');
-	loadJSForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/NODE.js');
+	loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/COMMON.js');
+	loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/CLIENT.js');
+	loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER.js');
+	loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER_INIT.js');
+	loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/NODE.js');
 
 	// clustering cpus and servers.
 	clustering(function() {

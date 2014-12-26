@@ -1,3 +1,0 @@
-TEST
-
-    number = 32
