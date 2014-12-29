@@ -1,1 +1,1 @@
-RUN(function(){"use strict";var t,o=BROWSER_CONFIG.fixTransportScriptsFolderPath;t=function(t){LOAD(o+"/"+t+".js")},void 0===global.WebSocket&&t("CONNECT/CONNECT_TO_WEB_SOCKET_SERVER")});
+RUN(function(){"use strict";var o,t=BROWSER_CONFIG.fixTransportScriptsFolderPath;o=function(o){LOAD(t+"/"+o+".js")},(void 0===global.WebSocket||void 0===WebSocket.prototype.CLOSING)&&o("CONNECT/CONNECT_TO_WEB_SOCKET_SERVER")});

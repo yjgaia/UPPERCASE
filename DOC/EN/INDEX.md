@@ -14,7 +14,6 @@ Based on [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)
 #### Supported platforms
 * Modern web browsers (including Internet explorers 5.5 and above)
 * [Apache Cordova](http://cordova.apache.org/)
-* [Appcelerator Titanium](http://www.appcelerator.com/titanium/)
 
 #### Sample project
 * Sample
