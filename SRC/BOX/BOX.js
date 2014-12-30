@@ -1,7 +1,7 @@
 /**
  * create box.
  */
-global.BOX = BOX = METHOD(function(m) {
+global.BOX = METHOD(function(m) {
 	'use strict';
 
 	var

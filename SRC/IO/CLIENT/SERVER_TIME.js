@@ -1,7 +1,7 @@
 /**
  * Get server time.
  */
-global.SERVER_TIME = SERVER_TIME = METHOD(function(m) {
+global.SERVER_TIME = METHOD(function(m) {
 	'use strict';
 
 	var

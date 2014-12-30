@@ -3,7 +3,7 @@
  */
 OVERRIDE(NODE_CONFIG, function(origin) {
 
-	global.NODE_CONFIG = NODE_CONFIG = COMBINE([origin, {
+	global.NODE_CONFIG = COMBINE([origin, {
 
 		// db log mode
 		isDBLogMode : false,

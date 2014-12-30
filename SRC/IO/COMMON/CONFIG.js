@@ -4,7 +4,7 @@
 OVERRIDE(CONFIG, function(origin) {
 	'use strict';
 
-	global.CONFIG = CONFIG = COMBINE([{
+	global.CONFIG = COMBINE([{
 		defaultBoxName : 'UPPERCASE.IO',
 		title : 'UPPERCASE.IO PROJECT',
 		description : 'UPPERCASE.IO PROJECT',

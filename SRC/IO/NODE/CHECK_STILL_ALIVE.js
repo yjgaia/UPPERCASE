@@ -1,7 +1,7 @@
 /**
  * Check still alive object
  */
-global.CHECK_STILL_ALIVE = CHECK_STILL_ALIVE = OBJECT({
+global.CHECK_STILL_ALIVE = OBJECT({
 
 	init : function() {
 		'use strict';

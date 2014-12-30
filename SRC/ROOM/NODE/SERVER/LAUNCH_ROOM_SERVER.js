@@ -1,7 +1,7 @@
 /*
  * Launch room server class
  */
-global.LAUNCH_ROOM_SERVER = LAUNCH_ROOM_SERVER = CLASS(function(cls) {
+global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 	'use strict';
 
 	var

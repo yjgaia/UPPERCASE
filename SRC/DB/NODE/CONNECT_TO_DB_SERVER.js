@@ -1,7 +1,7 @@
 /**
  * connect to MongoDB server.
  */
-global.CONNECT_TO_DB_SERVER = CONNECT_TO_DB_SERVER = METHOD(function(m) {
+global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 	var
 	// native db

@@ -1,1 +1,1 @@
-OVERRIDE(WIN_WIDTH,function(){"use strict";global.WIN_WIDTH=WIN_WIDTH=METHOD({run:function(){return document.documentElement.offsetWidth}})});
+OVERRIDE(WIN_WIDTH,function(){"use strict";global.WIN_WIDTH=METHOD({run:function(){return document.documentElement.offsetWidth}})});

@@ -1,4 +1,4 @@
-global.BOOT = BOOT = function(params) {
+global.BOOT = function(params) {
 	'use strict';
 	//OPTIONAL: params
 	//OPTIONAL: params.CONFIG

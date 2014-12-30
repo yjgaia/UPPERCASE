@@ -1,7 +1,7 @@
 /**
  * ImageMagick® identify.
  */
-global.IMAGEMAGICK_IDENTIFY = IMAGEMAGICK_IDENTIFY = METHOD(function() {
+global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 	'use strict';
 
 	var

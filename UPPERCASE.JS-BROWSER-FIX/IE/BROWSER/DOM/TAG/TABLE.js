@@ -1,1 +1,1 @@
-OVERRIDE(TABLE,function(t){"use strict";global.TABLE=TABLE=CLASS({preset:function(){return t},init:function(t,n){var e=DOM({tag:"tbody"});n.getWrapperEl().appendChild(e.getEl()),t.setContentDom(e)}})});
+OVERRIDE(TABLE,function(t){"use strict";global.TABLE=CLASS({preset:function(){return t},init:function(t,n){var e=DOM({tag:"tbody"});n.getWrapperEl().appendChild(e.getEl()),t.setContentDom(e)}})});

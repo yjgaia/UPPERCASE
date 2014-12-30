@@ -1,7 +1,7 @@
 /*
  * create upload request handler.
  */
-global.UPLOAD_REQUEST = UPLOAD_REQUEST = METHOD(function(m) {
+global.UPLOAD_REQUEST = METHOD(function(m) {
 	'use strict';
 
 	var

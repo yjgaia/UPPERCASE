@@ -1,7 +1,7 @@
 /*
  * create multi protocol socket server.
  */
-global.MULTI_PROTOCOL_SOCKET_SERVER = MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
+global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
 
 	init : function(inner, self, params, connectionListener) {
 		'use strict';

@@ -1,7 +1,7 @@
 /*
  * connect to room server.
  */
-global.CONNECT_TO_ROOM_SERVER = CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
+global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	'use strict';
 
 	var

@@ -1,7 +1,7 @@
 /**
  * Get time.
  */
-global.TIME = TIME = METHOD(function(m) {
+global.TIME = METHOD(function(m) {
 	'use strict';
 
 	var

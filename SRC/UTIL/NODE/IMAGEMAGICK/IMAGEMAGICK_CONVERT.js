@@ -1,7 +1,7 @@
 /**
  * ImageMagick® convert.
  */
-global.IMAGEMAGICK_CONVERT = IMAGEMAGICK_CONVERT = METHOD(function() {
+global.IMAGEMAGICK_CONVERT = METHOD(function() {
 	'use strict';
 
 	var

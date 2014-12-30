@@ -1,7 +1,7 @@
 /**
  * inject method or class to box.
  */
-global.FOR_BOX = FOR_BOX = METHOD(function(m) {
+global.FOR_BOX = METHOD(function(m) {
 	'use strict';
 
 	var

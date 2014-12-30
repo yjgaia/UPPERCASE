@@ -1,7 +1,7 @@
 /**
  * minify js.
  */
-global.MINIFY_JS = MINIFY_JS = METHOD(function() {
+global.MINIFY_JS = METHOD(function() {
 	'use strict';
 
 	var

@@ -1,7 +1,7 @@
 /*
  * connect to UPPERCASE.IO server.
  */
-global.CONNECT_TO_IO_SERVER = CONNECT_TO_IO_SERVER = METHOD({
+global.CONNECT_TO_IO_SERVER = METHOD({
 
 	run : function(connectionListenerOrListeners) {
 		'use strict';

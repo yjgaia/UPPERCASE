@@ -4,7 +4,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
 	/*
 	 * connect to web socket fix server (using jsonp long-polling).
 	 */
-	global.CONNECT_TO_WEB_SOCKET_SERVER = CONNECT_TO_WEB_SOCKET_SERVER = METHOD(function(m) {
+	global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD(function(m) {
 
 		var
 		// MAX_LENGTH

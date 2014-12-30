@@ -1,1 +1,1 @@
-OVERRIDE(TEXTAREA,function(n){"use strict";global.TEXTAREA=TEXTAREA=CLASS({preset:function(){return n},init:function(n,t){var e;t.setValue=e=function(n){t.empty(),t.append(n)}}})});
+OVERRIDE(TEXTAREA,function(n){"use strict";global.TEXTAREA=CLASS({preset:function(){return n},init:function(n,t){var e;t.setValue=e=function(n){t.empty(),t.append(n)}}})});

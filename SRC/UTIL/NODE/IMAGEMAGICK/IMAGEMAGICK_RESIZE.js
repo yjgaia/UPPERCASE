@@ -1,7 +1,7 @@
 /**
  * ImageMagick® resize.
  */
-global.IMAGEMAGICK_RESIZE = IMAGEMAGICK_RESIZE = METHOD(function() {
+global.IMAGEMAGICK_RESIZE = METHOD(function() {
 	'use strict';
 
 	var
