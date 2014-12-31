@@ -9,7 +9,7 @@ FOR_BOX(function(box) {
 		run : function(uri) {
 			//OPTIONAL: uri
 
-			global.open(box.HREF(uri));
+			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
 		}
 	});
 });

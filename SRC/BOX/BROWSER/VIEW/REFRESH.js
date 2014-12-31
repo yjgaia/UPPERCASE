@@ -8,14 +8,8 @@ FOR_BOX(function(box) {
 
 		run : function(uri) {
 			//OPTIONAL: uri
-
-			EVENT_ONCE({
-				name : 'hashchange'
-			}, function() {
-				box.GO(uri);
-			});
-
-			location.href = '#__REFRESING';
+			
+			REFRESH((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
 		}
 	});
 });

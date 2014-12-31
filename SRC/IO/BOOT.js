@@ -989,13 +989,20 @@ global.BOOT = function(params) {
 							}
 						}
 
+						// response UPPERCASE.IO-TRANSPORT-FIX.
 						if (boxName === 'UPPERCASE.IO-TRANSPORT') {
 							replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.IO-TRANSPORT/R');
 							requestInfo.uri = uri;
-						} else if (boxName === 'UPPERCASE.JS-BROWSER-FIX') {
+						}
+						
+						// response UPPERCASE.IO-BROWSER-FIX.
+						else if (boxName === 'UPPERCASE.JS-BROWSER-FIX') {
 							replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.JS-BROWSER-FIX');
 							requestInfo.uri = uri;
-						} else {
+						}
+						
+						// response resource.
+						else if (uri.substring(0, 2) === 'R/') {
 
 							if (boxRequestListeners[boxName] !== undefined) {
 								isGoingOn = boxRequestListeners[boxName](requestInfo, response, onDisconnected, replaceRootPath, next);
@@ -1007,26 +1014,23 @@ global.BOOT = function(params) {
 									array : boxNamesInBOXFolder,
 									value : boxName
 								}) === true) {
-									requestInfo.uri = 'BOX/' + boxName + (uri.substring(0, 2) === 'R/' ? '/' : '/R') + (uri === '' ? '' : ('/' + uri));
+									requestInfo.uri = 'BOX/' + boxName + '/' + uri;
 								} else {
-									requestInfo.uri = boxName + (uri.substring(0, 2) === 'R/' ? '/' : '/R') + (uri === '' ? '' : ('/' + uri));
+									requestInfo.uri = boxName + '/' + uri;
 								}
-
+								
 							} else {
 								return isGoingOn;
 							}
 						}
-					}
-				},
-
-				notExistsResource : function(resourcePath, requestInfo, response) {
-
-					if (requestInfo.uri === CONFIG.defaultBoxName + '/R' || requestInfo.uri === 'BOX/' + CONFIG.defaultBoxName + '/R') {
-
-						response({
-							contentType : 'text/html',
-							content : indexPageContent
-						});
+						
+						// response index page.
+						else {
+							response({
+								contentType : 'text/html',
+								content : indexPageContent
+							});
+						}
 					}
 				}
 			});

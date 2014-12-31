@@ -1,0 +1,1 @@
+OVERRIDE(REFRESH,function(){"use strict";global.REFRESH=METHOD(function(n){var o,t="__REFRESHING";return n.getRefreshingURI=o=function(){return t},{run:function(n){var o=void 0!==n?"#!/"+n:location.hash;EVENT_ONCE({name:"hashchange"},function(){location.href=""===o?"#!/":o}),location.href="#!/"+t}}})});

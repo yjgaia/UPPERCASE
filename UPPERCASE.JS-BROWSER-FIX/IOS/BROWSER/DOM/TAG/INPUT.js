@@ -1,0 +1,1 @@
+OVERRIDE(INPUT,function(t){"use strict";global.INPUT=CLASS({preset:function(){return t},init:function(t){t.setAttr({name:"autocapitalize",value:"none"}),t.setAttr({name:"autocorrect",value:"off"})}})});

@@ -1,1 +1,1 @@
-OVERRIDE(REFRESH,function(){"use strict";global.REFRESH=METHOD({run:function(n){var E=void 0!==n?"#"+n:location.hash;EVENT_ONCE({name:"hashchange"},function(){DELAY(function(){location.href=""===E?"#":E})}),location.href="#__REFRESING"}})});
+OVERRIDE(REFRESH,function(n){"use strict";global.REFRESH=METHOD(function(t){var o;return t.getRefreshingURI=o=function(){return n.getRefreshingURI()},{run:function(n){var t=void 0!==n?"#!/"+n:location.hash;EVENT_ONCE({name:"hashchange"},function(){DELAY(function(){location.href=""===t?"#!/":t})}),location.href="#!/"+o()}}})});

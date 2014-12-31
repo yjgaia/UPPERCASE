@@ -19,10 +19,10 @@ FOR_BOX(function(box) {
 			}
 
 			if (callback !== undefined) {
-				GET(uri, callback);
+				GET('/' + uri, callback);
 			}
 
-			return uri;
+			return '/' + uri;
 		}
 	});
 });

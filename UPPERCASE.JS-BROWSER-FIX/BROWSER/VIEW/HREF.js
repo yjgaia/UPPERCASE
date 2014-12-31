@@ -1,0 +1,1 @@
+OVERRIDE(HREF,function(){"use strict";global.HREF=METHOD({run:function(n){return"#!/"+(void 0===n?"":n)}})});

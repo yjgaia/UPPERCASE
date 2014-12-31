@@ -1,0 +1,1 @@
+OVERRIDE(GO,function(){"use strict";global.GO=METHOD({run:function(n){location.href=HREF(n)}})});

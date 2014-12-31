@@ -1,0 +1,1 @@
+OVERRIDE(TEXTAREA,function(t){"use strict";global.TEXTAREA=CLASS({preset:function(){return t},init:function(t){t.setAttr({name:"autocapitalize",value:"none"}),t.setAttr({name:"autocorrect",value:"off"})}})});
