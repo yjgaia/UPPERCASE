@@ -480,52 +480,72 @@ global.BOOT = function(params) {
 	};
 
 	generateIndexPage = function() {
-
-		indexPageContent += '<!DOCTYPE html>';
-		indexPageContent += '<html>';
-		indexPageContent += '<head>';
-		indexPageContent += '<meta charset="utf-8">';
-		indexPageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' + (CONFIG.isMobileFullScreen === true ? ', minimal-ui' : '') + '">';
-		indexPageContent += '<meta name="google" value="notranslate">';
-
-		if (CONFIG.googleSiteVerificationKey !== undefined) {
-			indexPageContent += '<meta name="google-site-verification" content="' + CONFIG.googleSiteVerificationKey + '" />';
-		}
-
-		indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
-
-		if (CONFIG.description !== undefined) {
-			indexPageContent += '<meta name="description" content="' + CONFIG.description + '">';
-		}
-
-		indexPageContent += '<link href="/favicon.ico" rel="shortcut icon">';
-		indexPageContent += '<title>' + CONFIG.title + '</title>';
-
-		// load css.
-		indexPageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?' + CONFIG.version + '" />';
 		
-		// set base color.
-		indexPageContent += '<style>';
-		indexPageContent += 'html, body {';
-		indexPageContent += 'background-color : ' + CONFIG.baseBackgroundColor + ';';
-		indexPageContent += 'color : ' + CONFIG.baseColor + ';';
-		indexPageContent += '}';
-		indexPageContent += '</style>';
+		var
+		// custom index path
+		customIndexPath = rootPath + '/' + CHECK_IS_IN({
+			array : boxNamesInBOXFolder,
+			value : CONFIG.defaultBoxName
+		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/index.html' : CONFIG.defaultBoxName + '/index.html';
 		
-		indexPageContent += '</head>';
-		indexPageContent += '<body>';
+		if (CHECK_IS_EXISTS_FILE({
+			path : customIndexPath,
+			isSync : true
+		}) === true) {
+			
+			indexPageContent = READ_FILE({
+				path : customIndexPath,
+				isSync : true
+			}).toString();
+			
+		} else {
 
-		// show please enable JavaScript msg.
-		indexPageContent += '<noscript>';
-		indexPageContent += '<p style="padding:15px;">';
-		indexPageContent += 'JavaScript is disabled. Please enable JavaScript in your browser.';
-		indexPageContent += '</p>';
-		indexPageContent += '</noscript>';
-
-		// load script.
-		indexPageContent += '<script type="text/javascript" src="/__SCRIPT?' + CONFIG.version + '"></script>';
-		indexPageContent += '</body>';
-		indexPageContent += '</html>';
+			indexPageContent += '<!DOCTYPE html>';
+			indexPageContent += '<html>';
+			indexPageContent += '<head>';
+			indexPageContent += '<meta charset="utf-8">';
+			indexPageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' + (CONFIG.isMobileFullScreen === true ? ', minimal-ui' : '') + '">';
+			indexPageContent += '<meta name="google" value="notranslate">';
+	
+			if (CONFIG.googleSiteVerificationKey !== undefined) {
+				indexPageContent += '<meta name="google-site-verification" content="' + CONFIG.googleSiteVerificationKey + '" />';
+			}
+	
+			indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
+	
+			if (CONFIG.description !== undefined) {
+				indexPageContent += '<meta name="description" content="' + CONFIG.description + '">';
+			}
+	
+			indexPageContent += '<link href="/favicon.ico" rel="shortcut icon">';
+			indexPageContent += '<title>' + CONFIG.title + '</title>';
+	
+			// load css.
+			indexPageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?' + CONFIG.version + '" />';
+			
+			// set base color.
+			indexPageContent += '<style>';
+			indexPageContent += 'html, body {';
+			indexPageContent += 'background-color : ' + CONFIG.baseBackgroundColor + ';';
+			indexPageContent += 'color : ' + CONFIG.baseColor + ';';
+			indexPageContent += '}';
+			indexPageContent += '</style>';
+			
+			indexPageContent += '</head>';
+			indexPageContent += '<body>';
+	
+			// show please enable JavaScript msg.
+			indexPageContent += '<noscript>';
+			indexPageContent += '<p style="padding:15px;">';
+			indexPageContent += 'JavaScript is disabled. Please enable JavaScript in your browser.';
+			indexPageContent += '</p>';
+			indexPageContent += '</noscript>';
+	
+			// load script.
+			indexPageContent += '<script type="text/javascript" src="/__SCRIPT?' + CONFIG.version + '"></script>';
+			indexPageContent += '</body>';
+			indexPageContent += '</html>';
+		}
 	};
 
 	run = function() {
@@ -961,7 +981,7 @@ global.BOOT = function(params) {
 						return false;
 					}
 
-					// serve web socket fix request
+					// serve web socket fix request.
 					else if (uri === '__WEB_SOCKET_FIX') {
 
 						webSocketFixRequest(requestInfo, {
@@ -970,6 +990,15 @@ global.BOOT = function(params) {
 						});
 
 						return false;
+					}
+					
+					// serve favicon.ico.
+					else if (uri === 'favicon.ico') {
+						
+						requestInfo.uri = CHECK_IS_IN({
+							array : boxNamesInBOXFolder,
+							value : CONFIG.defaultBoxName
+						}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/R/favicon.ico' : CONFIG.defaultBoxName + '/R/favicon.ico';
 					}
 
 					// serve others.
@@ -989,47 +1018,63 @@ global.BOOT = function(params) {
 							}
 						}
 
-						// response UPPERCASE.IO-TRANSPORT-FIX.
+						// serve UPPERCASE.IO-TRANSPORT-FIX.
 						if (boxName === 'UPPERCASE.IO-TRANSPORT') {
 							replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.IO-TRANSPORT/R');
 							requestInfo.uri = uri;
 						}
 						
-						// response UPPERCASE.IO-BROWSER-FIX.
+						// serve UPPERCASE.IO-BROWSER-FIX.
 						else if (boxName === 'UPPERCASE.JS-BROWSER-FIX') {
 							replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.JS-BROWSER-FIX');
 							requestInfo.uri = uri;
 						}
 						
-						// response resource.
-						else if (uri.substring(0, 2) === 'R/') {
-
-							if (boxRequestListeners[boxName] !== undefined) {
-								isGoingOn = boxRequestListeners[boxName](requestInfo, response, onDisconnected, replaceRootPath, next);
-							}
-
-							if (isGoingOn !== false) {
-
-								if (CHECK_IS_IN({
+						// serve other.
+						else {
+						
+							// serve resource.
+							if (uri.substring(0, 2) === 'R/') {
+								
+								requestInfo.uri = CHECK_IS_IN({
 									array : boxNamesInBOXFolder,
 									value : boxName
-								}) === true) {
-									requestInfo.uri = 'BOX/' + boxName + '/' + uri;
-								} else {
-									requestInfo.uri = boxName + '/' + uri;
+								}) === true ? 'BOX/' + boxName + '/' + uri : boxName + '/' + uri;
+							}
+							
+							// response index page.
+							else {
+	
+								if (boxRequestListeners[boxName] !== undefined) {
+									isGoingOn = boxRequestListeners[boxName](requestInfo, response, onDisconnected, replaceRootPath, next);
 								}
 								
-							} else {
-								return isGoingOn;
+								if (isGoingOn !== false) {
+									
+									if (params._escaped_fragment_ !== undefined) {
+										
+										response({
+											statusCode : 302,
+											headers : {
+												'Location' : params._escaped_fragment_
+											}
+										});
+										
+									} else {
+									
+										if (CONFIG.isDevMode === true) {
+											generateIndexPage();
+										}
+										
+										response({
+											contentType : 'text/html',
+											content : indexPageContent
+										});
+									}
+								}
+								
+								return false;
 							}
-						}
-						
-						// response index page.
-						else {
-							response({
-								contentType : 'text/html',
-								content : indexPageContent
-							});
 						}
 					}
 				}
@@ -1081,7 +1126,7 @@ global.BOOT = function(params) {
 			// minify browser script.
 			browserScript = MINIFY_JS(browserScript);
 		}
-
+		
 		// generate index page.
 		generateIndexPage();
 
