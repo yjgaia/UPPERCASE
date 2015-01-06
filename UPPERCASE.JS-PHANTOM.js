@@ -1,1 +1,62 @@
-global.WEB_SERVER=METHOD({run:function(e,t){"use strict";var o=require("webserver");o.create().listen(e,function(e,o){t({},function(e){var t=void 0===e.statusCode?200:e.statusCode,n=void 0===e.headers?{}:e.headers,i=e.contentType,s=e.content,a=void 0===e.encoding?"utf-8":a,d=e.cacheTime;void 0!==i&&(n["Content-Type"]=contentTypes),void 0!==d&&(n.ETag=d,n["Last-Modified"]=new Date(d).toUTCString()),o.statusCode=t,o.headers=n,o.write(s),o.close()})}),console.log("[UPPERCASE.JS-WEB_SERVER] RUNNING WEB SERVER... (PORT:"+e+")")}});
+/*
+ * create web server.
+ */
+global.WEB_SERVER = METHOD({
+
+	run : function(port, requestListener) {'use strict';
+		//REQUIRED: port
+		//REQUIRED: requestListener
+
+		var
+		//IMPORT: webserver
+		webserver = require('webserver');
+
+		webserver.create().listen(port, function(nativeReq, nativeRes) {
+
+			requestListener(
+
+			// request info
+			{
+			},
+
+			// response.
+			function(params) {
+
+				var
+				// status code
+				statusCode = params.statusCode === undefined ? 200 : params.statusCode,
+
+				// headers
+				headers = params.headers === undefined ? {} : params.headers,
+
+				// content type
+				contentType = params.contentType,
+
+				// content
+				content = params.content,
+
+				// encoding
+				encoding = params.encoding === undefined ? 'utf-8' : encoding,
+
+				// cache time
+				cacheTime = params.cacheTime;
+
+				if (contentType !== undefined) {
+					headers['Content-Type'] = contentTypes;
+				}
+
+				if (cacheTime !== undefined) {
+					headers['ETag'] = cacheTime;
+					headers['Last-Modified'] = new Date(cacheTime).toUTCString();
+				}
+
+				nativeRes.statusCode = statusCode;
+				nativeRes.headers = headers;
+				nativeRes.write(content);
+				nativeRes.close();
+			});
+		});
+
+		console.log('[UPPERCASE.JS-WEB_SERVER] RUNNING WEB SERVER... (PORT:' + port + ')');
+	}
+});

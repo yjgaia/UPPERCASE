@@ -1,1 +1,867 @@
-global.MULTI_PROTOCOL_SOCKET_SERVER=CLASS({init:function(e,t,S,r){"use strict";var E,o,i=S.socketServerPort,R=S.webSocketServerPort,_=S.isCreateWebSocketFixRequestManager,v=S.webServer;void 0!==i&&SOCKET_SERVER(i,r),(void 0!==R||void 0!==v)&&WEB_SOCKET_SERVER(void 0!==R?R:v,r),_===!0&&(E=WEB_SOCKET_FIX_REQUEST_MANAGER(r)),t.getWebSocketFixRequest=o=function(){return E.request}}});global.WEB_SOCKET_FIX_REQUEST_MANAGER=CLASS(function(){"use strict";var _=5,E=2;return{init:function(e,t,o){var n,d={},a={},R=0,T={},C={},i={},N={},S=function(_,E,e,t){void 0===d[_]&&(d[_]={}),void 0===d[_][E]?d[_][E]=e:d[_][E]+=e,t===!0&&void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__WEB_SOCKET_FIX_REQUEST_MANAGER__ADD_CONTENT",data:{clientId:_,requestKey:E,content:e}})},c=function(_,E,e){void 0!==d[_]&&delete d[_][E],e===!0&&void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_CONTENT",data:{clientId:_,requestKey:E}})},I=function(_,E){void 0!==T[_]?T[_](E):r(_,E,!0)},U=function(_,E,e,t){var o=a[_][E];void 0!==o&&EACH(o,function(E){E(e,function(E){void 0!==t&&I(_,{methodName:"__CALLBACK_"+t,data:E})})})},A=function(_){void 0!==i[_]&&(i[_].remove(),delete i[_]),delete T[_]},r=function(_,E,e){void 0===C[_]&&(C[_]=[]),C[_].push(E),e===!0&&void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__WEB_SOCKET_FIX_REQUEST_MANAGER__SEND",data:{clientId:_,params:E}})},v=function(_,E){REMOVE({array:C[_],key:0}),0===C[_].length&&delete C[_],E===!0&&void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_FIRST_WATING_PARAMS",data:_})},s=function(_,E){void 0!==N[_]&&(N[_].remove(),delete N[_]),E===!0&&void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_LIFE_DELAY",data:_})},O=function(_,E){A(_),void 0!==a[_]&&delete a[_],void 0!==C[_]&&delete C[_],s(_),void 0!==d[_]&&delete d[_],E===!0&&void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_ALL",data:_})};void 0!==CPU_CLUSTERING.on&&(CPU_CLUSTERING.on("__WEB_SOCKET_FIX_REQUEST_MANAGER__RUN_METHODS",function(_){var E=_.clientId;void 0!==a[E]&&U(E,_.methodName,_.data,_.sendKey)}),CPU_CLUSTERING.on("__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_FIRST_WATING_PARAMS",function(_){void 0!==C[_]&&v(_)}),CPU_CLUSTERING.on("__WEB_SOCKET_FIX_REQUEST_MANAGER__SEND",function(_){var E=_.clientId,e=_.params;void 0!==T[E]?(T[E](e),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_FIRST_WATING_PARAMS",data:E})):r(E,e)}),CPU_CLUSTERING.on("__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_LIFE_DELAY",function(_){s(_)}),CPU_CLUSTERING.on("__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_ALL",function(_){O(_)}),CPU_CLUSTERING.on("__WEB_SOCKET_FIX_REQUEST_MANAGER__ADD_CONTENT",function(_){S(_.clientId,_.requestKey,_.content)}),CPU_CLUSTERING.on("__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_CONTENT",function(_){c(_.clientId,_.requestKey)})),t.request=n=function(e,t){var n,r,G,u=e.params,L=u.clientId,K=INTEGER(u.connectionKey),M=INTEGER(u.requestKey),m=u.content,f="true"===u.isEnd,P=t.response,l=t.onDisconnected,F=function(_,E,e){void 0!==a[L]?U(L,_,E,e):void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__WEB_SOCKET_FIX_REQUEST_MANAGER__RUN_METHODS",data:{clientId:L,methodName:_,data:E,sendKey:e}}),"__DISCONNECTED"===_&&O(L,!0)};void 0===L?(L=RANDOM_STR(40),n=a[L]={},o({ip:e.ip,headers:e.headers},r=function(_,E){var e=n[_];void 0===e&&(e=n[_]=[]),e.push(E)},G=function(_,E){var e=n[_];void 0!==e&&(void 0!==E?REMOVE({array:e,value:E}):delete n[_])},function(_,E){var e="__CALLBACK_"+R;_.sendKey=R,R+=1,I(L,_),void 0!==E&&r(e,function(_){E(_),G(e)})},function(){F("__DISCONNECTED")}),P({contentType:"text/javascript",content:"CONNECT_TO_WEB_SOCKET_SERVER.response('"+encodeURIComponent(STRINGIFY({clientId:L,connectionKey:K,requestKey:M}))+"')"})):f===!0?(RUN(function(){var e,t,o,n,a=void 0===d[L]?void 0:PARSE_STR(d[L][M]);void 0!==a&&(e=a.methodName,t=a.data,o=a.sendKey),void 0!==e?(F(e,t,o),P({contentType:"text/javascript",content:"CONNECT_TO_WEB_SOCKET_SERVER.removeRequestInfo("+M+")"})):void 0!==T[L]?T[L]():(s(L,!0),n=function(){F("__DISCONNECTED")},T[L]=function(_){P({contentType:"text/javascript",content:"CONNECT_TO_WEB_SOCKET_SERVER.response('"+encodeURIComponent(STRINGIFY({connectionKey:K,clientId:L,params:_,requestKey:M}))+"')"}),A(L),N[L]=DELAY(E,n)},l(n),i[L]=DELAY(_,function(){void 0!==T[L]&&T[L]()}),void 0!==C[L]&&(T[L](C[L][0]),v(L,!0)))}),c(L,M,!0)):(S(L,M,m,!0),P({contentType:"text/javascript",content:"CONNECT_TO_WEB_SOCKET_SERVER.request("+M+")"}))},console.log("[UPPERCASE.IO-WEB_SOCKET_FIX_REQUEST_MANAGER] RUNNING WEB SOCKET FIX REQUEST MANAGER...")}}});global.WEB_SOCKET_SERVER=METHOD({run:function(o,e){"use strict";var n,E,r,i=require("ws").Server;CHECK_IS_DATA(o)!==!0?n=o:E=o,r=new i({port:n,server:void 0===E?void 0:E.getNativeHTTPServer()}),r.on("connection",function(o){var n,E,r,i,t=o.upgradeReq.headers,R={},d=0,a=function(o,e,n){var E=R[o];void 0!==E&&EACH(E,function(o){o(e,function(o){void 0!==n&&i({methodName:"__CALLBACK_"+n,data:o})})})};o.on("message",function(o){var e=PARSE_STR(o);void 0!==e&&a(e.methodName,e.data,e.sendKey)}),o.on("close",function(){a("__DISCONNECTED"),R=void 0}),o.on("error",function(o){var e=o.toString();console.log("[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:",e),a("__ERROR",e)}),n=t["x-forwarded-for"],void 0===n&&(n=o.upgradeReq.connection.remoteAddress),e({ip:n,headers:t},E=function(o,e){var n=R[o];void 0===n&&(n=R[o]=[]),n.push(e)},r=function(o,e){var n=R[o];void 0!==n&&(void 0!==e?REMOVE({array:n,value:e}):delete R[o])},i=function(e,n){var i="__CALLBACK_"+d;e.sendKey=d,d+=1;try{o.send(STRINGIFY(e))}catch(t){console.log("[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:",t.toString())}void 0!==n&&E(i,function(o){n(o),r(i)})},function(){o.close()})}),console.log("[UPPERCASE.IO-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER..."+(void 0===n?"":" (PORT:"+n+")"))}});
+/*
+ * create multi protocol socket server.
+ */
+global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
+
+	init : function(inner, self, params, connectionListener) {
+		'use strict';
+		//REQUIRED: params
+		//OPTIONAL: params.socketServerPort
+		//OPTIONAL: params.webSocketServerPort
+		//OPTIONAL: params.webServer
+		//OPTIONAL: params.isCreateWebSocketFixRequestManager
+		//REQUIRED: connectionListener
+
+		var
+		// socket server port
+		socketServerPort = params.socketServerPort,
+
+		// web socket server port
+		webSocketServerPort = params.webSocketServerPort,
+
+		// is create web socket fix request manager
+		isCreateWebSocketFixRequestManager = params.isCreateWebSocketFixRequestManager,
+
+		// web server
+		webServer = params.webServer,
+
+		// web socket fix request manager
+		webSocketFixRequestManager,
+
+		// get web socket fix request.
+		getWebSocketFixRequest;
+
+		if (socketServerPort !== undefined) {
+
+			// create socket server.
+			SOCKET_SERVER(socketServerPort, connectionListener);
+		}
+
+		if (webSocketServerPort !== undefined || webServer !== undefined) {
+
+			// create web socket server.
+			WEB_SOCKET_SERVER(webSocketServerPort !== undefined ? webSocketServerPort : webServer, connectionListener);
+		}
+
+		if (isCreateWebSocketFixRequestManager === true) {
+
+			webSocketFixRequestManager = WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener);
+		}
+
+		self.getWebSocketFixRequest = getWebSocketFixRequest = function() {
+			return webSocketFixRequestManager.request;
+		};
+	}
+});
+
+/*
+ * create web socket fix request handler. (using jsonp long-polling)
+ */
+global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// HANDSHAKE_DELAY_TIME
+	HANDSHAKE_DELAY_TIME = 5,
+
+	// LIFE_DELAY_TIME
+	LIFE_DELAY_TIME = 2;
+
+	return {
+
+		init : function(inner, self, connectionListener) {
+			//REQUIRED: connectionListener
+
+			var
+			// content map
+			contentMap = {},
+
+			// method maps
+			methodMaps = {},
+
+			// send key
+			sendKey = 0,
+
+			// inner sends
+			innerSends = {},
+
+			// waiting param map
+			waitingParamMap = {},
+
+			// handshake delays
+			handshakeDelays = {},
+
+			// life delays
+			lifeDelays = {},
+
+			// add content.
+			addContent = function(clientId, requestKey, content, isToBroadcast) {
+
+				if (contentMap[clientId] === undefined) {
+					contentMap[clientId] = {};
+				}
+
+				if (contentMap[clientId][requestKey] === undefined) {
+					contentMap[clientId][requestKey] = content;
+				} else {
+					contentMap[clientId][requestKey] += content;
+				}
+
+				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
+					CPU_CLUSTERING.broadcast({
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__ADD_CONTENT',
+						data : {
+							clientId : clientId,
+							requestKey : requestKey,
+							content : content
+						}
+					});
+				}
+			},
+
+			// remove content.
+			removeContent = function(clientId, requestKey, isToBroadcast) {
+
+				if (contentMap[clientId] !== undefined) {
+					delete contentMap[clientId][requestKey];
+				}
+
+				// broadcast.
+				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
+					CPU_CLUSTERING.broadcast({
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_CONTENT',
+						data : {
+							clientId : clientId,
+							requestKey : requestKey
+						}
+					});
+				}
+			},
+
+			// send.
+			send = function(clientId, params) {
+
+				// inner send.
+				if (innerSends[clientId] !== undefined) {
+					innerSends[clientId](params);
+				}
+
+				// when not exists send
+				else {
+					addWaitingParams(clientId, params, true);
+				}
+			},
+
+			// run methods.
+			runMethods = function(clientId, methodName, data, sendKey) {
+
+				var
+				// methods
+				methods = methodMaps[clientId][methodName];
+
+				if (methods !== undefined) {
+
+					EACH(methods, function(method) {
+
+						// run method.
+						method(data,
+
+						// ret.
+						function(retData) {
+
+							if (sendKey !== undefined) {
+
+								send(clientId, {
+									methodName : '__CALLBACK_' + sendKey,
+									data : retData
+								});
+							}
+						});
+					});
+				}
+			},
+
+			// remove send.
+			removeSend = function(clientId) {
+
+				// remove handshake delay.
+				if (handshakeDelays[clientId] !== undefined) {
+					handshakeDelays[clientId].remove();
+					delete handshakeDelays[clientId];
+				}
+
+				// remove inner send.
+				delete innerSends[clientId];
+			},
+
+			// add waiting params.
+			addWaitingParams = function(clientId, params, isToBroadcast) {
+
+				if (waitingParamMap[clientId] === undefined) {
+					waitingParamMap[clientId] = [];
+				}
+
+				waitingParamMap[clientId].push(params);
+
+				// broadcast send.
+				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
+					CPU_CLUSTERING.broadcast({
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__SEND',
+						data : {
+							clientId : clientId,
+							params : params
+						}
+					});
+				}
+			},
+
+			// remove first waiting params.
+			removeFirstWaitingParams = function(clientId, isToBroadcast) {
+
+				REMOVE({
+					array : waitingParamMap[clientId],
+					key : 0
+				});
+
+				if (waitingParamMap[clientId].length === 0) {
+					delete waitingParamMap[clientId];
+				}
+
+				// broadcast.
+				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
+					CPU_CLUSTERING.broadcast({
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_FIRST_WATING_PARAMS',
+						data : clientId
+					});
+				}
+			},
+
+			// remove life delay.
+			removeLifeDelay = function(clientId, isToBroadcast) {
+
+				if (lifeDelays[clientId] !== undefined) {
+					lifeDelays[clientId].remove();
+					delete lifeDelays[clientId];
+				}
+
+				// broadcast.
+				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
+					CPU_CLUSTERING.broadcast({
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_LIFE_DELAY',
+						data : clientId
+					});
+				}
+			},
+
+			// remove all.
+			removeAll = function(clientId, isToBroadcast) {
+
+				removeSend(clientId);
+
+				// remove method map.
+				if (methodMaps[clientId] !== undefined) {
+					delete methodMaps[clientId];
+				}
+
+				// remove waiting params.
+				if (waitingParamMap[clientId] !== undefined) {
+					delete waitingParamMap[clientId];
+				}
+
+				// remove life delay.
+				removeLifeDelay(clientId);
+
+				// remove contents.
+				if (contentMap[clientId] !== undefined) {
+					delete contentMap[clientId];
+				}
+
+				// broadcast.
+				if (isToBroadcast === true && CPU_CLUSTERING.broadcast !== undefined) {
+					CPU_CLUSTERING.broadcast({
+						methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_ALL',
+						data : clientId
+					});
+				}
+			},
+
+			// request.
+			request;
+
+			if (CPU_CLUSTERING.on !== undefined) {
+
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__RUN_METHODS', function(params) {
+
+					var
+					// client id
+					clientId = params.clientId;
+
+					if (methodMaps[clientId] !== undefined) {
+						runMethods(clientId, params.methodName, params.data, params.sendKey);
+					}
+				});
+
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_FIRST_WATING_PARAMS', function(clientId) {
+
+					if (waitingParamMap[clientId] !== undefined) {
+						removeFirstWaitingParams(clientId);
+					}
+				});
+
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__SEND', function(_params) {
+
+					var
+					// client id
+					clientId = _params.clientId,
+
+					// params
+					params = _params.params;
+
+					// inner send.
+					if (innerSends[clientId] !== undefined) {
+
+						innerSends[clientId](params);
+
+						// broadcast remove first waiting params.
+						if (CPU_CLUSTERING.broadcast !== undefined) {
+							CPU_CLUSTERING.broadcast({
+								methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_FIRST_WATING_PARAMS',
+								data : clientId
+							});
+						}
+					}
+
+					// when not exists send
+					else {
+						addWaitingParams(clientId, params);
+					}
+				});
+
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_LIFE_DELAY', function(clientId) {
+					removeLifeDelay(clientId);
+				});
+
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_ALL', function(clientId) {
+					removeAll(clientId);
+				});
+
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__ADD_CONTENT', function(params) {
+					addContent(params.clientId, params.requestKey, params.content);
+				});
+
+				CPU_CLUSTERING.on('__WEB_SOCKET_FIX_REQUEST_MANAGER__REMOVE_CONTENT', function(params) {
+					removeContent(params.clientId, params.requestKey);
+				});
+			}
+
+			self.request = request = function(requestInfo, funcs) {
+				//REQUIRED: requsetInfo
+				//REQUIRED: funcs
+				//REQUIRED: funcs.response
+				//REQUIRED: funcs.onDisconnected
+
+				var
+				// params
+				params = requestInfo.params,
+
+				// client id
+				clientId = params.clientId,
+
+				// connection key (integer)
+				connectionKey = INTEGER(params.connectionKey),
+
+				// request key (integer)
+				requestKey = INTEGER(params.requestKey),
+
+				// content
+				content = params.content,
+
+				// is end (boolean)
+				isEnd = params.isEnd === 'true',
+
+				// response.
+				response = funcs.response,
+
+				// on disconnected.
+				onDisconnected = funcs.onDisconnected,
+
+				// method map
+				methodMap,
+
+				// on.
+				on,
+
+				// off.
+				off,
+
+				// run methods or broadcast.
+				runMethodsOrBroadcast = function(methodName, data, sendKey) {
+
+					// when exists methodMap
+					if (methodMaps[clientId] !== undefined) {
+						runMethods(clientId, methodName, data, sendKey);
+					}
+
+					// when not exists methodMap
+					else if (CPU_CLUSTERING.broadcast !== undefined) {
+
+						// pass other cpus.
+						CPU_CLUSTERING.broadcast({
+							methodName : '__WEB_SOCKET_FIX_REQUEST_MANAGER__RUN_METHODS',
+							data : {
+								clientId : clientId,
+								methodName : methodName,
+								data : data,
+								sendKey : sendKey
+							}
+						});
+					}
+
+					if (methodName === '__DISCONNECTED') {
+						removeAll(clientId, true);
+					}
+				};
+
+				// create connection.
+				if (clientId === undefined) {
+
+					// create client id.
+					clientId = RANDOM_STR(40);
+
+					// create method map.
+					methodMap = methodMaps[clientId] = {};
+
+					// run connection listener.
+					connectionListener(
+
+					// client info
+					{
+						ip : requestInfo.ip,
+
+						headers : requestInfo.headers
+					},
+
+					// on.
+					on = function(methodName, method) {
+						//REQUIRED: methodName
+						//REQUIRED: method
+
+						var
+						// methods
+						methods = methodMap[methodName];
+
+						if (methods === undefined) {
+							methods = methodMap[methodName] = [];
+						}
+
+						methods.push(method);
+					},
+
+					// off.
+					off = function(methodName, method) {
+						//REQUIRED: methodName
+						//OPTIONAL: method
+
+						var
+						// methods
+						methods = methodMap[methodName];
+
+						if (methods !== undefined) {
+
+							if (method !== undefined) {
+
+								REMOVE({
+									array : methods,
+									value : method
+								});
+
+							} else {
+								delete methodMap[methodName];
+							}
+						}
+					},
+
+					// send to client.
+					function(params, callback) {
+						//REQUIRED: params
+						//REQUIRED: params.methodName
+						//REQUIRED: params.data
+						//OPTIONAL: callback
+
+						var
+						// callback name
+						callbackName = '__CALLBACK_' + sendKey;
+
+						params.sendKey = sendKey;
+
+						sendKey += 1;
+
+						send(clientId, params);
+
+						if (callback !== undefined) {
+
+							// on callback.
+							on(callbackName, function(data) {
+
+								// run callback.
+								callback(data);
+
+								// off callback.
+								off(callbackName);
+							});
+						}
+					},
+
+					// disconnect.
+					function() {
+						runMethodsOrBroadcast('__DISCONNECTED');
+					});
+
+					// response.
+					response({
+						contentType : 'text/javascript',
+						content : 'CONNECT_TO_WEB_SOCKET_SERVER.response(\'' + encodeURIComponent(STRINGIFY({
+							clientId : clientId,
+							connectionKey : connectionKey,
+							requestKey : requestKey
+						})) + '\')'
+					});
+				}
+
+				// done request (content complete).
+				else if (isEnd === true) {
+
+					RUN(function() {
+
+						var
+						// params
+						params = contentMap[clientId] === undefined ? undefined : PARSE_STR(contentMap[clientId][requestKey]),
+
+						// method name
+						methodName,
+
+						// data
+						data,
+
+						// send key
+						sendKey,
+
+						// connection info
+						connectionInfo,
+
+						// die.
+						die;
+
+						// init params.
+						if (params !== undefined) {
+							methodName = params.methodName;
+							data = params.data;
+							sendKey = params.sendKey;
+						}
+
+						// run methods or broadcast.
+						if (methodName !== undefined) {
+
+							runMethodsOrBroadcast(methodName, data, sendKey);
+
+							// response empty.
+							response({
+								contentType : 'text/javascript',
+								content : 'CONNECT_TO_WEB_SOCKET_SERVER.removeRequestInfo(' + requestKey + ')'
+							});
+						}
+
+						// when aleady exists inner send, inner send. (and remove inner send)
+						else if (innerSends[clientId] !== undefined) {
+							innerSends[clientId]();
+						}
+
+						// register send.
+						else {
+
+							// I'm still alive!
+							removeLifeDelay(clientId, true);
+
+							die = function() {
+								runMethodsOrBroadcast('__DISCONNECTED');
+							};
+
+							innerSends[clientId] = function(params) {
+
+								// response.
+								response({
+									contentType : 'text/javascript',
+									content : 'CONNECT_TO_WEB_SOCKET_SERVER.response(\'' + encodeURIComponent(STRINGIFY({
+										connectionKey : connectionKey,
+										clientId : clientId,
+										params : params,
+										requestKey : requestKey
+									})) + '\')'
+								});
+
+								removeSend(clientId);
+
+								// create life delay.
+								lifeDelays[clientId] = DELAY(LIFE_DELAY_TIME, die);
+							};
+
+							// on disconnected, die!
+							onDisconnected(die);
+
+							// create handshake delay.
+							handshakeDelays[clientId] = DELAY(HANDSHAKE_DELAY_TIME, function() {
+								if (innerSends[clientId] !== undefined) {
+									innerSends[clientId]();
+								}
+							});
+
+							if (waitingParamMap[clientId] !== undefined) {
+
+								// send first waiting params.
+								innerSends[clientId](waitingParamMap[clientId][0]);
+
+								removeFirstWaitingParams(clientId, true);
+							}
+						}
+					});
+
+					removeContent(clientId, requestKey, true);
+				}
+
+				// continue request.
+				else {
+
+					addContent(clientId, requestKey, content, true);
+
+					// response.
+					response({
+						contentType : 'text/javascript',
+						content : 'CONNECT_TO_WEB_SOCKET_SERVER.request(' + requestKey + ')'
+					});
+				}
+			};
+
+			console.log('[UPPERCASE.IO-WEB_SOCKET_FIX_REQUEST_MANAGER] RUNNING WEB SOCKET FIX REQUEST MANAGER...');
+		}
+	};
+});
+
+/*
+ * create web socket server.
+ */
+global.WEB_SOCKET_SERVER = METHOD({
+
+	run : function(portOrWebServer, connectionListener) {
+		'use strict';
+		//REQUIRED: portOrWebServer
+		//REQUIRED: connectionListener
+
+		var
+		//IMPORT: WebSocketServer
+		WebSocketServer = require('ws').Server,
+
+		// port
+		port,
+
+		// web server
+		webServer,
+
+		// server
+		server;
+
+		if (CHECK_IS_DATA(portOrWebServer) !== true) {
+			port = portOrWebServer;
+		} else {
+			webServer = portOrWebServer;
+		}
+
+		server = new WebSocketServer({
+			port : port,
+			server : webServer === undefined ? undefined : webServer.getNativeHTTPServer()
+		});
+
+		server.on('connection', function(conn) {
+
+			var
+			// headers
+			headers = conn.upgradeReq.headers,
+
+			// method map
+			methodMap = {},
+
+			// send key
+			sendKey = 0,
+
+			// ip
+			ip,
+			
+			// on.
+			on,
+
+			// off.
+			off,
+
+			// send.
+			send,
+
+			// run methods.
+			runMethods = function(methodName, data, sendKey) {
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					EACH(methods, function(method) {
+
+						// run method.
+						method(data,
+
+						// ret.
+						function(retData) {
+
+							if (sendKey !== undefined) {
+
+								send({
+									methodName : '__CALLBACK_' + sendKey,
+									data : retData
+								});
+							}
+						});
+					});
+				}
+			};
+
+			// when receive data
+			conn.on('message', function(str) {
+
+				var
+				// params
+				params = PARSE_STR(str);
+
+				if (params !== undefined) {
+					runMethods(params.methodName, params.data, params.sendKey);
+				}
+			});
+
+			// when disconnected
+			conn.on('close', function() {
+
+				runMethods('__DISCONNECTED');
+
+				// free method map.
+				methodMap = undefined;
+			});
+
+			// when error
+			conn.on('error', function(error) {
+
+				var
+				// error msg
+				errorMsg = error.toString();
+
+				console.log('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:', errorMsg);
+
+				runMethods('__ERROR', errorMsg);
+			});
+
+			ip = headers['x-forwarded-for'];
+
+			if (ip === undefined) {
+				ip = conn.upgradeReq.connection.remoteAddress;
+			}
+
+			connectionListener(
+
+			// client info
+			{
+				ip : ip,
+
+				headers : headers
+			},
+
+			// on.
+			on = function(methodName, method) {
+				//REQUIRED: methodName
+				//REQUIRED: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+			},
+
+			// off.
+			off = function(methodName, method) {
+				//REQUIRED: methodName
+				//OPTIONAL: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					if (method !== undefined) {
+
+						REMOVE({
+							array : methods,
+							value : method
+						});
+
+					} else {
+						delete methodMap[methodName];
+					}
+				}
+			},
+
+			// send to client.
+			send = function(params, callback) {
+				//REQUIRED: params
+				//REQUIRED: params.methodName
+				//REQUIRED: params.data
+				//OPTIONAL: callback
+
+				var
+				// callback name
+				callbackName = '__CALLBACK_' + sendKey;
+
+				params.sendKey = sendKey;
+
+				sendKey += 1;
+
+				try {
+					conn.send(STRINGIFY(params));
+				} catch(error) {
+					console.log('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:', error.toString());
+				}
+
+				if (callback !== undefined) {
+
+					// on callback.
+					on(callbackName, function(data) {
+
+						// run callback.
+						callback(data);
+
+						// off callback.
+						off(callbackName);
+					});
+				}
+			},
+
+			// disconnect.
+			function() {
+				conn.close();
+			});
+		});
+
+		console.log('[UPPERCASE.IO-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...' + (port === undefined ? '' : ' (PORT:' + port + ')'));
+	}
+});

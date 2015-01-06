@@ -1,1 +1,138 @@
-OVERRIDE(REQUEST,function(){"use strict";global.REQUEST=METHOD({run:function(t,e){var o,n,s,i,d,a=void 0===t.host?BROWSER_CONFIG.host:t.host,r=void 0===t.port?void 0===t.host?BROWSER_CONFIG.port:80:t.port,c=t.isSecure,E=t.method,p=t.uri,R=t.paramStr,u=t.data,v=t.isNotUsingLoadingBar;E=E.toUpperCase(),-1!==p.indexOf("?")&&(R=p.substring(p.indexOf("?")+1)+(void 0===R?"":"&"+R),p=p.substring(0,p.indexOf("?"))),void 0!==u&&(R=(void 0===R?"":R+"&")+"data="+encodeURIComponent(STRINGIFY(t.data))),R=(void 0===R?"":R+"&")+Date.now(),CHECK_IS_DATA(e)!==!0?o=e:(o=e.success,n=e.error),s=(c===!0?"https://":"http://")+a+":"+r+"/"+p,v!==!0&&(i=LOADING_BAR());try{d=new ActiveXObject("Msxml2.XMLHTTP")}catch(S){d=new ActiveXObject("Microsoft.XMLHTTP")}d.onreadystatechange=function(){var e;4===d.readyState&&(200===d.status?o(d.responseText):(e={code:d.status},void 0!==n?n(e):console.log("[UPPERCASE.JS-REQUEST] REQUEST FAILED:",t,e)),void 0!==i&&i.done())},"GET"===E?(d.open(E,s+"?"+R),d.send()):(d.open(E,s),d.setRequestHeader("Content-type","application/x-www-form-urlencoded"),d.send(R))}})});
+OVERRIDE(REQUEST, function(origin) {
+	'use strict';
+
+	/**
+	 * ajax request. (fix for IE)
+	 */
+	global.REQUEST = METHOD({
+	
+		run : function(params, responseListenerOrListeners) {
+			'use strict';
+			//REQUIRED: params
+			//OPTIONAL: params.host
+			//OPTIONAL: params.port
+			//OPTIONAL: params.isSecure
+			//REQUIRED: params.method
+			//REQUIRED: params.uri
+			//OPTIONAL: params.paramStr
+			//OPTIONAL: params.data
+			//OPTIONAL: params.isNotUsingLoadingBar
+			//REQUIRED: responseListenerOrListeners
+	
+			var
+			// host
+			host = params.host === undefined ? BROWSER_CONFIG.host : params.host,
+	
+			// port
+			port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port,
+	
+			// is secure
+			isSecure = params.isSecure,
+	
+			// method
+			method = params.method,
+	
+			// uri
+			uri = params.uri,
+	
+			// param str
+			paramStr = params.paramStr,
+	
+			// data
+			data = params.data,
+	
+			// is not using loading bar
+			isNotUsingLoadingBar = params.isNotUsingLoadingBar,
+	
+			// response listener
+			responseListener,
+	
+			// error listener
+			errorListener,
+	
+			// url
+			url,
+	
+			// loading bar
+			loadingBar,
+	
+			// http request
+			req;
+	
+			method = method.toUpperCase();
+	
+			if (uri.indexOf('?') !== -1) {
+				paramStr = uri.substring(uri.indexOf('?') + 1) + (paramStr === undefined ? '' : '&' + paramStr);
+				uri = uri.substring(0, uri.indexOf('?'));
+			}
+	
+			if (data !== undefined) {
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + 'data=' + encodeURIComponent(STRINGIFY(params.data));
+			}
+	
+			paramStr = (paramStr === undefined ? '' : paramStr + '&') + Date.now();
+	
+			if (CHECK_IS_DATA(responseListenerOrListeners) !== true) {
+				responseListener = responseListenerOrListeners;
+			} else {
+				responseListener = responseListenerOrListeners.success;
+				errorListener = responseListenerOrListeners.error;
+			}
+	
+			url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + uri;
+	
+			if (isNotUsingLoadingBar !== true) {
+				loadingBar = LOADING_BAR();
+			}
+	
+			try {
+				req = new ActiveXObject('Msxml2.XMLHTTP');
+			} catch (e1) {
+				req = new ActiveXObject('Microsoft.XMLHTTP');
+			}
+	
+			req.onreadystatechange = function() {
+	
+				var
+				// error
+				error;
+	
+				// when request completed
+				if (req.readyState === 4) {
+	
+					if (req.status === 200) {
+						responseListener(req.responseText);
+					} else {
+	
+						error = {
+							code : req.status
+						};
+	
+						if (errorListener !== undefined) {
+							errorListener(error);
+						} else {
+							console.log('[UPPERCASE.JS-REQUEST] REQUEST FAILED:', params, error);
+						}
+					}
+	
+					if (loadingBar !== undefined) {
+						loadingBar.done();
+					}
+				}
+			};
+	
+			// GET request.
+			if (method === 'GET') {
+				req.open(method, url + '?' + paramStr);
+				req.send();
+			}
+	
+			// other request.
+			else {
+				req.open(method, url);
+				req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				req.send(paramStr);
+			}
+		}
+	});
+});

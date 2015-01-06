@@ -1,1 +1,2762 @@
-global.TO_DELETE=null,global.CONFIG={},global.METHOD=function(t){"use strict";var n,r,e=function(t,n){return void 0!==r?r(t,n):void 0};return e.type=METHOD,n="function"==typeof t?t(e):t,void 0!==n&&(r=n.run),e},global.CLASS=METHOD(function(t){"use strict";var n,r=0;return t.getInstanceId=n=function(){return r+=1,r-1},{run:function(t){var r,e,i,u,o,a,c,E=function(t,r){var e={},i={};return i.type=E,i.checkIsInstanceOf=function(t){for(var n=E;void 0!==n;){if(n===t)return!0;n=n.mom}return!1},i.id=n(),t=a(e,i,t,r),c(e,i,t,r),i};return E.type=CLASS,E.innerInit=a=function(t,n,r,o){var a,c,f,A=function(t,n){EACH(n,function(n,r){void 0===t[r]?t[r]=n:CHECK_IS_DATA(t[r])===!0&&CHECK_IS_DATA(n)===!0&&A(t[r],n)})};return void 0!==u&&(void 0===r?r=u(E):CHECK_IS_DATA(r)===!0?(c=u(E),void 0!==c&&A(r,c)):(f=r,r=u(E))),void 0!==e&&(a=e(r,o),void 0!==a&&(E.mom=a,a.type===CLASS?a.innerInit(t,n,r,o):a.type.innerInit(t,n,r,o))),void 0!==i&&i(t,n,void 0===f?r:f,o),r},r="function"==typeof t?t(E):t,void 0!==r&&(e=r.preset,i=r.init,u=r.params,o=r.afterInit),E.innerAfterInit=c=function(t,n,r,e){var i=E.mom;void 0!==i&&(i.type===CLASS?i.innerAfterInit(t,n,r,e):i.type.innerAfterInit(t,n,r,e)),void 0!==o&&o(t,n,r,e)},E}}}),global.OBJECT=METHOD(function(t){"use strict";var n,r,e,i,u=[],o=!1;return n=function(t){var n=t.type,r={},e={};t.id=CLASS.getInstanceId(),n.innerInit(r,t,e),n.innerAfterInit(r,t,e)},r=function(t){o===!0?n(t):u.push(t)},t.removeReadyObject=e=function(t){REMOVE({array:u,value:t})},t.initObjects=i=function(){EACH(u,function(t){n(t)}),o=!0},{run:function(t){var n=CLASS(t),e={};return e.type=n,e.checkIsInstanceOf=function(t){for(var r=n;void 0!==r;){if(r===t)return!0;r=r.mom}return!1},r(e),e}}}),global.INIT_OBJECTS=METHOD({run:function(){"use strict";OBJECT.initObjects()}}),global.NEXT=METHOD({run:function(t,n){"use strict";var r,e,i;void 0===n&&(n=t,t=void 0),void 0!==t&&(CHECK_IS_ARRAY(t)!==!0?r=t:e=t),REPEAT({start:n.length-1,end:0},function(t){var u;0!==t&&void 0===i?i=n[t]():t>0?(u=i,i=n[t](u),i.next=u):(u=i,void 0===u&&(u=function(){}),i=n[t],void 0!==r?RUN(function(){var t=-1;RUN(function(n){t+=1,r>t+1?i(t,n):i(t,u)})}):void 0!==e?RUN(function(){var t=e.length,n=-1;0===t?u():RUN(function(r){n+=1,t>n+1?(e.length===t-1&&(n-=1,t-=1),i(e[n],r,n)):i(e[n],u,n)})}):i(u))})}}),global.OVERRIDE=METHOD({run:function(t,n){"use strict";void 0!==t.type&&t.type.type===CLASS&&OBJECT.removeReadyObject(t),n(t)}}),global.PARALLEL=METHOD({run:function(t,n){"use strict";var r,e,i=0;void 0===n&&(n=t,t=void 0),void 0!==t&&(CHECK_IS_ARRAY(t)!==!0?r=t:e=t),void 0!==r?0===r?n[1]():REPEAT(r,function(t){n[0](t,function(){i+=1,i===r&&n[1]()})}):void 0!==e?0===e.length?n[1]():EACH(e,function(t,r){n[0](t,function(){i+=1,i===e.length&&n[1]()},r)}):RUN(function(){var t=n.length-1;EACH(n,function(r,e){t>e&&r(function(){i+=1,i===t&&n[t]()})})})}}),global.PARSE_STR=METHOD({run:function(t){"use strict";var n;try{return n=JSON.parse(t),CHECK_IS_DATA(n)===!0?UNPACK_DATA(n):n}catch(r){return void 0}}}),global.RANDOM_STR=METHOD({run:function(t){"use strict";var n="",r="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";return REPEAT(t,function(){n+=r.charAt(RANDOM({limit:r.length}))}),n}}),global.STRINGIFY=METHOD({run:function(t){"use strict";return JSON.stringify(CHECK_IS_DATA(t)===!0?PACK_DATA(t):t)}}),global.TEST=METHOD(function(){"use strict";var t=0;return{run:function(n,r){r(function(r){var e,i={};r===!0?console.log("["+n+" TEST] SUCCESS! "+t+" error(s) founded."):(i.__THROW_ERROR_$$$=function(){try{throw Error()}catch(t){return t}},e=i.__THROW_ERROR_$$$().stack,void 0!==e&&(e=e.substring(e.indexOf("__THROW_ERROR_$$$")),e=e.split("\n")[2],e=e.substring(e.indexOf("at "))),t+=1,console.log("["+n+" TEST] ERROR! "+e+" "+t+" error(s) founded."))})}}}),global.URI_MATCHER=CLASS({init:function(t,n,r){"use strict";var e,i=CLASS({init:function(t,n,e){var i,u,o,a=e.split("/"),c={},E=function(t){var n=t.split("/");return EACH(a,function(t,r){var e=n[r];if("**"===e)return i=!0,!1;if(void 0===e)return!1;if("{"===e.charAt(0)&&"}"===e.charAt(e.length-1))c[e.substring(1,e.length-1)]=t;else if("*"!==e&&e!==t)return!1;return r===a.length-1&&r<n.length-1&&""!==n[n.length-1]?!1:void 0})===!0||i===!0};i=CHECK_IS_ARRAY(r)===!0?EACH(r,function(t){return E(t)!==!0})!==!0:E(r),n.checkIsMatched=u=function(){return i},n.getURIParams=o=function(){return c}}});n.check=e=function(t){return i(t)}}}),global.VALID=CLASS(function(t){"use strict";var n,r,e,i,u,o,a,c,E,f,A,l,v,C,d,s,_,T,g,H,S,D,R=[];return t.notEmpty=n=function(t){var n=void 0===t||t===TO_DELETE?"":String(t);return CHECK_IS_ARRAY(t)===!0||""!==n.trim()},t.regex=r=function(t){var n=t.pattern,r=String(t.value);return r===r.match(n)[0]},t.size=e=function(t){var n=t.min,r=t.max,e=String(t.value),i=e.length;return void 0===n&&(n=0),i>=n&&(void 0===r||r>=i)},t.integer=i=function(t){var r=String(t);return n(r)===!0&&r.match(/^(?:-?(?:0|[1-9][0-9]*))$/)!==TO_DELETE},t.real=u=function(t){var r=String(t);return n(r)===!0&&r.match(/^(?:-?(?:0|[1-9][0-9]*))?(?:\.[0-9]*)?$/)!==TO_DELETE},t.bool=o=function(t){var n=String(t);return"true"===n||"false"===n},t.date=a=function(t){var n=String(t),r=Date.parse(n);return isNaN(r)===!1},t.min=c=function(t){var n=t.min,r=t.value;return u(r)===!0&&r>=n},t.max=E=function(t){var n=t.max,r=t.value;return u(r)===!0&&n>=r},t.email=f=function(t){return"string"==typeof t&&n(t)===!0&&t.match(/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/)!==TO_DELETE},t.png=A=function(t){return"string"==typeof t&&n(t)===!0&&t.match(/^data:image\/png;base64,/)!==TO_DELETE},t.url=l=function(t){return"string"==typeof t&&n(t)===!0&&t.match(/^(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?:\w+:\w+@)?((?:(?:[-\w\d{1-3}]+\.)+(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|edu|co\.uk|ac\.uk|it|fr|tv|museum|asia|local|travel|[a-z]{2}))|((\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)(\.(\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)){3}))(?::[\d]{1,5})?(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?:#(?:[-\w~!$ |\/.,*:;=]|%[a-f\d]{2})*)?$/i)!==TO_DELETE&&t.length<=2083},t.username=v=function(t){return"string"==typeof t&&n(t)===!0&&t.match(/^[_a-zA-Z0-9\-]+$/)!==TO_DELETE},t.id=C=function(t){return"string"==typeof t&&n(t)===!0&&t.match(/[0-9a-f]{24}/)!==TO_DELETE&&24===t.length},t.one=d=function(t){var n=t.value,r=t.array;return EACH(r,function(t){return n===t?!1:void 0})===!1},t.array=s=function(t){return CHECK_IS_ARRAY(t)===!0},t.data=_=function(t){return CHECK_IS_DATA(t)===!0},t.element=T=function(t){var n=t.array,r=VALID({_:t.validData});return EACH(n,function(t){return r.check({_:t}).checkHasError()===!0?!1:void 0})===!0},t.property=g=function(t){var n=t.data,r=VALID({_:t.validData});return EACH(n,function(t){return r.check({_:t}).checkHasError()===!0?!1:void 0})===!0},t.detail=H=function(t){var n=t.data,r=VALID(t.validDataSet);return r.check(n).checkHasError()!==!0},t.equal=S=function(t){var n=t.value,r=String(n),e=t.validValue,i=String(e);return r===i},t.addIgnoreAttr=D=function(t){R.push(t)},{init:function(r,e,i){var u,o,a=CLASS({init:function(r,e,u){var o,a,c=u.data,E=u.isExceptUndefined,f=!1,A={};EACH(i,function(r,e){r!==!0&&EACH(r,function(r,i){var u=c[e];if(E===!0&&void 0===u)return!1;if("notEmpty"!==i&&n(u)!==!0)return c[e]=TO_DELETE,!0;if("one"===i){if(d({array:r,value:u})===!1)return f=!0,A[e]={type:i,array:r,value:u},!1}else if("element"===i){if(T({validData:r,array:u})===!1)return f=!0,A[e]={type:i,validData:r,array:u},!1}else if("property"===i){if(g({validData:r,data:u})===!1)return f=!0,A[e]={type:i,validData:r,data:u},!1}else if("detail"===i){if(H({validDataSet:r,data:u})===!1)return f=!0,A[e]={type:i,validDataSet:r,data:u},!1}else if("size"===i){if(t[i](COMBINE(CHECK_IS_DATA(r)===!0?[r,{value:u}]:[{min:r,max:r},{value:u}]))===!1)return f=!0,A[e]={type:i,validParams:r,value:u},!1}else if("regex"===i){if(t[i]({pattern:r,value:u})===!1)return f=!0,A[e]={type:i,validParam:r,value:u},!1}else if("min"===i){if(t[i]({min:r,value:u})===!1)return f=!0,A[e]={type:i,validParam:r,value:u},!1}else if("max"===i){if(t[i]({max:r,value:u})===!1)return f=!0,A[e]={type:i,validParam:r,value:u},!1}else if("equal"===i){if(t[i]({value:u,validValue:r})===!1)return f=!0,A[e]={type:i,validParam:r,value:u},!1}else if(r===!0&&t[i](u)===!1)return f=!0,A[e]={type:i,value:u},!1;n(u)===!0&&"string"==typeof u&&("integer"===i?c[e]=INTEGER(u):"real"===i?c[e]=REAL(u):"bool"===i?c[e]="true"===u:"date"===i?c[e]=new Date(u):"username"===i&&(c[e]=u.toLowerCase()))})}),EACH(c,function(t,n){CHECK_IS_IN({array:R,value:n})!==!0&&void 0===i[n]&&delete c[n]}),e.checkHasError=o=function(){return f},e.getErrors=a=function(){return A}}});e.check=u=function(t){return a({data:t})},e.checkExceptUndefined=o=function(t){return a({data:t,isExceptUndefined:!0})}}}}),global.CHECK_IS_ARGUMENTS=METHOD({run:function(t){"use strict";return void 0!==t&&t!==TO_DELETE&&"object"==typeof t&&("[object Arguments]"===Object.prototype.toString.call(t)||void 0!==t.callee&&"function"==typeof t.callee)?!0:!1}}),global.CHECK_ARE_SAME=METHOD({run:function(t){"use strict";var n=!1,r=function(t,n){return t instanceof Date==!0&&n instanceof Date==!0?t.getTime()===n.getTime():CHECK_IS_DATA(t)===!0&&CHECK_IS_DATA(n)===!0?EACH(t,function(t,e){return r(t,n[e])}):CHECK_IS_ARRAY(t)===!0&&CHECK_IS_ARRAY(n)===!0?EACH(t,function(t,e){return r(t,n[e])}):t===n};return t.length>1&&(n=REPEAT(t.length,function(n){return n<t.length-1?r(t[n],t[n+1]):r(t[n],t[0])})),n}}),global.CHECK_IS_ARRAY=METHOD({run:function(t){"use strict";return void 0!==t&&t!==TO_DELETE&&"object"==typeof t&&"[object Array]"===Object.prototype.toString.call(t)?!0:!1}}),global.CHECK_IS_DATA=METHOD({run:function(t){"use strict";return void 0!==t&&t!==TO_DELETE&&CHECK_IS_ARGUMENTS(t)!==!0&&CHECK_IS_ARRAY(t)!==!0&&t instanceof Date!=!0&&"object"==typeof t?!0:!1}}),global.CHECK_IS_EMPTY_DATA=METHOD({run:function(t){"use strict";return CHECK_ARE_SAME([t,{}])}}),global.PACK_DATA=METHOD({run:function(t){"use strict";var n=COPY(t),r=[];return EACH(n,function(t,e){t instanceof Date==!0?(n[e]=INTEGER(t.getTime()),r.push(e)):CHECK_IS_DATA(t)===!0?n[e]=PACK_DATA(t):CHECK_IS_ARRAY(t)===!0&&EACH(t,function(n,r){CHECK_IS_DATA(n)===!0&&(t[r]=PACK_DATA(n))})}),n.__DATE_ATTR_NAMES=r,n}}),global.UNPACK_DATA=METHOD({run:function(t){"use strict";var n=COPY(t);return void 0!==n.__DATE_ATTR_NAMES&&(EACH(n.__DATE_ATTR_NAMES,function(t){n[t]=new Date(n[t])}),delete n.__DATE_ATTR_NAMES),EACH(n,function(t,r){CHECK_IS_DATA(t)===!0?n[r]=UNPACK_DATA(t):CHECK_IS_ARRAY(t)===!0&&EACH(t,function(n,r){CHECK_IS_DATA(n)===!0&&(t[r]=UNPACK_DATA(n))})}),n}}),global.CHECK_IS_IN=METHOD({run:function(t){"use strict";var n=t.data,r=t.array,e=t.value;return void 0!==n?EACH(n,function(t){return CHECK_ARE_SAME([t,e])===!0?!1:void 0})!==!0:void 0!==r?EACH(r,function(t){return CHECK_ARE_SAME([t,e])===!0?!1:void 0})!==!0:void 0}}),global.COMBINE=METHOD({run:function(t){"use strict";var n,r;return t.length>0&&(n=t[0],CHECK_IS_DATA(n)===!0?(r={},EACH(t,function(t){EXTEND({origin:r,extend:t})})):CHECK_IS_ARRAY(n)===!0&&(r=[],EACH(t,function(t){EXTEND({origin:r,extend:t})}))),r}}),global.COPY=METHOD({run:function(t){"use strict";var n;return CHECK_IS_DATA(t)===!0?(n={},EXTEND({origin:n,extend:t})):CHECK_IS_ARRAY(t)===!0&&(n=[],EXTEND({origin:n,extend:t})),n}}),global.EXTEND=METHOD({run:function(t){"use strict";var n=t.origin,r=t.extend;return CHECK_IS_DATA(n)===!0?EACH(r,function(t,r){n[r]=t instanceof Date==!0?new Date(t.getTime()):CHECK_IS_DATA(t)===!0||CHECK_IS_ARRAY(t)===!0?COPY(t):t}):CHECK_IS_ARRAY(n)===!0&&EACH(r,function(t){n.push(t instanceof Date==!0?new Date(t.getTime()):CHECK_IS_DATA(t)===!0||CHECK_IS_ARRAY(t)===!0?COPY(t):t)}),n}}),global.FIND=METHOD({run:function(t,n){"use strict";var r,e,i,u;return void 0!==n?CHECK_IS_DATA(t)===!0?EACH(t,function(t){return n(t)===!0?(u=t,!1):void 0}):CHECK_IS_ARRAY(t)===!0&&EACH(t,function(t){return n(t)===!0?(u=t,!1):void 0}):(r=t.data,e=t.array,i=t.value,void 0!==r&&EACH(r,function(t,n){return t===i?(u=n,!1):void 0}),void 0!==e&&EACH(e,function(t,n){return t===i?(u=n,!1):void 0})),u}}),global.REMOVE=METHOD({run:function(t,n){"use strict";var r,e,i,u,o;void 0!==n?CHECK_IS_DATA(t)===!0?EACH(t,function(r,e){n(r)===!0&&REMOVE({data:t,name:e})}):CHECK_IS_ARRAY(t)===!0&&EACH(t,function(r,e){n(r)===!0&&REMOVE({array:t,key:e})}):(r=t.data,e=t.array,i=t.name,u=t.key,o=t.value,void 0!==i&&delete r[i],void 0!==u&&e.splice(u,1),void 0!==o&&(void 0!==r&&EACH(r,function(t,n){t===o&&REMOVE({data:r,name:n})}),void 0!==e&&EACH(e,function(t,n){t===o&&REMOVE({array:e,key:n})})))}}),global.CALENDAR=CLASS({init:function(t,n,r){"use strict";var e,i,u,o,a,c,E;void 0===r&&(r=new Date),n.getYear=e=function(){return r.getFullYear()},n.getMonth=i=function(){return r.getMonth()+1},n.getDate=u=function(){return r.getDate()},n.getDay=o=function(){return r.getDay()},n.getHour=a=function(){return r.getHours()},n.getMinute=c=function(){return r.getMinutes()},n.getSecond=E=function(){return r.getSeconds()}}}),global.DELAY=CLASS({init:function(t,n,r,e){"use strict";var i,u;void 0===e&&(e=r,r=0),i=setTimeout(function(){e(n)},1e3*r),n.remove=u=function(){clearTimeout(i)}}}),global.INTERVAL=CLASS({init:function(t,n,r,e){"use strict";var i,u;void 0===e&&(e=r,r=0),i=setInterval(function(){e(n)===!1&&u()},0===r?1:1e3*r),n.remove=u=function(){clearInterval(i)}}}),global.LOOP=CLASS(function(){"use strict";var t,n,r=[],e=[],i=function(){void 0===n&&(t=Date.now(),n=INTERVAL(function(){var n,i,u,o,a,c=Date.now(),E=c-t;if(E>0){for(o=0;o<r.length;o+=1)if(n=r[o],void 0!==n.fps&&n.fps>0){for(void 0===n.timeSigma&&(n.timeSigma=0,n.countSigma=0),i=parseInt(n.fps/(1e3/E)*(n.timeSigma/E+1),10)-n.countSigma,void 0!==n.start&&n.start(),u=n.interval,a=0;i>a;a+=1)u();void 0!==n.end&&n.end(E),n.countSigma+=i,n.timeSigma+=E,n.timeSigma>1e3&&(n.timeSigma=void 0)}for(o=0;o<e.length;o+=1)e[o](E);t=c}}))},u=function(){r.length<=0&&e.length<=0&&(n.remove(),n=void 0)};return{init:function(t,n,o,a){var c,E,f,A,l,v,C;void 0!==a?(CHECK_IS_DATA(a)!==!0?f=a:(E=a.start,f=a.interval,A=a.end),r.push(l={fps:o,start:E,interval:f,end:A}),n.changeFPS=v=function(t){l.fps=t},n.remove=C=function(){REMOVE({array:r,value:l}),u()}):(e.push(c=o),n.remove=C=function(){REMOVE({array:e,value:c}),u()}),i()}}}),global.RAR=METHOD({run:function(t,n){"use strict";return void 0===n&&(n=t,t=void 0),n(t),n}}),global.RUN=METHOD({run:function(t){"use strict";var n=function(){return t(n)};return n()}}),global.INTEGER=METHOD({run:function(t){"use strict";return void 0===t?void 0:parseInt(t,10)}}),global.RANDOM=METHOD({run:function(t){"use strict";var n,r,e;return CHECK_IS_DATA(t)!==!0?r=t:(n=t.min,r=t.max,e=t.limit),void 0===n&&(n=0),void 0!==e&&(r=e-1),Math.floor(Math.random()*(r-n+1)+n)}}),global.REAL=METHOD({run:function(t){"use strict";return void 0===t?void 0:parseFloat(t)}}),global.EACH=METHOD({run:function(t,n){"use strict";var r,e,i;if(void 0===t)return!1;if(CHECK_IS_DATA(t)===!0){for(e in t)if(t.hasOwnProperty(e)===!0&&n(t[e],e)===!1)return!1}else if(CHECK_IS_ARRAY(t)===!0||CHECK_IS_ARGUMENTS(t)===!0)for(r=t.length,i=0;r>i;i+=1){if(n(t[i],i)===!1)return!1;t.length===r-1&&(i-=1,r-=1)}else if(void 0===n)return n=t,t=void 0,function(t){return EACH(t,n)};return!0}}),global.REPEAT=METHOD({run:function(t,n){"use strict";var r,e,i,u,o,a;if(CHECK_IS_DATA(t)!==!0?r=t:(e=t.start,i=t.end,u=t.limit,o=t.step),void 0===u&&void 0!==i&&(u=i+1),void 0===o&&(o=1),void 0!==r){for(a=0;a<parseInt(r,10);a+=1)if(n(a)===!1)return!1}else if(void 0!==i&&e>i){for(a=e;a>=i;a-=o)if(n(a)===!1)return!1}else for(a=e;u>a;a+=o)if(n(a)===!1)return!1;return!0}});
+/**
+ * when database update, set to delete value.
+ *
+ * unique value only can be null.
+ */
+global.TO_DELETE = null;
+
+/**
+ * Configuration
+ */
+global.CONFIG = {};
+
+/**
+ * Create method.
+ */
+global.METHOD = function(define) {
+	'use strict';
+	//REQUIRED: define
+
+	var
+	// funcs
+	funcs,
+
+	// run.
+	run,
+
+	// method.
+	m = function(params, funcs) {
+		//OPTIONAL: params
+		//OPTIONAL: funcs
+
+		if (run !== undefined) {
+			return run(params, funcs);
+		}
+	};
+
+	// set type.
+	m.type = METHOD;
+
+	// when define is function
+	if ( typeof define === 'function') {
+		funcs = define(m);
+	}
+
+	// when define is function set
+	else {
+		funcs = define;
+	}
+
+	// init funcs.
+	if (funcs !== undefined) {
+		run = funcs.run;
+	};
+
+	return m;
+};
+
+/**
+ * Create class.
+ */
+global.CLASS = METHOD(function(m) {
+	'use strict';
+
+	var
+	// instance count
+	instanceCount = 0,
+
+	// get instance id.
+	getInstanceId;
+
+	m.getInstanceId = getInstanceId = function() {
+
+		instanceCount += 1;
+
+		return instanceCount - 1;
+	};
+
+	return {
+
+		run : function(define) {
+			//REQUIRED: define
+
+			var
+			// funcs
+			funcs,
+
+			// preset.
+			preset,
+
+			// init.
+			init,
+
+			// params.
+			_params,
+
+			// after init.
+			afterInit,
+
+			// cls.
+			cls = function(params, funcs) {
+				//OPTIONAL: params
+				//OPTIONAL: funcs
+
+				var
+				// inner (like Java's protected.)
+				inner = {},
+
+				// self (like Java's public.)
+				self = {};
+
+				// set type.
+				self.type = cls;
+
+				// check is instance of.
+				self.checkIsInstanceOf = function(checkCls) {
+
+					var
+					// target cls
+					targetCls = cls;
+
+					// check moms.
+					while (targetCls !== undefined) {
+
+						if (targetCls === checkCls) {
+							return true;
+						}
+
+						targetCls = targetCls.mom;
+					}
+
+					return false;
+				};
+
+				// set id.
+				self.id = getInstanceId();
+
+				// run inner init.
+				params = innerInit(inner, self, params, funcs);
+
+				// run inner after init.
+				innerAfterInit(inner, self, params, funcs);
+
+				return self;
+			},
+
+			// inner init.
+			innerInit,
+
+			// inner after init.
+			innerAfterInit;
+
+			// set type.
+			cls.type = CLASS;
+
+			cls.innerInit = innerInit = function(inner, self, params, funcs) {
+				//OPTIONAL: params
+				//OPTIONAL: funcs
+
+				var
+				// mom (parent class)
+				mom,
+
+				// temp params
+				tempParams,
+
+				// param value
+				paramValue,
+
+				// extend.
+				extend = function(params, tempParams) {
+
+					EACH(tempParams, function(value, name) {
+
+						if (params[name] === undefined) {
+							params[name] = value;
+						} else if (CHECK_IS_DATA(params[name]) === true && CHECK_IS_DATA(value) === true) {
+							extend(params[name], value);
+						}
+					});
+				};
+
+				// init params.
+				if (_params !== undefined) {
+
+					// when params is undefined
+					if (params === undefined) {
+						params = _params(cls);
+					}
+
+					// when params is data
+					else if (CHECK_IS_DATA(params) === true) {
+
+						tempParams = _params(cls);
+
+						if (tempParams !== undefined) {
+							extend(params, tempParams);
+						}
+					}
+
+					// when params is value
+					else {
+						paramValue = params;
+						params = _params(cls);
+					}
+				}
+
+				// preset.
+				if (preset !== undefined) {
+
+					mom = preset(params, funcs);
+
+					if (mom !== undefined) {
+
+						cls.mom = mom;
+
+						// when mom's type is CLASS
+						if (mom.type === CLASS) {
+							mom.innerInit(inner, self, params, funcs);
+						}
+
+						// when mon's type is OBJECT
+						else {
+							mom.type.innerInit(inner, self, params, funcs);
+						}
+					}
+				}
+
+				// init object.
+				if (init !== undefined) {
+					init(inner, self, paramValue === undefined ? params : paramValue, funcs);
+				}
+
+				return params;
+			};
+
+			// when define is function
+			if ( typeof define === 'function') {
+				funcs = define(cls);
+			}
+
+			// when define is function set
+			else {
+				funcs = define;
+			}
+
+			// init funcs.
+			if (funcs !== undefined) {
+				preset = funcs.preset;
+				init = funcs.init;
+				_params = funcs.params;
+				afterInit = funcs.afterInit;
+			}
+
+			cls.innerAfterInit = innerAfterInit = function(inner, self, params, funcs) {
+				//OPTIONAL: params
+				//OPTIONAL: funcs
+
+				var
+				// mom
+				mom = cls.mom;
+
+				// when mom exists, run mom's after init.
+				if (mom !== undefined) {
+
+					// when mom's type is CLASS
+					if (mom.type === CLASS) {
+						mom.innerAfterInit(inner, self, params, funcs);
+					}
+
+					// when mon's type is OBJECT
+					else {
+						mom.type.innerAfterInit(inner, self, params, funcs);
+					}
+				}
+
+				// run after init.
+				if (afterInit !== undefined) {
+					afterInit(inner, self, params, funcs);
+				}
+			};
+
+			return cls;
+		}
+	};
+});
+
+/**
+ * Create object.
+ */
+global.OBJECT = METHOD(function(m) {
+	'use strict';
+
+	var
+	// ready objects
+	readyObjects = [],
+
+	// is inited
+	isInited = false,
+
+	// init object.
+	initObject,
+
+	// add ready object.
+	addReadyObject,
+
+	// remove ready object.
+	removeReadyObject,
+
+	// init objects.
+	initObjects;
+
+	initObject = function(object) {
+
+		var
+		// cls
+		cls = object.type,
+
+		// inner (like Java's protected.)
+		inner = {},
+
+		// params
+		params = {};
+
+		// set id.
+		object.id = CLASS.getInstanceId();
+
+		// run inner init.
+		cls.innerInit(inner, object, params);
+
+		// run inner after init.
+		cls.innerAfterInit(inner, object, params);
+	};
+
+	addReadyObject = function(object) {
+		//REQUIRED: object
+
+		// when inited all
+		if (isInited === true) {
+			initObject(object);
+		}
+
+		// when not inited all
+		else {
+			readyObjects.push(object);
+		}
+	};
+
+	m.removeReadyObject = removeReadyObject = function(object) {
+		REMOVE({
+			array : readyObjects,
+			value : object
+		});
+	};
+
+	m.initObjects = initObjects = function() {
+
+		// init all objects.
+		EACH(readyObjects, function(object) {
+			initObject(object);
+		});
+
+		isInited = true;
+	};
+
+	return {
+
+		run : function(define) {
+			//REQUIRED: define
+
+			var
+			// cls
+			cls = CLASS(define),
+
+			// self
+			self = {};
+
+			// set type.
+			self.type = cls;
+
+			// check is instance of.
+			self.checkIsInstanceOf = function(checkCls) {
+
+				var
+				// target cls
+				targetCls = cls;
+
+				// check moms.
+				while (targetCls !== undefined) {
+
+					if (targetCls === checkCls) {
+						return true;
+					}
+
+					targetCls = targetCls.mom;
+				}
+
+				return false;
+			};
+
+			addReadyObject(self);
+
+			return self;
+		}
+	};
+});
+
+/**
+ * init all objects.
+ */
+global.INIT_OBJECTS = METHOD({
+
+	run : function() {'use strict';
+
+		OBJECT.initObjects();
+	}
+});
+
+/**
+ * async control-flow method that makes stepping through logic easy.
+ */
+global.NEXT = METHOD({
+
+	run : function(countOrArray, funcs) {
+		'use strict';
+		//OPTIONAL: countOrArray
+		//REQUIRED: funcs
+
+		var
+		// count
+		count,
+
+		// array
+		array,
+
+		// f.
+		f;
+
+		if (funcs === undefined) {
+			funcs = countOrArray;
+			countOrArray = undefined;
+		}
+
+		if (countOrArray !== undefined) {
+			if (CHECK_IS_ARRAY(countOrArray) !== true) {
+				count = countOrArray;
+			} else {
+				array = countOrArray;
+			}
+		}
+
+		REPEAT({
+			start : funcs.length - 1,
+			end : 0
+		}, function(i) {
+
+			var
+			// next.
+			next;
+
+			// get last function.
+			if (i !== 0 && f === undefined) {
+				f = funcs[i]();
+			}
+
+			// pass next function.
+			else if (i > 0) {
+
+				next = f;
+
+				f = funcs[i](next);
+
+				f.next = next;
+			}
+
+			// run first function.
+			else {
+
+				next = f;
+
+				// when next not exists, next is empty function.
+				if (next === undefined) {
+					next = function() {
+						// ignore.
+					};
+				}
+
+				f = funcs[i];
+
+				if (count !== undefined) {
+
+					RUN(function() {
+
+						var
+						// i
+						i = -1;
+
+						RUN(function(self) {
+
+							i += 1;
+
+							if (i + 1 < count) {
+								f(i, self);
+							} else {
+								f(i, next);
+							}
+						});
+					});
+
+				} else if (array !== undefined) {
+
+					RUN(function() {
+
+						var
+						// length
+						length = array.length,
+
+						// i
+						i = -1;
+
+						if (length === 0) {
+							next();
+						} else {
+
+							RUN(function(self) {
+
+								i += 1;
+
+								if (i + 1 < length) {
+
+									// if shrink
+									if (array.length === length - 1) {
+										i -= 1;
+										length -= 1;
+									}
+
+									f(array[i], self, i);
+
+								} else {
+									f(array[i], next, i);
+								}
+							});
+						}
+					});
+
+				} else {
+
+					f(next);
+				}
+			}
+		});
+	}
+});
+
+/**
+ * override something.
+ */
+global.OVERRIDE = METHOD({
+
+	run : function(origin, func) {
+		'use strict';
+		//REQUIRED: origin
+		//REQUIRED: func
+
+		// when origin is OBJECT.
+		if (origin.type !== undefined && origin.type.type === CLASS) {
+
+			// remove origin from init ready objects.
+			OBJECT.removeReadyObject(origin);
+		}
+
+		func(origin);
+	}
+});
+
+/**
+ * run funcs in parallel.
+ */
+global.PARALLEL = METHOD({
+
+	run : function(countOrArray, funcs) {
+		'use strict';
+		//OPTIONAL: countOrArray
+		//REQUIRED: funcs
+
+		var
+		// count
+		count,
+
+		// array
+		array,
+
+		// done count
+		doneCount = 0;
+
+		if (funcs === undefined) {
+			funcs = countOrArray;
+			countOrArray = undefined;
+		}
+
+		if (countOrArray !== undefined) {
+			if (CHECK_IS_ARRAY(countOrArray) !== true) {
+				count = countOrArray;
+			} else {
+				array = countOrArray;
+			}
+		}
+
+		if (count !== undefined) {
+
+			if (count === 0) {
+				funcs[1]();
+			} else {
+
+				REPEAT(count, function(i) {
+
+					funcs[0](i, function() {
+
+						doneCount += 1;
+
+						if (doneCount === count) {
+							funcs[1]();
+						}
+					});
+				});
+			}
+
+		} else if (array !== undefined) {
+
+			if (array.length === 0) {
+				funcs[1]();
+			} else {
+
+				EACH(array, function(value, i) {
+
+					funcs[0](value, function() {
+
+						doneCount += 1;
+
+						if (doneCount === array.length) {
+							funcs[1]();
+						}
+					}, i);
+				});
+			}
+
+		} else {
+
+			RUN(function() {
+
+				var
+				// length
+				length = funcs.length - 1;
+
+				EACH(funcs, function(func, i) {
+
+					if (i < length) {
+
+						func(function() {
+
+							doneCount += 1;
+
+							if (doneCount === length) {
+								funcs[length]();
+							}
+						});
+					}
+				});
+			});
+		}
+	}
+});
+
+/**
+ * parse stringified data.
+ */
+global.PARSE_STR = METHOD({
+
+	run : function(stringifiedData) {
+		'use strict';
+		//REQUIRED: stringifiedData
+
+		var
+		// value
+		value;
+
+		try {
+
+			value = JSON.parse(stringifiedData);
+
+			return CHECK_IS_DATA(value) === true ? UNPACK_DATA(value) : value;
+
+		} catch(e) {
+
+			// when error, return undefined.
+			return undefined;
+		}
+	}
+});
+
+/**
+ * generate random string.
+ */
+global.RANDOM_STR = METHOD({
+
+	run : function(length) {
+		'use strict';
+		//REQUIRED: length
+
+		var
+		// random string
+		randomStr = '',
+
+		// characters
+		characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+
+		// i
+		i;
+
+		REPEAT(length, function() {
+
+			// add random character to random string.
+			randomStr += characters.charAt(RANDOM({
+				limit : characters.length
+			}));
+		});
+
+		return randomStr;
+	}
+});
+
+/**
+ * stringify.
+ */
+global.STRINGIFY = METHOD({
+
+	run : function(value) {
+		'use strict';
+		//REQUIRED: value
+
+		return JSON.stringify(CHECK_IS_DATA(value) === true ? PACK_DATA(value) : value);
+	}
+});
+
+/**
+ * test.
+ */
+global.TEST = METHOD(function(m) {
+	'use strict';
+
+	var
+	// error count
+	errorCount = 0;
+
+	return {
+
+		run : function(name, test) {
+			//REQUIRED: name
+			//REQUIRED: test
+
+			test(function(bool) {
+				//REQUIRED: bool
+
+				var
+				// temp
+				temp = {},
+
+				// line
+				line,
+
+				// throw error.
+				throwError;
+
+				if (bool === true) {
+					console.log('[' + name + ' TEST] SUCCESS! ' + errorCount + ' error(s) founded.');
+				} else {
+
+					temp.__THROW_ERROR_$$$ = function() {
+						try {
+							throw Error();
+						} catch(error) {
+							return error;
+						}
+					};
+
+					line = temp.__THROW_ERROR_$$$().stack;
+
+					if (line !== undefined) {
+						line = line.substring(line.indexOf('__THROW_ERROR_$$$'));
+						line = line.split('\n')[2];
+						line = line.substring(line.indexOf('at '));
+					}
+
+					errorCount += 1;
+
+					console.log('[' + name + ' TEST] ERROR! ' + line + ' ' + errorCount + ' error(s) founded.');
+				}
+			});
+		}
+	};
+});
+
+/**
+ * URI matcher class
+ */
+global.URI_MATCHER = CLASS({
+
+	init : function(inner, self, format) {
+		'use strict';
+		//REQUIRED: format
+
+		var
+		// Check class
+		Check = CLASS({
+
+			init : function(inner, self, uri) {
+				//REQUIRED: uri
+
+				var
+				// uri parts
+				uriParts = uri.split('/'),
+
+				// is matched
+				isMatched,
+
+				// uri parmas
+				uriParams = {},
+
+				// find.
+				find = function(format) {
+
+					var
+					// format parts
+					formatParts = format.split('/');
+
+					return EACH(uriParts, function(uriPart, i) {
+
+						var
+						// format part
+						formatPart = formatParts[i];
+
+						if (formatPart === '**') {
+							isMatched = true;
+							return false;
+						}
+
+						if (formatPart === undefined) {
+							return false;
+						}
+
+						// find params.
+						if (formatPart.charAt(0) === '{' && formatPart.charAt(formatPart.length - 1) === '}') {
+							uriParams[formatPart.substring(1, formatPart.length - 1)] = uriPart;
+						} else if (formatPart !== '*' && formatPart !== uriPart) {
+							return false;
+						}
+
+						if (i === uriParts.length - 1 && i < formatParts.length - 1 && formatParts[formatParts.length - 1] !== '') {
+							return false;
+						}
+
+					}) === true || isMatched === true;
+				},
+
+				// check is matched.
+				checkIsMatched,
+
+				// get uri params.
+				getURIParams;
+
+				if (CHECK_IS_ARRAY(format) === true) {
+					isMatched = EACH(format, function(format) {
+						return find(format) !== true;
+					}) !== true;
+				} else {
+					isMatched = find(format);
+				}
+
+				self.checkIsMatched = checkIsMatched = function() {
+					return isMatched;
+				};
+
+				self.getURIParams = getURIParams = function() {
+					return uriParams;
+				};
+			}
+		}),
+
+		// check.
+		check;
+
+		self.check = check = function(uri) {
+			return Check(uri);
+		};
+	}
+});
+
+/**
+ * Data validation class
+ */
+global.VALID = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// ignore attrs
+	ignoreAttrs = [],
+
+	// not empty.
+	notEmpty,
+
+	// regex.
+	regex,
+
+	// size.
+	size,
+
+	// integer.
+	integer,
+
+	// real.
+	real,
+
+	// bool.
+	bool,
+
+	// date.
+	date,
+
+	// min.
+	min,
+
+	// max.
+	max,
+
+	// email.
+	email,
+
+	// png.
+	png,
+
+	// url.
+	url,
+
+	// username.
+	username,
+
+	// id.
+	id,
+
+	// one.
+	one,
+
+	// array.
+	array,
+
+	// data.
+	data,
+
+	// element.
+	element,
+
+	// property.
+	property,
+
+	// detail.
+	detail,
+
+	// equal.
+	equal,
+
+	// add ignore attr.
+	addIgnoreAttr;
+
+	cls.notEmpty = notEmpty = function(value) {
+		//REQUIRED: value
+
+		var
+		// string
+		str = (value === undefined || value === TO_DELETE) ? '' : String(value);
+
+		return CHECK_IS_ARRAY(value) === true || str.trim() !== '';
+	};
+
+	cls.regex = regex = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.patten
+		//REQUIRED: params.value
+
+		var
+		// pattern
+		pattern = params.pattern,
+
+		// string
+		str = String(params.value);
+
+		return str === str.match(pattern)[0];
+	};
+
+	cls.size = size = function(params) {
+		//REQUIRED: params.min
+		//REQUIRED: params.max
+		//REQUIRED: params.value
+
+		var
+		// min
+		min = params.min,
+
+		// max
+		max = params.max,
+
+		// string
+		str = String(params.value),
+
+		// length
+		length = str.length;
+
+		if (min === undefined) {
+			min = 0;
+		}
+
+		return min <= length && (max === undefined || length <= max);
+	};
+
+	cls.integer = integer = function(value) {
+		//REQUIRED: value
+
+		var
+		// string
+		str = String(value);
+
+		return notEmpty(str) === true && str.match(/^(?:-?(?:0|[1-9][0-9]*))$/) !== TO_DELETE;
+	};
+
+	cls.real = real = function(value) {
+		//REQUIRED: value
+
+		var
+		// string
+		str = String(value);
+
+		return notEmpty(str) === true && str.match(/^(?:-?(?:0|[1-9][0-9]*))?(?:\.[0-9]*)?$/) !== TO_DELETE;
+	};
+
+	cls.bool = bool = function(value) {
+		//REQUIRED: value
+
+		var
+		// string
+		str = String(value);
+
+		return str === 'true' || str === 'false';
+	};
+
+	cls.date = date = function(value) {
+		//REQUIRED: value
+
+		var
+		// string
+		str = String(value),
+
+		// date
+		date = Date.parse(str);
+
+		return isNaN(date) === false;
+	};
+
+	cls.min = min = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.min
+		//REQUIRED: params.value
+
+		var
+		// min
+		min = params.min,
+
+		// value
+		value = params.value;
+
+		return real(value) === true && min <= value;
+	};
+
+	cls.max = max = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.max
+		//REQUIRED: params.value
+
+		var
+		// max
+		max = params.max,
+
+		// value
+		value = params.value;
+
+		return real(value) === true && max >= value;
+	};
+
+	cls.email = email = function(value) {
+		//REQUIRED: value
+
+		return typeof value === 'string' && notEmpty(value) === true && value.match(/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/) !== TO_DELETE;
+	};
+
+	cls.png = png = function(value) {
+		//REQUIRED: value
+
+		return typeof value === 'string' && notEmpty(value) === true && value.match(/^data:image\/png;base64,/) !== TO_DELETE;
+	};
+
+	cls.url = url = function(value) {
+		//REQUIRED: value
+
+		return typeof value === 'string' && notEmpty(value) === true && value.match(/^(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?:\w+:\w+@)?((?:(?:[-\w\d{1-3}]+\.)+(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|edu|co\.uk|ac\.uk|it|fr|tv|museum|asia|local|travel|[a-z]{2}))|((\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)(\.(\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)){3}))(?::[\d]{1,5})?(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?:#(?:[-\w~!$ |\/.,*:;=]|%[a-f\d]{2})*)?$/i) !== TO_DELETE && value.length <= 2083;
+	};
+
+	cls.username = username = function(value) {
+		//REQUIRED: value
+
+		return typeof value === 'string' && notEmpty(value) === true && value.match(/^[_a-zA-Z0-9\-]+$/) !== TO_DELETE;
+	};
+
+	// mongodb id check
+	cls.id = id = function(value) {
+		//REQUIRED: value
+
+		return typeof value === 'string' && notEmpty(value) === true && value.match(/[0-9a-f]{24}/) !== TO_DELETE && value.length === 24;
+	};
+
+	cls.one = one = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.value
+		//REQUIRED: params.array
+
+		var
+		// value
+		value = params.value,
+
+		// array
+		array = params.array;
+
+		return EACH(array, function(_value) {
+			if (value === _value) {
+				return false;
+			}
+		}) === false;
+	};
+
+	cls.array = array = function(value) {
+		//REQUIRED: value
+
+		return CHECK_IS_ARRAY(value) === true;
+	};
+
+	cls.data = data = function(value) {
+		//REQUIRED: value
+
+		return CHECK_IS_DATA(value) === true;
+	};
+
+	cls.element = element = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.array
+		//REQUIRED: params.validData
+
+		var
+		// array
+		array = params.array,
+
+		// valid
+		valid = VALID({
+			_ : params.validData
+		});
+
+		return EACH(array, function(value) {
+			if (valid.check({
+				_ : value
+			}).checkHasError() === true) {
+				return false;
+			}
+		}) === true;
+	};
+
+	cls.property = property = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.data
+		//REQUIRED: params.validData
+
+		var
+		// array
+		data = params.data,
+
+		// valid
+		valid = VALID({
+			_ : params.validData
+		});
+
+		return EACH(data, function(value) {
+			if (valid.check({
+				_ : value
+			}).checkHasError() === true) {
+				return false;
+			}
+		}) === true;
+	};
+
+	cls.detail = detail = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.data
+		//REQUIRED: params.validDataSet
+
+		var
+		// data
+		data = params.data,
+
+		// valid
+		valid = VALID(params.validDataSet);
+
+		return valid.check(data).checkHasError() !== true;
+	};
+
+	cls.equal = equal = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.value
+		//REQUIRED: params.validValue
+
+		var
+		// value
+		value = params.value,
+
+		// string
+		str = String(value),
+
+		// valid value
+		validValue = params.validValue,
+
+		// valid str
+		validStr = String(validValue);
+
+		return str === validStr;
+	};
+
+	cls.addIgnoreAttr = addIgnoreAttr = function(attr) {
+		ignoreAttrs.push(attr);
+	};
+
+	return {
+
+		init : function(inner, self, validDataSet) {
+			//REQUIRED: validDataSet
+
+			var
+			// Check class
+			Check = CLASS({
+
+				init : function(inner, self, params) {
+					//REQUIRED: params
+					//REQUIRED: params.data
+					//OPTIONAL: params.isExceptUndefined
+
+					var
+					// data
+					data = params.data,
+
+					// is except undefined
+					isExceptUndefined = params.isExceptUndefined,
+
+					// has error
+					hasError = false,
+
+					// errors
+					errors = {},
+
+					// check has error.
+					checkHasError,
+
+					// get errors.
+					getErrors;
+
+					EACH(validDataSet, function(validData, attr) {
+
+						// when valid data is true, pass
+						if (validData !== true) {
+
+							EACH(validData, function(validParams, name) {
+
+								var
+								// value
+								value = data[attr];
+
+								if (isExceptUndefined === true && value === undefined) {
+
+									// break.
+									return false;
+								}
+
+								if (name !== 'notEmpty' && notEmpty(value) !== true) {
+
+									// set TO_DELETE(null).
+									data[attr] = TO_DELETE;
+
+									// continue.
+									return true;
+								}
+
+								// one
+								if (name === 'one') {
+
+									if (one({
+										array : validParams,
+										value : value
+									}) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											array : validParams,
+											value : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								// element
+								else if (name === 'element') {
+
+									if (element({
+										validData : validParams,
+										array : value
+									}) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											validData : validParams,
+											array : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								// property
+								else if (name === 'property') {
+
+									if (property({
+										validData : validParams,
+										data : value
+									}) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											validData : validParams,
+											data : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								// detail
+								else if (name === 'detail') {
+
+									if (detail({
+										validDataSet : validParams,
+										data : value
+									}) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											validDataSet : validParams,
+											data : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								// need params
+								else if (name === 'size') {
+
+									if (cls[name](CHECK_IS_DATA(validParams) === true ? COMBINE([validParams, {
+										value : value
+									}]) : COMBINE([{
+										min : validParams,
+										max : validParams
+									}, {
+										value : value
+									}])) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											validParams : validParams,
+											value : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								// regex
+								else if (name === 'regex') {
+
+									if (cls[name]({
+										pattern : validParams,
+										value : value
+									}) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											validParam : validParams,
+											value : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								// min
+								else if (name === 'min') {
+
+									if (cls[name]({
+										min : validParams,
+										value : value
+									}) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											validParam : validParams,
+											value : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								// max
+								else if (name === 'max') {
+
+									if (cls[name]({
+										max : validParams,
+										value : value
+									}) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											validParam : validParams,
+											value : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								// equal
+								else if (name === 'equal') {
+
+									if (cls[name]({
+										value : value,
+										validValue : validParams
+									}) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											validParam : validParams,
+											value : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								// need value
+								else if (validParams === true) {
+
+									if (cls[name](value) === false) {
+
+										hasError = true;
+										errors[attr] = {
+											type : name,
+											value : value
+										};
+
+										// break.
+										return false;
+									}
+								}
+
+								if (notEmpty(value) === true && typeof value === 'string') {
+									if (name === 'integer') {
+										data[attr] = INTEGER(value);
+									} else if (name === 'real') {
+										data[attr] = REAL(value);
+									} else if (name === 'bool') {
+										data[attr] = value === 'true';
+									} else if (name === 'date') {
+										data[attr] = new Date(value);
+									} else if (name === 'username') {
+										data[attr] = value.toLowerCase();
+									}
+								}
+							});
+						}
+					});
+
+					EACH(data, function(value, attr) {
+						if (CHECK_IS_IN({
+							array : ignoreAttrs,
+							value : attr
+						}) !== true && validDataSet[attr] === undefined) {
+							delete data[attr];
+						}
+					});
+
+					self.checkHasError = checkHasError = function() {
+						return hasError;
+					};
+
+					self.getErrors = getErrors = function() {
+						return errors;
+					};
+				}
+			}),
+
+			// check.
+			check,
+
+			// check except undefined.
+			checkExceptUndefined;
+
+			self.check = check = function(data) {
+				return Check({
+					data : data
+				});
+			};
+
+			self.checkExceptUndefined = checkExceptUndefined = function(data) {
+				return Check({
+					data : data,
+					isExceptUndefined : true
+				});
+			};
+		}
+	};
+});
+
+/**
+ * check it is arguments.
+ */
+global.CHECK_IS_ARGUMENTS = METHOD({
+
+	run : function(it) {'use strict';
+		//OPTIONAL: it
+
+		if (it !== undefined && it !== TO_DELETE && typeof it === 'object' && (Object.prototype.toString.call(it) === '[object Arguments]' || (it.callee !== undefined && typeof it.callee === 'function'))) {
+			return true;
+		}
+
+		return false;
+	}
+});
+
+/**
+ * check are same all elements in array.
+ */
+global.CHECK_ARE_SAME = METHOD({
+
+	run : function(array) {
+		'use strict';
+		//REQUIRED: array
+
+		var
+		// are same
+		areSame = false,
+
+		// check two same.
+		checkTwoSame = function(a, b) {
+
+			// when a, b are date
+			if ( a instanceof Date === true && b instanceof Date === true) {
+				return a.getTime() === b.getTime();
+			}
+
+			// when a, b are data (JS object)
+			else if (CHECK_IS_DATA(a) === true && CHECK_IS_DATA(b) === true) {
+				return EACH(a, function(value, name) {
+					return checkTwoSame(value, b[name]);
+				});
+			}
+
+			// when a, b are array
+			else if (CHECK_IS_ARRAY(a) === true && CHECK_IS_ARRAY(b) === true) {
+				return EACH(a, function(value, i) {
+					return checkTwoSame(value, b[i]);
+				});
+			}
+
+			// when a, b are value
+			else {
+				return a === b;
+			}
+		};
+
+		if (array.length > 1) {
+
+			areSame = REPEAT(array.length, function(i) {
+				if (i < array.length - 1) {
+					return checkTwoSame(array[i], array[i + 1]);
+				} else {
+					return checkTwoSame(array[i], array[0]);
+				}
+			});
+		}
+
+		return areSame;
+	}
+});
+
+/**
+ * check it is array.
+ */
+global.CHECK_IS_ARRAY = METHOD({
+
+	run : function(it) {
+		'use strict';
+		//OPTIONAL: it
+
+		if (it !== undefined && it !== TO_DELETE && typeof it === 'object' && Object.prototype.toString.call(it) === '[object Array]') {
+			return true;
+		}
+
+		return false;
+	}
+});
+
+/**
+ * check it is data.
+ */
+global.CHECK_IS_DATA = METHOD({
+
+	run : function(it) {'use strict';
+		//OPTIONAL: it
+
+		if (it !== undefined && it !== TO_DELETE && CHECK_IS_ARGUMENTS(it) !== true && CHECK_IS_ARRAY(it) !== true && it instanceof Date !== true && typeof it === 'object') {
+			return true;
+		}
+
+		return false;
+	}
+});
+
+/**
+ * check is empty data.
+ */
+global.CHECK_IS_EMPTY_DATA = METHOD({
+
+	run : function(data) {
+		'use strict';
+		//REQUIRED: data
+
+		return CHECK_ARE_SAME([data, {}]);
+	}
+});
+
+/**
+ * pack data with Date type.
+ */
+global.PACK_DATA = METHOD({
+
+	run : function(data) {
+		'use strict';
+		//REQUIRED: data
+
+		var
+		// result
+		result = COPY(data),
+
+		// date attribute names
+		dateAttrNames = [];
+
+		EACH(result, function(value, name) {
+
+			// when value is Date type
+			if ( value instanceof Date === true) {
+
+				// change to timestamp integer.
+				result[name] = INTEGER(value.getTime());
+				dateAttrNames.push(name);
+			}
+
+			// when value is data
+			else if (CHECK_IS_DATA(value) === true) {
+				result[name] = PACK_DATA(value);
+			}
+
+			// when value is array
+			else if (CHECK_IS_ARRAY(value) === true) {
+
+				EACH(value, function(v, i) {
+
+					if (CHECK_IS_DATA(v) === true) {
+						value[i] = PACK_DATA(v);
+					}
+				});
+			}
+		});
+
+		result.__DATE_ATTR_NAMES = dateAttrNames;
+
+		return result;
+	}
+});
+
+/**
+ * unpack data with Date type.
+ */
+global.UNPACK_DATA = METHOD({
+
+	run : function(data) {
+		'use strict';
+		//REQUIRED: data
+
+		var
+		// result
+		result = COPY(data);
+
+		// when date attribute names exists
+		if (result.__DATE_ATTR_NAMES !== undefined) {
+
+			// change timestamp integer to Date type.
+			EACH(result.__DATE_ATTR_NAMES, function(dateAttrName, i) {
+				result[dateAttrName] = new Date(result[dateAttrName]);
+			});
+			delete result.__DATE_ATTR_NAMES;
+		}
+
+		EACH(result, function(value, name) {
+
+			// when value is data
+			if (CHECK_IS_DATA(value) === true) {
+				result[name] = UNPACK_DATA(value);
+			}
+
+			// when value is array
+			else if (CHECK_IS_ARRAY(value) === true) {
+
+				EACH(value, function(v, i) {
+
+					if (CHECK_IS_DATA(v) === true) {
+						value[i] = UNPACK_DATA(v);
+					}
+				});
+			}
+		});
+
+		return result;
+	}
+});
+
+/**
+ * check is exists value in data or array.
+ */
+global.CHECK_IS_IN = METHOD({
+
+	run : function(params) {
+		'use strict';
+		//REQUIRED: params
+		//OPTIONAL: params.data
+		//OPTIONAL: params.array
+		//REQUIRED: params.value
+
+		var
+		// data
+		data = params.data,
+
+		// array
+		array = params.array,
+
+		// value
+		value = params.value;
+
+		if (data !== undefined) {
+			return EACH(data, function(_value, name) {
+				if (CHECK_ARE_SAME([_value, value]) === true) {
+					return false;
+				}
+			}) !== true;
+		}
+
+		if (array !== undefined) {
+			return EACH(array, function(_value, key) {
+				if (CHECK_ARE_SAME([_value, value]) === true) {
+					return false;
+				}
+			}) !== true;
+		}
+	}
+});
+
+/**
+ * combine data set or arrays.
+ */
+global.COMBINE = METHOD({
+
+	run : function(dataSetOrArrays) {
+		'use strict';
+		//REQUIRED: dataSetOrArrays
+
+		var
+		// first
+		first,
+
+		// result
+		result;
+
+		if (dataSetOrArrays.length > 0) {
+
+			first = dataSetOrArrays[0];
+
+			// when first is data
+			if (CHECK_IS_DATA(first) === true) {
+
+				result = {};
+
+				EACH(dataSetOrArrays, function(data) {
+					EXTEND({
+						origin : result,
+						extend : data
+					});
+				});
+			}
+
+			// when first is array
+			else if (CHECK_IS_ARRAY(first) === true) {
+
+				result = [];
+
+				EACH(dataSetOrArrays, function(array) {
+					EXTEND({
+						origin : result,
+						extend : array
+					});
+				});
+			}
+		}
+
+		return result;
+	}
+});
+
+/**
+ * copy data or array.
+ */
+global.COPY = METHOD({
+
+	run : function(dataOrArray) {
+		'use strict';
+		//REQUIRED: dataOrArray
+
+		var
+		// copy
+		copy;
+
+		// when dataOrArray is data (JS object)
+		if (CHECK_IS_DATA(dataOrArray) === true) {
+
+			copy = {};
+
+			EXTEND({
+				origin : copy,
+				extend : dataOrArray
+			});
+		}
+
+		// when dataOrArray is array
+		else if (CHECK_IS_ARRAY(dataOrArray) === true) {
+
+			copy = [];
+
+			EXTEND({
+				origin : copy,
+				extend : dataOrArray
+			});
+		}
+
+		return copy;
+	}
+});
+
+/**
+ * extend data or array.
+ */
+global.EXTEND = METHOD({
+
+	run : function(params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.origin
+		//REQUIRED: params.extend
+
+		var
+		// origin
+		origin = params.origin,
+
+		// extend
+		extend = params.extend;
+
+		// when origin is data
+		if (CHECK_IS_DATA(origin) === true) {
+
+			EACH(extend, function(value, name) {
+
+				if ( value instanceof Date === true) {
+					origin[name] = new Date(value.getTime());
+				} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
+					origin[name] = COPY(value);
+				} else {
+					origin[name] = value;
+				}
+			});
+		}
+
+		// when origin is array
+		else if (CHECK_IS_ARRAY(origin) === true) {
+
+			EACH(extend, function(value) {
+
+				if ( value instanceof Date === true) {
+					origin.push(new Date(value.getTime()));
+				} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
+					origin.push(COPY(value));
+				} else {
+					origin.push(value);
+				}
+			});
+		}
+
+		return origin;
+	}
+});
+
+/**
+ * find name or key in data or array.
+ */
+global.FIND = METHOD({
+
+	run : function(dataOrArrayOrParams, filter) {
+		'use strict';
+		//REQUIRED: dataOrArrayOrParams
+		//OPTIONAL: dataOrArrayOrParams.data
+		//OPTIONAL: dataOrArrayOrParams.array
+		//REQUIRED: dataOrArrayOrParams.value
+		//OPTIONAL: filter
+
+		var
+		// data
+		data,
+
+		// array
+		array,
+
+		// value
+		value,
+
+		// ret
+		ret;
+
+		// when filter exists
+		if (filter !== undefined) {
+
+			// when dataOrArrayOrParams is data
+			if (CHECK_IS_DATA(dataOrArrayOrParams) === true) {
+
+				EACH(dataOrArrayOrParams, function(value, name) {
+
+					// value passed filter.
+					if (filter(value) === true) {
+						ret = value;
+						return false;
+					}
+				});
+			}
+
+			// when dataOrArrayOrParams is array
+			else if (CHECK_IS_ARRAY(dataOrArrayOrParams) === true) {
+
+				EACH(dataOrArrayOrParams, function(value, key) {
+
+					// value passed filter.
+					if (filter(value) === true) {
+						ret = value;
+						return false;
+					}
+				});
+			}
+		}
+
+		// when filter not exists
+		else {
+
+			// init params.
+			data = dataOrArrayOrParams.data;
+			array = dataOrArrayOrParams.array;
+			value = dataOrArrayOrParams.value;
+
+			if (data !== undefined) {
+
+				EACH(data, function(_value, name) {
+					if (_value === value) {
+						ret = name;
+						return false;
+					}
+				});
+			}
+
+			if (array !== undefined) {
+
+				EACH(array, function(_value, key) {
+					if (_value === value) {
+						ret = key;
+						return false;
+					}
+				});
+			}
+		}
+
+		return ret;
+	}
+});
+
+/**
+ * remove at name or key or some value in data or array.
+ */
+global.REMOVE = METHOD({
+
+	run : function(dataOrArrayOrParams, filter) {
+		'use strict';
+		//REQUIRED: dataOrArrayOrParams
+		//OPTIONAL: dataOrArrayOrParams.data
+		//OPTIONAL: dataOrArrayOrParams.array
+		//OPTIONAL: dataOrArrayOrParams.name
+		//OPTIONAL: dataOrArrayOrParams.key
+		//OPTIONAL: dataOrArrayOrParams.value
+		//OPTIONAL: filter
+
+		var
+		// data
+		data,
+
+		// array
+		array,
+
+		// name
+		name,
+
+		// key
+		key,
+
+		// value
+		value;
+
+		// when filter exists
+		if (filter !== undefined) {
+
+			// when dataOrArrayOrParams is data
+			if (CHECK_IS_DATA(dataOrArrayOrParams) === true) {
+
+				EACH(dataOrArrayOrParams, function(value, name) {
+
+					// remove value passed filter.
+					if (filter(value) === true) {
+
+						REMOVE({
+							data : dataOrArrayOrParams,
+							name : name
+						});
+					}
+				});
+			}
+
+			// when dataOrArrayOrParams is array
+			else if (CHECK_IS_ARRAY(dataOrArrayOrParams) === true) {
+
+				EACH(dataOrArrayOrParams, function(value, key) {
+
+					// remove value passed filter.
+					if (filter(value) === true) {
+
+						REMOVE({
+							array : dataOrArrayOrParams,
+							key : key
+						});
+					}
+				});
+			}
+		}
+
+		// when filter not exists
+		else {
+
+			// init params.
+			data = dataOrArrayOrParams.data;
+			array = dataOrArrayOrParams.array;
+			name = dataOrArrayOrParams.name;
+			key = dataOrArrayOrParams.key;
+			value = dataOrArrayOrParams.value;
+
+			// remove at name.
+			if (name !== undefined) {
+				delete data[name];
+			}
+
+			// remove at key.
+			if (key !== undefined) {
+				array.splice(key, 1);
+			}
+
+			// remove value.
+			if (value !== undefined) {
+
+				if (data !== undefined) {
+
+					EACH(data, function(_value, name) {
+
+						if (_value === value) {
+
+							REMOVE({
+								data : data,
+								name : name
+							});
+						}
+					});
+				}
+
+				if (array !== undefined) {
+
+					EACH(array, function(_value, key) {
+
+						if (_value === value) {
+
+							REMOVE({
+								array : array,
+								key : key
+							});
+						}
+					});
+				}
+			}
+		}
+	}
+});
+
+/**
+ * Calendar class
+ */
+global.CALENDAR = CLASS({
+
+	init : function(inner, self, date) {
+		'use strict';
+		//OPTIONAL: date
+
+		var
+		// get year.
+		getYear,
+
+		// get month.
+		getMonth,
+
+		// get date.
+		getDate,
+
+		// get day.
+		getDay,
+
+		// get hour.
+		getHour,
+
+		// get minute
+		getMinute,
+
+		// get second.
+		getSecond;
+
+		if (date === undefined) {
+			date = new Date();
+		}
+
+		self.getYear = getYear = function() {
+			return date.getFullYear();
+		};
+
+		self.getMonth = getMonth = function() {
+			return date.getMonth() + 1;
+		};
+
+		self.getDate = getDate = function() {
+			return date.getDate();
+		};
+
+		self.getDay = getDay = function() {
+			return date.getDay();
+		};
+
+		self.getHour = getHour = function() {
+			return date.getHours();
+		};
+
+		self.getMinute = getMinute = function() {
+			return date.getMinutes();
+		};
+
+		self.getSecond = getSecond = function() {
+			return date.getSeconds();
+		};
+	}
+});
+
+/**
+ * Delay class
+ */
+global.DELAY = CLASS({
+
+	init : function(inner, self, seconds, func) {
+		'use strict';
+		//REQUIRED: seconds
+		//OPTIONAL: func
+
+		var
+		// timeout
+		timeout,
+
+		// remove.
+		remove;
+
+		if (func === undefined) {
+			func = seconds;
+			seconds = 0;
+		}
+
+		timeout = setTimeout(function() {
+			func(self);
+		}, seconds * 1000);
+
+		self.remove = remove = function() {
+			clearTimeout(timeout);
+		};
+	}
+});
+
+/**
+ * Interval class
+ */
+global.INTERVAL = CLASS({
+
+	init : function(inner, self, seconds, func) {
+		'use strict';
+		//REQUIRED: seconds
+		//OPTIONAL: func
+
+		var
+		// interval
+		interval,
+
+		// remove.
+		remove;
+
+		if (func === undefined) {
+			func = seconds;
+			seconds = 0;
+		}
+
+		interval = setInterval(function() {
+			if (func(self) === false) {
+				remove();
+			}
+		}, seconds === 0 ? 1 : seconds * 1000);
+
+		self.remove = remove = function() {
+			clearInterval(interval);
+		};
+	}
+});
+
+/**
+ * Loop class (for game etc.)
+ */
+global.LOOP = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// before time
+	beforeTime,
+
+	// animation interval
+	animationInterval,
+
+	// loop infos
+	loopInfos = [],
+
+	// runs
+	runs = [],
+
+	// fire.
+	fire = function() {
+
+		if (animationInterval === undefined) {
+
+			beforeTime = Date.now();
+
+			animationInterval = INTERVAL(function() {
+
+				var
+				// time
+				time = Date.now(),
+
+				// times
+				times = time - beforeTime,
+
+				// loop info
+				loopInfo,
+
+				// count
+				count,
+
+				// interval
+				interval,
+
+				// i, j
+				i, j;
+
+				if (times > 0) {
+
+					for ( i = 0; i < loopInfos.length; i += 1) {
+
+						loopInfo = loopInfos[i];
+
+						if (loopInfo.fps !== undefined && loopInfo.fps > 0) {
+
+							if (loopInfo.timeSigma === undefined) {
+								loopInfo.timeSigma = 0;
+								loopInfo.countSigma = 0;
+							}
+
+							// calculate count.
+							count = parseInt(loopInfo.fps / (1000 / times) * (loopInfo.timeSigma / times + 1), 10) - loopInfo.countSigma;
+
+							// start.
+							if (loopInfo.start !== undefined) {
+								loopInfo.start();
+							}
+
+							// run interval.
+							interval = loopInfo.interval;
+							for ( j = 0; j < count; j += 1) {
+								interval();
+							}
+
+							// end.
+							if (loopInfo.end !== undefined) {
+								loopInfo.end(times);
+							}
+
+							loopInfo.countSigma += count;
+
+							loopInfo.timeSigma += times;
+							if (loopInfo.timeSigma > 1000) {
+								loopInfo.timeSigma = undefined;
+							}
+						}
+					}
+
+					// run runs.
+					for ( i = 0; i < runs.length; i += 1) {
+						runs[i](times);
+					}
+
+					beforeTime = time;
+				}
+			});
+		}
+	},
+
+	// stop.
+	stop = function() {
+
+		if (loopInfos.length <= 0 && runs.length <= 0) {
+
+			animationInterval.remove();
+			animationInterval = undefined;
+		}
+	};
+
+	return {
+
+		init : function(inner, self, fps, intervalOrFuncs) {
+			'use strict';
+			//OPTIONAL: fps
+			//OPTIONAL: intervalOrFuncs
+			//OPTIONAL: intervalOrFuncs.start
+			//REQUIRED: intervalOrFuncs.interval
+			//OPTIONAL: intervalOrFuncs.end
+
+			var
+			// run.
+			run,
+
+			// start.
+			start,
+
+			// interval.
+			interval,
+
+			// end.
+			end,
+
+			// info
+			info,
+
+			// change fps.
+			changeFPS,
+
+			// remove.
+			remove;
+
+			// when intervalOrFuncs exists
+			if (intervalOrFuncs !== undefined) {
+
+				// init intervalOrFuncs.
+				if (CHECK_IS_DATA(intervalOrFuncs) !== true) {
+					interval = intervalOrFuncs;
+				} else {
+					start = intervalOrFuncs.start;
+					interval = intervalOrFuncs.interval;
+					end = intervalOrFuncs.end;
+				}
+
+				loopInfos.push( info = {
+					fps : fps,
+					start : start,
+					interval : interval,
+					end : end
+				});
+
+				self.changeFPS = changeFPS = function(fps) {
+					//REQUIRED: fps
+
+					info.fps = fps;
+				};
+
+				self.remove = remove = function() {
+
+					REMOVE({
+						array : loopInfos,
+						value : info
+					});
+
+					stop();
+				};
+			}
+
+			// when fps is run
+			else {
+
+				runs.push( run = fps);
+
+				self.remove = remove = function() {
+
+					REMOVE({
+						array : runs,
+						value : run
+					});
+
+					stop();
+				};
+			}
+
+			fire();
+		}
+	};
+});
+
+/**
+ * run `func` and return it.
+ */
+global.RAR = METHOD({
+
+	run : function(params, func) {
+		'use strict';
+		//OPTIONAL: params
+		//REQUIRED: func
+
+		// init params and func.
+		if (func === undefined) {
+			func = params;
+			params = undefined;
+		}
+
+		func(params);
+
+		return func;
+	}
+});
+
+/**
+ * just run.
+ *
+ * use this if you need a code block.
+ */
+global.RUN = METHOD({
+
+	run : function(func) {
+		'use strict';
+		//REQUIRED: func
+
+		var
+		// f.
+		f = function() {
+			return func(f);
+		};
+
+		return f();
+	}
+});
+
+/**
+ * convert integer string to integer number.
+ */
+global.INTEGER = METHOD({
+
+	run : function(integerString) {
+		'use strict';
+		//OPTIONAL: integerString
+
+		return integerString === undefined ? undefined : parseInt(integerString, 10);
+	}
+});
+
+/**
+ * generate random integer.
+ */
+global.RANDOM = METHOD({
+
+	run : function(maxOrParams) {
+		'use strict';
+		//REQUIRED: maxOrParams
+		//OPTIONAL: maxOrParams.min
+		//OPTIONAL: maxOrParams.max
+		//OPTIONAL: maxOrParams.limit
+
+		var
+		// min
+		min,
+
+		// max
+		max,
+
+		// limit
+		limit;
+
+		// init maxOrParams.
+		if (CHECK_IS_DATA(maxOrParams) !== true) {
+			max = maxOrParams;
+		} else {
+			min = maxOrParams.min;
+			max = maxOrParams.max;
+			limit = maxOrParams.limit;
+		}
+
+		if (min === undefined) {
+			min = 0;
+		}
+
+		if (limit !== undefined) {
+			max = limit - 1;
+		}
+
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	}
+});
+
+/**
+ * convert real string to real number.
+ */
+global.REAL = METHOD({
+
+	run : function(realString) {'use strict';
+		//OPTIONAL: realString
+
+		return realString === undefined ? undefined : parseFloat(realString);
+	}
+});
+
+/**
+ * same as `foreach`.
+ */
+global.EACH = METHOD({
+
+	run : function(dataOrArray, func) {
+		'use strict';
+		//OPTIONAL: dataOrArray
+		//REQUIRED: func
+
+		var
+		// length
+		length,
+
+		// name
+		name,
+
+		// extras
+		i;
+
+		// when dataOrArray is undefined
+		if (dataOrArray === undefined) {
+			return false;
+		}
+
+		// when dataOrArray is data
+		else if (CHECK_IS_DATA(dataOrArray) === true) {
+
+			for (name in dataOrArray) {
+				if (dataOrArray.hasOwnProperty(name) === true) {
+					if (func(dataOrArray[name], name) === false) {
+						return false;
+					}
+				}
+			}
+		}
+
+		// when dataOrArray is array or arguments
+		else if (CHECK_IS_ARRAY(dataOrArray) === true || CHECK_IS_ARGUMENTS(dataOrArray) === true) {
+
+			length = dataOrArray.length;
+
+			for ( i = 0; i < length; i += 1) {
+
+				if (func(dataOrArray[i], i) === false) {
+					return false;
+				}
+
+				// when shrink
+				if (dataOrArray.length === length - 1) {
+					i -= 1;
+					length -= 1;
+				}
+			}
+		}
+
+		// when dataOrArray is func
+		else if (func === undefined) {
+
+			func = dataOrArray;
+			dataOrArray = undefined;
+
+			return function(dataOrArray) {
+				return EACH(dataOrArray, func);
+			};
+		}
+
+		return true;
+	}
+});
+
+/**
+ * run `func` repeat `count` time, or same as `for`.
+ */
+global.REPEAT = METHOD({
+
+	run : function(countOrParams, func) {
+		'use strict';
+		//REQUIRED: countOrParams
+		//REQUIRED: countOrParams.start
+		//OPTIONAL: countOrParams.end
+		//OPTIONAL: countOrParams.limit
+		//OPTIONAL: countOrParams.step
+		//REQUIRED: func
+
+		var
+		// count
+		count,
+
+		// start
+		start,
+
+		// end
+		end,
+
+		// limit
+		limit,
+
+		// step
+		step,
+
+		// extras
+		i;
+
+		// init maxOrParams.
+		if (CHECK_IS_DATA(countOrParams) !== true) {
+			count = countOrParams;
+		} else {
+			start = countOrParams.start;
+			end = countOrParams.end;
+			limit = countOrParams.limit;
+			step = countOrParams.step;
+		}
+
+		if (limit === undefined && end !== undefined) {
+			limit = end + 1;
+		}
+
+		if (step === undefined) {
+			step = 1;
+		}
+
+		// count mode
+		if (count !== undefined) {
+
+			for ( i = 0; i < parseInt(count, 10); i += 1) {
+				if (func(i) === false) {
+					return false;
+				}
+			}
+		}
+
+		// end mode
+		else if (end !== undefined && start > end) {
+
+			for ( i = start; i >= end; i -= step) {
+				if (func(i) === false) {
+					return false;
+				}
+			}
+
+		}
+
+		// limit mode
+		else {
+
+			for ( i = start; i < limit; i += step) {
+				if (func(i) === false) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+});

@@ -1,1 +1,110 @@
-FOR_BOX(function(o){"use strict";o.GO=METHOD({run:function(O){GO((o.boxName===CONFIG.defaultBoxName?"":o.boxName+"/")+(void 0===O?"":O))}})});FOR_BOX(function(N){"use strict";N.GO_NEW_WIN=METHOD({run:function(o){GO_NEW_WIN((N.boxName===CONFIG.defaultBoxName?"":N.boxName+"/")+(void 0===o?"":o))}})});FOR_BOX(function(e){"use strict";e.HREF=METHOD({run:function(n){return HREF((e.boxName===CONFIG.defaultBoxName?"":e.boxName+"/")+(void 0===n?"":n))}})});FOR_BOX(function(t){"use strict";t.MATCH_VIEW=METHOD({run:function(u){var a=u.uri,e=u.target,n=[],r=function(u){t.boxName===CONFIG.defaultBoxName&&n.push(u),n.push(t.boxName+"/"+u)};CHECK_IS_ARRAY(a)===!0?EACH(a,r):r(a),MATCH_VIEW({uri:n,target:e})}})});FOR_BOX(function(o){"use strict";o.REFRESH=METHOD({run:function(e){REFRESH((o.boxName===CONFIG.defaultBoxName?"":o.boxName+"/")+(void 0===e?"":e))}})});
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * go another view.
+	 */
+	box.GO = METHOD({
+
+		run : function(uri) {
+			//OPTIONAL: uri
+
+			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * go another view on new window.
+	 */
+	box.GO_NEW_WIN = METHOD({
+
+		run : function(uri) {
+			//OPTIONAL: uri
+
+			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * get href.
+	 */
+	box.HREF = METHOD({
+
+		run : function(uri) {
+			//OPTIONAL: uri
+
+			return HREF((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * match view.
+	 */
+	box.MATCH_VIEW = METHOD({
+
+		run : function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.uri
+			//REQUIRED: params.target
+
+			var
+			// uri
+			uri = params.uri,
+
+			// target
+			target = params.target,
+
+			// new uris
+			newURIs = [],
+
+			// push.
+			push = function(uri) {
+
+				if (box.boxName === CONFIG.defaultBoxName) {
+					newURIs.push(uri);
+				}
+
+				newURIs.push(box.boxName + '/' + uri);
+			};
+
+			if (CHECK_IS_ARRAY(uri) === true) {
+				EACH(uri, push);
+			} else {
+				push(uri);
+			}
+
+			MATCH_VIEW({
+				uri : newURIs,
+				target : target
+			});
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * refresh view.
+	 */
+	box.REFRESH = METHOD({
+
+		run : function(uri) {
+			//OPTIONAL: uri
+			
+			REFRESH((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+		}
+	});
+});

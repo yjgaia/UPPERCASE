@@ -59,24 +59,52 @@ RUN(function() {
 	},
 
 	// save.
-	save = function(modulePath, scripts, path) {
-
+	save = function(modulePath, scriptPaths, path, isToSaveMin) {
+		
 		var
-		// script
-		script = '';
-
-		EACH(scripts, function(scriptPath) {
-			script += MINIFY_JS(READ_FILE({
+		// content
+		content,
+		
+		// minify result
+		minifyResult;
+		
+		EACH(scriptPaths, function(scriptPath) {
+			
+			if (content === undefined) {
+				content = '';
+			} else {
+				content += '\n';
+			}
+			
+			content += READ_FILE({
 				path : scriptPath,
 				isSync : true
-			}));
+			}).toString();
 		});
-
+		
 		WRITE_FILE({
-			path : '../UPPERCASE.IO-' + modulePath + '/' + path,
-			content : script,
+			path : '../UPPERCASE.IO-' + modulePath + '/' + path + '.js',
+			content : content,
 			isSync : true
 		});
+		
+		if (isToSaveMin === true) {
+			
+			content = '';
+		
+			EACH(scriptPaths, function(scriptPath) {
+				content += MINIFY_JS(READ_FILE({
+					path : scriptPath,
+					isSync : true
+				}));
+			});
+	
+			WRITE_FILE({
+				path : '../UPPERCASE.IO-' + modulePath + '/' + path + '.MIN.js',
+				content : content,
+				isSync : true
+			});
+		}
 	},
 
 	// copy folder.
@@ -97,29 +125,11 @@ RUN(function() {
 
 			success : function(fileNames) {
 				EACH(fileNames, function(fileName) {
-					if (path.extname(fileName) === '.js') {
-
-						save(modulePath, [modulePath + '/' + from + '/' + fileName], to + '/' + fileName);
-
-					} else if (path.extname(fileName) === '.css') {
-
-						WRITE_FILE({
-							path : realTo + '/' + fileName,
-							content : MINIFY_CSS(READ_FILE({
-								path : modulePath + '/' + from + '/' + fileName,
-								isSync : true
-							})),
-							isSync : true
-						});
-
-					} else {
-
-						COPY_FILE({
-							from : modulePath + '/' + from + '/' + fileName,
-							to : realTo + '/' + fileName,
-							isSync : true
-						});
-					}
+					COPY_FILE({
+						from : modulePath + '/' + from + '/' + fileName,
+						to : realTo + '/' + fileName,
+						isSync : true
+					});
 				});
 			}
 		});
@@ -151,7 +161,7 @@ RUN(function() {
 		scanFolder(scripts, modulePath + '/' + name);
 
 		if (scripts.length > 0) {
-			save(modulePath, scripts, name + '.js');
+			save(modulePath, scripts, name, true);
 		}
 	},
 
@@ -174,7 +184,7 @@ RUN(function() {
 	INIT_OBJECTS();
 
 	distModule('BOX');
-	save('BOX', ['BOX/BOX.js', 'BOX/FOR_BOX.js'], 'CORE.js');
+	save('BOX', ['BOX/BOX.js', 'BOX/FOR_BOX.js'], 'CORE', true);
 
 	distModule('DB');
 	distModule('TRANSPORT');
@@ -184,15 +194,24 @@ RUN(function() {
 	distModule('UTIL');
 
 	distModule('IO');
-	save('IO', ['IO/BOOT.js'], 'BOOT.js');
-	save('IO', ['IO/BROWSER_INIT.js'], 'BROWSER_INIT.js');
+	save('IO', ['IO/BOOT.js'], 'BOOT', false);
+	save('IO', ['IO/BROWSER_INIT.js'], 'BROWSER_INIT', true);
+	
+	WRITE_FILE({
+		path : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
+		content : MINIFY_CSS(READ_FILE({
+			path : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
+			isSync : true
+		})),
+		isSync : true
+	});
 
 	// make BROWSER-PACK.
 	RUN(function() {
 
 		var
 		// init script
-		initScript = 'global=window;',
+		initScript = 'global = window;\n\n',
 
 		// load.
 		load = function(path) {
@@ -267,6 +286,11 @@ RUN(function() {
 			content : initScript,
 			isSync : true
 		});
+		WRITE_FILE({
+			path : '../UPPERCASE.IO-BROWSER-PACK/IMPORT.MIN.js',
+			content : MINIFY_JS(initScript),
+			isSync : true
+		});
 
 		// copy BASE_STYLE
 		COPY_FILE({
@@ -279,6 +303,11 @@ RUN(function() {
 		COPY_FILE({
 			from : '../UPPERCASE.IO-IO/BROWSER_INIT.js',
 			to : '../UPPERCASE.IO-BROWSER-PACK/INIT.js',
+			isSync : true
+		});
+		COPY_FILE({
+			from : '../UPPERCASE.IO-IO/BROWSER_INIT.MIN.js',
+			to : '../UPPERCASE.IO-BROWSER-PACK/INIT.MIN.js',
 			isSync : true
 		});
 	});

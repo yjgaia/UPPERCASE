@@ -1,1 +1,113 @@
-OVERRIDE(ADD_STYLE,function(e){"use strict";global.ADD_STYLE=METHOD({run:function(r){var i=r.node,l=r.style,n=i.getWrapperEl();EACH(l,function(r,l){var o;if("onDisplayResize"===l)o={},o[l]=r,e({node:i,style:o});else try{if("flt"===l)n.style.styleFloat=r;else if(("backgroundImage"===l||"background"===l&&r.length>=7&&"url("===r.substring(0,4))&&IE.version<=6)DELAY(function(){"none"===n.style.display?i.__IS_KEEPED_PNG_FIX=!0:n.style.behavior="url("+BROWSER_CONFIG.fixScriptsFolderPath+"/IE/BROWSER/LIB/iepngfix/iepngfix.htc?"+(void 0!==CONFIG.version?CONFIG.version:Date.now())+");"});else if("display"===l&&"none"!==r)i.__IS_KEEPED_PNG_FIX===!0&&(n.style.behavior="url("+BROWSER_CONFIG.fixScriptsFolderPath+"/IE/BROWSER/LIB/iepngfix/iepngfix.htc?"+(void 0!==CONFIG.version?CONFIG.version:Date.now())+");",delete i.__IS_KEEPED_PNG_FIX);else if("backgroundSize"===l&&IE.version<=8)n.style.filter+=' progid:DXImageTransform.Microsoft.AlphaImageLoader(src="'+n.style.backgroundImage.replace('url("',"").replace('")',"").replace("url(","").replace(")","")+'",sizingMethod="scale");',n.style.backgroundImage="none";else if("cursor"===l&&"pointer"===r)n.style.cursor="hand";else if("filter"===l)return void(n.style.filter+=" "+r);o={},o[l]=r,e({node:i,style:o})}catch(s){}})}})});
+OVERRIDE(ADD_STYLE, function(origin) {
+	'use strict';
+
+	/**
+	 * add style. (fix for IE)
+	 */
+	global.ADD_STYLE = METHOD({
+
+		run : function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.node
+			//REQUIRED: params.style
+
+			var
+			// node
+			node = params.node,
+
+			// style
+			style = params.style,
+
+			// el
+			el = node.getWrapperEl();
+
+			EACH(style, function(value, name) {
+
+				var
+				// _style
+				_style;
+
+				// on display resize
+				if (name === 'onDisplayResize') {
+
+					_style = {};
+					_style[name] = value;
+
+					// pass to origin method.
+					origin({
+						node : node,
+						style : _style
+					});
+
+				} else {
+
+					try {
+
+						// flt -> float
+						if (name === 'flt') {
+							el.style.styleFloat = value;
+						}
+
+						// fix IE PNG transparent background bug.
+						else if ((name === 'backgroundImage' || (name === 'background' && value.length >= 7 && value.substring(0, 4) === 'url(')) &&
+
+						// when IE <= 6
+						IE.version <= 6) {
+
+							DELAY(function() {
+
+								if (el.style.display === 'none') {
+									node.__IS_KEEPED_PNG_FIX = true;
+								} else {
+									el.style.behavior = 'url(' + BROWSER_CONFIG.fixScriptsFolderPath + '/IE/BROWSER/LIB/iepngfix/iepngfix.htc?' + (CONFIG.version !== undefined ? CONFIG.version : Date.now()) + ');';
+								}
+							});
+
+						} else if (name === 'display' && value !== 'none') {
+
+							if (node.__IS_KEEPED_PNG_FIX === true) {
+
+								el.style.behavior = 'url(' + BROWSER_CONFIG.fixScriptsFolderPath + '/IE/BROWSER/LIB/iepngfix/iepngfix.htc?' + (CONFIG.version !== undefined ? CONFIG.version : Date.now()) + ');';
+								delete node.__IS_KEEPED_PNG_FIX;
+							}
+						}
+
+						// fix background size using filter.
+						else if (name === 'backgroundSize' &&
+
+						// when IE <= 8
+						IE.version <= 8) {
+
+							el.style.filter += ' progid:DXImageTransform.Microsoft.AlphaImageLoader(src="' + el.style.backgroundImage.replace('url("', '').replace('")', '').replace('url(', '').replace(')', '') + '",sizingMethod="scale");';
+							el.style.backgroundImage = 'none';
+						}
+
+						// fix cursor pointer.
+						else if (name === 'cursor' && value === 'pointer') {
+							el.style.cursor = 'hand';
+						}
+
+						// fix adding filter.
+						else if (name === 'filter') {
+							el.style.filter += ' ' + value;
+							return;
+						}
+
+						_style = {};
+						_style[name] = value;
+
+						// next to origin method.
+						origin({
+							node : node,
+							style : _style
+						});
+
+					} catch(e) {
+						// ignore
+					}
+				}
+			});
+
+		}
+	});
+});

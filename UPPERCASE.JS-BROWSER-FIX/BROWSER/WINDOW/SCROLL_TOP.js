@@ -1,1 +1,27 @@
-OVERRIDE(SCROLL_TOP,function(){"use strict";global.SCROLL_TOP=METHOD({run:function(){var o=document.documentElement,l=document.body;return void 0!==o&&void 0!==o.scrollTop&&o.scrollTop>0?o.scrollTop:void 0!==l&&void 0!==l.scrollTop&&l.scrollTop>0?l.scrollTop:0}})});
+OVERRIDE(SCROLL_TOP, function(origin) {
+	'use strict';
+
+	/**
+	 * get scroll top. (fix)
+	 */
+	global.SCROLL_TOP = METHOD({
+
+		run : function() {
+
+			var
+			// doc
+			doc = document.documentElement,
+
+			// body
+			body = document.body;
+
+			if (doc !== undefined && doc.scrollTop !== undefined && doc.scrollTop > 0) {
+				return doc.scrollTop;
+			} else if (body !== undefined && body.scrollTop !== undefined && body.scrollTop > 0) {
+				return body.scrollTop;
+			}
+
+			return 0;
+		}
+	});
+});

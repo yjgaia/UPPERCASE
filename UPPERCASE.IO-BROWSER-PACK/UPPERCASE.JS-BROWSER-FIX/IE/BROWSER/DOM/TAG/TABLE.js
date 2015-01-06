@@ -1,1 +1,26 @@
-OVERRIDE(TABLE,function(t){"use strict";global.TABLE=CLASS({preset:function(){return t},init:function(t,n){var e=DOM({tag:"tbody"});n.getWrapperEl().appendChild(e.getEl()),t.setContentDom(e)}})});
+OVERRIDE(TABLE, function(origin) {
+	'use strict';
+
+	/**
+	 * Table class (fix for IE<=7)
+	 */
+	global.TABLE = CLASS({
+
+		preset : function() {
+			return origin;
+		},
+
+		init : function(inner, self) {
+
+			var
+			// tbody
+			tbody = DOM({
+				tag : 'tbody'
+			});
+
+			self.getWrapperEl().appendChild(tbody.getEl());
+
+			inner.setContentDom(tbody);
+		}
+	});
+});

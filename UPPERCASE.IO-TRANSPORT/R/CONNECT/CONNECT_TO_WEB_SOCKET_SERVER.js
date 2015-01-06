@@ -1,1 +1,399 @@
-OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER,function(){"use strict";global.CONNECT_TO_WEB_SOCKET_SERVER=METHOD(function(e){var o,n,t,i=1e3,r=7,E=0,c=0,d={},s={};return e.request=o=function(e,o){var n=s[e],t=n.contentPieces,i=(void 0===n.clientId?"":"clientId="+n.clientId+"&")+"connectionKey="+n.connectionKey+"&requestKey="+e;void 0!==n.script&&n.script.remove(),0===t.length?i+="&isEnd=true":(i+="&content="+encodeURIComponent(t[0]),REMOVE({array:t,key:0})),n.script=LOAD({host:n.host,port:n.port,uri:n.uri,paramStr:i,isNoCache:!0},{error:o})},e.removeRequestInfo=n=function(e){var o=s[e];o.script.remove(),delete o.script,delete s[e]},e.response=t=function(e){var o=PARSE_STR(decodeURIComponent(e));d[o.connectionKey](o.clientId,o.params),n(o.requestKey)},{run:function(e,n){var t,u,v,C,_,a,O,R,I=void 0===e.host?BROWSER_CONFIG.host:e.host,N=e.port,f=e.fixRequestURI,T=E,S={},m=0,p=function(e,n,t){var r,E;if(s[c]={host:I,port:N,uri:f,clientId:e,connectionKey:n,contentPieces:E=[]},void 0!==t)for(r=STRINGIFY(t);""!==r;)E.push(r.substring(0,i)),r=r.substring(i);o(c,function(){D("__DISCONNECTED")}),c+=1},D=function(e,o,n){var t;_!==!0&&(t=S[e],void 0!==t&&EACH(t,function(e){e(o,function(e){void 0!==R&&void 0!==n&&R({methodName:"__CALLBACK_"+n,data:e})})}),"__DISCONNECTED"===e&&(void 0!==C&&C.remove(),_=!0))};CHECK_IS_DATA(n)!==!0?t=n:(t=n.success,u=n.error),v=DELAY(5,function(){void 0!==u?u("CONNECT TO WEB SOCKET FIX SERVER FAILED."):console.log("[UPPERCASE.IO-CONNECT_TO_WEB_SOCKET_SERVER (FIX)] CONNECT TO WEB SOCKET FIX SERVER FAILED.")}),d[T]=function(e,o){void 0!==v?(v.remove(),v=void 0,t(a=function(e,o){var n=S[e];void 0===n&&(n=S[e]=[]),n.push(o)},O=function(e,o){var n=S[e];void 0!==n&&(void 0!==o?REMOVE({array:n,value:o}):delete S[e])},R=function(o,n){var t="__CALLBACK_"+m;o.sendKey=m,m+=1,p(e,T,o),void 0!==n&&a(t,function(e){n(e),O(t)})},function(){p(e,T,{methodName:"__DISCONNECTED"}),_=!0})):void 0!==o&&D(o.methodName,o.data,o.sendKey),void 0!==C&&C.remove(),_!==!0&&(C=DELAY(r,function(){D("__DISCONNECTED")}),p(e,T))},p(void 0,T),E+=1}}})});
+OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
+	'use strict';
+
+	/*
+	 * connect to web socket fix server (using jsonp long-polling).
+	 */
+	global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD(function(m) {
+
+		var
+		// MAX_LENGTH
+		MAX_LENGTH = 1000,
+
+		// RESPONSE_ERROR_DELAY_TIME
+		RESPONSE_ERROR_DELAY_TIME = 7,
+
+		// connection count
+		connectionCount = 0,
+
+		// request count
+		requestCount = 0,
+
+		// response listeners
+		responseListeners = {},
+
+		// request infos
+		requestInfos = {},
+
+		// request.
+		request,
+
+		// remove request info.
+		removeRequestInfo,
+
+		// response.
+		response;
+
+		m.request = request = function(requestKey, errorListener) {
+			//REQUIRED: requestKey
+			//OPTIONAL: errorListener
+
+			var
+			// request info
+			requestInfo = requestInfos[requestKey],
+
+			// content pieces
+			contentPieces = requestInfo.contentPieces,
+
+			// param str
+			paramStr = (requestInfo.clientId === undefined ? '' : 'clientId=' + requestInfo.clientId + '&') + 'connectionKey=' + requestInfo.connectionKey + '&requestKey=' + requestKey;
+
+			// remove existed script.
+			if (requestInfo.script !== undefined) {
+				requestInfo.script.remove();
+			}
+
+			// when not exists content piece.
+			if (contentPieces.length === 0) {
+
+				// with end flag.
+				paramStr += '&isEnd=true';
+			}
+
+			// when exists content piece.
+			else {
+
+				// with content piece
+				paramStr += '&content=' + encodeURIComponent(contentPieces[0]);
+
+				// remove first content piece.
+				REMOVE({
+					array : contentPieces,
+					key : 0
+				});
+			}
+
+			requestInfo.script = LOAD({
+				host : requestInfo.host,
+				port : requestInfo.port,
+				uri : requestInfo.uri,
+				paramStr : paramStr,
+				isNoCache : true
+			}, {
+				error : errorListener
+			});
+		};
+
+		m.removeRequestInfo = removeRequestInfo = function(requestKey) {
+			//REQUIRED: requestKey
+
+			var
+			// request info
+			requestInfo = requestInfos[requestKey];
+
+			// remove script tag.
+			requestInfo.script.remove();
+			delete requestInfo.script;
+
+			// remove request info.
+			delete requestInfos[requestKey];
+		};
+
+		m.response = response = function(paramsStr) {
+			//REQUIRED: paramsStr
+
+			//REQUIRED: params
+			//REQUIRED: params.connectionKey
+			//REQUIRED: params.clientId
+			//OPTIONAL: params.params
+			//REQUIRED: params.requestKey
+
+			var
+			// params
+			params = PARSE_STR(decodeURIComponent(paramsStr));
+
+			// run response listener.
+			responseListeners[params.connectionKey](params.clientId, params.params);
+
+			// remove request info.
+			removeRequestInfo(params.requestKey);
+		};
+
+		return {
+
+			run : function(params, connectionListenerOrListeners) {
+				//REQUIRED: params
+				//OPTIONAL: params.host
+				//OPTIONAL: params.port
+				//REQUIRED: params.fixRequestURI
+				//REQUIRED: connectionListenerOrListeners
+
+				var
+				// host
+				host = params.host === undefined ? BROWSER_CONFIG.host : params.host,
+
+				// port
+				port = params.port,
+
+				// uri
+				uri = params.fixRequestURI,
+
+				// connection listener
+				connectionListener,
+
+				// error listener
+				errorListener,
+
+				// connection key
+				connectionKey = connectionCount,
+
+				// connection error delay
+				connectionErrorDelay,
+
+				// response error delay
+				responseErrorDelay,
+
+				// method map
+				methodMap = {},
+
+				// send key
+				sendKey = 0,
+
+				// is disconnected
+				isDisconnected,
+
+				// inner send.
+				innerSend = function(clientId, connectionKey, data) {
+
+					var
+					// content
+					content,
+
+					// content pieces
+					contentPieces;
+
+					// create request info.
+					requestInfos[requestCount] = {
+						host : host,
+						port : port,
+						uri : uri,
+						clientId : clientId,
+						connectionKey : connectionKey,
+						contentPieces : contentPieces = []
+					};
+
+					if (data !== undefined) {
+
+						// create content (data string).
+						content = STRINGIFY(data);
+
+						// split content pieces.
+						while (content !== '') {
+							contentPieces.push(content.substring(0, MAX_LENGTH));
+							content = content.substring(MAX_LENGTH);
+						}
+					}
+
+					request(requestCount, function() {
+						runMethods('__DISCONNECTED');
+					});
+
+					// increase requset count.
+					requestCount += 1;
+				},
+
+				// on.
+				on,
+
+				// off.
+				off,
+
+				// send.
+				send,
+
+				// run methods.
+				runMethods = function(methodName, data, sendKey) {
+
+					var
+					// methods
+					methods;
+
+					if (isDisconnected !== true) {
+
+						methods = methodMap[methodName];
+
+						if (methods !== undefined) {
+
+							EACH(methods, function(method) {
+
+								// run method.
+								method(data,
+
+								// ret.
+								function(retData) {
+
+									if (send !== undefined && sendKey !== undefined) {
+
+										send({
+											methodName : '__CALLBACK_' + sendKey,
+											data : retData
+										});
+									}
+								});
+							});
+						}
+
+						if (methodName === '__DISCONNECTED') {
+
+							// remove response error delay.
+							if (responseErrorDelay !== undefined) {
+								responseErrorDelay.remove();
+							}
+
+							isDisconnected = true;
+						}
+					}
+				};
+
+				if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
+					connectionListener = connectionListenerOrListeners;
+				} else {
+					connectionListener = connectionListenerOrListeners.success;
+					errorListener = connectionListenerOrListeners.error;
+				}
+
+				// create connection error delay.
+				connectionErrorDelay = DELAY(5, function() {
+
+					if (errorListener !== undefined) {
+						errorListener('CONNECT TO WEB SOCKET FIX SERVER FAILED.');
+					} else {
+						console.log('[UPPERCASE.IO-CONNECT_TO_WEB_SOCKET_SERVER (FIX)] CONNECT TO WEB SOCKET FIX SERVER FAILED.');
+					}
+				});
+
+				// resiger response listener.
+				responseListeners[connectionKey] = function(clientId, params) {
+
+					// when first time, run connection listener.
+					if (connectionErrorDelay !== undefined) {
+
+						// remove connection error delay.
+						connectionErrorDelay.remove();
+						connectionErrorDelay = undefined;
+
+						// run connection listener.
+						connectionListener(
+
+						// on.
+						on = function(methodName, method) {
+							//REQUIRED: methodName
+							//REQUIRED: method
+
+							var
+							// methods
+							methods = methodMap[methodName];
+
+							if (methods === undefined) {
+								methods = methodMap[methodName] = [];
+							}
+
+							methods.push(method);
+						},
+
+						// off.
+						off = function(methodName, method) {
+							//REQUIRED: methodName
+							//OPTIONAL: method
+
+							var
+							// methods
+							methods = methodMap[methodName];
+
+							if (methods !== undefined) {
+
+								if (method !== undefined) {
+
+									REMOVE({
+										array : methods,
+										value : method
+									});
+
+								} else {
+									delete methodMap[methodName];
+								}
+							}
+						},
+
+						// send to server.
+						send = function(params, callback) {
+							//REQUIRED: params
+							//REQUIRED: params.methodName
+							//REQUIRED: params.data
+							//OPTIONAL: callback
+
+							var
+							// callback name
+							callbackName = '__CALLBACK_' + sendKey;
+
+							params.sendKey = sendKey;
+
+							sendKey += 1;
+
+							innerSend(clientId, connectionKey, params);
+
+							if (callback !== undefined) {
+
+								// on callback.
+								on(callbackName, function(data) {
+
+									// run callback.
+									callback(data);
+
+									// off callback.
+									off(callbackName);
+								});
+							}
+						},
+
+						// disconnect.
+						function() {
+
+							innerSend(clientId, connectionKey, {
+								methodName : '__DISCONNECTED'
+							});
+
+							isDisconnected = true;
+						});
+					}
+
+					// when not first time, run methods.
+					else if (params !== undefined) {
+						runMethods(params.methodName, params.data, params.sendKey);
+					}
+
+					// remove response error delay.
+					if (responseErrorDelay !== undefined) {
+						responseErrorDelay.remove();
+					}
+
+					// create response error delay (when not disconnected).
+					if (isDisconnected !== true) {
+
+						responseErrorDelay = DELAY(RESPONSE_ERROR_DELAY_TIME, function() {
+							runMethods('__DISCONNECTED');
+						});
+
+						innerSend(clientId, connectionKey);
+					}
+				};
+
+				// firt send, get client id.
+				innerSend(undefined, connectionKey);
+
+				// increase connection count.
+				connectionCount += 1;
+			}
+		};
+	});
+});

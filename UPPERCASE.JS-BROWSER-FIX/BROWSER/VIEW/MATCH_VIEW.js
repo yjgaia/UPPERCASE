@@ -1,1 +1,99 @@
-OVERRIDE(MATCH_VIEW,function(){"use strict";global.MATCH_VIEW=METHOD(function(a){var n,c=[];return a.checkAll=n=function(){EACH(c,function(a){a()})},{run:function(a){var n,e,t=a.uri,i=a.target,s=URI_MATCHER(t),o=RAR(function(){var a,c,t=location.hash;t!=="#!/"+REFRESH.getRefreshingURI()&&(a=s.check(t.substring(3))).checkIsMatched()===!0?(c=a.getURIParams(),void 0===n?(n=i(),n.changeParams(c),i.lastView=n,e=c):CHECK_ARE_SAME([e,c])!==!0&&(n.changeParams(c),e=c)):void 0!==n&&(n.close(),n=void 0,i.lastView=void 0)});c.push(o),EVENT({name:"hashchange"},o)}}})});
+OVERRIDE(MATCH_VIEW, function(origin) {
+	'use strict';
+
+	/**
+	 * match view.
+	 */
+	global.MATCH_VIEW = METHOD(function(m) {
+		
+		var
+		// change uri handlers
+		changeURIHandlers = [],
+		
+		// check all.
+		checkAll;
+		
+		m.checkAll = checkAll = function() {
+			EACH(changeURIHandlers, function(changeURIHandler) {
+				changeURIHandler();
+			});
+		};
+		
+		return {
+	
+			run : function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.uri
+				//REQUIRED: params.target
+		
+				var
+				// uri
+				uri = params.uri,
+		
+				// target
+				target = params.target,
+		
+				// uri matcher
+				uriMatcher = URI_MATCHER(uri),
+		
+				// view
+				view,
+		
+				// pre params
+				preParams,
+				
+				// change uri handler.
+				changeURIHandler = RAR(function() {
+		
+					var
+					// hash
+					hash = location.hash,
+		
+					// result
+					result,
+		
+					// uri parmas
+					uriParams;
+		
+					// when view founded
+					if (hash !== '#!/' + REFRESH.getRefreshingURI() && ( result = uriMatcher.check(hash.substring(3))).checkIsMatched() === true) {
+		
+						uriParams = result.getURIParams();
+		
+						// when before view not exists, create view.
+						if (view === undefined) {
+		
+							view = target();
+							view.changeParams(uriParams);
+							target.lastView = view;
+		
+							preParams = uriParams;
+						}
+		
+						// when before view exists, change params.
+						else if (CHECK_ARE_SAME([preParams, uriParams]) !== true) {
+		
+							view.changeParams(uriParams);
+							preParams = uriParams;
+						}
+					}
+		
+					// when view not founded, close before view
+					else if (view !== undefined) {
+		
+						view.close();
+		
+						view = undefined;
+						target.lastView = undefined;
+					}
+				});
+		
+				changeURIHandlers.push(changeURIHandler);
+	
+				EVENT({
+					name : 'hashchange'
+				}, changeURIHandler);
+			}
+		};
+	});
+});

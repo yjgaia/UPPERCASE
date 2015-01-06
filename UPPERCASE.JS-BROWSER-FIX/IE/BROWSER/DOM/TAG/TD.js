@@ -1,1 +1,23 @@
-OVERRIDE(TD,function(n){"use strict";global.TD=CLASS({preset:function(){return n},init:function(n,t){ADD_STYLE({node:t,style:{verticalAlign:"middle"}})}})});
+OVERRIDE(TD, function(origin) {
+	'use strict';
+
+	/**
+	 * Td class (fix for IE)
+	 */
+	global.TD = CLASS({
+
+		preset : function() {
+			return origin;
+		},
+
+		init : function(inner, self) {
+
+			ADD_STYLE({
+				node : self,
+				style : {
+					verticalAlign : 'middle'
+				}
+			});
+		}
+	});
+});

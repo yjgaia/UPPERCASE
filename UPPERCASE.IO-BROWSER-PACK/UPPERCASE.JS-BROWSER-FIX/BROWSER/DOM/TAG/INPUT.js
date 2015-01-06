@@ -1,1 +1,104 @@
-OVERRIDE(INPUT,function(n){"use strict";global.INPUT=CLASS(function(e){var t;return e.getFocusingInputIds=t=n.getFocusingInputIds,{preset:function(){return n},init:function(n,e,t){var o;void 0!==t&&(o=t.placeholder),void 0!==o&&DELAY(function(){var n=DIV({style:{color:"#999",marginLeft:4,marginTop:2-e.getHeight(),cursor:"text"},c:o}).insertAfter(e),t=function(){""===e.getValue()?n.show():n.hide()};EVENT({node:n,name:"tap"},function(){e.select()}),EVENT({node:e,name:"keydown"},function(){DELAY(function(){t()})}),EVENT({node:e,name:"keyup"},function(){t()}),EVENT({node:e,name:"change"},function(){t()}),EVENT({node:e,name:"blur"},function(){t()})})}}})});
+OVERRIDE(INPUT, function(origin) {
+	'use strict';
+
+	/**
+	 * Input class (fix)
+	 */
+	global.INPUT = CLASS(function(cls) {
+
+		var
+		// get focusing input ids.
+		getFocusingInputIds;
+
+		cls.getFocusingInputIds = getFocusingInputIds = origin.getFocusingInputIds;
+
+		return {
+
+			preset : function() {
+				return origin;
+			},
+
+			init : function(inner, self, params) {
+				//OPTIONAL: params
+				//OPTIONAL: params.placeholder
+
+				var
+				// placeholder
+				placeholder;
+
+				// init params.
+				if (params !== undefined) {;
+					placeholder = params.placeholder;
+				}
+
+				// simulate placeholder.
+				if (placeholder !== undefined) {
+
+					DELAY(function() {
+
+						var
+						// placeholder div
+						placeholderDiv = DIV({
+							style : {
+								color : '#999',
+								marginLeft : 4,
+								marginTop : 2 - self.getHeight(),
+								cursor : 'text'
+							},
+							c : placeholder
+						}).insertAfter(self),
+
+						// toggle placeholder.
+						togglePlaceholder = function() {
+							if (self.getValue() === '') {
+								placeholderDiv.show();
+							} else {
+								placeholderDiv.hide();
+							}
+						};
+
+						// when tap placeholder, then select input.
+						EVENT({
+							node : placeholderDiv,
+							name : 'tap'
+						}, function() {
+							self.select();
+						});
+
+						// toggle placeholder when fire some events.
+
+						EVENT({
+							node : self,
+							name : 'keydown'
+						}, function() {
+							DELAY(function() {
+								togglePlaceholder();
+							});
+						});
+
+						EVENT({
+							node : self,
+							name : 'keyup'
+						}, function() {
+							togglePlaceholder();
+						});
+
+						EVENT({
+							node : self,
+							name : 'change'
+						}, function() {
+							togglePlaceholder();
+						});
+
+						EVENT({
+							node : self,
+							name : 'blur'
+						}, function() {
+							togglePlaceholder();
+						});
+					});
+				}
+			}
+		};
+	});
+});

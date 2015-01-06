@@ -1,1 +1,281 @@
-global.IMAGEMAGICK_CONVERT=METHOD(function(){"use strict";var r=require("imagemagick");return{run:function(E,o){var i,n;void 0!==o&&(CHECK_IS_DATA(o)!==!0?i=o:(i=o.success,n=o.error)),r.convert(E,function(r){var E;r!==TO_DELETE?(E=r.toString(),void 0!==n?n(E):console.log(CONSOLE_RED("[UPPERCASE.IO-IMAGEMAGICK_CONVERT] ERROR: "+E))):void 0!==i&&i()})}}});global.IMAGEMAGICK_IDENTIFY=METHOD(function(){"use strict";var E=require("imagemagick");return{run:function(r,i){var n,o;CHECK_IS_DATA(i)!==!0?n=i:(n=i.success,o=i.error),E.identify(r,function(E,r){var i;E!==TO_DELETE?(i=E.toString(),void 0!==o?o(i):console.log(CONSOLE_RED("[UPPERCASE.IO-IMAGEMAGICK_IDENTIFY] ERROR: "+i))):n(r)})}}});global.IMAGEMAGICK_READ_METADATA=METHOD(function(){"use strict";var E=require("imagemagick");return{run:function(A,r){var a,e;CHECK_IS_DATA(r)!==!0?a=r:(a=r.success,e=r.error),E.readMetadata(A,function(E,A){var r;E!==TO_DELETE?(r=E.toString(),void 0!==e?e(r):console.log(CONSOLE_RED("[UPPERCASE.IO-IMAGEMAGICK_READ_METADATA] ERROR: "+r))):a(A)})}}});global.IMAGEMAGICK_RESIZE=METHOD(function(){"use strict";var r=require("path");return{run:function(i,t){var e,s,c=i.srcPath,h=i.distPath,E=i.width,n=i.height;void 0!==t&&(CHECK_IS_DATA(t)!==!0?e=t:(e=t.success,s=t.error)),CREATE_FOLDER(r.dirname(h),{error:s,success:function(){IMAGEMAGICK_IDENTIFY(c,{error:s,success:function(r){void 0===E&&(E=n/r.height*r.width),void 0===n&&(n=E/r.width*r.height),IMAGEMAGICK_CONVERT([c,"-resize",E+"x"+n+"!",h],t)}})}})}}});global.MINIFY_CSS=METHOD(function(){"use strict";var r=require("sqwish");return{run:function(n){return r.minify(n.toString())}}});global.MINIFY_JS=METHOD(function(){"use strict";var r=require("uglify-js");return{run:function(n){return r.minify(n.toString(),{fromString:!0,mangle:!0}).code}}});
+/**
+ * ImageMagick® convert.
+ */
+global.IMAGEMAGICK_CONVERT = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: imagemagick
+	imagemagick = require('imagemagick');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params
+			//OPTIONAL: callbackOrHandlers
+
+			var
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			imagemagick.convert(params, function(error) {
+
+				var
+				// error msg
+				errorMsg;
+
+				if (error !== TO_DELETE) {
+
+					errorMsg = error.toString();
+
+					if (errorHandler !== undefined) {
+						errorHandler(errorMsg);
+					} else {
+						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_CONVERT] ERROR: ' + errorMsg));
+					}
+
+				} else {
+
+					if (callback !== undefined) {
+						callback();
+					}
+				}
+			});
+		}
+	};
+});
+
+/**
+ * ImageMagick® identify.
+ */
+global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: imagemagick
+	imagemagick = require('imagemagick');
+
+	return {
+
+		run : function(path, callbackOrHandlers) {
+			//REQUIRED: path
+			//REQUIRED: callbackOrHandlers
+
+			var
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				callback = callbackOrHandlers.success;
+				errorHandler = callbackOrHandlers.error;
+			}
+
+			imagemagick.identify(path, function(error, features) {
+
+				var
+				// error msg
+				errorMsg;
+
+				if (error !== TO_DELETE) {
+
+					errorMsg = error.toString();
+
+					if (errorHandler !== undefined) {
+						errorHandler(errorMsg);
+					} else {
+						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_IDENTIFY] ERROR: ' + errorMsg));
+					}
+
+				} else {
+					callback(features);
+				}
+			});
+		}
+	};
+});
+
+/**
+ * ImageMagick® read metadata.
+ */
+global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: imagemagick
+	imagemagick = require('imagemagick');
+
+	return {
+
+		run : function(path, callbackOrHandlers) {
+			//REQUIRED: path
+			//REQUIRED: callbackOrHandlers
+
+			var
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				callback = callbackOrHandlers.success;
+				errorHandler = callbackOrHandlers.error;
+			}
+
+			imagemagick.readMetadata(path, function(error, metadata) {
+
+				var
+				// error msg
+				errorMsg;
+
+				if (error !== TO_DELETE) {
+
+					errorMsg = error.toString();
+
+					if (errorHandler !== undefined) {
+						errorHandler(errorMsg);
+					} else {
+						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_READ_METADATA] ERROR: ' + errorMsg));
+					}
+
+				} else {
+					callback(metadata);
+				}
+			});
+		}
+	};
+});
+
+/**
+ * ImageMagick® resize.
+ */
+global.IMAGEMAGICK_RESIZE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params.srcPath
+			//REQUIRED: params.distPath
+			//OPTIONAL: params.width
+			//OPTIONAL: params.height
+			//OPTIONAL: callbackOrHandlers
+
+			var
+			// src path
+			srcPath = params.srcPath,
+
+			// dist path
+			distPath = params.distPath,
+
+			// width
+			width = params.width,
+
+			// height
+			height = params.height,
+
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			CREATE_FOLDER(_path.dirname(distPath), {
+				error : errorHandler,
+				success : function() {
+
+					IMAGEMAGICK_IDENTIFY(srcPath, {
+						error : errorHandler,
+						success : function(features) {
+
+							if (width === undefined) {
+								width = height / features.height * features.width;
+							}
+
+							if (height === undefined) {
+								height = width / features.width * features.height;
+							}
+
+							IMAGEMAGICK_CONVERT([srcPath, '-resize', width + 'x' + height + '\!', distPath], callbackOrHandlers);
+						}
+					});
+				}
+			});
+		}
+	};
+});
+
+/**
+ * minify css.
+ */
+global.MINIFY_CSS = METHOD(function() {
+	'use strict';
+
+	var
+	// sqwish
+	sqwish = require('sqwish');
+
+	return {
+
+		run : function(code) {
+			//REQUIRED: code
+
+			return sqwish.minify(code.toString());
+		}
+	};
+});
+
+/**
+ * minify js.
+ */
+global.MINIFY_JS = METHOD(function() {
+	'use strict';
+
+	var
+	// uglify-js
+	uglifyJS = require('uglify-js');
+
+	return {
+
+		run : function(code) {
+			//REQUIRED: code
+
+			return uglifyJS.minify(code.toString(), {
+				fromString : true,
+				mangle : true
+			}).code;
+		}
+	};
+});

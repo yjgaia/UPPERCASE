@@ -1,1 +1,49 @@
-OVERRIDE(UNPACK_DATA,function(){"use strict";global.UNPACK_DATA=METHOD({run:function(A){var _=function(A){var n=COPY(A);return void 0!==n.__DATE_ATTR_NAMES&&(EACH(n.__DATE_ATTR_NAMES,function(A){n[A]=new Date(n[A])}),delete n.__DATE_ATTR_NAMES),EACH(n,function(A,E){CHECK_IS_DATA(A)===!0?n[E]=_(A):CHECK_IS_ARRAY(A)===!0&&EACH(A,function(n,E){CHECK_IS_DATA(n)===!0&&(A[E]=_(n))})}),n};return _(A)}})});
+OVERRIDE(UNPACK_DATA, function(origin) {
+	'use strict';
+
+	/**
+	 * Unpack data. (fix for IE)
+	 */
+	global.UNPACK_DATA = METHOD({
+
+		run : function(data) {
+			//REQUIRED: data
+
+			var f = function(data) {
+
+				var
+				// result
+				result = COPY(data);
+
+				if (result.__DATE_ATTR_NAMES !== undefined) {
+					EACH(result.__DATE_ATTR_NAMES, function(dateAttrName, i) {
+						result[dateAttrName] = new Date(result[dateAttrName]);
+					});
+					delete result.__DATE_ATTR_NAMES;
+				}
+
+				EACH(result, function(value, name) {
+					if (CHECK_IS_DATA(value) === true) {
+						result[name] = f(value);
+					} else if (CHECK_IS_ARRAY(value) === true) {
+
+						EACH(value, function(v, i) {
+
+							if (CHECK_IS_DATA(v) === true) {
+								value[i] = f(v);
+							} else {
+								// do nothing.
+							}
+						});
+					} else {
+						// do nothing.
+					}
+				});
+
+				return result;
+			};
+
+			return f(data);
+		}
+	});
+});

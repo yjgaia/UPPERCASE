@@ -1,1 +1,67 @@
-OVERRIDE(COPY,function(){"use strict";global.COPY=METHOD({run:function(e){var n=function(e){var t,C,r;if(CHECK_IS_DATA(e)===!0){t={};for(r in e)e.hasOwnProperty(r)===!0&&(C=e[r],t[r]=C instanceof Date==!0?new Date(C.getTime()):CHECK_IS_DATA(C)===!0||CHECK_IS_ARRAY(C)===!0?n(C):C)}else if(CHECK_IS_ARRAY(e)===!0)for(t=[],r=0;r<e.length;r+=1)C=e[r],t.push(C instanceof Date==!0?new Date(C.getTime()):CHECK_IS_DATA(C)===!0||CHECK_IS_ARRAY(C)===!0?n(C):C);return t};return n(e)}})});
+OVERRIDE(COPY, function(origin) {
+	'use strict';
+
+	/**
+	 * copy data or array. (fix for IE)
+	 */
+	global.COPY = METHOD({
+
+		run : function(data) {
+			//REQUIRED: data
+
+			var
+			// copy.
+			f = function(data) {
+
+				var
+				// copy
+				copy,
+
+				// value
+				value,
+
+				// i
+				i;
+
+				if (CHECK_IS_DATA(data) === true) {
+
+					copy = {};
+
+					for (i in data) {
+						if (data.hasOwnProperty(i) === true) {
+							value = data[i];
+
+							if ( value instanceof Date === true) {
+								copy[i] = new Date(value.getTime());
+							} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
+								copy[i] = f(value);
+							} else {
+								copy[i] = value;
+							}
+						}
+					}
+
+				} else if (CHECK_IS_ARRAY(data) === true) {
+
+					copy = [];
+
+					for ( i = 0; i < data.length; i += 1) {
+						value = data[i];
+
+						if ( value instanceof Date === true) {
+							copy.push(new Date(value.getTime()));
+						} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
+							copy.push(f(value));
+						} else {
+							copy.push(value);
+						}
+					}
+				}
+
+				return copy;
+			};
+
+			return f(data);
+		}
+	});
+});

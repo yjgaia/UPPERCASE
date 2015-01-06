@@ -1,1 +1,59 @@
-OVERRIDE(INFO,function(n){"use strict";global.INFO=OBJECT({preset:function(){return n},init:function(n,t){var e,r,a;void 0===navigator.language&&(t.getLang=e=function(){var n=STORE("__INFO").get("lang");return void 0===n&&(n=navigator.userLanguage,n.length>2&&(n=n.substring(0,2)),n=n.toLowerCase()),n}),t.checkIsHDDisplay=r=function(){return!1},t.checkIsTouchMode=a=function(){return void 0!==navigator.msPointerEnabled}}})});
+OVERRIDE(INFO, function(origin) {
+	'use strict';
+
+	/**
+	 * Browser information object (fix for IE)
+	 */
+	global.INFO = OBJECT({
+
+		preset : function() {
+			return origin;
+		},
+
+		init : function(inner, self) {
+
+			var
+			// get lang.
+			getLang,
+			
+			// check is HD display.
+			checkIsHDDisplay,
+
+			// check is touch mode.
+			checkIsTouchMode;
+
+			if (navigator.language === undefined) {
+
+				self.getLang = getLang = function() {
+
+					var
+					// language
+					lang = STORE('__INFO').get('lang');
+
+					if (lang === undefined) {
+
+						lang = navigator.userLanguage;
+
+						if (lang.length > 2) {
+							lang = lang.substring(0, 2);
+						}
+
+						lang = lang.toLowerCase();
+					}
+
+					return lang;
+				};
+			}
+
+			// IE not support HD display force.
+			// because many IE are low performance.
+			self.checkIsHDDisplay = checkIsHDDisplay = function() {
+				return false;
+			};
+
+			self.checkIsTouchMode = checkIsTouchMode = function() {
+				return navigator.msPointerEnabled !== undefined;
+			};
+		}
+	});
+});

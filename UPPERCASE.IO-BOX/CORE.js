@@ -1,1 +1,130 @@
-global.BOX=METHOD(function(n){"use strict";var t,i={};return n.getBoxes=t=function(){return i},{run:function(n){var t=function(n){var i,o=n.split(".");return EACH(o,function(n){void 0===i?(void 0===t[n]&&(t[n]={}),i=t[n]):(void 0===i[n]&&(i[n]={}),i=i[n])}),i},o=n.split("."),r=global,u="";return t.boxName=n,t.type=BOX,i[n]=t,EACH(o,function(n,i){u+=(""===u?"":".")+n,i<o.length-1?r=void 0!==r[n]?r[n]:r[n]={}:r[n]=t}),FOR_BOX.inject(t),t}}});global.FOR_BOX=METHOD(function(n){"use strict";var t,u=[];return n.inject=t=function(n){EACH(u,function(t){t(n)})},{run:function(n){EACH(BOX.getBoxes(),function(t){n(t)}),u.push(n)}}});
+/**
+ * create box.
+ */
+global.BOX = METHOD(function(m) {
+	'use strict';
+
+	var
+	// boxes
+	boxes = {},
+
+	// get boxes.
+	getBoxes;
+
+	m.getBoxes = getBoxes = function() {
+		return boxes;
+	};
+
+	return {
+
+		run : function(boxName) {
+			//REQUIRED: boxName
+
+			var
+			// box.
+			box = function(packName) {
+				//REQUIRED: packName
+
+				var
+				// packNameSps
+				packNameSps = packName.split('.'),
+
+				// pack
+				pack;
+
+				EACH(packNameSps, function(packNameSp) {
+
+					if (pack === undefined) {
+
+						if (box[packNameSp] === undefined) {
+
+							//LOADED: PACK
+							box[packNameSp] = {};
+						}
+						pack = box[packNameSp];
+
+					} else {
+
+						if (pack[packNameSp] === undefined) {
+
+							//LOADED: PACK
+							pack[packNameSp] = {};
+						}
+						pack = pack[packNameSp];
+					}
+				});
+
+				return pack;
+			},
+
+			// box name splits
+			boxNameSplits = boxName.split('.'),
+
+			// before box split
+			beforeBoxSplit = global,
+
+			// before box name splits str
+			beforeBoxNameSplitsStr = '';
+
+			box.boxName = boxName;
+			box.type = BOX;
+
+			boxes[boxName] = box;
+
+			EACH(boxNameSplits, function(boxNameSplit, i) {
+
+				beforeBoxNameSplitsStr += (beforeBoxNameSplitsStr === '' ? '' : '.') + boxNameSplit;
+
+				if (i < boxNameSplits.length - 1) {
+
+					if (beforeBoxSplit[boxNameSplit] !== undefined) {
+						beforeBoxSplit = beforeBoxSplit[boxNameSplit];
+					} else {
+						beforeBoxSplit = beforeBoxSplit[boxNameSplit] = {};
+					}
+
+				} else {
+
+					beforeBoxSplit[boxNameSplit] = box;
+				}
+			});
+
+			FOR_BOX.inject(box);
+
+			return box;
+		}
+	};
+});
+
+/**
+ * inject method or class to box.
+ */
+global.FOR_BOX = METHOD(function(m) {
+	'use strict';
+
+	var
+	// funcs
+	funcs = [],
+
+	// inject.
+	inject;
+
+	m.inject = inject = function(box) {
+		EACH(funcs, function(func) {
+			func(box);
+		});
+	};
+
+	return {
+
+		run : function(func) {
+			//REQUIRED: func
+
+			EACH(BOX.getBoxes(), function(box) {
+				func(box);
+			});
+
+			funcs.push(func);
+		}
+	};
+});

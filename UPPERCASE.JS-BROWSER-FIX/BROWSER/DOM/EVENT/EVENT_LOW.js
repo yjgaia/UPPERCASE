@@ -1,1 +1,61 @@
-OVERRIDE(EVENT_LOW,function(n){"use strict";global.EVENT_LOW=CLASS({preset:function(){return n},init:function(n,o,a,t){var e,c,i,h;e=CHECK_IS_DATA(a)!==!0?a:a.name,"hashchange"===e&&void 0===global.onhashchange&&(c=location.hash,i=setInterval(function(){location.hash!==c&&(c=location.hash,t(EMPTY_E()))},100),OVERRIDE(o.remove,function(n){o.remove=h=function(){n(),clearInterval(i)}}))}})});
+OVERRIDE(EVENT_LOW, function(origin) {
+	'use strict';
+
+	/**
+	 * Low event class (fix)
+	 */
+	global.EVENT_LOW = CLASS({
+
+		preset : function() {
+			return origin;
+		},
+
+		init : function(inner, self, nameOrParams, eventHandler) {
+			//REQUIRED: nameOrParams
+			//OPTIONAL: nameOrParams.node
+			//OPTIONAL: nameOrParams.lowNode
+			//REQUIRED: nameOrParams.name
+			//REQUIRED: eventHandler
+
+			var
+			// name
+			name,
+
+			// hash
+			hash,
+
+			// hashchange interval
+			hashchangeInterval,
+
+			// remove.
+			remove;
+
+			// init params.
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				name = nameOrParams;
+			} else {
+				name = nameOrParams.name;
+			}
+
+			// fix hashchange.
+			if (name === 'hashchange' && global.onhashchange === undefined) {
+
+				hash = location.hash;
+				hashchangeInterval = setInterval(function() {
+					if (location.hash !== hash) {
+						hash = location.hash;
+						eventHandler(EMPTY_E());
+					}
+				}, 100);
+
+				OVERRIDE(self.remove, function(origin) {
+
+					self.remove = remove = function() {
+						origin();
+						clearInterval(hashchangeInterval);
+					};
+				});
+			}
+		}
+	});
+});

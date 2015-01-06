@@ -1,9 +1,9 @@
 /**
- * Time sync object (Client-side)
+ * Sync time. (Client-side)
  */
-global.TIME_SYNC = OBJECT({
+global.SYNC_TIME = METHOD({
 
-	init : function() {
+	run : function() {
 		'use strict';
 
 		var

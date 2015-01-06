@@ -1,1 +1,1593 @@
-FOR_BOX(function(o){"use strict";OVERRIDE(o.MODEL,function(){o.MODEL=CLASS({init:function(e,t,i){var r,n,a,s,d,c,u,v,E,f,l,C,O,N,A,I,S,R,_,m,D,g,h,L,H,M,T,x,K,P,p,U,b,k,B,y,V,W,X,F,Y,G,j=i.name,$=i.initData,q=i.methodConfig,w=i.isNotUsingObjectId,z=[],J=[],Q=[],Z=[],oe=[],ee=[],te=[],ie=[],re=[],ne=[],ae=o.DB({name:j,isNotUsingObjectId:w});void 0!==q&&(r=q.create,n=q.get,a=q.update,s=q.remove,d=q.find,c=q.count,u=q.checkIsExists,void 0!==r&&(v=r.valid,f=r.role,m=r.authKey,S=r.adminRole),void 0!==n&&(l=n.role),void 0!==a&&(E=a.valid,C=a.role,D=a.authKey,R=a.adminRole),void 0!==s&&(O=s.role,g=s.authKey,_=s.adminRole),void 0!==d&&(N=d.role),void 0!==c&&(A=c.role),void 0!==u&&(I=u.role)),void 0!==CPU_CLUSTERING.getWorkerId()&&1!==CPU_CLUSTERING.getWorkerId()||void 0===$||RUN(function(){var o=[];EACH($,function(e,t){var i={};i[t]=TO_DELETE,o.push(i)}),ae.find({filter:{$or:o},isFindAll:!0},EACH(function(o){console.log(o),EACH($,function(e,t){void 0===o[t]&&(o[t]=e)}),ae.update(o)}))}),t.getName=h=function(){return j},e.getInitData=L=function(){return $},e.getCreateValid=H=function(){return v},e.getUpdateValid=M=function(){return E},t.getDB=T=function(){return ae},e.on=x=function(o,e){"create"===o?(void 0!==e.before&&z.push(e.before),void 0!==e.after&&J.push(e.after)):"get"===o?Q.push(e):"update"===o?(void 0!==e.before&&Z.push(e.before),void 0!==e.after&&oe.push(e.after)):"remove"===o?(void 0!==e.before&&ee.push(e.before),void 0!==e.after&&te.push(e.after)):"find"===o?ie.push(e):"count"===o?re.push(e):"checkIsExists"===o&&ne.push(e)},K=function(e,t,i){var r,n;void 0!==$&&EACH($,function(o,t){e[t]=o}),void 0!==v&&(r=v.check(e)),void 0!==r&&r.checkHasError()===!0?t({validErrors:r.getErrors()}):NEXT([function(o){EACH(z,function(r){var a=r(e,t,o,i);n!==!0&&a===!1&&(n=!0)}),n!==!0&&o()},function(){return function(){ae.create(e,{error:function(o){t({errorMsg:o})},success:function(e){EACH(J,function(o){o(e,i)}),o.BROADCAST({roomName:j+"/create",methodName:"create",data:e}),EACH(e,function(t,i){o.BROADCAST({roomName:j+"/"+i+"/"+t+"/create",methodName:"create",data:e})}),t({savedData:e})}})}}])},P=function(o,e,t){var i,r,n,a,s;CHECK_IS_DATA(o)!==!0?i=o:(i=o.id,r=o.filter,n=o.sort,a=o.isRandom),ae.get({id:i,filter:r,sort:n,isRandom:a},{error:function(o){e({errorMsg:o})},notExists:function(){e()},success:function(o){EACH(Q,function(i){var r=i(o,e,t);s!==!0&&r===!1&&(s=!0)}),s!==!0&&e({savedData:o})}})},p=function(e,t,i){var r,n,a=e.id;void 0!==E&&(r=E.checkExceptUndefined(e)),e.id=a,void 0!==r&&r.checkHasError()===!0?t({validErrors:r.getErrors()}):NEXT([function(o){EACH(Z,function(r){var a=r(e,t,o,i);n!==!0&&a===!1&&(n=!0)}),n!==!0&&o()},function(){return function(){ae.update(e,{error:function(o){t({errorMsg:o})},notExists:function(){t()},success:function(e){void 0!==e&&(EACH(oe,function(o){o(e,i)}),o.BROADCAST({roomName:j+"/"+e.id,methodName:"update",data:e}),EACH(e,function(t,i){o.BROADCAST({roomName:j+"/"+i+"/"+t+"/update",methodName:"update",data:e})})),t({savedData:e})}})}}])},U=function(e,t,i){var r;NEXT([function(o){EACH(ee,function(n){var a=n(e,t,o,i);r!==!0&&a===!1&&(r=!0)}),r!==!0&&o()},function(){return function(){ae.remove(e,{error:function(o){t({errorMsg:o})},notExists:function(){t()},success:function(e){void 0!==e&&(EACH(te,function(o){o(e,i)}),o.BROADCAST({roomName:j+"/"+e.id,methodName:"remove",data:e}),EACH(e,function(t,i){o.BROADCAST({roomName:j+"/"+i+"/"+t+"/remove",methodName:"remove",data:e})})),t({savedData:e})}})}}])},b=function(o,e,t){var i,r,n,a,s,d;void 0!==o&&(i=o.filter,r=o.sort,n=INTEGER(o.start),a=INTEGER(o.count),s=o.isFindAll),ae.find({filter:i,sort:r,start:n,count:a,isFindAll:s},{error:function(o){e({errorMsg:o})},success:function(o){EACH(ie,function(i){var r=i(o,e,t);d!==!0&&r===!1&&(d=!0)}),d!==!0&&e({savedDataSet:o})}})},k=function(o,e,t){var i,r;void 0!==o&&(i=o.filter),ae.count({filter:i},{error:function(o){e({errorMsg:o})},success:function(o){EACH(re,function(i){var n=i(o,e,t);r!==!0&&n===!1&&(r=!0)}),r!==!0&&e({count:o})}})},B=function(o,e,t){var i,r;void 0!==o&&(i=o.filter),ae.checkIsExists({filter:i},{error:function(o){e({errorMsg:o})},success:function(o){EACH(ne,function(){var i=ne(o,e,t);r!==!0&&i===!1&&(r=!0)}),r!==!0&&e({isExists:o})}})},t.create=y=function(e,t){var i,r,n;void 0!==t&&(CHECK_IS_DATA(t)!==!0?i=t:(i=t.success,r=t.notValid,n=t.error)),K(e,function(e){var t,a,s;void 0!==e?(t=e.errorMsg,a=e.validErrors,s=e.savedData,void 0!==t?void 0!==n?n(t):console.log(CONSOLE_RED("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/create` ERROR: "+t)):void 0!==a?void 0!==r?r(a):console.log(CONSOLE_YELLOW("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/create` NOT VALID."),a):void 0!==i&&i(s)):void 0!==i&&i()})},t.get=V=function(e,t){var i,r,n;CHECK_IS_DATA(t)!==!0?i=t:(i=t.success,r=t.notExists,n=t.error),P(e,function(t){var a,s;void 0!==t&&(a=t.errorMsg,s=t.savedData),void 0!==a?void 0!==n?n(a):console.log(CONSOLE_RED("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/get` ERROR: "+a)):void 0===s?void 0!==r?r():console.log(CONSOLE_YELLOW("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/get` NOT EXISTS."),e):i(s)})},t.update=W=function(e,t){var i,r,n,a;void 0!==t&&(CHECK_IS_DATA(t)!==!0?i=t:(i=t.success,r=t.notExists,n=t.notValid,a=t.error)),p(e,function(t){var s,d,c;void 0!==t&&(s=t.errorMsg,d=t.validErrors,c=t.savedData),void 0!==s?void 0!==a?a(s):console.log(CONSOLE_RED("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/update` ERROR: "+s)):void 0!==d?void 0!==n?n(d):console.log(CONSOLE_YELLOW("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/update` NOT VALID."),d):void 0===c?void 0!==r?r():console.log(CONSOLE_YELLOW("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/update` NOT EXISTS."),e):void 0!==i&&i(c)})},w!==!0&&(t.remove=X=function(e,t){var i,r,n;void 0!==t&&(CHECK_IS_DATA(t)!==!0?i=t:(i=t.success,r=t.notExists,n=t.error)),U(e,function(t){var a,s;void 0!==t&&(a=t.errorMsg,s=t.savedData),void 0!==a?void 0!==n?n(a):console.log(CONSOLE_RED("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/remove` ERROR: "+a)):void 0===s?void 0!==r?r():console.log(CONSOLE_YELLOW("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/remove` NOT EXISTS."),e):void 0!==i&&i(s)})}),t.find=F=function(e,t){var i,r;void 0===t&&(t=e,e=void 0),void 0!==t&&(CHECK_IS_DATA(t)!==!0?i=t:(i=t.success,r=t.error)),b(e,function(e){var t=e.errorMsg,n=e.savedDataSet;void 0!==t?void 0!==r?r(t):console.log(CONSOLE_RED("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/find` ERROR: "+t)):i(n)})},t.count=Y=function(e,t){var i,r;void 0===t&&(t=e,e=void 0),void 0!==t&&(CHECK_IS_DATA(t)!==!0?i=t:(i=t.success,r=t.error)),k(e,function(e){var t=e.errorMsg,n=e.count;void 0!==t?void 0!==r?r(t):console.log(CONSOLE_RED("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/count` ERROR: "+t)):i(n)})},t.checkIsExists=G=function(e,t){var i,r;void 0===t&&(t=e,e=void 0),void 0!==t&&(CHECK_IS_DATA(t)!==!0?i=t:(i=t.success,r=t.error)),B(e,function(e){var t=e.errorMsg,n=e.isExists;void 0!==t?void 0!==r?r(t):console.log(CONSOLE_RED("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+j+"/checkIsExists` ERROR: "+t)):i(n)})},o.ROOM(j,function(o,e){r!==!1&&e("create",function(e,t){void 0!==S?void 0===f||void 0!==o.roles&&CHECK_IS_IN({data:o.roles,value:S})===!0?K(e,t,o):t({isNotAuthed:!0}):void 0===f||void 0!==o.roles&&CHECK_IS_IN({data:o.roles,value:f})===!0?(void 0!==m&&(e[m]=o.authKey),K(e,t,o)):t({isNotAuthed:!0})}),n!==!1&&e("get",function(e,t){void 0===l||void 0!==o.roles&&CHECK_IS_IN({data:o.roles,value:l})===!0?P(e,t,o):t({isNotAuthed:!0})}),a!==!1&&e("update",function(e,t){void 0===C||void 0!==o.roles&&(CHECK_IS_IN({data:o.roles,value:C})===!0||CHECK_IS_IN({data:o.roles,value:R})===!0)?void 0!==D&&(void 0!==o.roles&&CHECK_IS_IN({data:o.roles,value:R})===!0)!=!0?ae.get(e.id,{error:function(o){t({errorMsg:o})},notExists:function(){t()},success:function(i){i[D]===o.authKey?(e[D]=o.authKey,p(e,t,o)):t({isNotAuthed:!0})}}):p(e,t,o):t({isNotAuthed:!0})}),s!==!1&&w!==!0&&e("remove",function(e,t){void 0===O||void 0!==o.roles&&(CHECK_IS_IN({data:o.roles,value:O})===!0||CHECK_IS_IN({data:o.roles,value:_})===!0)?void 0!==g&&(void 0!==o.roles&&CHECK_IS_IN({data:o.roles,value:_})===!0)!=!0?ae.get(e,{error:function(o){t({errorMsg:o})},notExists:function(){t()},success:function(i){i[g]===o.authKey?U(e,t,o):t({isNotAuthed:!0})}}):void 0===g&&void 0!==_?void 0!==o.roles&&CHECK_IS_IN({data:o.roles,value:_})===!0?U(e,t,o):t({isNotAuthed:!0}):U(e,t,o):t({isNotAuthed:!0})}),d!==!1&&e("find",function(e,t){void 0===N||void 0!==o.roles&&CHECK_IS_IN({data:o.roles,value:N})===!0?(void 0!==e&&delete e.isFindAll,b(e,t,o)):t({isNotAuthed:!0})}),c!==!1&&e("count",function(e,t){void 0===A||void 0!==o.roles&&CHECK_IS_IN({data:o.roles,value:A})===!0?k(e,t,o):t({isNotAuthed:!0})}),u!==!1&&e("checkIsExists",function(e,t){void 0===I||void 0!==o.roles&&CHECK_IS_IN({data:o.roles,value:I})===!0?B(e,t,o):t({isNotAuthed:!0})})})}})})});
+FOR_BOX(function(box) {
+	'use strict';
+
+	OVERRIDE(box.MODEL, function(origin) {
+
+		/**
+		 * Model(include CRUD functions) class
+		 */
+		box.MODEL = CLASS({
+
+			init : function(inner, self, params) {
+				//REQUIRED: params
+				//REQUIRED: params.name
+				//OPTIONAL: params.initData
+				//OPTIONAL: params.methodConfig
+				//OPTIONAL: params.isNotUsingObjectId
+
+				var
+				// name
+				name = params.name,
+
+				// init data.
+				initData = params.initData,
+
+				// method config
+				methodConfig = params.methodConfig,
+
+				// is not using object id
+				isNotUsingObjectId = params.isNotUsingObjectId,
+
+				// create config
+				createConfig,
+
+				// get config
+				getConfig,
+
+				// update config
+				updateConfig,
+
+				// remove config
+				removeConfig,
+
+				// find config
+				findConfig,
+
+				// count onifg
+				countConfig,
+
+				// check is exists conifg
+				checkIsExistsConfig,
+
+				// create valid
+				createValid,
+
+				// update valid
+				updateValid,
+
+				// create role
+				createRole,
+
+				// get role
+				getRole,
+
+				// update role
+				updateRole,
+
+				// remove role
+				removeRole,
+
+				// find role
+				findRole,
+
+				// count role
+				countRole,
+
+				// check is exists role
+				checkIsExistsRole,
+
+				// create admin role
+				createAdminRole,
+
+				// update admin role
+				updateAdminRole,
+
+				// remove admin role
+				removeAdminRole,
+
+				// create auth key
+				createAuthKey,
+
+				// update auth key
+				updateAuthKey,
+
+				// remove auth key
+				removeAuthKey,
+
+				// is _id assignable
+				is_idAssignable,
+
+				// before create listeners
+				beforeCreateListeners = [],
+
+				// after create listeners
+				afterCreateListeners = [],
+
+				// get listeners
+				getListeners = [],
+
+				// before update listeners
+				beforeUpdateListeners = [],
+
+				// after update listeners
+				afterUpdateListeners = [],
+
+				// before remove listeners
+				beforeRemoveListeners = [],
+
+				// after remove listeners
+				afterRemoveListeners = [],
+
+				// find listeners
+				findListeners = [],
+
+				// count listeners
+				countListeners = [],
+
+				// check is exists listeners
+				checkIsExistsListeners = [],
+
+				// db
+				db = box.DB({
+					name : name,
+					isNotUsingObjectId : isNotUsingObjectId
+				}),
+
+				// get name.
+				getName,
+
+				// get init data.
+				getInitData,
+
+				// get create valid.
+				getCreateValid,
+
+				// get update valid.
+				getUpdateValid,
+
+				// get db.
+				getDB,
+
+				// on.
+				on,
+
+				// inner create.
+				innerCreate,
+
+				// inner get.
+				innerGet,
+
+				// inner update.
+				innerUpdate,
+
+				// inner remove.
+				innerRemove,
+
+				// inner find.
+				innerFind,
+
+				// inner count.
+				innerCount,
+
+				// inner check is exists.
+				innerCheckIsExists,
+
+				// create.
+				create,
+
+				// get.
+				get,
+
+				// update.
+				update,
+
+				// remove.
+				remove,
+
+				// find.
+				find,
+
+				// count.
+				count,
+
+				// check is exists.
+				checkIsExists;
+
+				// init method config.
+				if (methodConfig !== undefined) {
+
+					createConfig = methodConfig.create;
+					getConfig = methodConfig.get;
+					updateConfig = methodConfig.update;
+					removeConfig = methodConfig.remove;
+					findConfig = methodConfig.find;
+					countConfig = methodConfig.count;
+					checkIsExistsConfig = methodConfig.checkIsExists;
+
+					if (createConfig !== undefined) {
+						createValid = createConfig.valid;
+						createRole = createConfig.role;
+						createAuthKey = createConfig.authKey;
+						createAdminRole = createConfig.adminRole;
+					}
+
+					if (getConfig !== undefined) {
+						getRole = getConfig.role;
+					}
+
+					if (updateConfig !== undefined) {
+						updateValid = updateConfig.valid;
+						updateRole = updateConfig.role;
+						updateAuthKey = updateConfig.authKey;
+						updateAdminRole = updateConfig.adminRole;
+					}
+
+					if (removeConfig !== undefined) {
+						removeRole = removeConfig.role;
+						removeAuthKey = removeConfig.authKey;
+						removeAdminRole = removeConfig.adminRole;
+					}
+
+					if (findConfig !== undefined) {
+						findRole = findConfig.role;
+					}
+
+					if (countConfig !== undefined) {
+						countRole = countConfig.role;
+					}
+
+					if (checkIsExistsConfig !== undefined) {
+						checkIsExistsRole = checkIsExistsConfig.role;
+					}
+				}
+
+				// init not inited data set. (when not cpu clustering or worker id is 1)
+				if ((CPU_CLUSTERING.getWorkerId() === undefined || CPU_CLUSTERING.getWorkerId() === 1) && initData !== undefined) {
+
+					RUN(function() {
+
+						var
+						// or
+						$or = [];
+
+						EACH(initData, function(value, name) {
+
+							var
+							// filter
+							filter = {};
+
+							filter[name] = TO_DELETE;
+
+							$or.push(filter);
+						});
+
+						db.find({
+							filter : {
+								$or : $or
+							},
+							isFindAll : true
+						}, EACH(function(notInitedData) {
+							console.log(notInitedData);
+
+							EACH(initData, function(value, name) {
+								if (notInitedData[name] === undefined) {
+									notInitedData[name] = value;
+								}
+							});
+
+							db.update(notInitedData);
+						}));
+					});
+				}
+
+				self.getName = getName = function() {
+					return name;
+				};
+
+				inner.getInitData = getInitData = function() {
+					return initData;
+				};
+
+				inner.getCreateValid = getCreateValid = function() {
+					return createValid;
+				};
+
+				inner.getUpdateValid = getUpdateValid = function() {
+					return updateValid;
+				};
+
+				self.getDB = getDB = function() {
+					return db;
+				};
+
+				inner.on = on = function(methodName, funcOrFuncs) {
+					//REQUIRED: methodName
+					//REQUIRED: funcOrFuncs
+					//OPTIONAL: funcOrFuncs.before
+					//OPTIONAL: funcOrFuncs.after
+
+					// when create method
+					if (methodName === 'create') {
+
+						// add before listener.
+						if (funcOrFuncs.before !== undefined) {
+							beforeCreateListeners.push(funcOrFuncs.before);
+						}
+
+						// add after listener.
+						if (funcOrFuncs.after !== undefined) {
+							afterCreateListeners.push(funcOrFuncs.after);
+						}
+					}
+
+					// when get method
+					else if (methodName === 'get') {
+
+						// add listener.
+						getListeners.push(funcOrFuncs);
+					}
+
+					// when update method
+					else if (methodName === 'update') {
+
+						// add before listener.
+						if (funcOrFuncs.before !== undefined) {
+							beforeUpdateListeners.push(funcOrFuncs.before);
+						}
+
+						// add after listener.
+						if (funcOrFuncs.after !== undefined) {
+							afterUpdateListeners.push(funcOrFuncs.after);
+						}
+					}
+
+					// when remove method
+					else if (methodName === 'remove') {
+
+						// add before listener.
+						if (funcOrFuncs.before !== undefined) {
+							beforeRemoveListeners.push(funcOrFuncs.before);
+						}
+
+						// add after listener.
+						if (funcOrFuncs.after !== undefined) {
+							afterRemoveListeners.push(funcOrFuncs.after);
+						}
+					}
+
+					// when find method
+					else if (methodName === 'find') {
+
+						// add listener.
+						findListeners.push(funcOrFuncs);
+					}
+
+					// when count method
+					else if (methodName === 'count') {
+
+						// add listener.
+						countListeners.push(funcOrFuncs);
+					}
+
+					// when check is exists method
+					else if (methodName === 'checkIsExists') {
+
+						// add listener.
+						checkIsExistsListeners.push(funcOrFuncs);
+					}
+				};
+
+				innerCreate = function(data, ret, clientInfo) {
+
+					var
+					// valid result
+					validResult,
+
+					// is not run next
+					isNotRunNext;
+
+					// init data.
+					if (initData !== undefined) {
+						EACH(initData, function(value, name) {
+							data[name] = value;
+						});
+					}
+
+					// valid data.
+					if (createValid !== undefined) {
+						validResult = createValid.check(data);
+					}
+
+					// when has error
+					if (validResult !== undefined && validResult.checkHasError() === true) {
+
+						ret({
+							validErrors : validResult.getErrors()
+						});
+					}
+
+					// when has not error
+					else {
+
+						NEXT([
+						function(next) {
+
+							// run before create listeners.
+							EACH(beforeCreateListeners, function(beforeCreateListener) {
+
+								var
+								// b
+								b = beforeCreateListener(data, ret, next, clientInfo);
+
+								if (isNotRunNext !== true && b === false) {
+									isNotRunNext = true;
+								}
+							});
+
+							if (isNotRunNext !== true) {
+								next();
+							}
+						},
+
+						function() {
+							return function() {
+
+								// create data in database.
+								db.create(data, {
+
+									error : function(errorMsg) {
+										ret({
+											errorMsg : errorMsg
+										});
+									},
+
+									success : function(savedData) {
+
+										// run after create listeners.
+										EACH(afterCreateListeners, function(afterCreateListener) {
+											afterCreateListener(savedData, clientInfo);
+										});
+
+										// broadcast.
+										box.BROADCAST({
+											roomName : name + '/create',
+											methodName : 'create',
+											data : savedData
+										});
+
+										// broadcast by property.
+										EACH(savedData, function(value, propertyName) {
+											box.BROADCAST({
+												roomName : name + '/' + propertyName + '/' + value + '/create',
+												methodName : 'create',
+												data : savedData
+											});
+										});
+
+										ret({
+											savedData : savedData
+										});
+									}
+								});
+							};
+						}]);
+					}
+				};
+
+				innerGet = function(idOrParams, ret, clientInfo) {
+					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams.id
+					//OPTIONAL: idOrParams.filter
+					//OPTIONAL: idOrParams.sort
+					//OPTIONAL: idOrParams.isRandom
+
+					var
+					// id
+					id,
+
+					// filter
+					filter,
+
+					// sort
+					sort,
+
+					// is random
+					isRandom,
+
+					// is not run next
+					isNotRunNext;
+
+					// init params.
+					if (CHECK_IS_DATA(idOrParams) !== true) {
+						id = idOrParams;
+					} else {
+						id = idOrParams.id;
+						filter = idOrParams.filter;
+						sort = idOrParams.sort;
+						isRandom = idOrParams.isRandom;
+					}
+
+					// get data in database.
+					db.get({
+						id : id,
+						filter : filter,
+						sort : sort,
+						isRandom : isRandom
+					}, {
+
+						error : function(errorMsg) {
+							ret({
+								errorMsg : errorMsg
+							});
+						},
+
+						notExists : function() {
+							ret();
+						},
+
+						success : function(savedData) {
+
+							// run get listeners.
+							EACH(getListeners, function(getListener) {
+
+								var
+								// b
+								b = getListener(savedData, ret, clientInfo);
+
+								if (isNotRunNext !== true && b === false) {
+									isNotRunNext = true;
+								}
+							});
+
+							if (isNotRunNext !== true) {
+
+								ret({
+									savedData : savedData
+								});
+							}
+						}
+					});
+				};
+
+				innerUpdate = function(data, ret, clientInfo) {
+
+					var
+					// id
+					id = data.id,
+
+					// valid result
+					validResult,
+
+					// is not run next
+					isNotRunNext;
+
+					// valid data.
+					if (updateValid !== undefined) {
+						validResult = updateValid.checkExceptUndefined(data);
+					}
+
+					data.id = id;
+
+					// when has error
+					if (validResult !== undefined && validResult.checkHasError() === true) {
+
+						ret({
+							validErrors : validResult.getErrors()
+						});
+					}
+
+					// when has not error
+					else {
+
+						NEXT([
+						function(next) {
+
+							// run before update listeners.
+							EACH(beforeUpdateListeners, function(beforeUpdateListener) {
+
+								var
+								// b
+								b = beforeUpdateListener(data, ret, next, clientInfo);
+
+								if (isNotRunNext !== true && b === false) {
+									isNotRunNext = true;
+								}
+							});
+
+							if (isNotRunNext !== true) {
+								next();
+							}
+						},
+
+						function() {
+							return function() {
+
+								// update data in database.
+								db.update(data, {
+
+									error : function(errorMsg) {
+										ret({
+											errorMsg : errorMsg
+										});
+									},
+
+									notExists : function() {
+										ret();
+									},
+
+									success : function(savedData) {
+
+										if (savedData !== undefined) {
+
+											// run after update listeners.
+											EACH(afterUpdateListeners, function(afterUpdateListener) {
+												afterUpdateListener(savedData, clientInfo);
+											});
+
+											// broadcast.
+											box.BROADCAST({
+												roomName : name + '/' + savedData.id,
+												methodName : 'update',
+												data : savedData
+											});
+
+											// broadcast by property.
+											EACH(savedData, function(value, propertyName) {
+												box.BROADCAST({
+													roomName : name + '/' + propertyName + '/' + value + '/update',
+													methodName : 'update',
+													data : savedData
+												});
+											});
+										}
+
+										ret({
+											savedData : savedData
+										});
+									}
+								});
+							};
+						}]);
+					}
+				};
+
+				innerRemove = function(id, ret, clientInfo) {
+
+					var
+					// is not run next
+					isNotRunNext;
+
+					NEXT([
+					function(next) {
+
+						// run before remove listeners.
+						EACH(beforeRemoveListeners, function(beforeRemoveListener) {
+
+							var
+							// b
+							b = beforeRemoveListener(id, ret, next, clientInfo);
+
+							if (isNotRunNext !== true && b === false) {
+								isNotRunNext = true;
+							}
+						});
+
+						if (isNotRunNext !== true) {
+							next();
+						}
+					},
+
+					function() {
+						return function() {
+
+							// remove data in database.
+							db.remove(id, {
+
+								error : function(errorMsg) {
+									ret({
+										errorMsg : errorMsg
+									});
+								},
+
+								notExists : function() {
+									ret();
+								},
+
+								success : function(savedData) {
+
+									if (savedData !== undefined) {
+
+										// run after remove listeners.
+										EACH(afterRemoveListeners, function(afterRemoveListener) {
+											afterRemoveListener(savedData, clientInfo);
+										});
+
+										// broadcast.
+										box.BROADCAST({
+											roomName : name + '/' + savedData.id,
+											methodName : 'remove',
+											data : savedData
+										});
+
+										// broadcast by property.
+										EACH(savedData, function(value, propertyName) {
+											box.BROADCAST({
+												roomName : name + '/' + propertyName + '/' + value + '/remove',
+												methodName : 'remove',
+												data : savedData
+											});
+										});
+									}
+
+									ret({
+										savedData : savedData
+									});
+								}
+							});
+						};
+					}]);
+				};
+
+				innerFind = function(params, ret, clientInfo) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//OPTIONAL: params.isFindAll
+
+					var
+					// filter
+					filter,
+
+					// sort
+					sort,
+
+					// start
+					start,
+
+					// count
+					count,
+
+					// is find all
+					isFindAll,
+
+					// is not run next
+					isNotRunNext;
+
+					if (params !== undefined) {
+						filter = params.filter;
+						sort = params.sort;
+						start = INTEGER(params.start);
+						count = INTEGER(params.count);
+						isFindAll = params.isFindAll;
+					}
+
+					// find data set in database.
+					db.find({
+						filter : filter,
+						sort : sort,
+						start : start,
+						count : count,
+						isFindAll : isFindAll
+					}, {
+
+						error : function(errorMsg) {
+							ret({
+								errorMsg : errorMsg
+							});
+						},
+
+						success : function(savedDataSet) {
+
+							// run find listeners.
+							EACH(findListeners, function(findListener) {
+
+								var
+								// b
+								b = findListener(savedDataSet, ret, clientInfo);
+
+								if (isNotRunNext !== true && b === false) {
+									isNotRunNext = true;
+								}
+							});
+
+							if (isNotRunNext !== true) {
+
+								ret({
+									savedDataSet : savedDataSet
+								});
+							}
+						}
+					});
+				};
+
+				innerCount = function(params, ret, clientInfo) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+
+					var
+					// filter
+					filter,
+
+					// is not run next
+					isNotRunNext;
+
+					if (params !== undefined) {
+						filter = params.filter;
+					}
+
+					// count data in database.
+					db.count({
+						filter : filter
+					}, {
+
+						error : function(errorMsg) {
+							ret({
+								errorMsg : errorMsg
+							});
+						},
+
+						success : function(count) {
+
+							// run count listeners.
+							EACH(countListeners, function(countListener) {
+
+								var
+								// b
+								b = countListener(count, ret, clientInfo);
+
+								if (isNotRunNext !== true && b === false) {
+									isNotRunNext = true;
+								}
+							});
+
+							if (isNotRunNext !== true) {
+
+								ret({
+									count : count
+								});
+							}
+						}
+					});
+				};
+
+				innerCheckIsExists = function(params, ret, clientInfo) {
+
+					var
+					// filter
+					filter,
+
+					// is not run next
+					isNotRunNext;
+
+					if (params !== undefined) {
+						filter = params.filter;
+					}
+
+					// check is exists data in database.
+					db.checkIsExists({
+						filter : filter
+					}, {
+
+						error : function(errorMsg) {
+							ret({
+								errorMsg : errorMsg
+							});
+						},
+
+						success : function(isExists) {
+
+							// run check is exists listeners.
+							EACH(checkIsExistsListeners, function(checkIsExistsListener) {
+
+								var
+								// b
+								b = checkIsExistsListeners(isExists, ret, clientInfo);
+
+								if (isNotRunNext !== true && b === false) {
+									isNotRunNext = true;
+								}
+							});
+
+							if (isNotRunNext !== true) {
+
+								ret({
+									isExists : isExists
+								});
+							}
+						}
+					});
+				};
+
+				self.create = create = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//OPTIONAL: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not valid handler
+					notValidHandler,
+
+					// error handler
+					errorHandler;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notValidHandler = callbackOrHandlers.notValid;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerCreate(data, function(result) {
+
+						var
+						// error msg
+						errorMsg,
+
+						// valid errors
+						validErrors,
+
+						// saved data
+						savedData;
+
+						if (result !== undefined) {
+
+							errorMsg = result.errorMsg;
+							validErrors = result.validErrors;
+							savedData = result.savedData;
+
+							if (errorMsg !== undefined) {
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` ERROR: ' + errorMsg));
+								}
+							} else if (validErrors !== undefined) {
+								if (notValidHandler !== undefined) {
+									notValidHandler(validErrors);
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` NOT VALID.'), validErrors);
+								}
+							} else if (callback !== undefined) {
+								callback(savedData);
+							}
+
+						} else if (callback !== undefined) {
+							callback();
+						}
+					});
+				};
+
+				self.get = get = function(idOrParams, callbackOrHandlers) {
+					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams.id
+					//OPTIONAL: idOrParams.filter
+					//OPTIONAL: idOrParams.sort
+					//OPTIONAL: idOrParams.isRandom
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// error handler
+					errorHandler;
+
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notExistsHandler = callbackOrHandlers.notExists;
+						errorHandler = callbackOrHandlers.error;
+					}
+
+					innerGet(idOrParams, function(result) {
+
+						var
+						// error msg
+						errorMsg,
+
+						// saved data
+						savedData;
+
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							savedData = result.savedData;
+						}
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/get` ERROR: ' + errorMsg));
+							}
+						} else if (savedData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/get` NOT EXISTS.'), idOrParams);
+							}
+						} else {
+							callback(savedData);
+						}
+					});
+				};
+
+				self.update = update = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//REQUIRED: data.id
+					//OPTIONAL: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// not valid handler
+					notValidHandler,
+
+					// error handler
+					errorHandler;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
+							notValidHandler = callbackOrHandlers.notValid;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerUpdate(data, function(result) {
+
+						var
+						// error msg
+						errorMsg,
+
+						// valid errors
+						validErrors,
+
+						// saved data
+						savedData;
+
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							validErrors = result.validErrors;
+							savedData = result.savedData;
+						}
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` ERROR: ' + errorMsg));
+							}
+						} else if (validErrors !== undefined) {
+							if (notValidHandler !== undefined) {
+								notValidHandler(validErrors);
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID.'), validErrors);
+							}
+						} else if (savedData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT EXISTS.'), data);
+							}
+						} else if (callback !== undefined) {
+							callback(savedData);
+						}
+					});
+				};
+
+				if (isNotUsingObjectId !== true) {
+
+					self.remove = remove = function(id, callbackOrHandlers) {
+						//REQUIRED: id
+						//OPTIONAL: callbackOrHandlers
+
+						var
+						// callback
+						callback,
+
+						// not exists handler
+						notExistsHandler,
+
+						// error handler
+						errorHandler;
+
+						if (callbackOrHandlers !== undefined) {
+							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+								callback = callbackOrHandlers;
+							} else {
+								callback = callbackOrHandlers.success;
+								notExistsHandler = callbackOrHandlers.notExists;
+								errorHandler = callbackOrHandlers.error;
+							}
+						}
+
+						innerRemove(id, function(result) {
+
+							var
+							// error msg
+							errorMsg,
+
+							// saved data
+							savedData;
+
+							if (result !== undefined) {
+								errorMsg = result.errorMsg;
+								savedData = result.savedData;
+							}
+
+							if (errorMsg !== undefined) {
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg));
+								}
+							} else if (savedData === undefined) {
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS.'), id);
+								}
+							} else if (callback !== undefined) {
+								callback(savedData);
+							}
+						});
+					};
+				}
+
+				self.find = find = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//OPTIONAL: params.isFindAll
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler;
+
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerFind(params, function(result) {
+
+						var
+						// error msg
+						errorMsg = result.errorMsg,
+
+						// saved data set
+						savedDataSet = result.savedDataSet;
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/find` ERROR: ' + errorMsg));
+							}
+						} else {
+							callback(savedDataSet);
+						}
+					});
+				};
+
+				self.count = count = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler;
+
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerCount(params, function(result) {
+
+						var
+						// error msg
+						errorMsg = result.errorMsg,
+
+						// count
+						count = result.count;
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/count` ERROR: ' + errorMsg));
+							}
+						} else {
+							callback(count);
+						}
+					});
+				};
+
+				self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler;
+
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerCheckIsExists(params, function(result) {
+
+						var
+						// error msg
+						errorMsg = result.errorMsg,
+
+						// is exists
+						isExists = result.isExists;
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/checkIsExists` ERROR: ' + errorMsg));
+							}
+						} else {
+							callback(isExists);
+						}
+					});
+				};
+
+				// init room for create, get, find.
+				box.ROOM(name, function(clientInfo, on) {
+
+					// init create.
+					if (createConfig !== false) {
+
+						// on create.
+						on('create', function(data, ret) {
+
+							if (createAdminRole !== undefined) {
+
+								if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : createAdminRole
+								}) === true)) {
+
+									innerCreate(data, ret, clientInfo);
+
+								} else {
+
+									ret({
+										isNotAuthed : true
+									});
+								}
+
+							} else {
+
+								if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : createRole
+								}) === true)) {
+
+									// inject auth key.
+									if (createAuthKey !== undefined) {
+										data[createAuthKey] = clientInfo.authKey;
+									}
+
+									innerCreate(data, ret, clientInfo);
+
+								} else {
+
+									ret({
+										isNotAuthed : true
+									});
+								}
+							}
+						});
+					}
+
+					// init get.
+					if (getConfig !== false) {
+
+						// on get.
+						on('get', function(idOrParams, ret) {
+
+							if (getRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : getRole
+							}) === true)) {
+
+								innerGet(idOrParams, ret, clientInfo);
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
+							}
+						});
+					}
+
+					// init update.
+					if (updateConfig !== false) {
+
+						// on update.
+						on('update', function(data, ret) {
+
+							if (updateRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : updateRole
+							}) === true || CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : updateAdminRole
+							}) === true))) {
+
+								// check and inject auth key. (when not admin)
+								if (updateAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : updateAdminRole
+								}) === true) !== true) {
+
+									// get data in database.
+									db.get(data.id, {
+
+										error : function(errorMsg) {
+											ret({
+												errorMsg : errorMsg
+											});
+										},
+
+										notExists : function() {
+											ret();
+										},
+
+										success : function(savedData) {
+
+											// check auth key.
+											if (savedData[updateAuthKey] === clientInfo.authKey) {
+
+												// do not change auth key.
+												data[updateAuthKey] = clientInfo.authKey;
+
+												innerUpdate(data, ret, clientInfo);
+											}
+
+											// not authed
+											else {
+												ret({
+													isNotAuthed : true
+												});
+											}
+										}
+									});
+
+								} else {
+									innerUpdate(data, ret, clientInfo);
+								}
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
+							}
+						});
+					}
+
+					// init remove.
+					if (removeConfig !== false && isNotUsingObjectId !== true) {
+
+						// on remove.
+						on('remove', function(id, ret) {
+
+							if (removeRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : removeRole
+							}) === true || CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : removeAdminRole
+							}) === true))) {
+
+								// check auth key. (when not admin)
+								if (removeAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : removeAdminRole
+								}) === true) !== true) {
+
+									// get data in database.
+									db.get(id, {
+
+										error : function(errorMsg) {
+											ret({
+												errorMsg : errorMsg
+											});
+										},
+
+										notExists : function() {
+											ret();
+										},
+
+										success : function(savedData) {
+
+											// check auth key.
+											if (savedData[removeAuthKey] === clientInfo.authKey) {
+												innerRemove(id, ret, clientInfo);
+											}
+
+											// not authed
+											else {
+												ret({
+													isNotAuthed : true
+												});
+											}
+										}
+									});
+
+								} else if (removeAuthKey === undefined && removeAdminRole !== undefined) {
+
+									if (clientInfo.roles !== undefined && CHECK_IS_IN({
+										data : clientInfo.roles,
+										value : removeAdminRole
+									}) === true) {
+
+										innerRemove(id, ret, clientInfo);
+
+									} else {
+
+										ret({
+											isNotAuthed : true
+										});
+									}
+
+								} else {
+									innerRemove(id, ret, clientInfo);
+								}
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
+							}
+						});
+					}
+
+					// init find.
+					if (findConfig !== false) {
+
+						// on find.
+						on('find', function(params, ret) {
+
+							if (findRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : findRole
+							}) === true)) {
+
+								if (params !== undefined) {
+
+									// delete isFindAll.
+									delete params.isFindAll;
+								}
+
+								innerFind(params, ret, clientInfo);
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
+							}
+						});
+					}
+
+					// init count.
+					if (countConfig !== false) {
+
+						// on count.
+						on('count', function(params, ret) {
+
+							if (countRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : countRole
+							}) === true)) {
+
+								innerCount(params, ret, clientInfo);
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
+							}
+						});
+					}
+
+					// init check is exists.
+					if (checkIsExistsConfig !== false) {
+
+						// on check is exists.
+						on('checkIsExists', function(params, ret) {
+
+							if (checkIsExistsRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : checkIsExistsRole
+							}) === true)) {
+
+								innerCheckIsExists(params, ret, clientInfo);
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
+							}
+						});
+					}
+				});
+			}
+		});
+	});
+});

@@ -1,7 +1,7 @@
 /**
- * Time sync object (Server-side)
+ * Sync time object (Server-side)
  */
-global.TIME_SYNC = OBJECT({
+global.SYNC_TIME = OBJECT({
 
 	init : function() {
 		'use strict';

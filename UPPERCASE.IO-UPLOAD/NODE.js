@@ -1,1 +1,200 @@
-OVERRIDE(NODE_CONFIG,function(O){global.NODE_CONFIG=COMBINE([O,{maxUploadFileMB:10}])});global.UPLOAD_REQUEST=METHOD(function(){"use strict";var n=(require("fs"),require("formidable").IncomingForm);return{run:function(e,i){var o,r,t,u=e.requestInfo,a=e.uploadPath;CHECK_IS_DATA(i)!==!0?o=i:(o=i.success,r=i.error,t=i.overFileSize),CREATE_FOLDER(a,function(){var e,i,f,c=u.method,E=u.ip,s=u.nativeReq;"POST"===c&&(e=new n,i=[],f={},e.uploadDir=a,e.on("field",function(n,e){f[n]=e}).on("file",function(n,e){i.push({path:e.path,size:e.size,name:e.name,type:e.type,lastModifiedTime:e.lastModifiedDate})}).on("end",function(){NEXT(i,[function(n,e){var o=n.path,u=n.size;if(n.ip=E,u>1024*NODE_CONFIG.maxUploadFileMB*1024)return NEXT(i,[function(n,e){REMOVE_FILE(n.path,e)},function(){return function(){void 0!==t&&t()}}]),!1;EACH(f,function(e,i){""!==e.trim()&&(n[i]=e)});var a=n.type;"image/png"===a||"image/jpeg"===a||"image/gif"===a?IMAGEMAGICK_READ_METADATA(o,{error:function(){e(n)},success:function(i){void 0!==i.exif?(n.exif=i.exif,IMAGEMAGICK_CONVERT([o,"-auto-orient",o],{error:r,success:e})):e()}}):e()},function(){return function(){o(i)}}])}).on("error",function(n){var e=n.toString();void 0!==r?r(e):console.log("[UPPERCASE.IO-UPLOAD_REQUEST] ERROR: "+e)}),e.parse(s))})}}});
+/**
+ * Node-side Configuration
+ */
+OVERRIDE(NODE_CONFIG, function(origin) {
+
+	global.NODE_CONFIG = COMBINE([origin, {
+
+		// init max upload file size is 10mb.
+		maxUploadFileMB : 10
+	}]);
+});
+
+/*
+ * create upload request handler.
+ */
+global.UPLOAD_REQUEST = METHOD(function(m) {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: IncomingForm
+	IncomingForm = require('formidable').IncomingForm;
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			'use strict';
+			//REQUIRED: params
+			//OPTIONAL: params.requestInfo
+			//REQUIRED: params.uploadPath
+			//REQUIRED: callbackOrHandlers
+			//REQUIRED: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.overFileSize
+
+			var
+			// request info
+			requestInfo = params.requestInfo,
+
+			// upload path
+			uploadPath = params.uploadPath,
+
+			// callback
+			callback,
+
+			// error handler
+			errorHandler,
+
+			// over file size handler
+			overFileSizeHandler;
+
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				callback = callbackOrHandlers.success;
+				errorHandler = callbackOrHandlers.error;
+				overFileSizeHandler = callbackOrHandlers.overFileSize;
+			}
+
+			CREATE_FOLDER(uploadPath, function() {
+
+				var
+				// method
+				method = requestInfo.method,
+
+				// ip
+				ip = requestInfo.ip,
+
+				// native req
+				nativeReq = requestInfo.nativeReq,
+
+				// form
+				form,
+
+				// file data set
+				fileDataSet,
+
+				// field data
+				fieldData;
+
+				// serve upload.
+				if (method === 'POST') {
+
+					form = new IncomingForm();
+					fileDataSet = [];
+					fieldData = {};
+
+					form.uploadDir = uploadPath;
+
+					form.on('field', function(fieldName, value) {
+
+						fieldData[fieldName] = value;
+
+					}).on('file', function(fieldName, file) {
+
+						fileDataSet.push({
+							path : file.path,
+							size : file.size,
+							name : file.name,
+							type : file.type,
+							lastModifiedTime : file.lastModifiedDate
+						});
+
+					}).on('end', function() {
+
+						NEXT(fileDataSet, [
+						function(fileData, next) {
+
+							var
+							// path
+							path = fileData.path,
+
+							// file size
+							fileSize = fileData.size;
+
+							fileData.ip = ip;
+
+							if (fileSize > NODE_CONFIG.maxUploadFileMB * 1024 * 1024) {
+
+								NEXT(fileDataSet, [
+								function(fileData, next) {
+									REMOVE_FILE(fileData.path, next);
+								},
+
+								function() {
+									return function() {
+										if (overFileSizeHandler !== undefined) {
+											overFileSizeHandler();
+										}
+									};
+								}]);
+
+								return false;
+							}
+
+							EACH(fieldData, function(value, name) {
+								if (value.trim() !== '') {
+									fileData[name] = value;
+								}
+							});
+
+							var
+							// file type
+							fileType = fileData.type;
+
+							if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
+
+								IMAGEMAGICK_READ_METADATA(path, {
+									error : function() {
+										next(fileData);
+									},
+									success : function(metadata) {
+
+										if (metadata.exif !== undefined) {
+
+											fileData.exif = metadata.exif;
+
+											IMAGEMAGICK_CONVERT([path, '-auto-orient', path], {
+												error : errorHandler,
+												success : next
+											});
+
+										} else {
+											next();
+										}
+									}
+								});
+
+							} else {
+								next();
+							}
+						},
+
+						function() {
+							return function() {
+								callback(fileDataSet);
+							};
+						}]);
+
+					}).on('error', function(error) {
+
+						var
+						// error msg
+						errorMsg = error.toString();
+
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						} else {
+							console.log('[UPPERCASE.IO-UPLOAD_REQUEST] ERROR: ' + errorMsg);
+						}
+					});
+
+					form.parse(nativeReq);
+				}
+			});
+		}
+	};
+});

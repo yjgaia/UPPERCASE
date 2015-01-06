@@ -1,1 +1,26 @@
-OVERRIDE(INPUT,function(t){"use strict";global.INPUT=CLASS({preset:function(){return t},init:function(t){t.setAttr({name:"autocapitalize",value:"none"}),t.setAttr({name:"autocorrect",value:"off"})}})});
+OVERRIDE(INPUT, function(origin) {
+	'use strict';
+
+	/**
+	 * Input class (fix for iOS)
+	 */
+	global.INPUT = CLASS({
+
+		preset : function() {
+			return origin;
+		},
+
+		init : function(inner, self) {
+
+			inner.setAttr({
+				name : 'autocapitalize',
+				value : 'none'
+			});
+			
+			inner.setAttr({
+				name : 'autocorrect',
+				value : 'off'
+			});
+		}
+	});
+});

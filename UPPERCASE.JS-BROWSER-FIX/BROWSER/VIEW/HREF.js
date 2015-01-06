@@ -1,1 +1,15 @@
-OVERRIDE(HREF,function(){"use strict";global.HREF=METHOD({run:function(n){return"#!/"+(void 0===n?"":n)}})});
+OVERRIDE(HREF, function(origin) {
+	'use strict';
+
+	/**
+	 * get href.
+	 */
+	global.HREF = METHOD({
+	
+		run : function(uri) {
+			//OPTIONAL: uri
+	
+			return '#!/' + (uri === undefined ? '' : uri);
+		}
+	});
+});

@@ -1,1 +1,151 @@
-OVERRIDE(ADD_STYLE,function(o){"use strict";global.ADD_STYLE=METHOD({run:function(e){var t=e.node,n=e.style,l=t.getWrapperEl();EACH(n,function(e,n){var c,f,i;if("onDisplayResize"===n)c={},c[n]=e,o({node:t,style:c});else try{ANDROID.version<3&&("overflow"===n?(EVENT({node:t,name:"touchmove"},function(o){void 0===f?f=l.scrollLeft+o.getLeft():l.scrollLeft=f-o.getLeft(),void 0===i?i=l.scrollTop+o.getTop():l.scrollTop=i-o.getTop(),o.stopDefault()}),EVENT({node:t,name:"touchend"},function(){f=void 0,i=void 0})):"overflowX"===n?(EVENT({node:t,name:"touchmove"},function(o){void 0===f?f=l.scrollLeft+o.getLeft():l.scrollLeft=f-o.getLeft(),o.stopDefault()}),EVENT({node:t,name:"touchend"},function(){f=void 0})):"overflowY"===n&&(EVENT({node:t,name:"touchmove"},function(o){void 0===i?i=l.scrollTop+o.getTop():l.scrollTop=i-o.getTop(),o.stopDefault()}),EVENT({node:t,name:"touchend"},function(){i=void 0}))),c={},c[n]=e,o({node:t,style:c})}catch(d){}})}})});
+OVERRIDE(ADD_STYLE, function(origin) {
+	'use strict';
+
+	/**
+	 * add style. (fix for Android)
+	 */
+	global.ADD_STYLE = METHOD({
+
+		run : function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.node
+			//REQUIRED: params.style
+
+			var
+			// node
+			node = params.node,
+
+			// style
+			style = params.style,
+
+			// el
+			el = node.getWrapperEl();
+
+			EACH(style, function(value, name) {
+
+				var
+				// _style
+				_style,
+
+				// scroll start left
+				scrollStartLeft,
+
+				// scroll start top
+				scrollStartTop;
+
+				if (name === 'onDisplayResize') {
+
+					_style = {};
+					_style[name] = value;
+
+					origin({
+						node : node,
+						style : _style
+					});
+
+				} else {
+
+					try {
+
+						if (ANDROID.version < 3) {
+
+							// fix overflow.
+							if (name === 'overflow') {
+
+								EVENT({
+									node : node,
+									name : 'touchmove'
+								}, function(e) {
+
+									if (scrollStartLeft === undefined) {
+										scrollStartLeft = el.scrollLeft + e.getLeft();
+									} else {
+										el.scrollLeft = scrollStartLeft - e.getLeft();
+									}
+
+									if (scrollStartTop === undefined) {
+										scrollStartTop = el.scrollTop + e.getTop();
+									} else {
+										el.scrollTop = scrollStartTop - e.getTop();
+									}
+
+									e.stopDefault();
+								});
+
+								EVENT({
+									node : node,
+									name : 'touchend'
+								}, function(e) {
+									scrollStartLeft = undefined;
+									scrollStartTop = undefined;
+								});
+							}
+
+							// fix overflowX.
+							else if (name === 'overflowX') {
+
+								EVENT({
+									node : node,
+									name : 'touchmove'
+								}, function(e) {
+
+									if (scrollStartLeft === undefined) {
+										scrollStartLeft = el.scrollLeft + e.getLeft();
+									} else {
+										el.scrollLeft = scrollStartLeft - e.getLeft();
+									}
+
+									e.stopDefault();
+								});
+
+								EVENT({
+									node : node,
+									name : 'touchend'
+								}, function(e) {
+									scrollStartLeft = undefined;
+								});
+							}
+
+							// fix overflowY.
+							else if (name === 'overflowY') {
+
+								EVENT({
+									node : node,
+									name : 'touchmove'
+								}, function(e) {
+
+									if (scrollStartTop === undefined) {
+										scrollStartTop = el.scrollTop + e.getTop();
+									} else {
+										el.scrollTop = scrollStartTop - e.getTop();
+									}
+
+									e.stopDefault();
+								});
+
+								EVENT({
+									node : node,
+									name : 'touchend'
+								}, function(e) {
+									scrollStartTop = undefined;
+								});
+							}
+						}
+
+						_style = {};
+						_style[name] = value;
+
+						origin({
+							node : node,
+							style : _style
+						});
+
+					} catch(e) {
+						// ignore
+					}
+				}
+			});
+
+		}
+	});
+});

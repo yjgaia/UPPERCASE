@@ -1,1 +1,38 @@
-OVERRIDE(REFRESH,function(n){"use strict";global.REFRESH=METHOD(function(t){var o;return t.getRefreshingURI=o=function(){return n.getRefreshingURI()},{run:function(n){var t=void 0!==n?"#!/"+n:location.hash;EVENT_ONCE({name:"hashchange"},function(){DELAY(function(){location.href=""===t?"#!/":t})}),location.href="#!/"+o()}}})});
+OVERRIDE(REFRESH, function(origin) {
+	'use strict';
+
+	/**
+	 * refresh view. (fix for IE)
+	 */
+	global.REFRESH = METHOD(function(m) {
+		
+		var
+		// get refreshing uri.
+		getRefreshingURI;
+		
+		m.getRefreshingURI = getRefreshingURI = function() {
+			return origin.getRefreshingURI();
+		};
+		
+		return {
+	
+			run : function(uri) {
+				//OPTIONAL: uri
+	
+				var
+				// saved hash
+				savedHash = uri !== undefined ? '#!/' + uri : location.hash;
+	
+				EVENT_ONCE({
+					name : 'hashchange'
+				}, function() {
+					DELAY(function() {
+						location.href = savedHash === '' ? '#!/' : savedHash;
+					});
+				});
+	
+				location.href = '#!/' + getRefreshingURI();
+			}
+		};
+	});
+});

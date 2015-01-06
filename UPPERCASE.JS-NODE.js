@@ -1,1 +1,3557 @@
-global.NODE_CONFIG={},global.CPU_CLUSTERING=METHOD(function(o){"use strict";var E,n,t=require("cluster");return o.getWorkerId=n=function(){return E},{run:function(n){RUN(t.isMaster?function(){var o=function(){var o=t.fork();o.on("message",function(E){EACH(t.workers,function(n){n!==o&&n.send(E)})})};REPEAT(require("os").cpus().length,function(){o()}),t.on("exit",function(E,n,t){console.log(CONSOLE_RED("[UPPERCASE.JS-CPU_CLUSTERING] WORKER #"+E.id+" died. ("+(void 0!==t?t:n)+"). restarting...")),o()})}:function(){var e,i,r,S={},a=function(o,E){var n=S[o];void 0!==n&&EACH(n,function(o){o(E)})};E=t.worker.id,process.on("message",function(o){var E=PARSE_STR(o);void 0!==E&&a(E.methodName,E.data)}),o.on=e=function(o,E){var n=S[o];void 0===n&&(n=S[o]=[]),n.push(E)},e("__SHARED_STORE_SAVE",SHARED_STORE.save),e("__SHARED_STORE_REMOVE",SHARED_STORE.remove),e("__CPU_SHARED_STORE_SAVE",CPU_SHARED_STORE.save),e("__CPU_SHARED_STORE_REMOVE",CPU_SHARED_STORE.remove),o.off=i=function(o){delete S[o]},o.broadcast=r=function(o){process.send(STRINGIFY(o))},n(),console.log(CONSOLE_GREEN("[UPPERCASE.JS-CPU_CLUSTERING] RUNNING WORKER... (ID:"+E+")"))})}}}),global.CPU_SHARED_STORE=CLASS(function(o){"use strict";var E,n,t,e={},i={};return o.save=E=function(o,E){var n=o.fullName,t=o.value,r=o.removeAfterSeconds,S=o.isWaitingRemove;e[n]=t,S===!0&&void 0!==i[n]&&(i[n].remove(),delete i[n]),void 0!==r&&(i[n]=DELAY(r,E))},o.get=n=function(o){return e[o]},o.remove=t=function(o){delete e[o],void 0!==i[o]&&(i[o].remove(),delete i[o])},{init:function(E,n,t){var e,i,r,S;E.getFullName=e=function(o){return t+"."+o},n.save=i=function(E){var n=E.name,t=e(n),i=E.value,r=E.removeAfterSeconds;o.save({fullName:t,value:i,removeAfterSeconds:r},function(){S(n)}),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__CPU_SHARED_STORE_SAVE",data:{fullName:t,value:i,isWaitingRemove:void 0!==r}})},n.get=r=function(E){return o.get(e(E))},n.remove=S=function(E){var n=e(E);o.remove(n),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__CPU_SHARED_STORE_REMOVE",data:n})}}}}),global.SERVER_CLUSTERING=METHOD(function(o){"use strict";return{run:function(E,n){var t,e,i,r,S=E.servers,a=E.thisServerName,c=E.port,s={},u={},R={},_=[];t=function(o){u[o]!==!0&&(u[o]=!0,CONNECT_TO_SOCKET_SERVER({host:S[o],port:c},{error:function(){delete u[o]},success:function(E,n,t){t({methodName:"__BOOTED",data:a}),R[o]=function(o){var E=o.methodName,n=o.data;t({methodName:"SERVER_CLUSTERING."+E,data:n})},E("__DISCONNECTED",function(){delete R[o],delete u[o]}),console.log("[UPPERCASE.JS-SERVER_CLUSTERING] CONNECTED CLUSTERING SERVER. (SERVER NAME:"+o+")"),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER",data:o})}}))},void 0!==CPU_CLUSTERING.on&&CPU_CLUSTERING.on("__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER",t),EACH(S,function(o,E){E!==a&&t(E)}),SOCKET_SERVER(c,function(o,E){_.push(E),E("__BOOTED",function(o){t(o)}),EACH(s,function(o,n){EACH(o,function(o){E("SERVER_CLUSTERING."+n,o)})}),E("__DISCONNECTED",function(){REMOVE({array:_,value:E})})}),o.on=e=function(o,E){var n=s[o];void 0===n&&(n=s[o]=[]),n.push(E),EACH(_,function(n){n("SERVER_CLUSTERING."+o,E)})},e("__SHARED_STORE_SAVE",function(o){SHARED_STORE.save(o),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__SHARED_STORE_SAVE",data:o})}),e("__SHARED_STORE_REMOVE",function(o){SHARED_STORE.remove(o),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__SHARED_STORE_REMOVE",data:o})}),o.off=i=function(o){delete s[o]},o.broadcast=r=function(o){EACH(R,function(E){E(o)})},void 0!==n&&n(),console.log(CONSOLE_BLUE("[UPPERCASE.JS-SERVER_CLUSTERING] RUNNING CLUSTERING SERVER... (THIS SERVER NAME:"+a+", PORT:"+c+")"))}}}),global.SHARED_STORE=CLASS(function(o){"use strict";var E,n,t,e={},i={};return o.save=E=function(o,E){var n=o.fullName,t=o.value,r=o.removeAfterSeconds,S=o.isWaitingRemove;e[n]=t,S===!0&&void 0!==i[n]&&(i[n].remove(),delete i[n]),void 0!==r&&(i[n]=DELAY(r,E))},o.get=n=function(o){return e[o]},o.remove=t=function(o){delete e[o],void 0!==i[o]&&(i[o].remove(),delete i[o])},{init:function(E,n,t){var e,i,r,S;e=function(o){return t+"."+o},n.save=i=function(E){var n=E.name,t=e(n),i=E.value,r=E.removeAfterSeconds;o.save({fullName:t,value:i,removeAfterSeconds:r},function(){S(n)}),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__SHARED_STORE_SAVE",data:{fullName:t,value:i,isWaitingRemove:void 0!==r}}),void 0!==SERVER_CLUSTERING.broadcast&&SERVER_CLUSTERING.broadcast({methodName:"__SHARED_STORE_SAVE",data:{fullName:t,value:i,isWaitingRemove:void 0!==r}})},n.get=r=function(E){return o.get(e(E))},n.remove=S=function(E){var n=e(E);o.remove(n),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__SHARED_STORE_REMOVE",data:n}),void 0!==SERVER_CLUSTERING.broadcast&&SERVER_CLUSTERING.broadcast({methodName:"__SHARED_STORE_REMOVE",data:n})}}}}),global.CONNECT_TO_SOCKET_SERVER=METHOD({run:function(o,E){"use strict";var n,t,e,i,r,S,a,c,s=o.host,u=o.port,R=require("net"),_={},d=0,C="";CHECK_IS_DATA(E)!==!0?n=E:(n=E.success,t=E.error),c=function(o,E,n){var t=_[o];void 0!==t&&EACH(t,function(o){o(E,function(o){void 0!==a&&void 0!==n&&a({methodName:"__CALLBACK_"+n,data:o})})})},e=R.connect({host:s,port:u},function(){i=!0,n(r=function(o,E){var n=_[o];void 0===n&&(n=_[o]=[]),n.push(E)},S=function(o,E){var n=_[o];void 0!==n&&(void 0!==E?REMOVE({array:n,value:E}):delete _[o])},a=function(o,E){var n="__CALLBACK_"+d;o.sendKey=d,d+=1,e.write(STRINGIFY(o)+"\r\n"),void 0!==E&&r(n,function(o){E(o),S(n)})},function(){e.end()})}),e.on("data",function(o){var E,n,t;for(C+=o.toString();-1!==(n=C.indexOf("\r\n"));)E=C.substring(0,n),t=PARSE_STR(E),void 0!==t&&c(t.methodName,t.data,t.sendKey),C=C.substring(n+1)}),e.on("close",function(){c("__DISCONNECTED")}),e.on("error",function(o){var E=o.toString();i!==!0?void 0!==t?t(E):console.log(CONSOLE_RED("[UPPERCASE.JS-CONNECT_TO_SOCKET_SERVER] CONNECT TO SOCKET SERVER FAILED: "+E)):c("__ERROR",E)})}}),global.CONSOLE_BLUE=METHOD({run:function(o){"use strict";return"[36m"+o+"[0m"}}),global.CONSOLE_GREEN=METHOD({run:function(o){"use strict";return"[32m"+o+"[0m"}}),global.CONSOLE_RED=METHOD({run:function(o){"use strict";return"[31m"+o+"[0m"}}),global.CONSOLE_YELLOW=METHOD({run:function(o){"use strict";return"[33m"+o+"[0m"}}),global.SHA1=METHOD({run:function(o){"use strict";var E=o.key,n=o.password,t=require("crypto");return t.createHmac("sha1",E).update(n).digest("hex")}}),global.CHECK_IS_EXISTS_FILE=METHOD(function(){"use strict";var o=require("fs");return{run:function(E,n){var t,e;return CHECK_IS_DATA(E)!==!0?t=E:(t=E.path,e=E.isSync),e===!0?o.existsSync(t):void o.exists(t,n)}}}),global.COPY_FILE=METHOD(function(){"use strict";var o=require("fs"),E=require("path");return{run:function(n,t){var e,i,r,S=n.from,a=n.to,c=n.isSync;void 0!==t&&(CHECK_IS_DATA(t)!==!0?e=t:(e=t.success,i=t.notExists,r=t.error)),CREATE_FOLDER({path:E.dirname(a),isSync:c},{error:r,success:function(){c!==!0?CHECK_IS_EXISTS_FILE(S,function(E){var n;E===!0?(n=o.createReadStream(S),n.pipe(o.createWriteStream(a)),n.on("error",function(o){var E=o.toString();void 0!==r?r(E):console.log(CONSOLE_RED("[UPPERCASE.JS-COPY_FILE] ERROR:"+E))}),n.on("end",function(){void 0!==e&&e()})):void 0!==i?i(S):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-COPY_FILE] NOT EXISTS! <"+S+">"))}):RUN(function(){var E;try{if(CHECK_IS_EXISTS_FILE({path:S,isSync:!0})!==!0)return void(void 0!==i?i(S):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-COPY_FILE] NOT EXISTS! <"+S+">")));o.writeFileSync(a,o.readFileSync(S))}catch(n){n!==TO_DELETE&&(E=n.toString(),void 0!==r?r(E):console.log(CONSOLE_RED("[UPPERCASE.JS-COPY_FILE] ERROR: "+E)))}void 0!==e&&e()})}})}}}),global.CREATE_FOLDER=METHOD(function(){"use strict";var o=require("fs"),E=require("path");return{run:function(n,t){var e,i,r,S,a;CHECK_IS_DATA(n)!==!0?e=n:(e=n.path,i=n.isSync),void 0!==t&&(CHECK_IS_DATA(t)!==!0?S=t:(S=t.success,a=t.error)),i!==!0?CHECK_IS_EXISTS_FILE(e,function(n){n===!0?void 0!==S&&S():(r=E.dirname(e),CHECK_IS_EXISTS_FILE(r,function(E){E===!0?o.mkdir(e,function(o){var E;o!==TO_DELETE?(E=o.toString(),void 0!==a?a(E):console.log(CONSOLE_RED("[UPPERCASE.JS-CREATE_FOLDER] ERROR: "+E))):S()}):CREATE_FOLDER(r,function(){CREATE_FOLDER(e,S)})}))}):RUN(function(){var n;try{CHECK_IS_EXISTS_FILE({path:e,isSync:!0})!==!0&&(r=E.dirname(e),CHECK_IS_EXISTS_FILE({path:r,isSync:!0})===!0?o.mkdirSync(e):(CREATE_FOLDER({path:r,isSync:!0}),CREATE_FOLDER({path:e,isSync:!0})))}catch(t){t!==TO_DELETE&&(n=t.toString(),void 0!==a?a(n):console.log(CONSOLE_RED("[UPPERCASE.JS-CREATE_FOLDER] ERROR: "+n)))}void 0!==S&&S()})}}}),global.FIND_FILE_NAMES=METHOD(function(){"use strict";{var o=require("fs");require("path")}return{run:function(E,n){var t,e,i,r,S,a=[];return CHECK_IS_DATA(E)!==!0?t=E:(t=E.path,e=E.isSync),void 0!==n&&(CHECK_IS_DATA(n)!==!0?i=n:(i=n.success,r=n.notExists,S=n.error)),e===!0?RUN(function(){var E,n;try{if(CHECK_IS_EXISTS_FILE({path:t,isSync:!0})!==!0)return void(void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-FIND_FILE_NAMES] NOT EXISTS! <"+t+">")));E=o.readdirSync(t),EACH(E,function(E){"."!==E[0]&&o.statSync(t+"/"+E).isDirectory()!==!0&&a.push(E)})}catch(e){e!==TO_DELETE&&(n=e.toString(),void 0!==S?S(n):console.log(CONSOLE_RED("[UPPERCASE.JS-FIND_FILE_NAMES] ERROR: "+n)))}return void 0!==i&&i(a),a}):void CHECK_IS_EXISTS_FILE(t,function(E){E===!0?o.readdir(t,function(E,n){var e;E!==TO_DELETE?(e=E.toString(),void 0!==S?S(e):console.log(CONSOLE_RED("[UPPERCASE.JS-FIND_FILE_NAMES] ERROR:"+e))):void 0!==i&&PARALLEL(n,[function(E,n){"."!==E[0]?o.stat(t+"/"+E,function(o,t){var e;o!==TO_DELETE?(e=o.toString(),void 0!==S?S(e):console.log(CONSOLE_RED("[UPPERCASE.JS-FIND_FILE_NAMES] ERROR:"+e))):(t.isDirectory()!==!0&&a.push(E),n())}):n()},function(){void 0!==i&&i(a)}])}):void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-FIND_FOLDER_NAMES] NOT EXISTS! <"+t+">"))})}}}),global.FIND_FOLDER_NAMES=METHOD(function(){"use strict";{var o=require("fs");require("path")}return{run:function(E,n){var t,e,i,r,S,a=[];return CHECK_IS_DATA(E)!==!0?t=E:(t=E.path,e=E.isSync),void 0!==n&&(CHECK_IS_DATA(n)!==!0?i=n:(i=n.success,r=n.notExists,S=n.error)),e===!0?RUN(function(){var E,n;try{if(CHECK_IS_EXISTS_FILE({path:t,isSync:!0})!==!0)return void(void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-FIND_FOLDER_NAMES] NOT EXISTS! <"+t+">")));E=o.readdirSync(t),EACH(E,function(E){"."!==E[0]&&o.statSync(t+"/"+E).isDirectory()===!0&&a.push(E)})}catch(e){e!==TO_DELETE&&(n=e.toString(),void 0!==S?S(n):console.log(CONSOLE_RED("[UPPERCASE.JS-FIND_FOLDER_NAMES] ERROR: "+n)))}return void 0!==i&&i(a),a}):void CHECK_IS_EXISTS_FILE(t,function(E){E===!0?o.readdir(t,function(E,n){var e;E!==TO_DELETE?(e=E.toString(),void 0!==S?S(e):console.log(CONSOLE_RED("[UPPERCASE.JS-FIND_FOLDER_NAMES] ERROR:"+e))):void 0!==i&&PARALLEL(n,[function(E,n){"."!==E[0]?o.stat(t+"/"+E,function(o,t){var e;o!==TO_DELETE?(e=o.toString(),void 0!==S?S(e):console.log(CONSOLE_RED("[UPPERCASE.JS-FIND_FOLDER_NAMES] ERROR:"+e))):(t.isDirectory()===!0&&a.push(E),n())}):n()},function(){void 0!==i&&i(a)}])}):void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-FIND_FOLDER_NAMES] NOT EXISTS! <"+t+">"))})}}}),global.MOVE_FILE=METHOD({run:function(o,E){"use strict";var n,t,e,i=o.from,r=o.isSync;CHECK_IS_DATA(E)!==!0?n=E:(n=E.success,t=E.notExists,e=E.error),COPY_FILE(o,{error:e,notExists:t,success:function(){REMOVE_FILE({path:i,isSync:r},{error:e,notExists:t,success:n})}})}}),global.READ_FILE=METHOD(function(){"use strict";var o=require("fs");return{run:function(E,n){var t,e,i,r,S;return CHECK_IS_DATA(E)!==!0?t=E:(t=E.path,e=E.isSync),void 0!==n&&(CHECK_IS_DATA(n)!==!0?i=n:(i=n.success,r=n.notExists,S=n.error)),e===!0?RUN(function(){var E,n;try{if(CHECK_IS_EXISTS_FILE({path:t,isSync:!0})!==!0)return void(void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-READ_FILE] NOT EXISTS! <"+t+">")));if(o.statSync(t).isDirectory()===!0)return void(void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-READ_FILE] NOT EXISTS! <"+t+">")))}catch(e){e!==TO_DELETE&&(E=e.toString(),void 0!==S?S(E):console.log(CONSOLE_RED("[UPPERCASE.JS-READ_FILE] ERROR: "+E)))}return n=o.readFileSync(t),void 0!==i&&i(n),n}):void CHECK_IS_EXISTS_FILE(t,function(E){E===!0?o.stat(t,function(E,n){var e;E!==TO_DELETE?(e=E.toString(),void 0!==S?S(e):console.log(CONSOLE_RED("[UPPERCASE.JS-READ_FILE] ERROR: "+e))):n.isDirectory()===!0?void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-READ_FILE] NOT EXISTS! <"+t+">")):o.readFile(t,function(o,E){var n;o!==TO_DELETE?(n=o.toString(),void 0!==S?S(n):console.log(CONSOLE_RED("[UPPERCASE.JS-READ_FILE] ERROR: "+n))):void 0!==i&&i(E)})}):void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-READ_FILE] NOT EXISTS! <"+t+">"))})}}}),global.REMOVE_FILE=METHOD(function(){"use strict";var o=require("fs");return{run:function(E,n){var t,e,i,r,S;CHECK_IS_DATA(E)!==!0?t=E:(t=E.path,e=E.isSync),CHECK_IS_DATA(n)!==!0?i=n:(i=n.success,r=n.notExists,S=n.error),e!==!0?CHECK_IS_EXISTS_FILE(t,function(E){E===!0?o.unlink(t,function(o){var E;o!==TO_DELETE?(E=o.toString(),void 0!==S?S(E):console.log(CONSOLE_RED("[UPPERCASE.JS-REMOVE_FILE] ERROR: "+E))):void 0!==i&&i()}):void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-REMOVE_FILE] NOT EXISTS! <"+t+">"))}):RUN(function(){var E;try{if(CHECK_IS_EXISTS_FILE({path:t,isSync:!0})!==!0)return void(void 0!==r?r(t):console.log(CONSOLE_YELLOW("[UPPERCASE.JS-REMOVE_FILE] NOT EXISTS! <"+t+">")));o.unlinkSync(t)}catch(n){n!==TO_DELETE&&(E=n.toString(),void 0!==S?S(E):console.log(CONSOLE_RED("[UPPERCASE.JS-REMOVE_FILE] ERROR: "+E)))}void 0!==i&&i()})}}}),global.WRITE_FILE=METHOD(function(){"use strict";var o=require("fs"),E=require("path");return{run:function(n,t){var e,i,r=n.path,S=n.content,a=n.buffer,c=n.isSync;void 0!==t&&(CHECK_IS_DATA(t)!==!0?e=t:(e=t.success,i=t.error)),CREATE_FOLDER({path:E.dirname(r),isSync:c},function(){c!==!0?o.writeFile(r,void 0!==a?a:S,function(o){var E;o!==TO_DELETE?(E=o.toString(),void 0!==i?i(E):console.log(CONSOLE_RED("[UPPERCASE.JS-WRITE_FILE] ERROR:"+E))):void 0!==e&&e()}):RUN(function(){var E;try{o.writeFileSync(r,void 0!==a?a:S)}catch(n){n!==TO_DELETE&&(E=n.toString(),void 0!==i?i(E):console.log(CONSOLE_RED("[UPPERCASE.JS-WRITE_FILE] ERROR: "+E)))}void 0!==e&&e()})})}}}),global.DELETE=METHOD({run:function(o,E){"use strict";REQUEST(COMBINE([CHECK_IS_DATA(o)===!0?o:{uri:o},{method:"DELETE"}]),E)}}),global.GET=METHOD({run:function(o,E){"use strict";REQUEST(COMBINE([CHECK_IS_DATA(o)===!0?o:{uri:o},{method:"GET"}]),E)}}),global.POST=METHOD({run:function(o,E){"use strict";REQUEST(COMBINE([CHECK_IS_DATA(o)===!0?o:{uri:o},{method:"POST"}]),E)}}),global.PUT=METHOD({run:function(o,E){"use strict";REQUEST(COMBINE([CHECK_IS_DATA(o)===!0?o:{uri:o},{method:"PUT"}]),E)}}),global.REQUEST=METHOD(function(){"use strict";var o=require("http"),E=require("https");return{run:function(n,t){var e,i,r,S=n.host,a=n.isSecure,c=void 0===n.port?a!==!0?80:443:n.port,s=n.method,u=n.uri,R=n.paramStr,_=n.data;s=s.toUpperCase(),void 0!==u&&-1!==u.indexOf("?")&&(R=u.substring(u.indexOf("?")+1)+(void 0===R?"":"&"+R),u=u.substring(0,u.indexOf("?"))),void 0!==_&&(R=(void 0===R?"":R+"&")+"data="+encodeURIComponent(STRINGIFY(_))),R=(void 0===R?"":R+"&")+Date.now(),CHECK_IS_DATA(t)!==!0?e=t:(e=t.success,i=t.error),"GET"===s?r=(a!==!0?o:E).get({hostname:S,port:c,path:"/"+(void 0===u?"":u)+"?"+R},function(o){var E="";o.setEncoding("utf-8"),o.on("data",function(o){E+=o}),o.on("end",function(){e(E,o.headers)})}):(r=(a!==!0?o:E).request({hostname:S,port:c,path:"/"+(void 0===u?"":u),method:s},function(o){var E="";o.setEncoding("utf-8"),o.on("data",function(o){E+=o}),o.on("end",function(){e(E,o.headers)})}),r.write(R),r.end()),r.on("error",function(o){var E=o.toString();void 0!==i?i(E):console.log(CONSOLE_RED("[UPPERCASE.JS-NODE] REQUEST FAILED: "+E),n)})}}}),global.RESOURCE_SERVER=CLASS(function(o){"use strict";var E,n=require("path"),t=require("querystring");return o.getContentTypeFromURI=E=function(o){var E=n.extname(o);return".png"===E?"image/png":".jpeg"===E||".jpg"===E?"image/jpeg":".gif"===E?"image/gif":".svg"===E?"image/svg+xml":".js"===E?"application/javascript":".json"===E?"application/json":".css"===E?"text/css":".text"===E||".txt"===E?"text/plain":".html"===E?"text/html":".swf"===E?"application/x-shockwave-flash":".mp3"===E?"audio/mpeg":"application/octet-stream"},{init:function(o,n,e,i){var r,S,a,c,s,u,R,_,d,C=(require("path"),{});CHECK_IS_DATA(e)!==!0?r=e:(r=e.port,S=e.securedPort,a=e.rootPath,c=e.version),void 0!==i&&(CHECK_IS_DATA(i)!==!0?s=i:(s=i.requestListener,u=i.error,R=i.notExistsResource)),_=WEB_SERVER(e,function(o,n,e){var i,r,S,_=a,d=o.uri,v=o.uri,O=o.method,T=o.params,f=o.headers,l={};NEXT([function(E){void 0!==s&&(i=s(o,n,e,function(o){_=o},function(o){void 0!==o&&(l=o),DELAY(E)}),v=o.uri,O=o.method,T=o.params,f=o.headers),i!==!1&&o.isResponsed!==!0&&E()},function(){return function(){CONFIG.isDevMode!==!0&&(l.isFinal!==!0?void 0!==c&&f["if-none-match"]===c:void 0!==f["if-none-match"])?n(EXTEND({origin:{statusCode:304},extend:l})):CONFIG.isDevMode!==!0&&l.isFinal!==!0&&void 0!==c&&""!==d&&T.version!==c?n(EXTEND({origin:{statusCode:302,headers:{Location:"/"+d+"?"+t.stringify(COMBINE([T,{version:c}]))}},extend:l})):void 0!==_&&"GET"===O?(r=function(E){void 0!==R&&R(E,o,n),o.isResponsed!==!0&&n(EXTEND({origin:{statusCode:404},extend:l}))},S=function(E){void 0!==u?u(E,o,n):console.log(CONSOLE_RED("[UPPERCASE.JS-RESOURCE_SERVER] ERROR: "+E)),o.isResponsed!==!0&&n(EXTEND({origin:{statusCode:500},extend:l}))},NEXT([function(o){var E=C[d];void 0!==E?o(E.buffer,E.contentType):READ_FILE(_+"/"+v,{notExists:function(){READ_FILE(_+(""===v?"":"/"+v)+"/index.html",{notExists:r,error:S,success:function(E){o(E,"text/html")}})},error:S,success:o})},function(){return function(o,t){void 0===t&&(t=E(v)),CONFIG.isDevMode!==!0&&l.isFinal!==!0&&void 0===C[d]&&(C[d]={buffer:o,contentType:t}),n(EXTEND({origin:{buffer:o,contentType:t,version:c},extend:l}))}}])):n(EXTEND({origin:{statusCode:404},extend:l}))}}])}),console.log("[UPPERCASE.JS-RESOURCE_SERVER] RUNNING RESOURCE SERVER..."+(void 0===r?"":" (PORT:"+r+")")+(void 0===S?"":" (SECURED PORT:"+S+")")),n.getNativeHTTPServer=d=function(){return _.getNativeHTTPServer()}}}}),global.SOCKET_SERVER=METHOD({run:function(o,E){"use strict";var n=require("net"),t=n.createServer(function(o){var n,t,e,i={},r=0,S="",a=function(o,E,n){var t=i[o];void 0!==t&&EACH(t,function(o){o(E,function(o){void 0!==n&&e({methodName:"__CALLBACK_"+n,data:o})})})};o.on("data",function(o){var E,n,t;for(S+=o.toString();-1!==(n=S.indexOf("\r\n"));)E=S.substring(0,n),t=PARSE_STR(E),void 0!==t&&a(t.methodName,t.data,t.sendKey),S=S.substring(n+1)}),o.on("close",function(){a("__DISCONNECTED"),i=void 0}),o.on("error",function(o){var E=o.toString();console.log("[UPPERCASE.JS-SOCEKT_SERVER] ERROR:",E),a("__ERROR",E)}),E({ip:o.remoteAddress},n=function(o,E){var n=i[o];void 0===n&&(n=i[o]=[]),n.push(E)},t=function(o,E){var n=i[o];void 0!==n&&(void 0!==E?REMOVE({array:n,value:E}):delete i[o])},e=function(E,e){var i="__CALLBACK_"+r;E.sendKey=r,r+=1,o.write(STRINGIFY(E)+"\r\n"),void 0!==e&&n(i,function(o){e(o),t(i)})},function(){o.end()})});t.listen(o),console.log("[UPPERCASE.JS-SOCKET_SERVER] RUNNING SOCKET SERVER... (PORT:"+o+")")}}),global.WEB_SERVER=CLASS(function(o){"use strict";var E,n=require("http"),t=require("querystring"),e=require("zlib");return o.getEncodingFromContentType=E=function(o){return"application/javascript"===o?"utf-8":"application/json"===o?"utf-8":"text/css"===o?"utf-8":"text/plain"===o?"utf-8":"text/html"===o?"utf-8":"image/png"===o?"binary":"image/jpeg"===o?"binary":"image/gif"===o?"binary":"image/svg+xml"===o?"utf-8":"application/x-shockwave-flash"===o?"binary":"audio/mpeg"===o?"binary":"binary"},{init:function(o,i,r,S){var a,c,s,u,R,_,d,C;CHECK_IS_DATA(r)!==!0?a=r:(a=r.port,c=r.securedPort,s=r.securedKeyFilePath,u=r.securedCertFilePath,R=r.noParsingParamsURI),d=function(o,n){var i,r,a=o.headers,c=o.url,s=o.method.toUpperCase(),u=a["x-forwarded-for"],_=a["accept-encoding"],d=[];void 0===u&&(u=o.connection.remoteAddress),void 0===_&&(_=""),-1!=c.indexOf("?")&&(i=c.substring(c.indexOf("?")+1),c=c.substring(0,c.indexOf("?"))),c=c.substring(1),NEXT([function(E){"GET"===s||R===c||CHECK_IS_IN({array:R,value:c})===!0?E():(o.on("data",function(o){void 0===i&&(i=""),i+=o}),o.on("end",function(){E()}))},function(){return function(){S(r={headers:a,uri:c,method:s,params:t.parse(i),ip:u,cookies:PARSE_COOKIE_STR(a.cookie),nativeReq:o},function(o){var t,i,S,a,c,s,u,R;r.isResponsed!==!0&&(CHECK_IS_DATA(o)!==!0?a=o:(t=o.statusCode,i=o.headers,S=o.contentType,a=o.content,c=o.buffer,s=o.encoding,u=o.version,R=o.isFinal),void 0===t&&(t=200),void 0===i&&(i={}),void 0!==S&&(void 0===s&&(s=E(S)),i["Content-Type"]=S+"; charset="+s),CONFIG.isDevMode!==!0&&(R===!0?i.ETag="FINAL":void 0!==u&&(i.ETag=u)),_.match(/\bgzip\b/)!==TO_DELETE?(i["Content-Encoding"]="gzip",e.gzip(void 0!==c?c:String(a),function(o,E){n.writeHead(t,i),n.end(E,s)})):(n.writeHead(t,i),n.end(void 0!==c?c:String(a),s)),r.isResponsed=!0)},function(o){d.push(o)})}}]),R!==c&&CHECK_IS_IN({array:R,value:c})!==!0&&o.on("close",function(){EACH(d,function(o){o()})})},void 0!==a&&(_=n.createServer(d).listen(a)),void 0!==c&&(_=https.createServer({key:fs.readFileSync(s),cert:fs.readFileSync(u)},d).listen(c)),console.log("[UPPERCASE.JS-WEB_SERVER] RUNNING WEB SERVER..."+(void 0===a?"":" (PORT:"+a+")")+(void 0===c?"":" (SECURED PORT:"+c+")")),i.getNativeHTTPServer=C=function(){return _}}}}),global.PARSE_COOKIE_STR=PARSE_COOKIE_STR=METHOD({run:function(o){"use strict";var E,n={};return void 0!==o&&(E=o.split(";"),EACH(E,function(o){var E=o.split("=");n[E[0].trim()]=decodeURIComponent(E[1])})),n}}),global.CREATE_COOKIE_STR_ARRAY=CREATE_COOKIE_STR_ARRAY=METHOD({run:function(o){"use strict";var E=[];return EACH(o,function(o,n){E.push(n+"="+encodeURIComponent(o))}),E}});
+/**
+ * Node-side Configuration
+ */
+global.NODE_CONFIG = {};
+
+/*
+ * cpu clustering work.
+ */
+global.CPU_CLUSTERING = METHOD(function(m) {
+	'use strict';
+
+	var
+	//IMPORT: cluster
+	cluster = require('cluster'),
+
+	// worker id
+	workerId,
+
+	// get worker id.
+	getWorkerId;
+
+	m.getWorkerId = getWorkerId = function() {
+		return workerId;
+	};
+
+	return {
+
+		run : function(work) {
+			//REQUIRED: work
+
+			// when master
+			if (cluster.isMaster) {
+
+				RUN(function() {
+
+					var
+					// fork.
+					fork = function() {
+
+						var
+						// new worker
+						newWorker = cluster.fork();
+
+						// receive data from new worker.
+						newWorker.on('message', function(data) {
+
+							// send data to all workers except new worker.
+							EACH(cluster.workers, function(worker) {
+								if (worker !== newWorker) {
+									worker.send(data);
+								}
+							});
+						});
+					};
+
+					// fork workers.
+					REPEAT(require('os').cpus().length, function() {
+						fork();
+					});
+
+					cluster.on('exit', function(worker, code, signal) {
+						console.log(CONSOLE_RED('[UPPERCASE.JS-CPU_CLUSTERING] WORKER #' + worker.id + ' died. (' + (signal !== undefined ? signal : code) + '). restarting...'));
+						fork();
+					});
+				});
+			}
+
+			// when worker
+			else {
+
+				RUN(function() {
+
+					var
+					// method map
+					methodMap = {},
+
+					// run methods.
+					runMethods = function(methodName, data) {
+
+						var
+						// methods
+						methods = methodMap[methodName];
+
+						if (methods !== undefined) {
+
+							EACH(methods, function(method) {
+
+								// run method.
+								method(data);
+							});
+						}
+					},
+
+					// on.
+					on,
+
+					// off.
+					off,
+
+					// broadcast.
+					broadcast;
+
+					workerId = cluster.worker.id;
+
+					// receive data.
+					process.on('message', function(paramsStr) {
+
+						var
+						// params
+						params = PARSE_STR(paramsStr);
+
+						if (params !== undefined) {
+							runMethods(params.methodName, params.data);
+						}
+					});
+
+					m.on = on = function(methodName, method) {
+
+						var
+						// methods
+						methods = methodMap[methodName];
+
+						if (methods === undefined) {
+							methods = methodMap[methodName] = [];
+						}
+
+						methods.push(method);
+					};
+
+					// save shared value.
+					on('__SHARED_STORE_SAVE', SHARED_STORE.save);
+
+					// remove shared value.
+					on('__SHARED_STORE_REMOVE', SHARED_STORE.remove);
+
+					// save cpu shared value.
+					on('__CPU_SHARED_STORE_SAVE', CPU_SHARED_STORE.save);
+
+					// remove cpu shared value.
+					on('__CPU_SHARED_STORE_REMOVE', CPU_SHARED_STORE.remove);
+
+					m.off = off = function(methodName) {
+						delete methodMap[methodName];
+					};
+
+					m.broadcast = broadcast = function(params) {
+						//REQUIRED: params
+						//REQUIRED: params.methodName
+						//REQUIRED: params.data
+
+						process.send(STRINGIFY(params));
+					};
+
+					work();
+
+					console.log(CONSOLE_GREEN('[UPPERCASE.JS-CPU_CLUSTERING] RUNNING WORKER... (ID:' + workerId + ')'));
+				});
+			}
+		}
+	};
+});
+
+/**
+ * Cpu clustering shared store class
+ */
+global.CPU_SHARED_STORE = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// static storage
+	storage = {},
+
+	// remove delays
+	removeDelays = {},
+
+	// save.
+	save,
+
+	// get.
+	get,
+
+	// remove.
+	remove;
+
+	cls.save = save = function(params, remove) {
+		//REQUIRED: params
+		//REQUIRED: params.fullName
+		//REQUIRED: params.value
+		//OPTIONAL: params.removeAfterSeconds
+		//OPTIONAL: params.isWaitingRemove
+		//OPTIONAL: remove
+
+		var
+		// full name
+		fullName = params.fullName,
+
+		// value
+		value = params.value,
+
+		// remove after seconds
+		removeAfterSeconds = params.removeAfterSeconds,
+
+		// is waiting remove
+		isWaitingRemove = params.isWaitingRemove;
+
+		storage[fullName] = value;
+
+		if (isWaitingRemove === true && removeDelays[fullName] !== undefined) {
+			removeDelays[fullName].remove();
+			delete removeDelays[fullName];
+		}
+
+		if (removeAfterSeconds !== undefined) {
+			removeDelays[fullName] = DELAY(removeAfterSeconds, remove);
+		}
+	};
+
+	cls.get = get = function(fullName) {
+		//REQUIRED: fullName
+
+		return storage[fullName];
+	};
+
+	cls.remove = remove = function(fullName) {
+		//REQUIRED: fullName
+
+		delete storage[fullName];
+
+		if (removeDelays[fullName] !== undefined) {
+			removeDelays[fullName].remove();
+			delete removeDelays[fullName];
+		}
+	};
+
+	return {
+
+		init : function(inner, self, name) {
+			//REQUIRED: name
+
+			var
+			// gen full name.
+			getFullName,
+
+			// save.
+			save,
+
+			// get.
+			get,
+
+			// remove.
+			remove;
+
+			inner.getFullName = getFullName = function(_name) {
+				return name + '.' + _name;
+			};
+
+			self.save = save = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.name
+				//REQUIRED: params.value
+				//OPTIONAL: params.removeAfterSeconds
+
+				var
+				// name
+				name = params.name,
+
+				// full name
+				fullName = getFullName(name),
+
+				// value
+				value = params.value,
+
+				// remove after seconds
+				removeAfterSeconds = params.removeAfterSeconds;
+
+				cls.save({
+					fullName : fullName,
+					value : value,
+					removeAfterSeconds : removeAfterSeconds
+				}, function() {
+					remove(name);
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_STORE_SAVE',
+						data : {
+							fullName : fullName,
+							value : value,
+							isWaitingRemove : removeAfterSeconds !== undefined
+						}
+					});
+				}
+			};
+
+			self.get = get = function(name) {
+				//REQUIRED: name
+
+				return cls.get(getFullName(name));
+			};
+
+			self.remove = remove = function(name) {
+				//REQUIRED: name
+
+				var
+				// full name
+				fullName = getFullName(name);
+
+				cls.remove(fullName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_STORE_REMOVE',
+						data : fullName
+					});
+				}
+			};
+		}
+	};
+});
+
+/*
+ * server clustering work.
+ */
+global.SERVER_CLUSTERING = METHOD(function(m) {
+	'use strict';
+
+	return {
+
+		run : function(params, work) {
+			//REQUIRED: params
+			//REQUIRED: params.servers
+			//REQUIRED: params.thisServerName
+			//REQUIRED: params.port
+			//OPTIONAL: work
+
+			var
+			// servers
+			servers = params.servers,
+
+			// this server name
+			thisServerName = params.thisServerName,
+
+			// port
+			port = params.port,
+
+			// method map
+			methodMap = {},
+
+			// is connectings
+			isConnectings = {},
+
+			// server sends
+			serverSends = {},
+
+			// connect to clustering server.
+			connectToClusteringServer,
+
+			// run methods.
+			runMethods = function(methodName, data) {
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					EACH(methods, function(method) {
+
+						// run method.
+						method(data);
+					});
+				}
+			},
+
+			// socket server ons
+			socketServeOns = [],
+
+			// on.
+			on,
+
+			// off.
+			off,
+
+			// broadcast.
+			broadcast;
+
+			connectToClusteringServer = function(serverName) {
+
+				if (isConnectings[serverName] !== true) {
+					isConnectings[serverName] = true;
+
+					CONNECT_TO_SOCKET_SERVER({
+						host : servers[serverName],
+						port : port
+					}, {
+						error : function() {
+							delete isConnectings[serverName];
+						},
+
+						success : function(on, off, send) {
+
+							send({
+								methodName : '__BOOTED',
+								data : thisServerName
+							});
+
+							serverSends[serverName] = function(params) {
+								//REQUIRED: params
+								//REQUIRED: params.methodName
+								//REQUIRED: params.data
+
+								var
+								// method name
+								methodName = params.methodName,
+
+								// data
+								data = params.data;
+
+								send({
+									methodName : 'SERVER_CLUSTERING.' + methodName,
+									data : data
+								});
+							};
+
+							on('__DISCONNECTED', function() {
+								delete serverSends[serverName];
+								delete isConnectings[serverName];
+							});
+
+							console.log('[UPPERCASE.JS-SERVER_CLUSTERING] CONNECTED CLUSTERING SERVER. (SERVER NAME:' + serverName + ')');
+
+							if (CPU_CLUSTERING.broadcast !== undefined) {
+
+								CPU_CLUSTERING.broadcast({
+									methodName : '__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER',
+									data : serverName
+								});
+							}
+						}
+					});
+				}
+			};
+
+			if (CPU_CLUSTERING.on !== undefined) {
+				CPU_CLUSTERING.on('__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER', connectToClusteringServer);
+			}
+
+			// try connect to all clustering servers.
+			EACH(servers, function(host, serverName) {
+				if (serverName !== thisServerName) {
+					connectToClusteringServer(serverName);
+				}
+			});
+
+			SOCKET_SERVER(port, function(clientInfo, socketServeOn) {
+
+				socketServeOns.push(socketServeOn);
+
+				socketServeOn('__BOOTED', function(serverName) {
+					connectToClusteringServer(serverName);
+				});
+
+				EACH(methodMap, function(methods, methodName) {
+					EACH(methods, function(method) {
+						socketServeOn('SERVER_CLUSTERING.' + methodName, method);
+					});
+				});
+
+				socketServeOn('__DISCONNECTED', function() {
+					REMOVE({
+						array : socketServeOns,
+						value : socketServeOn
+					});
+				});
+			});
+
+			m.on = on = function(methodName, method) {
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+
+				EACH(socketServeOns, function(socketServeOn) {
+					socketServeOn('SERVER_CLUSTERING.' + methodName, method);
+				});
+			};
+
+			// save shared value.
+			on('__SHARED_STORE_SAVE', function(params) {
+
+				SHARED_STORE.save(params);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_SAVE',
+						data : params
+					});
+				}
+			});
+
+			// remove shared value.
+			on('__SHARED_STORE_REMOVE', function(fullName) {
+
+				SHARED_STORE.remove(fullName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_REMOVE',
+						data : fullName
+					});
+				}
+			});
+
+			m.off = off = function(methodName) {
+				delete methodMap[methodName];
+			};
+
+			m.broadcast = broadcast = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.methodName
+				//REQUIRED: params.data
+
+				EACH(serverSends, function(serverSend) {
+					serverSend(params);
+				});
+			};
+
+			if (work !== undefined) {
+				work();
+			}
+
+			console.log(CONSOLE_BLUE('[UPPERCASE.JS-SERVER_CLUSTERING] RUNNING CLUSTERING SERVER... (THIS SERVER NAME:' + thisServerName + ', PORT:' + port + ')'));
+		}
+	};
+});
+
+/**
+ * Cpu and server clustering shared store class
+ */
+global.SHARED_STORE = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// static storage
+	storage = {},
+
+	// remove delays
+	removeDelays = {},
+
+	// save.
+	save,
+
+	// get.
+	get,
+
+	// remove.
+	remove;
+
+	cls.save = save = function(params, remove) {
+		//REQUIRED: params
+		//REQUIRED: params.fullName
+		//REQUIRED: params.value
+		//OPTIONAL: params.removeAfterSeconds
+		//OPTIONAL: params.isWaitingRemove
+		//OPTIONAL: remove
+
+		var
+		// full name
+		fullName = params.fullName,
+
+		// value
+		value = params.value,
+
+		// remove after seconds
+		removeAfterSeconds = params.removeAfterSeconds,
+
+		// is waiting remove
+		isWaitingRemove = params.isWaitingRemove;
+
+		storage[fullName] = value;
+
+		if (isWaitingRemove === true && removeDelays[fullName] !== undefined) {
+			removeDelays[fullName].remove();
+			delete removeDelays[fullName];
+		}
+
+		if (removeAfterSeconds !== undefined) {
+			removeDelays[fullName] = DELAY(removeAfterSeconds, remove);
+		}
+	};
+
+	cls.get = get = function(fullName) {
+		//REQUIRED: fullName
+
+		return storage[fullName];
+	};
+
+	cls.remove = remove = function(fullName) {
+		//REQUIRED: fullName
+
+		delete storage[fullName];
+
+		if (removeDelays[fullName] !== undefined) {
+			removeDelays[fullName].remove();
+			delete removeDelays[fullName];
+		}
+	};
+
+	return {
+
+		init : function(inner, self, name) {
+			'use strict';
+			//REQUIRED: name
+
+			var
+			// gen full name.
+			genFullName,
+
+			// save.
+			save,
+
+			// get.
+			get,
+
+			// remove.
+			remove;
+
+			genFullName = function(_name) {
+				return name + '.' + _name;
+			};
+
+			self.save = save = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.name
+				//REQUIRED: params.value
+				//OPTIONAL: params.removeAfterSeconds
+
+				var
+				// name
+				name = params.name,
+
+				// full name
+				fullName = genFullName(name),
+
+				// value
+				value = params.value,
+
+				// remove after seconds
+				removeAfterSeconds = params.removeAfterSeconds;
+
+				cls.save({
+					fullName : fullName,
+					value : value,
+					removeAfterSeconds : removeAfterSeconds
+				}, function() {
+					remove(name);
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_SAVE',
+						data : {
+							fullName : fullName,
+							value : value,
+							isWaitingRemove : removeAfterSeconds !== undefined
+						}
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_SAVE',
+						data : {
+							fullName : fullName,
+							value : value,
+							isWaitingRemove : removeAfterSeconds !== undefined
+						}
+					});
+				}
+			};
+
+			self.get = get = function(name) {
+				//REQUIRED: name
+
+				return cls.get(genFullName(name));
+			};
+
+			self.remove = remove = function(name) {
+				//REQUIRED: name
+
+				var
+				// full name
+				fullName = genFullName(name);
+
+				cls.remove(fullName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_REMOVE',
+						data : fullName
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_REMOVE',
+						data : fullName
+					});
+				}
+			};
+		}
+	};
+});
+
+/*
+ * connect to socket server.
+ */
+global.CONNECT_TO_SOCKET_SERVER = METHOD({
+
+	run : function(params, connectionListenerOrListeners) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.host
+		//REQUIRED: params.port
+		//REQUIRED: connectionListenerOrListeners
+		//REQUIRED: connectionListenerOrListeners.success
+		//OPTIONAL: connectionListenerOrListeners.error
+
+		var
+		// host
+		host = params.host,
+
+		// port
+		port = params.port,
+
+		// connection listener
+		connectionListener,
+
+		// error listener
+		errorListener,
+
+		// net
+		net = require('net'),
+
+		// connection
+		conn,
+
+		// is connected
+		isConnected,
+
+		// method map
+		methodMap = {},
+
+		// send key
+		sendKey = 0,
+
+		// received string
+		receivedStr = '',
+
+		// on.
+		on,
+
+		// off.
+		off,
+
+		// send.
+		send,
+
+		// run methods.
+		runMethods;
+
+		if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
+			connectionListener = connectionListenerOrListeners;
+		} else {
+			connectionListener = connectionListenerOrListeners.success;
+			errorListener = connectionListenerOrListeners.error;
+		}
+
+		runMethods = function(methodName, data, sendKey) {
+
+			var
+			// methods
+			methods = methodMap[methodName];
+
+			if (methods !== undefined) {
+
+				EACH(methods, function(method) {
+
+					// run method.
+					method(data,
+
+					// ret.
+					function(retData) {
+
+						if (send !== undefined && sendKey !== undefined) {
+
+							send({
+								methodName : '__CALLBACK_' + sendKey,
+								data : retData
+							});
+						}
+					});
+				});
+			}
+		};
+
+		conn = net.connect({
+			host : host,
+			port : port
+		}, function() {
+
+			isConnected = true;
+
+			connectionListener(
+
+			// on.
+			on = function(methodName, method) {
+				//REQUIRED: methodName
+				//REQUIRED: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+			},
+
+			// off.
+			off = function(methodName, method) {
+				//REQUIRED: methodName
+				//OPTIONAL: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					if (method !== undefined) {
+
+						REMOVE({
+							array : methods,
+							value : method
+						});
+
+					} else {
+						delete methodMap[methodName];
+					}
+				}
+			},
+
+			// send to server.
+			send = function(params, callback) {
+				//REQUIRED: params
+				//REQUIRED: params.methodName
+				//REQUIRED: params.data
+				//OPTIONAL: callback
+
+				var
+				// callback name
+				callbackName = '__CALLBACK_' + sendKey;
+
+				params.sendKey = sendKey;
+
+				sendKey += 1;
+
+				conn.write(STRINGIFY(params) + '\r\n');
+
+				if (callback !== undefined) {
+
+					// on callback.
+					on(callbackName, function(data) {
+
+						// run callback.
+						callback(data);
+
+						// off callback.
+						off(callbackName);
+					});
+				}
+			},
+
+			// disconnect.
+			function() {
+				conn.end();
+			});
+		});
+
+		// when receive data
+		conn.on('data', function(content) {
+
+			var
+			// str
+			str,
+
+			// index
+			index,
+
+			// params
+			params;
+
+			receivedStr += content.toString();
+
+			while (( index = receivedStr.indexOf('\r\n')) !== -1) {
+
+				str = receivedStr.substring(0, index);
+
+				params = PARSE_STR(str);
+
+				if (params !== undefined) {
+					runMethods(params.methodName, params.data, params.sendKey);
+				}
+
+				receivedStr = receivedStr.substring(index + 1);
+			}
+		});
+
+		// when disconnected
+		conn.on('close', function() {
+			runMethods('__DISCONNECTED');
+		});
+
+		// when error
+		conn.on('error', function(error) {
+
+			var
+			// error msg
+			errorMsg = error.toString();
+
+			if (isConnected !== true) {
+
+				if (errorListener !== undefined) {
+					errorListener(errorMsg);
+				} else {
+					console.log(CONSOLE_RED('[UPPERCASE.JS-CONNECT_TO_SOCKET_SERVER] CONNECT TO SOCKET SERVER FAILED: ' + errorMsg));
+				}
+
+			} else {
+				runMethods('__ERROR', errorMsg);
+			}
+		});
+	}
+});
+
+/*
+ * console blue
+ */
+global.CONSOLE_BLUE = METHOD({
+
+	run : function(text) {
+		'use strict';
+		//REQUIRED: text
+
+		return '[36m' + text + '[0m';
+	}
+});
+
+/*
+ * console green
+ */
+global.CONSOLE_GREEN = METHOD({
+
+	run : function(text) {
+		'use strict';
+		//REQUIRED: text
+
+		return '[32m' + text + '[0m';
+	}
+});
+
+/*
+ * console red
+ */
+global.CONSOLE_RED = METHOD({
+
+	run : function(text) {
+		'use strict';
+		//REQUIRED: text
+
+		return '[31m' + text + '[0m';
+	}
+});
+
+/*
+ * console yellow
+ */
+global.CONSOLE_YELLOW = METHOD({
+
+	run : function(text) {
+		'use strict';
+		//REQUIRED: text
+
+		return '[33m' + text + '[0m';
+	}
+});
+
+/**
+ * HMAC SHA1 encrypt.
+ */
+global.SHA1 = METHOD({
+
+	run : function(params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.key
+		//REQUIRED: params.password
+
+		var
+		// key
+		key = params.key,
+
+		// password
+		password = params.password,
+
+		// crypto
+		crypto = require('crypto');
+
+		return crypto.createHmac('sha1', key).update(password).digest('hex');
+	}
+});
+
+/*
+ * check is exists file.
+ */
+global.CHECK_IS_EXISTS_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs');
+
+	return {
+
+		run : function(pathOrParams, callback) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path
+			//OPTIONAL: pathOrParams.isSync
+			//OPTIONAL: callback
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+				fs.exists(path, callback);
+			}
+
+			// when sync mode
+			else {
+				return fs.existsSync(path);
+			}
+		}
+	};
+});
+
+/*
+ * copy file.
+ */
+global.COPY_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params
+			//REQUIRED: params.from
+			//REQUIRED: params.to
+			//OPTIONAL: params.isSync
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExistsHandler
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// from
+			from = params.from,
+
+			// to
+			to = params.to,
+
+			// is sync
+			isSync = params.isSync,
+
+			// callback.
+			callback,
+
+			// not exists handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler;
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			CREATE_FOLDER({
+				path : _path.dirname(to),
+				isSync : isSync
+			}, {
+
+				error : errorHandler,
+
+				success : function() {
+
+					// when normal mode
+					if (isSync !== true) {
+
+						CHECK_IS_EXISTS_FILE(from, function(isExists) {
+
+							var
+							// reader
+							reader;
+
+							if (isExists === true) {
+
+								reader = fs.createReadStream(from);
+
+								reader.pipe(fs.createWriteStream(to));
+
+								reader.on('error', function(error) {
+
+									var
+									// error msg
+									errorMsg = error.toString();
+
+									if (errorHandler !== undefined) {
+										errorHandler(errorMsg);
+									} else {
+										console.log(CONSOLE_RED('[UPPERCASE.JS-COPY_FILE] ERROR:' + errorMsg));
+									}
+								});
+
+								reader.on('end', function() {
+									if (callback !== undefined) {
+										callback();
+									}
+								});
+
+							} else {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(from);
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.JS-COPY_FILE] NOT EXISTS! <' + from + '>'));
+								}
+							}
+						});
+					}
+
+					// when sync mode
+					else {
+
+						RUN(function() {
+
+							var
+							// error msg
+							errorMsg;
+
+							try {
+
+								if (CHECK_IS_EXISTS_FILE({
+									path : from,
+									isSync : true
+								}) === true) {
+
+									fs.writeFileSync(to, fs.readFileSync(from));
+
+								} else {
+
+									if (notExistsHandler !== undefined) {
+										notExistsHandler(from);
+									} else {
+										console.log(CONSOLE_YELLOW('[UPPERCASE.JS-COPY_FILE] NOT EXISTS! <' + from + '>'));
+									}
+
+									// do not run callback.
+									return;
+								}
+
+							} catch(error) {
+
+								if (error !== TO_DELETE) {
+
+									errorMsg = error.toString();
+
+									if (errorHandler !== undefined) {
+										errorHandler(errorMsg);
+									} else {
+										console.log(CONSOLE_RED('[UPPERCASE.JS-COPY_FILE] ERROR: ' + errorMsg));
+									}
+								}
+							}
+
+							if (callback !== undefined) {
+								callback();
+							}
+						});
+					}
+				}
+			});
+		}
+	};
+});
+
+/*
+ * create folder.
+ */
+global.CREATE_FOLDER = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path
+			//OPTIONAL: pathOrParams.isSync
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// folder path
+			folderPath,
+
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						if (callback !== undefined) {
+							callback();
+						}
+
+					} else {
+
+						folderPath = _path.dirname(path);
+
+						CHECK_IS_EXISTS_FILE(folderPath, function(isExists) {
+
+							if (isExists === true) {
+
+								fs.mkdir(path, function(error) {
+
+									var
+									// error msg
+									errorMsg;
+
+									if (error !== TO_DELETE) {
+
+										errorMsg = error.toString();
+
+										if (errorHandler !== undefined) {
+											errorHandler(errorMsg);
+										} else {
+											console.log(CONSOLE_RED('[UPPERCASE.JS-CREATE_FOLDER] ERROR: ' + errorMsg));
+										}
+
+									} else {
+										callback();
+									}
+								});
+
+							} else {
+
+								CREATE_FOLDER(folderPath, function() {
+
+									// retry.
+									CREATE_FOLDER(path, callback);
+								});
+							}
+						});
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				RUN(function() {
+
+					var
+					// error msg
+					errorMsg;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) !== true) {
+
+							folderPath = _path.dirname(path);
+
+							if (CHECK_IS_EXISTS_FILE({
+								path : folderPath,
+								isSync : true
+							}) === true) {
+								fs.mkdirSync(path);
+							} else {
+
+								CREATE_FOLDER({
+									path : folderPath,
+									isSync : true
+								});
+
+								// retry.
+								CREATE_FOLDER({
+									path : path,
+									isSync : true
+								});
+							}
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.JS-CREATE_FOLDER] ERROR: ' + errorMsg));
+							}
+						}
+					}
+
+					if (callback !== undefined) {
+						callback();
+					}
+				});
+			}
+		}
+	};
+});
+
+/*
+ * find file names.
+ */
+global.FIND_FILE_NAMES = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path
+			//OPTIONAL: pathOrParams.isSync
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExistsHandler
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not exists handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler,
+
+			// file names
+			fileNames = [];
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						fs.readdir(path, function(error, names) {
+
+							var
+							// error msg
+							errorMsg;
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.JS-FIND_FILE_NAMES] ERROR:' + errorMsg));
+								}
+
+							} else if (callback !== undefined) {
+
+								PARALLEL(names, [
+								function(name, done) {
+
+									if (name[0] !== '.') {
+
+										fs.stat(path + '/' + name, function(error, stats) {
+
+											var
+											// error msg
+											errorMsg;
+
+											if (error !== TO_DELETE) {
+
+												errorMsg = error.toString();
+
+												if (errorHandler !== undefined) {
+													errorHandler(errorMsg);
+												} else {
+													console.log(CONSOLE_RED('[UPPERCASE.JS-FIND_FILE_NAMES] ERROR:' + errorMsg));
+												}
+
+											} else {
+
+												if (stats.isDirectory() !== true) {
+													fileNames.push(name);
+												}
+
+												done();
+											}
+										});
+
+									} else {
+										done();
+									}
+								},
+
+								function() {
+									if (callback !== undefined) {
+										callback(fileNames);
+									}
+								}]);
+							}
+						});
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[UPPERCASE.JS-FIND_FOLDER_NAMES] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				return RUN(function() {
+
+					var
+					// names
+					names,
+
+					// error msg
+					errorMsg;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+
+							names = fs.readdirSync(path);
+
+							EACH(names, function(name) {
+								if (name[0] !== '.' && fs.statSync(path + '/' + name).isDirectory() !== true) {
+									fileNames.push(name);
+								}
+							});
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.JS-FIND_FILE_NAMES] NOT EXISTS! <' + path + '>'));
+							}
+
+							// do not run callback.
+							return;
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.JS-FIND_FILE_NAMES] ERROR: ' + errorMsg));
+							}
+						}
+					}
+
+					if (callback !== undefined) {
+						callback(fileNames);
+					}
+
+					return fileNames;
+				});
+			}
+		}
+	};
+});
+
+/*
+ * find folder names.
+ */
+global.FIND_FOLDER_NAMES = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path
+			//OPTIONAL: pathOrParams.isSync
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExistsHandler
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not exists handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler,
+
+			// file names
+			folderNames = [];
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						fs.readdir(path, function(error, names) {
+
+							var
+							// error msg
+							errorMsg;
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.JS-FIND_FOLDER_NAMES] ERROR:' + errorMsg));
+								}
+
+							} else if (callback !== undefined) {
+
+								PARALLEL(names, [
+								function(name, done) {
+
+									if (name[0] !== '.') {
+
+										fs.stat(path + '/' + name, function(error, stats) {
+
+											var
+											// error msg
+											errorMsg;
+
+											if (error !== TO_DELETE) {
+
+												errorMsg = error.toString();
+
+												if (errorHandler !== undefined) {
+													errorHandler(errorMsg);
+												} else {
+													console.log(CONSOLE_RED('[UPPERCASE.JS-FIND_FOLDER_NAMES] ERROR:' + errorMsg));
+												}
+
+											} else {
+
+												if (stats.isDirectory() === true) {
+													folderNames.push(name);
+												}
+
+												done();
+											}
+										});
+
+									} else {
+										done();
+									}
+								},
+
+								function() {
+									if (callback !== undefined) {
+										callback(folderNames);
+									}
+								}]);
+							}
+						});
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[UPPERCASE.JS-FIND_FOLDER_NAMES] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				return RUN(function() {
+
+					var
+					// names
+					names,
+
+					// error msg
+					errorMsg;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+
+							names = fs.readdirSync(path);
+
+							EACH(names, function(name) {
+								if (name[0] !== '.' && fs.statSync(path + '/' + name).isDirectory() === true) {
+									folderNames.push(name);
+								}
+							});
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.JS-FIND_FOLDER_NAMES] NOT EXISTS! <' + path + '>'));
+							}
+
+							// do not run callback.
+							return;
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.JS-FIND_FOLDER_NAMES] ERROR: ' + errorMsg));
+							}
+						}
+					}
+
+					if (callback !== undefined) {
+						callback(folderNames);
+					}
+
+					return folderNames;
+				});
+			}
+		}
+	};
+});
+
+/*
+ * move file.
+ */
+global.MOVE_FILE = METHOD({
+
+	run : function(params, callbackOrHandlers) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.from
+		//REQUIRED: params.to
+		//OPTIONAL: params.isSync
+		//REQUIRED: callbackOrHandlers
+		//REQUIRED: callbackOrHandlers.success
+		//OPTIONAL: callbackOrHandlers.notExistsHandler
+		//OPTIONAL: callbackOrHandlers.error
+
+		var
+		// from
+		from = params.from,
+
+		// is sync
+		isSync = params.isSync,
+
+		// callback.
+		callback,
+
+		// not exists handler.
+		notExistsHandler,
+
+		// error handler.
+		errorHandler;
+
+		if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+			callback = callbackOrHandlers;
+		} else {
+			callback = callbackOrHandlers.success;
+			notExistsHandler = callbackOrHandlers.notExists;
+			errorHandler = callbackOrHandlers.error;
+		}
+
+		COPY_FILE(params, {
+			error : errorHandler,
+			notExists : notExistsHandler,
+			success : function() {
+
+				REMOVE_FILE({
+					path : from,
+					isSync : isSync
+				}, {
+					error : errorHandler,
+					notExists : notExistsHandler,
+					success : callback
+				});
+			}
+		});
+	}
+});
+
+/*
+ * read file.
+ */
+global.READ_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path
+			//OPTIONAL: pathOrParams.isSync
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExists
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not eixsts handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						fs.stat(path, function(error, stat) {
+
+							var
+							// error msg
+							errorMsg;
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.JS-READ_FILE] ERROR: ' + errorMsg));
+								}
+
+							} else if (stat.isDirectory() === true) {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(path);
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.JS-READ_FILE] NOT EXISTS! <' + path + '>'));
+								}
+
+							} else {
+
+								fs.readFile(path, function(error, buffer) {
+
+									var
+									// error msg
+									errorMsg;
+
+									if (error !== TO_DELETE) {
+
+										errorMsg = error.toString();
+
+										if (errorHandler !== undefined) {
+											errorHandler(errorMsg);
+										} else {
+											console.log(CONSOLE_RED('[UPPERCASE.JS-READ_FILE] ERROR: ' + errorMsg));
+										}
+
+									} else if (callback !== undefined) {
+										callback(buffer);
+									}
+								});
+							}
+						});
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[UPPERCASE.JS-READ_FILE] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				return RUN(function() {
+
+					var
+					// error msg
+					errorMsg,
+
+					// buffer
+					buffer;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+
+							if (fs.statSync(path).isDirectory() === true) {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(path);
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.JS-READ_FILE] NOT EXISTS! <' + path + '>'));
+								}
+
+								// do not run callback.
+								return;
+							}
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.JS-READ_FILE] NOT EXISTS! <' + path + '>'));
+							}
+
+							// do not run callback.
+							return;
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.JS-READ_FILE] ERROR: ' + errorMsg));
+							}
+						}
+					}
+
+					buffer = fs.readFileSync(path);
+
+					if (callback !== undefined) {
+						callback(buffer);
+					}
+
+					return buffer;
+				});
+			}
+		}
+	};
+});
+
+/*
+ * remove file.
+ */
+global.REMOVE_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path
+			//OPTIONAL: pathOrParams.isSync
+			//REQUIRED: callbackOrHandlers
+			//REQUIRED: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExists
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not eixsts handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				callback = callbackOrHandlers.success;
+				notExistsHandler = callbackOrHandlers.notExists;
+				errorHandler = callbackOrHandlers.error;
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						fs.unlink(path, function(error) {
+
+							var
+							// error msg
+							errorMsg;
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.JS-REMOVE_FILE] ERROR: ' + errorMsg));
+								}
+
+							} else {
+
+								if (callback !== undefined) {
+									callback();
+								}
+							}
+						});
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[UPPERCASE.JS-REMOVE_FILE] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				RUN(function() {
+
+					var
+					// error msg
+					errorMsg;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+
+							fs.unlinkSync(path);
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.JS-REMOVE_FILE] NOT EXISTS! <' + path + '>'));
+							}
+
+							// do not run callback.
+							return;
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.JS-REMOVE_FILE] ERROR: ' + errorMsg));
+							}
+						}
+					}
+
+					if (callback !== undefined) {
+						callback();
+					}
+				});
+			}
+		}
+	};
+});
+
+/*
+ * write file.
+ */
+global.WRITE_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params
+			//REQUIRED: params.path
+			//OPTIONAL: params.content
+			//OPTIONAL: params.buffer
+			//OPTIONAL: params.isSync
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path = params.path,
+
+			// content
+			content = params.content,
+
+			// buffer
+			buffer = params.buffer,
+
+			// is sync
+			isSync = params.isSync,
+
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			CREATE_FOLDER({
+				path : _path.dirname(path),
+				isSync : isSync
+			}, function() {
+
+				// when normal mode
+				if (isSync !== true) {
+
+					fs.writeFile(path, buffer !== undefined ? buffer : content, function(error) {
+
+						var
+						// error msg
+						errorMsg;
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.JS-WRITE_FILE] ERROR:' + errorMsg));
+							}
+
+						} else if (callback !== undefined) {
+							callback();
+						}
+					});
+				}
+
+				// when sync mode
+				else {
+
+					RUN(function() {
+
+						var
+						// error msg
+						errorMsg;
+
+						try {
+
+							fs.writeFileSync(path, buffer !== undefined ? buffer : content);
+
+						} catch(error) {
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.JS-WRITE_FILE] ERROR: ' + errorMsg));
+								}
+							}
+						}
+
+						if (callback !== undefined) {
+							callback();
+						}
+					});
+				}
+			});
+		}
+	};
+});
+
+/**
+ * http DELETE request.
+ */
+global.DELETE = METHOD({
+
+	run : function(uriOrParams, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: uriOrParams
+		//REQUIRED: uriOrParams.host
+		//OPTIONAL: uriOrParams.port
+		//OPTIONAL: uriOrParams.isSecure
+		//OPTIONAL: uriOrParams.uri
+		//OPTIONAL: uriOrParams.paramStr
+		//OPTIONAL: uriOrParams.data
+		//REQUIRED: responseListenerOrListeners
+
+		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
+			uri : uriOrParams
+		}, {
+			method : 'DELETE'
+		}]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * http GET request.
+ */
+global.GET = METHOD({
+
+	run : function(uriOrParams, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: uriOrParams
+		//REQUIRED: uriOrParams.host
+		//OPTIONAL: uriOrParams.port
+		//OPTIONAL: uriOrParams.isSecure
+		//REQUIRED: uriOrParams.uri
+		//OPTIONAL: uriOrParams.paramStr
+		//OPTIONAL: uriOrParams.data
+		//REQUIRED: responseListenerOrListeners
+
+		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
+			uri : uriOrParams
+		}, {
+			method : 'GET'
+		}]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * http POST request.
+ */
+global.POST = METHOD({
+
+	run : function(uriOrParams, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: uriOrParams
+		//REQUIRED: uriOrParams.host
+		//OPTIONAL: uriOrParams.port
+		//OPTIONAL: uriOrParams.isSecure
+		//OPTIONAL: uriOrParams.uri
+		//OPTIONAL: uriOrParams.paramStr
+		//OPTIONAL: uriOrParams.data
+		//REQUIRED: responseListenerOrListeners
+
+		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
+			uri : uriOrParams
+		}, {
+			method : 'POST'
+		}]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * http PUT request.
+ */
+global.PUT = METHOD({
+
+	run : function(uriOrParams, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: uriOrParams
+		//REQUIRED: uriOrParams.host
+		//OPTIONAL: uriOrParams.port
+		//OPTIONAL: uriOrParams.isSecure
+		//OPTIONAL: uriOrParams.uri
+		//OPTIONAL: uriOrParams.paramStr
+		//OPTIONAL: uriOrParams.data
+		//REQUIRED: responseListenerOrListeners
+
+		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
+			uri : uriOrParams
+		}, {
+			method : 'PUT'
+		}]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * http request.
+ */
+global.REQUEST = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: http
+	http = require('http'),
+
+	//IMPORT: https
+	https = require('https');
+
+	return {
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: params
+			//REQUIRED: params.host
+			//OPTIONAL: params.port
+			//OPTIONAL: params.isSecure
+			//REQUIRED: params.method
+			//OPTIONAL: params.uri
+			//OPTIONAL: params.paramStr
+			//OPTIONAL: params.data
+			//REQUIRED: responseListenerOrListeners
+
+			var
+			// host
+			host = params.host,
+
+			// is secure
+			isSecure = params.isSecure,
+
+			// port
+			port = params.port === undefined ? (isSecure !== true ? 80 : 443) : params.port,
+
+			// method
+			method = params.method,
+
+			// uri
+			uri = params.uri,
+
+			// param str
+			paramStr = params.paramStr,
+
+			// data
+			data = params.data,
+
+			// response listener
+			responseListener,
+
+			// error listener
+			errorListener,
+
+			// http request
+			req;
+
+			method = method.toUpperCase();
+
+			if (uri !== undefined && uri.indexOf('?') !== -1) {
+				paramStr = uri.substring(uri.indexOf('?') + 1) + (paramStr === undefined ? '' : '&' + paramStr);
+				uri = uri.substring(0, uri.indexOf('?'));
+			}
+
+			if (data !== undefined) {
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + 'data=' + encodeURIComponent(STRINGIFY(data));
+			}
+
+			paramStr = (paramStr === undefined ? '' : paramStr + '&') + Date.now();
+
+			if (CHECK_IS_DATA(responseListenerOrListeners) !== true) {
+				responseListener = responseListenerOrListeners;
+			} else {
+				responseListener = responseListenerOrListeners.success;
+				errorListener = responseListenerOrListeners.error;
+			}
+
+			// GET request.
+			if (method === 'GET') {
+
+				req = (isSecure !== true ? http : https).get({
+					hostname : host,
+					port : port,
+					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr
+				}, function(httpResponse) {
+
+					var
+					// content
+					content = '';
+
+					httpResponse.setEncoding('utf-8');
+					httpResponse.on('data', function(str) {
+						content += str;
+					});
+					httpResponse.on('end', function() {
+						responseListener(content, httpResponse.headers);
+					});
+				});
+			}
+
+			// other request.
+			else {
+
+				req = (isSecure !== true ? http : https).request({
+					hostname : host,
+					port : port,
+					path : '/' + (uri === undefined ? '' : uri),
+					method : method
+				}, function(httpResponse) {
+
+					var
+					// content
+					content = '';
+
+					httpResponse.setEncoding('utf-8');
+					httpResponse.on('data', function(str) {
+						content += str;
+					});
+					httpResponse.on('end', function() {
+						responseListener(content, httpResponse.headers);
+					});
+				});
+
+				req.write(paramStr);
+				req.end();
+			}
+
+			req.on('error', function(error) {
+
+				var
+				// error msg
+				errorMsg = error.toString();
+
+				if (errorListener !== undefined) {
+					errorListener(errorMsg);
+				} else {
+					console.log(CONSOLE_RED('[UPPERCASE.JS-NODE] REQUEST FAILED: ' + errorMsg), params);
+				}
+			});
+		}
+	};
+});
+
+/*
+ * create resourec server.
+ */
+global.RESOURCE_SERVER = CLASS(function(cls) {
+	'use strict';
+
+	var
+	//IMPORT: path
+	path = require('path'),
+
+	//IMPORT: querystring
+	querystring = require('querystring'),
+
+	// get content type from uri.
+	getContentTypeFromURI;
+
+	cls.getContentTypeFromURI = getContentTypeFromURI = function(uri) {
+		//REQUIRED: uri
+
+		var
+		// extname
+		extname = path.extname(uri);
+
+		// png image
+		if (extname === '.png') {
+			return 'image/png';
+		}
+
+		// jpeg image
+		if (extname === '.jpeg' || extname === '.jpg') {
+			return 'image/jpeg';
+		}
+
+		// gif image
+		if (extname === '.gif') {
+			return 'image/gif';
+		}
+
+		// svg
+		if (extname === '.svg') {
+			return 'image/svg+xml';
+		}
+
+		// javascript
+		if (extname === '.js') {
+			return 'application/javascript';
+		}
+
+		// json document
+		if (extname === '.json') {
+			return 'application/json';
+		}
+
+		// css
+		if (extname === '.css') {
+			return 'text/css';
+		}
+
+		// text
+		if (extname === '.text' || extname === '.txt') {
+			return 'text/plain';
+		}
+
+		// html document
+		if (extname === '.html') {
+			return 'text/html';
+		}
+
+		// swf
+		if (extname === '.swf') {
+			return 'application/x-shockwave-flash';
+		}
+
+		// mp3
+		if (extname === '.mp3') {
+			return 'audio/mpeg';
+		}
+
+		return 'application/octet-stream';
+	};
+
+	return {
+
+		init : function(inner, self, portOrParams, requestListenerOrHandlers) {
+			//REQUIRED: portOrParams
+			//OPTIONAL: portOrParams.port
+			//OPTIONAL: portOrParams.securedPort
+			//OPTIONAL: portOrParams.securedKeyFilePath
+			//OPTIONAL: portOrParams.securedCertFilePath
+			//OPTIONAL: portOrParams.noParsingParamsURI
+			//OPTIONAL: portOrParams.rootPath
+			//OPTIONAL: portOrParams.version
+			//OPTIONAL: requestListenerOrHandlers
+			//OPTIONAL: requestListenerOrHandlers.requestListener
+			//OPTIONAL: requestListenerOrHandlers.error
+			//OPTIONAL: requestListenerOrHandlers.notExistsResource
+
+			var
+			//IMPORT: path
+			path = require('path'),
+
+			// port
+			port,
+
+			// secured port
+			securedPort,
+
+			// origin root path
+			originRootPath,
+
+			// version
+			version,
+
+			// request listener.
+			requestListener,
+
+			// error handler.
+			errorHandler,
+
+			// not exists resource handler.
+			notExistsResourceHandler,
+
+			// resource caches
+			resourceCaches = {},
+
+			// web server
+			webServer,
+
+			// get native http server.
+			getNativeHTTPServer;
+
+			// init params.
+			if (CHECK_IS_DATA(portOrParams) !== true) {
+				port = portOrParams;
+			} else {
+				port = portOrParams.port;
+				securedPort = portOrParams.securedPort;
+				originRootPath = portOrParams.rootPath;
+				version = portOrParams.version;
+			}
+
+			if (requestListenerOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(requestListenerOrHandlers) !== true) {
+					requestListener = requestListenerOrHandlers;
+				} else {
+					requestListener = requestListenerOrHandlers.requestListener;
+					errorHandler = requestListenerOrHandlers.error;
+					notExistsResourceHandler = requestListenerOrHandlers.notExistsResource;
+				}
+			}
+
+			webServer = WEB_SERVER(portOrParams, function(requestInfo, response, onDisconnected) {
+
+				var
+				// root path
+				rootPath = originRootPath,
+
+				// is going on
+				isGoingOn,
+
+				// original uri
+				originalURI = requestInfo.uri,
+
+				// uri
+				uri = requestInfo.uri,
+
+				// method
+				method = requestInfo.method,
+
+				// params
+				params = requestInfo.params,
+
+				// headers
+				headers = requestInfo.headers,
+
+				// overriding response info
+				overrideResponseInfo = {},
+
+				// response not found.
+				responseNotFound,
+
+				// response error.
+				responseError;
+
+				NEXT([
+				function(next) {
+
+					if (requestListener !== undefined) {
+
+						isGoingOn = requestListener(requestInfo, response, onDisconnected, function(newRootPath) {
+							rootPath = newRootPath;
+						}, function(_overrideResponseInfo) {
+
+							if (_overrideResponseInfo !== undefined) {
+								overrideResponseInfo = _overrideResponseInfo;
+							}
+
+							DELAY(next);
+						});
+
+						// init properties again.
+						uri = requestInfo.uri;
+						method = requestInfo.method;
+						params = requestInfo.params;
+						headers = requestInfo.headers;
+					}
+
+					if (isGoingOn !== false && requestInfo.isResponsed !== true) {
+						next();
+					}
+				},
+
+				function() {
+					return function() {
+
+						// check ETag.
+						if (CONFIG.isDevMode !== true && (overrideResponseInfo.isFinal !== true ?
+
+						// check version.
+						(version !== undefined && headers['if-none-match'] === version) :
+
+						// check exists.
+						headers['if-none-match'] !== undefined)) {
+
+							// response cached.
+							response(EXTEND({
+								origin : {
+									statusCode : 304
+								},
+								extend : overrideResponseInfo
+							}));
+						}
+
+						// redirect correct version uri.
+						else if (CONFIG.isDevMode !== true && overrideResponseInfo.isFinal !== true && version !== undefined && originalURI !== '' && params.version !== version) {
+
+							response(EXTEND({
+								origin : {
+									statusCode : 302,
+									headers : {
+										'Location' : '/' + originalURI + '?' + querystring.stringify(COMBINE([params, {
+											version : version
+										}]))
+									}
+								},
+								extend : overrideResponseInfo
+							}));
+						}
+
+						// response resource file.
+						else if (rootPath !== undefined && method === 'GET') {
+
+							responseNotFound = function(resourcePath) {
+
+								if (notExistsResourceHandler !== undefined) {
+									notExistsResourceHandler(resourcePath, requestInfo, response);
+								}
+
+								if (requestInfo.isResponsed !== true) {
+
+									response(EXTEND({
+										origin : {
+											statusCode : 404
+										},
+										extend : overrideResponseInfo
+									}));
+								}
+							};
+
+							responseError = function(errorMsg) {
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg, requestInfo, response);
+								} else {
+									console.log(CONSOLE_RED('[UPPERCASE.JS-RESOURCE_SERVER] ERROR: ' + errorMsg));
+								}
+
+								if (requestInfo.isResponsed !== true) {
+
+									response(EXTEND({
+										origin : {
+											statusCode : 500
+										},
+										extend : overrideResponseInfo
+									}));
+								}
+							};
+
+							NEXT([
+							function(next) {
+
+								var
+								// resource cache
+								resourceCache = resourceCaches[originalURI];
+
+								if (resourceCache !== undefined) {
+									next(resourceCache.buffer, resourceCache.contentType);
+								} else {
+
+									// serve file.
+									READ_FILE(rootPath + '/' + uri, {
+
+										notExists : function() {
+
+											// not found file, so serve index.
+											READ_FILE(rootPath + (uri === '' ? '' : ('/' + uri)) + '/index.html', {
+
+												notExists : responseNotFound,
+												error : responseError,
+
+												success : function(buffer) {
+													next(buffer, 'text/html');
+												}
+											});
+										},
+
+										error : responseError,
+										success : next
+									});
+								}
+							},
+
+							function() {
+								return function(buffer, contentType) {
+
+									if (contentType === undefined) {
+										contentType = getContentTypeFromURI(uri);
+									}
+
+									if (CONFIG.isDevMode !== true && overrideResponseInfo.isFinal !== true && resourceCaches[originalURI] === undefined) {
+										resourceCaches[originalURI] = {
+											buffer : buffer,
+											contentType : contentType
+										};
+									}
+
+									response(EXTEND({
+										origin : {
+											buffer : buffer,
+											contentType : contentType,
+											version : version
+										},
+										extend : overrideResponseInfo
+									}));
+								};
+							}]);
+
+						} else {
+							response(EXTEND({
+								origin : {
+									statusCode : 404
+								},
+								extend : overrideResponseInfo
+							}));
+						}
+					};
+				}]);
+			});
+
+			console.log('[UPPERCASE.JS-RESOURCE_SERVER] RUNNING RESOURCE SERVER...' + (port === undefined ? '' : (' (PORT:' + port + ')')) + (securedPort === undefined ? '' : (' (SECURED PORT:' + securedPort + ')')));
+
+			self.getNativeHTTPServer = getNativeHTTPServer = function() {
+				return webServer.getNativeHTTPServer();
+			};
+		}
+	};
+});
+
+/*
+ * create socket server.
+ */
+global.SOCKET_SERVER = METHOD({
+
+	run : function(port, connectionListener) {
+		'use strict';
+		//REQUIRED: port
+		//REQUIRED: connectionListener
+
+		var
+		// net
+		net = require('net'),
+
+		// server
+		server = net.createServer(function(conn) {
+
+			var
+			// method map
+			methodMap = {},
+
+			// send key
+			sendKey = 0,
+
+			// received string
+			receivedStr = '',
+
+			// on.
+			on,
+
+			// off.
+			off,
+
+			// send.
+			send,
+
+			// run methods.
+			runMethods = function(methodName, data, sendKey) {
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					EACH(methods, function(method) {
+
+						// run method.
+						method(data,
+
+						// ret.
+						function(retData) {
+
+							if (sendKey !== undefined) {
+
+								send({
+									methodName : '__CALLBACK_' + sendKey,
+									data : retData
+								});
+							}
+						});
+					});
+				}
+			};
+
+			// when receive data
+			conn.on('data', function(content) {
+
+				var
+				// str
+				str,
+
+				// index
+				index,
+
+				// params
+				params;
+
+				receivedStr += content.toString();
+
+				while (( index = receivedStr.indexOf('\r\n')) !== -1) {
+
+					str = receivedStr.substring(0, index);
+
+					params = PARSE_STR(str);
+
+					if (params !== undefined) {
+						runMethods(params.methodName, params.data, params.sendKey);
+					}
+
+					receivedStr = receivedStr.substring(index + 1);
+				}
+			});
+
+			// when disconnected
+			conn.on('close', function() {
+				
+				runMethods('__DISCONNECTED');
+				
+				// free method map.
+				methodMap = undefined;
+			});
+
+			// when error
+			conn.on('error', function(error) {
+
+				var
+				// error msg
+				errorMsg = error.toString();
+
+				console.log('[UPPERCASE.JS-SOCEKT_SERVER] ERROR:', errorMsg);
+
+				runMethods('__ERROR', errorMsg);
+			});
+
+			connectionListener(
+
+			// client info
+			{
+				ip : conn.remoteAddress
+			},
+
+			// on.
+			on = function(methodName, method) {
+				//REQUIRED: methodName
+				//REQUIRED: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+			},
+
+			// off.
+			off = function(methodName, method) {
+				//REQUIRED: methodName
+				//OPTIONAL: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					if (method !== undefined) {
+
+						REMOVE({
+							array : methods,
+							value : method
+						});
+
+					} else {
+						delete methodMap[methodName];
+					}
+				}
+			},
+
+			// send to client.
+			send = function(params, callback) {
+				//REQUIRED: params
+				//REQUIRED: params.methodName
+				//REQUIRED: params.data
+				//OPTIONAL: callback
+
+				var
+				// callback name
+				callbackName = '__CALLBACK_' + sendKey;
+
+				params.sendKey = sendKey;
+
+				sendKey += 1;
+
+				conn.write(STRINGIFY(params) + '\r\n');
+
+				if (callback !== undefined) {
+
+					// on callback.
+					on(callbackName, function(data) {
+
+						// run callback.
+						callback(data);
+
+						// off callback.
+						off(callbackName);
+					});
+				}
+			},
+
+			// disconnect.
+			function() {
+				conn.end();
+			});
+		});
+
+		// listen.
+		server.listen(port);
+
+		console.log('[UPPERCASE.JS-SOCKET_SERVER] RUNNING SOCKET SERVER... (PORT:' + port + ')');
+	}
+});
+
+/*
+ * create web server.
+ */
+global.WEB_SERVER = CLASS(function(cls) {
+	'use strict';
+
+	var
+	//IMPORT: http
+	http = require('http'),
+
+	//IMPORT: querystring
+	querystring = require('querystring'),
+
+	//IMPORT: zlib
+	zlib = require('zlib'),
+
+	// get encoding from content type.
+	getEncodingFromContentType;
+
+	cls.getEncodingFromContentType = getEncodingFromContentType = function(contentType) {
+		//REQUIRED: contentType
+
+		if (contentType === 'application/javascript') {
+			return 'utf-8';
+		}
+
+		if (contentType === 'application/json') {
+			return 'utf-8';
+		}
+
+		if (contentType === 'text/css') {
+			return 'utf-8';
+		}
+
+		if (contentType === 'text/plain') {
+			return 'utf-8';
+		}
+
+		if (contentType === 'text/html') {
+			return 'utf-8';
+		}
+
+		if (contentType === 'image/png') {
+			return 'binary';
+		}
+
+		if (contentType === 'image/jpeg') {
+			return 'binary';
+		}
+
+		if (contentType === 'image/gif') {
+			return 'binary';
+		}
+
+		if (contentType === 'image/svg+xml') {
+			return 'utf-8';
+		}
+
+		if (contentType === 'application/x-shockwave-flash') {
+			return 'binary';
+		}
+
+		if (contentType === 'audio/mpeg') {
+			return 'binary';
+		}
+
+		return 'binary';
+	};
+
+	return {
+
+		init : function(inner, self, portOrParams, requestListener) {
+			'use strict';
+			//REQUIRED: portOrParams
+			//OPTIONAL: portOrParams.port
+			//OPTIONAL: portOrParams.securedPort
+			//OPTIONAL: portOrParams.securedKeyFilePath
+			//OPTIONAL: portOrParams.securedCertFilePath
+			//OPTIONAL: portOrParams.noParsingParamsURI
+			//REQUIRED: requestListener
+
+			var
+			// port
+			port,
+
+			// secured port
+			securedPort,
+
+			// secured key file path
+			securedKeyFilePath,
+
+			// secured cert file path
+			securedCertFilePath,
+
+			// no parsing params uri
+			noParsingParamsURI,
+
+			// server
+			nativeHTTPServer,
+
+			// serve.
+			serve,
+
+			// get native http server.
+			getNativeHTTPServer;
+
+			// init params.
+			if (CHECK_IS_DATA(portOrParams) !== true) {
+				port = portOrParams;
+			} else {
+				port = portOrParams.port;
+				securedPort = portOrParams.securedPort;
+				securedKeyFilePath = portOrParams.securedKeyFilePath;
+				securedCertFilePath = portOrParams.securedCertFilePath;
+				noParsingParamsURI = portOrParams.noParsingParamsURI;
+			}
+
+			serve = function(nativeReq, nativeRes) {
+
+				var
+				// headers
+				headers = nativeReq.headers,
+
+				// uri
+				uri = nativeReq.url,
+
+				// method
+				method = nativeReq.method.toUpperCase(),
+
+				// ip
+				ip = headers['x-forwarded-for'],
+
+				// accept encoding
+				acceptEncoding = headers['accept-encoding'],
+
+				// disconnected methods
+				disconnectedMethods = [],
+
+				// param str
+				paramStr,
+
+				// request info
+				requestInfo;
+
+				if (ip === undefined) {
+					ip = nativeReq.connection.remoteAddress;
+				}
+
+				if (acceptEncoding === undefined) {
+					acceptEncoding = '';
+				}
+
+				if (uri.indexOf('?') != -1) {
+					paramStr = uri.substring(uri.indexOf('?') + 1);
+					uri = uri.substring(0, uri.indexOf('?'));
+				}
+
+				uri = uri.substring(1);
+
+				NEXT([
+				function(next) {
+
+					if (method === 'GET' || noParsingParamsURI === uri || CHECK_IS_IN({
+						array : noParsingParamsURI,
+						value : uri
+					}) === true) {
+						next();
+					} else {
+
+						nativeReq.on('data', function(data) {
+							if (paramStr === undefined) {
+								paramStr = '';
+							}
+							paramStr += data;
+						});
+
+						nativeReq.on('end', function() {
+							next();
+						});
+					}
+				},
+
+				function() {
+					return function() {
+
+						requestListener( requestInfo = {
+
+							headers : headers,
+
+							uri : uri,
+
+							method : method,
+
+							params : querystring.parse(paramStr),
+
+							ip : ip,
+
+							cookies : PARSE_COOKIE_STR(headers.cookie),
+
+							nativeReq : nativeReq
+						},
+
+						// response.
+						function(contentOrParams) {
+							//REQUIRED: contentOrParams
+							//OPTIONAL: contentOrParams.statusCode
+							//OPTIONAL: contentOrParams.headers
+							//OPTIONAL: contentOrParams.contentType
+							//OPTIONAL: contentOrParams.content
+							//OPTIONAL: contentOrParams.buffer
+							//OPTIONAL: contentOrParams.encoding
+							//OPTIONAL: contentOrParams.version
+							//OPTIONAL: contentOrParams.isFinal
+
+							var
+							// status code
+							statusCode,
+
+							// headers
+							headers,
+
+							// content type
+							contentType,
+
+							// content
+							content,
+
+							// buffer
+							buffer,
+
+							// encoding
+							encoding,
+
+							// version
+							version,
+
+							// is final
+							isFinal;
+
+							if (requestInfo.isResponsed !== true) {
+
+								if (CHECK_IS_DATA(contentOrParams) !== true) {
+									content = contentOrParams;
+								} else {
+									statusCode = contentOrParams.statusCode;
+									headers = contentOrParams.headers;
+									contentType = contentOrParams.contentType;
+									content = contentOrParams.content;
+									buffer = contentOrParams.buffer;
+									encoding = contentOrParams.encoding;
+									version = contentOrParams.version;
+									isFinal = contentOrParams.isFinal;
+								}
+
+								if (statusCode === undefined) {
+									statusCode = 200;
+								}
+
+								if (headers === undefined) {
+									headers = {};
+								}
+
+								if (contentType !== undefined) {
+
+									if (encoding === undefined) {
+										encoding = getEncodingFromContentType(contentType);
+									}
+
+									headers['Content-Type'] = contentType + '; charset=' + encoding;
+								}
+
+								if (CONFIG.isDevMode !== true) {
+									if (isFinal === true) {
+										headers['ETag'] = 'FINAL';
+									} else if (version !== undefined) {
+										headers['ETag'] = version;
+									}
+								}
+
+								// when gzip encoding
+								if (acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
+
+									headers['Content-Encoding'] = 'gzip';
+
+									zlib.gzip(buffer !== undefined ? buffer : String(content), function(error, buffer) {
+										nativeRes.writeHead(statusCode, headers);
+										nativeRes.end(buffer, encoding);
+									});
+								}
+
+								// when not encoding
+								else {
+									nativeRes.writeHead(statusCode, headers);
+									nativeRes.end(buffer !== undefined ? buffer : String(content), encoding);
+								}
+
+								requestInfo.isResponsed = true;
+							}
+						},
+
+						// on disconnected.
+						function(method) {
+							disconnectedMethods.push(method);
+						});
+					};
+				}]);
+
+				if (noParsingParamsURI !== uri && CHECK_IS_IN({
+					array : noParsingParamsURI,
+					value : uri
+				}) !== true) {
+
+					nativeReq.on('close', function() {
+						EACH(disconnectedMethods, function(method) {
+							method();
+						});
+					});
+				}
+			};
+
+			// init sever.
+			if (port !== undefined) {
+				nativeHTTPServer = http.createServer(serve).listen(port);
+			}
+
+			// init secured sever.
+			if (securedPort !== undefined) {
+
+				nativeHTTPServer = https.createServer({
+					key : fs.readFileSync(securedKeyFilePath),
+					cert : fs.readFileSync(securedCertFilePath)
+				}, serve).listen(securedPort);
+			}
+
+			console.log('[UPPERCASE.JS-WEB_SERVER] RUNNING WEB SERVER...' + (port === undefined ? '' : (' (PORT:' + port + ')')) + (securedPort === undefined ? '' : (' (SECURED PORT:' + securedPort + ')')));
+
+			self.getNativeHTTPServer = getNativeHTTPServer = function() {
+				return nativeHTTPServer;
+			};
+		}
+	};
+});
+
+/**
+ * parse cookie str.
+ */
+global.PARSE_COOKIE_STR = PARSE_COOKIE_STR = METHOD({
+
+	run : function(str) {
+		'use strict';
+		//OPTIONAL: str
+
+		var
+		// splits
+		splits,
+
+		// data
+		data = {};
+
+		if (str !== undefined) {
+
+			splits = str.split(';');
+
+			EACH(splits, function(cookie) {
+
+				var
+				// parts
+				parts = cookie.split('=');
+
+				data[parts[0].trim()] = decodeURIComponent(parts[1]);
+			});
+		}
+
+		return data;
+	}
+});
+
+/**
+ * create cookie str array.
+ */
+global.CREATE_COOKIE_STR_ARRAY = CREATE_COOKIE_STR_ARRAY = METHOD({
+
+	run : function(data) {
+		'use strict';
+		//REQUIRED: data
+
+		var
+		// strs
+		strs = [];
+
+		EACH(data, function(value, name) {
+			strs.push(name + '=' + encodeURIComponent(value));
+		});
+
+		return strs;
+	}
+});

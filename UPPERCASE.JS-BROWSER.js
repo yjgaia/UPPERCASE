@@ -1,2 +1,7228 @@
-global.BROWSER_CONFIG={host:location.hostname,port:location.port,loadingBarColor:"#007aff"},global.INFO=OBJECT({init:function(e,t){"use strict";var n,o,i,r,a,u=void 0!==global.ontouchstart;t.getLang=function(){var e=STORE("__INFO").get("lang");return void 0===e&&(e=navigator.language,e.length>2&&(e=e.substring(0,2)),e=e.toLowerCase()),e},t.changeLang=n=function(e){STORE("__INFO").save({key:"lang",value:e}),location.reload()},t.checkIsHDDisplay=o=function(){return void 0!==global.devicePixelRatio&&devicePixelRatio>1?!0:!1},t.checkIsTouchMode=i=function(){return u},t.checkIsExistsTapDelay=r=function(){return!1},t.getBrowserInfo=a=function(){return{name:bowser.name,version:REAL(bowser.version)}},EVENT_LOW("mousemove",function(){u=!1}),EVENT_LOW("touchstart",function(){u=!0})}}),global.LOAD=METHOD({run:function(e,t){"use strict";var n,o,i,r,a,u,s,c,d,l,g,f;CHECK_IS_DATA(e)!==!0?n=e:(n=e.url,void 0===n&&(i=void 0===e.host?BROWSER_CONFIG.host:e.host,r=void 0===e.port?BROWSER_CONFIG.port:e.port,a=e.isSecure,u=e.uri,s=e.paramStr,n=(a===!0?"https://":"http://")+i+":"+r+"/"+u+"?"+s),o=e.isNoCache),void 0!==t&&(c=t.error),READY.readyLoad(),l=document.getElementsByTagName("script"),d=l[l.length-1],g=document.createElement("script"),g.src=(-1===n.indexOf("?")?n+"?":n+"&")+(o!==!0?void 0!==CONFIG.version?"version="+CONFIG.version:"":(new Date).getTime()),g.onload=function(){f!==!0&&(f=!0,READY.loaded())},g.onreadystatechange=function(){var e=this.readyState;f===!0||"loaded"!==e&&"complete"!==e||(f=!0,DELAY(function(){READY.loaded()}))};try{g.onerror=c}catch(h){}return DOM({el:g}).insertAfter(DOM({el:d}))}}),global.READY=METHOD(function(e){"use strict";var t,n,o,i=0,r=[];return e.readyLoad=n=function(){i+=1},e.loaded=o=function(){i-=1,t===!0&&0===i&&(EACH(r,function(e){e()}),r=[])},global.onload=function(){t=!0,0===i&&(EACH(r,function(e){e()}),r=[])},{run:function(e){i>0||t!==!0?r.push(e):e()}}}),global.SOUND=CLASS(function(){"use strict";var e,t=global.webkitAudioContext||global.mozAudioContext||global.oAudioContext||global.msAudioContext||global.AudioContext;return void 0!==t&&(e=new t),{init:function(t,n,o){var i,r,a,u,s,c,d=o.mp3,l=o.ogg,g=o.isLoop,f=new Audio;""===f.canPlayType("audio/mpeg;")&&f.canPlayType("audio/ogg;")&&(d=l),void 0!==e?(i=new XMLHttpRequest,i.open("GET",d,!0),i.responseType="arraybuffer",i.onload=function(){e.decodeAudioData(i.response,function(t){var n=e.createGain?e.createGain():e.createGainNode();r=t,n.connect(e.destination),n.gain.value=.5,void 0!==u&&u()})},i.send(),n.play=s=function(){return u=function(){a=e.createBufferSource(),a.buffer=r,a.connect(e.destination),a.loop=g,void 0!==a.noteOn?a.noteOn(0):a.start(0),u=void 0},void 0!==r&&u(),n},n.stop=c=function(){void 0!==a&&(void 0!==a.noteOff?a.noteOff(0):a.stop(0))}):(f.src=d,g===!0&&f.addEventListener("ended",function(){this.currentTime=0,this.play()},!1),n.play=s=function(){return f.play(),n},n.stop=c=function(){f.pause()})}}}),global.STORE=CLASS({init:function(e,t,n){"use strict";var o,i,r,a;e.genFullName=o=function(e){return n+"."+e},t.save=i=function(e){var t=e.name,n=o(t),i=e.value,r=e.isToSession;sessionStorage.setItem(n,STRINGIFY(i)),r!==!0&&localStorage.setItem(n,STRINGIFY(i))},t.get=r=function(e){var t=o(e),n=PARSE_STR(sessionStorage.getItem(t));return(void 0===n||n===TO_DELETE)&&(n=PARSE_STR(localStorage.getItem(t)),n===TO_DELETE&&(n=void 0)),n},t.remove=a=function(e){var t=o(e);sessionStorage.removeItem(t),localStorage.removeItem(t)}}}),global.CLEAR_BOTH=METHOD({run:function(){"use strict";return DIV({style:{clear:"both"}})}}),global.DOM=CLASS({preset:function(){"use strict";return NODE},init:function(e,t,n){"use strict";var o,i,r,a=n.tag,u=n.__TEXT,s=n.el;void 0!==a?s="body"===a?document.body:"__STRING"===a?document.createTextNode(u):document.createElement(a):s!==document.body&&s.parentNode!==TO_DELETE&&t.setParent(DOM({el:s.parentNode})),t.getEl=o=function(){return s},e.setEl=i=function(n){s=n,e.setDom(t)},i(s),e.setAttr=r=function(e){var t=e.name,n=e.value;s.setAttribute(t,n)}}}),global.LOADING_BAR=CLASS({init:function(e,t){"use strict";var n,o,i;n=DIV({style:{position:"fixed",left:0,top:0,height:3,backgroundColor:BROWSER_CONFIG.loadingBarColor,zIndex:999999}}).appendTo(BODY),o=DIV({style:{position:"fixed",left:0,top:0,height:3,backgroundColor:BROWSER_CONFIG.loadingBarColor,zIndex:999999}}).appendTo(BODY),ANIMATE({node:n,keyframes:KEYFRAMES({from:{width:"0%"},to:{width:"50%"}}),duration:.5}),t.done=i=function(){void 0!==n&&(ANIMATE({node:o,keyframes:KEYFRAMES({from:{width:"0%"},to:{width:"100%"}}),duration:.5}),DELAY(.25,function(){n.remove(),n=void 0,ANIMATE({node:o,keyframes:KEYFRAMES({from:{opacity:1},to:{opacity:0}}),duration:.25},function(){o.remove(),o=void 0})}))},DELAY(5,function(){void 0!==n&&(n.remove(),n=void 0,ANIMATE({node:o,keyframes:KEYFRAMES({from:{width:"50%"},to:{width:"0%"}}),duration:.5},function(){o.remove(),o=void 0}))})}}),global.NODE=CLASS(function(){"use strict";var e=[];return{init:function(e,t){var n,o,i,r,a,u,s,c,d,l,g,f,h,E,v,p,m,S,T,I,A,y,C,D,_,b,O,N,F,L,R,w,M,H,P,k,B,G,x,V,X,W,Y=[];e.setWrapperDom=d=function(e){n=e,i=e.getEl(),c=M("display"),L("show",function(){EACH(Y,function(e){e.checkIsShowing()===!0&&(EVENT.fireAll({node:e,name:"show"}),EVENT.removeAll({node:e,name:"show"}))})})},e.setContentDom=l=function(e){o=e,r=e.getEl()},e.setDom=g=function(e){d(e),l(e)},t.getWrapperDom=f=function(){return n},t.getContentDom=h=function(){return o},t.getWrapperEl=E=function(){return i},t.getContentEl=v=function(){return r},p=function(e){N(e),s.getChildren().push(t),EVENT.fireAll({node:t,name:"attach"}),W()===!0&&(EVENT.fireAll({node:t,name:"show"}),EVENT.removeAll({node:t,name:"show"})),void 0!==a&&EACH(a,function(e){A(e)}),void 0!==u&&EACH(u,function(e){C(e)})},t.append=m=function(e){var n;CHECK_IS_DATA(e)===!0?e.appendTo(t):t.type===TEXTAREA?m(DOM({tag:"__STRING",__TEXT:String(void 0===e?"":e)})):(n=String(void 0===e?"":e).split("\n"),EACH(n,function(e,t){m(DOM({tag:"__STRING",__TEXT:e})),t<n.length-1&&m(BR())}))},t.appendTo=S=function(e){return e.getContentEl().appendChild(i),p(e),t},t.prepend=T=function(e){var n;CHECK_IS_DATA(e)===!0?e.prependTo(t):t.type===TEXTAREA?T(DOM({tag:"__STRING",__TEXT:String(void 0===e?"":e)})):(n=String(void 0===e?"":e).split("\n"),REPEAT({start:n.length-1,end:0},function(e){T(DOM({tag:"__STRING",__TEXT:n[e]})),e<n.length-1&&T(BR())}))},t.prependTo=I=function(e){var n=e.getContentEl();return void 0===n.childNodes[0]?n.appendChild(i):n.insertBefore(i,n.childNodes[0]),p(e),t},t.after=A=function(e){var n;i.parentNode===TO_DELETE?(void 0===a&&(a=[]),a.push(e)):CHECK_IS_DATA(e)===!0?e.insertAfter(t):"textarea"===tag?A(DOM({tag:"__STRING",__TEXT:String(void 0===e?"":e)})):(n=String(void 0===e?"":e).split("\n"),REPEAT({start:n.length-1,end:0},function(e){A(DOM({tag:"__STRING",__TEXT:n[e]})),e<n.length-1&&A(BR())}))},t.insertAfter=y=function(e){var n=e.getWrapperEl();return n.parentNode.insertBefore(i,n.nextSibling),p(e.getParent()),t},t.before=C=function(e){var n;i.parentNode===TO_DELETE?(void 0===u&&(u=[]),u.push(e)):CHECK_IS_DATA(e)===!0?e.insertBefore(t):"textarea"===tag?C(DOM({tag:"__STRING",__TEXT:String(void 0===e?"":e)})):(n=String(void 0===e?"":e).split("\n"),EACH(n,function(e,t){C(DOM({tag:"__STRING",__TEXT:e})),t<n.length-1&&C(BR())}))},t.insertBefore=D=function(e){var n=e.getWrapperEl();return n.parentNode.insertBefore(i,n),p(e.getParent()),t},t.remove=_=function(){void 0!==i&&i.parentNode!==TO_DELETE&&(b(),i.parentNode.removeChild(i),REMOVE({array:s.getChildren(),value:t}),N(void 0),EVENT.fireAll({node:t,name:"remove"}),EVENT.removeAll({node:t}),i=void 0,r=void 0)},t.empty=b=function(){EACH(Y,function(e){e.remove()})},t.getParent=O=function(){return s},t.setParent=N=function(e){s=e},t.getChildren=F=function(){return Y},t.on=L=function(e,n){EVENT({node:t,name:e},n)},t.off=R=function(e,n){void 0!==n?EVENT.remove({node:t,name:e},n):EVENT.removeAll({node:t,name:e})},t.addStyle=w=function(e){ADD_STYLE({node:t,style:e})},t.getStyle=M=function(e){var t,n;return void 0!==i&&(t=i.style,void 0!==t)?(n=t[e],""===n?void 0:"px"===n.substring(n.length-2)?REAL(n):n):void 0},t.getWidth=H=function(){return i.offsetWidth},t.getInnerWidth=P=function(){return i.clientWidth},t.getHeight=k=function(){return i.offsetHeight},t.getInnerHeight=B=function(){return i.clientHeight},t.getLeft=G=function(){var e=0,t=i;do e+=t.offsetLeft-(t===document.body?0:t.scrollLeft),t=t.offsetParent;while(t!==TO_DELETE);return e},t.getTop=x=function(){var e=0,t=i;do e+=t.offsetTop-(t===document.body?0:t.scrollTop),t=t.offsetParent;while(t!==TO_DELETE);return e},t.hide=V=function(){w({display:"none"})},t.show=X=function(){w({display:void 0===c?"":c}),W()===!0&&(EVENT.fireAll({node:t,name:"show"}),EVENT.removeAll({node:t,name:"show"}))},t.checkIsShowing=W=function(){return i===document.body?!0:void 0!==s&&s.checkIsShowing()===!0&&"none"!==M("display")}},afterInit:function(t,n,o,i){var r,a,u,s,c,d=e.length;void 0!==o&&(CHECK_IS_DATA(o)===!0?(r=o.tag,a=o.style,u=void 0===o.c||CHECK_IS_ARRAY(o.c)===!0?o.c:[o.c],s=o.on):void 0===i&&(i=o)),void 0!==a&&n.addStyle(a),void 0!==s&&EACH(s,function(e,t){n.on(t,e)}),void 0!==u&&EACH(u,function(e){n.append(e)}),d>0&&"__STRING"!==r&&n.appendTo(e[d-1]),void 0!==i&&(e.push(n),c=i(),void 0!==c&&CHECK_IS_DATA(c)!==!0&&n.append(c),e.pop())}}}),global.ANIMATE=METHOD({run:function(e,t){"use strict";var n=e.node,o=e.keyframes,i=void 0===e.duration?.5:e.duration,r=void 0===e.timingFunction?"":e.timingFunction,a=void 0===e.delay?"":e.delay,u=void 0===e.iterationCount?"":e.iterationCount,s=void 0===e.direction?"":e.direction,c=void 0===e.playState?"":e.playState,d=o.getName()+" "+i+"s "+r+" "+a+" "+u+" "+s+" "+c;n.addStyle(o.getStartStyle()),n.addStyle({animation:d}),n.addStyle(o.getFinalStyle()),void 0===t||""!==u&&1!==u||DELAY(i,function(){t(n)})}}),global.KEYFRAMES=CLASS({init:function(e,t,n){"use strict";var o,i,r,a,u,s,c="__KEYFRAMES_"+t.id,d="",l="";EACH(n,function(e,t){d+=t+"{",EACH(e,function(e,t){"number"==typeof e&&"zIndex"!==t&&"opacity"!==t&&(e+="px"),d+=t.replace(/([A-Z])/g,"-$1").toLowerCase()+":"+e+";","transform"===t&&(d+="-webkit-transform:"+e+";",d+="-moz-transform:"+e+";",d+="-o-transform:"+e+";",d+="-ms-transform:"+e+";")}),d+="}","from"===t||"0%"===t?i=e:("to"===t||"100%"===t)&&(r=e)}),l+="@-webkit-keyframes "+c+"{"+d+"}",l+="@-moz-keyframes "+c+"{"+d+"}",l+="@-o-keyframes "+c+"{"+d+"}",l+="@-ms-keyframes "+c+"{"+d+"}",l+="@keyframes "+c+"{"+d+"}",o=document.createElement("style"),o.type="text/css",o.appendChild(document.createTextNode(l)),document.getElementsByTagName("head")[0].appendChild(o),t.getName=a=function(){return c},t.getStartStyle=u=function(){return i},t.getFinalStyle=s=function(){return r}}}),global.E=CLASS({init:function(e,t,n){"use strict";var o,i,r,a,u,s,c,d,l=n.e,g=n.el;o=function(e,t){for(var n=t.parentNode;n!==TO_DELETE;){if(n===e)return!0;n=n.parentNode}return!1},t.stopDefault=i=function(){l.preventDefault()},t.stopBubbling=r=function(){l.stopPropagation()},t.stop=a=function(){i(),r()},t.getLeft=u=function(){var e;if(INFO.checkIsTouchMode()===!0){if(void 0!==l.touches&&void 0!==l.touches[0]&&(EACH(l.touches,function(t){return void 0!==t.target&&o(g,t.target)===!0?(e=t.pageX,!1):void 0}),void 0===e&&(e=l.touches[0].pageX),void 0!==e))return e;if(void 0!==l.changedTouches&&void 0!==l.changedTouches[0]&&(EACH(l.changedTouches,function(t){return void 0!==t.target&&o(g,t.target)===!0?(e=t.pageX,!1):void 0}),void 0===e&&(e=l.changedTouches[0].pageX),void 0!==e))return e}return l.pageX},t.getTop=s=function(){var e;if(INFO.checkIsTouchMode()===!0){if(void 0!==l.touches&&void 0!==l.touches[0]&&(EACH(l.touches,function(t){return void 0!==t.target&&o(g,t.target)===!0?(e=t.pageY,!1):void 0}),void 0===e&&(e=l.touches[0].pageY),void 0!==e))return e;if(void 0!==l.changedTouches&&void 0!==l.changedTouches[0]&&(EACH(l.changedTouches,function(t){return void 0!==t.target&&o(g,t.target)===!0?(e=t.pageY,!1):void 0}),void 0===e&&(e=l.changedTouches[0].pageY),void 0!==e))return e}return l.pageY},t.getKeyCode=c=function(){return l.keyCode},t.getState=d=function(){return l.state}}}),global.EMPTY_E=CLASS({init:function(e,t){"use strict";var n,o,i,r,a,u,s;t.stopDefault=n=function(){},t.stopBubbling=o=function(){},t.stop=i=function(){},t.getLeft=r=function(){return-999999},t.getTop=a=function(){return-999999},t.getKeyCode=u=function(){return-999999},t.getState=s=function(){}}}),global.EVENT=CLASS(function(e){"use strict";var t,n,o,i={};return e.fireAll=t=function(e){var t,n,o,r,a,u;return CHECK_IS_DATA(e)!==!0?n=e:(t=e.node,n=e.name),o=void 0===t?"body":t.id,r=i[o],void 0!==r&&(a=r[n],void 0!==a&&EACH(a,function(e){var t=e.fire();t===!1&&(u=!1)})),u},e.removeAll=n=function(e){var t,n,o,r,a;CHECK_IS_DATA(e)!==!0?n=e:(t=e.node,n=e.name),o=void 0===t?"body":t.id,r=i[o],void 0!==r&&(void 0!==n?(a=r[n],void 0!==a&&EACH(a,function(e){e.remove()})):EACH(r,function(e){EACH(e,function(e){e.remove()})}))},e.remove=o=function(e,t){var n,o,r,a=e.node,u=e.name;n=void 0===a?"body":a.id,o=i[n],void 0!==o&&(r=o[u],void 0!==r&&EACH(r,function(e){e.getEventHandler()===t&&e.remove()}))},{init:function(e,t,n,o){var r,a,u,s,c,d,l,g,f,h,E,v,p=[];CHECK_IS_DATA(n)!==!0?u=n:(r=n.node,a=n.lowNode,u=n.name,void 0===a&&(a=r)),s=void 0===r?"body":r.id,void 0===i[s]&&(i[s]={}),void 0===i[s][u]&&(i[s][u]=[]),i[s][u].push(t),f=function(){REMOVE({array:i[s][u],value:t}),i[s][u].length<=0&&delete i[s][u],CHECK_IS_EMPTY_DATA(i[s])===!0&&delete i[s]},"tap"===u?(p.push(EVENT_LOW({node:r,lowNode:a,name:"touchstart"},function(e){INFO.checkIsTouchMode()===!0&&INFO.checkIsExistsTapDelay()===!0&&void 0!==e&&(d=e.getLeft(),l=e.getTop())})),p.push(EVENT_LOW({node:r,lowNode:a,name:"touchend"},function(e,t){var n,i;return INFO.checkIsTouchMode()===!0&&INFO.checkIsExistsTapDelay()===!0&&void 0!==e&&(n=e.getLeft(),i=e.getTop(),n>=d-5&&d+5>=n&&i>=l-5&&l+5>=i)?(e.stopDefault(),o(e,t)):void 0})),p.push(EVENT_LOW({node:r,lowNode:a,name:"click"},function(e,t){(INFO.checkIsTouchMode()!==!0||INFO.checkIsExistsTapDelay()!==!0)&&o(e,t)}))):"doubletap"===u?c=EVENT({node:r,name:"tap"},function(e){void 0===g?g=Date.now():(Date.now()-g<600&&o(e,r),g=void 0,getSelection().removeAllRanges())}):"touchstart"===u?(p.push(EVENT_LOW({node:r,lowNode:a,name:"touchstart"},function(e,t){INFO.checkIsTouchMode()===!0&&o(e,t)})),p.push(EVENT_LOW({node:r,lowNode:a,name:"mousedown"},function(e,t){INFO.checkIsTouchMode()!==!0&&o(e,t)}))):"touchmove"===u?(p.push(EVENT_LOW({node:r,lowNode:a,name:"touchmove"},function(e,t){INFO.checkIsTouchMode()===!0&&o(e,t)})),p.push(EVENT_LOW({node:r,lowNode:a,name:"mousemove"},function(e,t){INFO.checkIsTouchMode()!==!0&&o(e,t)}))):"touchend"===u?(p.push(EVENT_LOW({node:r,lowNode:a,name:"touchend"},function(e,t){INFO.checkIsTouchMode()===!0&&o(e,t)})),p.push(EVENT_LOW({node:r,lowNode:a,name:"mouseup"},function(e,t){INFO.checkIsTouchMode()!==!0&&o(e,t)}))):"mouseover"===u?(p.push(EVENT_LOW({node:r,lowNode:a,name:"touchstart"},function(e,t){INFO.checkIsTouchMode()===!0&&o(e,t)})),p.push(EVENT_LOW({node:r,lowNode:a,name:"mouseover"},function(e,t){INFO.checkIsTouchMode()!==!0&&o(e,t)}))):"mouseout"===u?(p.push(EVENT_LOW({node:r,lowNode:a,name:"touchend"},function(e,t){INFO.checkIsTouchMode()===!0&&o(e,t)})),p.push(EVENT_LOW({node:r,lowNode:a,name:"mouseout"},function(e,t){INFO.checkIsTouchMode()!==!0&&o(e,t)}))):"attach"!==u&&"show"!==u&&"remove"!==u&&p.push(EVENT_LOW(n,o)),t.remove=h=function(){EACH(p,function(e){e.remove()}),void 0!==c&&c.remove(),f()},t.fire=E=function(){return o(EMPTY_E(),r)},t.getEventHandler=v=function(){return o}}}}),global.EVENT_LOW=CLASS({init:function(e,t,n,o){"use strict";var i,r,a,u,s,c;CHECK_IS_DATA(n)!==!0?a=n:(i=n.node,r=n.lowNode,a=n.name,void 0===r&&(r=i)),u=void 0!==r?r.getWrapperEl():void 0===global["on"+a]?document:global,e.innerHandler=s=function(e){return o(E({e:e,el:u}),i)},u.addEventListener(a,s,!1),t.remove=c=function(){u.removeEventListener(a,s,!1)}}}),global.EVENT_ONCE=CLASS({init:function(e,t,n,o){"use strict";var i,r,a=EVENT(n,function(e,t){o(e,t),a.remove()});t.remove=i=function(){a.remove()},t.fire=r=function(){a.fire()}}}),global.ADD_STYLE=METHOD(function(){"use strict";var e,t=["Webkit","Moz","O","Ms"],n=["transform","transformOrigin","animation","touchCallout","userSelect","backgroundSize","backgroundPosition"];return NEXT([function(e){document.body===TO_DELETE?EVENT({name:"load"},e):e()},function(){return function(){var t=document.createElement("div");t.style.position="fixed",t.style.top="10px",document.body.appendChild(t),e=10===t.offsetTop,document.body.removeChild(t)}}]),{run:function(o){var i=o.node,r=o.style,a=i.getWrapperEl(),u=function(e){X2.checkIsCached(e)===!0?X2.switchBG({node:i,uri:e}):EXPORT_IMG_TYPE(IMG({src:e}),function(t){("png"===t||"gif"===t||"bmp"===t)&&X2.switchBG({node:i,uri:e})})};EACH(r,function(o,r){var s,c,d;if(void 0!==o)if("onDisplayResize"===r)s=EVENT({name:"resize"},RAR(function(){ADD_STYLE({node:i,style:o(WIN_WIDTH(),WIN_HEIGHT())})})),i.on("remove",function(){s.remove()});else try{"position"===r&&"fixed"===o&&e!==!0?(a.style.position="absolute",i.__FIXED=!0,void 0===i.__FIXED_LEFT&&""!==a.style.left&&(i.__FIXED_LEFT=INTEGER(a.style.left)),void 0===i.__FIXED_RIGHT&&""!==a.style.right&&(i.__FIXED_RIGHT=INTEGER(a.style.right)),void 0===i.__FIXED_TOP&&""!==a.style.top&&(i.__FIXED_TOP=INTEGER(a.style.top)),void 0===i.__FIXED_BOTTOM&&""!==a.style.bottom&&(i.__FIXED_BOTTOM=INTEGER(a.style.bottom)),c=EVENT({name:"scroll"},RAR(d=function(){void 0!==i.__FIXED_LEFT&&(a.style.left=i.__FIXED_LEFT+SCROLL_LEFT()+"px"),void 0!==i.__FIXED_RIGHT&&(a.style.left=SCROLL_LEFT()+WIN_WIDTH()-i.getWidth()-i.__FIXED_RIGHT+"px"),void 0!==i.__FIXED_TOP&&(a.style.top=i.__FIXED_TOP+SCROLL_TOP()+"px"),void 0!==i.__FIXED_BOTTOM&&(a.style.top=SCROLL_TOP()+WIN_HEIGHT()-i.getHeight()-i.__FIXED_BOTTOM+"px")})),i.on("attach",function(){d()}),DELAY(function(){d()}),i.on("remove",function(){c.remove()})):i.__FIXED===!0&&"left"===r?(i.__FIXED_LEFT=INTEGER(o),a.style.left=o+SCROLL_LEFT()+"px"):i.__FIXED===!0&&"right"===r?(i.__FIXED_RIGHT=INTEGER(o),a.style.left=SCROLL_LEFT()+WIN_WIDTH()-i.getWidth()-i.__FIXED_RIGHT+"px"):i.__FIXED===!0&&"top"===r?(i.__FIXED_TOP=INTEGER(o),a.style.top=o+SCROLL_TOP()+"px"):i.__FIXED===!0&&"bottom"===r?(i.__FIXED_BOTTOM=INTEGER(o),a.style.top=SCROLL_TOP()+WIN_HEIGHT()-i.getHeight()-i.__FIXED_BOTTOM+"px"):"flt"===r?a.style.cssFloat=o:"number"==typeof o&&"zIndex"!==r&&"opacity"!==r?(a.style[r]=o+"px",BROWSER_CONFIG.isSupportingX2===!0&&void 0!==INFO.checkIsHDDisplay&&INFO.checkIsHDDisplay()===!0&&("width"===r||"height"===r)&&(a.removeAttribute("width"),a.removeAttribute("height"))):"backgroundX2Image"===r?a.style.backgroundImage="url("+o+")":"backgroundImage"===r&&"none"!==o?(a.style[r]="url("+o+")",BROWSER_CONFIG.isSupportingX2===!0&&void 0!==INFO.checkIsHDDisplay&&INFO.checkIsHDDisplay()===!0&&u(o)):(a.style[r]=o,BROWSER_CONFIG.isSupportingX2===!0&&void 0!==INFO.checkIsHDDisplay&&INFO.checkIsHDDisplay()===!0&&(("width"===r||"height"===r)&&(a.removeAttribute("width"),a.removeAttribute("height")),"background"===r&&o.length>=7&&"url("===o.substring(0,4)&&u("'"===o.charAt(4)||'"'===o.charAt(4)?o.substring(5,o.length-2):o.substring(4,o.length-1))),CHECK_IS_IN({array:n,value:r})===!0&&EACH(t,function(e){a.style[e+r.charAt(0).toUpperCase()+r.slice(1)]=o}))}catch(l){}})}}}),global.RGBA=METHOD({run:function(e){"use strict";return"rgba("+e[0]+","+e[1]+","+e[2]+","+e[3]+")"}}),global.A=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"a"}},init:function(e,t,n){"use strict";var o,i,r,a,u;void 0!==n&&(o=n.href,i=n.target,r=n.style),t.changeHref=a=function(t){e.setAttr({name:"href",value:t})},void 0!==o&&a(o),void 0!==i&&e.setAttr({name:"target",value:i}),(void 0===r||void 0===r.cursor)&&t.addStyle({cursor:"pointer"}),(void 0===r||void 0===r.textDecoration)&&t.addStyle({textDecoration:"underline"}),t.tap=u=function(){EVENT.fireAll({node:t,name:"tap"})}}}),global.BODY=OBJECT({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"body"}}}),global.BR=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"br"}}}),global.CANVAS=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"canvas"}},init:function(e,t,n){"use strict";var o,i,r,a,u,s,c;void 0!==n&&(o=n.width,i=n.height),t.getContext=r=function(){return CONTEXT(t)},t.setSize=a=function(e){var n=t.getEl();void 0!==e.width&&(o=e.width),void 0!==e.height&&(i=e.height),void 0!==o&&(n.width=o),void 0!==i&&(n.height=i)},a({width:o,height:i}),t.getWidth=u=function(){return o},t.getHeight=s=function(){return i},t.getDataURL=c=function(){return t.getEl().toDataURL()}}}),global.DIV=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"div"}}}),global.FORM=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"form"}},init:function(e,t,n){"use strict";var o,i,r,a,u,s,c;void 0!==n&&(o=n.action,i=n.target,r=n.method,a=n.enctype),void 0!==o&&e.setAttr({name:"action",value:o}),void 0!==i&&e.setAttr({name:"target",value:i}),void 0!==r&&e.setAttr({name:"method",value:r}),void 0!==a&&e.setAttr({name:"enctype",value:a}),t.getData=u=function(){var e={},n=function(t){EACH(t.getChildren(),function(t){void 0!==t.getValue&&void 0!==t.getName&&void 0!==t.getName()&&(e[t.getName()]=t.getValue()),n(t)})};return n(t),e},t.setData=s=function(e){var n=function(t){EACH(t.getChildren(),function(t){var o;void 0!==t.setValue&&void 0!==t.getName&&void 0!==t.getName()&&(o=e[t.getName()],t.setValue(void 0===o?"":o)),n(t)})};n(t)},EVENT({node:t,name:"submit"},function(e){e.stop()}),t.submit=c=function(e){EVENT.fireAll({node:t,name:"submit"}),e===!0&&t.getEl().submit()}}}),global.H1=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"h1"}}}),global.H2=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"h2"}}}),global.H3=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"h3"}}}),global.H4=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"h4"}}}),global.H5=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"h5"}}}),global.H6=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"h6"}}}),global.IFRAME=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"iframe",style:{border:"none"}}},init:function(e,t,n){"use strict";var o,i,r,a;void 0!==n&&(o=n.name,i=n.src),e.setAttr({name:"allowTransparency",value:!0}),e.setAttr({name:"frameBorder",value:0}),void 0!==o&&e.setAttr({name:"name",value:o}),t.setSrc=r=function(t){i=t,e.setAttr({name:"src",value:i})},void 0!==i&&r(i),t.getSrc=a=function(){return i}}}),global.IMG=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"img"}},init:function(e,t,n){"use strict";var o,i,r,a,u,s,c,d,l=n.src,g=t.getEl();t.getWidth=i=function(){return g.width},t.getHeight=r=function(){return g.height},t.setSize=a=function(e){var t=e.width,n=e.height;void 0!==t&&(g.width=t),void 0!==n&&(g.height=n)},t.getSrc=u=function(){return l},t.setX2Src=s=function(t){e.setAttr({name:"src",value:t})},t.setSrc=c=function(n){l=n,e.setAttr({name:"src",value:l}),o!==!0&&BROWSER_CONFIG.isSupportingX2===!0&&void 0!==INFO.checkIsHDDisplay&&INFO.checkIsHDDisplay()===!0&&(X2.checkIsCached(l)===!0?X2.switchImg(t):EXPORT_IMG_TYPE(t,function(e){("png"===e||"gif"===e||"bmp"===e)&&(o=!0,X2.switchImg(t))}))},void 0!==l&&c(l),t.checkIsX2=d=function(){return o}}}),global.INPUT=CLASS(function(e){"use strict";var t,n=[];return e.getFocusingInputIds=t=function(){return n},{preset:function(){return DOM},params:function(){return{tag:"input"}},init:function(e,n,o){var i,r,a,u,s,c,d,l,g,f,h,E,v,p;void 0!==o&&(i=o.name,r=o.type,a=o.placeholder,u=o.capture,s=o.accept,c=o.isMultiple),void 0!==r&&e.setAttr({name:"type",value:r}),"submit"!==r&&"reset"!==r&&(void 0!==i&&e.setAttr({name:"name",value:i}),void 0!==a&&e.setAttr({name:"placeholder",value:a}),void 0!==u&&e.setAttr({name:"capture",value:u}),void 0!==s&&e.setAttr({name:"accept",value:s}),c===!0&&e.setAttr({name:"multiple",value:c}),n.getName=d=function(){return i},n.getValue=l=function(){return"checkbox"===r?n.getEl().checked:n.getEl().value},n.select=f=function(){"file"===r?n.getEl().click():n.getEl().select()},n.focus=h=function(){n.getEl().focus()},n.blur=E=function(){n.getEl().blur()},"checkbox"===r&&(n.toggleCheck=v=function(){return n.getEl().checked=n.getEl().checked===!0?!1:!0,EVENT.fireAll({node:n,name:"change"}),n.getEl().checked},n.checkIsChecked=p=function(){return n.getEl().checked},EVENT({node:n,name:"keyup"},function(e){void 0!==e&&32===e.getKeyCode()&&DELAY(function(){EVENT.fireAll({node:n,name:"change"})})}))),n.setValue=g=function(e){"checkbox"===r?e===!0?n.getEl().checked!==!0?(n.getEl().checked=!0,EVENT.fireAll({node:n,name:"change"})):n.getEl().checked=!0:n.getEl().checked===!0?(n.getEl().checked=!1,EVENT.fireAll({node:n,name:"change"})):n.getEl().checked=!1:n.getEl().value!==e?(n.getEl().value=e,EVENT.fireAll({node:n,name:"change"})):n.getEl().value=e},EVENT({node:n,name:"focus"},function(){t().push(n.id)}),EVENT({node:n,name:"blur"},function(){REMOVE({array:t(),value:n.id})}),n.on("remove",function(){REMOVE({array:t(),value:n.id})})},afterInit:function(e,t,n){var o,i;void 0!==n&&(o=n.type,i=n.value),void 0!==i&&("checkbox"===o?t.getEl().checked=i===!0?t.getEl().checked!==!0?!0:!0:t.getEl().checked===!0?!1:!1:t.getEl().value=t.getEl().value!==i?i:i)}}}),global.LI=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"li"}}}),global.OPTION=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"option"}},init:function(e,t){"use strict";var n,o;t.getValue=n=function(){return t.getEl().value},t.setValue=o=function(e){t.getEl().value=e}},afterInit:function(e,t,n){"use strict";var o;void 0!==n&&(o=n.value),t.setValue(void 0===o?"":o)}}),global.P=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"p"}}}),global.SELECT=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"select"}},init:function(e,t,n){"use strict";var o,i,r,a,u,s,c,d=!1;void 0!==n&&(o=n.name),void 0!==o&&e.setAttr({name:"name",value:o}),t.getName=i=function(){return o},t.getValue=r=function(){return t.getEl().value},t.setValue=a=function(e){t.getEl().value!==e?(t.getEl().value=e,EVENT.fireAll({node:t,name:"change"})):t.getEl().value=e},t.select=u=function(){t.getEl().select()},t.focus=s=function(){t.getEl().focus()},t.blur=c=function(){t.getEl().blur()},EVENT({node:t,name:"keydown"},function(e){var t=e.getKeyCode();91===t||17===t?d=!0:d!==!0&&e.stopBubbling()}),EVENT({node:t,name:"keyup"},function(e){var t=e.getKeyCode();(91===t||17===t)&&(d=!1)}),EVENT({node:t,name:"focus"},function(){INPUT.getFocusingInputIds().push(t.id)}),EVENT({node:t,name:"blur"},function(){REMOVE({array:INPUT.getFocusingInputIds(),value:t.id})}),t.on("remove",function(){REMOVE({array:INPUT.getFocusingInputIds(),value:t.id})})},afterInit:function(e,t,n){"use strict";var o;void 0!==n&&(o=n.value),void 0!==o&&t.setValue(o)}}),global.SPAN=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"span"}}}),global.TABLE=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"table"}}}),global.TD=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"td"}},init:function(e,t,n){"use strict";var o,i;void 0!==n&&(o=n.rowspan,i=n.colspan),void 0!==o&&e.setAttr({name:"rowspan",value:o}),void 0!==i&&e.setAttr({name:"colspan",value:i})}}),global.TEXTAREA=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"textarea"}},init:function(e,t,n){"use strict";var o,i,r,a,u,s,c,d,l=!1;void 0!==n&&(o=n.name,i=n.placeholder),void 0!==o&&e.setAttr({name:"name",value:o}),void 0!==i&&e.setAttr({name:"placeholder",value:i}),t.getName=r=function(){return o},t.getValue=a=function(){return t.getEl().value},t.setValue=u=function(e){t.getEl().value!==e?(t.getEl().value=e,EVENT.fireAll({node:t,name:"change"})):t.getEl().value=e},t.select=s=function(){t.getEl().select()},t.focus=c=function(){t.getEl().focus()},t.blur=d=function(){t.getEl().blur()},EVENT({node:t,name:"keydown"},function(e){var t=e.getKeyCode();91===t||17===t?l=!0:l!==!0&&e.stopBubbling()}),EVENT({node:t,name:"keyup"},function(e){var t=e.getKeyCode();(91===t||17===t)&&(l=!1)}),EVENT({node:t,name:"focus"},function(){INPUT.getFocusingInputIds().push(t.id)}),EVENT({node:t,name:"blur"},function(){REMOVE({array:INPUT.getFocusingInputIds(),value:t.id})}),t.on("remove",function(){REMOVE({array:INPUT.getFocusingInputIds(),value:t.id})})},afterInit:function(e,t,n){"use strict";var o;void 0!==n&&(o=n.value),void 0!==o&&t.setValue(o)}}),global.TH=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"th"}},init:function(e,t,n){"use strict";var o,i;void 0!==n&&(o=n.rowspan,i=n.colspan),void 0!==o&&e.setAttr({name:"rowspan",value:o}),void 0!==i&&e.setAttr({name:"colspan",value:i})}}),global.TR=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"tr"}}}),global.UL=CLASS({preset:function(){"use strict";return DOM},params:function(){"use strict";return{tag:"ul"}}}),global.CHECK_IS_BLANK_PIXEL=METHOD(function(){"use strict";var e={};return{run:function(t,n){var o=t.img,i=t.left,r=t.right,a=t.centerLeft,u=t.top,s=t.bottom,c=t.centerTop;EXPORT_IMG_DATA(o,function(t){var d,l,g,f,h,E,v=o.getSrc(),p=e[v];if(void 0===p){for(d=t.width,l=t.height,g=t.data,p=[],h=0;l>h;h+=1)for(p[h]=[],E=0;d>E;E+=1)p[h][E]=g[h*d*4+4*E+3]<127.5;e[v]=p}void 0!==u?f=p[INTEGER(u)]:void 0!==s?f=p[p.length-INTEGER(s)-1]:void 0!==c&&(f=p[INTEGER(p.length/2)+INTEGER(c)]),void 0!==f&&(void 0!==i?n(f[INTEGER(i)]):void 0!==r?n(f[f.length-INTEGER(r)-1]):void 0!==a&&n(f[INTEGER(f.length/2)+INTEGER(a)]))})}}}),global.CONTEXT=CLASS({init:function(e,t,n){"use strict";var o,i,r,a,u,s,c,d,l,g,f=n.getEl().getContext("2d");e.getNativeContext=o=function(){return f},t.drawImg=i=function(e){var t=e.img,n=void 0===e.left?0:e.left,o=void 0===e.top?0:e.top,i=void 0!==e.clipLeft?e.clipLeft:0,r=void 0!==e.clipTop?e.clipTop:0,a=e.clipWidth,u=e.clipHeight,s=e.width,c=e.height,d=t.checkIsX2()===!0?2:1;void 0===a&&void 0===u?s>0&&c>0?f.drawImage(t.getEl(),n,o,s,c):f.drawImage(t.getEl(),n,o):(void 0===a&&(a=t.getWidth()),void 0===u&&(u=t.getHeight()),f.drawImage(t.getEl(),i*d,r*d,a*d,u*d,n,o,s,c))},t.getImgData=r=function(e){var t=void 0===e||void 0===e.left?0:e.left,o=void 0===e||void 0===e.top?0:e.top,i=void 0===e||void 0===e.width?n.getWidth():e.width,r=void 0===e||void 0===e.height?n.getHeight():e.height;return f.getImageData(t,o,i,r)},t.createImgData=a=function(e){var t=e.width,n=e.height;return f.createImageData(t,n)},t.putImgData=u=function(e){var t=e.data,n=void 0===e.left?0:e.left,o=void 0===e.top?0:e.top;f.putImageData(t,n,o)},t.setScale=s=function(e){var t=e.scaleWidth,n=e.scaleHeight;f.scale(t,n)},t.rotate=c=function(e){var t=e.centerLeft,n=e.centerTop,o=e.degree;f.translate(t,n),f.rotate(o*Math.PI/180),f.translate(-t,-n)},t.save=d=function(){f.save()},t.restore=l=function(){f.restore()},t.clear=g=function(){f.clearRect(0,0,n.getWidth(),n.getHeight())}}}),global.EXPORT_IMG_DATA=METHOD(function(){"use strict";var e={},t={};return{run:function(n,o){var i,r=n.getSrc(),a=e[r],u=t[r];void 0!==a?o(a):void 0!==u?u.push(o):(u=t[r]=[o],i=IMG(),i.getContentEl().crossOrigin="anonymous",i.setSrc(r),EVENT_ONCE({node:i,name:"load"},function(n,o){var i,a=o.getWidth(),s=o.getHeight(),c=CANVAS({width:a,height:s}),d=c.getContext();
-d.drawImg({img:o}),i=d.getImgData(),e[r]=i,EACH(u,function(e){e(i)}),delete t[r]}))}}}),global.EXPORT_IMG_TYPE=METHOD(function(){"use strict";var e={},t={};return{run:function(n,o){var i=n.getSrc(),r=e[i],a=t[i];void 0!==r?o(r):void 0!==a?a.push(o):(a=t[i]=[o],ImageInfo.loadInfo(i,function(){var n=ImageInfo.getAllFields(i).format.toLowerCase();e[i]=n,EACH(a,function(e){e(n)}),delete t[i]}))}}}),global.X2=OBJECT({init:function(e,t){"use strict";var n,o,i,r,a={};t.checkIsCached=n=function(e){return void 0!==a[e]},o=function(e,t){var o=e.getSrc();n(o)===!0?t(a[o]):EXPORT_IMG_DATA(e,function(e){var n,i,r,u,s,c,d,l,g,f,h;for(i=e.width,r=e.height,u=e.data,s=CANVAS(),s.setSize({width:2*i,height:2*r}),c=s.getContext(),n=c.createImgData({width:2*i,height:2*r}),d=n.data,l=0;r>l;l+=1)for(g=0;i>g;g+=1)f=l*i*4+4*g,h=4*(4*l*i+2*g),d[h]=u[f],d[h+1]=u[f+1],d[h+2]=u[f+2],d[h+3]=u[f+3],d[h+4]=u[f],d[h+5]=u[f+1],d[h+6]=u[f+2],d[h+7]=u[f+3],h=4*(2*(2*l+1)*i+2*g),d[h]=u[f],d[h+1]=u[f+1],d[h+2]=u[f+2],d[h+3]=u[f+3],d[h+4]=u[f],d[h+5]=u[f+1],d[h+6]=u[f+2],d[h+7]=u[f+3];c.putImgData({data:n}),t(a[o]={x2DataURL:s.getDataURL(),width:i,height:r})})},t.switchImg=i=function(e){void 0!==e.getEl()&&o(e,function(t){var n,o,i;void 0!==e.getEl()&&(n=t.x2DataURL,o=e.getWidth(),i=e.getHeight(),(void 0===o||0>=o)&&(o=t.width),(void 0===i||0>=i)&&(i=t.height),void 0===e.getStyle("width")&&void 0===e.getStyle("height")&&e.setSize({width:o,height:i}),e.setX2Src(n))})},t.switchBG=r=function(e){var t=e.node,n=IMG({src:e.uri});o(n,function(e){var n=e.x2DataURL,o=t.getStyle("backgroundSize");(void 0===o||"initial"===o)&&(o=e.width+"px "+e.height+"px"),ADD_STYLE({node:t,style:{backgroundX2Image:n,backgroundSize:o}})})}}}),global.MSG=METHOD({run:function(e){"use strict";var t=e[INFO.getLang()];return void 0===t&&EACH(e,function(e){return t=e,!1}),t}}),!function(e,t){"undefined"!=typeof module&&module.exports?module.exports.browser=t():"function"==typeof define?define(t):this[e]=t()}("bowser",function(){function e(e){function n(t){var n=e.match(t);return n&&n.length>1&&n[1]||""}var o,i=n(/(ipod|iphone|ipad)/i).toLowerCase(),r=/like android/i.test(e),a=!r&&/android/i.test(e),u=n(/version\/(\d+(\.\d+)?)/i),s=/tablet/i.test(e),c=!s&&/[^-]mobi/i.test(e);/opera|opr/i.test(e)?o={name:"Opera",opera:t,version:u||n(/(?:opera|opr)[\s\/](\d+(\.\d+)?)/i)}:/windows phone/i.test(e)?o={name:"Windows Phone",windowsphone:t,msie:t,version:n(/iemobile\/(\d+(\.\d+)?)/i)}:/msie|trident/i.test(e)?o={name:"Internet Explorer",msie:t,version:n(/(?:msie |rv:)(\d+(\.\d+)?)/i)}:/chrome|crios|crmo/i.test(e)?o={name:"Chrome",chrome:t,version:n(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)}:i?(o={name:"iphone"==i?"iPhone":"ipad"==i?"iPad":"iPod"},u&&(o.version=u)):/sailfish/i.test(e)?o={name:"Sailfish",sailfish:t,version:n(/sailfish\s?browser\/(\d+(\.\d+)?)/i)}:/seamonkey\//i.test(e)?o={name:"SeaMonkey",seamonkey:t,version:n(/seamonkey\/(\d+(\.\d+)?)/i)}:/firefox|iceweasel/i.test(e)?(o={name:"Firefox",firefox:t,version:n(/(?:firefox|iceweasel)[ \/](\d+(\.\d+)?)/i)},/\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(e)&&(o.firefoxos=t)):/silk/i.test(e)?o={name:"Amazon Silk",silk:t,version:n(/silk\/(\d+(\.\d+)?)/i)}:a?o={name:"Android",version:u}:/phantom/i.test(e)?o={name:"PhantomJS",phantom:t,version:n(/phantomjs\/(\d+(\.\d+)?)/i)}:/blackberry|\bbb\d+/i.test(e)||/rim\stablet/i.test(e)?o={name:"BlackBerry",blackberry:t,version:u||n(/blackberry[\d]+\/(\d+(\.\d+)?)/i)}:/(web|hpw)os/i.test(e)?(o={name:"WebOS",webos:t,version:u||n(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)},/touchpad\//i.test(e)&&(o.touchpad=t)):o=/bada/i.test(e)?{name:"Bada",bada:t,version:n(/dolfin\/(\d+(\.\d+)?)/i)}:/tizen/i.test(e)?{name:"Tizen",tizen:t,version:n(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i)||u}:/safari/i.test(e)?{name:"Safari",safari:t,version:u}:{},/(apple)?webkit/i.test(e)?(o.name=o.name||"Webkit",o.webkit=t,!o.version&&u&&(o.version=u)):!o.opera&&/gecko\//i.test(e)&&(o.name=o.name||"Gecko",o.gecko=t,o.version=o.version||n(/gecko\/(\d+(\.\d+)?)/i)),a||o.silk?o.android=t:i&&(o[i]=t,o.ios=t);var d="";i?(d=n(/os (\d+([_\s]\d+)*) like mac os x/i),d=d.replace(/[_\s]/g,".")):a?d=n(/android[ \/-](\d+(\.\d+)*)/i):o.windowsphone?d=n(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i):o.webos?d=n(/(?:web|hpw)os\/(\d+(\.\d+)*)/i):o.blackberry?d=n(/rim\stablet\sos\s(\d+(\.\d+)*)/i):o.bada?d=n(/bada\/(\d+(\.\d+)*)/i):o.tizen&&(d=n(/tizen[\/\s](\d+(\.\d+)*)/i)),d&&(o.osversion=d);var l=d.split(".")[0];return s||"ipad"==i||a&&(3==l||4==l&&!c)||o.silk?o.tablet=t:(c||"iphone"==i||"ipod"==i||a||o.blackberry||o.webos||o.bada)&&(o.mobile=t),o.msie&&o.version>=10||o.chrome&&o.version>=20||o.firefox&&o.version>=20||o.safari&&o.version>=6||o.opera&&o.version>=10||o.ios&&o.osversion&&o.osversion.split(".")[0]>=6?o.a=t:o.msie&&o.version<10||o.chrome&&o.version<20||o.firefox&&o.version<20||o.safari&&o.version<6||o.opera&&o.version<10||o.ios&&o.osversion&&o.osversion.split(".")[0]<6?o.c=t:o.x=t,o}var t=!0,n=e("undefined"!=typeof navigator?navigator.userAgent:"");return n._detect=e,n});var BinaryFile=function(e,t,n){var o=e,i=t||0,r=0;this.getRawData=function(){return o},"string"==typeof e?(r=n||o.length,this.getByteAt=function(e){return 255&o.charCodeAt(e+i)}):"unknown"==typeof e&&(r=n||IEBinary_getLength(o),this.getByteAt=function(e){return IEBinary_getByteAt(o,e+i)}),this.getLength=function(){return r},this.getSByteAt=function(e){var t=this.getByteAt(e);return t>127?t-256:t},this.getShortAt=function(e,t){var n=t?(this.getByteAt(e)<<8)+this.getByteAt(e+1):(this.getByteAt(e+1)<<8)+this.getByteAt(e);return 0>n&&(n+=65536),n},this.getSShortAt=function(e,t){var n=this.getShortAt(e,t);return n>32767?n-65536:n},this.getLongAt=function(e,t){var n=this.getByteAt(e),o=this.getByteAt(e+1),i=this.getByteAt(e+2),r=this.getByteAt(e+3),a=t?(((n<<8)+o<<8)+i<<8)+r:(((r<<8)+i<<8)+o<<8)+n;return 0>a&&(a+=4294967296),a},this.getSLongAt=function(e,t){var n=this.getLongAt(e,t);return n>2147483647?n-4294967296:n},this.getStringAt=function(e,t){for(var n=[],o=e,i=0;e+t>o;o++,i++)n[i]=String.fromCharCode(this.getByteAt(o));return n.join("")},this.getCharAt=function(e){return String.fromCharCode(this.getByteAt(e))},this.toBase64=function(){return window.btoa(o)},this.fromBase64=function(e){o=window.atob(e)}},BinaryAjax=function(){function e(){var e=null;return window.XMLHttpRequest?e=new XMLHttpRequest:window.ActiveXObject&&(e=new ActiveXObject("Microsoft.XMLHTTP")),e}function t(t,n,o){var i=e();i?(n&&("undefined"!=typeof i.onload?i.onload=function(){"200"==i.status?n(this):o&&o(),i=null}:i.onreadystatechange=function(){4==i.readyState&&("200"==i.status?n(this):o&&o(),i=null)}),i.open("HEAD",t,!0),i.send(null)):o&&o()}function n(t,n,o,i,r){var a=e();if(a){var u=0;i&&!r&&(u=i[0]);var s=0;i&&(s=i[1]-i[0]+1),n&&("undefined"!=typeof a.onload?a.onload=function(){"200"==a.status||"206"==a.status?(this.binaryResponse=new BinaryFile(this.responseText,u,s),n(this)):o&&o(),a=null}:a.onreadystatechange=function(){4==a.readyState&&("200"==a.status||"206"==a.status?(this.binaryResponse=new BinaryFile(a.responseBody,u,s),n(this)):o&&o(),a=null)}),a.open("GET",t,!0),a.overrideMimeType&&a.overrideMimeType("text/plain; charset=x-user-defined"),i&&r&&a.setRequestHeader("Range","bytes="+i[0]+"-"+i[1]),a.send(null)}else o&&o()}return function(e,o,i,r){r?t(e,function(){}):n(e,o,i)}}();document.write("<script type='text/vbscript'>\r\nFunction IEBinary_getByteAt(strBinary, iOffset)\r\n	IEBinary_getByteAt = AscB(MidB(strBinary,iOffset+1,1))\r\nEnd Function\r\nFunction IEBinary_getLength(strBinary)\r\n	IEBinary_getLength = LenB(strBinary)\r\nEnd Function\r\n</script>\r\n");var EXIF={};!function(){function e(e,t,n){e.addEventListener?e.addEventListener(t,n,!1):e.attachEvent&&e.attachEvent("on"+t,n)}function t(e){return!!e.exifdata}function n(e,t){BinaryAjax(e.src,function(n){var i=o(n.binaryResponse);e.exifdata=i||{},t&&t()})}function o(e){if(255!=e.getByteAt(0)||216!=e.getByteAt(1))return!1;for(var t=2,n=e.getLength();n>t;){if(255!=e.getByteAt(t))return s&&console.log("Not a valid marker at offset "+t+", found: "+e.getByteAt(t)),!1;var o=e.getByteAt(t+1);if(22400==o)return s&&console.log("Found 0xFFE1 marker"),a(e,t+4,e.getShortAt(t+2,!0)-2);if(225==o)return s&&console.log("Found 0xFFE1 marker"),a(e,t+4,e.getShortAt(t+2,!0)-2);t+=2+e.getShortAt(t+2,!0)}}function i(e,t,n,o,i){for(var a=e.getShortAt(n,i),u={},c=0;a>c;c++){var d=n+12*c+2,l=o[e.getShortAt(d,i)];!l&&s&&console.log("Unknown tag: "+e.getShortAt(d,i)),u[l]=r(e,d,t,n,i)}return u}function r(e,t,n,o,i){var r=e.getShortAt(t+2,i),a=e.getLongAt(t+4,i),u=e.getLongAt(t+8,i)+n;switch(r){case 1:case 7:if(1==a)return e.getByteAt(t+8,i);for(var s=a>4?u:t+8,c=[],d=0;a>d;d++)c[d]=e.getByteAt(s+d);return c;case 2:var l=a>4?u:t+8;return e.getStringAt(l,a-1);case 3:if(1==a)return e.getShortAt(t+8,i);for(var s=a>2?u:t+8,c=[],d=0;a>d;d++)c[d]=e.getShortAt(s+2*d,i);return c;case 4:if(1==a)return e.getLongAt(t+8,i);for(var c=[],d=0;a>d;d++)c[d]=e.getLongAt(u+4*d,i);return c;case 5:if(1==a)return e.getLongAt(u,i)/e.getLongAt(u+4,i);for(var c=[],d=0;a>d;d++)c[d]=e.getLongAt(u+8*d,i)/e.getLongAt(u+4+8*d,i);return c;case 9:if(1==a)return e.getSLongAt(t+8,i);for(var c=[],d=0;a>d;d++)c[d]=e.getSLongAt(u+4*d,i);return c;case 10:if(1==a)return e.getSLongAt(u,i)/e.getSLongAt(u+4,i);for(var c=[],d=0;a>d;d++)c[d]=e.getSLongAt(u+8*d,i)/e.getSLongAt(u+4+8*d,i);return c}}function a(e,t){if("Exif"!=e.getStringAt(t,4))return s&&console.log("Not valid EXIF data! "+e.getStringAt(t,4)),!1;var n,o=t+6;if(18761==e.getShortAt(o))n=!1;else{if(19789!=e.getShortAt(o))return s&&console.log("Not valid TIFF data! (no 0x4949 or 0x4D4D)"),!1;n=!0}if(42!=e.getShortAt(o+2,n))return s&&console.log("Not valid TIFF data! (no 0x002A)"),!1;if(8!=e.getLongAt(o+4,n))return s&&console.log("Not valid TIFF data! (First offset not 8)",e.getShortAt(o+4,n)),!1;var r=i(e,o,o+8,EXIF.TiffTags,n);if(r.ExifIFDPointer){var a=i(e,o,o+r.ExifIFDPointer,EXIF.Tags,n);for(var u in a){switch(u){case"LightSource":case"Flash":case"MeteringMode":case"ExposureProgram":case"SensingMethod":case"SceneCaptureType":case"SceneType":case"CustomRendered":case"WhiteBalance":case"GainControl":case"Contrast":case"Saturation":case"Sharpness":case"SubjectDistanceRange":case"FileSource":a[u]=EXIF.StringValues[u][a[u]];break;case"ExifVersion":case"FlashpixVersion":a[u]=String.fromCharCode(a[u][0],a[u][1],a[u][2],a[u][3]);break;case"ComponentsConfiguration":a[u]=EXIF.StringValues.Components[a[u][0]]+EXIF.StringValues.Components[a[u][1]]+EXIF.StringValues.Components[a[u][2]]+EXIF.StringValues.Components[a[u][3]]}r[u]=a[u]}}if(r.GPSInfoIFDPointer){var c=i(e,o,o+r.GPSInfoIFDPointer,EXIF.GPSTags,n);for(var u in c){switch(u){case"GPSVersionID":c[u]=c[u][0]+"."+c[u][1]+"."+c[u][2]+"."+c[u][3]}r[u]=c[u]}}return r}function u(){for(var t=document.getElementsByTagName("img"),n=0;n<t.length;n++)"true"==t[n].getAttribute("exif")&&(t[n].complete?EXIF.getData(t[n]):e(t[n],"load",function(){EXIF.getData(this)}))}var s=!1;EXIF.Tags={36864:"ExifVersion",40960:"FlashpixVersion",40961:"ColorSpace",40962:"PixelXDimension",40963:"PixelYDimension",37121:"ComponentsConfiguration",37122:"CompressedBitsPerPixel",37500:"MakerNote",37510:"UserComment",40964:"RelatedSoundFile",36867:"DateTimeOriginal",36868:"DateTimeDigitized",37520:"SubsecTime",37521:"SubsecTimeOriginal",37522:"SubsecTimeDigitized",33434:"ExposureTime",33437:"FNumber",34850:"ExposureProgram",34852:"SpectralSensitivity",34855:"ISOSpeedRatings",34856:"OECF",37377:"ShutterSpeedValue",37378:"ApertureValue",37379:"BrightnessValue",37380:"ExposureBias",37381:"MaxApertureValue",37382:"SubjectDistance",37383:"MeteringMode",37384:"LightSource",37385:"Flash",37396:"SubjectArea",37386:"FocalLength",41483:"FlashEnergy",41484:"SpatialFrequencyResponse",41486:"FocalPlaneXResolution",41487:"FocalPlaneYResolution",41488:"FocalPlaneResolutionUnit",41492:"SubjectLocation",41493:"ExposureIndex",41495:"SensingMethod",41728:"FileSource",41729:"SceneType",41730:"CFAPattern",41985:"CustomRendered",41986:"ExposureMode",41987:"WhiteBalance",41988:"DigitalZoomRation",41989:"FocalLengthIn35mmFilm",41990:"SceneCaptureType",41991:"GainControl",41992:"Contrast",41993:"Saturation",41994:"Sharpness",41995:"DeviceSettingDescription",41996:"SubjectDistanceRange",40965:"InteroperabilityIFDPointer",42016:"ImageUniqueID"},EXIF.TiffTags={256:"ImageWidth",257:"ImageHeight",34665:"ExifIFDPointer",34853:"GPSInfoIFDPointer",40965:"InteroperabilityIFDPointer",258:"BitsPerSample",259:"Compression",262:"PhotometricInterpretation",274:"Orientation",277:"SamplesPerPixel",284:"PlanarConfiguration",530:"YCbCrSubSampling",531:"YCbCrPositioning",282:"XResolution",283:"YResolution",296:"ResolutionUnit",273:"StripOffsets",278:"RowsPerStrip",279:"StripByteCounts",513:"JPEGInterchangeFormat",514:"JPEGInterchangeFormatLength",301:"TransferFunction",318:"WhitePoint",319:"PrimaryChromaticities",529:"YCbCrCoefficients",532:"ReferenceBlackWhite",306:"DateTime",270:"ImageDescription",271:"Make",272:"Model",305:"Software",315:"Artist",33432:"Copyright"},EXIF.GPSTags={0:"GPSVersionID",1:"GPSLatitudeRef",2:"GPSLatitude",3:"GPSLongitudeRef",4:"GPSLongitude",5:"GPSAltitudeRef",6:"GPSAltitude",7:"GPSTimeStamp",8:"GPSSatellites",9:"GPSStatus",10:"GPSMeasureMode",11:"GPSDOP",12:"GPSSpeedRef",13:"GPSSpeed",14:"GPSTrackRef",15:"GPSTrack",16:"GPSImgDirectionRef",17:"GPSImgDirection",18:"GPSMapDatum",19:"GPSDestLatitudeRef",20:"GPSDestLatitude",21:"GPSDestLongitudeRef",22:"GPSDestLongitude",23:"GPSDestBearingRef",24:"GPSDestBearing",25:"GPSDestDistanceRef",26:"GPSDestDistance",27:"GPSProcessingMethod",28:"GPSAreaInformation",29:"GPSDateStamp",30:"GPSDifferential"},EXIF.StringValues={ExposureProgram:{0:"Not defined",1:"Manual",2:"Normal program",3:"Aperture priority",4:"Shutter priority",5:"Creative program",6:"Action program",7:"Portrait mode",8:"Landscape mode"},MeteringMode:{0:"Unknown",1:"Average",2:"CenterWeightedAverage",3:"Spot",4:"MultiSpot",5:"Pattern",6:"Partial",255:"Other"},LightSource:{0:"Unknown",1:"Daylight",2:"Fluorescent",3:"Tungsten (incandescent light)",4:"Flash",9:"Fine weather",10:"Cloudy weather",11:"Shade",12:"Daylight fluorescent (D 5700 - 7100K)",13:"Day white fluorescent (N 4600 - 5400K)",14:"Cool white fluorescent (W 3900 - 4500K)",15:"White fluorescent (WW 3200 - 3700K)",17:"Standard light A",18:"Standard light B",19:"Standard light C",20:"D55",21:"D65",22:"D75",23:"D50",24:"ISO studio tungsten",255:"Other"},Flash:{0:"Flash did not fire",1:"Flash fired",5:"Strobe return light not detected",7:"Strobe return light detected",9:"Flash fired, compulsory flash mode",13:"Flash fired, compulsory flash mode, return light not detected",15:"Flash fired, compulsory flash mode, return light detected",16:"Flash did not fire, compulsory flash mode",24:"Flash did not fire, auto mode",25:"Flash fired, auto mode",29:"Flash fired, auto mode, return light not detected",31:"Flash fired, auto mode, return light detected",32:"No flash function",65:"Flash fired, red-eye reduction mode",69:"Flash fired, red-eye reduction mode, return light not detected",71:"Flash fired, red-eye reduction mode, return light detected",73:"Flash fired, compulsory flash mode, red-eye reduction mode",77:"Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected",79:"Flash fired, compulsory flash mode, red-eye reduction mode, return light detected",89:"Flash fired, auto mode, red-eye reduction mode",93:"Flash fired, auto mode, return light not detected, red-eye reduction mode",95:"Flash fired, auto mode, return light detected, red-eye reduction mode"},SensingMethod:{1:"Not defined",2:"One-chip color area sensor",3:"Two-chip color area sensor",4:"Three-chip color area sensor",5:"Color sequential area sensor",7:"Trilinear sensor",8:"Color sequential linear sensor"},SceneCaptureType:{0:"Standard",1:"Landscape",2:"Portrait",3:"Night scene"},SceneType:{1:"Directly photographed"},CustomRendered:{0:"Normal process",1:"Custom process"},WhiteBalance:{0:"Auto white balance",1:"Manual white balance"},GainControl:{0:"None",1:"Low gain up",2:"High gain up",3:"Low gain down",4:"High gain down"},Contrast:{0:"Normal",1:"Soft",2:"Hard"},Saturation:{0:"Normal",1:"Low saturation",2:"High saturation"},Sharpness:{0:"Normal",1:"Soft",2:"Hard"},SubjectDistanceRange:{0:"Unknown",1:"Macro",2:"Close view",3:"Distant view"},FileSource:{3:"DSC"},Components:{0:"",1:"Y",2:"Cb",3:"Cr",4:"R",5:"G",6:"B"}},EXIF.getData=function(e,o){return e.complete?(t(e)?o&&o():n(e,o),!0):!1},EXIF.getTag=function(e,n){return t(e)?e.exifdata[n]:void 0},EXIF.pretty=function(e){if(!t(e))return"";var n=e.exifdata,o="";for(var i in n)n.hasOwnProperty(i)&&(o+="object"==typeof n[i]?i+" : ["+n[i].length+" values]\r\n":i+" : "+n[i]+"\r\n");return o},EXIF.readFromBinaryFile=function(e){return o(e)},e(window,"load",u)}();var ImageInfo={};ImageInfo.useRange=!1,ImageInfo.range=10240,function(){function e(e,n){BinaryAjax(e,function(o){var i=t(o.binaryResponse),r=o.getResponseHeader("Content-Type");i.mimeType=r,i.byteSize=o.fileSize,a[e]=i,n&&n()},null,ImageInfo.useRange?[0,ImageInfo.range]:null)}function t(e){return 255==e.getByteAt(0)&&216==e.getByteAt(1)?i(e):137!=e.getByteAt(0)&&48!=e.getByteAt(0)||"PNG"!=e.getStringAt(1,3)?"GIF"==e.getStringAt(0,3)?o(e):66==e.getByteAt(0)&&77==e.getByteAt(1)?r(e):0==e.getByteAt(0)&&0==e.getByteAt(1)?readICOInfo(e):{format:"UNKNOWN"}:n(e)}function n(e){var t=e.getLongAt(16,!0),n=e.getLongAt(20,!0),o=e.getByteAt(24),i=e.getByteAt(25),r=o;4==i&&(r*=2),2==i&&(r*=3),6==i&&(r*=4);var a=e.getByteAt(25)>=4;return{format:"PNG",version:"",width:t,height:n,bpp:r,alpha:a,exif:{}}}function o(e){var t=e.getStringAt(3,3),n=e.getShortAt(6),o=e.getShortAt(8),i=(e.getByteAt(10)>>4&7)+1;return{format:"GIF",version:t,width:n,height:o,bpp:i,alpha:!1,exif:{}}}function i(e){for(var t=0,n=0,o=0,i=e.getLength(),r=2;i>r;){var a=e.getShortAt(r,!0);if(r+=2,65472==a){n=e.getShortAt(r+3,!0),t=e.getShortAt(r+5,!0),o=e.getByteAt(r+7,!0);break}r+=e.getShortAt(r,!0)}var u={};return"undefined"!=typeof EXIF&&EXIF.readFromBinaryFile&&(u=EXIF.readFromBinaryFile(e)),{format:"JPEG",version:"",width:t,height:n,bpp:8*o,alpha:!1,exif:u}}function r(e){var t=e.getLongAt(18),n=e.getLongAt(22),o=e.getShortAt(28);return{format:"BMP",version:"",width:t,height:n,bpp:o,alpha:!1,exif:{}}}var a=[];ImageInfo.loadInfo=function(t,n){a[t]?n&&n():e(t,n)},ImageInfo.getAllFields=function(e){if(!a[e])return null;var t={};for(var n in a[e])a[e].hasOwnProperty(n)&&(t[n]=a[e][n]);return t},ImageInfo.getField=function(e,t){return a[e]?a[e][t]:null}}(),global.DELETE=METHOD({run:function(e,t){"use strict";REQUEST(COMBINE([CHECK_IS_DATA(e)===!0?e:{uri:e},{method:"DELETE"}]),t)}}),global.GET=METHOD({run:function(e,t){"use strict";REQUEST(COMBINE([CHECK_IS_DATA(e)===!0?e:{uri:e},{method:"GET"}]),t)}}),global.POST=METHOD({run:function(e,t){"use strict";REQUEST(COMBINE([CHECK_IS_DATA(e)===!0?e:{uri:e},{method:"POST"}]),t)}}),global.PUT=METHOD({run:function(e,t){"use strict";REQUEST(COMBINE([CHECK_IS_DATA(e)===!0?e:{uri:e},{method:"PUT"}]),t)}}),global.REQUEST=METHOD({run:function(e,t){"use strict";var n,o,i,r,a,u=void 0===e.host?BROWSER_CONFIG.host:e.host,s=void 0===e.port?void 0===e.host?BROWSER_CONFIG.port:80:e.port,c=e.isSecure,d=e.method,l=e.uri,g=e.paramStr,f=e.data,h=e.isNotUsingLoadingBar;d=d.toUpperCase(),void 0!==l&&-1!==l.indexOf("?")&&(g=l.substring(l.indexOf("?")+1)+(void 0===g?"":"&"+g),l=l.substring(0,l.indexOf("?"))),void 0!==f&&(g=(void 0===g?"":g+"&")+"data="+encodeURIComponent(STRINGIFY(f))),g=(void 0===g?"":g+"&")+Date.now(),CHECK_IS_DATA(t)!==!0?n=t:(n=t.success,o=t.error),i=(c===!0?"https://":"http://")+u+":"+s+"/"+(void 0===l?"":l),h!==!0&&(r=LOADING_BAR()),a=new XMLHttpRequest,a.onreadystatechange=function(){var t;4===a.readyState&&(200===a.status?n(a.responseText):(t={code:a.status},void 0!==o?o(t):console.log("[UPPERCASE.JS-REQUEST] REQUEST FAILED:",e,t)),void 0!==r&&r.done())},"GET"===d?(a.open(d,i+"?"+g),a.send()):(a.open(d,i),a.setRequestHeader("Content-type","application/x-www-form-urlencoded"),a.send(g))}}),global.GO=METHOD({run:function(e){"use strict";history.pushState(void 0,void 0,HREF(e)),MATCH_VIEW.checkAll()}}),global.GO_NEW_WIN=METHOD({run:function(e){"use strict";global.open(HREF(e))}}),global.HREF=METHOD({run:function(e){"use strict";return"/"+(void 0===e?"":e)}}),global.MATCH_VIEW=METHOD(function(e){"use strict";var t,n=[];return e.checkAll=t=function(){EACH(n,function(e){e()})},{run:function(e){var t,o,i=e.uri,r=e.target,a=URI_MATCHER(i),u=RAR(function(){var e,n,i=location.pathname.substring(1);i!==REFRESH.getRefreshingURI()&&(e=a.check(i)).checkIsMatched()===!0?(n=e.getURIParams(),void 0===t?(t=r(),t.changeParams(n),r.lastView=t,o=n):CHECK_ARE_SAME([o,n])!==!0&&(t.changeParams(n),o=n)):void 0!==t&&(t.close(),t=void 0,r.lastView=void 0)});n.push(u),EVENT({name:"popstate"},u)}}}),global.REFRESH=METHOD(function(e){"use strict";var t,n="__REFRESHING";return e.getRefreshingURI=t=function(){return n},{run:function(e){var t=void 0!==e?e:location.pathname.substring(1);history.pushState(void 0,void 0,"/"+n),MATCH_VIEW.checkAll(),history.pushState(void 0,void 0,"/"+t),MATCH_VIEW.checkAll()}}}),global.VIEW=CLASS({init:function(e,t){"use strict";var n,o,i,r,a,u=[],s=[];e.on=o=function(e,t){"paramsChange"===e?u.push(t):"close"===e&&s.push(t)},t.changeParams=i=function(e){EACH(u,function(t){t(e)})},t.close=r=function(){EACH(s,function(e){e()}),n=!0},e.checkIsClosed=a=function(){return n}}}),global.SCROLL_LEFT=METHOD({run:function(){"use strict";return global.pageXOffset}}),global.SCROLL_TOP=METHOD({run:function(){"use strict";return global.pageYOffset}}),global.TITLE=METHOD({run:function(e){"use strict";document.title=e}}),global.WIN_HEIGHT=METHOD({run:function(){"use strict";return global.innerHeight}}),global.WIN_WIDTH=METHOD({run:function(){"use strict";return global.innerWidth}});
+/**
+ * Browser-side Configuration
+ */
+global.BROWSER_CONFIG = {
+
+	host : location.hostname,
+	port : location.port,
+
+	// isSupportingX2
+	// isUsingFlashCanvasPro
+	// fixScriptsFolderPath
+	loadingBarColor : '#007aff'
+};
+
+/**
+ * Browser information object
+ */
+global.INFO = OBJECT({
+
+	init : function(inner, self) {
+		'use strict';
+
+		var
+		// is touch mode
+		isTouchMode = global.ontouchstart !== undefined,
+		
+		// browser info
+		browserInfo,
+
+		// get lang.
+		getLang,
+
+		// change lang.
+		changeLang,
+
+		// check is HD display.
+		checkIsHDDisplay,
+
+		// check is touch mode.
+		checkIsTouchMode,
+
+		// check is exists tap delay.
+		checkIsExistsTapDelay,
+
+		// get browser info.
+		getBrowserInfo;
+
+		self.getLang = function() {
+
+			var
+			// language
+			lang = STORE('__INFO').get('lang');
+
+			if (lang === undefined) {
+
+				lang = navigator.language;
+
+				if (lang.length > 2) {
+					lang = lang.substring(0, 2);
+				}
+
+				lang = lang.toLowerCase();
+			}
+
+			return lang;
+		};
+
+		self.changeLang = changeLang = function(lang) {
+			//REQUIRED: lang
+
+			STORE('__INFO').save({
+				key : 'lang',
+				value : lang
+			});
+
+			location.reload();
+		};
+
+		self.checkIsHDDisplay = checkIsHDDisplay = function() {
+			return global.devicePixelRatio !== undefined && devicePixelRatio > 1 ? true : false;
+		};
+
+		self.checkIsTouchMode = checkIsTouchMode = function() {
+			return isTouchMode;
+		};
+
+		self.checkIsExistsTapDelay = checkIsExistsTapDelay = function() {
+			return false;
+		};
+
+		self.getBrowserInfo = getBrowserInfo = function() {
+			// using bowser. (https://github.com/ded/bowser)
+			return {
+				name : bowser.name,
+				version : REAL(bowser.version)
+			};
+		};
+		
+		EVENT_LOW('mousemove', function() {
+			isTouchMode = false;
+		});
+		
+		EVENT_LOW('touchstart', function() {
+			isTouchMode = true;
+		});
+	}
+});
+
+/**
+ * load JS file.
+ */
+global.LOAD = METHOD({
+
+	run : function(urlOrParams, handlers) {
+		'use strict';
+		//REQUIRED: urlOrParams
+		//REQUIRED: urlOrParams.url
+		//OPTIONAL: urlOrParams.host
+		//OPTIONAL: urlOrParams.port
+		//OPTIONAL: urlOrParams.isSecure
+		//OPTIONAL: urlOrParams.uri
+		//OPTIONAL: urlOrParams.paramStr
+		//OPTIONAL: urlOrParams.isNoCache
+		//OPTIONAL: handlers
+		//OPTIONAL: handlers.error
+
+		var
+		// url
+		url,
+
+		// is no Cache
+		isNoCache,
+
+		// host
+		host,
+
+		// port
+		port,
+
+		// is secure
+		isSecure,
+
+		// uri
+		uri,
+
+		// param str
+		paramStr,
+
+		// error handler.
+		errorHandler,
+
+		// current script
+		currentScript,
+
+		// script els
+		scriptEls,
+
+		// script el
+		scriptEl,
+
+		// is loaded
+		isLoaded;
+
+		if (CHECK_IS_DATA(urlOrParams) !== true) {
+			url = urlOrParams;
+		} else {
+
+			url = urlOrParams.url;
+
+			if (url === undefined) {
+
+				host = urlOrParams.host === undefined ? BROWSER_CONFIG.host : urlOrParams.host;
+				port = urlOrParams.port === undefined ? BROWSER_CONFIG.port : urlOrParams.port;
+				isSecure = urlOrParams.isSecure;
+				uri = urlOrParams.uri;
+				paramStr = urlOrParams.paramStr;
+
+				url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + uri + '?' + paramStr;
+			}
+
+			isNoCache = urlOrParams.isNoCache;
+		}
+
+		if (handlers !== undefined) {
+			errorHandler = handlers.error;
+		}
+
+		READY.readyLoad();
+
+		scriptEls = document.getElementsByTagName('script');
+		currentScript = scriptEls[scriptEls.length - 1];
+
+		scriptEl = document.createElement('script');
+		scriptEl.src = (url.indexOf('?') === -1 ? url + '?' : url + '&') + (isNoCache !== true ? (CONFIG.version !== undefined ? 'version=' + CONFIG.version : '') : (new Date()).getTime());
+
+		scriptEl.onload = function() {
+
+			if (isLoaded !== true) {
+				isLoaded = true;
+
+				READY.loaded();
+			}
+		};
+
+		scriptEl.onreadystatechange = function() {
+
+			var
+			// ready state
+			readyState = this.readyState;
+
+			if (isLoaded !== true && (readyState === 'loaded' || readyState === 'complete')) {
+				isLoaded = true;
+
+				DELAY(function() {
+					READY.loaded();
+				});
+			}
+		};
+
+		try {
+			// this work only IE >= 9
+			scriptEl.onerror = errorHandler;
+		} catch (e) {
+			// ignore.
+		}
+
+		// create script.
+		return DOM({
+			el : scriptEl
+		}).insertAfter(DOM({
+			el : currentScript
+		}));
+	}
+});
+
+/**
+ * document ready.
+ */
+global.READY = METHOD(function(m) {
+	'use strict';
+
+	var
+	// ready count
+	readyCount = 0,
+
+	// is loaded
+	isLoaded,
+
+	// handlers
+	handlers = [],
+
+	// ready load.
+	readyLoad,
+
+	// loaded.
+	loaded;
+
+	m.readyLoad = readyLoad = function() {
+		readyCount += 1;
+	};
+
+	m.loaded = loaded = function() {
+
+		readyCount -= 1;
+
+		if (isLoaded === true && readyCount === 0) {
+
+			EACH(handlers, function(handler) {
+				handler();
+			});
+
+			handlers = [];
+		}
+	};
+
+	global.onload = function() {
+
+		isLoaded = true;
+
+		if (readyCount === 0) {
+
+			EACH(handlers, function(handler) {
+				handler();
+			});
+
+			handlers = [];
+		}
+	};
+
+	return {
+
+		run : function(handler) {
+			//REQUIRED: handler
+
+			if (readyCount > 0 || isLoaded !== true) {
+				handlers.push(handler);
+			} else {
+				handler();
+			}
+		}
+	};
+});
+
+/**
+ * SOUND class
+ */
+global.SOUND = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// Audio Context
+	AudioContext = global.webkitAudioContext || global.mozAudioContext || global.oAudioContext || global.msAudioContext || global.AudioContext,
+
+	// audio context
+	audioContext;
+
+	if (AudioContext !== undefined) {
+		audioContext = new AudioContext();
+	}
+
+	return {
+
+		init : function(inner, self, params) {
+			//REQUIRED: params
+			//REQUIRED: params.mp3
+			//REQUIRED: params.ogg
+			//OPTIONAL: params.isLoop
+
+			var
+			// src
+			src = params.mp3,
+
+			// ogg
+			ogg = params.ogg,
+
+			// is loop
+			isLoop = params.isLoop,
+
+			// audio
+			audio = new Audio(),
+
+			// request
+			request,
+
+			// buffer
+			buffer,
+
+			// source
+			source,
+
+			// delayed.
+			delayed,
+
+			// play.
+			play,
+
+			// stop.
+			stop;
+
+			// Check if we can play mp3, if not then fall back to ogg
+			if (audio.canPlayType('audio/mpeg;') === '' && audio.canPlayType('audio/ogg;')) {
+				src = ogg;
+			}
+
+			// if exists audio context
+			if (audioContext !== undefined) {
+
+				request = new XMLHttpRequest();
+				request.open('GET', src, true);
+				request.responseType = 'arraybuffer';
+
+				request.onload = function() {
+
+					audioContext.decodeAudioData(request.response, function(_buffer) {
+
+						var
+						// gain
+						gain = audioContext.createGain ? audioContext.createGain() : audioContext.createGainNode();
+
+						buffer = _buffer;
+
+						// default volume
+						// support both webkitAudioContext or standard AudioContext
+						gain.connect(audioContext.destination);
+						gain.gain.value = 0.5;
+
+						if (delayed !== undefined) {
+							delayed();
+						}
+					});
+				};
+				request.send();
+
+				self.play = play = function() {
+
+					delayed = function() {
+
+						source = audioContext.createBufferSource();
+						// creates a sound source
+						source.buffer = buffer;
+						// tell the source which sound to play
+						source.connect(audioContext.destination);
+						// connect the source to the context's destination (the speakers)
+						// support both webkitAudioContext or standard AudioContext
+
+						source.loop = isLoop;
+
+						if (source.noteOn !== undefined) {
+							source.noteOn(0);
+						} else {
+							source.start(0);
+						}
+
+						delayed = undefined;
+					};
+
+					if (buffer !== undefined) {
+						delayed();
+					}
+
+					return self;
+				};
+
+				self.stop = stop = function() {
+
+					if (source !== undefined) {
+						if (source.noteOff !== undefined) {
+							source.noteOff(0);
+						} else {
+							source.stop(0);
+						}
+					}
+				};
+
+			}
+
+			// if not exists audio context
+			else {
+
+				audio.src = src;
+
+				if (isLoop === true) {
+
+					// when audio ended, play again.
+					audio.addEventListener('ended', function() {
+						this.currentTime = 0;
+						this.play();
+					}, false);
+				}
+
+				self.play = play = function() {
+
+					audio.play();
+
+					return self;
+				};
+
+				self.stop = stop = function() {
+					audio.pause();
+				};
+			}
+		}
+	};
+});
+
+/**
+ * Browser store class
+ */
+global.STORE = CLASS({
+
+	init : function(inner, self, storeName) {
+		'use strict';
+		//REQUIRED: storeName
+
+		var
+		// gen full name.
+		genFullName,
+
+		// save.
+		save,
+
+		// get.
+		get,
+
+		// remove.
+		remove;
+
+		inner.genFullName = genFullName = function(name) {
+			//REQUIRED: name
+
+			return storeName + '.' + name;
+		};
+
+		self.save = save = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//REQUIRED: params.value
+			//OPTIONAL: params.isToSession
+
+			var
+			// name
+			name = params.name,
+
+			// full name
+			fullName = genFullName(name),
+
+			// value
+			value = params.value,
+
+			// is to session
+			isToSession = params.isToSession;
+
+			sessionStorage.setItem(fullName, STRINGIFY(value));
+
+			if (isToSession !== true) {
+				localStorage.setItem(fullName, STRINGIFY(value));
+			}
+		};
+
+		self.get = get = function(name) {
+			//REQUIRED: name
+
+			var
+			// full name
+			fullName = genFullName(name),
+
+			// value
+			value = PARSE_STR(sessionStorage.getItem(fullName));
+
+			if (value === undefined || value === TO_DELETE) {
+				value = PARSE_STR(localStorage.getItem(fullName));
+
+				if (value === TO_DELETE) {
+					value = undefined;
+				}
+			}
+
+			return value;
+		};
+
+		self.remove = remove = function(name) {
+			//REQUIRED: name
+
+			var
+			// full name
+			fullName = genFullName(name);
+
+			sessionStorage.removeItem(fullName);
+			localStorage.removeItem(fullName);
+		};
+	}
+});
+
+/**
+ * create clear:both div.
+ */
+global.CLEAR_BOTH = METHOD({
+
+	run : function() {
+		'use strict';
+
+		return DIV({
+			style : {
+				clear : 'both'
+			}
+		});
+	}
+});
+
+/**
+ * Dom wrapper class
+ */
+global.DOM = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return NODE;
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//OPTIONAL: params.tag
+		//OPTIONAL: params.style
+		//OPTIONAL: params.c
+		//OPTIONAL: params.on
+		//OPTIONAL: params.__TEXT
+		//OPTIONAL: params.el
+
+		var
+		// tag
+		tag = params.tag,
+
+		// __TEXT
+		__TEXT = params.__TEXT,
+
+		// HTML Element
+		el = params.el,
+
+		// get el.
+		getEl,
+
+		// set el.
+		setEl,
+
+		// set attr.
+		setAttr;
+
+		// when tag is not undefined
+		if (tag !== undefined) {
+
+			if (tag === 'body') {
+				el = document.body;
+			} else if (tag === '__STRING') {
+				el = document.createTextNode(__TEXT);
+			} else {
+				el = document.createElement(tag);
+			}
+		}
+
+		// when tag is undefined, el is not undefined
+		else if (el !== document.body && el.parentNode !== TO_DELETE) {
+
+			self.setParent(DOM({
+				el : el.parentNode
+			}));
+		}
+
+		self.getEl = getEl = function() {
+			return el;
+		};
+
+		inner.setEl = setEl = function(_el) {
+			//REQUIRED: _el
+
+			el = _el;
+
+			inner.setDom(self);
+		};
+
+		setEl(el);
+
+		inner.setAttr = setAttr = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//REQUIRED: params.value
+
+			var
+			// name
+			name = params.name,
+
+			// value
+			value = params.value;
+
+			el.setAttribute(name, value);
+		};
+	}
+});
+
+/**
+ * Loading bar class
+ */
+global.LOADING_BAR = CLASS({
+
+	init : function(inner, self) {
+		'use strict';
+
+		var
+		// bars
+		bar1, bar2,
+
+		// done.
+		done;
+
+		bar1 = DIV({
+			style : {
+				position : 'fixed',
+				left : 0,
+				top : 0,
+				height : 3,
+				backgroundColor : BROWSER_CONFIG.loadingBarColor,
+				zIndex : 999999
+			}
+		}).appendTo(BODY);
+
+		bar2 = DIV({
+			style : {
+				position : 'fixed',
+				left : 0,
+				top : 0,
+				height : 3,
+				backgroundColor : BROWSER_CONFIG.loadingBarColor,
+				zIndex : 999999
+			}
+		}).appendTo(BODY);
+
+		ANIMATE({
+			node : bar1,
+			keyframes : KEYFRAMES({
+				from : {
+					width : '0%'
+				},
+				to : {
+					width : '50%'
+				}
+			}),
+			duration : 0.5
+		});
+
+		self.done = done = function() {
+
+			if (bar1 !== undefined) {
+
+				ANIMATE({
+					node : bar2,
+					keyframes : KEYFRAMES({
+						from : {
+							width : '0%'
+						},
+						to : {
+							width : '100%'
+						}
+					}),
+					duration : 0.5
+				});
+
+				DELAY(0.25, function() {
+
+					bar1.remove();
+					bar1 = undefined;
+
+					ANIMATE({
+						node : bar2,
+						keyframes : KEYFRAMES({
+							from : {
+								opacity : 1
+							},
+							to : {
+								opacity : 0
+							}
+						}),
+						duration : 0.25
+					}, function() {
+						bar2.remove();
+						bar2 = undefined;
+					});
+				});
+			}
+		};
+
+		// timeout
+		DELAY(5, function() {
+
+			if (bar1 !== undefined) {
+
+				bar1.remove();
+				bar1 = undefined;
+
+				ANIMATE({
+					node : bar2,
+					keyframes : KEYFRAMES({
+						from : {
+							width : '50%'
+						},
+						to : {
+							width : '0%'
+						}
+					}),
+					duration : 0.5
+				}, function() {
+					bar2.remove();
+					bar2 = undefined;
+				});
+			}
+		});
+	}
+});
+
+/**
+ * Node interface
+ */
+global.NODE = CLASS(function() {
+	'use strict';
+
+	var
+	// parent nodes
+	parentNodes = [];
+
+	return {
+
+		init : function(inner, self) {
+
+			var
+			// wrapper dom
+			wrapperDom,
+
+			// content dom
+			contentDom,
+
+			// wrapper el
+			wrapperEl,
+
+			// content el
+			contentEl,
+
+			// waiting after nodes
+			waitingAfterNodes,
+
+			// waiting before nodes
+			waitingBeforeNodes,
+
+			// parent node
+			parentNode,
+
+			// child nodes
+			childNodes = [],
+
+			// origin display
+			originDisplay,
+
+			// set wrapper dom.
+			setWrapperDom,
+
+			// set content dom.
+			setContentDom,
+
+			// set dom.
+			setDom,
+
+			// get wrapper dom.
+			getWrapperDom,
+
+			// get content dom.
+			getContentDom,
+
+			// get wrapper el.
+			getWrapperEl,
+
+			// get content el.
+			getContentEl,
+
+			// attach.
+			attach,
+
+			// append.
+			append,
+
+			// append to.
+			appendTo,
+
+			// prepend.
+			prepend,
+
+			// prepend to.
+			prependTo,
+
+			// after.
+			after,
+
+			// insert after.
+			insertAfter,
+
+			// before.
+			before,
+
+			// insert before.
+			insertBefore,
+
+			// remove.
+			remove,
+
+			// empty.
+			empty,
+
+			// get parent.
+			getParent,
+
+			// set parent.
+			setParent,
+
+			// get children.
+			getChildren,
+
+			// on.
+			on,
+
+			// off.
+			off,
+
+			// add style.
+			addStyle,
+
+			// get style.
+			getStyle,
+
+			// get width.
+			getWidth,
+
+			// get inner width.
+			getInnerWidth,
+
+			// get height.
+			getHeight,
+
+			// get inner height.
+			getInnerHeight,
+
+			// get left.
+			getLeft,
+
+			// get top.
+			getTop,
+
+			// hide.
+			hide,
+
+			// show.
+			show,
+
+			// check is showing.
+			checkIsShowing;
+
+			inner.setWrapperDom = setWrapperDom = function(dom) {
+				//REQUIRED: dom
+
+				wrapperDom = dom;
+				wrapperEl = dom.getEl();
+
+				originDisplay = getStyle('display');
+
+				on('show', function() {
+
+					EACH(childNodes, function(childNode) {
+
+						if (childNode.checkIsShowing() === true) {
+
+							EVENT.fireAll({
+								node : childNode,
+								name : 'show'
+							});
+
+							EVENT.removeAll({
+								node : childNode,
+								name : 'show'
+							});
+						}
+					});
+				});
+			};
+
+			inner.setContentDom = setContentDom = function(dom) {
+				//REQUIRED: dom
+
+				contentDom = dom;
+				contentEl = dom.getEl();
+			};
+
+			inner.setDom = setDom = function(dom) {
+				//REQUIRED: dom
+
+				setWrapperDom(dom);
+				setContentDom(dom);
+			};
+
+			self.getWrapperDom = getWrapperDom = function() {
+				return wrapperDom;
+			};
+
+			self.getContentDom = getContentDom = function() {
+				return contentDom;
+			};
+
+			self.getWrapperEl = getWrapperEl = function() {
+				return wrapperEl;
+			};
+
+			self.getContentEl = getContentEl = function() {
+				return contentEl;
+			};
+
+			attach = function(node) {
+				//REQUIRED: node
+
+				setParent(node);
+
+				parentNode.getChildren().push(self);
+
+				EVENT.fireAll({
+					node : self,
+					name : 'attach'
+				});
+
+				if (checkIsShowing() === true) {
+
+					EVENT.fireAll({
+						node : self,
+						name : 'show'
+					});
+
+					EVENT.removeAll({
+						node : self,
+						name : 'show'
+					});
+				}
+
+				// run after wating after nodes.
+				if (waitingAfterNodes !== undefined) {
+					EACH(waitingAfterNodes, function(node) {
+						after(node);
+					});
+				}
+
+				// run before wating before nodes.
+				if (waitingBeforeNodes !== undefined) {
+					EACH(waitingBeforeNodes, function(node) {
+						before(node);
+					});
+				}
+			};
+
+			self.append = append = function(node) {
+				//REQUIRED: node
+
+				var
+				// splits
+				splits;
+
+				// append child.
+				if (CHECK_IS_DATA(node) === true) {
+					node.appendTo(self);
+				}
+
+				// append textarea content.
+				else if (self.type === TEXTAREA) {
+
+					append(DOM({
+						tag : '__STRING',
+						__TEXT : String(node === undefined ? '' : node)
+					}));
+				}
+
+				// append string.
+				else {
+
+					splits = String(node === undefined ? '' : node).split('\n');
+
+					EACH(splits, function(text, i) {
+
+						append(DOM({
+							tag : '__STRING',
+							__TEXT : text
+						}));
+
+						if (i < splits.length - 1) {
+							append(BR());
+						}
+					});
+				}
+			};
+
+			self.appendTo = appendTo = function(node) {
+				//REQUIRED: node
+
+				node.getContentEl().appendChild(wrapperEl);
+
+				attach(node);
+
+				return self;
+			};
+
+			self.prepend = prepend = function(node) {
+				//REQUIRED: node
+
+				var
+				// splits
+				splits;
+
+				// prepend child.
+				if (CHECK_IS_DATA(node) === true) {
+					node.prependTo(self);
+				}
+
+				// prepend textarea content.
+				else if (self.type === TEXTAREA) {
+
+					prepend(DOM({
+						tag : '__STRING',
+						__TEXT : String(node === undefined ? '' : node)
+					}));
+				}
+
+				// prepend string.
+				else {
+
+					splits = String(node === undefined ? '' : node).split('\n');
+
+					REPEAT({
+						start : splits.length - 1,
+						end : 0
+					}, function(i) {
+
+						prepend(DOM({
+							tag : '__STRING',
+							__TEXT : splits[i]
+						}));
+
+						if (i < splits.length - 1) {
+							prepend(BR());
+						}
+					});
+				}
+			};
+
+			self.prependTo = prependTo = function(node) {
+				//REQUIRED: node
+
+				var
+				// parent el
+				parentEl = node.getContentEl();
+
+				if (parentEl.childNodes[0] === undefined) {
+					parentEl.appendChild(wrapperEl);
+				} else {
+					parentEl.insertBefore(wrapperEl, parentEl.childNodes[0]);
+				}
+
+				attach(node);
+
+				return self;
+			};
+
+			self.after = after = function(node) {
+				//REQUIRED: node
+
+				var
+				// splits
+				splits;
+
+				// wait after node.
+				if (wrapperEl.parentNode === TO_DELETE) {
+
+					if (waitingAfterNodes === undefined) {
+						waitingAfterNodes = [];
+					}
+
+					waitingAfterNodes.push(node);
+				}
+
+				// after node.
+				else {
+
+					// after child.
+					if (CHECK_IS_DATA(node) === true) {
+						node.insertAfter(self);
+					}
+
+					// after textarea content.
+					else if (tag === 'textarea') {
+
+						after(DOM({
+							tag : '__STRING',
+							__TEXT : String(node === undefined ? '' : node)
+						}));
+					}
+
+					// after string.
+					else {
+
+						splits = String(node === undefined ? '' : node).split('\n');
+
+						REPEAT({
+							start : splits.length - 1,
+							end : 0
+						}, function(i) {
+
+							after(DOM({
+								tag : '__STRING',
+								__TEXT : splits[i]
+							}));
+
+							if (i < splits.length - 1) {
+								after(BR());
+							}
+						});
+					}
+				}
+			};
+
+			self.insertAfter = insertAfter = function(node) {
+				//REQUIRED: node
+
+				var
+				// before el
+				beforeEl = node.getWrapperEl();
+
+				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
+
+				attach(node.getParent());
+
+				return self;
+			};
+
+			self.before = before = function(node) {
+				//REQUIRED: node
+
+				var
+				// splits
+				splits;
+
+				// wait before node.
+				if (wrapperEl.parentNode === TO_DELETE) {
+
+					if (waitingBeforeNodes === undefined) {
+						waitingBeforeNodes = [];
+					}
+
+					waitingBeforeNodes.push(node);
+				}
+
+				// before node.
+				else {
+
+					// before child.
+					if (CHECK_IS_DATA(node) === true) {
+						node.insertBefore(self);
+					}
+
+					// before textarea content.
+					else if (tag === 'textarea') {
+
+						before(DOM({
+							tag : '__STRING',
+							__TEXT : String(node === undefined ? '' : node)
+						}));
+					}
+
+					// before string.
+					else {
+
+						splits = String(node === undefined ? '' : node).split('\n');
+
+						EACH(splits, function(text, i) {
+
+							before(DOM({
+								tag : '__STRING',
+								__TEXT : text
+							}));
+
+							if (i < splits.length - 1) {
+								before(BR());
+							}
+						});
+					}
+				}
+			};
+
+			self.insertBefore = insertBefore = function(node) {
+				//REQUIRED: node
+
+				var
+				// after el
+				afterEl = node.getWrapperEl();
+
+				afterEl.parentNode.insertBefore(wrapperEl, afterEl);
+
+				attach(node.getParent());
+
+				return self;
+			};
+
+			self.remove = remove = function() {
+
+				if (wrapperEl !== undefined && wrapperEl.parentNode !== TO_DELETE) {
+
+					// empty children.
+					empty();
+
+					// remove from parent node.
+					wrapperEl.parentNode.removeChild(wrapperEl);
+
+					REMOVE({
+						array : parentNode.getChildren(),
+						value : self
+					});
+
+					setParent(undefined);
+
+					// fire remove event.
+					EVENT.fireAll({
+						node : self,
+						name : 'remove'
+					});
+
+					EVENT.removeAll({
+						node : self
+					});
+
+					wrapperEl = undefined;
+					contentEl = undefined;
+				}
+			};
+
+			self.empty = empty = function() {
+				EACH(childNodes, function(child) {
+					child.remove();
+				});
+			};
+
+			self.getParent = getParent = function() {
+				return parentNode;
+			};
+
+			self.setParent = setParent = function(node) {
+				//OPTIONAL: node
+
+				parentNode = node;
+			};
+
+			self.getChildren = getChildren = function() {
+				return childNodes;
+			};
+
+			self.on = on = function(eventName, eventHandler) {
+				//REQUIRED: eventName
+				//REQUIRED: eventHandler
+
+				EVENT({
+					node : self,
+					name : eventName
+				}, eventHandler);
+			};
+
+			self.off = off = function(eventName, eventHandler) {
+				//REQUIRED: eventName
+				//OPTIONAL: eventHandler
+
+				if (eventHandler !== undefined) {
+
+					EVENT.remove({
+						node : self,
+						name : eventName
+					}, eventHandler);
+
+				} else {
+
+					EVENT.removeAll({
+						node : self,
+						name : eventName
+					});
+				}
+			};
+
+			self.addStyle = addStyle = function(style) {
+				//REQUIRED: style
+
+				ADD_STYLE({
+					node : self,
+					style : style
+				});
+			};
+
+			self.getStyle = getStyle = function(name) {
+				//REQUIRED: name
+
+				var
+				// styles
+				styles,
+
+				// style
+				style;
+
+				if (wrapperEl !== undefined) {
+
+					styles = wrapperEl.style;
+
+					if (styles !== undefined) {
+
+						style = styles[name];
+
+						return style === '' ? undefined : (style.substring(style.length - 2) === 'px' ? REAL(style) : style);
+					}
+				}
+			};
+
+			self.getWidth = getWidth = function() {
+				return wrapperEl.offsetWidth;
+			};
+
+			self.getInnerWidth = getInnerWidth = function() {
+				return wrapperEl.clientWidth;
+			};
+
+			self.getHeight = getHeight = function() {
+				return wrapperEl.offsetHeight;
+			};
+
+			self.getInnerHeight = getInnerHeight = function() {
+				return wrapperEl.clientHeight;
+			};
+
+			self.getLeft = getLeft = function() {
+
+				var
+				// left
+				left = 0,
+
+				// parent el
+				parentEl = wrapperEl;
+
+				do {
+					left += parentEl.offsetLeft - (parentEl === document.body ? 0 : parentEl.scrollLeft);
+					parentEl = parentEl.offsetParent;
+				} while (parentEl !== TO_DELETE);
+
+				return left;
+			};
+
+			self.getTop = getTop = function() {
+
+				var
+				// top
+				top = 0,
+
+				// parent el
+				parentEl = wrapperEl;
+
+				do {
+					top += parentEl.offsetTop - (parentEl === document.body ? 0 : parentEl.scrollTop);
+					parentEl = parentEl.offsetParent;
+				} while (parentEl !== TO_DELETE);
+
+				return top;
+			};
+
+			self.hide = hide = function() {
+
+				addStyle({
+					display : 'none'
+				});
+			};
+
+			self.show = show = function() {
+
+				addStyle({
+					display : originDisplay === undefined ? '' : originDisplay
+				});
+
+				if (checkIsShowing() === true) {
+
+					EVENT.fireAll({
+						node : self,
+						name : 'show'
+					});
+
+					EVENT.removeAll({
+						node : self,
+						name : 'show'
+					});
+				}
+			};
+
+			self.checkIsShowing = checkIsShowing = function() {
+
+				if (wrapperEl === document.body) {
+					return true;
+				} else {
+					return parentNode !== undefined && parentNode.checkIsShowing() === true && getStyle('display') !== 'none';
+				}
+			};
+		},
+
+		afterInit : function(inner, self, params, generateChildren) {
+			//OPTIONAL: params
+			//OPTIONAL: params.tag
+			//OPTIONAL: params.style
+			//OPTIONAL: params.c
+			//OPTIONAL: params.on
+			//OPTIONAL: generateChildren
+
+			var
+			// tag
+			tag,
+
+			// style
+			style,
+
+			// children
+			children,
+
+			// on
+			on,
+
+			// parent nodes length
+			parentNodesLength = parentNodes.length,
+
+			// generate children result
+			generateChildrenResult;
+
+			// init params.
+			if (params !== undefined) {
+
+				if (CHECK_IS_DATA(params) === true) {
+
+					tag = params.tag;
+					style = params.style;
+					children = params.c === undefined || CHECK_IS_ARRAY(params.c) === true ? params.c : [params.c];
+					on = params.on;
+
+				} else if (generateChildren === undefined) {
+					generateChildren = params;
+				}
+			}
+
+			if (style !== undefined) {
+				self.addStyle(style);
+			}
+
+			if (on !== undefined) {
+				EACH(on, function(handler, name) {
+					self.on(name, handler);
+				});
+			}
+
+			if (children !== undefined) {
+				EACH(children, function(child, i) {
+					self.append(child);
+				});
+			}
+
+			// when parent node exists, when tag is not __STRING.
+			if (parentNodesLength > 0 && tag !== '__STRING') {
+				self.appendTo(parentNodes[parentNodesLength - 1]);
+			}
+
+			if (generateChildren !== undefined) {
+
+				parentNodes.push(self);
+
+				generateChildrenResult = generateChildren();
+
+				// append __STRING.
+				if (generateChildrenResult !== undefined && CHECK_IS_DATA(generateChildrenResult) !== true) {
+					self.append(generateChildrenResult);
+				}
+
+				parentNodes.pop();
+			}
+		}
+	};
+});
+
+/**
+ * animate node.
+ */
+global.ANIMATE = METHOD({
+
+	run : function(params, callback) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.node
+		//REQUIRED: params.keyframes
+		//OPTIONAL: params.duration
+		//OPTIONAL: params.timingFunction
+		//OPTIONAL: params.delay
+		//OPTIONAL: params.iterationCount
+		//OPTIONAL: params.direction
+		//OPTIONAL: params.playState
+		//OPTIONAL: callback
+
+		var
+		// node
+		node = params.node,
+
+		// keyframes
+		keyframes = params.keyframes,
+
+		// duration
+		duration = params.duration === undefined ? 0.5 : params.duration,
+
+		// timing function
+		timingFunction = params.timingFunction === undefined ? '' : params.timingFunction,
+
+		// delay
+		delay = params.delay === undefined ? '' : params.delay,
+
+		// iteration count
+		iterationCount = params.iterationCount === undefined ? '' : params.iterationCount,
+
+		// direction
+		direction = params.direction === undefined ? '' : params.direction,
+
+		// play state
+		playState = params.playState === undefined ? '' : params.playState,
+
+		// str
+		str = keyframes.getName() + ' ' + duration + 's ' + timingFunction + ' ' + delay + ' ' + iterationCount + ' ' + direction + ' ' + playState;
+
+		node.addStyle(keyframes.getStartStyle());
+
+		node.addStyle({
+			animation : str
+		});
+
+		node.addStyle(keyframes.getFinalStyle());
+
+		if (callback !== undefined && (iterationCount === '' || iterationCount === 1)) {
+
+			DELAY(duration, function() {
+				callback(node);
+			});
+		}
+	}
+});
+
+
+/**
+ * Animation keyframes class
+ */
+global.KEYFRAMES = CLASS({
+
+	init : function(inner, self, keyframes) {
+		'use strict';
+		//REQUIRED: keyframes
+
+		var
+		// name
+		name = '__KEYFRAMES_' + self.id,
+
+		// str
+		str = '',
+
+		// style el
+		styleEl,
+
+		// rules string
+		rulesStr = '',
+
+		// start style
+		startStyle,
+
+		// final style
+		finalStyle,
+
+		// get name.
+		getName,
+
+		// get start style.
+		getStartStyle,
+
+		// get final style.
+		getFinalStyle;
+
+		EACH(keyframes, function(style, key) {
+
+			str += key + '{';
+
+			EACH(style, function(value, name) {
+
+				if ( typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
+					value = value + 'px';
+				}
+
+				str += name.replace(/([A-Z])/g, '-$1').toLowerCase() + ':' + value + ';';
+
+				// cross browser transform
+				if (name === 'transform') {
+					str += '-webkit-transform:' + value + ';';
+					str += '-moz-transform:' + value + ';';
+					str += '-o-transform:' + value + ';';
+					str += '-ms-transform:' + value + ';';
+				}
+			});
+
+			str += '}';
+
+			if (key === 'from' || key === '0%') {
+				startStyle = style;
+			} else if (key === 'to' || key === '100%') {
+				finalStyle = style;
+			}
+		});
+
+		// cross browser @keyframes
+		rulesStr += '@-webkit-keyframes ' + name + '{' + str + '}';
+		rulesStr += '@-moz-keyframes ' + name + '{' + str + '}';
+		rulesStr += '@-o-keyframes ' + name + '{' + str + '}';
+		rulesStr += '@-ms-keyframes ' + name + '{' + str + '}';
+		rulesStr += '@keyframes ' + name + '{' + str + '}';
+
+		// create style element.
+		styleEl = document.createElement('style');
+		styleEl.type = 'text/css';
+		styleEl.appendChild(document.createTextNode(rulesStr));
+		document.getElementsByTagName('head')[0].appendChild(styleEl);
+
+		self.getName = getName = function() {
+			return name;
+		};
+
+		self.getStartStyle = getStartStyle = function() {
+			return startStyle;
+		};
+
+		self.getFinalStyle = getFinalStyle = function() {
+			return finalStyle;
+		};
+	}
+});
+
+/**
+ * Dom event object wrapper class
+ */
+global.E = CLASS({
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.e
+		//REQUIRED: params.el
+
+		var
+		// e
+		e = params.e,
+
+		// el
+		el = params.el,
+
+		// check is descendant.
+		checkIsDescendant,
+
+		// stop default.
+		stopDefault,
+
+		// stop bubbling.
+		stopBubbling,
+
+		// stop default and bubbling.
+		stop,
+
+		// get left.
+		getLeft,
+
+		// get top.
+		getTop,
+
+		// get key code.
+		getKeyCode,
+		
+		// get state.
+		getState;
+
+		checkIsDescendant = function(parent, child) {
+
+			var
+			// node
+			node = child.parentNode;
+
+			while (node !== TO_DELETE) {
+
+				if (node === parent) {
+					return true;
+				}
+
+				node = node.parentNode;
+			}
+
+			return false;
+		};
+
+		self.stopDefault = stopDefault = function() {
+			e.preventDefault();
+		};
+
+		self.stopBubbling = stopBubbling = function() {
+			e.stopPropagation();
+		};
+
+		self.stop = stop = function() {
+			stopDefault();
+			stopBubbling();
+		};
+
+		self.getLeft = getLeft = function() {
+
+			var
+			// touch page x
+			touchPageX;
+
+			// if is touch mode
+			if (INFO.checkIsTouchMode() === true) {
+
+				if (e.touches !== undefined && e.touches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.touches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageX = touch.pageX;
+							return false;
+						}
+					});
+
+					if (touchPageX === undefined) {
+						touchPageX = e.touches[0].pageX;
+					}
+
+					if (touchPageX !== undefined) {
+						return touchPageX;
+					}
+				}
+
+				if (e.changedTouches !== undefined && e.changedTouches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.changedTouches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageX = touch.pageX;
+							return false;
+						}
+					});
+
+					if (touchPageX === undefined) {
+						touchPageX = e.changedTouches[0].pageX;
+					}
+
+					if (touchPageX !== undefined) {
+						return touchPageX;
+					}
+				}
+			}
+
+			return e.pageX;
+		};
+
+		self.getTop = getTop = function() {
+
+			var
+			// touch page y
+			touchPageY;
+
+			// if is touch mode
+			if (INFO.checkIsTouchMode() === true) {
+
+				if (e.touches !== undefined && e.touches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.touches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageY = touch.pageY;
+							return false;
+						}
+					});
+
+					if (touchPageY === undefined) {
+						touchPageY = e.touches[0].pageY;
+					}
+
+					if (touchPageY !== undefined) {
+						return touchPageY;
+					}
+				}
+
+				if (e.changedTouches !== undefined && e.changedTouches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.changedTouches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageY = touch.pageY;
+							return false;
+						}
+					});
+
+					if (touchPageY === undefined) {
+						touchPageY = e.changedTouches[0].pageY;
+					}
+
+					if (touchPageY !== undefined) {
+						return touchPageY;
+					}
+				}
+			}
+
+			return e.pageY;
+		};
+
+		self.getKeyCode = getKeyCode = function() {
+			return e.keyCode;
+		};
+		
+		self.getState = getState = function() {
+			return e.state;
+		};
+	}
+});
+
+/**
+ * Dom epmty event object class
+ */
+global.EMPTY_E = CLASS({
+
+	init : function(inner, self) {
+		'use strict';
+
+		var
+		// stop default.
+		stopDefault,
+
+		// stop bubbling.
+		stopBubbling,
+
+		// stop default and bubbling.
+		stop,
+
+		// get left.
+		getLeft,
+
+		// get top.
+		getTop,
+
+		// get key code.
+		getKeyCode,
+		
+		// get state.
+		getState;
+
+		self.stopDefault = stopDefault = function() {
+			// ignore.
+		};
+
+		self.stopBubbling = stopBubbling = function() {
+			// ignore.
+		};
+
+		self.stop = stop = function() {
+			// ignore.
+		};
+
+		self.getLeft = getLeft = function() {
+
+			// on heaven!
+			return -999999;
+		};
+
+		self.getTop = getTop = function() {
+
+			// on heaven!
+			return -999999;
+		};
+
+		self.getKeyCode = getKeyCode = function() {
+
+			// on heaven!
+			return -999999;
+		};
+		
+		self.getState = getState = function() {
+			// ignore.
+		};
+	}
+});
+
+/**
+ * Event class
+ */
+global.EVENT = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// event map
+	eventMaps = {},
+
+	// fire all.
+	fireAll,
+
+	// remove all.
+	removeAll,
+
+	// remove.
+	remove;
+
+	cls.fireAll = fireAll = function(nameOrParams) {
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node
+		//REQUIRED: nameOrParams.name
+
+		var
+		// node
+		node,
+
+		// name
+		name,
+
+		// node id
+		nodeId,
+
+		// event map
+		eventMap,
+
+		// events
+		events,
+
+		// ret
+		ret;
+
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			name = nameOrParams.name;
+		}
+
+		if (node === undefined) {
+			nodeId = 'body';
+		} else {
+			nodeId = node.id;
+		}
+
+		eventMap = eventMaps[nodeId];
+
+		if (eventMap !== undefined) {
+
+			events = eventMap[name];
+
+			if (events !== undefined) {
+
+				EACH(events, function(evt) {
+
+					var
+					// b
+					b = evt.fire();
+
+					if (b === false) {
+						ret = false;
+					}
+				});
+			}
+		}
+
+		return ret;
+	};
+
+	cls.removeAll = removeAll = function(nameOrParams) {
+		//OPTIONAL: nameOrParams
+		//OPTIONAL: nameOrParams.node
+		//OPTIONAL: nameOrParams.name
+
+		var
+		// node
+		node,
+
+		// name
+		name,
+
+		// node id
+		nodeId,
+
+		// event map
+		eventMap,
+
+		// events
+		events;
+
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			name = nameOrParams.name;
+		}
+
+		if (node === undefined) {
+			nodeId = 'body';
+		} else {
+			nodeId = node.id;
+		}
+
+		eventMap = eventMaps[nodeId];
+
+		if (eventMap !== undefined) {
+
+			if (name !== undefined) {
+
+				events = eventMap[name];
+
+				if (events !== undefined) {
+
+					EACH(events, function(evt) {
+						evt.remove();
+					});
+				}
+
+			} else {
+
+				EACH(eventMap, function(events) {
+					EACH(events, function(evt) {
+						evt.remove();
+					});
+				});
+			}
+		}
+	};
+
+	cls.remove = remove = function(params, eventHandler) {
+		//REQUIRED: params
+		//OPTIONAL: params.node
+		//REQUIRED: params.name
+		//REQUIRED: eventHandler
+
+		var
+		// node
+		node = params.node,
+
+		// name
+		name = params.name,
+
+		// node id
+		nodeId,
+
+		// event map
+		eventMap,
+
+		// events
+		events;
+
+		if (node === undefined) {
+			nodeId = 'body';
+		} else {
+			nodeId = node.id;
+		}
+
+		eventMap = eventMaps[nodeId];
+
+		if (eventMap !== undefined) {
+
+			events = eventMap[name];
+
+			if (events !== undefined) {
+
+				EACH(events, function(evt) {
+					if (evt.getEventHandler() === eventHandler) {
+						evt.remove();
+					}
+				});
+			}
+		}
+	};
+
+	return {
+
+		init : function(inner, self, nameOrParams, eventHandler) {
+			//REQUIRED: nameOrParams
+			//OPTIONAL: nameOrParams.node
+			//OPTIONAL: nameOrParams.lowNode
+			//REQUIRED: nameOrParams.name
+			//REQUIRED: eventHandler
+
+			var
+			// node
+			node,
+
+			// low node
+			lowNode,
+
+			// name
+			name,
+
+			// node id
+			nodeId,
+
+			// event lows
+			eventLows = [],
+
+			// sub event
+			subEvent,
+
+			// touch start left, top
+			startLeft, startTop,
+
+			// last tap time
+			lastTapTime,
+
+			// remove from map.
+			removeFromMap,
+
+			// remove.
+			remove,
+
+			// fire.
+			fire,
+			
+			// get event handler.
+			getEventHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				name = nameOrParams;
+			} else {
+				node = nameOrParams.node;
+				lowNode = nameOrParams.lowNode;
+				name = nameOrParams.name;
+
+				if (lowNode === undefined) {
+					lowNode = node;
+				}
+			}
+
+			if (node === undefined) {
+				nodeId = 'body';
+			} else {
+				nodeId = node.id;
+			}
+
+			// push event to map.
+
+			if (eventMaps[nodeId] === undefined) {
+				eventMaps[nodeId] = {};
+			}
+
+			if (eventMaps[nodeId][name] === undefined) {
+				eventMaps[nodeId][name] = [];
+			}
+
+			eventMaps[nodeId][name].push(self);
+
+			removeFromMap = function() {
+
+				REMOVE({
+					array : eventMaps[nodeId][name],
+					value : self
+				});
+
+				if (eventMaps[nodeId][name].length <= 0) {
+					delete eventMaps[nodeId][name];
+				}
+
+				if (CHECK_IS_EMPTY_DATA(eventMaps[nodeId]) === true) {
+					delete eventMaps[nodeId];
+				}
+			};
+
+			// tap event (for remove click delay, simulate click event.)
+			if (name === 'tap') {
+
+				// when is touch mode or when is exists tap delay (300ms)
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchstart'
+				}, function(e) {
+					if (INFO.checkIsTouchMode() === true && INFO.checkIsExistsTapDelay() === true && e !== undefined) {
+						startLeft = e.getLeft();
+						startTop = e.getTop();
+					}
+				}));
+
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchend'
+				}, function(e, node) {
+
+					var
+					// left
+					left,
+
+					// top
+					top;
+
+					if (INFO.checkIsTouchMode() === true && INFO.checkIsExistsTapDelay() === true && e !== undefined) {
+
+						left = e.getLeft();
+						top = e.getTop();
+
+						if (startLeft - 5 <= left && left <= startLeft + 5 && startTop - 5 <= top && top <= startTop + 5) {
+
+							e.stopDefault();
+
+							return eventHandler(e, node);
+						}
+					}
+				}));
+
+				// when is not touch mode or when is not exists tap delay (300ms)
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'click'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true || INFO.checkIsExistsTapDelay() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// double tap event (not exists, simulate.)
+			else if (name === 'doubletap') {
+
+				subEvent = EVENT({
+					node : node,
+					name : 'tap'
+				}, function(e) {
+
+					if (lastTapTime === undefined) {
+						lastTapTime = Date.now();
+					} else {
+
+						if (Date.now() - lastTapTime < 600) {
+							eventHandler(e, node);
+						}
+
+						lastTapTime = undefined;
+
+						// clear text selections.
+						getSelection().removeAllRanges();
+					}
+				});
+			}
+
+			// when is not touch mode, touchmove link to mousedown event
+			else if (name === 'touchstart') {
+				
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchstart'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+				
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mousedown'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// when is not touch mode, touchmove link to mousemove event
+			else if (name === 'touchmove') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchmove'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+				
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mousemove'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// when is not touch mode, touchend link to mouseup event
+			else if (name === 'touchend') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchend'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+				
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mouseup'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// mouse over event (when is touch mode, link to touchstart event.)
+			else if (name === 'mouseover') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchstart'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mouseover'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// mouse out event (when is touch mode, link to touchend event.)
+			else if (name === 'mouseout') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchend'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mouseout'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// other events
+			else if (name !== 'attach' && name !== 'show' && name !== 'remove') {
+				eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
+			}
+			
+			self.remove = remove = function() {
+
+				EACH(eventLows, function(eventLow) {
+					eventLow.remove();
+				});
+					
+				if (subEvent !== undefined) {
+					subEvent.remove();
+				}
+
+				removeFromMap();
+			};
+
+			self.fire = fire = function() {
+
+				// pass empty e object.
+				return eventHandler(EMPTY_E(), node);
+			};
+
+			self.getEventHandler = getEventHandler = function() {
+				return eventHandler;
+			};
+		}
+	};
+});
+/**
+ * Low event class
+ */
+global.EVENT_LOW = CLASS({
+
+	init : function(inner, self, nameOrParams, eventHandler) {
+		'use strict';
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node
+		//OPTIONAL: nameOrParams.lowNode
+		//REQUIRED: nameOrParams.name
+		//REQUIRED: eventHandler
+
+		var
+		// node
+		node,
+
+		// low node
+		lowNode,
+
+		// name
+		name,
+
+		// el
+		el,
+
+		// inner handler.
+		innerHandler,
+
+		// remove.
+		remove;
+
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			lowNode = nameOrParams.lowNode;
+			name = nameOrParams.name;
+
+			if (lowNode === undefined) {
+				lowNode = node;
+			}
+		}
+
+		if (lowNode !== undefined) {
+			el = lowNode.getWrapperEl();
+		} else if (global['on' + name] === undefined) {
+			el = document;
+		} else {
+			el = global;
+		}
+
+		inner.innerHandler = innerHandler = function(e) {
+			//REQUIRED: e
+
+			return eventHandler(E({
+				e : e,
+				el : el
+			}), node);
+		};
+
+		el.addEventListener(name, innerHandler, false);
+
+		self.remove = remove = function() {
+			el.removeEventListener(name, innerHandler, false);
+		};
+	}
+});
+
+/**
+ * Event once class
+ */
+global.EVENT_ONCE = CLASS({
+
+	init : function(inner, self, nameOrParams, eventHandler) {
+		'use strict';
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node
+		//OPTIONAL: nameOrParams.lowNode
+		//REQUIRED: nameOrParams.name
+		//REQUIRED: eventHandler
+
+		var
+		// evt
+		evt = EVENT(nameOrParams, function(e, node) {
+			eventHandler(e, node);
+			evt.remove();
+		}),
+
+		// remove.
+		remove,
+
+		// fire.
+		fire;
+
+		self.remove = remove = function() {
+			evt.remove();
+		};
+
+		self.fire = fire = function() {
+			evt.fire();
+		};
+	}
+});
+
+/**
+ * add style.
+ */
+global.ADD_STYLE = METHOD(function(m) {
+	'use strict';
+
+	var
+	// venders
+	venders = ['Webkit', 'Moz', 'O', 'Ms'],
+	
+	// cross browser style names
+	crossBrowserStyleNames = ['transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition'],
+	
+	// is support fixed
+	isSupportFixed;
+
+	NEXT([
+	function(next) {
+
+		// when body exsists
+		if (document.body === TO_DELETE) {
+
+			EVENT({
+				name : 'load'
+			}, next);
+		}
+
+		// when body not exsists
+		else {
+			next();
+		}
+	},
+
+	function() {
+
+		// check is support fixed.
+		return function() {
+
+			var
+			// el
+			el = document.createElement('div');
+
+			el.style.position = 'fixed';
+			el.style.top = '10px';
+
+			document.body.appendChild(el);
+
+			isSupportFixed = el.offsetTop === 10;
+
+			document.body.removeChild(el);
+		};
+	}]);
+
+	return {
+
+		run : function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.node
+			//REQUIRED: params.style
+
+			var
+			// node
+			node = params.node,
+
+			// style
+			style = params.style,
+
+			// el
+			el = node.getWrapperEl(),
+
+			// switch bg to X2.
+			switchBGToX2 = function(uri) {
+
+				if (X2.checkIsCached(uri) === true) {
+
+					// background switch to X2 image.
+					X2.switchBG({
+						node : node,
+						uri : uri
+					});
+
+				} else {
+
+					EXPORT_IMG_TYPE(IMG({
+						src : uri
+					}), function(type) {
+
+						if (type === 'png' || type === 'gif' || type === 'bmp') {
+
+							// background switch to X2 image.
+							X2.switchBG({
+								node : node,
+								uri : uri
+							});
+						}
+					});
+				}
+			};
+
+			EACH(style, function(value, name) {
+
+				var
+				// resize event
+				resizeEvent,
+
+				// scroll event
+				scrollEvent,
+
+				// fix position.
+				fixPosition;
+
+				if (value !== undefined) {
+
+					// on display resize
+					if (name === 'onDisplayResize') {
+
+						resizeEvent = EVENT({
+							name : 'resize'
+						}, RAR(function() {
+
+							// when this, value is function.
+							ADD_STYLE({
+								node : node,
+								style : value(WIN_WIDTH(), WIN_HEIGHT())
+							});
+						}));
+
+						// remove resize event when remove node.
+						node.on('remove', function() {
+							resizeEvent.remove();
+						});
+
+					} else {
+
+						try {
+
+							// fix position fixed when not support fixed.
+							if (name === 'position' && value === 'fixed' && isSupportFixed !== true) {
+
+								el.style.position = 'absolute';
+
+								node.__FIXED = true;
+
+								// save fixed position.
+								if (node.__FIXED_LEFT === undefined && el.style.left !== '') {
+									node.__FIXED_LEFT = INTEGER(el.style.left);
+								}
+
+								if (node.__FIXED_RIGHT === undefined && el.style.right !== '') {
+									node.__FIXED_RIGHT = INTEGER(el.style.right);
+								}
+
+								if (node.__FIXED_TOP === undefined && el.style.top !== '') {
+									node.__FIXED_TOP = INTEGER(el.style.top);
+								}
+
+								if (node.__FIXED_BOTTOM === undefined && el.style.bottom !== '') {
+									node.__FIXED_BOTTOM = INTEGER(el.style.bottom);
+								}
+
+								// when scroll
+								scrollEvent = EVENT({
+									name : 'scroll'
+								}, RAR( fixPosition = function() {
+
+									if (node.__FIXED_LEFT !== undefined) {
+										el.style.left = (node.__FIXED_LEFT + SCROLL_LEFT()) + 'px';
+									}
+
+									if (node.__FIXED_RIGHT !== undefined) {
+										el.style.left = (SCROLL_LEFT() + WIN_WIDTH() - node.getWidth() - node.__FIXED_RIGHT) + 'px';
+									}
+
+									if (node.__FIXED_TOP !== undefined) {
+										el.style.top = (node.__FIXED_TOP + SCROLL_TOP()) + 'px';
+									}
+
+									if (node.__FIXED_BOTTOM !== undefined) {
+										el.style.top = (SCROLL_TOP() + WIN_HEIGHT() - node.getHeight() - node.__FIXED_BOTTOM) + 'px';
+									}
+								}));
+
+								// fix position when show.
+								node.on('attach', function() {
+									fixPosition();
+								});
+
+								// fix position delayed.
+								DELAY(function() {
+									fixPosition();
+								});
+
+								// remove scroll event when remove node.
+								node.on('remove', function() {
+									scrollEvent.remove();
+								});
+							}
+
+							// save position when fixed.
+							else if (node.__FIXED === true && name === 'left') {
+
+								node.__FIXED_LEFT = INTEGER(value);
+
+								el.style.left = (value + SCROLL_LEFT()) + 'px';
+
+							} else if (node.__FIXED === true && name === 'right') {
+
+								node.__FIXED_RIGHT = INTEGER(value);
+
+								el.style.left = (SCROLL_LEFT() + WIN_WIDTH() - node.getWidth() - node.__FIXED_RIGHT) + 'px';
+
+							} else if (node.__FIXED === true && name === 'top') {
+
+								node.__FIXED_TOP = INTEGER(value);
+
+								el.style.top = (value + SCROLL_TOP()) + 'px';
+
+							} else if (node.__FIXED === true && name === 'bottom') {
+
+								node.__FIXED_BOTTOM = INTEGER(value);
+
+								el.style.top = (SCROLL_TOP() + WIN_HEIGHT() - node.getHeight() - node.__FIXED_BOTTOM) + 'px';
+							}
+
+							// flt -> float
+							else if (name === 'flt') {
+								el.style.cssFloat = value;
+							}
+
+							// assume number value is px value.
+							else if ( typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
+
+								el.style[name] = value + 'px';
+
+								// X2 support.
+								if (BROWSER_CONFIG.isSupportingX2 === true &&
+
+								// after INIT_OBJECTS(), check is hd display.
+								INFO.checkIsHDDisplay !== undefined && INFO.checkIsHDDisplay() === true) {
+
+									if (name === 'width' || name === 'height') {
+										el.removeAttribute('width');
+										el.removeAttribute('height');
+									}
+								}
+							}
+
+							// set background X2 image.
+							else if (name === 'backgroundX2Image') {
+								el.style.backgroundImage = 'url(' + value + ')';
+							}
+
+							// set background image. (not need url prefix.)
+							else if (name === 'backgroundImage' && value !== 'none') {
+
+								el.style[name] = 'url(' + value + ')';
+
+								// X2 support.
+								if (BROWSER_CONFIG.isSupportingX2 === true &&
+
+								// after INIT_OBJECTS(), check is hd display.
+								INFO.checkIsHDDisplay !== undefined && INFO.checkIsHDDisplay() === true) {
+
+									// background switch to X2 image.
+									switchBGToX2(value);
+								}
+							}
+
+							// set normal style.
+							else {
+
+								el.style[name] = value;
+
+								// X2 support.
+								if (BROWSER_CONFIG.isSupportingX2 === true &&
+
+								// after INIT_OBJECTS(), check is hd display.
+								INFO.checkIsHDDisplay !== undefined && INFO.checkIsHDDisplay() === true) {
+
+									// when image
+									if (name === 'width' || name === 'height') {
+										el.removeAttribute('width');
+										el.removeAttribute('height');
+									}
+
+									// when background
+									if (name === 'background' && value.length >= 7 && value.substring(0, 4) === 'url(') {
+
+										// background switch to X2 image.
+										switchBGToX2(value.charAt(4) === '\'' || value.charAt(4) === '"' ? value.substring(5, value.length - 2) : value.substring(4, value.length - 1));
+									}
+								}
+
+								// cross browser styles
+								if (CHECK_IS_IN({
+									array : crossBrowserStyleNames,
+									value : name
+								}) === true) {
+								
+									EACH(venders, function(vender) {
+										el.style[vender + name.charAt(0).toUpperCase() + name.slice(1)] = value;
+									});
+								}
+							}
+
+						} catch(e) {
+							// ignore.
+						}
+					}
+				}
+			});
+		}
+	};
+});
+
+/**
+ * get rgba style string.
+ */
+global.RGBA = METHOD({
+
+	run : function(rgba) {
+		'use strict';
+		//REQUIRED: rgba
+
+		return 'rgba(' + rgba[0] + ',' + rgba[1] + ',' + rgba[2] + ',' + rgba[3] + ')';
+	}
+});
+
+/**
+ * A class
+ */
+global.A = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'a'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.href
+		//OPTIONAL: params.target
+		//OPTIONAL: params.style
+
+		var
+		// href
+		href,
+		
+		// target
+		target,
+		
+		// style
+		style,
+		
+		// change href.
+		changeHref,
+
+		// tap.
+		tap;
+
+		// init params.
+		if (params !== undefined) {
+			href = params.href;
+			target = params.target;
+			style = params.style;
+		}
+
+		self.changeHref = changeHref = function(href) {
+			inner.setAttr({
+				name : 'href',
+				value : href
+			});
+		};
+
+		if (href !== undefined) {
+			changeHref(href);
+		}
+
+		if (target !== undefined) {
+			inner.setAttr({
+				name : 'target',
+				value : target
+			});
+		}
+
+		if (style === undefined || style.cursor === undefined) {
+			self.addStyle({
+				cursor : 'pointer'
+			});
+		}
+
+		if (style === undefined || style.textDecoration === undefined) {
+			self.addStyle({
+				textDecoration : 'underline'
+			});
+		}
+
+		self.tap = tap = function() {
+
+			EVENT.fireAll({
+				node : self,
+				name : 'tap'
+			});
+		};
+	}
+});
+
+/**
+ * Body class
+ */
+global.BODY = OBJECT({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'body'
+		};
+	}
+});
+
+/**
+ * Br class
+ */
+global.BR = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'br'
+		};
+	}
+});
+
+/**
+ * Canvas class
+ */
+global.CANVAS = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'canvas'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.width
+		//OPTIONAL: params.height
+
+		var
+		// wdith
+		width,
+
+		// height
+		height,
+
+		// get context.
+		getContext,
+
+		// set size.
+		setSize,
+
+		// get width.
+		getWidth,
+
+		// get height.
+		getHeight,
+
+		// get data url.
+		getDataURL;
+
+		// init params.
+		if (params !== undefined) {
+			width = params.width;
+			height = params.height;
+		}
+
+		self.getContext = getContext = function() {
+			return CONTEXT(self);
+		};
+
+		self.setSize = setSize = function(size) {
+			//REQUIRED: size
+			//OPTIONAL: size.width
+			//OPTIONAL: size.height
+
+			var
+			// el
+			el = self.getEl();
+
+			if (size.width !== undefined) {
+				width = size.width;
+			}
+
+			if (size.height !== undefined) {
+				height = size.height;
+			}
+
+			if (width !== undefined) {
+				el.width = width;
+			}
+
+			if (height !== undefined) {
+				el.height = height;
+			}
+		};
+
+		setSize({
+			width : width,
+			height : height
+		});
+
+		self.getWidth = getWidth = function() {
+			return width;
+		};
+
+		self.getHeight = getHeight = function() {
+			return height;
+		};
+
+		self.getDataURL = getDataURL = function() {
+			return self.getEl().toDataURL();
+		};
+	}
+});
+
+/**
+ * Div class
+ */
+global.DIV = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'div'
+		};
+	}
+});
+
+/**
+ * Form class
+ */
+global.FORM = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'form'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.action
+		//OPTIONAL: params.target
+		//OPTIONAL: params.method
+		//OPTIONAL: params.enctype
+
+		var
+		// action
+		action,
+
+		// target
+		target,
+
+		// method
+		method,
+
+		// enctype
+		enctype,
+
+		// get data.
+		getData,
+
+		// set data.
+		setData,
+
+		// submit.
+		submit;
+
+		// init params.
+		if (params !== undefined) {
+			action = params.action;
+			target = params.target;
+			method = params.method;
+			enctype = params.enctype;
+		}
+
+		if (action !== undefined) {
+			inner.setAttr({
+				name : 'action',
+				value : action
+			});
+		}
+
+		if (target !== undefined) {
+			inner.setAttr({
+				name : 'target',
+				value : target
+			});
+		}
+
+		if (method !== undefined) {
+			inner.setAttr({
+				name : 'method',
+				value : method
+			});
+		}
+
+		if (enctype !== undefined) {
+			inner.setAttr({
+				name : 'enctype',
+				value : enctype
+			});
+		}
+
+		self.getData = getData = function() {
+
+			var
+			// data
+			data = {},
+
+			// f.
+			f = function(node) {
+				//REQUIRED: node
+
+				EACH(node.getChildren(), function(child) {
+
+					if (child.getValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
+						data[child.getName()] = child.getValue();
+					}
+
+					f(child);
+				});
+			};
+
+			f(self);
+
+			return data;
+		};
+
+		self.setData = setData = function(data) {
+			//REQUIRED: data
+
+			var
+			// f.
+			f = function(node) {
+				//REQUIRED: node
+
+				EACH(node.getChildren(), function(child) {
+
+					var
+					// value
+					value;
+
+					if (child.setValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
+						value = data[child.getName()];
+						child.setValue(value === undefined ? '' : value);
+					}
+
+					f(child);
+				});
+			};
+
+			f(self);
+		};
+
+		EVENT({
+			node : self,
+			name : 'submit'
+		}, function(e) {
+			e.stop();
+		});
+
+		self.submit = submit = function(isRealSubmit) {
+			//OPTIONAL: isRealSubmit
+
+			EVENT.fireAll({
+				node : self,
+				name : 'submit'
+			});
+
+			if (isRealSubmit === true) {
+				self.getEl().submit();
+			}
+		};
+	}
+});
+
+/**
+ * H1 class
+ */
+global.H1 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h1'
+		};
+	}
+});
+
+/**
+ * H2 class
+ */
+global.H2 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h2'
+		};
+	}
+});
+
+/**
+ * H3 class
+ */
+global.H3 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h3'
+		};
+	}
+});
+
+/**
+ * H4 class
+ */
+global.H4 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h4'
+		};
+	}
+});
+
+/**
+ * H5 class
+ */
+global.H5 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h5'
+		};
+	}
+});
+
+/**
+ * H6 class
+ */
+global.H6 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h6'
+		};
+	}
+});
+
+/**
+ * Iframe class
+ */
+global.IFRAME = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'iframe',
+			style : {
+				border : 'none'
+			}
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.src
+
+		var
+		// name
+		name,
+
+		// src
+		src,
+
+		// set src.
+		setSrc,
+
+		// get src.
+		getSrc;
+
+		// init params.
+		if (params !== undefined) {
+			name = params.name;
+			src = params.src;
+		}
+
+		inner.setAttr({
+			name : 'allowTransparency',
+			value : true
+		});
+
+		inner.setAttr({
+			name : 'frameBorder',
+			value : 0
+		});
+
+		if (name !== undefined) {
+			inner.setAttr({
+				name : 'name',
+				value : name
+			});
+		}
+
+		self.setSrc = setSrc = function(_src) {
+			//REQUIRED: _src
+
+			src = _src;
+
+			inner.setAttr({
+				name : 'src',
+				value : src
+			});
+		};
+
+		if (src !== undefined) {
+			setSrc(src);
+		}
+
+		self.getSrc = getSrc = function() {
+			return src;
+		};
+	}
+});
+
+/**
+ * Img class
+ */
+global.IMG = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'img'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.src
+
+		var
+		// src
+		src = params.src,
+
+		// el
+		el = self.getEl(),
+
+		// is X2 switched
+		isX2Switched,
+
+		// get width.
+		getWidth,
+
+		// get height.
+		getHeight,
+
+		// set size.
+		setSize,
+
+		// get src.
+		getSrc,
+
+		// set x2 src.
+		setX2Src,
+
+		// set src.
+		setSrc,
+
+		// check is X2.
+		checkIsX2;
+
+		//OVERRIDE: self.getWidth
+		self.getWidth = getWidth = function() {
+			return el.width;
+		};
+
+		//OVERRIDE: self.getHeight
+		self.getHeight = getHeight = function() {
+			return el.height;
+		};
+
+		self.setSize = setSize = function(size) {
+			//REQUIRED: size
+			//OPTIONAL: size.width
+			//OPTIONAL: size.height
+
+			var
+			// width
+			width = size.width,
+
+			// height
+			height = size.height;
+
+			if (width !== undefined) {
+				el.width = width;
+			}
+
+			if (height !== undefined) {
+				el.height = height;
+			}
+		};
+
+		self.getSrc = getSrc = function() {
+			return src;
+		};
+
+		self.setX2Src = setX2Src = function(x2Src) {
+			//REQUIRED: x2Src
+
+			inner.setAttr({
+				name : 'src',
+				value : x2Src
+			});
+		};
+
+		self.setSrc = setSrc = function(_src) {
+			//REQUIRED: _src
+
+			src = _src;
+
+			inner.setAttr({
+				name : 'src',
+				value : src
+			});
+
+			// X2 support.
+			if (isX2Switched !== true && BROWSER_CONFIG.isSupportingX2 === true &&
+
+			// after INIT_OBJECTS(), check is hd display.
+			INFO.checkIsHDDisplay !== undefined && INFO.checkIsHDDisplay() === true) {
+
+				if (X2.checkIsCached(src) === true) {
+
+					// switch X2 img.
+					X2.switchImg(self);
+
+				} else {
+
+					EXPORT_IMG_TYPE(self, function(type) {
+
+						if (type === 'png' || type === 'gif' || type === 'bmp') {
+
+							isX2Switched = true;
+
+							// switch X2 img.
+							X2.switchImg(self);
+						}
+					});
+				}
+			}
+		};
+
+		if (src !== undefined) {
+			setSrc(src);
+		}
+
+		self.checkIsX2 = checkIsX2 = function() {
+			return isX2Switched;
+		};
+	}
+});
+
+/**
+ * Input class
+ */
+global.INPUT = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// focusing input ids
+	focusingInputIds = [],
+
+	// get focusing input ids.
+	getFocusingInputIds;
+
+	cls.getFocusingInputIds = getFocusingInputIds = function(id) {
+		return focusingInputIds;
+	};
+
+	return {
+
+		preset : function() {
+			return DOM;
+		},
+
+		params : function() {
+			return {
+				tag : 'input'
+			};
+		},
+
+		init : function(inner, self, params) {
+			//OPTIONAL: params
+			//OPTIONAL: params.name
+			//OPTIONAL: params.type
+			//OPTIONAL: params.placeholder
+			//OPTIONAL: params.value
+			//OPTIONAL: params.capture
+			//OPTIONAL: params.accept
+			//OPTIONAL: params.isMultiple
+
+			var
+			// name
+			name,
+
+			// type
+			type,
+
+			// placeholder
+			placeholder,
+
+			// capture
+			capture,
+
+			// accept
+			accept,
+
+			// is multiple
+			isMultiple,
+
+			// get name.
+			getName,
+
+			// get value.
+			getValue,
+
+			// set value.
+			setValue,
+
+			// select.
+			select,
+
+			// focus.
+			focus,
+
+			// blur.
+			blur,
+
+			// toggle check.
+			toggleCheck,
+
+			// check is checked.
+			checkIsChecked;
+
+			// init params.
+			if (params !== undefined) {
+				name = params.name;
+				type = params.type;
+				placeholder = params.placeholder;
+				capture = params.capture;
+				accept = params.accept;
+				isMultiple = params.isMultiple;
+			}
+
+			if (type !== undefined) {
+				inner.setAttr({
+					name : 'type',
+					value : type
+				});
+			}
+
+			if (type !== 'submit' && type !== 'reset') {
+
+				if (name !== undefined) {
+					inner.setAttr({
+						name : 'name',
+						value : name
+					});
+				}
+
+				if (placeholder !== undefined) {
+					inner.setAttr({
+						name : 'placeholder',
+						value : placeholder
+					});
+				}
+				
+				if (capture !== undefined) {
+					inner.setAttr({
+						name : 'capture',
+						value : capture
+					});
+				}
+				
+				if (accept !== undefined) {
+					inner.setAttr({
+						name : 'accept',
+						value : accept
+					});
+				}
+
+				if (isMultiple === true) {
+					inner.setAttr({
+						name : 'multiple',
+						value : isMultiple
+					});
+				}
+
+				self.getName = getName = function() {
+					return name;
+				};
+
+				self.getValue = getValue = function() {
+					if (type === 'checkbox') {
+						return self.getEl().checked;
+					}
+					return self.getEl().value;
+				};
+
+				self.select = select = function() {
+					if (type === 'file') {
+						self.getEl().click();
+					} else {
+						self.getEl().select();
+					}
+				};
+
+				self.focus = focus = function() {
+					self.getEl().focus();
+				};
+
+				self.blur = blur = function() {
+					self.getEl().blur();
+				};
+
+				if (type === 'checkbox') {
+
+					self.toggleCheck = toggleCheck = function(e) {
+
+						if (self.getEl().checked === true) {
+							self.getEl().checked = false;
+						} else {
+							self.getEl().checked = true;
+						}
+
+						EVENT.fireAll({
+							node : self,
+							name : 'change'
+						});
+
+						return self.getEl().checked;
+					};
+
+					self.checkIsChecked = checkIsChecked = function() {
+						return self.getEl().checked;
+					};
+
+					EVENT({
+						node : self,
+						name : 'keyup'
+					}, function(e) {
+						if (e !== undefined && e.getKeyCode() === 32) {
+							DELAY(function() {
+								EVENT.fireAll({
+									node : self,
+									name : 'change'
+								});
+							});
+						}
+					});
+				}
+			}
+
+			self.setValue = setValue = function(value) {
+				//REQUIRED: value
+
+				if (type === 'checkbox') {
+
+					if (value === true) {
+
+						if (self.getEl().checked !== true) {
+
+							self.getEl().checked = true;
+
+							EVENT.fireAll({
+								node : self,
+								name : 'change'
+							});
+
+						} else {
+							self.getEl().checked = true;
+						}
+
+					} else {
+
+						if (self.getEl().checked === true) {
+
+							self.getEl().checked = false;
+
+							EVENT.fireAll({
+								node : self,
+								name : 'change'
+							});
+
+						} else {
+							self.getEl().checked = false;
+						}
+					}
+
+				} else {
+
+					if (self.getEl().value !== value) {
+
+						self.getEl().value = value;
+
+						EVENT.fireAll({
+							node : self,
+							name : 'change'
+						});
+
+					} else {
+						self.getEl().value = value;
+					}
+				}
+			};
+
+			EVENT({
+				node : self,
+				name : 'focus'
+			}, function() {
+				getFocusingInputIds().push(self.id);
+			});
+
+			EVENT({
+				node : self,
+				name : 'blur'
+			}, function() {
+
+				REMOVE({
+					array : getFocusingInputIds(),
+					value : self.id
+				});
+			});
+
+			self.on('remove', function() {
+
+				REMOVE({
+					array : getFocusingInputIds(),
+					value : self.id
+				});
+			});
+		},
+
+		afterInit : function(inner, self, params) {
+			//OPTIONAL: params
+			//OPTIONAL: params.name
+			//OPTIONAL: params.type
+			//OPTIONAL: params.placeholder
+			//OPTIONAL: params.value
+			//OPTIONAL: params.isMultiple
+
+			var
+			// type
+			type,
+
+			// value
+			value;
+
+			// init params.
+			if (params !== undefined) {
+				type = params.type;
+				value = params.value;
+			}
+
+			if (value !== undefined) {
+
+				if (type === 'checkbox') {
+
+					if (value === true) {
+
+						if (self.getEl().checked !== true) {
+							self.getEl().checked = true;
+						} else {
+							self.getEl().checked = true;
+						}
+
+					} else {
+
+						if (self.getEl().checked === true) {
+							self.getEl().checked = false;
+						} else {
+							self.getEl().checked = false;
+						}
+					}
+
+				} else {
+
+					if (self.getEl().value !== value) {
+						self.getEl().value = value;
+					} else {
+						self.getEl().value = value;
+					}
+				}
+			}
+		}
+	};
+});
+
+/**
+ * LI class
+ */
+global.LI = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'li'
+		};
+	}
+});
+
+/**
+ * Option class
+ */
+global.OPTION = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'option'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.value
+
+		var
+		// get value.
+		getValue,
+
+		// set value.
+		setValue;
+
+		self.getValue = getValue = function() {
+			return self.getEl().value;
+		};
+
+		self.setValue = setValue = function(value) {
+			//REQUIRED: value
+
+			self.getEl().value = value;
+		};
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder
+		//OPTIONAL: params.value
+
+		var
+		// value
+		value;
+
+		// init params.
+		if (params !== undefined) {
+			value = params.value;
+		}
+
+		if (value === undefined) {
+			self.setValue('');
+		} else {
+			self.setValue(value);
+		}
+	}
+});
+
+/**
+ * P class
+ */
+global.P = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'p'
+		};
+	}
+});
+
+/**
+ * Select class
+ */
+global.SELECT = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'select'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.value
+
+		var
+		// name
+		name,
+
+		// is ctrl down
+		isCtrlDown = false,
+
+		// get name.
+		getName,
+
+		// get value.
+		getValue,
+
+		// set value.
+		setValue,
+
+		// select.
+		select,
+
+		// focus.
+		focus,
+
+		// blur.
+		blur;
+
+		// init params.
+		if (params !== undefined) {
+			name = params.name;
+		}
+
+		if (name !== undefined) {
+			inner.setAttr({
+				name : 'name',
+				value : name
+			});
+		}
+
+		self.getName = getName = function() {
+			return name;
+		};
+
+		self.getValue = getValue = function() {
+			return self.getEl().value;
+		};
+
+		self.setValue = setValue = function(value) {
+			//REQUIRED: value
+
+			if (self.getEl().value !== value) {
+
+				self.getEl().value = value;
+
+				EVENT.fireAll({
+					node : self,
+					name : 'change'
+				});
+
+			} else {
+				self.getEl().value = value;
+			}
+		};
+
+		self.select = select = function() {
+			self.getEl().select();
+		};
+
+		self.focus = focus = function() {
+			self.getEl().focus();
+		};
+
+		self.blur = blur = function() {
+			self.getEl().blur();
+		};
+
+		EVENT({
+			node : self,
+			name : 'keydown'
+		}, function(e) {
+
+			var
+			// key code
+			keyCode = e.getKeyCode();
+
+			if (keyCode === 91 || keyCode === 17) {
+				isCtrlDown = true;
+			} else if (isCtrlDown !== true) {
+				e.stopBubbling();
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'keyup'
+		}, function(e) {
+
+			var
+			// key code
+			keyCode = e.getKeyCode();
+
+			if (keyCode === 91 || keyCode === 17) {
+				isCtrlDown = false;
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'focus'
+		}, function() {
+			INPUT.getFocusingInputIds().push(self.id);
+		});
+
+		EVENT({
+			node : self,
+			name : 'blur'
+		}, function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+
+		self.on('remove', function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder
+		//OPTIONAL: params.value
+
+		var
+		// value
+		value;
+
+		// init params.
+		if (params !== undefined) {
+			value = params.value;
+		}
+
+		if (value !== undefined) {
+			self.setValue(value);
+		}
+	}
+});
+
+/**
+ * Span class
+ */
+global.SPAN = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'span'
+		};
+	}
+});
+
+/**
+ * Table class
+ */
+global.TABLE = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'table'
+		};
+	}
+});
+
+/**
+ * Td class
+ */
+global.TD = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'td'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.rowspan
+		//OPTIONAL: params.colspan
+
+		var
+		// rowspan
+		rowspan,
+
+		// colspan
+		colspan;
+
+		// init params.
+		if (params !== undefined) {
+			rowspan = params.rowspan;
+			colspan = params.colspan;
+		}
+
+		if (rowspan !== undefined) {
+			inner.setAttr({
+				name : 'rowspan',
+				value : rowspan
+			});
+		}
+
+		if (colspan !== undefined) {
+			inner.setAttr({
+				name : 'colspan',
+				value : colspan
+			});
+		}
+	}
+});
+
+/**
+ * Textarea class
+ */
+global.TEXTAREA = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'textarea'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder
+		//OPTIONAL: params.value
+
+		var
+		// name
+		name,
+
+		// placeholder
+		placeholder,
+
+		// is ctrl down
+		isCtrlDown = false,
+
+		// get name.
+		getName,
+
+		// get value.
+		getValue,
+
+		// set value.
+		setValue,
+
+		// select.
+		select,
+
+		// focus.
+		focus,
+
+		// blur.
+		blur;
+
+		// init params.
+		if (params !== undefined) {
+			name = params.name;
+			placeholder = params.placeholder;
+		}
+
+		if (name !== undefined) {
+			inner.setAttr({
+				name : 'name',
+				value : name
+			});
+		}
+
+		if (placeholder !== undefined) {
+			inner.setAttr({
+				name : 'placeholder',
+				value : placeholder
+			});
+		}
+
+		self.getName = getName = function() {
+			return name;
+		};
+
+		self.getValue = getValue = function() {
+			return self.getEl().value;
+		};
+
+		self.setValue = setValue = function(value) {
+			//REQUIRED: value
+
+			if (self.getEl().value !== value) {
+
+				self.getEl().value = value;
+
+				EVENT.fireAll({
+					node : self,
+					name : 'change'
+				});
+
+			} else {
+				self.getEl().value = value;
+			}
+		};
+
+		self.select = select = function() {
+			self.getEl().select();
+		};
+
+		self.focus = focus = function() {
+			self.getEl().focus();
+		};
+
+		self.blur = blur = function() {
+			self.getEl().blur();
+		};
+
+		EVENT({
+			node : self,
+			name : 'keydown'
+		}, function(e) {
+
+			var
+			// key code
+			keyCode = e.getKeyCode();
+
+			if (keyCode === 91 || keyCode === 17) {
+				isCtrlDown = true;
+			} else if (isCtrlDown !== true) {
+				e.stopBubbling();
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'keyup'
+		}, function(e) {
+
+			var
+			// key code
+			keyCode = e.getKeyCode();
+
+			if (keyCode === 91 || keyCode === 17) {
+				isCtrlDown = false;
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'focus'
+		}, function() {
+			INPUT.getFocusingInputIds().push(self.id);
+		});
+
+		EVENT({
+			node : self,
+			name : 'blur'
+		}, function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+
+		self.on('remove', function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder
+		//OPTIONAL: params.value
+
+		var
+		// value
+		value;
+
+		// init params.
+		if (params !== undefined) {
+			value = params.value;
+		}
+
+		if (value !== undefined) {
+			self.setValue(value);
+		}
+	}
+});
+
+/**
+ * Th class
+ */
+global.TH = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'th'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.rowspan
+		//OPTIONAL: params.colspan
+
+		var
+		// rowspan
+		rowspan,
+
+		// colspan
+		colspan;
+
+		// init params.
+		if (params !== undefined) {
+			rowspan = params.rowspan;
+			colspan = params.colspan;
+		}
+
+		if (rowspan !== undefined) {
+			inner.setAttr({
+				name : 'rowspan',
+				value : rowspan
+			});
+		}
+
+		if (colspan !== undefined) {
+			inner.setAttr({
+				name : 'colspan',
+				value : colspan
+			});
+		}
+	}
+});
+
+/**
+ * Tr class
+ */
+global.TR = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'tr'
+		};
+	}
+});
+
+/**
+ * Ul class
+ */
+global.UL = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'ul'
+		};
+	}
+});
+
+/**
+ * check the pixel is blank pixel.
+ */
+global.CHECK_IS_BLANK_PIXEL = METHOD(function(m) {
+	'use strict';
+
+	var
+	// img blank pixel data set
+	imgBlankPixelDataSet = {};
+
+	return {
+
+		run : function(params, callback) {
+			//REQUIRED: params
+			//REQUIRED: params.img
+			//OPTIONAL: params.left
+			//OPTIONAL: params.right
+			//OPTIONAL: params.centerLeft
+			//OPTIONAL: params.top
+			//OPTIONAL: params.bottom
+			//OPTIONAL: params.centerTop
+			//REQUIRED: callback
+
+			var
+			// img
+			img = params.img,
+
+			// left
+			left = params.left,
+
+			// right
+			right = params.right,
+
+			// center left
+			centerLeft = params.centerLeft,
+
+			// top
+			top = params.top,
+
+			// bottom
+			bottom = params.bottom,
+
+			// center top
+			centerTop = params.centerTop;
+
+			EXPORT_IMG_DATA(img, function(imgData) {
+
+				var
+				// uri
+				uri = img.getSrc(),
+
+				// img blank pixel data
+				imgBlankPixelData = imgBlankPixelDataSet[uri],
+
+				// width
+				width,
+
+				// heigth
+				height,
+
+				// data
+				data,
+
+				// img blank pixels
+				imgBlankPixels,
+
+				// extras
+				i, j;
+
+				// export.
+				if (imgBlankPixelData === undefined) {
+
+					width = imgData.width;
+					height = imgData.height;
+					data = imgData.data;
+
+					imgBlankPixelData = [];
+					for ( i = 0; i < height; i += 1) {
+						imgBlankPixelData[i] = [];
+						for ( j = 0; j < width; j += 1) {
+							imgBlankPixelData[i][j] = data[i * width * 4 + j * 4 + 3] < 255 / 2;
+						}
+					}
+
+					imgBlankPixelDataSet[uri] = imgBlankPixelData;
+				}
+
+				// find top.
+				if (top !== undefined) {
+					imgBlankPixels = imgBlankPixelData[INTEGER(top)];
+				} else if (bottom !== undefined) {
+					imgBlankPixels = imgBlankPixelData[imgBlankPixelData.length - INTEGER(bottom) - 1];
+				} else if (centerTop !== undefined) {
+					imgBlankPixels = imgBlankPixelData[INTEGER(imgBlankPixelData.length / 2) + INTEGER(centerTop)];
+				}
+
+				// find left.
+				if (imgBlankPixels !== undefined) {
+					if (left !== undefined) {
+						callback(imgBlankPixels[INTEGER(left)]);
+					} else if (right !== undefined) {
+						callback(imgBlankPixels[imgBlankPixels.length - INTEGER(right) - 1]);
+					} else if (centerLeft !== undefined) {
+						callback(imgBlankPixels[INTEGER(imgBlankPixels.length / 2) + INTEGER(centerLeft)]);
+					}
+				}
+			});
+		}
+	};
+});
+
+/**
+ * Context for canvas wrapper class
+ */
+global.CONTEXT = CLASS({
+
+	init : function(inner, self, canvas) {
+		'use strict';
+		//REQUIRED: canvas
+
+		var
+		// native context
+		nativeContext = canvas.getEl().getContext('2d'),
+
+		// get native context.
+		getNativeContext,
+
+		// draw img.
+		drawImg,
+
+		// get img data.
+		getImgData,
+
+		// create image data.
+		createImgData,
+
+		// put image data.
+		putImgData,
+
+		// set scale.
+		setScale,
+
+		// rotate.
+		rotate,
+
+		// save.
+		save,
+
+		// restore.
+		restore,
+
+		// clear.
+		clear;
+
+		inner.getNativeContext = getNativeContext = function() {
+			return nativeContext;
+		};
+
+		self.drawImg = drawImg = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.img
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			//OPTIONAL: params.clipLeft
+			//OPTIONAL: params.clipTop
+			//OPTIONAL: params.clipWidth
+			//OPTIONAL: params.clipHeight
+			//OPTIONAL: params.width
+			//OPTIONAL: params.height
+
+			var
+			// img
+			img = params.img,
+
+			// left
+			left = params.left === undefined ? 0 : params.left,
+
+			// top
+			top = params.top === undefined ? 0 : params.top,
+
+			// clip left
+			clipLeft = params.clipLeft !== undefined ? params.clipLeft : 0,
+
+			// clip top
+			clipTop = params.clipTop !== undefined ? params.clipTop : 0,
+
+			// clip width
+			clipWidth = params.clipWidth,
+
+			// clip height
+			clipHeight = params.clipHeight,
+
+			// width
+			width = params.width,
+
+			// height
+			height = params.height,
+
+			// scale
+			scale = img.checkIsX2() === true ? 2 : 1;
+
+			if (clipWidth === undefined && clipHeight === undefined) {
+				if (width > 0 && height > 0) {
+					nativeContext.drawImage(img.getEl(), left, top, width, height);
+				} else {
+					nativeContext.drawImage(img.getEl(), left, top);
+				}
+			} else {
+
+				if (clipWidth === undefined) {
+					clipWidth = img.getWidth();
+				}
+				if (clipHeight === undefined) {
+					clipHeight = img.getHeight();
+				}
+
+				nativeContext.drawImage(img.getEl(), clipLeft * scale, clipTop * scale, clipWidth * scale, clipHeight * scale, left, top, width, height);
+			}
+		};
+
+		self.getImgData = getImgData = function(params) {
+			//OPTIONAL: params
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			//OPTIONAL: params.width
+			//OPTIONAL: params.height
+
+			var
+			// left
+			left = params === undefined || params.left === undefined ? 0 : params.left,
+
+			// top
+			top = params === undefined || params.top === undefined ? 0 : params.top,
+
+			// width
+			width = params === undefined || params.width === undefined ? canvas.getWidth() : params.width,
+
+			// height
+			height = params === undefined || params.height === undefined ? canvas.getHeight() : params.height;
+
+			return nativeContext.getImageData(left, top, width, height);
+		};
+
+		self.createImgData = createImgData = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.width
+			//REQUIRED: params.height
+
+			var
+			// width
+			width = params.width,
+
+			// height
+			height = params.height;
+
+			return nativeContext.createImageData(width, height);
+		};
+
+		self.putImgData = putImgData = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.data
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+
+			var
+			// data
+			data = params.data,
+
+			// left
+			left = params.left === undefined ? 0 : params.left,
+
+			// top
+			top = params.top === undefined ? 0 : params.top;
+
+			nativeContext.putImageData(data, left, top);
+		};
+
+		self.setScale = setScale = function(scaleSize) {
+			//REQUIRED: scaleSize
+			//OPTIONAL: scaleSize.scaleWidth
+			//OPTIONAL: scaleSize.scaleHeight
+
+			var
+			// scale width
+			scaleWidth = scaleSize.scaleWidth,
+
+			// scale height
+			scaleHeight = scaleSize.scaleHeight;
+
+			nativeContext.scale(scaleWidth, scaleHeight);
+		};
+
+		self.rotate = rotate = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.centerLeft
+			//REQUIRED: params.centerTop
+			//REQUIRED: params.degree
+
+			var
+			// center left
+			centerLeft = params.centerLeft,
+
+			// center top
+			centerTop = params.centerTop,
+
+			// degree
+			degree = params.degree;
+
+			// Move registration point to the center of the canvas
+			nativeContext.translate(centerLeft, centerTop);
+
+			// Rotate degree
+			nativeContext.rotate(degree * Math.PI / 180);
+
+			// Move registration point back to the top left corner of canvas
+			nativeContext.translate(-centerLeft, -centerTop);
+		};
+
+		self.save = save = function() {
+			nativeContext.save();
+		};
+
+		self.restore = restore = function() {
+			nativeContext.restore();
+		};
+
+		self.clear = clear = function() {
+			nativeContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		};
+	}
+});
+
+/**
+ * export img data.
+ */
+global.EXPORT_IMG_DATA = METHOD(function(m) {
+	'use strict';
+
+	var
+	// exported img data set.
+	exportedImgDataSet = {},
+
+	// exporting callback map
+	exportingCallbackMap = {};
+
+	return {
+
+		run : function(img, callback) {
+			//REQUIRED: img
+			//REQUIRED: callback
+
+			var
+			// uri
+			uri = img.getSrc(),
+
+			// new img
+			newImg,
+
+			// exported img data
+			exportedImgData = exportedImgDataSet[uri],
+
+			// exporting callbacks
+			exportingCallbacks = exportingCallbackMap[uri];
+
+			// if aleady exported.
+			if (exportedImgData !== undefined) {
+				callback(exportedImgData);
+			}
+
+			// is processed uri.
+			else if (exportingCallbacks !== undefined) {
+				exportingCallbacks.push(callback);
+			}
+
+			// export img data.
+			else {
+
+				exportingCallbacks = exportingCallbackMap[uri] = [callback];
+
+				newImg = IMG();
+				newImg.getContentEl().crossOrigin = 'anonymous';
+				newImg.setSrc(uri);
+
+				EVENT_ONCE({
+					node : newImg,
+					name : 'load'
+				}, function(e, img) {
+
+					var
+					// width
+					width = img.getWidth(),
+
+					// height
+					height = img.getHeight(),
+
+					// canvas
+					canvas = CANVAS({
+						width : width,
+						height : height
+					}),
+
+					// context
+					context = canvas.getContext(),
+
+					// img data
+					imgData;
+
+					// draw img.
+					context.drawImg({
+						img : img
+					});
+
+					// get img data.
+					imgData = context.getImgData();
+
+					// cache.
+					exportedImgDataSet[uri] = imgData;
+
+					// run callbacks.
+					EACH(exportingCallbacks, function(callback) {
+						callback(imgData);
+					});
+
+					// clear exporting callbacks.
+					delete exportingCallbackMap[uri];
+				});
+			}
+		}
+	};
+});
+
+/**
+ * export img type.
+ */
+global.EXPORT_IMG_TYPE = METHOD(function(m) {
+	'use strict';
+
+	var
+	// loaded img types
+	loadedImgTypes = {},
+
+	// loading callback map
+	loadingCallbackMap = {};
+
+	return {
+
+		run : function(img, callback) {
+			//REQUIRED: img
+			//REQUIRED: callback
+
+			var
+			// uri
+			uri = img.getSrc(),
+
+			// loaded img type
+			loadedImgType = loadedImgTypes[uri],
+
+			// loading callbacks
+			loadingCallbacks = loadingCallbackMap[uri],
+
+			// load event
+			loadEvent;
+
+			// if aleady loaded.
+			if (loadedImgType !== undefined) {
+				callback(loadedImgType);
+			}
+
+			// is processed uri.
+			else if (loadingCallbacks !== undefined) {
+				loadingCallbacks.push(callback);
+			}
+
+			// load img type.
+			else {
+
+				loadingCallbacks = loadingCallbackMap[uri] = [callback];
+
+				ImageInfo.loadInfo(uri, function() {
+
+					var
+					// img type
+					imgType = ImageInfo.getAllFields(uri).format.toLowerCase();
+
+					// cache.
+					loadedImgTypes[uri] = imgType;
+
+					// run callbacks.
+					EACH(loadingCallbacks, function(callback) {
+						callback(imgType);
+					});
+
+					// clear loading callbacks.
+					delete loadingCallbackMap[uri];
+				});
+			}
+		}
+	};
+});
+
+/**
+ * For image X2 object
+ */
+global.X2 = OBJECT({
+
+	init : function(inner, self) {
+		'use strict';
+
+		var
+		// X2 img data set
+		x2ImgDataSet = {},
+
+		// check is cached.
+		checkIsCached,
+
+		// export X2 img data.
+		exportX2ImgData,
+
+		// switch img.
+		switchImg,
+
+		// switch background.
+		switchBG;
+
+		self.checkIsCached = checkIsCached = function(uri) {
+			return x2ImgDataSet[uri] !== undefined;
+		};
+
+		exportX2ImgData = function(img, callback) {
+
+			var
+			// uri
+			uri = img.getSrc();
+
+			// aleady exported.
+			if (checkIsCached(uri) === true) {
+				callback(x2ImgDataSet[uri]);
+			}
+
+			// export.
+			else {
+
+				EXPORT_IMG_DATA(img, function(imgData) {
+
+					var
+					// X2 img data
+					x2ImgData,
+
+					// width
+					width,
+
+					// height
+					height,
+
+					// data
+					data,
+
+					// X2 canvas
+					x2Canvas,
+
+					// X2 context
+					x2Context,
+
+					// X2 data
+					x2Data,
+
+					// X2 img data url
+					x2ImgDataURL,
+
+					// extras
+					i, j, k, l;
+
+					width = imgData.width;
+					height = imgData.height;
+					data = imgData.data;
+
+					x2Canvas = CANVAS();
+					x2Canvas.setSize({
+						width : width * 2,
+						height : height * 2
+					});
+
+					x2Context = x2Canvas.getContext();
+
+					x2ImgData = x2Context.createImgData({
+						width : width * 2,
+						height : height * 2
+					});
+
+					x2Data = x2ImgData.data;
+
+					for ( i = 0; i < height; i += 1) {
+						for ( j = 0; j < width; j += 1) {
+
+							k = i * width * 4 + j * 4;
+
+							l = (i * 4 * width + j * 2) * 4;
+							x2Data[l] = data[k];
+							x2Data[l + 1] = data[k + 1];
+							x2Data[l + 2] = data[k + 2];
+							x2Data[l + 3] = data[k + 3];
+							x2Data[l + 4] = data[k];
+							x2Data[l + 5] = data[k + 1];
+							x2Data[l + 6] = data[k + 2];
+							x2Data[l + 7] = data[k + 3];
+
+							l = ((i * 2 + 1) * 2 * width + j * 2) * 4;
+							x2Data[l] = data[k];
+							x2Data[l + 1] = data[k + 1];
+							x2Data[l + 2] = data[k + 2];
+							x2Data[l + 3] = data[k + 3];
+							x2Data[l + 4] = data[k];
+							x2Data[l + 5] = data[k + 1];
+							x2Data[l + 6] = data[k + 2];
+							x2Data[l + 7] = data[k + 3];
+						}
+					}
+
+					x2Context.putImgData({
+						data : x2ImgData
+					});
+
+					callback(x2ImgDataSet[uri] = {
+						x2DataURL : x2Canvas.getDataURL(),
+						width : width,
+						height : height
+					});
+				});
+			}
+		};
+
+		self.switchImg = switchImg = function(img) {
+
+			if (img.getEl() !== undefined) {
+
+				exportX2ImgData(img, function(x2ImgData) {
+
+					var
+					// X2 data url
+					x2DataURL,
+
+					// width
+					width,
+
+					// height
+					height;
+
+					if (img.getEl() !== undefined) {
+
+						x2DataURL = x2ImgData.x2DataURL;
+
+						width = img.getWidth();
+						height = img.getHeight();
+
+						if (width === undefined || width <= 0) {
+							width = x2ImgData.width;
+						}
+
+						if (height === undefined || height <= 0) {
+							height = x2ImgData.height;
+						}
+
+						// fix to origin size.
+						if (img.getStyle('width') === undefined && img.getStyle('height') === undefined) {
+							img.setSize({
+								width : width,
+								height : height
+							});
+						}
+
+						// switch X2 image data url.
+						img.setX2Src(x2DataURL);
+					}
+				});
+			}
+		};
+
+		self.switchBG = switchBG = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.node
+			//REQUIRED: params.uri
+
+			var
+			// node
+			node = params.node,
+
+			// img
+			img = IMG({
+				src : params.uri
+			});
+
+			exportX2ImgData(img, function(x2ImgData) {
+
+				var
+				// X2 data url
+				x2DataURL = x2ImgData.x2DataURL,
+
+				// background size
+				backgroundSize = node.getStyle('backgroundSize');
+
+				// fix to origin size.
+				if (backgroundSize === undefined || backgroundSize === 'initial') {
+					backgroundSize = x2ImgData.width + 'px ' + x2ImgData.height + 'px';
+				}
+
+				// switch X2 background.
+				ADD_STYLE({
+					node : node,
+					style : {
+						backgroundX2Image : x2DataURL,
+						backgroundSize : backgroundSize
+					}
+				});
+			});
+		};
+	}
+});
+
+/**
+ * get internationalization message.
+ */
+global.MSG = METHOD({
+
+	run : function(msgs) {
+		'use strict';
+		//REQUIRED: msgs
+
+		var
+		// msg
+		msg = msgs[INFO.getLang()];
+
+		if (msg === undefined) {
+
+			// get first msg.
+			EACH(msgs, function(_msg) {
+				msg = _msg;
+				return false;
+			});
+		}
+
+		return msg;
+	}
+});
+
+
+/*!
+  * Bowser - a browser detector
+  * https://github.com/ded/bowser
+  * MIT License | (c) Dustin Diaz 2014
+  */
+
+!function (name, definition) {
+  if (typeof module != 'undefined' && module.exports) module.exports['browser'] = definition()
+  else if (typeof define == 'function') define(definition)
+  else this[name] = definition()
+}('bowser', function () {
+  /**
+    * See useragents.js for examples of navigator.userAgent
+    */
+
+  var t = true
+
+  function detect(ua) {
+
+    function getFirstMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[1]) || '';
+    }
+
+    var iosdevice = getFirstMatch(/(ipod|iphone|ipad)/i).toLowerCase()
+      , likeAndroid = /like android/i.test(ua)
+      , android = !likeAndroid && /android/i.test(ua)
+      , versionIdentifier = getFirstMatch(/version\/(\d+(\.\d+)?)/i)
+      , tablet = /tablet/i.test(ua)
+      , mobile = !tablet && /[^-]mobi/i.test(ua)
+      , result
+
+    if (/opera|opr/i.test(ua)) {
+      result = {
+        name: 'Opera'
+      , opera: t
+      , version: versionIdentifier || getFirstMatch(/(?:opera|opr)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/windows phone/i.test(ua)) {
+      result = {
+        name: 'Windows Phone'
+      , windowsphone: t
+      , msie: t
+      , version: getFirstMatch(/iemobile\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/msie|trident/i.test(ua)) {
+      result = {
+        name: 'Internet Explorer'
+      , msie: t
+      , version: getFirstMatch(/(?:msie |rv:)(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/chrome|crios|crmo/i.test(ua)) {
+      result = {
+        name: 'Chrome'
+      , chrome: t
+      , version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (iosdevice) {
+      result = {
+        name : iosdevice == 'iphone' ? 'iPhone' : iosdevice == 'ipad' ? 'iPad' : 'iPod'
+      }
+      // WTF: version is not part of user agent in web apps
+      if (versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    }
+    else if (/sailfish/i.test(ua)) {
+      result = {
+        name: 'Sailfish'
+      , sailfish: t
+      , version: getFirstMatch(/sailfish\s?browser\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/seamonkey\//i.test(ua)) {
+      result = {
+        name: 'SeaMonkey'
+      , seamonkey: t
+      , version: getFirstMatch(/seamonkey\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/firefox|iceweasel/i.test(ua)) {
+      result = {
+        name: 'Firefox'
+      , firefox: t
+      , version: getFirstMatch(/(?:firefox|iceweasel)[ \/](\d+(\.\d+)?)/i)
+      }
+      if (/\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(ua)) {
+        result.firefoxos = t
+      }
+    }
+    else if (/silk/i.test(ua)) {
+      result =  {
+        name: 'Amazon Silk'
+      , silk: t
+      , version : getFirstMatch(/silk\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (android) {
+      result = {
+        name: 'Android'
+      , version: versionIdentifier
+      }
+    }
+    else if (/phantom/i.test(ua)) {
+      result = {
+        name: 'PhantomJS'
+      , phantom: t
+      , version: getFirstMatch(/phantomjs\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/blackberry|\bbb\d+/i.test(ua) || /rim\stablet/i.test(ua)) {
+      result = {
+        name: 'BlackBerry'
+      , blackberry: t
+      , version: versionIdentifier || getFirstMatch(/blackberry[\d]+\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/(web|hpw)os/i.test(ua)) {
+      result = {
+        name: 'WebOS'
+      , webos: t
+      , version: versionIdentifier || getFirstMatch(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)
+      };
+      /touchpad\//i.test(ua) && (result.touchpad = t)
+    }
+    else if (/bada/i.test(ua)) {
+      result = {
+        name: 'Bada'
+      , bada: t
+      , version: getFirstMatch(/dolfin\/(\d+(\.\d+)?)/i)
+      };
+    }
+    else if (/tizen/i.test(ua)) {
+      result = {
+        name: 'Tizen'
+      , tizen: t
+      , version: getFirstMatch(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i) || versionIdentifier
+      };
+    }
+    else if (/safari/i.test(ua)) {
+      result = {
+        name: 'Safari'
+      , safari: t
+      , version: versionIdentifier
+      }
+    }
+    else result = {}
+
+    // set webkit or gecko flag for browsers based on these engines
+    if (/(apple)?webkit/i.test(ua)) {
+      result.name = result.name || "Webkit"
+      result.webkit = t
+      if (!result.version && versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    } else if (!result.opera && /gecko\//i.test(ua)) {
+      result.name = result.name || "Gecko"
+      result.gecko = t
+      result.version = result.version || getFirstMatch(/gecko\/(\d+(\.\d+)?)/i)
+    }
+
+    // set OS flags for platforms that have multiple browsers
+    if (android || result.silk) {
+      result.android = t
+    } else if (iosdevice) {
+      result[iosdevice] = t
+      result.ios = t
+    }
+
+    // OS version extraction
+    var osVersion = '';
+    if (iosdevice) {
+      osVersion = getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i);
+      osVersion = osVersion.replace(/[_\s]/g, '.');
+    } else if (android) {
+      osVersion = getFirstMatch(/android[ \/-](\d+(\.\d+)*)/i);
+    } else if (result.windowsphone) {
+      osVersion = getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i);
+    } else if (result.webos) {
+      osVersion = getFirstMatch(/(?:web|hpw)os\/(\d+(\.\d+)*)/i);
+    } else if (result.blackberry) {
+      osVersion = getFirstMatch(/rim\stablet\sos\s(\d+(\.\d+)*)/i);
+    } else if (result.bada) {
+      osVersion = getFirstMatch(/bada\/(\d+(\.\d+)*)/i);
+    } else if (result.tizen) {
+      osVersion = getFirstMatch(/tizen[\/\s](\d+(\.\d+)*)/i);
+    }
+    if (osVersion) {
+      result.osversion = osVersion;
+    }
+
+    // device type extraction
+    var osMajorVersion = osVersion.split('.')[0];
+    if (tablet || iosdevice == 'ipad' || (android && (osMajorVersion == 3 || (osMajorVersion == 4 && !mobile))) || result.silk) {
+      result.tablet = t
+    } else if (mobile || iosdevice == 'iphone' || iosdevice == 'ipod' || android || result.blackberry || result.webos || result.bada) {
+      result.mobile = t
+    }
+
+    // Graded Browser Support
+    // http://developer.yahoo.com/yui/articles/gbs
+    if ((result.msie && result.version >= 10) ||
+        (result.chrome && result.version >= 20) ||
+        (result.firefox && result.version >= 20.0) ||
+        (result.safari && result.version >= 6) ||
+        (result.opera && result.version >= 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] >= 6)
+        ) {
+      result.a = t;
+    }
+    else if ((result.msie && result.version < 10) ||
+        (result.chrome && result.version < 20) ||
+        (result.firefox && result.version < 20.0) ||
+        (result.safari && result.version < 6) ||
+        (result.opera && result.version < 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] < 6)
+        ) {
+      result.c = t
+    } else result.x = t
+
+    return result
+  }
+
+  var bowser = detect(typeof navigator !== 'undefined' ? navigator.userAgent : '')
+
+
+  /*
+   * Set our detect method to the main bowser object so we can
+   * reuse it to test other user agents.
+   * This is needed to implement future tests.
+   */
+  bowser._detect = detect;
+
+  return bowser
+});
+
+
+/*
+ * Binary Ajax 0.1.5
+ * Copyright (c) 2008 Jacob Seidelin, cupboy@gmail.com, http://blog.nihilogic.dk/
+ * MIT License [http://www.opensource.org/licenses/mit-license.php]
+ */
+
+
+var BinaryFile = function(strData, iDataOffset, iDataLength) {
+	var data = strData;
+	var dataOffset = iDataOffset || 0;
+	var dataLength = 0;
+
+	this.getRawData = function() {
+		return data;
+	}
+
+	if (typeof strData == "string") {
+		dataLength = iDataLength || data.length;
+
+		this.getByteAt = function(iOffset) {
+			return data.charCodeAt(iOffset + dataOffset) & 0xFF;
+		}
+	} else if (typeof strData == "unknown") {
+		dataLength = iDataLength || IEBinary_getLength(data);
+
+		this.getByteAt = function(iOffset) {
+			return IEBinary_getByteAt(data, iOffset + dataOffset);
+		}
+	}
+
+	this.getLength = function() {
+		return dataLength;
+	}
+
+	this.getSByteAt = function(iOffset) {
+		var iByte = this.getByteAt(iOffset);
+		if (iByte > 127)
+			return iByte - 256;
+		else
+			return iByte;
+	}
+
+	this.getShortAt = function(iOffset, bBigEndian) {
+		var iShort = bBigEndian ? 
+			(this.getByteAt(iOffset) << 8) + this.getByteAt(iOffset + 1)
+			: (this.getByteAt(iOffset + 1) << 8) + this.getByteAt(iOffset)
+		if (iShort < 0) iShort += 65536;
+		return iShort;
+	}
+	this.getSShortAt = function(iOffset, bBigEndian) {
+		var iUShort = this.getShortAt(iOffset, bBigEndian);
+		if (iUShort > 32767)
+			return iUShort - 65536;
+		else
+			return iUShort;
+	}
+	this.getLongAt = function(iOffset, bBigEndian) {
+		var iByte1 = this.getByteAt(iOffset),
+			iByte2 = this.getByteAt(iOffset + 1),
+			iByte3 = this.getByteAt(iOffset + 2),
+			iByte4 = this.getByteAt(iOffset + 3);
+
+		var iLong = bBigEndian ? 
+			(((((iByte1 << 8) + iByte2) << 8) + iByte3) << 8) + iByte4
+			: (((((iByte4 << 8) + iByte3) << 8) + iByte2) << 8) + iByte1;
+		if (iLong < 0) iLong += 4294967296;
+		return iLong;
+	}
+	this.getSLongAt = function(iOffset, bBigEndian) {
+		var iULong = this.getLongAt(iOffset, bBigEndian);
+		if (iULong > 2147483647)
+			return iULong - 4294967296;
+		else
+			return iULong;
+	}
+	this.getStringAt = function(iOffset, iLength) {
+		var aStr = [];
+		for (var i=iOffset,j=0;i<iOffset+iLength;i++,j++) {
+			aStr[j] = String.fromCharCode(this.getByteAt(i));
+		}
+		return aStr.join("");
+	}
+
+	this.getCharAt = function(iOffset) {
+		return String.fromCharCode(this.getByteAt(iOffset));
+	}
+	this.toBase64 = function() {
+		return window.btoa(data);
+	}
+	this.fromBase64 = function(strBase64) {
+		data = window.atob(strBase64);
+	}
+}
+
+
+var BinaryAjax = (function() {
+
+	function createRequest() {
+		var oHTTP = null;
+		if (window.XMLHttpRequest) {
+			oHTTP = new XMLHttpRequest();
+		} else if (window.ActiveXObject) {
+			oHTTP = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		return oHTTP;
+	}
+
+	function getHead(strURL, fncCallback, fncError) {
+		var oHTTP = createRequest();
+		if (oHTTP) {
+			if (fncCallback) {
+				if (typeof(oHTTP.onload) != "undefined") {
+					oHTTP.onload = function() {
+						if (oHTTP.status == "200") {
+							fncCallback(this);
+						} else {
+							if (fncError) fncError();
+						}
+						oHTTP = null;
+					};
+				} else {
+					oHTTP.onreadystatechange = function() {
+						if (oHTTP.readyState == 4) {
+							if (oHTTP.status == "200") {
+								fncCallback(this);
+							} else {
+								if (fncError) fncError();
+							}
+							oHTTP = null;
+						}
+					};
+				}
+			}
+			oHTTP.open("HEAD", strURL, true);
+			oHTTP.send(null);
+		} else {
+			if (fncError) fncError();
+		}
+	}
+
+	function sendRequest(strURL, fncCallback, fncError, aRange, bAcceptRanges, iFileSize) {
+		var oHTTP = createRequest();
+		if (oHTTP) {
+
+			var iDataOffset = 0;
+			if (aRange && !bAcceptRanges) {
+				iDataOffset = aRange[0];
+			}
+			var iDataLen = 0;
+			if (aRange) {
+				iDataLen = aRange[1]-aRange[0]+1;
+			}
+
+			if (fncCallback) {
+				if (typeof(oHTTP.onload) != "undefined") {
+					oHTTP.onload = function() {
+
+						if (oHTTP.status == "200" || oHTTP.status == "206") {
+							this.binaryResponse = new BinaryFile(this.responseText, iDataOffset, iDataLen);
+							//this.fileSize = iFileSize || this.getResponseHeader("Content-Length");
+							fncCallback(this);
+						} else {
+							if (fncError) fncError();
+						}
+						oHTTP = null;
+					};
+				} else {
+					oHTTP.onreadystatechange = function() {
+						if (oHTTP.readyState == 4) {
+							if (oHTTP.status == "200" || oHTTP.status == "206") {
+								this.binaryResponse = new BinaryFile(oHTTP.responseBody, iDataOffset, iDataLen);
+								//this.fileSize = iFileSize || this.getResponseHeader("Content-Length");
+								fncCallback(this);
+							} else {
+								if (fncError) fncError();
+							}
+							oHTTP = null;
+						}
+					};
+				}
+			}
+			oHTTP.open("GET", strURL, true);
+
+			if (oHTTP.overrideMimeType) oHTTP.overrideMimeType('text/plain; charset=x-user-defined');
+
+			if (aRange && bAcceptRanges) {
+				oHTTP.setRequestHeader("Range", "bytes=" + aRange[0] + "-" + aRange[1]);
+			}
+
+			//oHTTP.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
+
+			oHTTP.send(null);
+		} else {
+			if (fncError) fncError();
+		}
+	}
+
+	return function(strURL, fncCallback, fncError, aRange) {
+
+		if (aRange) {
+			getHead(
+				strURL, 
+				function(oHTTP) {
+					/*
+					var iLength = parseInt(oHTTP.getResponseHeader("Content-Length"),10);
+					var strAcceptRanges = oHTTP.getResponseHeader("Accept-Ranges");
+
+					var iStart, iEnd;
+					iStart = aRange[0];
+					if (aRange[0] < 0) 
+						iStart += iLength;
+					iEnd = iStart + aRange[1] - 1;
+
+					sendRequest(strURL, fncCallback, fncError, [iStart, iEnd], (strAcceptRanges == "bytes"), iLength);
+					*/
+				}
+			);
+
+		} else {
+			sendRequest(strURL, fncCallback, fncError);
+		}
+	}
+
+}());
+
+
+document.write(
+	"<script type='text/vbscript'>\r\n"
+	+ "Function IEBinary_getByteAt(strBinary, iOffset)\r\n"
+	+ "	IEBinary_getByteAt = AscB(MidB(strBinary,iOffset+1,1))\r\n"
+	+ "End Function\r\n"
+	+ "Function IEBinary_getLength(strBinary)\r\n"
+	+ "	IEBinary_getLength = LenB(strBinary)\r\n"
+	+ "End Function\r\n"
+	+ "</script>\r\n"
+);
+
+/*
+ * Javascript EXIF Reader 0.1.2
+ * Copyright (c) 2008 Jacob Seidelin, cupboy@gmail.com, http://blog.nihilogic.dk/
+ * MIT License [http://www.opensource.org/licenses/mit-license.php]
+ */
+
+
+var EXIF = {};
+
+(function() {
+
+var bDebug = false;
+
+EXIF.Tags = {
+
+	// version tags
+	0x9000 : "ExifVersion",			// EXIF version
+	0xA000 : "FlashpixVersion",		// Flashpix format version
+
+	// colorspace tags
+	0xA001 : "ColorSpace",			// Color space information tag
+
+	// image configuration
+	0xA002 : "PixelXDimension",		// Valid width of meaningful image
+	0xA003 : "PixelYDimension",		// Valid height of meaningful image
+	0x9101 : "ComponentsConfiguration",	// Information about channels
+	0x9102 : "CompressedBitsPerPixel",	// Compressed bits per pixel
+
+	// user information
+	0x927C : "MakerNote",			// Any desired information written by the manufacturer
+	0x9286 : "UserComment",			// Comments by user
+
+	// related file
+	0xA004 : "RelatedSoundFile",		// Name of related sound file
+
+	// date and time
+	0x9003 : "DateTimeOriginal",		// Date and time when the original image was generated
+	0x9004 : "DateTimeDigitized",		// Date and time when the image was stored digitally
+	0x9290 : "SubsecTime",			// Fractions of seconds for DateTime
+	0x9291 : "SubsecTimeOriginal",		// Fractions of seconds for DateTimeOriginal
+	0x9292 : "SubsecTimeDigitized",		// Fractions of seconds for DateTimeDigitized
+
+	// picture-taking conditions
+	0x829A : "ExposureTime",		// Exposure time (in seconds)
+	0x829D : "FNumber",			// F number
+	0x8822 : "ExposureProgram",		// Exposure program
+	0x8824 : "SpectralSensitivity",		// Spectral sensitivity
+	0x8827 : "ISOSpeedRatings",		// ISO speed rating
+	0x8828 : "OECF",			// Optoelectric conversion factor
+	0x9201 : "ShutterSpeedValue",		// Shutter speed
+	0x9202 : "ApertureValue",		// Lens aperture
+	0x9203 : "BrightnessValue",		// Value of brightness
+	0x9204 : "ExposureBias",		// Exposure bias
+	0x9205 : "MaxApertureValue",		// Smallest F number of lens
+	0x9206 : "SubjectDistance",		// Distance to subject in meters
+	0x9207 : "MeteringMode", 		// Metering mode
+	0x9208 : "LightSource",			// Kind of light source
+	0x9209 : "Flash",			// Flash status
+	0x9214 : "SubjectArea",			// Location and area of main subject
+	0x920A : "FocalLength",			// Focal length of the lens in mm
+	0xA20B : "FlashEnergy",			// Strobe energy in BCPS
+	0xA20C : "SpatialFrequencyResponse",	// 
+	0xA20E : "FocalPlaneXResolution", 	// Number of pixels in width direction per FocalPlaneResolutionUnit
+	0xA20F : "FocalPlaneYResolution", 	// Number of pixels in height direction per FocalPlaneResolutionUnit
+	0xA210 : "FocalPlaneResolutionUnit", 	// Unit for measuring FocalPlaneXResolution and FocalPlaneYResolution
+	0xA214 : "SubjectLocation",		// Location of subject in image
+	0xA215 : "ExposureIndex",		// Exposure index selected on camera
+	0xA217 : "SensingMethod", 		// Image sensor type
+	0xA300 : "FileSource", 			// Image source (3 == DSC)
+	0xA301 : "SceneType", 			// Scene type (1 == directly photographed)
+	0xA302 : "CFAPattern",			// Color filter array geometric pattern
+	0xA401 : "CustomRendered",		// Special processing
+	0xA402 : "ExposureMode",		// Exposure mode
+	0xA403 : "WhiteBalance",		// 1 = auto white balance, 2 = manual
+	0xA404 : "DigitalZoomRation",		// Digital zoom ratio
+	0xA405 : "FocalLengthIn35mmFilm",	// Equivalent foacl length assuming 35mm film camera (in mm)
+	0xA406 : "SceneCaptureType",		// Type of scene
+	0xA407 : "GainControl",			// Degree of overall image gain adjustment
+	0xA408 : "Contrast",			// Direction of contrast processing applied by camera
+	0xA409 : "Saturation", 			// Direction of saturation processing applied by camera
+	0xA40A : "Sharpness",			// Direction of sharpness processing applied by camera
+	0xA40B : "DeviceSettingDescription",	// 
+	0xA40C : "SubjectDistanceRange",	// Distance to subject
+
+	// other tags
+	0xA005 : "InteroperabilityIFDPointer",
+	0xA420 : "ImageUniqueID"		// Identifier assigned uniquely to each image
+};
+
+EXIF.TiffTags = {
+	0x0100 : "ImageWidth",
+	0x0101 : "ImageHeight",
+	0x8769 : "ExifIFDPointer",
+	0x8825 : "GPSInfoIFDPointer",
+	0xA005 : "InteroperabilityIFDPointer",
+	0x0102 : "BitsPerSample",
+	0x0103 : "Compression",
+	0x0106 : "PhotometricInterpretation",
+	0x0112 : "Orientation",
+	0x0115 : "SamplesPerPixel",
+	0x011C : "PlanarConfiguration",
+	0x0212 : "YCbCrSubSampling",
+	0x0213 : "YCbCrPositioning",
+	0x011A : "XResolution",
+	0x011B : "YResolution",
+	0x0128 : "ResolutionUnit",
+	0x0111 : "StripOffsets",
+	0x0116 : "RowsPerStrip",
+	0x0117 : "StripByteCounts",
+	0x0201 : "JPEGInterchangeFormat",
+	0x0202 : "JPEGInterchangeFormatLength",
+	0x012D : "TransferFunction",
+	0x013E : "WhitePoint",
+	0x013F : "PrimaryChromaticities",
+	0x0211 : "YCbCrCoefficients",
+	0x0214 : "ReferenceBlackWhite",
+	0x0132 : "DateTime",
+	0x010E : "ImageDescription",
+	0x010F : "Make",
+	0x0110 : "Model",
+	0x0131 : "Software",
+	0x013B : "Artist",
+	0x8298 : "Copyright"
+}
+
+EXIF.GPSTags = {
+	0x0000 : "GPSVersionID",
+	0x0001 : "GPSLatitudeRef",
+	0x0002 : "GPSLatitude",
+	0x0003 : "GPSLongitudeRef",
+	0x0004 : "GPSLongitude",
+	0x0005 : "GPSAltitudeRef",
+	0x0006 : "GPSAltitude",
+	0x0007 : "GPSTimeStamp",
+	0x0008 : "GPSSatellites",
+	0x0009 : "GPSStatus",
+	0x000A : "GPSMeasureMode",
+	0x000B : "GPSDOP",
+	0x000C : "GPSSpeedRef",
+	0x000D : "GPSSpeed",
+	0x000E : "GPSTrackRef",
+	0x000F : "GPSTrack",
+	0x0010 : "GPSImgDirectionRef",
+	0x0011 : "GPSImgDirection",
+	0x0012 : "GPSMapDatum",
+	0x0013 : "GPSDestLatitudeRef",
+	0x0014 : "GPSDestLatitude",
+	0x0015 : "GPSDestLongitudeRef",
+	0x0016 : "GPSDestLongitude",
+	0x0017 : "GPSDestBearingRef",
+	0x0018 : "GPSDestBearing",
+	0x0019 : "GPSDestDistanceRef",
+	0x001A : "GPSDestDistance",
+	0x001B : "GPSProcessingMethod",
+	0x001C : "GPSAreaInformation",
+	0x001D : "GPSDateStamp",
+	0x001E : "GPSDifferential"
+}
+
+EXIF.StringValues = {
+	ExposureProgram : {
+		0 : "Not defined",
+		1 : "Manual",
+		2 : "Normal program",
+		3 : "Aperture priority",
+		4 : "Shutter priority",
+		5 : "Creative program",
+		6 : "Action program",
+		7 : "Portrait mode",
+		8 : "Landscape mode"
+	},
+	MeteringMode : {
+		0 : "Unknown",
+		1 : "Average",
+		2 : "CenterWeightedAverage",
+		3 : "Spot",
+		4 : "MultiSpot",
+		5 : "Pattern",
+		6 : "Partial",
+		255 : "Other"
+	},
+	LightSource : {
+		0 : "Unknown",
+		1 : "Daylight",
+		2 : "Fluorescent",
+		3 : "Tungsten (incandescent light)",
+		4 : "Flash",
+		9 : "Fine weather",
+		10 : "Cloudy weather",
+		11 : "Shade",
+		12 : "Daylight fluorescent (D 5700 - 7100K)",
+		13 : "Day white fluorescent (N 4600 - 5400K)",
+		14 : "Cool white fluorescent (W 3900 - 4500K)",
+		15 : "White fluorescent (WW 3200 - 3700K)",
+		17 : "Standard light A",
+		18 : "Standard light B",
+		19 : "Standard light C",
+		20 : "D55",
+		21 : "D65",
+		22 : "D75",
+		23 : "D50",
+		24 : "ISO studio tungsten",
+		255 : "Other"
+	},
+	Flash : {
+		0x0000 : "Flash did not fire",
+		0x0001 : "Flash fired",
+		0x0005 : "Strobe return light not detected",
+		0x0007 : "Strobe return light detected",
+		0x0009 : "Flash fired, compulsory flash mode",
+		0x000D : "Flash fired, compulsory flash mode, return light not detected",
+		0x000F : "Flash fired, compulsory flash mode, return light detected",
+		0x0010 : "Flash did not fire, compulsory flash mode",
+		0x0018 : "Flash did not fire, auto mode",
+		0x0019 : "Flash fired, auto mode",
+		0x001D : "Flash fired, auto mode, return light not detected",
+		0x001F : "Flash fired, auto mode, return light detected",
+		0x0020 : "No flash function",
+		0x0041 : "Flash fired, red-eye reduction mode",
+		0x0045 : "Flash fired, red-eye reduction mode, return light not detected",
+		0x0047 : "Flash fired, red-eye reduction mode, return light detected",
+		0x0049 : "Flash fired, compulsory flash mode, red-eye reduction mode",
+		0x004D : "Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected",
+		0x004F : "Flash fired, compulsory flash mode, red-eye reduction mode, return light detected",
+		0x0059 : "Flash fired, auto mode, red-eye reduction mode",
+		0x005D : "Flash fired, auto mode, return light not detected, red-eye reduction mode",
+		0x005F : "Flash fired, auto mode, return light detected, red-eye reduction mode"
+	},
+	SensingMethod : {
+		1 : "Not defined",
+		2 : "One-chip color area sensor",
+		3 : "Two-chip color area sensor",
+		4 : "Three-chip color area sensor",
+		5 : "Color sequential area sensor",
+		7 : "Trilinear sensor",
+		8 : "Color sequential linear sensor"
+	},
+	SceneCaptureType : {
+		0 : "Standard",
+		1 : "Landscape",
+		2 : "Portrait",
+		3 : "Night scene"
+	},
+	SceneType : {
+		1 : "Directly photographed"
+	},
+	CustomRendered : {
+		0 : "Normal process",
+		1 : "Custom process"
+	},
+	WhiteBalance : {
+		0 : "Auto white balance",
+		1 : "Manual white balance"
+	},
+	GainControl : {
+		0 : "None",
+		1 : "Low gain up",
+		2 : "High gain up",
+		3 : "Low gain down",
+		4 : "High gain down"
+	},
+	Contrast : {
+		0 : "Normal",
+		1 : "Soft",
+		2 : "Hard"
+	},
+	Saturation : {
+		0 : "Normal",
+		1 : "Low saturation",
+		2 : "High saturation"
+	},
+	Sharpness : {
+		0 : "Normal",
+		1 : "Soft",
+		2 : "Hard"
+	},
+	SubjectDistanceRange : {
+		0 : "Unknown",
+		1 : "Macro",
+		2 : "Close view",
+		3 : "Distant view"
+	},
+	FileSource : {
+		3 : "DSC"
+	},
+
+	Components : {
+		0 : "",
+		1 : "Y",
+		2 : "Cb",
+		3 : "Cr",
+		4 : "R",
+		5 : "G",
+		6 : "B"
+	}
+}
+
+function addEvent(oElement, strEvent, fncHandler) 
+{
+	if (oElement.addEventListener) { 
+		oElement.addEventListener(strEvent, fncHandler, false); 
+	} else if (oElement.attachEvent) { 
+		oElement.attachEvent("on" + strEvent, fncHandler); 
+	}
+}
+
+
+function imageHasData(oImg) 
+{
+	return !!(oImg.exifdata);
+}
+
+function getImageData(oImg, fncCallback) 
+{
+	BinaryAjax(
+		oImg.src,
+		function(oHTTP) {
+			var oEXIF = findEXIFinJPEG(oHTTP.binaryResponse);
+			oImg.exifdata = oEXIF || {};
+			if (fncCallback) fncCallback();
+		}
+	)
+}
+
+function findEXIFinJPEG(oFile) {
+	var aMarkers = [];
+
+	if (oFile.getByteAt(0) != 0xFF || oFile.getByteAt(1) != 0xD8) {
+		return false; // not a valid jpeg
+	}
+
+	var iOffset = 2;
+	var iLength = oFile.getLength();
+	while (iOffset < iLength) {
+		if (oFile.getByteAt(iOffset) != 0xFF) {
+			if (bDebug) console.log("Not a valid marker at offset " + iOffset + ", found: " + oFile.getByteAt(iOffset));
+			return false; // not a valid marker, something is wrong
+		}
+
+		var iMarker = oFile.getByteAt(iOffset+1);
+
+		// we could implement handling for other markers here, 
+		// but we're only looking for 0xFFE1 for EXIF data
+
+		if (iMarker == 22400) {
+			if (bDebug) console.log("Found 0xFFE1 marker");
+			return readEXIFData(oFile, iOffset + 4, oFile.getShortAt(iOffset+2, true)-2);
+			iOffset += 2 + oFile.getShortAt(iOffset+2, true);
+
+		} else if (iMarker == 225) {
+			// 0xE1 = Application-specific 1 (for EXIF)
+			if (bDebug) console.log("Found 0xFFE1 marker");
+			return readEXIFData(oFile, iOffset + 4, oFile.getShortAt(iOffset+2, true)-2);
+
+		} else {
+			iOffset += 2 + oFile.getShortAt(iOffset+2, true);
+		}
+
+	}
+
+}
+
+
+function readTags(oFile, iTIFFStart, iDirStart, oStrings, bBigEnd) 
+{
+	var iEntries = oFile.getShortAt(iDirStart, bBigEnd);
+	var oTags = {};
+	for (var i=0;i<iEntries;i++) {
+		var iEntryOffset = iDirStart + i*12 + 2;
+		var strTag = oStrings[oFile.getShortAt(iEntryOffset, bBigEnd)];
+		if (!strTag && bDebug) console.log("Unknown tag: " + oFile.getShortAt(iEntryOffset, bBigEnd));
+		oTags[strTag] = readTagValue(oFile, iEntryOffset, iTIFFStart, iDirStart, bBigEnd);
+	}
+	return oTags;
+}
+
+
+function readTagValue(oFile, iEntryOffset, iTIFFStart, iDirStart, bBigEnd)
+{
+	var iType = oFile.getShortAt(iEntryOffset+2, bBigEnd);
+	var iNumValues = oFile.getLongAt(iEntryOffset+4, bBigEnd);
+	var iValueOffset = oFile.getLongAt(iEntryOffset+8, bBigEnd) + iTIFFStart;
+
+	switch (iType) {
+		case 1: // byte, 8-bit unsigned int
+		case 7: // undefined, 8-bit byte, value depending on field
+			if (iNumValues == 1) {
+				return oFile.getByteAt(iEntryOffset + 8, bBigEnd);
+			} else {
+				var iValOffset = iNumValues > 4 ? iValueOffset : (iEntryOffset + 8);
+				var aVals = [];
+				for (var n=0;n<iNumValues;n++) {
+					aVals[n] = oFile.getByteAt(iValOffset + n);
+				}
+				return aVals;
+			}
+			break;
+
+		case 2: // ascii, 8-bit byte
+			var iStringOffset = iNumValues > 4 ? iValueOffset : (iEntryOffset + 8);
+			return oFile.getStringAt(iStringOffset, iNumValues-1);
+			break;
+
+		case 3: // short, 16 bit int
+			if (iNumValues == 1) {
+				return oFile.getShortAt(iEntryOffset + 8, bBigEnd);
+			} else {
+				var iValOffset = iNumValues > 2 ? iValueOffset : (iEntryOffset + 8);
+				var aVals = [];
+				for (var n=0;n<iNumValues;n++) {
+					aVals[n] = oFile.getShortAt(iValOffset + 2*n, bBigEnd);
+				}
+				return aVals;
+			}
+			break;
+
+		case 4: // long, 32 bit int
+			if (iNumValues == 1) {
+				return oFile.getLongAt(iEntryOffset + 8, bBigEnd);
+			} else {
+				var aVals = [];
+				for (var n=0;n<iNumValues;n++) {
+					aVals[n] = oFile.getLongAt(iValueOffset + 4*n, bBigEnd);
+				}
+				return aVals;
+			}
+			break;
+		case 5:	// rational = two long values, first is numerator, second is denominator
+			if (iNumValues == 1) {
+				return oFile.getLongAt(iValueOffset, bBigEnd) / oFile.getLongAt(iValueOffset+4, bBigEnd);
+			} else {
+				var aVals = [];
+				for (var n=0;n<iNumValues;n++) {
+					aVals[n] = oFile.getLongAt(iValueOffset + 8*n, bBigEnd) / oFile.getLongAt(iValueOffset+4 + 8*n, bBigEnd);
+				}
+				return aVals;
+			}
+			break;
+		case 9: // slong, 32 bit signed int
+			if (iNumValues == 1) {
+				return oFile.getSLongAt(iEntryOffset + 8, bBigEnd);
+			} else {
+				var aVals = [];
+				for (var n=0;n<iNumValues;n++) {
+					aVals[n] = oFile.getSLongAt(iValueOffset + 4*n, bBigEnd);
+				}
+				return aVals;
+			}
+			break;
+		case 10: // signed rational, two slongs, first is numerator, second is denominator
+			if (iNumValues == 1) {
+				return oFile.getSLongAt(iValueOffset, bBigEnd) / oFile.getSLongAt(iValueOffset+4, bBigEnd);
+			} else {
+				var aVals = [];
+				for (var n=0;n<iNumValues;n++) {
+					aVals[n] = oFile.getSLongAt(iValueOffset + 8*n, bBigEnd) / oFile.getSLongAt(iValueOffset+4 + 8*n, bBigEnd);
+				}
+				return aVals;
+			}
+			break;
+	}
+}
+
+
+function readEXIFData(oFile, iStart, iLength) 
+{
+	if (oFile.getStringAt(iStart, 4) != "Exif") {
+		if (bDebug) console.log("Not valid EXIF data! " + oFile.getStringAt(iStart, 4));
+		return false;
+	}
+
+	var bBigEnd;
+
+	var iTIFFOffset = iStart + 6;
+
+	// test for TIFF validity and endianness
+	if (oFile.getShortAt(iTIFFOffset) == 0x4949) {
+		bBigEnd = false;
+	} else if (oFile.getShortAt(iTIFFOffset) == 0x4D4D) {
+		bBigEnd = true;
+	} else {
+		if (bDebug) console.log("Not valid TIFF data! (no 0x4949 or 0x4D4D)");
+		return false;
+	}
+
+	if (oFile.getShortAt(iTIFFOffset+2, bBigEnd) != 0x002A) {
+		if (bDebug) console.log("Not valid TIFF data! (no 0x002A)");
+		return false;
+	}
+
+	if (oFile.getLongAt(iTIFFOffset+4, bBigEnd) != 0x00000008) {
+		if (bDebug) console.log("Not valid TIFF data! (First offset not 8)", oFile.getShortAt(iTIFFOffset+4, bBigEnd));
+		return false;
+	}
+
+	var oTags = readTags(oFile, iTIFFOffset, iTIFFOffset+8, EXIF.TiffTags, bBigEnd);
+
+	if (oTags.ExifIFDPointer) {
+		var oEXIFTags = readTags(oFile, iTIFFOffset, iTIFFOffset + oTags.ExifIFDPointer, EXIF.Tags, bBigEnd);
+		for (var strTag in oEXIFTags) {
+			switch (strTag) {
+				case "LightSource" :
+				case "Flash" :
+				case "MeteringMode" :
+				case "ExposureProgram" :
+				case "SensingMethod" :
+				case "SceneCaptureType" :
+				case "SceneType" :
+				case "CustomRendered" :
+				case "WhiteBalance" : 
+				case "GainControl" : 
+				case "Contrast" :
+				case "Saturation" :
+				case "Sharpness" : 
+				case "SubjectDistanceRange" :
+				case "FileSource" :
+					oEXIFTags[strTag] = EXIF.StringValues[strTag][oEXIFTags[strTag]];
+					break;
+	
+				case "ExifVersion" :
+				case "FlashpixVersion" :
+					oEXIFTags[strTag] = String.fromCharCode(oEXIFTags[strTag][0], oEXIFTags[strTag][1], oEXIFTags[strTag][2], oEXIFTags[strTag][3]);
+					break;
+	
+				case "ComponentsConfiguration" : 
+					oEXIFTags[strTag] = 
+						EXIF.StringValues.Components[oEXIFTags[strTag][0]]
+						+ EXIF.StringValues.Components[oEXIFTags[strTag][1]]
+						+ EXIF.StringValues.Components[oEXIFTags[strTag][2]]
+						+ EXIF.StringValues.Components[oEXIFTags[strTag][3]];
+					break;
+			}
+			oTags[strTag] = oEXIFTags[strTag];
+		}
+	}
+
+	if (oTags.GPSInfoIFDPointer) {
+		var oGPSTags = readTags(oFile, iTIFFOffset, iTIFFOffset + oTags.GPSInfoIFDPointer, EXIF.GPSTags, bBigEnd);
+		for (var strTag in oGPSTags) {
+			switch (strTag) {
+				case "GPSVersionID" : 
+					oGPSTags[strTag] = oGPSTags[strTag][0] 
+						+ "." + oGPSTags[strTag][1] 
+						+ "." + oGPSTags[strTag][2] 
+						+ "." + oGPSTags[strTag][3];
+					break;
+			}
+			oTags[strTag] = oGPSTags[strTag];
+		}
+	}
+
+	return oTags;
+}
+
+
+EXIF.getData = function(oImg, fncCallback) 
+{
+	if (!oImg.complete) return false;
+	if (!imageHasData(oImg)) {
+		getImageData(oImg, fncCallback);
+	} else {
+		if (fncCallback) fncCallback();
+	}
+	return true;
+}
+
+EXIF.getTag = function(oImg, strTag) 
+{
+	if (!imageHasData(oImg)) return;
+	return oImg.exifdata[strTag];
+}
+
+EXIF.pretty = function(oImg) 
+{
+	if (!imageHasData(oImg)) return "";
+	var oData = oImg.exifdata;
+	var strPretty = "";
+	for (var a in oData) {
+		if (oData.hasOwnProperty(a)) {
+			if (typeof oData[a] == "object") {
+				strPretty += a + " : [" + oData[a].length + " values]\r\n";
+			} else {
+				strPretty += a + " : " + oData[a] + "\r\n";
+			}
+		}
+	}
+	return strPretty;
+}
+
+EXIF.readFromBinaryFile = function(oFile) {
+	return findEXIFinJPEG(oFile);
+}
+
+function loadAllImages() 
+{
+	var aImages = document.getElementsByTagName("img");
+	for (var i=0;i<aImages.length;i++) {
+		if (aImages[i].getAttribute("exif") == "true") {
+			if (!aImages[i].complete) {
+				addEvent(aImages[i], "load", 
+					function() {
+						EXIF.getData(this);
+					}
+				); 
+			} else {
+				EXIF.getData(aImages[i]);
+			}
+		}
+	}
+}
+
+addEvent(window, "load", loadAllImages); 
+
+})();
+
+
+/*
+ * ImageInfo 0.1.2 - A JavaScript library for reading image metadata.
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * MIT License [http://www.nihilogic.dk/licenses/mit-license.txt]
+ */
+
+
+var ImageInfo = {};
+
+ImageInfo.useRange = false;
+ImageInfo.range = 10240;
+
+(function() {
+
+	var files = [];
+
+	function readFileData(url, callback) {
+		BinaryAjax(
+			url,
+			function(http) {
+				var tags = readInfoFromData(http.binaryResponse);
+				var mime = http.getResponseHeader("Content-Type");
+
+				tags["mimeType"] = mime;
+				tags["byteSize"] = http.fileSize;
+
+				files[url] = tags;
+				if (callback) callback();
+			},
+			null,
+			ImageInfo.useRange ? [0, ImageInfo.range] : null
+		)
+	}
+
+	function readInfoFromData(data) {
+	
+		var offset = 0;
+
+		if (data.getByteAt(0) == 0xFF && data.getByteAt(1) == 0xD8) {
+			return readJPEGInfo(data);
+		}
+		// IE11 -> 0x30
+		if ((data.getByteAt(0) == 0x89 || data.getByteAt(0) == 0x30) && data.getStringAt(1, 3) == "PNG") {
+			return readPNGInfo(data);
+		}
+		if (data.getStringAt(0,3) == "GIF") {
+			return readGIFInfo(data);
+		}
+		if (data.getByteAt(0) == 0x42 && data.getByteAt(1) == 0x4D) {
+			return readBMPInfo(data);
+		}
+		if (data.getByteAt(0) == 0x00 && data.getByteAt(1) == 0x00) {
+			return readICOInfo(data);
+		}
+
+		return {
+			format : "UNKNOWN"
+		};
+	}
+
+
+	function readPNGInfo(data) {
+		var w = data.getLongAt(16,true);
+		var h = data.getLongAt(20,true);
+
+		var bpc = data.getByteAt(24);
+		var ct = data.getByteAt(25);
+
+		var bpp = bpc;
+		if (ct == 4) bpp *= 2;
+		if (ct == 2) bpp *= 3;
+		if (ct == 6) bpp *= 4;
+
+		var alpha = data.getByteAt(25) >= 4;
+
+		return {
+			format : "PNG",
+			version : "",
+			width : w,
+			height : h,
+			bpp : bpp,
+			alpha : alpha,
+			exif : {}
+		}
+	}
+
+	function readGIFInfo(data) {
+		var version = data.getStringAt(3,3);
+		var w = data.getShortAt(6);
+		var h = data.getShortAt(8);
+
+		var bpp = ((data.getByteAt(10) >> 4) & 7) + 1;
+
+		return {
+			format : "GIF",
+			version : version,
+			width : w,
+			height : h,
+			bpp : bpp,
+			alpha : false,
+			exif : {}
+		}
+	}
+
+	function readJPEGInfo(data) {
+
+		var w = 0;
+		var h = 0;
+		var comps = 0;
+		var len = data.getLength();
+		var offset = 2;
+		while (offset < len) {
+			var marker = data.getShortAt(offset, true);
+			offset += 2;
+			if (marker == 0xFFC0) {
+				h = data.getShortAt(offset + 3, true);
+				w = data.getShortAt(offset + 5, true);
+				comps = data.getByteAt(offset + 7, true)
+				break;
+			} else {
+				offset += data.getShortAt(offset, true)
+			}
+		}
+
+		var exif = {};
+
+		if (typeof EXIF != "undefined" && EXIF.readFromBinaryFile) {
+			exif = EXIF.readFromBinaryFile(data);
+		}
+
+		return {
+			format : "JPEG",
+			version : "",
+			width : w,
+			height : h,
+			bpp : comps * 8,
+			alpha : false,
+			exif : exif
+		}
+	}
+
+	function readBMPInfo(data) {
+		var w = data.getLongAt(18);
+		var h = data.getLongAt(22);
+		var bpp = data.getShortAt(28);
+		return {
+			format : "BMP",
+			version : "",
+			width : w,
+			height : h,
+			bpp : bpp,
+			alpha : false,
+			exif : {}
+		}
+	}
+
+	ImageInfo.loadInfo = function(url, cb) {
+		if (!files[url]) {
+			readFileData(url, cb);
+		} else {
+			if (cb) cb();
+		}
+	}
+
+	ImageInfo.getAllFields = function(url) {
+		if (!files[url]) return null;
+
+		var tags = {};
+		for (var a in files[url]) {
+			if (files[url].hasOwnProperty(a))
+				tags[a] = files[url][a];
+		}
+		return tags;
+	}
+
+	ImageInfo.getField = function(url, field) {
+		if (!files[url]) return null;
+		return files[url][field];
+	}
+
+
+})();
+
+
+/**
+ * ajax DELETE request.
+ */
+global.DELETE = METHOD({
+
+	run : function(uriOrParams, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: uriOrParams
+		//OPTIONAL: uriOrParams.host
+		//OPTIONAL: uriOrParams.port
+		//OPTIONAL: uriOrParams.isSecure
+		//REQUIRED: uriOrParams.uri
+		//OPTIONAL: uriOrParams.paramStr
+		//OPTIONAL: uriOrParams.data
+		//OPTIONAL: uriOrParams.isNotUsingLoadingBar
+		//REQUIRED: responseListenerOrListeners
+
+		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
+			uri : uriOrParams
+		}, {
+			method : 'DELETE'
+		}]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * ajax GET request.
+ */
+global.GET = METHOD({
+
+	run : function(uriOrParams, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: uriOrParams
+		//OPTIONAL: uriOrParams.host
+		//OPTIONAL: uriOrParams.port
+		//OPTIONAL: uriOrParams.isSecure
+		//REQUIRED: uriOrParams.uri
+		//OPTIONAL: uriOrParams.paramStr
+		//OPTIONAL: uriOrParams.data
+		//OPTIONAL: uriOrParams.isNotUsingLoadingBar
+		//REQUIRED: responseListenerOrListeners
+
+		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
+			uri : uriOrParams
+		}, {
+			method : 'GET'
+		}]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * ajax POST request.
+ */
+global.POST = METHOD({
+
+	run : function(uriOrParams, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: uriOrParams
+		//OPTIONAL: uriOrParams.host
+		//OPTIONAL: uriOrParams.port
+		//OPTIONAL: uriOrParams.isSecure
+		//REQUIRED: uriOrParams.uri
+		//OPTIONAL: uriOrParams.paramStr
+		//OPTIONAL: uriOrParams.data
+		//OPTIONAL: uriOrParams.isNotUsingLoadingBar
+		//REQUIRED: responseListenerOrListeners
+
+		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
+			uri : uriOrParams
+		}, {
+			method : 'POST'
+		}]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * ajax PUT request.
+ */
+global.PUT = METHOD({
+
+	run : function(uriOrParams, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: uriOrParams
+		//OPTIONAL: uriOrParams.host
+		//OPTIONAL: uriOrParams.port
+		//OPTIONAL: uriOrParams.isSecure
+		//REQUIRED: uriOrParams.uri
+		//OPTIONAL: uriOrParams.paramStr
+		//OPTIONAL: uriOrParams.data
+		//OPTIONAL: uriOrParams.isNotUsingLoadingBar
+		//REQUIRED: responseListenerOrListeners
+
+		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
+			uri : uriOrParams
+		}, {
+			method : 'PUT'
+		}]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * ajax request.
+ */
+global.REQUEST = METHOD({
+
+	run : function(params, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: params
+		//OPTIONAL: params.host
+		//OPTIONAL: params.port
+		//OPTIONAL: params.isSecure
+		//REQUIRED: params.method
+		//OPTIONAL: params.uri
+		//OPTIONAL: params.paramStr
+		//OPTIONAL: params.data
+		//OPTIONAL: params.isNotUsingLoadingBar
+		//REQUIRED: responseListenerOrListeners
+
+		var
+		// host
+		host = params.host === undefined ? BROWSER_CONFIG.host : params.host,
+
+		// port
+		port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port,
+
+		// is secure
+		isSecure = params.isSecure,
+
+		// method
+		method = params.method,
+
+		// uri
+		uri = params.uri,
+
+		// param str
+		paramStr = params.paramStr,
+
+		// data
+		data = params.data,
+
+		// is not using loading bar
+		isNotUsingLoadingBar = params.isNotUsingLoadingBar,
+
+		// response listener
+		responseListener,
+
+		// error listener
+		errorListener,
+
+		// url
+		url,
+
+		// loading bar
+		loadingBar,
+
+		// http request
+		req;
+
+		method = method.toUpperCase();
+
+		if (uri !== undefined && uri.indexOf('?') !== -1) {
+			paramStr = uri.substring(uri.indexOf('?') + 1) + (paramStr === undefined ? '' : '&' + paramStr);
+			uri = uri.substring(0, uri.indexOf('?'));
+		}
+
+		if (data !== undefined) {
+			paramStr = (paramStr === undefined ? '' : paramStr + '&') + 'data=' + encodeURIComponent(STRINGIFY(data));
+		}
+
+		paramStr = (paramStr === undefined ? '' : paramStr + '&') + Date.now();
+
+		if (CHECK_IS_DATA(responseListenerOrListeners) !== true) {
+			responseListener = responseListenerOrListeners;
+		} else {
+			responseListener = responseListenerOrListeners.success;
+			errorListener = responseListenerOrListeners.error;
+		}
+
+		url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + (uri === undefined ? '' : uri);
+
+		if (isNotUsingLoadingBar !== true) {
+			loadingBar = LOADING_BAR();
+		}
+
+		req = new XMLHttpRequest();
+
+		req.onreadystatechange = function() {
+
+			var
+			// error
+			error;
+
+			// when request completed
+			if (req.readyState === 4) {
+
+				if (req.status === 200) {
+					responseListener(req.responseText);
+				} else {
+
+					error = {
+						code : req.status
+					};
+
+					if (errorListener !== undefined) {
+						errorListener(error);
+					} else {
+						console.log('[UPPERCASE.JS-REQUEST] REQUEST FAILED:', params, error);
+					}
+				}
+
+				if (loadingBar !== undefined) {
+					loadingBar.done();
+				}
+			}
+		};
+
+		// GET request.
+		if (method === 'GET') {
+			req.open(method, url + '?' + paramStr);
+			req.send();
+		}
+
+		// other request.
+		else {
+			req.open(method, url);
+			req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			req.send(paramStr);
+		}
+	}
+});
+
+/**
+ * go another view.
+ */
+global.GO = METHOD({
+
+	run : function(uri) {
+		'use strict';
+		//OPTIONAL: uri
+
+		history.pushState(undefined, undefined, HREF(uri));
+		
+		MATCH_VIEW.checkAll();
+	}
+});
+
+/**
+ * go another view on new window.
+ */
+global.GO_NEW_WIN = METHOD({
+
+	run : function(uri) {
+		'use strict';
+		//OPTIONAL: uri
+
+		global.open(HREF(uri));
+	}
+});
+
+/**
+ * get href.
+ */
+global.HREF = METHOD({
+
+	run : function(uri) {
+		'use strict';
+		//OPTIONAL: uri
+
+		return '/' + (uri === undefined ? '' : uri);
+	}
+});
+
+/**
+ * match view.
+ */
+global.MATCH_VIEW = METHOD(function(m) {
+	'use strict';
+	
+	var
+	// change uri handlers
+	changeURIHandlers = [],
+	
+	// check all.
+	checkAll;
+	
+	m.checkAll = checkAll = function() {
+		EACH(changeURIHandlers, function(changeURIHandler) {
+			changeURIHandler();
+		});
+	};
+	
+	return {
+
+		run : function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.uri
+			//REQUIRED: params.target
+	
+			var
+			// uri
+			uri = params.uri,
+	
+			// target
+			target = params.target,
+	
+			// uri matcher
+			uriMatcher = URI_MATCHER(uri),
+	
+			// view
+			view,
+	
+			// pre params
+			preParams,
+			
+			// change uri handler.
+			changeURIHandler = RAR(function() {
+	
+				var
+				// uri
+				uri = location.pathname.substring(1),
+	
+				// result
+				result,
+	
+				// uri parmas
+				uriParams;
+	
+				// when view founded
+				if (uri !== REFRESH.getRefreshingURI() && ( result = uriMatcher.check(uri)).checkIsMatched() === true) {
+	
+					uriParams = result.getURIParams();
+	
+					// when before view not exists, create view.
+					if (view === undefined) {
+	
+						view = target();
+						view.changeParams(uriParams);
+						target.lastView = view;
+	
+						preParams = uriParams;
+					}
+	
+					// when before view exists, change params.
+					else if (CHECK_ARE_SAME([preParams, uriParams]) !== true) {
+	
+						view.changeParams(uriParams);
+						preParams = uriParams;
+					}
+				}
+	
+				// when view not founded, close before view
+				else if (view !== undefined) {
+	
+					view.close();
+	
+					view = undefined;
+					target.lastView = undefined;
+				}
+			});
+			
+			changeURIHandlers.push(changeURIHandler);
+	
+			EVENT({
+				name : 'popstate'
+			}, changeURIHandler);
+		}
+	};
+});
+
+/**
+ * refresh view.
+ */
+global.REFRESH = METHOD(function(m) {
+	'use strict';
+	
+	var
+	// refreshing uri
+	refreshingURI = '__REFRESHING',
+	
+	// get refreshing uri.
+	getRefreshingURI;
+	
+	m.getRefreshingURI = getRefreshingURI = function() {
+		return refreshingURI;
+	};
+	
+	return {
+
+		run : function(uri) {
+			//OPTIONAL: uri
+	
+			var
+			// saved uri
+			savedURI = uri !== undefined ? uri : location.pathname.substring(1);
+	
+			history.pushState(undefined, undefined, '/' + refreshingURI);
+			MATCH_VIEW.checkAll();
+			
+			history.pushState(undefined, undefined, '/' + savedURI);
+			MATCH_VIEW.checkAll();
+		}
+	};
+});
+
+/**
+ * View interface
+ */
+global.VIEW = CLASS({
+
+	init : function(inner, self) {
+		'use strict';
+
+		var
+		// is closed
+		isClosed,
+
+		// params change handlers
+		paramsChangeHandlers = [],
+
+		// close handlers
+		closeHandlers = [],
+
+		// on.
+		on,
+
+		// change params.
+		changeParams,
+
+		// close.
+		close,
+
+		// check is closed.
+		checkIsClosed;
+
+		inner.on = on = function(methodName, handler) {
+			//REQUIRED: methodName
+
+			// when change params
+			if (methodName === 'paramsChange') {
+				paramsChangeHandlers.push(handler);
+			}
+
+			// when close
+			else if (methodName === 'close') {
+				closeHandlers.push(handler);
+			}
+		};
+
+		self.changeParams = changeParams = function(params) {
+
+			EACH(paramsChangeHandlers, function(handler) {
+				handler(params);
+			});
+		};
+
+		self.close = close = function() {
+
+			EACH(closeHandlers, function(handler) {
+				handler();
+			});
+
+			isClosed = true;
+		};
+
+		inner.checkIsClosed = checkIsClosed = function() {
+			return isClosed;
+		};
+	}
+});
+
+/**
+ * get scroll left. (px)
+ */
+global.SCROLL_LEFT = METHOD({
+
+	run : function() {
+		'use strict';
+
+		return global.pageXOffset;
+	}
+});
+
+/**
+ * get scroll top. (px)
+ */
+global.SCROLL_TOP = METHOD({
+
+	run : function() {
+		'use strict';
+
+		return global.pageYOffset;
+	}
+});
+
+/**
+ * change document title.
+ */
+global.TITLE = METHOD({
+
+	run : function(title) {
+		'use strict';
+		//REQUIRED: title
+
+		document.title = title;
+	}
+});
+
+/**
+ * get window height. (px)
+ */
+global.WIN_HEIGHT = METHOD({
+
+	run : function() {
+		'use strict';
+
+		return global.innerHeight;
+	}
+});
+
+/**
+ * get window width. (px)
+ */
+global.WIN_WIDTH = METHOD({
+
+	run : function() {
+		'use strict';
+
+		return global.innerWidth;
+	}
+});

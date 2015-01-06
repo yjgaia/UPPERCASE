@@ -1,1 +1,35 @@
-global.CHECK_STILL_ALIVE=OBJECT({init:function(){"use strict";UPPERCASE.IO.ROOM("checkStillAliveRoom",function(c,i){i("check",function(c,i){i("ALIVE!")})})}});global.TIME_SYNC=OBJECT({init:function(){"use strict";UPPERCASE.IO.ROOM("timeSyncRoom",function(n,t){t("sync",function(n,t){t(n-new Date)})})}});
+/**
+ * Check still alive object
+ */
+global.CHECK_STILL_ALIVE = OBJECT({
+
+	init : function() {
+		'use strict';
+
+		UPPERCASE.IO.ROOM('checkStillAliveRoom', function(clientInfo, on, off, send) {
+			
+			// I'm still alive!!
+			on('check', function(notUsing, ret) {
+				ret('ALIVE!');
+			});
+		});
+	}
+});
+
+/**
+ * Sync time object (Server-side)
+ */
+global.SYNC_TIME = OBJECT({
+
+	init : function() {
+		'use strict';
+
+		UPPERCASE.IO.ROOM('timeSyncRoom', function(clientInfo, on) {
+
+			// return diff. (diff: client time - server time)
+			on('sync', function(clientNow, ret) {
+				ret(clientNow - new Date());
+			});
+		});
+	}
+});

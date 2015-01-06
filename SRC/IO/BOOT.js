@@ -686,6 +686,14 @@ global.BOOT = function(params) {
 
 						return false;
 					}
+					
+					// serve version.
+					else if (uri === '__VERSION') {
+
+						response(CONFIG.version);
+
+						return false;
+					}
 
 					// serve browser script.
 					else if (uri === '__SCRIPT') {
@@ -1051,6 +1059,7 @@ global.BOOT = function(params) {
 								
 								if (isGoingOn !== false) {
 									
+									// for SEO
 									if (params._escaped_fragment_ !== undefined) {
 										
 										response({
@@ -1062,6 +1071,7 @@ global.BOOT = function(params) {
 										
 									} else {
 									
+										// when dev mode, re-generate index page.
 										if (CONFIG.isDevMode === true) {
 											generateIndexPage();
 										}

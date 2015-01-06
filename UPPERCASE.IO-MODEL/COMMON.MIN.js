@@ -1,0 +1,1 @@
+FOR_BOX(function(i){"use strict";i.MODEL=CLASS({init:function(){}})});

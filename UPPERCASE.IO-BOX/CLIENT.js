@@ -1,1 +1,163 @@
-FOR_BOX(function(e){"use strict";e.STORE=CLASS({init:function(t,i,n){var o,v,a,r=STORE(e.boxName+"."+n);i.save=o=r.save,i.get=v=r.get,i.remove=a=r.remove}})});FOR_BOX(function(E){"use strict";E.DELETE=METHOD({run:function(n,t){E.REQUEST(COMBINE([n,{method:"DELETE"}]),t)}})});FOR_BOX(function(E){"use strict";E.GET=METHOD({run:function(n,t){E.REQUEST(COMBINE([n,{method:"GET"}]),t)}})});FOR_BOX(function(O){"use strict";O.POST=METHOD({run:function(n,t){O.REQUEST(COMBINE([n,{method:"POST"}]),t)}})});FOR_BOX(function(n){"use strict";n.PUT=METHOD({run:function(t,u){n.REQUEST(COMBINE([t,{method:"PUT"}]),u)}})});FOR_BOX(function(u){"use strict";u.REQUEST=METHOD({run:function(E,i){REQUEST(COMBINE([E,{uri:u.boxName+"/"+E.uri}]),i)}})});
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * Browser store class
+	 */
+	box.STORE = CLASS({
+
+		init : function(inner, self, storeName) {
+			//REQUIRED: storeName
+
+			var
+			// store
+			store = STORE(box.boxName + '.' + storeName),
+
+			// save.
+			save,
+
+			// get.
+			get,
+
+			// remove.
+			remove;
+
+			self.save = save = store.save;
+
+			self.get = get = store.get;
+
+			self.remove = remove = store.remove;
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * ajax DELETE request.
+	 */
+	box.DELETE = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: uriOrParams
+			//OPTIONAL: uriOrParams.host
+			//OPTIONAL: uriOrParams.port
+			//OPTIONAL: uriOrParams.isSecure
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.paramStr
+			//OPTIONAL: uriOrParams.data
+			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
+			//REQUIRED: responseListenerOrListeners
+
+			box.REQUEST(COMBINE([params, {
+				method : 'DELETE'
+			}]), responseListenerOrListeners);
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * ajax GET request.
+	 */
+	box.GET = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: uriOrParams
+			//OPTIONAL: uriOrParams.host
+			//OPTIONAL: uriOrParams.port
+			//OPTIONAL: uriOrParams.isSecure
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.paramStr
+			//OPTIONAL: uriOrParams.data
+			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
+			//REQUIRED: responseListenerOrListeners
+
+			box.REQUEST(COMBINE([params, {
+				method : 'GET'
+			}]), responseListenerOrListeners);
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * ajax POST request.
+	 */
+	box.POST = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: uriOrParams
+			//OPTIONAL: uriOrParams.host
+			//OPTIONAL: uriOrParams.port
+			//OPTIONAL: uriOrParams.isSecure
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.paramStr
+			//OPTIONAL: uriOrParams.data
+			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
+			//REQUIRED: responseListenerOrListeners
+
+			box.REQUEST(COMBINE([params, {
+				method : 'POST'
+			}]), responseListenerOrListeners);
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * ajax PUT request.
+	 */
+	box.PUT = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: uriOrParams
+			//OPTIONAL: uriOrParams.host
+			//OPTIONAL: uriOrParams.port
+			//OPTIONAL: uriOrParams.isSecure
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.paramStr
+			//OPTIONAL: uriOrParams.data
+			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
+			//REQUIRED: responseListenerOrListeners
+
+			box.REQUEST(COMBINE([params, {
+				method : 'PUT'
+			}]), responseListenerOrListeners);
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * ajax request.
+	 */
+	box.REQUEST = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: params
+			//OPTIONAL: params.host
+			//OPTIONAL: params.port
+			//OPTIONAL: params.isSecure
+			//REQUIRED: params.method
+			//REQUIRED: params.uri
+			//OPTIONAL: params.paramStr
+			//OPTIONAL: params.data
+			//OPTIONAL: params.isNotUsingLoadingBar
+			//REQUIRED: responseListenerOrListeners
+
+			REQUEST(COMBINE([params, {
+				uri : box.boxName + '/' + params.uri
+			}]), responseListenerOrListeners);
+		}
+	});
+});

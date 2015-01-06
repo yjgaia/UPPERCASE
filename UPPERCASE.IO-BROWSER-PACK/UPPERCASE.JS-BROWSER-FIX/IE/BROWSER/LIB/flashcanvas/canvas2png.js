@@ -1,1 +1,47 @@
-!function(e){var t=e.getElementsByTagName("script"),a=t[t.length-1],n=a.getAttribute("src").replace(/[^\/]+$/,"save.php");window.canvas2png=function(t,a){var i=t.tagName.toLowerCase();if("canvas"===i)if("undefined"!=typeof FlashCanvas)FlashCanvas.saveImage(t,a);else{var r=n;a&&(r+="?filename="+a);var s=e.createElement("form"),d=e.createElement("input");s.setAttribute("action",r),s.setAttribute("method","post"),d.setAttribute("type","hidden"),d.setAttribute("name","dataurl"),d.setAttribute("value",t.toDataURL()),e.body.appendChild(s),s.appendChild(d),s.submit(),s.removeChild(d),e.body.removeChild(s)}}}(document);
+/*
+ * canvas2png.js
+ *
+ * Copyright (c) 2010-2013 Shinya Muramatsu
+ * Released under the MIT License
+ * http://flashcanvas.net/
+ */
+
+(function(doc) {
+
+var scripts = doc.getElementsByTagName("script");
+var script  = scripts[scripts.length - 1];
+var url     = script.getAttribute("src").replace(/[^\/]+$/, "save.php");
+
+window.canvas2png = function(canvas, filename) {
+    var tagName = canvas.tagName.toLowerCase();
+    if (tagName !== "canvas") {
+        return;
+    }
+
+    if (typeof FlashCanvas !== "undefined") {
+        FlashCanvas.saveImage(canvas, filename);
+    } else {
+        var action = url;
+        if (filename) {
+            action += "?filename=" + filename;
+        }
+
+        var form  = doc.createElement("form");
+        var input = doc.createElement("input");
+
+        form.setAttribute("action", action);
+        form.setAttribute("method", "post");
+
+        input.setAttribute("type",  "hidden");
+        input.setAttribute("name",  "dataurl");
+        input.setAttribute("value", canvas.toDataURL());
+
+        doc.body.appendChild(form);
+        form.appendChild(input);
+        form.submit();
+        form.removeChild(input);
+        doc.body.removeChild(form);
+    }
+}
+
+})(document);

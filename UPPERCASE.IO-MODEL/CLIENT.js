@@ -1,1 +1,1144 @@
-FOR_BOX(function(o){"use strict";o.MODEL=CLASS({init:function(e,t,n){var i,r,d,c,a,v,u,E,s,O,A,f,C,R,m,N,l,g,D,x,I,P,M,h,S,T,U=n.name,H=n.initData,L=n.methodConfig,b=n.isNotUsingObjectId,_=o.ROOM(U);void 0!==L&&(i=L.create,r=L.get,d=L.update,c=L.remove,a=L.find,v=L.count,u=L.checkIsExists,void 0!==i&&(E=i.valid),void 0!==d&&(s=d.valid)),t.getName=O=function(){return U},e.getInitData=A=function(){return H},e.getCreateValid=f=function(){return E},e.getUpdateValid=C=function(){return s},t.getRoom=R=function(){return _},i!==!1&&(t.create=m=function(e,t){var n,i,r,d,c;void 0!==t&&(CHECK_IS_DATA(t)!==!0?n=t:(n=t.success,i=t.notValid,r=t.notAuthed,d=t.error)),void 0!==H&&EACH(H,function(o,t){e[t]=o}),void 0!==E&&(c=E.check(e)),void 0!==c&&c.checkHasError()===!0?void 0!==i?i(c.getErrors()):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/create` NOT VALID!: ",c.getErrors()):_.send({methodName:"create",data:e},function(e){var t,c,a,v;void 0!==e?(t=e.errorMsg,c=e.validErrors,a=e.isNotAuthed,v=e.savedData,void 0!==t?void 0!==d?d(t):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/create` ERROR: "+t):void 0!==c?void 0!==i?i(c):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/create` NOT VALID!: ",c):a===!0?void 0!==r?r():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/create` NOT AUTHED!"):void 0!==n&&n(v)):void 0!==n&&n()})}),r!==!1&&(t.get=N=function(e,t){var n,i,r,d;CHECK_IS_DATA(t)!==!0?n=t:(n=t.success,i=t.notExists,r=t.notAuthed,d=t.error),_.send({methodName:"get",data:e},function(e){var t,c,a;void 0!==e&&(t=e.errorMsg,c=e.isNotAuthed,a=e.savedData),void 0!==t?void 0!==d?d(t):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/get` ERROR: "+t):c===!0?void 0!==r?r():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/get` NOT AUTHED!"):void 0===a?void 0!==i?i():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/get` NOT EXISTS!"):void 0!==n&&n(a)})},t.getWatching=l=function(e,n){var i,r,d,c,a,v;return CHECK_IS_DATA(n)!==!0?i=n:(i=n.success,r=n.notExists,d=n.notAuthed,c=n.error),t.get(e,{success:function(e){var t;a!==!0&&void 0!==i&&(v=o.ROOM(U+"/"+e.id),i(e,function(o){v.on("update",o)},function(o){v.on("remove",function(e){o(e),t()})},t=function(){void 0!==v&&(v.exit(),v=void 0)}))},notExists:r,notAuthed:d,error:c}),OBJECT({init:function(o,e){var t;e.exit=t=function(){void 0!==v&&v.exit(),a=!0}}})}),d!==!1&&(t.update=g=function(e,t){var n,i,r,d,c,a,v=e.id;void 0!==t&&(CHECK_IS_DATA(t)!==!0?n=t:(n=t.success,i=t.notValid,r=t.notExists,d=t.notAuthed,c=t.error)),void 0!==s&&(a=s.checkExceptUndefined(e)),e.id=v,void 0!==s&&a.checkHasError()===!0?void 0!==i?i(a.getErrors()):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/update` NOT VALID!: ",a.getErrors()):_.send({methodName:"update",data:e},function(e){var t,a,v,u;void 0!==e&&(t=e.errorMsg,a=e.validErrors,v=e.isNotAuthed,u=e.savedData),void 0!==t?void 0!==c?c(t):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/update` ERROR: "+t):void 0!==a?void 0!==i?i(a):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/update` NOT VALID!: ",a):v===!0?void 0!==d?d():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/update` NOT AUTHED!"):void 0===u?void 0!==r?r():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/update` NOT EXISTS!"):void 0!==n&&n(u)})}),c!==!1&&b!==!0&&(t.remove=D=function(e,t){var n,i,r,d;void 0!==t&&(CHECK_IS_DATA(t)!==!0?n=t:(n=t.success,i=t.notExists,r=t.notAuthed,d=t.error)),_.send({methodName:"remove",data:e},function(e){var t,c,a;void 0!==e&&(t=e.errorMsg,c=e.isNotAuthed,a=e.savedData),void 0!==t?void 0!==d?d(t):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/remove` ERROR: "+t):c===!0?void 0!==r?r():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/remove` NOT AUTHED!"):void 0===a?void 0!==i?i():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/remove` NOT EXISTS!"):void 0!==n&&n(a)})}),a!==!1&&(t.find=x=function(e,t){var n,i,r;void 0===t&&(t=e,e=void 0),CHECK_IS_DATA(t)!==!0?n=t:(n=t.success,i=t.notAuthed,r=t.error),_.send({methodName:"find",data:e},function(e){var t=e.errorMsg,d=e.isNotAuthed,c=e.savedDataSet;void 0!==t?void 0!==r?r(t):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/find` ERROR: "+t):d===!0?void 0!==i?i():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/find` NOT AUTHED!"):void 0!==n&&n(c)})},t.findWatching=I=function(e,n){var i,r,d,c,a={};return void 0===n&&(n=e,e=void 0),CHECK_IS_DATA(n)!==!0?i=n:(i=n.success,r=n.notAuthed,d=n.error),t.find(e,{success:function(e){var t;c!==!0&&void 0!==i&&(EACH(e,function(e){var t=e.id;a[t]=o.ROOM(U+"/"+t)}),i(e,function(o,e){a[o].on("update",e)},function(o,e){a[o].on("remove",function(n){e(n),t(o)})},t=function(o){void 0!==a[o]&&(a[o].exit(),delete a[o])}))},notAuthed:r,error:d}),OBJECT({init:function(o,e){var t;e.exit=t=function(){EACH(a,function(o){o.exit()}),c=!0}}})}),v!==!1&&(t.count=P=function(e,t){var n,i,r;void 0===t&&(t=e,e=void 0),CHECK_IS_DATA(t)!==!0?n=t:(n=t.success,i=t.notAuthed,r=t.error),_.send({methodName:"count",data:e},function(e){var t=e.errorMsg,d=e.isNotAuthed,c=e.count;void 0!==t?void 0!==r?r(t):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/count` ERROR: "+t):d===!0?void 0!==i?i():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/count` NOT AUTHED!"):void 0!==n&&n(c)})}),u!==!1&&(t.checkIsExists=M=function(e,t){var n,i,r;void 0===t&&(t=e,e=void 0),CHECK_IS_DATA(t)!==!0?n=t:(n=t.success,i=t.notAuthed,r=t.error),_.send({methodName:"checkIsExists",data:e},function(e){var t=e.errorMsg,d=e.isNotAuthed,c=e.isExists;void 0!==t?void 0!==r?r(t):console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/checkIsExists` ERROR: "+t):d===!0?void 0!==i?i():console.log("[UPPERCASE.IO-MODEL] `"+o.boxName+"."+U+"/checkIsExists` NOT AUTHED!"):void 0!==n&&n(c)})}),t.onNew=h=function(e,t){var n;return void 0===t?(t=e,(n=o.ROOM(U+"/create")).on("create",t)):EACH(e,function(i,r){return(n=o.ROOM(U+"/"+r+"/"+i+"/create")).on("create",function(o){EACH(e,function(e,t){return o[t]!==e?!1:void 0})===!0&&t(o)}),!1}),OBJECT({init:function(o,e){var t;e.exit=t=function(){void 0!==n&&n.exit()}}})},t.onNewWatching=S=function(e,t){var n,i=[],r=function(e){var n,r,d=e.id;i.push(n=o.ROOM(U+"/"+d)),t(e,function(o){n.on("update",o)},function(o){n.on("remove",function(e){o(e),r()})},r=function(){n.exit(),REMOVE({array:i,value:n})})};return void 0===t?(t=e,(n=o.ROOM(U+"/create")).on("create",function(o){r(o)})):EACH(e,function(t,i){return(n=o.ROOM(U+"/"+i+"/"+t+"/create")).on("create",function(o){EACH(e,function(e,t){return o[t]!==e?!1:void 0})===!0&&r(o)}),!1}),OBJECT({init:function(o,e){var t;e.exit=t=function(){void 0!==n&&n.exit(),EACH(i,function(o){o.exit()})}}})},t.onRemove=T=function(e,t){var n;return void 0===t?(t=e,(n=o.ROOM(U+"/remove")).on("remove",t)):EACH(e,function(i,r){return(n=o.ROOM(U+"/"+r+"/"+i+"/remove")).on("remove",function(o){EACH(e,function(e,t){return o[t]!==e?!1:void 0})===!0&&t(o)}),!1}),OBJECT({init:function(o,e){var t;e.exit=t=function(){void 0!==n&&n.exit()}}})}}})});
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * Model(include CRUD functions) class
+	 */
+	box.MODEL = CLASS({
+
+		init : function(inner, self, params) {
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//OPTIONAL: params.initData
+			//OPTIONAL: params.methodConfig
+			//OPTIONAL: params.isNotUsingObjectId
+
+			var
+			// name
+			name = params.name,
+
+			// init data.
+			initData = params.initData,
+
+			// method config
+			methodConfig = params.methodConfig,
+
+			// is not using object id
+			isNotUsingObjectId = params.isNotUsingObjectId,
+
+			// create config
+			createConfig,
+
+			// get config
+			getConfig,
+
+			// update config
+			updateConfig,
+
+			// remove config
+			removeConfig,
+
+			// find config
+			findConfig,
+
+			// count conifg
+			countConfig,
+
+			// check is exists conifg
+			checkIsExistsConfig,
+
+			// create valid
+			createValid,
+
+			// update valid
+			updateValid,
+
+			// is _id assignable
+			is_idAssignable,
+
+			// room
+			room = box.ROOM(name),
+
+			// get name.
+			getName,
+
+			// get init data.
+			getInitData,
+
+			// get create valid.
+			getCreateValid,
+
+			// get update valid.
+			getUpdateValid,
+
+			// get room.
+			getRoom,
+
+			// create.
+			create,
+
+			// get.
+			get,
+
+			// get watching.
+			getWatching,
+
+			// update.
+			update,
+
+			// remove.
+			remove,
+
+			// find.
+			find,
+
+			// find watching.
+			findWatching,
+
+			// count.
+			count,
+
+			// check is exists.
+			checkIsExists,
+
+			// on new.
+			onNew,
+
+			// on new watching.
+			onNewWatching,
+
+			// on remove.
+			onRemove;
+
+			// init method config.
+			if (methodConfig !== undefined) {
+
+				createConfig = methodConfig.create;
+				getConfig = methodConfig.get;
+				updateConfig = methodConfig.update;
+				removeConfig = methodConfig.remove;
+				findConfig = methodConfig.find;
+				countConfig = methodConfig.count;
+				checkIsExistsConfig = methodConfig.checkIsExists;
+
+				if (createConfig !== undefined) {
+					createValid = createConfig.valid;
+				}
+
+				if (updateConfig !== undefined) {
+					updateValid = updateConfig.valid;
+				}
+			}
+
+			self.getName = getName = function() {
+				return name;
+			};
+
+			inner.getInitData = getInitData = function() {
+				return initData;
+			};
+
+			inner.getCreateValid = getCreateValid = function() {
+				return createValid;
+			};
+
+			inner.getUpdateValid = getUpdateValid = function() {
+				return updateValid;
+			};
+
+			self.getRoom = getRoom = function() {
+				return room;
+			};
+
+			// create.
+			if (createConfig !== false) {
+
+				self.create = create = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notValid
+					//OPTIONAL: callbackOrHandlers.notAuthed
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// callback.
+					callback,
+
+					// not valid handler.
+					notValidHandler,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler,
+
+					// valid result
+					validResult;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notValidHandler = callbackOrHandlers.notValid;
+							notAuthedHandler = callbackOrHandlers.notAuthed;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					// init data.
+					if (initData !== undefined) {
+						EACH(initData, function(value, name) {
+							data[name] = value;
+						});
+					}
+
+					if (createValid !== undefined) {
+						validResult = createValid.check(data);
+					}
+
+					if (validResult !== undefined && validResult.checkHasError() === true) {
+
+						if (notValidHandler !== undefined) {
+							notValidHandler(validResult.getErrors());
+						} else {
+							console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` NOT VALID!: ', validResult.getErrors());
+						}
+
+					} else {
+
+						room.send({
+							methodName : 'create',
+							data : data
+						}, function(result) {
+
+							var
+							// error msg
+							errorMsg,
+
+							// valid errors
+							validErrors,
+
+							// is not authed
+							isNotAuthed,
+
+							// saved data
+							savedData;
+
+							if (result !== undefined) {
+
+								errorMsg = result.errorMsg;
+								validErrors = result.validErrors;
+								isNotAuthed = result.isNotAuthed;
+								savedData = result.savedData;
+
+								if (errorMsg !== undefined) {
+									if (errorHandler !== undefined) {
+										errorHandler(errorMsg);
+									} else {
+										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` ERROR: ' + errorMsg);
+									}
+								} else if (validErrors !== undefined) {
+									if (notValidHandler !== undefined) {
+										notValidHandler(validErrors);
+									} else {
+										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` NOT VALID!: ', validErrors);
+									}
+								} else if (isNotAuthed === true) {
+									if (notAuthedHandler !== undefined) {
+										notAuthedHandler();
+									} else {
+										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` NOT AUTHED!');
+									}
+								} else if (callback !== undefined) {
+									callback(savedData);
+								}
+
+							} else if (callback !== undefined) {
+								callback();
+							}
+						});
+					}
+				};
+			}
+
+			// get.
+			if (getConfig !== false) {
+
+				self.get = get = function(idOrParams, callbackOrHandlers) {
+					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams.id
+					//OPTIONAL: idOrParams.filter
+					//OPTIONAL: idOrParams.sort
+					//OPTIONAL: idOrParams.isRandom
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not exists handler.
+					notExistsHandler,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler;
+
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notExistsHandler = callbackOrHandlers.notExists;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
+					}
+
+					room.send({
+						methodName : 'get',
+						data : idOrParams
+					}, function(result) {
+
+						var
+						// error msg
+						errorMsg,
+
+						// is not authed
+						isNotAuthed,
+
+						// saved data
+						savedData;
+
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							isNotAuthed = result.isNotAuthed;
+							savedData = result.savedData;
+						}
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/get` ERROR: ' + errorMsg);
+							}
+						} else if (isNotAuthed === true) {
+							if (notAuthedHandler !== undefined) {
+								notAuthedHandler();
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/get` NOT AUTHED!');
+							}
+						} else if (savedData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/get` NOT EXISTS!');
+							}
+						} else if (callback !== undefined) {
+							callback(savedData);
+						}
+					});
+				};
+
+				self.getWatching = getWatching = function(idOrParams, callbackOrHandlers) {
+					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams.id
+					//OPTIONAL: idOrParams.filter
+					//OPTIONAL: idOrParams.sort
+					//OPTIONAL: idOrParams.isRandom
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback.
+					callback,
+
+					// not exists handler.
+					notExistsHandler,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler,
+
+					// is exited
+					isExited,
+
+					// sub room
+					subRoom;
+
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notExistsHandler = callbackOrHandlers.notExists;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
+					}
+
+					self.get(idOrParams, {
+
+						success : function(savedData) {
+
+							var
+							// exit.
+							exit;
+
+							if (isExited !== true && callback !== undefined) {
+
+								subRoom = box.ROOM(name + '/' + savedData.id);
+
+								callback(savedData,
+
+								// add update handler.
+								function(callback) {
+									subRoom.on('update', callback);
+								},
+
+								// add remove handler.
+								function(callback) {
+									subRoom.on('remove', function(result) {
+										callback(result);
+										exit();
+									});
+								},
+
+								// exit.
+								exit = function() {
+									if (subRoom !== undefined) {
+										subRoom.exit();
+										subRoom = undefined;
+									}
+								});
+							}
+						},
+
+						notExists : notExistsHandler,
+						notAuthed : notAuthedHandler,
+						error : errorHandler
+					});
+
+					return OBJECT({
+
+						init : function(inner, self) {
+
+							var
+							// exit.
+							exit;
+
+							self.exit = exit = function() {
+
+								if (subRoom !== undefined) {
+									subRoom.exit();
+								}
+
+								isExited = true;
+							};
+						}
+					});
+				};
+			}
+
+			// update.
+			if (updateConfig !== false) {
+
+				self.update = update = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//REQUIRED: data.id
+					//OPTIONAL: callbackOrHandlers
+
+					var
+					// id
+					id = data.id,
+
+					// callback
+					callback,
+
+					// not valid handler.
+					notValidHandler,
+
+					// not exists handler.
+					notExistsHandler,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler,
+
+					// valid result
+					validResult;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notValidHandler = callbackOrHandlers.notValid;
+							notExistsHandler = callbackOrHandlers.notExists;
+							notAuthedHandler = callbackOrHandlers.notAuthed;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					if (updateValid !== undefined) {
+						validResult = updateValid.checkExceptUndefined(data);
+					}
+
+					data.id = id;
+
+					if (updateValid !== undefined && validResult.checkHasError() === true) {
+
+						if (notValidHandler !== undefined) {
+							notValidHandler(validResult.getErrors());
+						} else {
+							console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validResult.getErrors());
+						}
+
+					} else {
+
+						room.send({
+							methodName : 'update',
+							data : data
+						}, function(result) {
+
+							var
+							// error msg
+							errorMsg,
+
+							// valid errors
+							validErrors,
+
+							// is not authed
+							isNotAuthed,
+
+							// saved data
+							savedData;
+
+							if (result !== undefined) {
+								errorMsg = result.errorMsg;
+								validErrors = result.validErrors;
+								isNotAuthed = result.isNotAuthed;
+								savedData = result.savedData;
+							}
+
+							if (errorMsg !== undefined) {
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` ERROR: ' + errorMsg);
+								}
+							} else if (validErrors !== undefined) {
+								if (notValidHandler !== undefined) {
+									notValidHandler(validErrors);
+								} else {
+									console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validErrors);
+								}
+							} else if (isNotAuthed === true) {
+								if (notAuthedHandler !== undefined) {
+									notAuthedHandler();
+								} else {
+									console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT AUTHED!');
+								}
+							} else if (savedData === undefined) {
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
+								} else {
+									console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT EXISTS!');
+								}
+							} else if (callback !== undefined) {
+								callback(savedData);
+							}
+						});
+					}
+				};
+			}
+
+			// remove.
+			if (removeConfig !== false && isNotUsingObjectId !== true) {
+
+				self.remove = remove = function(id, callbackOrHandlers) {
+					//REQUIRED: id
+					//OPTIONAL: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not exists handler.
+					notExistsHandler,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
+							notAuthedHandler = callbackOrHandlers.notAuthed;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					room.send({
+						methodName : 'remove',
+						data : id
+					}, function(result) {
+
+						var
+						// error msg
+						errorMsg,
+
+						// is not authed
+						isNotAuthed,
+
+						// saved data
+						savedData;
+
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							isNotAuthed = result.isNotAuthed;
+							savedData = result.savedData;
+						}
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg);
+							}
+						} else if (isNotAuthed === true) {
+							if (notAuthedHandler !== undefined) {
+								notAuthedHandler();
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT AUTHED!');
+							}
+						} else if (savedData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS!');
+							}
+						} else if (callback !== undefined) {
+							callback(savedData);
+						}
+					});
+				};
+			}
+
+			// find.
+			if (findConfig !== false) {
+
+				self.find = find = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler;
+
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
+
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
+					}
+
+					room.send({
+						methodName : 'find',
+						data : params
+					}, function(result) {
+
+						var
+						// error msg
+						errorMsg = result.errorMsg,
+
+						// is not authed
+						isNotAuthed = result.isNotAuthed,
+
+						// saved data set
+						savedDataSet = result.savedDataSet;
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/find` ERROR: ' + errorMsg);
+							}
+						} else if (isNotAuthed === true) {
+							if (notAuthedHandler !== undefined) {
+								notAuthedHandler();
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/find` NOT AUTHED!');
+							}
+						} else if (callback !== undefined) {
+							callback(savedDataSet);
+						}
+					});
+				};
+
+				self.findWatching = findWatching = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler,
+
+					// is exited
+					isExited,
+
+					// sub rooms
+					subRooms = {};
+
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
+
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
+					}
+
+					self.find(params, {
+
+						success : function(savedDataSet) {
+
+							var
+							// exit.
+							exit;
+
+							if (isExited !== true && callback !== undefined) {
+
+								EACH(savedDataSet, function(savedData, i) {
+
+									var
+									// id
+									id = savedData.id;
+
+									subRooms[id] = box.ROOM(name + '/' + id);
+								});
+
+								callback(savedDataSet,
+
+								// add update handler.
+								function(id, callback) {
+									subRooms[id].on('update', callback);
+								},
+
+								// add remove handler.
+								function(id, callback) {
+									subRooms[id].on('remove', function(result) {
+										callback(result);
+										exit(id);
+									});
+								},
+
+								// exit.
+								exit = function(id) {
+									if (subRooms[id] !== undefined) {
+										subRooms[id].exit();
+										delete subRooms[id];
+									}
+								});
+							}
+						},
+
+						notAuthed : notAuthedHandler,
+						error : errorHandler
+					});
+
+					return OBJECT({
+
+						init : function(inner, self) {
+
+							var
+							// exit.
+							exit;
+
+							self.exit = exit = function() {
+
+								EACH(subRooms, function(subRoom) {
+									subRoom.exit();
+								});
+
+								isExited = true;
+							};
+						}
+					});
+				};
+			}
+
+			if (countConfig !== false) {
+
+				self.count = count = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler;
+
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
+
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
+					}
+
+					room.send({
+						methodName : 'count',
+						data : params
+					}, function(result) {
+
+						var
+						// error msg
+						errorMsg = result.errorMsg,
+
+						// is not authed
+						isNotAuthed = result.isNotAuthed,
+
+						// count
+						count = result.count;
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/count` ERROR: ' + errorMsg);
+							}
+						} else if (isNotAuthed === true) {
+							if (notAuthedHandler !== undefined) {
+								notAuthedHandler();
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/count` NOT AUTHED!');
+							}
+						} else if (callback !== undefined) {
+							callback(count);
+						}
+					});
+				};
+			}
+
+			if (checkIsExistsConfig !== false) {
+
+				self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//REQUIRED: callbackOrHandlers
+
+					var
+					// callback
+					callback,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler;
+
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = params;
+						params = undefined;
+					}
+
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						notAuthedHandler = callbackOrHandlers.notAuthed;
+						errorHandler = callbackOrHandlers.error;
+					}
+
+					room.send({
+						methodName : 'checkIsExists',
+						data : params
+					}, function(result) {
+
+						var
+						// error msg
+						errorMsg = result.errorMsg,
+
+						// is not authed
+						isNotAuthed = result.isNotAuthed,
+
+						// is exists
+						isExists = result.isExists;
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/checkIsExists` ERROR: ' + errorMsg);
+							}
+						} else if (isNotAuthed === true) {
+							if (notAuthedHandler !== undefined) {
+								notAuthedHandler();
+							} else {
+								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/checkIsExists` NOT AUTHED!');
+							}
+						} else if (callback !== undefined) {
+							callback(isExists);
+						}
+					});
+				};
+			}
+
+			self.onNew = onNew = function(properties, handler) {
+				//OPTIONAL: properties
+				//REQUIRED: handler
+
+				var
+				// room for create
+				roomForCreate;
+
+				if (handler === undefined) {
+					handler = properties;
+
+					( roomForCreate = box.ROOM(name + '/create')).on('create', handler);
+
+				} else {
+
+					EACH(properties, function(value, propertyName) {
+
+						( roomForCreate = box.ROOM(name + '/' + propertyName + '/' + value + '/create')).on('create', function(savedData) {
+
+							if (EACH(properties, function(value, propertyName) {
+
+								if (savedData[propertyName] !== value) {
+									return false;
+								}
+							}) === true) {
+								handler(savedData);
+							}
+						});
+
+						return false;
+					});
+				}
+
+				return OBJECT({
+
+					init : function(inner, self) {
+
+						var
+						// exit.
+						exit;
+
+						self.exit = exit = function() {
+							if (roomForCreate !== undefined) {
+								roomForCreate.exit();
+							}
+						};
+					}
+				});
+			};
+
+			self.onNewWatching = onNewWatching = function(properties, handler) {
+				//OPTIONAL: properties (or operation)
+				//REQUIRED: handler
+
+				var
+				// room for create
+				roomForCreate,
+
+				// sub rooms
+				subRooms = [],
+
+				// inner handler.
+				innerHandler = function(savedData) {
+
+					var
+					// id
+					id = savedData.id,
+
+					// sub room
+					subRoom,
+
+					// close watching.
+					closeWatching;
+
+					subRooms.push( subRoom = box.ROOM(name + '/' + id));
+
+					handler(savedData,
+
+					// add update handler.
+					function(callback) {
+						subRoom.on('update', callback);
+					},
+
+					// add remove handler.
+					function(callback) {
+						subRoom.on('remove', function(result) {
+							callback(result);
+							closeWatching();
+						});
+					},
+
+					// close watching.
+					closeWatching = function() {
+
+						subRoom.exit();
+
+						REMOVE({
+							array : subRooms,
+							value : subRoom
+						});
+					});
+				};
+
+				if (handler === undefined) {
+					handler = properties;
+
+					( roomForCreate = box.ROOM(name + '/create')).on('create', function(savedData) {
+						innerHandler(savedData);
+					});
+
+				} else {
+
+					EACH(properties, function(value, propertyName) {
+
+						( roomForCreate = box.ROOM(name + '/' + propertyName + '/' + value + '/create')).on('create', function(savedData) {
+
+							if (EACH(properties, function(value, propertyName) {
+
+								if (savedData[propertyName] !== value) {
+									return false;
+								}
+							}) === true) {
+								innerHandler(savedData);
+							}
+						});
+
+						return false;
+					});
+				}
+
+				return OBJECT({
+
+					init : function(inner, self) {
+
+						var
+						// exit.
+						exit;
+
+						self.exit = exit = function() {
+
+							if (roomForCreate !== undefined) {
+								roomForCreate.exit();
+							}
+
+							EACH(subRooms, function(subRoom) {
+								subRoom.exit();
+							});
+						};
+					}
+				});
+			};
+
+			self.onRemove = onRemove = function(properties, handler) {
+				//OPTIONAL: properties (or operation)
+				//REQUIRED: handler
+
+				var
+				// room for removes
+				roomForRemove;
+
+				if (handler === undefined) {
+					handler = properties;
+
+					( roomForRemove = box.ROOM(name + '/remove')).on('remove', handler);
+
+				} else {
+
+					EACH(properties, function(value, propertyName) {
+
+						( roomForRemove = box.ROOM(name + '/' + propertyName + '/' + value + '/remove')).on('remove', function(savedData) {
+
+							if (EACH(properties, function(value, propertyName) {
+
+								if (savedData[propertyName] !== value) {
+									return false;
+								}
+							}) === true) {
+								handler(savedData);
+							}
+						});
+
+						return false;
+					});
+				}
+
+				return OBJECT({
+
+					init : function(inner, self) {
+
+						var
+						// exit.
+						exit;
+
+						self.exit = exit = function() {
+							if (roomForRemove !== undefined) {
+								roomForRemove.exit();
+							}
+						};
+					}
+				});
+			};
+		}
+	});
+});

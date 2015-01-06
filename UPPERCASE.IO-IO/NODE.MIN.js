@@ -1,0 +1,1 @@
+global.CHECK_STILL_ALIVE=OBJECT({init:function(){"use strict";UPPERCASE.IO.ROOM("checkStillAliveRoom",function(c,i){i("check",function(c,i){i("ALIVE!")})})}});global.SYNC_TIME=OBJECT({init:function(){"use strict";UPPERCASE.IO.ROOM("timeSyncRoom",function(n,t){t("sync",function(n,t){t(n-new Date)})})}});

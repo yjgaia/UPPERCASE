@@ -1,1 +1,19 @@
-OVERRIDE(CANVAS,function(n){"use strict";global.CANVAS=CLASS({preset:function(){return n},init:function(n,t){FlashCanvas.initElement(t.getEl())}})});
+OVERRIDE(CANVAS, function(origin) {
+	'use strict';
+
+	/**
+	 * Canvas class (fix for IE)
+	 */
+	global.CANVAS = CLASS({
+
+		preset : function() {
+			return origin;
+		},
+
+		init : function(inner, self) {
+
+			// init flash canvas.
+			FlashCanvas.initElement(self.getEl());
+		}
+	});
+});

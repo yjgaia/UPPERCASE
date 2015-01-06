@@ -1,1 +1,218 @@
-OVERRIDE(EVENT_LOW,function(e){"use strict";global.EVENT_LOW=CLASS({preset:function(n){var o,t,i,r;return CHECK_IS_DATA(n)!==!0?i=n:(o=n.node,t=n.lowNode,i=n.name,void 0===t&&(t=o)),r=void 0!==t?t.getWrapperEl():void 0===global["on"+i]?document:global,void 0===r.addEventListener&&(r.addEventListener=function(e,n){r.attachEvent("on"+e,n)}),e},init:function(e,n,o,t){var i,r,a,v,c,E,d,l=e.innerHandler;CHECK_IS_DATA(o)!==!0?a=o:(i=o.node,r=o.lowNode,a=o.name,void 0===r&&(r=i)),v=void 0!==r?r.getWrapperEl():void 0===global["on"+a]?document:global,IE.version<=8&&"load"===a&&void 0!==v.complete&&RUN(function(){var e;e=setInterval(RAR(function(){if(v.complete===!0){clearInterval(e);try{l()}catch(n){}}}),100)}),void 0!==v.detachEvent&&OVERRIDE(n.remove,function(e){n.remove=d=function(){e(),("hashchange"!==a||void 0!==global.onhashchange)&&v.detachEvent("on"+a,l)}}),navigator.msPointerEnabled===!0&&("touchstart"===a?(v.addEventListener("MSPointerDown",l),OVERRIDE(n.remove,function(e){n.remove=d=function(){e(),v.removeEventListener("MSPointerDown",l)}})):"touchmove"===a?(v.addEventListener("MSPointerMove",l),OVERRIDE(n.remove,function(e){n.remove=d=function(){e(),v.removeEventListener("MSPointerMove",l)}})):"touchend"===a&&(v.addEventListener("MSPointerUp",l),OVERRIDE(n.remove,function(e){n.remove=d=function(){e(),v.removeEventListener("MSPointerUp",l)}}))),"hashchange"===a&&IE.version<=7&&(c=location.hash,E=setInterval(function(){location.hash!==c&&(c=location.hash,t())},100),OVERRIDE(n.remove,function(e){n.remove=d=function(){e(),clearInterval(E)}}))}})});
+OVERRIDE(EVENT_LOW, function(origin) {
+	'use strict';
+
+	/**
+	 * Low event class (fix for IE)
+	 */
+	global.EVENT_LOW = CLASS({
+
+		preset : function(nameOrParams) {
+			//REQUIRED: nameOrParams
+			//OPTIONAL: nameOrParams.node
+			//OPTIONAL: nameOrParams.lowNode
+			//REQUIRED: nameOrParams.name
+
+			var
+			// node
+			node,
+
+			// low node
+			lowNode,
+
+			// name
+			name,
+
+			// el
+			el;
+
+			// init params.
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				name = nameOrParams;
+			} else {
+				node = nameOrParams.node;
+				lowNode = nameOrParams.lowNode;
+				name = nameOrParams.name;
+
+				if (lowNode === undefined) {
+					lowNode = node;
+				}
+			}
+
+			if (lowNode !== undefined) {
+				el = lowNode.getWrapperEl();
+			} else if (global['on' + name] === undefined) {
+				el = document;
+			} else {
+				el = global;
+			}
+
+			// if is not exists addEventListener, link to attachEvent.
+			if (el.addEventListener === undefined) {
+				el.addEventListener = function(name, eventHandler, b) {
+					el.attachEvent('on' + name, eventHandler);
+				};
+			}
+
+			return origin;
+		},
+
+		init : function(inner, self, nameOrParams, eventHandler) {
+			//REQUIRED: nameOrParams
+			//OPTIONAL: nameOrParams.node
+			//OPTIONAL: nameOrParams.lowNode
+			//REQUIRED: nameOrParams.name
+			//REQUIRED: eventHandler
+
+			var
+			// node
+			node,
+
+			// low node
+			lowNode,
+
+			// name
+			name,
+
+			// el
+			el,
+
+			// hash
+			hash,
+
+			// hashchange interval
+			hashchangeInterval,
+
+			// inner handler.
+			innerHandler = inner.innerHandler,
+
+			// remove.
+			remove;
+
+			// init params.
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				name = nameOrParams;
+			} else {
+				node = nameOrParams.node;
+				lowNode = nameOrParams.lowNode;
+				name = nameOrParams.name;
+
+				if (lowNode === undefined) {
+					lowNode = node;
+				}
+			}
+
+			if (lowNode !== undefined) {
+				el = lowNode.getWrapperEl();
+			} else if (global['on' + name] === undefined) {
+				el = document;
+			} else {
+				el = global;
+			}
+
+			// if image is cached image, not fire load event. (IE <= 8 bug)
+			if (IE.version <= 8 && name === 'load' && el.complete !== undefined) {
+
+				RUN(function() {
+
+					var
+					// interval
+					interval;
+
+					interval = setInterval(RAR(function() {
+						if (el.complete === true) {
+
+							clearInterval(interval);
+
+							try {
+								innerHandler();
+							} catch(e) {
+								// ignore.
+							}
+						}
+					}), 100);
+				});
+			}
+
+			// if is exists detachEvent, remove work by detachEvent.
+			if (el.detachEvent !== undefined) {
+
+				OVERRIDE(self.remove, function(origin) {
+
+					self.remove = remove = function() {
+						origin();
+
+						if (name !== 'hashchange' || global.onhashchange !== undefined) {
+							el.detachEvent('on' + name, innerHandler);
+						}
+					};
+				});
+			}
+
+			// when ms pointer enabled
+			if (navigator.msPointerEnabled === true) {
+
+				// touchstart link to MSPointerDown
+				if (name === 'touchstart') {
+
+					el.addEventListener('MSPointerDown', innerHandler);
+
+					OVERRIDE(self.remove, function(origin) {
+
+						self.remove = remove = function() {
+							origin();
+							el.removeEventListener('MSPointerDown', innerHandler);
+						};
+					});
+				}
+
+				// touchmove link to MSPointerMove
+				else if (name === 'touchmove') {
+
+					el.addEventListener('MSPointerMove', innerHandler);
+
+					OVERRIDE(self.remove, function(origin) {
+
+						self.remove = remove = function() {
+							origin();
+							el.removeEventListener('MSPointerMove', innerHandler);
+						};
+					});
+				}
+
+				// touchend link to MSPointerUp
+				else if (name === 'touchend') {
+
+					el.addEventListener('MSPointerUp', innerHandler);
+
+					OVERRIDE(self.remove, function(origin) {
+
+						self.remove = remove = function() {
+							origin();
+							el.removeEventListener('MSPointerUp', innerHandler);
+						};
+					});
+				}
+			}
+
+			// simulate hashchange event. (IE <= 7)
+			if (name === 'hashchange' && IE.version <= 7) {
+
+				hash = location.hash;
+				hashchangeInterval = setInterval(function() {
+					if (location.hash !== hash) {
+						hash = location.hash;
+						eventHandler();
+					}
+				}, 100);
+
+				OVERRIDE(self.remove, function(origin) {
+
+					self.remove = remove = function() {
+						origin();
+						clearInterval(hashchangeInterval);
+					};
+				});
+			}
+		}
+	});
+});

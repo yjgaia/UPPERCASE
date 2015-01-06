@@ -10,6 +10,8 @@ if (BROWSER_CONFIG.fixTransportScriptsFolderPath !== undefined) {
 
 READY(function() {
 	'use strict';
+	
+	SYNC_TIME();
 
 	INIT_OBJECTS();
 

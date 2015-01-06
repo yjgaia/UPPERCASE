@@ -1,1 +1,52 @@
-OVERRIDE(KEYFRAMES,function(){"use strict";global.KEYFRAMES=CLASS({init:function(t,n,i){var e,r,u,o,E,S="__KEYFRAMES_"+n.id;EACH(i,function(t,n){"from"===n||"0%"===n?e=t:("to"===n||"100%"===n)&&(r=t)}),n.getName=u=function(){return S},n.getStartStyle=o=function(){return e},n.getFinalStyle=E=function(){return r}}})});
+OVERRIDE(KEYFRAMES, function(origin) {
+	'use strict';
+
+	/**
+	 * Animation keyframes class. (destory for IE)
+	 */
+	global.KEYFRAMES = CLASS({
+
+		init : function(inner, self, keyframes) {
+			//REQUIRED: keyframes
+
+			var
+			// name
+			name = '__KEYFRAMES_' + self.id,
+
+			// start style
+			startStyle,
+
+			// final style
+			finalStyle,
+
+			// get name.
+			getName,
+
+			// get start style.
+			getStartStyle,
+
+			// get final style.
+			getFinalStyle;
+
+			EACH(keyframes, function(style, key) {
+				if (key === 'from' || key === '0%') {
+					startStyle = style;
+				} else if (key === 'to' || key === '100%') {
+					finalStyle = style;
+				}
+			});
+
+			self.getName = getName = function() {
+				return name;
+			};
+
+			self.getStartStyle = getStartStyle = function() {
+				return startStyle;
+			};
+
+			self.getFinalStyle = getFinalStyle = function() {
+				return finalStyle;
+			};
+		}
+	});
+});

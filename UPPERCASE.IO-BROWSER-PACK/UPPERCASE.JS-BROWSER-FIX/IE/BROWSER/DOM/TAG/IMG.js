@@ -1,1 +1,63 @@
-OVERRIDE(IMG,function(t){"use strict";global.IMG=CLASS({preset:function(){return t},init:function(t,e){var i;IE.version<=8&&(void 0===e.getStyle("width")&&void 0!==e.getStyle("height")&&e.addStyle({width:"auto"}),void 0!==e.getStyle("width")&&void 0===e.getStyle("height")&&e.addStyle({height:"auto"})),IE.version<=10&&(OVERRIDE(e.setSrc,function(t){e.setSrc=i=function(e){t(e+(-1===e.indexOf("?")?"?"+Date.now():"&"+Date.now()))}}),void 0!==e.getSrc()&&i(e.getSrc())),IE.version<=6&&void 0!==e.getSrc()&&-1===e.getSrc().indexOf(".gif")&&ADD_STYLE({node:e,style:{behavior:"url("+BROWSER_CONFIG.fixScriptsFolderPath+"/IE/BROWSER/LIB/iepngfix/iepngfix.htc?"+(void 0!==CONFIG.version?CONFIG.version:Date.now())+");"}})}})});
+OVERRIDE(IMG, function(origin) {
+	'use strict';
+
+	/**
+	 * Img class (fix for IE)
+	 */
+	global.IMG = CLASS({
+
+		preset : function() {
+			return origin;
+		},
+
+		init : function(inner, self) {
+
+			var
+			// set src.
+			setSrc;
+
+			if (IE.version <= 8) {
+
+				if (self.getStyle('width') === undefined && self.getStyle('height') !== undefined) {
+					self.addStyle({
+						width : 'auto'
+					});
+				}
+
+				if (self.getStyle('width') !== undefined && self.getStyle('height') === undefined) {
+					self.addStyle({
+						height : 'auto'
+					});
+				}
+			}
+
+			if (IE.version <= 10) {
+
+				OVERRIDE(self.setSrc, function(origin) {
+
+					self.setSrc = setSrc = function(src) {
+						//REQUIRED: src
+
+						// fix IE6 image memory leak.
+						origin(src + (src.indexOf('?') === -1 ? ('?' + Date.now()) : ('&' + Date.now())));
+					};
+				});
+
+				if (self.getSrc() !== undefined) {
+					setSrc(self.getSrc());
+				}
+			}
+
+			if (IE.version <= 6 && self.getSrc() !== undefined && self.getSrc().indexOf('.gif') === -1) {
+
+				// fix IE PNG transparent background bug.
+				ADD_STYLE({
+					node : self,
+					style : {
+						behavior : 'url(' + BROWSER_CONFIG.fixScriptsFolderPath + '/IE/BROWSER/LIB/iepngfix/iepngfix.htc?' + (CONFIG.version !== undefined ? CONFIG.version : Date.now()) + ');'
+					}
+				});
+			}
+		}
+	});
+});

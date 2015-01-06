@@ -1,1 +1,1612 @@
-global.CONNECT_TO_DB_SERVER=METHOD(function(o){var n,i,t=[];return o.addInitDBFunc=i=function(o){void 0===n?t.push(o):o(n)},{run:function(o,i){"use strict";var E=o.username,r=o.password,d=void 0===o.host?"127.0.0.1":o.host,u=void 0===o.port?27017:o.port,c=o.name;require("mongodb").MongoClient.connect("mongodb://"+(void 0!==E&&void 0!==r?E+":"+r+"@":"")+d+":"+u+"/"+c,function(o,E){o!==TO_DELETE?console.log(CONSOLE_RED("[UPPERCASE.IO-DB] CONNECT TO DB SERVER FAILED: "+o.toString())):(n=E,EACH(t,function(o){o(n)}),t=void 0,void 0!==i&&i())})}}});FOR_BOX(function(e){"use strict";var o=require("mongodb").ObjectID;e.DB=CLASS({init:function(t,r,i){var n,a,d,c,s,E,u,_,l,v,m=[],f=[],O=[],A=[],g=[],C=[],T=[],S=[],D=function(e){return a===!0?e:new o(e)},I=function(e){return void 0!==e._id&&(e.id=e._id.toString()),delete e._id,delete e.__IS_ENABLED,delete e.__RANDOM_KEY,e},H=function(e){EACH(e,function(o,t){void 0===o||o===TO_DELETE?REMOVE({data:e,name:t}):(CHECK_IS_DATA(o)===!0||CHECK_IS_ARRAY(o)===!0)&&H(o)})},h=function(e,o){var t=function(e){void 0!==e.id&&(CHECK_IS_DATA(e.id)===!0?(EACH(e.id,function(o,t){CHECK_IS_DATA(o)===!0||CHECK_IS_ARRAY(o)===!0?EACH(o,function(e,t){o[t]=D(e)}):e.id[t]=D(o)}),e._id=e.id):e._id=D(e.id),delete e.id),o!==!0&&(e.__IS_ENABLED=!0),EACH(e,function(o,t){void 0===o&&delete e[t]})};void 0!==e.$and?EACH(e.$and,function(e){t(e)}):void 0!==e.$or?EACH(e.$or,function(e){t(e)}):t(e)};CHECK_IS_DATA(i)!==!0?n=i:(n=i.name,a=i.isNotUsingObjectId),r.create=d=function(e,o){m.push({data:e,callbackOrHandlers:o})},r.get=c=function(e,o){f.push({idOrParams:e,callbackOrHandlers:o})},r.update=s=function(e,o){O.push({data:e,callbackOrHandlers:o})},a!==!0&&(r.remove=E=function(e,o){A.push({id:e,callbackOrHandlers:o})}),r.find=u=function(e,o){g.push({params:e,callbackOrHandlers:o})},r.count=_=function(e,o){C.push({params:e,callbackOrHandlers:o})},r.checkIsExists=l=function(e,o){T.push({params:e,callbackOrHandlers:o})},r.aggregate=v=function(e,o){S.push({params:e,callbackOrHandlers:o})},CONNECT_TO_DB_SERVER.addInitDBFunc(function(o){var t,i=o.collection(e.boxName+"."+n),N=o.collection(e.boxName+"."+n+"__HISTORY"),L=o.collection(e.boxName+"."+n+"__ERROR"),p=function(o,t,r,i){N.findOne({id:t},function(e,n){var a;e===TO_DELETE&&(a={method:o,change:r,time:i},n===TO_DELETE?N.insert({id:t,timeline:[a]},{w:0}):N.update({id:t},{$push:{timeline:a}},{w:0}))}),NODE_CONFIG.isDBLogMode===!0&&console.log("[UPPERCASE.IO-DB] `"+e.boxName+"."+n+"` DATA SAVED:",r)},R=function(o,t){o.time=new Date;try{L.insert(o,{w:0})}catch(r){}void 0!==t?t(o.errorMsg):console.log("[UPPERCASE.IO-DB] `"+e.boxName+"."+n+"` ERROR:",o)};r.create=d=function(e,o){var t,r;try{e.__IS_ENABLED=!0,e.__RANDOM_KEY=Math.random(),e.createTime=new Date,H(e),delete e._id,a===!0&&(e._id=e.id),delete e.id,void 0!==o&&(CHECK_IS_DATA(o)!==!0?t=o:(t=o.success,r=o.error)),i.insert(e,{safe:!0},function(o,i){var n;o===TO_DELETE?(n=i[0],I(n),p("create",n.id,n,n.createTime),void 0!==t&&t(n)):R({method:"create",data:e,errorMsg:o.toString()},r)})}catch(n){R({method:"create",data:e,errorMsg:n.toString()},r)}},t=function(o,t){var r,a,d,c=o.filter,s=o.sort,E=o.isIncludeRemoved;try{h(c,E),CHECK_IS_DATA(t)!==!0?r=t:(r=t.success,a=t.notExists,d=t.error),i.find(c).sort(s).limit(1).toArray(function(t,i){var s;t===TO_DELETE?i!==TO_DELETE&&i.length>0?(s=i[0],I(s),r(s)):void 0!==a?a():console.log(CONSOLE_YELLOW("[UPPERCASE.IO-DB] `"+e.boxName+"."+n+".get` NOT EXISTS."),c):R({method:"get",params:o,errorMsg:t.toString()},d)})}catch(u){R({method:"get",params:o,errorMsg:u.toString()},d)}},r.get=c=function(e,o){var r,i,n,a,d,c,s,E,u;try{CHECK_IS_DATA(e)!==!0?r=e:(r=e.id,i=e.filter,n=e.sort,a=e.isRandom,d=e.isIncludeRemoved),CHECK_IS_DATA(o)!==!0?c=o:(c=o.success,s=o.notExists,E=o.error),void 0===n&&(n={createTime:-1}),a===!0?(void 0===i&&(i={}),i.__RANDOM_KEY={$gte:u=Math.random()},n.__RANDOM_KEY=1,t({filter:i,sort:n,isIncludeRemoved:d},{error:E,notExists:function(){i.__RANDOM_KEY={$lte:u},t({filter:i,sort:n,isIncludeRemoved:d},o)},success:c})):(void 0===i&&(i={_id:D(r)}),t({filter:i,sort:n,isIncludeRemoved:d},o))}catch(_){R({method:"get",idOrParams:e,errorMsg:_.toString()},E)}},r.update=s=function(o,t){var r,a,d,s,E,u,_,l=o.id,v=o.$inc;try{a={_id:D(l),__IS_ENABLED:!0},void 0!==t&&(CHECK_IS_DATA(t)!==!0?d=t:(d=t.success,s=t.notExists,E=t.error)),EACH(o,function(e,t){"id"===t||"_id"===t||"__IS_ENABLED"===t||"createTime"===t||"$inc"===t?delete o[t]:e===TO_DELETE?(void 0===r&&(r={}),r[t]=""):_=!0}),o.lastUpdateTime=new Date,H(o),u={$set:o},void 0!==r&&(u.$unset=r),void 0!==v&&(u.$inc=v),i.update(a,u,{safe:!0},function(t,i){0===i?void 0!==s?s():console.log(CONSOLE_YELLOW("[UPPERCASE.IO-DB] `"+e.boxName+"."+n+".update` NOT EXISTS."),a):t===TO_DELETE?c({filter:a},{error:function(e){R({method:"update",data:o,errorMsg:e},E)},notExists:function(){void 0!==s?s():console.log(CONSOLE_YELLOW("[UPPERCASE.IO-DB] `"+e.boxName+"."+n+".update` NOT EXISTS."),a)},success:function(e){var t;(void 0===v||_===!0||void 0!==r)&&(t={},_===!0&&EACH(o,function(e,o){t[o]=e}),void 0!==r&&EACH(r,function(e,o){t[o]=TO_DELETE}),p("update",l,t,e.lastUpdateTime)),I(e),void 0!==d&&d(e)}}):R({method:"update",data:o,errorMsg:t.toString()},E)})}catch(m){R({method:"update",data:o,errorMsg:m.toString()},E)}},a!==!0&&(r.remove=E=function(o,t){var r,a,d,s;try{r={_id:D(o),__IS_ENABLED:!0},void 0!==t&&(CHECK_IS_DATA(t)!==!0?a=t:(a=t.success,d=t.notExists,s=t.error)),c({filter:r},{error:function(e){R({method:"remove",id:o,errorMsg:e},s)},notExists:function(){void 0!==d?d():console.log(CONSOLE_YELLOW("[UPPERCASE.IO-DB] `"+e.boxName+"."+n+".remove` NOT EXISTS."),r)},success:function(t){var c;i.update(r,{$set:c={__IS_ENABLED:!1,removeTime:new Date}},{safe:!0},function(i,E){0===E?void 0!==d?d():console.log(CONSOLE_YELLOW("[UPPERCASE.IO-DB] `"+e.boxName+"."+n+".remove` NOT EXISTS."),r):i===TO_DELETE?(p("remove",t.id,{removeTime:c.removeTime},c.removeTime),I(t),void 0!==a&&a(t)):R({method:"remove",id:o,errorMsg:i.toString()},s)})}})}catch(E){R({method:"remove",id:o,errorMsg:E.toString()},s)}}),r.find=u=function(e,o){var t,r,n,a,d,c,s,E,u;try{void 0===o&&(o=e,e=void 0),void 0!==e&&(t=e.filter,r=e.sort,n=INTEGER(e.start),a=INTEGER(e.count),d=e.isFindAll,c=e.isIncludeRemoved),CHECK_IS_DATA(o)!==!0?s=o:(s=o.success,E=o.error),void 0===t&&(t={}),void 0===r&&(r={createTime:-1}),void 0===n&&(n=0),d!==!0&&(void 0===a||a>NODE_CONFIG.maxDataCount||isNaN(a)===!0?a=NODE_CONFIG.maxDataCount:1>a&&(a=1)),h(t),u=function(o,t){o===TO_DELETE?(t!==TO_DELETE&&EACH(t,function(e){I(e)}),s(t)):R({method:"find",params:e,errorMsg:o.toString()},E)},d===!0?i.find(t).sort(r).skip(n).toArray(u):i.find(t).sort(r).skip(n).limit(a).toArray(u)}catch(_){R({method:"find",params:e,errorMsg:_.toString()},E)}},r.count=_=function(e,o){var t,r,n,a;try{void 0===o&&(o=e,e=void 0),void 0!==e&&(t=e.filter,r=e.isIncludeRemoved),void 0===o&&(o=t,t=void 0),void 0===t&&(t={}),CHECK_IS_DATA(o)!==!0?n=o:(n=o.success,a=o.error),h(t),i.find(t).count(function(e,o){e===TO_DELETE?n(o):R({method:"count",filter:t,errorMsg:e.toString()},a)})}catch(d){R({method:"count",filter:t,errorMsg:d.toString()},a)}},r.checkIsExists=l=function(e,o){var t,r,n,a;try{void 0===o&&(o=e,e=void 0),void 0!==e&&(t=e.filter,r=e.isIncludeRemoved),void 0===o&&(o=t,t=void 0),void 0===t?t={}:CHECK_IS_DATA(t)!==!0&&(t={_id:D(t)}),CHECK_IS_DATA(o)!==!0?n=o:(n=o.success,a=o.error),h(t),i.find(t).count(function(e,o){e===TO_DELETE?n(void 0!==o&&o>0):R({method:"checkIsExists",filter:t,errorMsg:e.toString()},a)})}catch(d){R({method:"checkIsExists",filter:t,errorMsg:d.toString()},a)}},r.aggregate=v=function(e,o){var t,r;try{CHECK_IS_DATA(o)!==!0?t=o:(t=o.success,r=o.error),i.aggregate(e,function(o,i){o===TO_DELETE?t(i):R({method:"aggregate",params:e,errorMsg:o.toString()},r)})}catch(n){R({method:"aggregate",params:e,errorMsg:n.toString()},r)}},EACH(m,function(e){d(e.data,e.callbackOrHandlers)}),m=void 0,EACH(f,function(e){c(e.idOrParams,e.callbackOrHandlers)}),f=void 0,EACH(O,function(e){s(e.data,e.callbackOrHandlers)}),O=void 0,EACH(A,function(e){E(e.id,e.callbackOrHandlers)}),A=void 0,EACH(g,function(e){u(e.params,e.callbackOrHandlers)}),g=void 0,EACH(C,function(e){_(e.params,e.callbackOrHandlers)}),C=void 0,EACH(T,function(e){l(e.params,e.callbackOrHandlers)}),T=void 0,EACH(S,function(e){v(e.params,e.callbackOrHandlers)}),S=void 0})}})});FOR_BOX(function(n){"use strict";n.LOG_DB=CLASS({init:function(i,t,o){var c,u=[];t.log=c=function(n){u.push(n)},CONNECT_TO_DB_SERVER.addInitDBFunc(function(i){var e=i.collection(n.boxName+"."+o);t.log=c=function(n){n.time=new Date,e.insert(n,{w:0})},EACH(u,function(n){c(n)}),u=void 0})}})});OVERRIDE(NODE_CONFIG,function(O){global.NODE_CONFIG=COMBINE([O,{isDBLogMode:!1,maxDataCount:1e3}])});
+/**
+ * connect to MongoDB server.
+ */
+global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
+
+	var
+	// native db
+	nativeDB,
+
+	// init db funcs
+	initDBFuncs = [],
+
+	// add init db func.
+	addInitDBFunc;
+
+	m.addInitDBFunc = addInitDBFunc = function(initDBFunc) {
+
+		if (nativeDB === undefined) {
+			initDBFuncs.push(initDBFunc);
+		} else {
+			initDBFunc(nativeDB);
+		}
+	};
+
+	return {
+
+		run : function(params, callback) {
+			'use strict';
+			//REQUIRED: params
+			//OPTIONAL: params.username
+			//OPTIONAL: params.password
+			//OPTIONAL: params.host
+			//OPTIONAL: params.port
+			//REQUIRED: params.name
+			//OPTIONAL: callback
+
+			var
+			// username
+			username = params.username,
+
+			// password
+			password = params.password,
+
+			// host
+			host = params.host === undefined ? '127.0.0.1' : params.host,
+
+			// port
+			port = params.port === undefined ? 27017 : params.port,
+
+			// name
+			name = params.name;
+
+			require('mongodb').MongoClient.connect('mongodb://' + (username !== undefined && password !== undefined ? username + ':' + password + '@' : '') + host + ':' + port + '/' + name, function(error, _nativeDB) {
+
+				if (error !== TO_DELETE) {
+
+					console.log(CONSOLE_RED('[UPPERCASE.IO-DB] CONNECT TO DB SERVER FAILED: ' + error.toString()));
+
+				} else {
+
+					nativeDB = _nativeDB;
+
+					EACH(initDBFuncs, function(initDBFunc) {
+						initDBFunc(nativeDB);
+					});
+
+					initDBFuncs = undefined;
+
+					if (callback !== undefined) {
+						callback();
+					}
+				}
+			});
+		}
+	};
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	var
+	//IMPORT: MongoDB ObjectID
+	ObjectID = require('mongodb').ObjectID;
+
+	/**
+	 * MongoDB collection wrapper class
+	 */
+	box.DB = CLASS({
+
+		init : function(inner, self, nameOrParams) {
+			'use strict';
+			//REQUIRED: nameOrParams
+			//REQUIRED: nameOrParams.name
+			//REQUIRED: nameOrParams.isNotUsingObjectId
+
+			var
+			// name
+			name,
+
+			// is not using object id
+			isNotUsingObjectId,
+
+			// waiting create infos
+			waitingCreateInfos = [],
+
+			// waiting get infos
+			waitingGetInfos = [],
+
+			// waiting update infos
+			waitingUpdateInfos = [],
+
+			// waiting remove infos
+			waitingRemoveInfos = [],
+
+			// waiting find infos
+			waitingFindInfos = [],
+
+			// waiting count infos
+			waitingCountInfos = [],
+
+			// waiting check is exists infos
+			waitingCheckIsExistsInfos = [],
+
+			// waiting aggregate infos
+			waitingAggregateInfos = [],
+
+			// generate _id.
+			gen_id = function(id) {
+				//REQUIRED: id
+
+				if (isNotUsingObjectId === true) {
+					return id;
+				} else {
+					return new ObjectID(id);
+				}
+			},
+
+			// clean data.
+			cleanData = function(data) {
+				//REQUIRED: data
+
+				// convert _id (object) to id (string).
+				if (data._id !== undefined) {
+					data.id = data._id.toString();
+				}
+
+				// delete _id.
+				delete data._id;
+
+				// delete __IS_ENABLED.
+				delete data.__IS_ENABLED;
+
+				// delete __RANDOM_KEY.
+				delete data.__RANDOM_KEY;
+
+				return data;
+			},
+
+			// remove empty values.
+			removeEmptyValues = function(data) {
+				//REQUIRED: data
+
+				EACH(data, function(value, name) {
+
+					if (value === undefined || value === TO_DELETE) {
+
+						REMOVE({
+							data : data,
+							name : name
+						});
+
+					} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
+
+						removeEmptyValues(value);
+					}
+				});
+			},
+
+			// make up filter.
+			makeUpFilter = function(filter, isIncludeRemoved) {
+
+				var
+				// f.
+				f = function(filter) {
+
+					if (filter.id !== undefined) {
+
+						if (CHECK_IS_DATA(filter.id) === true) {
+
+							EACH(filter.id, function(values, i) {
+								if (CHECK_IS_DATA(values) === true || CHECK_IS_ARRAY(values) === true) {
+									EACH(values, function(value, j) {
+										values[j] = gen_id(value);
+									});
+								} else {
+									filter.id[i] = gen_id(values);
+								}
+							});
+
+							filter._id = filter.id;
+
+						} else {
+							filter._id = gen_id(filter.id);
+						}
+						delete filter.id;
+					}
+
+					if (isIncludeRemoved !== true) {
+						filter.__IS_ENABLED = true;
+					}
+
+					EACH(filter, function(value, name) {
+						if (value === undefined) {
+							delete filter[name];
+						}
+					});
+				};
+
+				if (filter.$and !== undefined) {
+
+					EACH(filter.$and, function(filter) {
+						f(filter);
+					});
+
+				} else if (filter.$or !== undefined) {
+
+					EACH(filter.$or, function(filter) {
+						f(filter);
+					});
+
+				} else {
+					f(filter);
+				}
+			},
+
+			// create data.
+			// if success, callback saved data.
+			// if error, run error handler.
+			create,
+
+			// get data.
+			// if success, callback saved data.
+			// if not exists, callback undefined.
+			// if error, run error handler.
+			get,
+
+			// update data.
+			// if success, callback saved data.
+			// if not exists, callback undefined.
+			// if error, run error handler.
+			update,
+
+			// remove data.
+			// if success, callback saved data.
+			// if not exists, callback undefined.
+			// if error, run error handler.
+			remove,
+
+			// find data set.
+			// if success, callback saved data set.
+			// if error, run error handler.
+			find,
+
+			// count data set.
+			// if success, callback count.
+			// if error, run error handler.
+			count,
+
+			// check is exists.
+			// if success, callback true or false.
+			// if error, run error handler.
+			checkIsExists,
+
+			// aggregate.
+			aggregate;
+
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				name = nameOrParams;
+			} else {
+				name = nameOrParams.name;
+				isNotUsingObjectId = nameOrParams.isNotUsingObjectId;
+			}
+
+			self.create = create = function(data, callbackOrHandlers) {
+				//REQUIRED: data
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+
+				waitingCreateInfos.push({
+					data : data,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+
+			self.get = get = function(idOrParams, callbackOrHandlers) {
+				//REQUIRED: idOrParams
+				//OPTIONAL: idOrParams.id
+				//OPTIONAL: idOrParams.filter
+				//OPTIONAL: idOrParams.sort
+				//OPTIONAL: idOrParams.isRandom
+				//OPTIONAL: idOrParams.isIncludeRemoved
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.error
+
+				waitingGetInfos.push({
+					idOrParams : idOrParams,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+
+			self.update = update = function(data, callbackOrHandlers) {
+				//REQUIRED: data
+				//REQUIRED: data.id
+				//OPTIONAL: data.$inc
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.error
+
+				waitingUpdateInfos.push({
+					data : data,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+
+			if (isNotUsingObjectId !== true) {
+
+				self.remove = remove = function(id, callbackOrHandlers) {
+					//REQUIRED: id
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
+
+					waitingRemoveInfos.push({
+						id : id,
+						callbackOrHandlers : callbackOrHandlers
+					});
+				};
+			}
+
+			self.find = find = function(params, callbackOrHandlers) {
+				//OPTIONAL: params
+				//OPTIONAL: params.filter
+				//OPTIONAL: params.sort
+				//OPTIONAL: params.start
+				//OPTIONAL: params.count
+				//OPTIONAL: params.isFindAll
+				//OPTIONAL: params.isIncludeRemoved
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+
+				waitingFindInfos.push({
+					params : params,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+
+			self.count = count = function(params, callbackOrHandlers) {
+				//OPTIONAL: params
+				//OPTIONAL: params.filter
+				//OPTIONAL: params.isIncludeRemoved
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+
+				waitingCountInfos.push({
+					params : params,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+
+			self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+				//OPTIONAL: params
+				//OPTIONAL: params.filter
+				//OPTIONAL: params.isIncludeRemoved
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+
+				waitingCheckIsExistsInfos.push({
+					params : params,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+
+			self.aggregate = aggregate = function(params, callbackOrHandlers) {
+				//REQUIRED: params
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+
+				waitingAggregateInfos.push({
+					params : params,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+
+			CONNECT_TO_DB_SERVER.addInitDBFunc(function(nativeDB) {
+
+				var
+				// MongoDB collection
+				collection = nativeDB.collection(box.boxName + '.' + name),
+
+				// MongoDB collection for history
+				historyCollection = nativeDB.collection(box.boxName + '.' + name + '__HISTORY'),
+
+				// MongoDB collection for error log
+				errorLogCollection = nativeDB.collection(box.boxName + '.' + name + '__ERROR'),
+
+				// add history.
+				addHistory = function(method, id, change, time) {
+					//REQUIRED: method
+					//REQUIRED: id
+					//REQUIRED: change
+					//REQUIRED: time
+
+					historyCollection.findOne({
+						id : id
+					}, function(error, savedData) {
+
+						var
+						// info
+						info;
+
+						if (error === TO_DELETE) {
+
+							info = {
+								method : method,
+								change : change,
+								time : time
+							};
+
+							if (savedData === TO_DELETE) {
+
+								historyCollection.insert({
+									id : id,
+									timeline : [info]
+								}, {
+									w : 0
+								});
+
+							} else {
+
+								historyCollection.update({
+									id : id
+								}, {
+									$push : {
+										timeline : info
+									}
+								}, {
+									w : 0
+								});
+							}
+						}
+					});
+
+					if (NODE_CONFIG.isDBLogMode === true) {
+						console.log('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` DATA SAVED:', change);
+					}
+				},
+
+				// log error.
+				logError = function(errorInfo, errorHandler) {
+					//REQUIRED: errorInfo
+					//REQUIRED: errorInfo.errorMsg
+					//OPTIONAL: errorHandler
+
+					// now
+					errorInfo.time = new Date();
+
+					try {
+
+						errorLogCollection.insert(errorInfo, {
+							w : 0
+						});
+					}
+
+					// if catch error
+					catch (error) {
+						// this case, ignore.
+					}
+
+					if (errorHandler !== undefined) {
+						errorHandler(errorInfo.errorMsg);
+					} else {
+						console.log('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` ERROR:', errorInfo);
+					}
+				},
+
+				// inner get.
+				innerGet;
+
+				self.create = create = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler,
+
+					// error message
+					errorMsg,
+
+					// f.
+					f;
+
+					try {
+
+						// set is enabled.
+						data.__IS_ENABLED = true;
+
+						// set random key.
+						data.__RANDOM_KEY = Math.random();
+
+						// set create time.
+						data.createTime = new Date();
+
+						removeEmptyValues(data);
+
+						// remove _id.
+						delete data._id;
+
+						if (isNotUsingObjectId === true) {
+							data._id = data.id;
+						}
+
+						// remove id.
+						delete data.id;
+
+						if (callbackOrHandlers !== undefined) {
+							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+								callback = callbackOrHandlers;
+							} else {
+								callback = callbackOrHandlers.success;
+								errorHandler = callbackOrHandlers.error;
+							}
+						}
+
+						collection.insert(data, {
+							safe : true
+						}, function(error, savedDataSet) {
+
+							var
+							// saved data
+							savedData;
+
+							if (error === TO_DELETE) {
+
+								savedData = savedDataSet[0];
+
+								// clean saved data before callback.
+								cleanData(savedData);
+
+								addHistory('create', savedData.id, savedData, savedData.createTime);
+
+								if (callback !== undefined) {
+									callback(savedData);
+								}
+							}
+
+							// if error is not TO_DELETE
+							else {
+
+								logError({
+									method : 'create',
+									data : data,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'create',
+							data : data,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+
+				innerGet = function(params, callbackOrHandlers) {
+					//REQUIRED: params
+					//REQUIRED: params.filter
+					//REQUIRED: params.sort
+					//OPTIONAL: params.isIncludeRemoved
+					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// filter
+					filter = params.filter,
+
+					// sort
+					sort = params.sort,
+
+					// is include removed
+					isIncludeRemoved = params.isIncludeRemoved,
+
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// error handler
+					errorHandler,
+
+					// error message
+					errorMsg;
+
+					try {
+
+						makeUpFilter(filter, isIncludeRemoved);
+
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
+							errorHandler = callbackOrHandlers.error;
+						}
+
+						collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
+
+							var
+							// saved data
+							savedData;
+
+							if (error === TO_DELETE) {
+
+								if (savedDataSet !== TO_DELETE && savedDataSet.length > 0) {
+
+									savedData = savedDataSet[0];
+
+									// clean saved data before callback.
+									cleanData(savedData);
+
+									callback(savedData);
+
+								} else {
+
+									if (notExistsHandler !== undefined) {
+										notExistsHandler();
+									} else {
+										console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
+									}
+								}
+							}
+
+							// if error is not TO_DELETE
+							else {
+
+								logError({
+									method : 'get',
+									params : params,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'get',
+							params : params,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+
+				self.get = get = function(idOrParams, callbackOrHandlers) {
+					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams.id
+					//OPTIONAL: idOrParams.filter
+					//OPTIONAL: idOrParams.sort
+					//OPTIONAL: idOrParams.isRandom
+					//OPTIONAL: idOrParams.isIncludeRemoved
+					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// id
+					id,
+
+					// filter
+					filter,
+
+					// sort
+					sort,
+
+					// is random
+					isRandom,
+
+					// is include removed
+					isIncludeRemoved,
+
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// error handler
+					errorHandler,
+
+					// random key
+					randomKey,
+
+					// error message
+					errorMsg;
+
+					try {
+
+						// init params.
+						if (CHECK_IS_DATA(idOrParams) !== true) {
+							id = idOrParams;
+						} else {
+							id = idOrParams.id;
+							filter = idOrParams.filter;
+							sort = idOrParams.sort;
+							isRandom = idOrParams.isRandom;
+							isIncludeRemoved = idOrParams.isIncludeRemoved;
+						}
+
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
+							errorHandler = callbackOrHandlers.error;
+						}
+
+						if (sort === undefined) {
+							sort = {
+								createTime : -1
+							};
+						}
+
+						if (isRandom === true) {
+
+							if (filter === undefined) {
+								filter = {};
+							}
+
+							filter.__RANDOM_KEY = {
+								$gte : randomKey = Math.random()
+							};
+
+							sort.__RANDOM_KEY = 1;
+
+							innerGet({
+								filter : filter,
+								sort : sort,
+								isIncludeRemoved : isIncludeRemoved
+							}, {
+								error : errorHandler,
+								notExists : function() {
+
+									filter.__RANDOM_KEY = {
+										$lte : randomKey
+									};
+
+									innerGet({
+										filter : filter,
+										sort : sort,
+										isIncludeRemoved : isIncludeRemoved
+									}, callbackOrHandlers);
+								},
+								success : callback
+							});
+
+						} else {
+
+							if (filter === undefined) {
+								filter = {
+									_id : gen_id(id)
+								};
+							}
+
+							innerGet({
+								filter : filter,
+								sort : sort,
+								isIncludeRemoved : isIncludeRemoved
+							}, callbackOrHandlers);
+						}
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'get',
+							idOrParams : idOrParams,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+
+				self.update = update = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//REQUIRED: data.id
+					//OPTIONAL: data.$inc
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// id
+					id = data.id,
+
+					// $unset
+					$unset,
+
+					// $inc
+					$inc = data.$inc,
+
+					// filter
+					filter,
+
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// error handler
+					errorHandler,
+
+					// update data
+					updateData,
+
+					// is set data
+					isSetData,
+
+					// error message
+					errorMsg;
+
+					try {
+
+						filter = {
+							_id : gen_id(id),
+							__IS_ENABLED : true
+						};
+
+						if (callbackOrHandlers !== undefined) {
+							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+								callback = callbackOrHandlers;
+							} else {
+								callback = callbackOrHandlers.success;
+								notExistsHandler = callbackOrHandlers.notExists;
+								errorHandler = callbackOrHandlers.error;
+							}
+						}
+
+						EACH(data, function(value, name) {
+							if (name === 'id' || name === '_id' || name === '__IS_ENABLED' || name === 'createTime' || name === '$inc') {
+								delete data[name];
+							} else if (value === TO_DELETE) {
+
+								if ($unset === undefined) {
+									$unset = {};
+								}
+
+								$unset[name] = '';
+
+							} else {
+								isSetData = true;
+							}
+						});
+
+						data.lastUpdateTime = new Date();
+
+						removeEmptyValues(data);
+
+						updateData = {
+							$set : data
+						};
+
+						if ($unset !== undefined) {
+							updateData.$unset = $unset;
+						}
+
+						if ($inc !== undefined) {
+							updateData.$inc = $inc;
+						}
+
+						collection.update(filter, updateData, {
+							safe : true
+						}, function(error, result) {
+
+							if (result === 0) {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+								}
+
+							} else if (error === TO_DELETE) {
+
+								get({
+									filter : filter
+								}, {
+
+									error : function(errorMsg) {
+
+										logError({
+											method : 'update',
+											data : data,
+											errorMsg : errorMsg
+										}, errorHandler);
+									},
+
+									notExists : function() {
+
+										if (notExistsHandler !== undefined) {
+											notExistsHandler();
+										} else {
+											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+										}
+									},
+
+									success : function(savedData) {
+
+										var
+										// update data
+										updateData;
+
+										if ($inc === undefined || isSetData === true || $unset !== undefined) {
+
+											updateData = {};
+
+											if (isSetData === true) {
+												EACH(data, function(value, name) {
+													updateData[name] = value;
+												});
+											}
+
+											if ($unset !== undefined) {
+												EACH($unset, function(value, name) {
+													updateData[name] = TO_DELETE;
+												});
+											}
+
+											addHistory('update', id, updateData, savedData.lastUpdateTime);
+										}
+
+										// clean saved data before callback.
+										cleanData(savedData);
+
+										if (callback !== undefined) {
+											callback(savedData);
+										}
+									}
+								});
+							}
+
+							// if error is not TO_DELETE
+							else {
+
+								logError({
+									method : 'update',
+									data : data,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'update',
+							data : data,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+
+				if (isNotUsingObjectId !== true) {
+
+					self.remove = remove = function(id, callbackOrHandlers) {
+						//REQUIRED: id
+						//OPTIONAL: callbackOrHandlers
+						//OPTIONAL: callbackOrHandlers.success
+						//OPTIONAL: callbackOrHandlers.notExists
+						//OPTIONAL: callbackOrHandlers.error
+
+						var
+						// filter
+						filter,
+
+						// callback
+						callback,
+
+						// not exists handler
+						notExistsHandler,
+
+						// error handler
+						errorHandler,
+
+						// error message
+						errorMsg;
+
+						try {
+
+							filter = {
+								_id : gen_id(id),
+								__IS_ENABLED : true
+							};
+
+							if (callbackOrHandlers !== undefined) {
+								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+									callback = callbackOrHandlers;
+								} else {
+									callback = callbackOrHandlers.success;
+									notExistsHandler = callbackOrHandlers.notExists;
+									errorHandler = callbackOrHandlers.error;
+								}
+							}
+
+							get({
+								filter : filter
+							}, {
+
+								error : function(errorMsg) {
+
+									logError({
+										method : 'remove',
+										id : id,
+										errorMsg : errorMsg
+									}, errorHandler);
+								},
+
+								notExists : function() {
+
+									if (notExistsHandler !== undefined) {
+										notExistsHandler();
+									} else {
+										console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
+									}
+								},
+
+								success : function(savedData) {
+
+									var
+									// remove data
+									removeData;
+
+									collection.update(filter, {
+										$set : removeData = {
+											__IS_ENABLED : false,
+											removeTime : new Date()
+										}
+									}, {
+										safe : true
+									}, function(error, result) {
+
+										if (result === 0) {
+
+											if (notExistsHandler !== undefined) {
+												notExistsHandler();
+											} else {
+												console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
+											}
+
+										} else if (error === TO_DELETE) {
+
+											addHistory('remove', savedData.id, {
+												removeTime : removeData.removeTime
+											}, removeData.removeTime);
+
+											// clean saved data before callback.
+											cleanData(savedData);
+
+											if (callback !== undefined) {
+												callback(savedData);
+											}
+										}
+
+										// if error is not TO_DELETE
+										else {
+
+											logError({
+												method : 'remove',
+												id : id,
+												errorMsg : error.toString()
+											}, errorHandler);
+										}
+									});
+								}
+							});
+						}
+
+						// if catch error
+						catch (error) {
+
+							logError({
+								method : 'remove',
+								id : id,
+								errorMsg : error.toString()
+							}, errorHandler);
+						}
+					};
+				}
+
+				self.find = find = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//OPTIONAL: params.isFindAll
+					//OPTIONAL: params.isIncludeRemoved
+					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// filter
+					filter,
+
+					// sort
+					sort,
+
+					// start
+					start,
+
+					// count
+					count,
+
+					// is find all
+					isFindAll,
+
+					// is include remove data
+					isIncludeRemoved,
+
+					// callback
+					callback,
+
+					// error handler
+					errorHandler,
+
+					// error message
+					errorMsg,
+
+					// proc.
+					proc;
+
+					try {
+
+						if (callbackOrHandlers === undefined) {
+							callbackOrHandlers = params;
+							params = undefined;
+						}
+
+						if (params !== undefined) {
+							filter = params.filter;
+							sort = params.sort;
+							start = INTEGER(params.start);
+							count = INTEGER(params.count);
+							isFindAll = params.isFindAll;
+							isIncludeRemoved = params.isIncludeRemoved;
+						}
+
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+
+						if (filter === undefined) {
+							filter = {};
+						}
+
+						if (sort === undefined) {
+							sort = {
+								createTime : -1
+							};
+						}
+
+						if (start === undefined) {
+							start = 0;
+						}
+
+						if (isFindAll !== true) {
+							if (count === undefined || count > NODE_CONFIG.maxDataCount || isNaN(count) === true) {
+								count = NODE_CONFIG.maxDataCount;
+							} else if (count < 1) {
+								count = 1;
+							}
+						}
+
+						makeUpFilter(filter);
+
+						proc = function(error, savedDataSet) {
+
+							if (error === TO_DELETE) {
+
+								if (savedDataSet !== TO_DELETE) {
+
+									// clean saved data before callback.
+									EACH(savedDataSet, function(savedData, i) {
+										cleanData(savedData);
+									});
+								}
+
+								callback(savedDataSet);
+							}
+
+							// if error is not TO_DELETE
+							else {
+
+								logError({
+									method : 'find',
+									params : params,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						};
+
+						if (isFindAll === true) {
+
+							// find all data set.
+							collection.find(filter).sort(sort).skip(start).toArray(proc);
+
+						} else {
+
+							collection.find(filter).sort(sort).skip(start).limit(count).toArray(proc);
+						}
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'find',
+							params : params,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+
+				self.count = count = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.isIncludeRemoved
+					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// filter
+					filter,
+
+					// is include remove data
+					isIncludeRemoved,
+
+					// callback
+					callback,
+
+					// error handler
+					errorHandler,
+
+					// error message
+					errorMsg;
+
+					try {
+
+						if (callbackOrHandlers === undefined) {
+							callbackOrHandlers = params;
+							params = undefined;
+						}
+
+						if (params !== undefined) {
+							filter = params.filter;
+							isIncludeRemoved = params.isIncludeRemoved;
+						}
+
+						if (callbackOrHandlers === undefined) {
+							callbackOrHandlers = filter;
+							filter = undefined;
+						}
+
+						if (filter === undefined) {
+							filter = {};
+						}
+
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+
+						makeUpFilter(filter);
+
+						collection.find(filter).count(function(error, count) {
+
+							if (error === TO_DELETE) {
+								callback(count);
+							}
+
+							// if error is not TO_DELETE
+							else {
+
+								logError({
+									method : 'count',
+									filter : filter,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'count',
+							filter : filter,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+
+				self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.isIncludeRemoved
+					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// filter
+					filter,
+
+					// is include remove data
+					isIncludeRemoved,
+
+					// callback
+					callback,
+
+					// error handler
+					errorHandler,
+
+					// error message
+					errorMsg;
+
+					try {
+
+						if (callbackOrHandlers === undefined) {
+							callbackOrHandlers = params;
+							params = undefined;
+						}
+
+						if (params !== undefined) {
+							filter = params.filter;
+							isIncludeRemoved = params.isIncludeRemoved;
+						}
+
+						if (callbackOrHandlers === undefined) {
+							callbackOrHandlers = filter;
+							filter = undefined;
+						}
+
+						// when undefined
+						if (filter === undefined) {
+							filter = {};
+						}
+
+						// when id
+						else if (CHECK_IS_DATA(filter) !== true) {
+
+							filter = {
+								_id : gen_id(filter)
+							};
+						}
+
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+
+						makeUpFilter(filter);
+
+						collection.find(filter).count(function(error, count) {
+
+							if (error === TO_DELETE) {
+
+								callback(count !== undefined && count > 0);
+							}
+
+							// if error is not TO_DELETE
+							else {
+
+								logError({
+									method : 'checkIsExists',
+									filter : filter,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'checkIsExists',
+							filter : filter,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+
+				self.aggregate = aggregate = function(params, callbackOrHandlers) {
+					//REQUIRED: params
+					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler;
+
+					try {
+
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+
+						collection.aggregate(params, function(error, result) {
+
+							if (error === TO_DELETE) {
+
+								callback(result);
+							}
+
+							// if error is not TO_DELETE
+							else {
+
+								logError({
+									method : 'aggregate',
+									params : params,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'aggregate',
+							params : params,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+
+				// run all waiting infos.
+
+				EACH(waitingCreateInfos, function(info) {
+					create(info.data, info.callbackOrHandlers);
+				});
+
+				waitingCreateInfos = undefined;
+
+				EACH(waitingGetInfos, function(info) {
+					get(info.idOrParams, info.callbackOrHandlers);
+				});
+
+				waitingGetInfos = undefined;
+
+				EACH(waitingUpdateInfos, function(info) {
+					update(info.data, info.callbackOrHandlers);
+				});
+
+				waitingUpdateInfos = undefined;
+
+				EACH(waitingRemoveInfos, function(info) {
+					remove(info.id, info.callbackOrHandlers);
+				});
+
+				waitingRemoveInfos = undefined;
+
+				EACH(waitingFindInfos, function(info) {
+					find(info.params, info.callbackOrHandlers);
+				});
+
+				waitingFindInfos = undefined;
+
+				EACH(waitingCountInfos, function(info) {
+					count(info.params, info.callbackOrHandlers);
+				});
+
+				waitingCountInfos = undefined;
+
+				EACH(waitingCheckIsExistsInfos, function(info) {
+					checkIsExists(info.params, info.callbackOrHandlers);
+				});
+
+				waitingCheckIsExistsInfos = undefined;
+
+				EACH(waitingAggregateInfos, function(info) {
+					aggregate(info.params, info.callbackOrHandlers);
+				});
+
+				waitingAggregateInfos = undefined;
+			});
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * MongoDB collection wrapper class for logging
+	 */
+	box.LOG_DB = CLASS({
+
+		init : function(inner, self, name) {
+			//REQUIRED: name
+
+			var
+			// waiting log data set
+			waitingLogDataSet = [],
+
+			// log.
+			log;
+
+			self.log = log = function(data) {
+				//REQUIRED: data
+
+				waitingLogDataSet.push(data);
+			};
+
+			CONNECT_TO_DB_SERVER.addInitDBFunc(function(nativeDB) {
+
+				var
+				// MongoDB collection
+				collection = nativeDB.collection(box.boxName + '.' + name);
+
+				self.log = log = function(data) {
+					//REQUIRED: data
+
+					// now
+					data.time = new Date();
+
+					collection.insert(data, {
+						w : 0
+					});
+				};
+
+				EACH(waitingLogDataSet, function(data) {
+					log(data);
+				});
+
+				waitingLogDataSet = undefined;
+			});
+		}
+	});
+});
+
+/**
+ * Node-side Configuration
+ */
+OVERRIDE(NODE_CONFIG, function(origin) {
+
+	global.NODE_CONFIG = COMBINE([origin, {
+
+		// db log mode
+		isDBLogMode : false,
+
+		// init max data count = 1000
+		maxDataCount : 1000
+	}]);
+});

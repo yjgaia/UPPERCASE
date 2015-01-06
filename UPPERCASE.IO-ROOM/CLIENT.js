@@ -1,1 +1,136 @@
-FOR_BOX(function(O){"use strict";O.ROOM=CLASS({init:function(R,n,o){var E,e,t,i,_,C,N,f=O.boxName+"/"+o,u={};CONNECT_TO_ROOM_SERVER.enterRoom(f),R.getRoomName=e=function(){return f},R.checkIsExited=t=function(){return E},n.on=i=function(O,R){var n=u[O];CONNECT_TO_ROOM_SERVER.on(f+"/"+O,R),void 0===n&&(n=u[O]=[]),n.push(R)},n.off=_=function(O,R){var n=u[O];void 0!==n&&(void 0!==R?(CONNECT_TO_ROOM_SERVER.off(f+"/"+O,R),REMOVE({array:n,value:R}),0===n.length&&delete u[O]):(EACH(n,function(R){CONNECT_TO_ROOM_SERVER.off(f+"/"+O,R)}),delete u[O]))},n.send=C=function(O,R){E!==!0?CONNECT_TO_ROOM_SERVER.send({methodName:f+"/"+O.methodName,data:O.data},R):console.log(CONSOLE_RED("[UPPERCASE.IO-ROOM] `ROOM.send` ERROR! ROOM EXITED!"))},n.exit=N=function(){E!==!0&&(CONNECT_TO_ROOM_SERVER.exitRoom(f),EACH(u,function(O,R){_(R)}),u=void 0,E=!0)}}})});
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * Connection room class
+	 */
+	box.ROOM = CLASS({
+
+		init : function(inner, self, name) {
+			//REQUIRED: name
+
+			var
+			// room name
+			roomName = box.boxName + '/' + name,
+
+			// method map
+			methodMap = {},
+
+			// is exited
+			isExited,
+
+			// get room name.
+			getRoomName,
+
+			// check is exited.
+			checkIsExited,
+
+			// on.
+			on,
+
+			// off.
+			off,
+
+			// send.
+			send,
+
+			// exit.
+			exit;
+
+			CONNECT_TO_ROOM_SERVER.enterRoom(roomName);
+
+			inner.getRoomName = getRoomName = function() {
+				return roomName;
+			};
+
+			inner.checkIsExited = checkIsExited = function() {
+				return isExited;
+			};
+
+			self.on = on = function(methodName, method) {
+				//REQUIRED: methodName
+				//REQUIRED: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				CONNECT_TO_ROOM_SERVER.on(roomName + '/' + methodName, method);
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+			};
+
+			self.off = off = function(methodName, method) {
+				//REQUIRED: methodName
+				//OPTIONAL: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					if (method !== undefined) {
+
+						CONNECT_TO_ROOM_SERVER.off(roomName + '/' + methodName, method);
+
+						REMOVE({
+							array : methods,
+							value : method
+						});
+
+						if (methods.length === 0) {
+							delete methodMap[methodName];
+						}
+
+					} else {
+
+						EACH(methods, function(method) {
+							CONNECT_TO_ROOM_SERVER.off(roomName + '/' + methodName, method);
+						});
+						delete methodMap[methodName];
+					}
+				}
+			};
+
+			self.send = send = function(params, callback) {
+				//REQUIRED: params
+				//REQUIRED: params.methodName
+				//REQUIRED: params.data
+				//OPTIONAL: callback
+
+				if (isExited !== true) {
+
+					CONNECT_TO_ROOM_SERVER.send({
+						methodName : roomName + '/' + params.methodName,
+						data : params.data
+					}, callback);
+
+				} else {
+					console.log(CONSOLE_RED('[UPPERCASE.IO-ROOM] `ROOM.send` ERROR! ROOM EXITED!'));
+				}
+			};
+
+			self.exit = exit = function() {
+
+				if (isExited !== true) {
+
+					CONNECT_TO_ROOM_SERVER.exitRoom(roomName);
+
+					EACH(methodMap, function(methods, methodName) {
+						off(methodName);
+					});
+
+					// free method map.
+					methodMap = undefined;
+
+					isExited = true;
+				}
+			};
+		}
+	});
+});

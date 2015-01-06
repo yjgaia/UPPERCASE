@@ -1,1 +1,26 @@
-OVERRIDE(TEXTAREA,function(t){"use strict";global.TEXTAREA=CLASS({preset:function(){return t},init:function(t){t.setAttr({name:"autocapitalize",value:"none"}),t.setAttr({name:"autocorrect",value:"off"})}})});
+OVERRIDE(TEXTAREA, function(origin) {
+	'use strict';
+
+	/**
+	 * Textarea class (fix for iOS)
+	 */
+	global.TEXTAREA = CLASS({
+
+		preset : function() {
+			return origin;
+		},
+
+		init : function(inner, self) {
+
+			inner.setAttr({
+				name : 'autocapitalize',
+				value : 'none'
+			});
+			
+			inner.setAttr({
+				name : 'autocorrect',
+				value : 'off'
+			});
+		}
+	});
+});

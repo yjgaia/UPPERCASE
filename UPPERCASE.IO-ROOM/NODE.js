@@ -1,1 +1,275 @@
-FOR_BOX(function(a){"use strict";a.BROADCAST=METHOD({run:function(o){var m=a.boxName+"/"+o.roomName,t=o.methodName,d=o.data;LAUNCH_ROOM_SERVER.broadcast({roomName:m,methodName:t,data:d}),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__LAUNCH_ROOM_SERVER__MESSAGE",data:{roomName:m,methodName:t,data:d}}),void 0!==SERVER_CLUSTERING.broadcast&&SERVER_CLUSTERING.broadcast({methodName:"__LAUNCH_ROOM_SERVER__MESSAGE",data:{roomName:m,methodName:t,data:d}})}})});FOR_BOX(function(n){"use strict";n.ROOM=METHOD({run:function(O,R){LAUNCH_ROOM_SERVER.addInitRoomFunc(n.boxName+"/"+O,R)}})});global.LAUNCH_ROOM_SERVER=CLASS(function(t){"use strict";var o,n,E={},e={};return t.addInitRoomFunc=o=function(t,o){void 0===E[t]&&(E[t]=[]),E[t].push(o)},t.broadcast=n=function(t){var o=t.roomName,n=e[o];void 0!==n&&EACH(n,function(n){n({methodName:o+"/"+t.methodName,data:t.data})})},{init:function(t,o,_){var a,R;void 0!==CPU_CLUSTERING.on&&CPU_CLUSTERING.on("__LAUNCH_ROOM_SERVER__MESSAGE",n),void 0!==SERVER_CLUSTERING.on&&SERVER_CLUSTERING.on("__LAUNCH_ROOM_SERVER__MESSAGE",function(t){n(t),void 0!==CPU_CLUSTERING.broadcast&&CPU_CLUSTERING.broadcast({methodName:"__LAUNCH_ROOM_SERVER__MESSAGE",data:t})}),a=MULTI_PROTOCOL_SOCKET_SERVER(_,function(t,o,n,_){var a={};o("__ENTER_ROOM",function(R){var i=E[R],d=e[R];void 0===a[R]?(a[R]=1,void 0!==i&&EACH(i,function(E){E(t,function(t,n){o(R+"/"+t,n)},function(t,o){n(R+"/"+t,o)},function(t,o){_({methodName:R+"/"+t.methodName,data:t.data},o)})}),void 0===d&&(d=e[R]=[]),d.push(_)):a[R]+=1}),o("__EXIT_ROOM",function(t){void 0!==a[t]&&(a[t]-=1,0===a[t]&&(REMOVE({array:e[t],value:_}),0===e[t].length&&delete e[t],delete a[t]))}),o("__DISCONNECTED",function(){EACH(a,function(t,o){REMOVE({array:e[o],value:_}),0===e[o].length&&delete e[o]}),a=void 0})}),o.getWebSocketFixRequest=R=function(){return a.getWebSocketFixRequest()}}}});
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * broadcast to rooms.
+	 */
+	box.BROADCAST = METHOD({
+
+		run : function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.roomName
+			//REQUIRED: params.methodName
+			//REQUIRED: params.data
+
+			var
+			// room name
+			roomName = box.boxName + '/' + params.roomName,
+
+			// method name
+			methodName = params.methodName,
+
+			// data
+			data = params.data;
+
+			LAUNCH_ROOM_SERVER.broadcast({
+				roomName : roomName,
+				methodName : methodName,
+				data : data
+			});
+
+			if (CPU_CLUSTERING.broadcast !== undefined) {
+
+				CPU_CLUSTERING.broadcast({
+					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+					data : {
+						roomName : roomName,
+						methodName : methodName,
+						data : data
+					}
+				});
+			}
+
+			if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+				SERVER_CLUSTERING.broadcast({
+					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+					data : {
+						roomName : roomName,
+						methodName : methodName,
+						data : data
+					}
+				});
+			}
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * create room.
+	 */
+	box.ROOM = METHOD({
+
+		run : function(name, connectionListener) {
+			//REQUIRED: name
+			//REQUIRED: connectionListener
+
+			LAUNCH_ROOM_SERVER.addInitRoomFunc(box.boxName + '/' + name, connectionListener);
+		}
+	});
+});
+
+/*
+ * Launch room server class
+ */
+global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// init room func map
+	initRoomFuncMap = {},
+
+	// send map
+	sendMap = {},
+
+	// add init room func.
+	addInitRoomFunc,
+
+	// broadcast.
+	broadcast;
+
+	cls.addInitRoomFunc = addInitRoomFunc = function(roomName, initRoomFunc) {
+		//REQUIRED: roomName
+		//REQUIRED: initRoomFunc
+
+		if (initRoomFuncMap[roomName] === undefined) {
+			initRoomFuncMap[roomName] = [];
+		}
+
+		initRoomFuncMap[roomName].push(initRoomFunc);
+	};
+
+	cls.broadcast = broadcast = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.roomName
+		//REQUIRED: params.methodName
+		//REQUIRED: params.data
+
+		var
+		// room name
+		roomName = params.roomName,
+
+		// sends
+		sends = sendMap[roomName];
+
+		if (sends !== undefined) {
+
+			EACH(sends, function(send) {
+
+				send({
+					methodName : roomName + '/' + params.methodName,
+					data : params.data
+				});
+			});
+		}
+	};
+
+	return {
+
+		init : function(inner, self, params) {
+			//REQUIRED: params
+			//OPTIONAL: params.socketServerPort
+			//OPTIONAL: params.webSocketServerPort
+			//OPTIONAL: params.webServer
+			//OPTIONAL: params.isCreateWebSocketFixRequestManager
+
+			var
+			// multi protocol socket server
+			multiProtocolSocketServer,
+
+			// get web socket fix request.
+			getWebSocketFixRequest;
+
+			if (CPU_CLUSTERING.on !== undefined) {
+
+				CPU_CLUSTERING.on('__LAUNCH_ROOM_SERVER__MESSAGE', broadcast);
+			}
+
+			if (SERVER_CLUSTERING.on !== undefined) {
+
+				SERVER_CLUSTERING.on('__LAUNCH_ROOM_SERVER__MESSAGE', function(params) {
+
+					broadcast(params);
+
+					if (CPU_CLUSTERING.broadcast !== undefined) {
+
+						CPU_CLUSTERING.broadcast({
+							methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+							data : params
+						});
+					}
+				});
+			}
+
+			multiProtocolSocketServer = MULTI_PROTOCOL_SOCKET_SERVER(params, function(clientInfo, on, off, send) {
+
+				var
+				// room counts
+				roomCounts = {};
+
+				on('__ENTER_ROOM', function(roomName) {
+
+					var
+					// init room funcs
+					initRoomFuncs = initRoomFuncMap[roomName],
+
+					// sends
+					sends = sendMap[roomName];
+
+					if (roomCounts[roomName] === undefined) {
+						roomCounts[roomName] = 1;
+
+						if (initRoomFuncs !== undefined) {
+
+							EACH(initRoomFuncs, function(initRoomFunc) {
+								initRoomFunc(clientInfo,
+
+								// on.
+								function(methodName, method) {
+									//REQUIRED: methodName
+									//REQUIRED: method
+
+									on(roomName + '/' + methodName, method);
+								},
+
+								// off.
+								function(methodName, method) {
+									//REQUIRED: methodName
+									//OPTIONAL: method
+
+									off(roomName + '/' + methodName, method);
+								},
+
+								// send.
+								function(params, callback) {
+									//REQUIRED: params
+									//REQUIRED: params.methodName
+									//REQUIRED: params.data
+									//OPTIONAL: callback
+
+									send({
+										methodName : roomName + '/' + params.methodName,
+										data : params.data
+									}, callback);
+								});
+							});
+						}
+
+						if (sends === undefined) {
+							sends = sendMap[roomName] = [];
+						}
+
+						sends.push(send);
+
+					} else {
+						roomCounts[roomName] += 1;
+					}
+				});
+
+				on('__EXIT_ROOM', function(roomName) {
+
+					if (roomCounts[roomName] !== undefined) {
+						roomCounts[roomName] -= 1;
+
+						if (roomCounts[roomName] === 0) {
+
+							REMOVE({
+								array : sendMap[roomName],
+								value : send
+							});
+
+							if (sendMap[roomName].length === 0) {
+								delete sendMap[roomName];
+							}
+							delete roomCounts[roomName];
+						}
+					}
+				});
+
+				on('__DISCONNECTED', function() {
+
+					EACH(roomCounts, function(roomCount, roomName) {
+
+						REMOVE({
+							array : sendMap[roomName],
+							value : send
+						});
+
+						if (sendMap[roomName].length === 0) {
+							delete sendMap[roomName];
+						}
+					});
+
+					roomCounts = undefined;
+				});
+			});
+
+			self.getWebSocketFixRequest = getWebSocketFixRequest = function() {
+				return multiProtocolSocketServer.getWebSocketFixRequest();
+			};
+		}
+	};
+});

@@ -1,1 +1,78 @@
-OVERRIDE(INFO,function(n){"use strict";global.INFO=OBJECT({preset:function(){return n},init:function(n,t){var e,r,a;t.getLang=e=function(){var n,t=STORE("__INFO").get("lang");return void 0===t&&(void 0!==navigator.userAgent&&(n=navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i),null!==n&&(t=n[1])),void 0===t&&(t=navigator.language),t.length>2&&(t=t.substring(0,2)),t=t.toLowerCase()),t},t.checkIsHDDisplay=r=function(){return!1},t.checkIsExistsTapDelay=a=function(){var n=getBrowserInfo();return"Chrome"!==n.name||INTEGER(n.version)<32?!0:!1}}})});
+OVERRIDE(INFO, function(origin) {
+	'use strict';
+
+	/**
+	 * Browser information object (fix for Android)
+	 */
+	global.INFO = OBJECT({
+
+		preset : function() {
+			return origin;
+		},
+
+		init : function(inner, self) {
+
+			var
+			// get lang.
+			getLang,
+
+			// check is HD display.
+			checkIsHDDisplay,
+			
+			// check is exists tap delay.
+			checkIsExistsTapDelay;
+
+			self.getLang = getLang = function() {
+
+				var
+				// language
+				lang = STORE('__INFO').get('lang'),
+
+				// match
+				match;
+
+				if (lang === undefined) {
+
+					if (navigator.userAgent !== undefined) {
+						match = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i);
+						if (match !== null) {
+							lang = match[1];
+						}
+					}
+
+					if (lang === undefined) {
+						lang = navigator.language;
+					}
+
+					if (lang.length > 2) {
+						lang = lang.substring(0, 2);
+					}
+
+					lang = lang.toLowerCase();
+				}
+
+				return lang;
+			};
+
+			// android not support HD display force.
+			// because many android devices are low end machine.
+			self.checkIsHDDisplay = checkIsHDDisplay = function() {
+				return false;
+			};
+			
+			// android chrome above 32 version, not exists tap delay.
+			self.checkIsExistsTapDelay = checkIsExistsTapDelay = function() {
+	
+				var
+				// browser info
+				browserInfo = getBrowserInfo();
+	
+				if (browserInfo.name !== 'Chrome' || INTEGER(browserInfo.version) < 32) {
+					return true;
+				}
+				
+				return false;
+			};
+		}
+	});
+});

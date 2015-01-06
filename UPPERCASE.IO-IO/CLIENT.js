@@ -1,1 +1,129 @@
-FOR_BOX(function(n){"use strict";n.R=METHOD({run:function(i,o){var r=n.boxName+"/R/"+i;return void 0!==CONFIG.version&&(r+="?version="+CONFIG.version),void 0!==o&&GET("/"+r,o),"/"+r}})});FOR_BOX(function(n){"use strict";n.RF=METHOD({run:function(t){return"/__RF/"+n.boxName+"/"+t}})});global.SERVER_TIME=METHOD(function(n){"use strict";var t,e=0;return n.setDiff=t=function(n){e=n},{run:function(n){return new Date(n.getTime()-e)}}});global.TIME=METHOD(function(n){"use strict";var t,e=0;return n.setDiff=t=function(n){e=n},{run:function(n){return new Date(n.getTime()+e)}}});global.TIME_SYNC=OBJECT({init:function(){"use strict";var t=UPPERCASE.IO.ROOM("timeSyncRoom"),e=new Date;t.send({methodName:"sync",data:e},function(t){TIME.setDiff(t),SERVER_TIME.setDiff(t)})}});
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * get resource's real path with version.
+	 */
+	box.R = METHOD({
+
+		run : function(path, callback) {
+			//REQUIRED: path
+			//OPTIONAL: callback
+
+			var
+			// uri
+			uri = box.boxName + '/R/' + path;
+
+			if (CONFIG.version !== undefined) {
+				uri += '?version=' + CONFIG.version;
+			}
+
+			if (callback !== undefined) {
+				GET('/' + uri, callback);
+			}
+
+			return '/' + uri;
+		}
+	});
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	/**
+	 * get final resource's real path.
+	 */
+	box.RF = METHOD({
+
+		run : function(path) {
+			//REQUIRED: path
+
+			return '/__RF/' + box.boxName + '/' + path;
+		}
+	});
+});
+
+/**
+ * Get server time.
+ */
+global.SERVER_TIME = METHOD(function(m) {
+	'use strict';
+
+	var
+	// diff
+	diff = 0,
+
+	// set diff.
+	setDiff;
+
+	m.setDiff = setDiff = function(_diff) {
+		diff = _diff;
+	};
+
+	return {
+
+		run : function(date) {
+			//REQUIRED: date
+
+			return new Date(date.getTime() - diff);
+		}
+	};
+});
+
+/**
+ * Sync time. (Client-side)
+ */
+global.SYNC_TIME = METHOD({
+
+	run : function() {
+		'use strict';
+
+		var
+		// time sync room
+		timeSyncRoom = UPPERCASE.IO.ROOM('timeSyncRoom'),
+
+		// now time
+		now = new Date();
+
+		timeSyncRoom.send({
+			methodName : 'sync',
+			data : now
+		},
+
+		function(diff) {
+			
+			// The local time = The server time + diff (diff: client time - server time)
+			TIME.setDiff(diff);
+			
+			// The server time = The local time - diff (diff: client time - server time)
+			SERVER_TIME.setDiff(diff);
+		});
+	}
+});
+
+/**
+ * Get time.
+ */
+global.TIME = METHOD(function(m) {
+	'use strict';
+
+	var
+	// diff
+	diff = 0,
+
+	// set diff.
+	setDiff;
+
+	m.setDiff = setDiff = function(_diff) {
+		diff = _diff;
+	};
+
+	return {
+
+		run : function(date) {
+			//REQUIRED: date
+
+			return new Date(date.getTime() + diff);
+		}
+	};
+});

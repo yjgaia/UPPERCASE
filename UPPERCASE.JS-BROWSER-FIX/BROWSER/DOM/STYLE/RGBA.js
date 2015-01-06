@@ -1,1 +1,28 @@
-OVERRIDE(RGBA,function(){"use strict";global.RGBA=METHOD({run:function(n){var t;return t=function(n){var t=n.toString(16);return 1===t.length?"0"+t:t},"#"+t(n[0])+t(n[1])+t(n[2])}})});
+OVERRIDE(RGBA, function(origin) {
+	'use strict';
+
+	/**
+	 * get rgba style string. (fix)
+	 */
+	global.RGBA = METHOD({
+
+		run : function(rgba) {
+			//REQUIRED: rgba
+
+			var
+			// function
+			f;
+
+			f = function(n) {
+
+				var
+				// hex
+				hex = n.toString(16);
+
+				return hex.length === 1 ? '0' + hex : hex;
+			};
+
+			return '#' + f(rgba[0]) + f(rgba[1]) + f(rgba[2]);
+		}
+	});
+});
