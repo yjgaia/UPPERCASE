@@ -28,7 +28,7 @@ global.BOOT = function(params) {
 	browserScript = '',
 
 	// index page content
-	indexPageContent = '',
+	indexPageContent = undefined,
 
 	// box names in BOX folder
 	boxNamesInBOXFolder = [],
@@ -500,7 +500,7 @@ global.BOOT = function(params) {
 			
 		} else {
 
-			indexPageContent += '<!DOCTYPE html>';
+			indexPageContent = '<!DOCTYPE html>';
 			indexPageContent += '<html>';
 			indexPageContent += '<head>';
 			indexPageContent += '<meta charset="utf-8">';
@@ -683,6 +683,14 @@ global.BOOT = function(params) {
 								'Access-Control-Allow-Origin' : '*'
 							}
 						});
+
+						return false;
+					}
+					
+					// serve version.
+					else if (uri === '__VERSION') {
+
+						response(CONFIG.version);
 
 						return false;
 					}

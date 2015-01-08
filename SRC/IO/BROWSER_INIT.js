@@ -10,10 +10,10 @@ if (BROWSER_CONFIG.fixTransportScriptsFolderPath !== undefined) {
 
 READY(function() {
 	'use strict';
-	
-	SYNC_TIME();
 
 	INIT_OBJECTS();
+	
+	SYNC_TIME();
 
 	FOR_BOX(function(box) {
 		if (box.MAIN !== undefined) {
