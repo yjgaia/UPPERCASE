@@ -3,6 +3,11 @@
 
 [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)를 기반으로 하고 있습니다.
 
+#### 기능
+* `모듈화` 모듈을 BOX라는 개념으로 제공하고 있습니다.
+* MVC 패턴의 Model 부분을 전담하고 있습니다.
+* 서버 사이드 기술의 전반적인 부분을 담당하고 있습니다.
+
 #### 기반 시스템
 * [Node.js](http://nodejs.org)
 * [MongoDB](http://www.mongodb.org)
