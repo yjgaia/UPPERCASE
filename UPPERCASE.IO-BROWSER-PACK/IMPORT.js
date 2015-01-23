@@ -2833,7 +2833,7 @@ global.INFO = OBJECT({
 			//REQUIRED: lang
 
 			STORE('__INFO').save({
-				key : 'lang',
+				name : 'lang',
 				value : lang
 			});
 
@@ -9775,7 +9775,7 @@ global.MATCH_VIEW = METHOD(function(m) {
 			preParams,
 			
 			// change uri handler.
-			changeURIHandler = RAR(function() {
+			changeURIHandler = function() {
 	
 				var
 				// uri
@@ -9818,13 +9818,15 @@ global.MATCH_VIEW = METHOD(function(m) {
 					view = undefined;
 					target.lastView = undefined;
 				}
-			});
+			};
 			
 			changeURIHandlers.push(changeURIHandler);
 	
 			EVENT({
 				name : 'popstate'
 			}, changeURIHandler);
+			
+			changeURIHandler();
 		}
 	};
 });
