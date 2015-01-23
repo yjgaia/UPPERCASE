@@ -14,7 +14,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
-			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {

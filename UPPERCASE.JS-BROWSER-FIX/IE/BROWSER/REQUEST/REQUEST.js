@@ -16,7 +16,6 @@ OVERRIDE(REQUEST, function(origin) {
 			//REQUIRED: params.uri
 			//OPTIONAL: params.paramStr
 			//OPTIONAL: params.data
-			//OPTIONAL: params.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 	
 			var
@@ -40,10 +39,7 @@ OVERRIDE(REQUEST, function(origin) {
 	
 			// data
 			data = params.data,
-	
-			// is not using loading bar
-			isNotUsingLoadingBar = params.isNotUsingLoadingBar,
-	
+
 			// response listener
 			responseListener,
 	
@@ -52,9 +48,6 @@ OVERRIDE(REQUEST, function(origin) {
 	
 			// url
 			url,
-	
-			// loading bar
-			loadingBar,
 	
 			// http request
 			req;
@@ -80,11 +73,7 @@ OVERRIDE(REQUEST, function(origin) {
 			}
 	
 			url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + uri;
-	
-			if (isNotUsingLoadingBar !== true) {
-				loadingBar = LOADING_BAR();
-			}
-	
+
 			try {
 				req = new ActiveXObject('Msxml2.XMLHTTP');
 			} catch (e1) {
@@ -113,10 +102,6 @@ OVERRIDE(REQUEST, function(origin) {
 						} else {
 							console.log('[UPPERCASE.JS-REQUEST] REQUEST FAILED:', params, error);
 						}
-					}
-	
-					if (loadingBar !== undefined) {
-						loadingBar.done();
 					}
 				}
 			};

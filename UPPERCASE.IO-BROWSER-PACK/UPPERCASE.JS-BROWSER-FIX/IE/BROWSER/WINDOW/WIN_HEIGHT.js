@@ -7,7 +7,7 @@ OVERRIDE(WIN_HEIGHT, function(origin) {
 	global.WIN_HEIGHT = METHOD({
 
 		run : function() {
-			return document.documentElement.clientHeight;
+			return document.documentElement.offsetHeight;
 		}
 	});
 });

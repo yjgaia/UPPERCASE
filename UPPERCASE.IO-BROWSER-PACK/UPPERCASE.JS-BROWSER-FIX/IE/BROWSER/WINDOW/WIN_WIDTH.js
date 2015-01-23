@@ -7,7 +7,7 @@ OVERRIDE(WIN_WIDTH, function(origin) {
 	global.WIN_WIDTH = METHOD({
 
 		run : function() {
-			return document.documentElement.clientWidth;
+			return document.documentElement.offsetWidth;
 		}
 	});
 });

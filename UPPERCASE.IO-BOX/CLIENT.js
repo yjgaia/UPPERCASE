@@ -47,7 +47,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
-			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -73,7 +72,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
-			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -99,7 +97,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
-			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -125,7 +122,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
-			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -152,7 +148,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: params.uri
 			//OPTIONAL: params.paramStr
 			//OPTIONAL: params.data
-			//OPTIONAL: params.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			REQUEST(COMBINE([params, {

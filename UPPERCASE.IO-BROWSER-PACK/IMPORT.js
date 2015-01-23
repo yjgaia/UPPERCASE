@@ -2768,12 +2768,11 @@ global.REPEAT = METHOD({
 global.BROWSER_CONFIG = {
 
 	host : location.hostname,
-	port : location.port,
+	port : location.port
 
 	// isSupportingX2
 	// isUsingFlashCanvasPro
 	// fixScriptsFolderPath
-	loadingBarColor : '#007aff'
 };
 
 /**
@@ -3419,125 +3418,6 @@ global.DOM = CLASS({
 
 			el.setAttribute(name, value);
 		};
-	}
-});
-
-/**
- * Loading bar class
- */
-global.LOADING_BAR = CLASS({
-
-	init : function(inner, self) {
-		'use strict';
-
-		var
-		// bars
-		bar1, bar2,
-
-		// done.
-		done;
-
-		bar1 = DIV({
-			style : {
-				position : 'fixed',
-				left : 0,
-				top : 0,
-				height : 3,
-				backgroundColor : BROWSER_CONFIG.loadingBarColor,
-				zIndex : 999999
-			}
-		}).appendTo(BODY);
-
-		bar2 = DIV({
-			style : {
-				position : 'fixed',
-				left : 0,
-				top : 0,
-				height : 3,
-				backgroundColor : BROWSER_CONFIG.loadingBarColor,
-				zIndex : 999999
-			}
-		}).appendTo(BODY);
-
-		ANIMATE({
-			node : bar1,
-			keyframes : KEYFRAMES({
-				from : {
-					width : '0%'
-				},
-				to : {
-					width : '50%'
-				}
-			}),
-			duration : 0.5
-		});
-
-		self.done = done = function() {
-
-			if (bar1 !== undefined) {
-
-				ANIMATE({
-					node : bar2,
-					keyframes : KEYFRAMES({
-						from : {
-							width : '0%'
-						},
-						to : {
-							width : '100%'
-						}
-					}),
-					duration : 0.5
-				});
-
-				DELAY(0.25, function() {
-
-					bar1.remove();
-					bar1 = undefined;
-
-					ANIMATE({
-						node : bar2,
-						keyframes : KEYFRAMES({
-							from : {
-								opacity : 1
-							},
-							to : {
-								opacity : 0
-							}
-						}),
-						duration : 0.25
-					}, function() {
-						bar2.remove();
-						bar2 = undefined;
-					});
-				});
-			}
-		};
-
-		// timeout
-		DELAY(5, function() {
-
-			if (bar1 !== undefined) {
-
-				bar1.remove();
-				bar1 = undefined;
-
-				ANIMATE({
-					node : bar2,
-					keyframes : KEYFRAMES({
-						from : {
-							width : '50%'
-						},
-						to : {
-							width : '0%'
-						}
-					}),
-					duration : 0.5
-				}, function() {
-					bar2.remove();
-					bar2 = undefined;
-				});
-			}
-		});
 	}
 });
 
@@ -9474,7 +9354,6 @@ global.DELETE = METHOD({
 		//REQUIRED: uriOrParams.uri
 		//OPTIONAL: uriOrParams.paramStr
 		//OPTIONAL: uriOrParams.data
-		//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
@@ -9499,7 +9378,6 @@ global.GET = METHOD({
 		//REQUIRED: uriOrParams.uri
 		//OPTIONAL: uriOrParams.paramStr
 		//OPTIONAL: uriOrParams.data
-		//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
@@ -9524,7 +9402,6 @@ global.POST = METHOD({
 		//REQUIRED: uriOrParams.uri
 		//OPTIONAL: uriOrParams.paramStr
 		//OPTIONAL: uriOrParams.data
-		//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
@@ -9549,7 +9426,6 @@ global.PUT = METHOD({
 		//REQUIRED: uriOrParams.uri
 		//OPTIONAL: uriOrParams.paramStr
 		//OPTIONAL: uriOrParams.data
-		//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
@@ -9575,7 +9451,6 @@ global.REQUEST = METHOD({
 		//OPTIONAL: params.uri
 		//OPTIONAL: params.paramStr
 		//OPTIONAL: params.data
-		//OPTIONAL: params.isNotUsingLoadingBar
 		//REQUIRED: responseListenerOrListeners
 
 		var
@@ -9600,9 +9475,6 @@ global.REQUEST = METHOD({
 		// data
 		data = params.data,
 
-		// is not using loading bar
-		isNotUsingLoadingBar = params.isNotUsingLoadingBar,
-
 		// response listener
 		responseListener,
 
@@ -9611,9 +9483,6 @@ global.REQUEST = METHOD({
 
 		// url
 		url,
-
-		// loading bar
-		loadingBar,
 
 		// http request
 		req;
@@ -9640,10 +9509,6 @@ global.REQUEST = METHOD({
 
 		url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + (uri === undefined ? '' : uri);
 
-		if (isNotUsingLoadingBar !== true) {
-			loadingBar = LOADING_BAR();
-		}
-
 		req = new XMLHttpRequest();
 
 		req.onreadystatechange = function() {
@@ -9668,10 +9533,6 @@ global.REQUEST = METHOD({
 					} else {
 						console.log('[UPPERCASE.JS-REQUEST] REQUEST FAILED:', params, error);
 					}
-				}
-
-				if (loadingBar !== undefined) {
-					loadingBar.done();
 				}
 			}
 		};
@@ -10171,7 +10032,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
-			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -10197,7 +10057,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
-			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -10223,7 +10082,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
-			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -10249,7 +10107,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
-			//OPTIONAL: uriOrParams.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -10276,7 +10133,6 @@ FOR_BOX(function(box) {
 			//REQUIRED: params.uri
 			//OPTIONAL: params.paramStr
 			//OPTIONAL: params.data
-			//OPTIONAL: params.isNotUsingLoadingBar
 			//REQUIRED: responseListenerOrListeners
 
 			REQUEST(COMBINE([params, {
@@ -10767,15 +10623,13 @@ FOR_BOX(function(box) {
 					//REQUIRED: params
 					//REQUIRED: params.methodName
 					//REQUIRED: params.data
-					//OPTIONAL: params.isNotUsingLoadingBar
 					//OPTIONAL: callback
 
 					if (inner.checkIsExited() !== true) {
 
 						CONNECT_TO_ROOM_SERVER.send({
 							methodName : inner.getRoomName() + '/' + params.methodName,
-							data : params.data,
-							isNotUsingLoadingBar : params.isNotUsingLoadingBar
+							data : params.data
 						}, callback);
 
 					} else {
@@ -10879,35 +10733,11 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		}
 	};
 
-	m.send = send = function(params, _callback) {
+	m.send = send = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.methodName
 		//REQUIRED: params.data
-		//OPTIONAL: params.isNotUsingLoadingBar
-		//OPTIONAL: _callback
-
-		var
-		// is not using loading bar
-		isNotUsingLoadingBar = params.isNotUsingLoadingBar,
-
-		// loading bar
-		loadingBar,
-
-		// callback
-		callback = function(result) {
-
-			if (_callback !== undefined) {
-				_callback(result);
-			}
-
-			if (loadingBar !== undefined) {
-				loadingBar.done();
-			}
-		};
-
-		if (isNotUsingLoadingBar !== true) {
-			loadingBar = LOADING_BAR();
-		}
+		//OPTIONAL: callback
 
 		if (innerSend === undefined) {
 

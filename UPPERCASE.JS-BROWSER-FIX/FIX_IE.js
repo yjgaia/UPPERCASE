@@ -68,12 +68,12 @@ RUN(function() {
 	 */
 
 	// fix WIN_WIDTH.
-	if (document.body.clientWidth === undefined) {
+	if (global.innerWidth === undefined) {
 		loadFixScript('BROWSER/WINDOW/WIN_WIDTH');
 	}
 
 	// fix WIN_HEIGHT.
-	if (document.body.clientHeight === undefined) {
+	if (global.innerHeight === undefined) {
 		loadFixScript('BROWSER/WINDOW/WIN_HEIGHT');
 	}
 

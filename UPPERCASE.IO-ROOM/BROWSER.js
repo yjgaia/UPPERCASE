@@ -24,15 +24,13 @@ FOR_BOX(function(box) {
 					//REQUIRED: params
 					//REQUIRED: params.methodName
 					//REQUIRED: params.data
-					//OPTIONAL: params.isNotUsingLoadingBar
 					//OPTIONAL: callback
 
 					if (inner.checkIsExited() !== true) {
 
 						CONNECT_TO_ROOM_SERVER.send({
 							methodName : inner.getRoomName() + '/' + params.methodName,
-							data : params.data,
-							isNotUsingLoadingBar : params.isNotUsingLoadingBar
+							data : params.data
 						}, callback);
 
 					} else {
@@ -136,35 +134,11 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		}
 	};
 
-	m.send = send = function(params, _callback) {
+	m.send = send = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.methodName
 		//REQUIRED: params.data
-		//OPTIONAL: params.isNotUsingLoadingBar
-		//OPTIONAL: _callback
-
-		var
-		// is not using loading bar
-		isNotUsingLoadingBar = params.isNotUsingLoadingBar,
-
-		// loading bar
-		loadingBar,
-
-		// callback
-		callback = function(result) {
-
-			if (_callback !== undefined) {
-				_callback(result);
-			}
-
-			if (loadingBar !== undefined) {
-				loadingBar.done();
-			}
-		};
-
-		if (isNotUsingLoadingBar !== true) {
-			loadingBar = LOADING_BAR();
-		}
+		//OPTIONAL: callback
 
 		if (innerSend === undefined) {
 

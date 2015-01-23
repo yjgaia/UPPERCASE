@@ -24,15 +24,13 @@ FOR_BOX(function(box) {
 					//REQUIRED: params
 					//REQUIRED: params.methodName
 					//REQUIRED: params.data
-					//OPTIONAL: params.isNotUsingLoadingBar
 					//OPTIONAL: callback
 
 					if (inner.checkIsExited() !== true) {
 
 						CONNECT_TO_ROOM_SERVER.send({
 							methodName : inner.getRoomName() + '/' + params.methodName,
-							data : params.data,
-							isNotUsingLoadingBar : params.isNotUsingLoadingBar
+							data : params.data
 						}, callback);
 
 					} else {
