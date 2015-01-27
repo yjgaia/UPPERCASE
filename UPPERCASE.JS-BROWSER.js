@@ -2305,32 +2305,6 @@ global.EVENT = CLASS(function(cls) {
 				}));
 			}
 
-			// mouse out event (when is touch mode, link to touchend event.)
-			else if (name === 'mouseout') {
-
-				// by touch
-				eventLows.push(EVENT_LOW({
-					node : node,
-					lowNode : lowNode,
-					name : 'touchend'
-				}, function(e, node) {
-					if (INFO.checkIsTouchMode() === true) {
-						eventHandler(e, node);
-					}
-				}));
-
-				// by mouse
-				eventLows.push(EVENT_LOW({
-					node : node,
-					lowNode : lowNode,
-					name : 'mouseout'
-				}, function(e, node) {
-					if (INFO.checkIsTouchMode() !== true) {
-						eventHandler(e, node);
-					}
-				}));
-			}
-
 			// other events
 			else if (name !== 'attach' && name !== 'show' && name !== 'remove') {
 				eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
