@@ -54,7 +54,7 @@ FOR_BOX(function(box) {
 				if (isNotUsingObjectId === true) {
 					return id;
 				} else {
-					return new ObjectID(id);
+					return VALID.id(id) === true ? new ObjectID(id) : -1;
 				}
 			},
 
