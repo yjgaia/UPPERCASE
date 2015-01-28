@@ -187,7 +187,6 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 		//REQUIRED: params.fullName
 		//REQUIRED: params.value
 		//OPTIONAL: params.removeAfterSeconds
-		//OPTIONAL: params.isWaitingRemove
 		//OPTIONAL: remove
 
 		var
@@ -198,14 +197,11 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 		value = params.value,
 
 		// remove after seconds
-		removeAfterSeconds = params.removeAfterSeconds,
-
-		// is waiting remove
-		isWaitingRemove = params.isWaitingRemove;
+		removeAfterSeconds = params.removeAfterSeconds;
 
 		storage[fullName] = value;
 
-		if (isWaitingRemove === true && removeDelays[fullName] !== undefined) {
+		if (removeDelays[fullName] !== undefined) {
 			removeDelays[fullName].remove();
 			delete removeDelays[fullName];
 		}
@@ -287,8 +283,7 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 						methodName : '__CPU_SHARED_STORE_SAVE',
 						data : {
 							fullName : fullName,
-							value : value,
-							isWaitingRemove : removeAfterSeconds !== undefined
+							value : value
 						}
 					});
 				}
@@ -572,7 +567,6 @@ global.SHARED_STORE = CLASS(function(cls) {
 		//REQUIRED: params.fullName
 		//REQUIRED: params.value
 		//OPTIONAL: params.removeAfterSeconds
-		//OPTIONAL: params.isWaitingRemove
 		//OPTIONAL: remove
 
 		var
@@ -583,14 +577,11 @@ global.SHARED_STORE = CLASS(function(cls) {
 		value = params.value,
 
 		// remove after seconds
-		removeAfterSeconds = params.removeAfterSeconds,
-
-		// is waiting remove
-		isWaitingRemove = params.isWaitingRemove;
+		removeAfterSeconds = params.removeAfterSeconds;
 
 		storage[fullName] = value;
 
-		if (isWaitingRemove === true && removeDelays[fullName] !== undefined) {
+		if (removeDelays[fullName] !== undefined) {
 			removeDelays[fullName].remove();
 			delete removeDelays[fullName];
 		}
@@ -620,7 +611,6 @@ global.SHARED_STORE = CLASS(function(cls) {
 	return {
 
 		init : function(inner, self, name) {
-			'use strict';
 			//REQUIRED: name
 
 			var
@@ -673,8 +663,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 						methodName : '__SHARED_STORE_SAVE',
 						data : {
 							fullName : fullName,
-							value : value,
-							isWaitingRemove : removeAfterSeconds !== undefined
+							value : value
 						}
 					});
 				}
@@ -685,8 +674,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 						methodName : '__SHARED_STORE_SAVE',
 						data : {
 							fullName : fullName,
-							value : value,
-							isWaitingRemove : removeAfterSeconds !== undefined
+							value : value
 						}
 					});
 				}
