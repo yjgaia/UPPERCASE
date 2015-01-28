@@ -13,7 +13,7 @@ FOR_BOX(function(box) {
 				//REQUIRED: params.name
 				//OPTIONAL: params.initData
 				//OPTIONAL: params.methodConfig
-				//OPTIONAL: params.isNotUsingObjectId
+				//OPTIONAL: params.isNotUsingHistory
 
 				var
 				// name
@@ -25,8 +25,8 @@ FOR_BOX(function(box) {
 				// method config
 				methodConfig = params.methodConfig,
 
-				// is not using object id
-				isNotUsingObjectId = params.isNotUsingObjectId,
+				// is not using history
+				isNotUsingHistory = params.isNotUsingHistory,
 
 				// create config
 				createConfig,
@@ -130,7 +130,7 @@ FOR_BOX(function(box) {
 				// db
 				db = box.DB({
 					name : name,
-					isNotUsingObjectId : isNotUsingObjectId
+					isNotUsingHistory : isNotUsingHistory
 				}),
 
 				// get name.
@@ -1093,64 +1093,61 @@ FOR_BOX(function(box) {
 					});
 				};
 
-				if (isNotUsingObjectId !== true) {
+				self.remove = remove = function(id, callbackOrHandlers) {
+					//REQUIRED: id
+					//OPTIONAL: callbackOrHandlers
 
-					self.remove = remove = function(id, callbackOrHandlers) {
-						//REQUIRED: id
-						//OPTIONAL: callbackOrHandlers
+					var
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// error handler
+					errorHandler;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerRemove(id, function(result) {
 
 						var
-						// callback
-						callback,
+						// error msg
+						errorMsg,
 
-						// not exists handler
-						notExistsHandler,
+						// saved data
+						savedData;
 
-						// error handler
-						errorHandler;
-
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
-							} else {
-								callback = callbackOrHandlers.success;
-								notExistsHandler = callbackOrHandlers.notExists;
-								errorHandler = callbackOrHandlers.error;
-							}
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							savedData = result.savedData;
 						}
 
-						innerRemove(id, function(result) {
-
-							var
-							// error msg
-							errorMsg,
-
-							// saved data
-							savedData;
-
-							if (result !== undefined) {
-								errorMsg = result.errorMsg;
-								savedData = result.savedData;
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg));
 							}
-
-							if (errorMsg !== undefined) {
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg));
-								}
-							} else if (savedData === undefined) {
-								if (notExistsHandler !== undefined) {
-									notExistsHandler();
-								} else {
-									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS.'), id);
-								}
-							} else if (callback !== undefined) {
-								callback(savedData);
+						} else if (savedData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS.'), id);
 							}
-						});
-					};
-				}
+						} else if (callback !== undefined) {
+							callback(savedData);
+						}
+					});
+				};
 
 				self.find = find = function(params, callbackOrHandlers) {
 					//OPTIONAL: params
@@ -1438,7 +1435,7 @@ FOR_BOX(function(box) {
 					}
 
 					// init remove.
-					if (removeConfig !== false && isNotUsingObjectId !== true) {
+					if (removeConfig !== false) {
 
 						// on remove.
 						on('remove', function(id, ret) {
