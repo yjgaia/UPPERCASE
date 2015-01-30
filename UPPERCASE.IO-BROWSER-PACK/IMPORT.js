@@ -10840,6 +10840,7 @@ FOR_BOX(function(box) {
 			//REQUIRED: params.name
 			//OPTIONAL: params.initData
 			//OPTIONAL: params.methodConfig
+			//OPTIONAL: params.isNotUsingObjectId
 
 			var
 			// name
@@ -10850,6 +10851,9 @@ FOR_BOX(function(box) {
 
 			// method config
 			methodConfig = params.methodConfig,
+			
+			// is not using object id
+			isNotUsingObjectId = params.isNotUsingObjectId,
 
 			// create config
 			createConfig,
@@ -11382,7 +11386,7 @@ FOR_BOX(function(box) {
 			}
 
 			// remove.
-			if (removeConfig !== false) {
+			if (removeConfig !== false && isNotUsingObjectId !== true) {
 
 				self.remove = remove = function(id, callbackOrHandlers) {
 					//REQUIRED: id
