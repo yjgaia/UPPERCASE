@@ -22,8 +22,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		}
 
 		GET({
-			host : BROWSER_CONFIG.host,
-			port : BROWSER_CONFIG.port,
+			port : CONFIG.webServerPort,
 			uri : '__WEB_SOCKET_SERVER_HOST',
 			paramStr : 'defaultHost=' + BROWSER_CONFIG.host
 		}, {

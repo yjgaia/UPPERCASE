@@ -848,7 +848,7 @@ global.URI_MATCHER = CLASS({
 						}
 
 						// find params.
-						if (formatPart.charAt(0) === '{' && formatPart.charAt(formatPart.length - 1) === '}') {
+						if (uriPart !== '' && formatPart.charAt(0) === '{' && formatPart.charAt(formatPart.length - 1) === '}') {
 							uriParams[formatPart.substring(1, formatPart.length - 1)] = uriPart;
 						} else if (formatPart !== '*' && formatPart !== uriPart) {
 							return false;

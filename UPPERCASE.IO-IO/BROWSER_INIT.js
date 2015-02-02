@@ -29,8 +29,7 @@ READY(function() {
 			INTERVAL(1, RAR(function() {
 
 				GET({
-					host : BROWSER_CONFIG.host,
-					port : BROWSER_CONFIG.port,
+					port : CONFIG.webServerPort,
 					uri : '__CHECK_ALIVE'
 				}, function() {
 					location.reload();

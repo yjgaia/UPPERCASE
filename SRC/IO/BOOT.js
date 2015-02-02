@@ -4,6 +4,7 @@ global.BOOT = function(params) {
 	//OPTIONAL: params.CONFIG
 	//OPTIONAL: params.NODE_CONFIG
 	//OPTIONAL: params.BROWSER_CONFIG
+	//OPTIONAL: params.UDB_CONFIG
 
 	var
 	//IMPORT: path
@@ -28,8 +29,8 @@ global.BOOT = function(params) {
 	browserScript = '',
 
 	// index page content
-	indexPageContent = undefined,
-
+	indexPageContent,
+	
 	// box names in BOX folder
 	boxNamesInBOXFolder = [],
 
@@ -184,9 +185,12 @@ global.BOOT = function(params) {
 		NODE_CONFIG.rootPath = rootPath;
 
 		if (params !== undefined) {
+			
 			_CONFIG = params.CONFIG;
 			_NODE_CONFIG = params.NODE_CONFIG;
 			_BROWSER_CONFIG = params.BROWSER_CONFIG;
+			
+			global.UDB_CONFIG = params.UDB_CONFIG;
 		}
 
 		// override CONFIG.
@@ -1142,5 +1146,10 @@ global.BOOT = function(params) {
 
 		// run.
 		run();
+		
+		// run UDB.
+		if (UDB_CONFIG !== undefined) {
+			BOOT_UDB(UPPERCASE_IO_PATH);
+		}
 	});
 };

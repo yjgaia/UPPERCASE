@@ -660,317 +660,376 @@ global.DOM = CLASS({
 /**
  * Node interface
  */
-global.NODE = CLASS(function() {
-	'use strict';
+global.NODE = CLASS({
 
-	var
-	// parent nodes
-	parentNodes = [];
+	init : function(inner, self) {
+		'use strict';
 
-	return {
+		var
+		// wrapper dom
+		wrapperDom,
 
-		init : function(inner, self) {
+		// content dom
+		contentDom,
 
-			var
-			// wrapper dom
-			wrapperDom,
+		// wrapper el
+		wrapperEl,
 
-			// content dom
-			contentDom,
+		// content el
+		contentEl,
 
-			// wrapper el
-			wrapperEl,
+		// waiting after nodes
+		waitingAfterNodes,
 
-			// content el
-			contentEl,
+		// waiting before nodes
+		waitingBeforeNodes,
 
-			// waiting after nodes
-			waitingAfterNodes,
+		// parent node
+		parentNode,
 
-			// waiting before nodes
-			waitingBeforeNodes,
+		// child nodes
+		childNodes = [],
 
-			// parent node
-			parentNode,
+		// origin display
+		originDisplay,
 
-			// child nodes
-			childNodes = [],
+		// set wrapper dom.
+		setWrapperDom,
 
-			// origin display
-			originDisplay,
+		// set content dom.
+		setContentDom,
 
-			// set wrapper dom.
-			setWrapperDom,
+		// set dom.
+		setDom,
 
-			// set content dom.
-			setContentDom,
+		// get wrapper dom.
+		getWrapperDom,
 
-			// set dom.
-			setDom,
+		// get content dom.
+		getContentDom,
 
-			// get wrapper dom.
-			getWrapperDom,
+		// get wrapper el.
+		getWrapperEl,
 
-			// get content dom.
-			getContentDom,
+		// get content el.
+		getContentEl,
 
-			// get wrapper el.
-			getWrapperEl,
+		// attach.
+		attach,
 
-			// get content el.
-			getContentEl,
+		// append.
+		append,
 
-			// attach.
-			attach,
+		// append to.
+		appendTo,
 
-			// append.
-			append,
+		// prepend.
+		prepend,
 
-			// append to.
-			appendTo,
+		// prepend to.
+		prependTo,
 
-			// prepend.
-			prepend,
+		// after.
+		after,
 
-			// prepend to.
-			prependTo,
+		// insert after.
+		insertAfter,
 
-			// after.
-			after,
+		// before.
+		before,
 
-			// insert after.
-			insertAfter,
+		// insert before.
+		insertBefore,
 
-			// before.
-			before,
+		// remove.
+		remove,
 
-			// insert before.
-			insertBefore,
+		// empty.
+		empty,
 
-			// remove.
-			remove,
+		// get parent.
+		getParent,
 
-			// empty.
-			empty,
+		// set parent.
+		setParent,
 
-			// get parent.
-			getParent,
+		// get children.
+		getChildren,
 
-			// set parent.
-			setParent,
+		// on.
+		on,
 
-			// get children.
-			getChildren,
+		// off.
+		off,
 
-			// on.
-			on,
+		// add style.
+		addStyle,
 
-			// off.
-			off,
+		// get style.
+		getStyle,
 
-			// add style.
-			addStyle,
+		// get width.
+		getWidth,
 
-			// get style.
-			getStyle,
+		// get inner width.
+		getInnerWidth,
 
-			// get width.
-			getWidth,
+		// get height.
+		getHeight,
 
-			// get inner width.
-			getInnerWidth,
+		// get inner height.
+		getInnerHeight,
 
-			// get height.
-			getHeight,
+		// get left.
+		getLeft,
 
-			// get inner height.
-			getInnerHeight,
+		// get top.
+		getTop,
 
-			// get left.
-			getLeft,
+		// hide.
+		hide,
 
-			// get top.
-			getTop,
+		// show.
+		show,
 
-			// hide.
-			hide,
+		// check is showing.
+		checkIsShowing;
 
-			// show.
-			show,
+		inner.setWrapperDom = setWrapperDom = function(dom) {
+			//REQUIRED: dom
 
-			// check is showing.
-			checkIsShowing;
+			wrapperDom = dom;
+			wrapperEl = dom.getEl();
 
-			inner.setWrapperDom = setWrapperDom = function(dom) {
-				//REQUIRED: dom
+			originDisplay = getStyle('display');
 
-				wrapperDom = dom;
-				wrapperEl = dom.getEl();
+			on('show', function() {
 
-				originDisplay = getStyle('display');
+				EACH(childNodes, function(childNode) {
 
-				on('show', function() {
+					if (childNode.checkIsShowing() === true) {
 
-					EACH(childNodes, function(childNode) {
+						EVENT.fireAll({
+							node : childNode,
+							name : 'show'
+						});
 
-						if (childNode.checkIsShowing() === true) {
-
-							EVENT.fireAll({
-								node : childNode,
-								name : 'show'
-							});
-
-							EVENT.removeAll({
-								node : childNode,
-								name : 'show'
-							});
-						}
-					});
+						EVENT.removeAll({
+							node : childNode,
+							name : 'show'
+						});
+					}
 				});
-			};
+			});
+		};
 
-			inner.setContentDom = setContentDom = function(dom) {
-				//REQUIRED: dom
+		inner.setContentDom = setContentDom = function(dom) {
+			//REQUIRED: dom
 
-				contentDom = dom;
-				contentEl = dom.getEl();
-			};
+			contentDom = dom;
+			contentEl = dom.getEl();
+		};
 
-			inner.setDom = setDom = function(dom) {
-				//REQUIRED: dom
+		inner.setDom = setDom = function(dom) {
+			//REQUIRED: dom
 
-				setWrapperDom(dom);
-				setContentDom(dom);
-			};
+			setWrapperDom(dom);
+			setContentDom(dom);
+		};
 
-			self.getWrapperDom = getWrapperDom = function() {
-				return wrapperDom;
-			};
+		self.getWrapperDom = getWrapperDom = function() {
+			return wrapperDom;
+		};
 
-			self.getContentDom = getContentDom = function() {
-				return contentDom;
-			};
+		self.getContentDom = getContentDom = function() {
+			return contentDom;
+		};
 
-			self.getWrapperEl = getWrapperEl = function() {
-				return wrapperEl;
-			};
+		self.getWrapperEl = getWrapperEl = function() {
+			return wrapperEl;
+		};
 
-			self.getContentEl = getContentEl = function() {
-				return contentEl;
-			};
+		self.getContentEl = getContentEl = function() {
+			return contentEl;
+		};
 
-			attach = function(node) {
-				//REQUIRED: node
+		attach = function(node) {
+			//REQUIRED: node
 
-				setParent(node);
+			setParent(node);
 
-				parentNode.getChildren().push(self);
+			parentNode.getChildren().push(self);
+
+			EVENT.fireAll({
+				node : self,
+				name : 'attach'
+			});
+
+			if (checkIsShowing() === true) {
 
 				EVENT.fireAll({
 					node : self,
-					name : 'attach'
+					name : 'show'
 				});
 
-				if (checkIsShowing() === true) {
+				EVENT.removeAll({
+					node : self,
+					name : 'show'
+				});
+			}
 
-					EVENT.fireAll({
-						node : self,
-						name : 'show'
-					});
+			// run after wating after nodes.
+			if (waitingAfterNodes !== undefined) {
+				EACH(waitingAfterNodes, function(node) {
+					after(node);
+				});
+			}
 
-					EVENT.removeAll({
-						node : self,
-						name : 'show'
-					});
-				}
+			// run before wating before nodes.
+			if (waitingBeforeNodes !== undefined) {
+				EACH(waitingBeforeNodes, function(node) {
+					before(node);
+				});
+			}
+		};
 
-				// run after wating after nodes.
-				if (waitingAfterNodes !== undefined) {
-					EACH(waitingAfterNodes, function(node) {
-						after(node);
-					});
-				}
+		self.append = append = function(node) {
+			//REQUIRED: node
 
-				// run before wating before nodes.
-				if (waitingBeforeNodes !== undefined) {
-					EACH(waitingBeforeNodes, function(node) {
-						before(node);
-					});
-				}
-			};
+			var
+			// splits
+			splits;
 
-			self.append = append = function(node) {
-				//REQUIRED: node
+			// append child.
+			if (CHECK_IS_DATA(node) === true) {
+				node.appendTo(self);
+			}
 
-				var
-				// splits
-				splits;
+			// append textarea content.
+			else if (self.type === TEXTAREA) {
 
-				// append child.
-				if (CHECK_IS_DATA(node) === true) {
-					node.appendTo(self);
-				}
+				append(DOM({
+					tag : '__STRING',
+					__TEXT : String(node === undefined ? '' : node)
+				}));
+			}
 
-				// append textarea content.
-				else if (self.type === TEXTAREA) {
+			// append string.
+			else {
+
+				splits = String(node === undefined ? '' : node).split('\n');
+
+				EACH(splits, function(text, i) {
 
 					append(DOM({
 						tag : '__STRING',
-						__TEXT : String(node === undefined ? '' : node)
+						__TEXT : text
 					}));
-				}
 
-				// append string.
-				else {
+					if (i < splits.length - 1) {
+						append(BR());
+					}
+				});
+			}
+		};
 
-					splits = String(node === undefined ? '' : node).split('\n');
+		self.appendTo = appendTo = function(node) {
+			//REQUIRED: node
 
-					EACH(splits, function(text, i) {
+			node.getContentEl().appendChild(wrapperEl);
 
-						append(DOM({
-							tag : '__STRING',
-							__TEXT : text
-						}));
+			attach(node);
 
-						if (i < splits.length - 1) {
-							append(BR());
-						}
-					});
-				}
-			};
+			return self;
+		};
 
-			self.appendTo = appendTo = function(node) {
-				//REQUIRED: node
+		self.prepend = prepend = function(node) {
+			//REQUIRED: node
 
-				node.getContentEl().appendChild(wrapperEl);
+			var
+			// splits
+			splits;
 
-				attach(node);
+			// prepend child.
+			if (CHECK_IS_DATA(node) === true) {
+				node.prependTo(self);
+			}
 
-				return self;
-			};
+			// prepend textarea content.
+			else if (self.type === TEXTAREA) {
 
-			self.prepend = prepend = function(node) {
-				//REQUIRED: node
+				prepend(DOM({
+					tag : '__STRING',
+					__TEXT : String(node === undefined ? '' : node)
+				}));
+			}
 
-				var
-				// splits
-				splits;
+			// prepend string.
+			else {
 
-				// prepend child.
-				if (CHECK_IS_DATA(node) === true) {
-					node.prependTo(self);
-				}
+				splits = String(node === undefined ? '' : node).split('\n');
 
-				// prepend textarea content.
-				else if (self.type === TEXTAREA) {
+				REPEAT({
+					start : splits.length - 1,
+					end : 0
+				}, function(i) {
 
 					prepend(DOM({
 						tag : '__STRING',
-						__TEXT : String(node === undefined ? '' : node)
+						__TEXT : splits[i]
 					}));
+
+					if (i < splits.length - 1) {
+						prepend(BR());
+					}
+				});
+			}
+		};
+
+		self.prependTo = prependTo = function(node) {
+			//REQUIRED: node
+
+			var
+			// parent el
+			parentEl = node.getContentEl();
+
+			if (parentEl.childNodes[0] === undefined) {
+				parentEl.appendChild(wrapperEl);
+			} else {
+				parentEl.insertBefore(wrapperEl, parentEl.childNodes[0]);
+			}
+
+			attach(node);
+
+			return self;
+		};
+
+		self.after = after = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+
+			// wait after node.
+			if (wrapperEl.parentNode === TO_DELETE) {
+
+				if (waitingAfterNodes === undefined) {
+					waitingAfterNodes = [];
 				}
 
-				// prepend string.
+				waitingAfterNodes.push(node);
+			}
+
+			// after node.
+			else {
+
+				// after child.
+				if (CHECK_IS_DATA(node) === true) {
+					node.insertAfter(self);
+				}
+
+				// after string.
 				else {
 
 					splits = String(node === undefined ? '' : node).split('\n');
@@ -980,454 +1039,333 @@ global.NODE = CLASS(function() {
 						end : 0
 					}, function(i) {
 
-						prepend(DOM({
+						after(DOM({
 							tag : '__STRING',
 							__TEXT : splits[i]
 						}));
 
 						if (i < splits.length - 1) {
-							prepend(BR());
+							after(BR());
 						}
 					});
 				}
-			};
+			}
+		};
 
-			self.prependTo = prependTo = function(node) {
-				//REQUIRED: node
+		self.insertAfter = insertAfter = function(node) {
+			//REQUIRED: node
 
-				var
-				// parent el
-				parentEl = node.getContentEl();
+			var
+			// before el
+			beforeEl = node.getWrapperEl();
 
-				if (parentEl.childNodes[0] === undefined) {
-					parentEl.appendChild(wrapperEl);
-				} else {
-					parentEl.insertBefore(wrapperEl, parentEl.childNodes[0]);
+			beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
+
+			attach(node.getParent());
+
+			return self;
+		};
+
+		self.before = before = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+
+			// wait before node.
+			if (wrapperEl.parentNode === TO_DELETE) {
+
+				if (waitingBeforeNodes === undefined) {
+					waitingBeforeNodes = [];
 				}
 
-				attach(node);
+				waitingBeforeNodes.push(node);
+			}
 
-				return self;
-			};
+			// before node.
+			else {
 
-			self.after = after = function(node) {
-				//REQUIRED: node
-
-				var
-				// splits
-				splits;
-
-				// wait after node.
-				if (wrapperEl.parentNode === TO_DELETE) {
-
-					if (waitingAfterNodes === undefined) {
-						waitingAfterNodes = [];
-					}
-
-					waitingAfterNodes.push(node);
+				// before child.
+				if (CHECK_IS_DATA(node) === true) {
+					node.insertBefore(self);
 				}
 
-				// after node.
+				// before string.
 				else {
 
-					// after child.
-					if (CHECK_IS_DATA(node) === true) {
-						node.insertAfter(self);
-					}
+					splits = String(node === undefined ? '' : node).split('\n');
 
-					// after textarea content.
-					else if (tag === 'textarea') {
-
-						after(DOM({
-							tag : '__STRING',
-							__TEXT : String(node === undefined ? '' : node)
-						}));
-					}
-
-					// after string.
-					else {
-
-						splits = String(node === undefined ? '' : node).split('\n');
-
-						REPEAT({
-							start : splits.length - 1,
-							end : 0
-						}, function(i) {
-
-							after(DOM({
-								tag : '__STRING',
-								__TEXT : splits[i]
-							}));
-
-							if (i < splits.length - 1) {
-								after(BR());
-							}
-						});
-					}
-				}
-			};
-
-			self.insertAfter = insertAfter = function(node) {
-				//REQUIRED: node
-
-				var
-				// before el
-				beforeEl = node.getWrapperEl();
-
-				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
-
-				attach(node.getParent());
-
-				return self;
-			};
-
-			self.before = before = function(node) {
-				//REQUIRED: node
-
-				var
-				// splits
-				splits;
-
-				// wait before node.
-				if (wrapperEl.parentNode === TO_DELETE) {
-
-					if (waitingBeforeNodes === undefined) {
-						waitingBeforeNodes = [];
-					}
-
-					waitingBeforeNodes.push(node);
-				}
-
-				// before node.
-				else {
-
-					// before child.
-					if (CHECK_IS_DATA(node) === true) {
-						node.insertBefore(self);
-					}
-
-					// before textarea content.
-					else if (tag === 'textarea') {
+					EACH(splits, function(text, i) {
 
 						before(DOM({
 							tag : '__STRING',
-							__TEXT : String(node === undefined ? '' : node)
+							__TEXT : text
 						}));
-					}
 
-					// before string.
-					else {
-
-						splits = String(node === undefined ? '' : node).split('\n');
-
-						EACH(splits, function(text, i) {
-
-							before(DOM({
-								tag : '__STRING',
-								__TEXT : text
-							}));
-
-							if (i < splits.length - 1) {
-								before(BR());
-							}
-						});
-					}
+						if (i < splits.length - 1) {
+							before(BR());
+						}
+					});
 				}
-			};
+			}
+		};
 
-			self.insertBefore = insertBefore = function(node) {
-				//REQUIRED: node
+		self.insertBefore = insertBefore = function(node) {
+			//REQUIRED: node
 
-				var
-				// after el
-				afterEl = node.getWrapperEl();
+			var
+			// after el
+			afterEl = node.getWrapperEl();
 
-				afterEl.parentNode.insertBefore(wrapperEl, afterEl);
+			afterEl.parentNode.insertBefore(wrapperEl, afterEl);
 
-				attach(node.getParent());
+			attach(node.getParent());
 
-				return self;
-			};
+			return self;
+		};
 
-			self.remove = remove = function() {
+		self.remove = remove = function() {
 
-				if (wrapperEl !== undefined && wrapperEl.parentNode !== TO_DELETE) {
+			if (wrapperEl !== undefined && wrapperEl.parentNode !== TO_DELETE) {
 
-					// empty children.
-					empty();
+				// empty children.
+				empty();
 
-					// remove from parent node.
-					wrapperEl.parentNode.removeChild(wrapperEl);
+				// remove from parent node.
+				wrapperEl.parentNode.removeChild(wrapperEl);
 
-					REMOVE({
-						array : parentNode.getChildren(),
-						value : self
-					});
-
-					setParent(undefined);
-
-					// fire remove event.
-					EVENT.fireAll({
-						node : self,
-						name : 'remove'
-					});
-
-					EVENT.removeAll({
-						node : self
-					});
-
-					wrapperEl = undefined;
-					contentEl = undefined;
-				}
-			};
-
-			self.empty = empty = function() {
-				EACH(childNodes, function(child) {
-					child.remove();
+				REMOVE({
+					array : parentNode.getChildren(),
+					value : self
 				});
-			};
 
-			self.getParent = getParent = function() {
-				return parentNode;
-			};
+				setParent(undefined);
 
-			self.setParent = setParent = function(node) {
-				//OPTIONAL: node
+				// fire remove event.
+				EVENT.fireAll({
+					node : self,
+					name : 'remove'
+				});
 
-				parentNode = node;
-			};
+				EVENT.removeAll({
+					node : self
+				});
 
-			self.getChildren = getChildren = function() {
-				return childNodes;
-			};
+				wrapperEl = undefined;
+				contentEl = undefined;
+			}
+		};
 
-			self.on = on = function(eventName, eventHandler) {
-				//REQUIRED: eventName
-				//REQUIRED: eventHandler
+		self.empty = empty = function() {
+			EACH(childNodes, function(child) {
+				child.remove();
+			});
+		};
 
-				EVENT({
+		self.getParent = getParent = function() {
+			return parentNode;
+		};
+
+		self.setParent = setParent = function(node) {
+			//OPTIONAL: node
+
+			parentNode = node;
+		};
+
+		self.getChildren = getChildren = function() {
+			return childNodes;
+		};
+
+		self.on = on = function(eventName, eventHandler) {
+			//REQUIRED: eventName
+			//REQUIRED: eventHandler
+
+			EVENT({
+				node : self,
+				name : eventName
+			}, eventHandler);
+		};
+
+		self.off = off = function(eventName, eventHandler) {
+			//REQUIRED: eventName
+			//OPTIONAL: eventHandler
+
+			if (eventHandler !== undefined) {
+
+				EVENT.remove({
 					node : self,
 					name : eventName
 				}, eventHandler);
-			};
 
-			self.off = off = function(eventName, eventHandler) {
-				//REQUIRED: eventName
-				//OPTIONAL: eventHandler
+			} else {
 
-				if (eventHandler !== undefined) {
-
-					EVENT.remove({
-						node : self,
-						name : eventName
-					}, eventHandler);
-
-				} else {
-
-					EVENT.removeAll({
-						node : self,
-						name : eventName
-					});
-				}
-			};
-
-			self.addStyle = addStyle = function(style) {
-				//REQUIRED: style
-
-				ADD_STYLE({
+				EVENT.removeAll({
 					node : self,
-					style : style
+					name : eventName
 				});
-			};
+			}
+		};
 
-			self.getStyle = getStyle = function(name) {
-				//REQUIRED: name
+		self.addStyle = addStyle = function(style) {
+			//REQUIRED: style
 
-				var
-				// styles
-				styles,
+			ADD_STYLE({
+				node : self,
+				style : style
+			});
+		};
 
-				// style
-				style;
-
-				if (wrapperEl !== undefined) {
-
-					styles = wrapperEl.style;
-
-					if (styles !== undefined) {
-
-						style = styles[name];
-
-						return style === '' ? undefined : (style.substring(style.length - 2) === 'px' ? REAL(style) : style);
-					}
-				}
-			};
-
-			self.getWidth = getWidth = function() {
-				return wrapperEl.offsetWidth;
-			};
-
-			self.getInnerWidth = getInnerWidth = function() {
-				return wrapperEl.clientWidth;
-			};
-
-			self.getHeight = getHeight = function() {
-				return wrapperEl.offsetHeight;
-			};
-
-			self.getInnerHeight = getInnerHeight = function() {
-				return wrapperEl.clientHeight;
-			};
-
-			self.getLeft = getLeft = function() {
-
-				var
-				// left
-				left = 0,
-
-				// parent el
-				parentEl = wrapperEl;
-
-				do {
-					left += parentEl.offsetLeft - (parentEl === document.body ? 0 : parentEl.scrollLeft);
-					parentEl = parentEl.offsetParent;
-				} while (parentEl !== TO_DELETE);
-
-				return left;
-			};
-
-			self.getTop = getTop = function() {
-
-				var
-				// top
-				top = 0,
-
-				// parent el
-				parentEl = wrapperEl;
-
-				do {
-					top += parentEl.offsetTop - (parentEl === document.body ? 0 : parentEl.scrollTop);
-					parentEl = parentEl.offsetParent;
-				} while (parentEl !== TO_DELETE);
-
-				return top;
-			};
-
-			self.hide = hide = function() {
-
-				addStyle({
-					display : 'none'
-				});
-			};
-
-			self.show = show = function() {
-
-				addStyle({
-					display : originDisplay === undefined ? '' : originDisplay
-				});
-
-				if (checkIsShowing() === true) {
-
-					EVENT.fireAll({
-						node : self,
-						name : 'show'
-					});
-
-					EVENT.removeAll({
-						node : self,
-						name : 'show'
-					});
-				}
-			};
-
-			self.checkIsShowing = checkIsShowing = function() {
-
-				if (wrapperEl === document.body) {
-					return true;
-				} else {
-					return parentNode !== undefined && parentNode.checkIsShowing() === true && getStyle('display') !== 'none';
-				}
-			};
-		},
-
-		afterInit : function(inner, self, params, generateChildren) {
-			//OPTIONAL: params
-			//OPTIONAL: params.tag
-			//OPTIONAL: params.style
-			//OPTIONAL: params.c
-			//OPTIONAL: params.on
-			//OPTIONAL: generateChildren
+		self.getStyle = getStyle = function(name) {
+			//REQUIRED: name
 
 			var
-			// tag
-			tag,
+			// styles
+			styles,
 
 			// style
-			style,
+			style;
 
-			// children
-			children,
+			if (wrapperEl !== undefined) {
 
-			// on
-			on,
+				styles = wrapperEl.style;
 
-			// parent nodes length
-			parentNodesLength = parentNodes.length,
+				if (styles !== undefined) {
 
-			// generate children result
-			generateChildrenResult;
+					style = styles[name];
 
-			// init params.
-			if (params !== undefined) {
-
-				if (CHECK_IS_DATA(params) === true) {
-
-					tag = params.tag;
-					style = params.style;
-					children = params.c === undefined || CHECK_IS_ARRAY(params.c) === true ? params.c : [params.c];
-					on = params.on;
-
-				} else if (generateChildren === undefined) {
-					generateChildren = params;
+					return style === '' ? undefined : (style.substring(style.length - 2) === 'px' ? REAL(style) : style);
 				}
 			}
+		};
 
-			if (style !== undefined) {
-				self.addStyle(style);
-			}
+		self.getWidth = getWidth = function() {
+			return wrapperEl.offsetWidth;
+		};
 
-			if (on !== undefined) {
-				EACH(on, function(handler, name) {
-					self.on(name, handler);
+		self.getInnerWidth = getInnerWidth = function() {
+			return wrapperEl.clientWidth;
+		};
+
+		self.getHeight = getHeight = function() {
+			return wrapperEl.offsetHeight;
+		};
+
+		self.getInnerHeight = getInnerHeight = function() {
+			return wrapperEl.clientHeight;
+		};
+
+		self.getLeft = getLeft = function() {
+
+			var
+			// left
+			left = 0,
+
+			// parent el
+			parentEl = wrapperEl;
+
+			do {
+				left += parentEl.offsetLeft - (parentEl === document.body ? 0 : parentEl.scrollLeft);
+				parentEl = parentEl.offsetParent;
+			} while (parentEl !== TO_DELETE);
+
+			return left;
+		};
+
+		self.getTop = getTop = function() {
+
+			var
+			// top
+			top = 0,
+
+			// parent el
+			parentEl = wrapperEl;
+
+			do {
+				top += parentEl.offsetTop - (parentEl === document.body ? 0 : parentEl.scrollTop);
+				parentEl = parentEl.offsetParent;
+			} while (parentEl !== TO_DELETE);
+
+			return top;
+		};
+
+		self.hide = hide = function() {
+
+			addStyle({
+				display : 'none'
+			});
+		};
+
+		self.show = show = function() {
+
+			addStyle({
+				display : originDisplay === undefined ? '' : originDisplay
+			});
+
+			if (checkIsShowing() === true) {
+
+				EVENT.fireAll({
+					node : self,
+					name : 'show'
+				});
+
+				EVENT.removeAll({
+					node : self,
+					name : 'show'
 				});
 			}
+		};
 
-			if (children !== undefined) {
-				EACH(children, function(child, i) {
-					self.append(child);
-				});
+		self.checkIsShowing = checkIsShowing = function() {
+
+			if (wrapperEl === document.body) {
+				return true;
+			} else {
+				return parentNode !== undefined && parentNode.checkIsShowing() === true && getStyle('display') !== 'none';
 			}
+		};
+	},
 
-			// when parent node exists, when tag is not __STRING.
-			if (parentNodesLength > 0 && tag !== '__STRING') {
-				self.appendTo(parentNodes[parentNodesLength - 1]);
-			}
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.style
+		//OPTIONAL: params.c
+		//OPTIONAL: params.on
 
-			if (generateChildren !== undefined) {
+		var
+		// style
+		style,
 
-				parentNodes.push(self);
+		// children
+		children,
 
-				generateChildrenResult = generateChildren();
+		// on
+		on;
 
-				// append __STRING.
-				if (generateChildrenResult !== undefined && CHECK_IS_DATA(generateChildrenResult) !== true) {
-					self.append(generateChildrenResult);
-				}
-
-				parentNodes.pop();
-			}
+		// init params.
+		if (params !== undefined) {
+			style = params.style;
+			children = params.c === undefined || CHECK_IS_ARRAY(params.c) === true ? params.c : [params.c];
+			on = params.on;
 		}
-	};
+
+		if (style !== undefined) {
+			self.addStyle(style);
+		}
+
+		if (on !== undefined) {
+			EACH(on, function(handler, name) {
+				self.on(name, handler);
+			});
+		}
+
+		if (children !== undefined) {
+			EACH(children, function(child, i) {
+				self.append(child);
+			});
+		}
+	}
 });
 
 /**

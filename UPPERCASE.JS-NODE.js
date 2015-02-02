@@ -2827,10 +2827,10 @@ global.RESOURCE_SERVER = CLASS(function(cls) {
 							responseNotFound = function(resourcePath) {
 
 								if (notExistsResourceHandler !== undefined) {
-									notExistsResourceHandler(resourcePath, requestInfo, response);
+									isGoingOn = notExistsResourceHandler(resourcePath, requestInfo, response);
 								}
 
-								if (requestInfo.isResponsed !== true) {
+								if (isGoingOn !== false && requestInfo.isResponsed !== true) {
 
 									response(EXTEND({
 										origin : {
@@ -2844,12 +2844,12 @@ global.RESOURCE_SERVER = CLASS(function(cls) {
 							responseError = function(errorMsg) {
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg, requestInfo, response);
+									isGoingOn = errorHandler(errorMsg, requestInfo, response);
 								} else {
 									console.log(CONSOLE_RED('[UPPERCASE.JS-RESOURCE_SERVER] ERROR: ' + errorMsg));
 								}
 
-								if (requestInfo.isResponsed !== true) {
+								if (isGoingOn !== false && requestInfo.isResponsed !== true) {
 
 									response(EXTEND({
 										origin : {

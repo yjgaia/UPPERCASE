@@ -260,6 +260,8 @@ RUN(function() {
 		load('UPPERCASE.IO-BOX/CORE.js');
 		load('UPPERCASE.IO-BOX/CLIENT.js');
 		load('UPPERCASE.IO-BOX/BROWSER.js');
+		
+		initScript += 'BOX(\'UPPERCASE.IO\');\n\n';
 
 		// load UPPERCASE.IO-TRANSPORT.
 		load('UPPERCASE.IO-TRANSPORT/BROWSER.js');

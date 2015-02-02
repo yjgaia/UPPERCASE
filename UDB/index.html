@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="google" value="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">
+		<title>UDB</title>
+		<link rel="stylesheet" type="text/css" href="/UPPERCASE.IO-BROWSER-PACK/BASE_STYLE.css" />
+	</head>
+	<body>
+		<script src="/UPPERCASE.IO-BROWSER-PACK/IMPORT.js"></script>
+		
+		<script>
+			BROWSER_CONFIG.fixScriptsFolderPath = '/UPPERCASE.IO-BROWSER-PACK/UPPERCASE.JS-BROWSER-FIX';
+			BROWSER_CONFIG.fixTransportScriptsFolderPath = '/UPPERCASE.IO-BROWSER-PACK/UPPERCASE.IO-TRANSPORT/R';
+
+			BOX('UUI');
+			BOX('UANI');
+			BOX('Yogurt');
+			BOX('UDB');
+			
+			CONFIG.defaultBoxName = 'UDB';
+		</script>
+		
+		<!-- IMPORT BOXes. -->
+		<script src="/BOX/UUI/BROWSER.js"></script>
+		<script src="/BOX/UANI/BROWSER.js"></script>
+		<script src="/BOX/Yogurt/BROWSER.js"></script>
+		
+		<script src="/MAIN.js"></script>
+		<script src="/Layout.js"></script>
+		<script src="/Home.js"></script>
+		<script src="/Detail.js"></script>
+		<script>
+			GET('__WEB_SERVER_PORT', function(webServerPortStr) {
+				
+				CONFIG.webServerPort = INTEGER(webServerPortStr);
+				
+				LOAD('/UPPERCASE.IO-BROWSER-PACK/INIT.js');
+			});
+		</script>
+	</body>
+</html>
