@@ -16,10 +16,13 @@ UDB.Detail = CLASS({
 		inner.on('paramsChange', function(params) {
 			
 			var
+			// box name
+			boxName = params.boxName,
+			
 			// model name
 			modelName = params.modelName;
 			
-			wrapper.append(modelName);
+			wrapper.append(boxName + ' / ' + modelName);
 		});
 
 		inner.on('close', function() {

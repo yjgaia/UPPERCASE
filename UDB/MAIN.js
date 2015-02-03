@@ -3,9 +3,9 @@ UDB.MAIN = METHOD({
 	run : function() {
 		'use strict';
 		
-		GET('__MODEL_NAMES', function(modelNamesStr) {
+		GET('__MODEL_NAME_MAP', function(json) {
 			
-			UDB.MODEL_NAMES = PARSE_STR(modelNamesStr);
+			UDB.MODEL_NAME_MAP = PARSE_STR(json);
 			
 			UDB.MATCH_VIEW({
 				uri : ['**'],
@@ -18,7 +18,7 @@ UDB.MAIN = METHOD({
 			});
 			
 			UDB.MATCH_VIEW({
-				uri : ['{modelName}'],
+				uri : ['{boxName}/{modelName}'],
 				target : UDB.Detail
 			});
 		});

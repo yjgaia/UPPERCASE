@@ -8,24 +8,31 @@ global.BOOT_UDB = METHOD({
 		//REQUIRED: UPPERCASE_IO_PATH
 
 		var
-		// models
-		models = {},
+		// model map
+		modelMap = {},
 		
-		// model names
-		modelNames = [],
+		// model name map
+		modelNameMap = {},
 		
 		// UDB server
 		udbServer;
 		
-		UDB_CONFIG.init(function(model) {
+		UDB_CONFIG.init(function(box, model) {
 			
 			var
+			// models
+			models = modelMap[box.boxName],
+			
 			// name
 			name = model.getName();
 			
-			models[name] = model;
+			if (models === undefined) {
+				models = modelMap[box.boxName] = {};
+				modelNameMap[box.boxName] = [];
+			}
 			
-			modelNames.push(name);
+			models[name] = model;
+			modelNameMap[box.boxName].push(name);
 		});
 		
 		udbServer = RESOURCE_SERVER({
@@ -51,10 +58,10 @@ global.BOOT_UDB = METHOD({
 					return false;
 				}
 				
-				// serve model naems.
-				if (uri.indexOf('__MODEL_NAMES') === 0) {
+				// serve model naem map.
+				if (uri.indexOf('__MODEL_NAME_MAP') === 0) {
 					
-					response(STRINGIFY(modelNames));
+					response(STRINGIFY(modelNameMap));
 					
 					return false;
 				}
@@ -62,6 +69,12 @@ global.BOOT_UDB = METHOD({
 				// serve UPPERCASE.IO-BROWSER-PACK.
 				if (uri.indexOf('UPPERCASE.IO-BROWSER-PACK/') === 0) {
 					replaceRootPath(UPPERCASE_IO_PATH);
+				}
+				
+				// serve model funcs.
+				if (uri.indexOf('__/') === 0) {
+					
+					return false;
 				}
 			},
 			

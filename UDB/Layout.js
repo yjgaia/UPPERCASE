@@ -21,8 +21,40 @@ UDB.Layout = CLASS(function(cls) {
 		init : function(inner, self) {
 
 			var
-			// wrapper
-			wrapper = Yogurt.MenuLayout({
+			// menu layout
+			menuLayout = Yogurt.MenuLayout({
+				
+				toolbar : Yogurt.Toolbar({
+
+					// left
+					left : Yogurt.ToolbarButton({
+						style : {
+							onDisplayResize : function(width, height) {
+	
+								if (width > Yogurt.MenuLayout.getHideMenuWinWidth()) {
+									return {
+										display : 'none'
+									};
+								} else {
+									return {
+										display : 'block'
+									};
+								}
+							}
+						},
+						img : IMG({
+							src : '/BOX/Yogurt/R/menu.png'
+						}),
+						on : {
+							tap : function(e) {
+								menuLayout.toggleLeftMenu();
+							}
+						}
+					}),
+	
+					// title
+					title : 'UDB'
+				}),
 				
 				leftMenu : DIV({
 					c : RUN(function() {
@@ -43,20 +75,23 @@ UDB.Layout = CLASS(function(cls) {
 							}
 						})];
 						
-						EACH(UDB.MODEL_NAMES, function(modelName) {
-							c.push(UUI.BUTTON_H({
-								style : {
-									padding : 15,
-									borderBottom : '1px solid #666',
-									fontSize : 15
-								},
-								title : modelName + ' Model',
-								on : {
-									tap : function() {
-										UDB.GO(modelName);
+						EACH(UDB.MODEL_NAME_MAP, function(modelNames, boxName) {
+							EACH(modelNames, function(modelName) {
+								
+								c.push(UUI.BUTTON_H({
+									style : {
+										padding : 15,
+										borderBottom : '1px solid #666',
+										fontSize : 15
+									},
+									title : boxName + ' / ' + modelName + ' Model',
+									on : {
+										tap : function() {
+											UDB.GO(boxName + '/' + modelName);
+										}
 									}
-								}
-							}));
+								}));
+							});
 						});
 						
 						return c;
@@ -69,7 +104,7 @@ UDB.Layout = CLASS(function(cls) {
 			
 			inner.on('close', function() {
 				
-				wrapper.remove();
+				menuLayout.remove();
 				
 				content = undefined;
 			});
