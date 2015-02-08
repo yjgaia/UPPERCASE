@@ -353,23 +353,6 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			// connect to clustering server.
 			connectToClusteringServer,
 
-			// run methods.
-			runMethods = function(methodName, data) {
-
-				var
-				// methods
-				methods = methodMap[methodName];
-
-				if (methods !== undefined) {
-
-					EACH(methods, function(method) {
-
-						// run method.
-						method(data);
-					});
-				}
-			},
-
 			// socket server ons
 			socketServeOns = [],
 

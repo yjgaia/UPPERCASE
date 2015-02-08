@@ -19,6 +19,11 @@ UDB.MAIN = METHOD({
 			
 			UDB.MATCH_VIEW({
 				uri : ['{boxName}/{modelName}'],
+				target : UDB.List
+			});
+			
+			UDB.MATCH_VIEW({
+				uri : ['{boxName}/{modelName}/{id}'],
 				target : UDB.Detail
 			});
 		});

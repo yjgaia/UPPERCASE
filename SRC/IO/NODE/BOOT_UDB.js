@@ -14,6 +14,9 @@ global.BOOT_UDB = METHOD({
 		// model name map
 		modelNameMap = {},
 		
+		// uri matcher
+		uriMatcher = URI_MATCHER('__/{boxName}/{modelName}/{method}'),
+		
 		// UDB server
 		udbServer;
 		
@@ -48,7 +51,19 @@ global.BOOT_UDB = METHOD({
 				
 				var
 				// uri
-				uri = requestInfo.uri;
+				uri = requestInfo.uri,
+				
+				// match info
+				matchInfo,
+				
+				// uri params
+				uriParams,
+				
+				// models
+				models,
+				
+				// model
+				model;
 				
 				// serve web server port.
 				if (uri.indexOf('__WEB_SERVER_PORT') === 0) {
@@ -71,10 +86,28 @@ global.BOOT_UDB = METHOD({
 					replaceRootPath(UPPERCASE_IO_PATH);
 				}
 				
+				matchInfo = uriMatcher.check(uri);
+				
 				// serve model funcs.
-				if (uri.indexOf('__/') === 0) {
+				if (matchInfo.checkIsMatched() === true) {
 					
-					return false;
+					uriParams = matchInfo.getURIParams();
+					
+					models = modelMap[uriParams.boxName];
+					
+					if (models !== undefined) {
+						
+						model = models[uriParams.modelName];
+						
+						if (model !== undefined && model[uriParams.method] !== undefined) {
+							
+							model[uriParams.method](PARSE_STR(requestInfo.params.data), function(result) {
+								response(STRINGIFY(result));
+							});
+							
+							return false;
+						}
+					}
 				}
 			},
 			

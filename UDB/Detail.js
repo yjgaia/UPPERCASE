@@ -11,7 +11,11 @@ UDB.Detail = CLASS({
 		
 		var
 		// wrapper
-		wrapper = DIV().appendTo(UDB.Layout.getContent());
+		wrapper = DIV({
+			style : {
+				backgroundColor : '#fff'
+			}
+		}).appendTo(UDB.Layout.getContent());
 
 		inner.on('paramsChange', function(params) {
 			
@@ -20,9 +24,55 @@ UDB.Detail = CLASS({
 			boxName = params.boxName,
 			
 			// model name
-			modelName = params.modelName;
+			modelName = params.modelName,
 			
-			wrapper.append(boxName + ' / ' + modelName);
+			// id
+			id = params.id;
+			
+			wrapper.empty();
+			
+			GET({
+				uri : '__/' + boxName + '/' + modelName + '/get',
+				data : id
+			}, function(savedDataStr) {
+				
+				var
+				// saved data
+				savedData = PARSE_STR(savedDataStr);
+				
+				UDB.Layout.getToolbar().setTitle(savedData.id);
+				
+				wrapper.append(P({
+					style : {
+						whiteSpace : 'pre',
+						padding : 20,
+						color : '#000'
+					},
+					c : RUN(function() {
+						
+						var
+						// children
+						c = [];
+						
+						EACH(savedData, function(value, name) {
+							
+							if (name !== 'id') {
+							
+								c.push(DIV({
+									c : [SPAN({
+										style : {
+											fontWeight : 'bold'
+										},
+										c : name
+									}), ' : ', JSON.stringify(value, TO_DELETE, 4)]
+								}));
+							}
+						});
+						
+						return c;
+					})
+				}));
+			});
 		});
 
 		inner.on('close', function() {

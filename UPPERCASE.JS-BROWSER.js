@@ -935,10 +935,17 @@ global.NODE = CLASS({
 
 		self.appendTo = appendTo = function(node) {
 			//REQUIRED: node
+			
+			var
+			// parent el
+			parentEl = node.getContentEl();
 
-			node.getContentEl().appendChild(wrapperEl);
+			if (parentEl !== undefined) {
+				
+				parentEl.appendChild(wrapperEl);
 
-			attach(node);
+				attach(node);
+			}
 
 			return self;
 		};
@@ -993,13 +1000,16 @@ global.NODE = CLASS({
 			// parent el
 			parentEl = node.getContentEl();
 
-			if (parentEl.childNodes[0] === undefined) {
-				parentEl.appendChild(wrapperEl);
-			} else {
-				parentEl.insertBefore(wrapperEl, parentEl.childNodes[0]);
-			}
+			if (parentEl !== undefined) {
+				
+				if (parentEl.childNodes[0] === undefined) {
+					parentEl.appendChild(wrapperEl);
+				} else {
+					parentEl.insertBefore(wrapperEl, parentEl.childNodes[0]);
+				}
 
-			attach(node);
+				attach(node);
+			}
 
 			return self;
 		};
@@ -1010,44 +1020,47 @@ global.NODE = CLASS({
 			var
 			// splits
 			splits;
-
-			// wait after node.
-			if (wrapperEl.parentNode === TO_DELETE) {
-
-				if (waitingAfterNodes === undefined) {
-					waitingAfterNodes = [];
+			
+			if (wrapperEl !== undefined) {
+	
+				// wait after node.
+				if (wrapperEl.parentNode === TO_DELETE) {
+	
+					if (waitingAfterNodes === undefined) {
+						waitingAfterNodes = [];
+					}
+	
+					waitingAfterNodes.push(node);
 				}
-
-				waitingAfterNodes.push(node);
-			}
-
-			// after node.
-			else {
-
-				// after child.
-				if (CHECK_IS_DATA(node) === true) {
-					node.insertAfter(self);
-				}
-
-				// after string.
+	
+				// after node.
 				else {
-
-					splits = String(node === undefined ? '' : node).split('\n');
-
-					REPEAT({
-						start : splits.length - 1,
-						end : 0
-					}, function(i) {
-
-						after(DOM({
-							tag : '__STRING',
-							__TEXT : splits[i]
-						}));
-
-						if (i < splits.length - 1) {
-							after(BR());
-						}
-					});
+	
+					// after child.
+					if (CHECK_IS_DATA(node) === true) {
+						node.insertAfter(self);
+					}
+	
+					// after string.
+					else {
+	
+						splits = String(node === undefined ? '' : node).split('\n');
+	
+						REPEAT({
+							start : splits.length - 1,
+							end : 0
+						}, function(i) {
+	
+							after(DOM({
+								tag : '__STRING',
+								__TEXT : splits[i]
+							}));
+	
+							if (i < splits.length - 1) {
+								after(BR());
+							}
+						});
+					}
 				}
 			}
 		};
@@ -1058,10 +1071,13 @@ global.NODE = CLASS({
 			var
 			// before el
 			beforeEl = node.getWrapperEl();
+			
+			if (beforeEl !== undefined) {
+				
+				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
 
-			beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
-
-			attach(node.getParent());
+				attach(node.getParent());
+			}
 
 			return self;
 		};
@@ -1072,41 +1088,44 @@ global.NODE = CLASS({
 			var
 			// splits
 			splits;
-
-			// wait before node.
-			if (wrapperEl.parentNode === TO_DELETE) {
-
-				if (waitingBeforeNodes === undefined) {
-					waitingBeforeNodes = [];
+			
+			if (wrapperEl !== undefined) {
+	
+				// wait before node.
+				if (wrapperEl.parentNode === TO_DELETE) {
+	
+					if (waitingBeforeNodes === undefined) {
+						waitingBeforeNodes = [];
+					}
+	
+					waitingBeforeNodes.push(node);
 				}
-
-				waitingBeforeNodes.push(node);
-			}
-
-			// before node.
-			else {
-
-				// before child.
-				if (CHECK_IS_DATA(node) === true) {
-					node.insertBefore(self);
-				}
-
-				// before string.
+	
+				// before node.
 				else {
-
-					splits = String(node === undefined ? '' : node).split('\n');
-
-					EACH(splits, function(text, i) {
-
-						before(DOM({
-							tag : '__STRING',
-							__TEXT : text
-						}));
-
-						if (i < splits.length - 1) {
-							before(BR());
-						}
-					});
+	
+					// before child.
+					if (CHECK_IS_DATA(node) === true) {
+						node.insertBefore(self);
+					}
+	
+					// before string.
+					else {
+	
+						splits = String(node === undefined ? '' : node).split('\n');
+	
+						EACH(splits, function(text, i) {
+	
+							before(DOM({
+								tag : '__STRING',
+								__TEXT : text
+							}));
+	
+							if (i < splits.length - 1) {
+								before(BR());
+							}
+						});
+					}
 				}
 			}
 		};
@@ -1118,9 +1137,12 @@ global.NODE = CLASS({
 			// after el
 			afterEl = node.getWrapperEl();
 
-			afterEl.parentNode.insertBefore(wrapperEl, afterEl);
+			if (afterEl !== undefined) {
+				
+				afterEl.parentNode.insertBefore(wrapperEl, afterEl);
 
-			attach(node.getParent());
+				attach(node.getParent());
+			}
 
 			return self;
 		};

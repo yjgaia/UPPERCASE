@@ -2,12 +2,22 @@ UDB.Layout = CLASS(function(cls) {
 	'use strict';
 
 	var
+	// toolbar
+	toolbar,
+	
 	// content
 	content,
+	
+	// get toolbar.
+	getToolbar,
 	
 	// get content.
 	getContent;
 
+	cls.getToolbar = getToolbar = function() {
+		return toolbar;
+	};
+	
 	cls.getContent = getContent = function() {
 		return content;
 	};
@@ -24,7 +34,7 @@ UDB.Layout = CLASS(function(cls) {
 			// menu layout
 			menuLayout = Yogurt.MenuLayout({
 				
-				toolbar : Yogurt.Toolbar({
+				toolbar : toolbar = Yogurt.Toolbar({
 
 					// left
 					left : Yogurt.ToolbarButton({

@@ -101,6 +101,9 @@ RUN(function() {
 		// fix HREF.
 		loadFixScript('BROWSER/VIEW/HREF');
 		
+		// fix GO.
+		loadFixScript('BROWSER/VIEW/GO');
+		
 		// fix MATCH_VIEW.
 		loadFixScript('BROWSER/VIEW/MATCH_VIEW');
 		
