@@ -1540,7 +1540,10 @@ global.VALID = CLASS(function(cls) {
 			check,
 
 			// check except undefined.
-			checkExceptUndefined;
+			checkExceptUndefined,
+			
+			// get valid data set.
+			getValidDataSet;
 
 			self.check = check = function(data) {
 				return Check({
@@ -1553,6 +1556,10 @@ global.VALID = CLASS(function(cls) {
 					data : data,
 					isExceptUndefined : true
 				});
+			};
+			
+			self.getValidDataSet = getValidDataSet = function() {
+				return validDataSet;
 			};
 		}
 	};

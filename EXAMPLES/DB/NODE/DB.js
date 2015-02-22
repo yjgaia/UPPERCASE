@@ -81,14 +81,6 @@ TEST('DB', function(ok) {
 					db.get(savedData.id, function(savedData) {
 						console.log('Get data again successed!', savedData);
 					});
-
-					// get data again.
-					db.get({
-						id : savedData.id,
-						isIncludeRemoved : true
-					}, function(savedData) {
-						console.log('Get data again successed!', savedData);
-					});
 				});
 			});
 		});

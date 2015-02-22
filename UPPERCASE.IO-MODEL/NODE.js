@@ -259,11 +259,15 @@ FOR_BOX(function(box) {
 
 							var
 							// filter
-							filter = {};
-
-							filter[name] = TO_DELETE;
-
-							$or.push(filter);
+							filter;
+							
+							if (createValid !== undefined && createValid.getValidDataSet()[name].notEmpty === true) {
+							
+								filter = {};
+								filter[name] = TO_DELETE;
+							
+								$or.push(filter);
+							}
 						});
 
 						db.find({
@@ -272,7 +276,8 @@ FOR_BOX(function(box) {
 							},
 							isFindAll : true
 						}, EACH(function(notInitedData) {
-							console.log(notInitedData);
+							
+							console.log('[UPPERCASE.IO-MODEL] Found not inited data in `' + box.boxName + '.' + name + '`.', notInitedData);
 
 							EACH(initData, function(value, name) {
 								if (notInitedData[name] === undefined) {
