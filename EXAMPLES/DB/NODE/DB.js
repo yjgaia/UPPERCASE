@@ -22,7 +22,7 @@ TEST('DB', function(ok) {
 		var
 		// db
 		db = TestBox.DB('test');
-
+		
 		// create data test
 		db.create({
 			msg : 'test',
@@ -127,6 +127,16 @@ TEST('DB', function(ok) {
 			}
 		}], function(result) {
 			console.log('Aggregate success!', result);
+		});
+		
+		// create index test
+		db.createIndex({
+			test : 1
+		}, function() {
+		
+			db.findAllIndexes(function(indexes) {
+				console.log(indexes);
+			});
 		});
 	});
 });

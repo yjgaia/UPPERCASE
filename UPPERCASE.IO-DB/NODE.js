@@ -127,6 +127,15 @@ FOR_BOX(function(box) {
 			// waiting aggregate infos
 			waitingAggregateInfos = [],
 
+			// waiting create index infos
+			waitingCreateIndexInfos = [],
+
+			// waiting remove index infos
+			waitingRemoveIndexInfos = [],
+			
+			// waiting find all indexes infos
+			waitingFindAllIndexesInfos = [],
+
 			// generate _id.
 			gen_id = function(id) {
 				//REQUIRED: id
@@ -268,7 +277,16 @@ FOR_BOX(function(box) {
 			checkIsExists,
 
 			// aggregate.
-			aggregate;
+			aggregate,
+			
+			// create index.
+			createIndex,
+			
+			// remove index.
+			removeIndex,
+			
+			// find all indexes
+			findAllIndexes;
 
 			if (CHECK_IS_DATA(nameOrParams) !== true) {
 				name = nameOrParams;
@@ -392,6 +410,40 @@ FOR_BOX(function(box) {
 					callbackOrHandlers : callbackOrHandlers
 				});
 			};
+			
+			self.createIndex = createIndex = function(keys, callbackOrHandlers) {
+				//REQUIRED: keys
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+				
+				waitingCreateIndexInfos.push({
+					keys : keys,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+			
+			self.removeIndex = removeIndex = function(index, callbackOrHandlers) {
+				//REQUIRED: index
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+				
+				waitingRemoveIndexInfos.push({
+					index : index,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+			
+			self.findAllIndexes = findAllIndexes = function(callbackOrHandlers) {
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+				
+				waitingFindAllIndexesInfos.push({
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
 
 			CONNECT_TO_DB_SERVER.addInitDBFunc(function(nativeDB) {
 
@@ -413,7 +465,7 @@ FOR_BOX(function(box) {
 					//REQUIRED: time
 
 					historyCollection.findOne({
-						id : id
+						_id : id
 					}, function(error, savedData) {
 
 						var
@@ -434,7 +486,7 @@ FOR_BOX(function(box) {
 							if (savedData === TO_DELETE) {
 
 								historyCollection.insert({
-									id : id,
+									_id : id,
 									timeline : [info]
 								}, {
 									w : 0
@@ -443,7 +495,7 @@ FOR_BOX(function(box) {
 							} else {
 
 								historyCollection.update({
-									id : id
+									_id : id
 								}, {
 									$push : {
 										timeline : info
@@ -1454,6 +1506,190 @@ FOR_BOX(function(box) {
 						}, errorHandler);
 					}
 				};
+				
+				self.createIndex = createIndex = function(keys, callbackOrHandlers) {
+					//REQUIRED: keys
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
+					
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler;
+					
+					try {
+						
+						if (callbackOrHandlers !== undefined) {
+							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+								callback = callbackOrHandlers;
+							} else {
+								callback = callbackOrHandlers.success;
+								errorHandler = callbackOrHandlers.error;
+							}
+						}
+						
+						collection.ensureIndex(keys, {
+							safe : true
+						}, function(error) {
+	
+							if (error === TO_DELETE) {
+	
+								if (callback !== undefined) {
+									callback();
+								}
+							}
+	
+							// if error is not TO_DELETE
+							else {
+	
+								logError({
+									method : 'createIndex',
+									keys : keys,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+						
+						logError({
+							method : 'createIndex',
+							keys : keys,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+				
+				self.removeIndex = removeIndex = function(index, callbackOrHandlers) {
+					//REQUIRED: index
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
+					
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler;
+					
+					try {
+					
+						if (callbackOrHandlers !== undefined) {
+							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+								callback = callbackOrHandlers;
+							} else {
+								callback = callbackOrHandlers.success;
+								errorHandler = callbackOrHandlers.error;
+							}
+						}
+						
+						collection.dropIndex(index, {
+							safe : true
+						}, function(error) {
+	
+							if (error === TO_DELETE) {
+	
+								if (callback !== undefined) {
+									callback();
+								}
+							}
+	
+							// if error is not TO_DELETE
+							else {
+	
+								logError({
+									method : 'removeIndex',
+									index : index,
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+						
+						logError({
+							method : 'removeIndex',
+							index : index,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+				
+				self.findAllIndexes = findAllIndexes = function(callbackOrHandlers) {
+					//REQUIRED: callbackOrHandlers
+					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// callback
+					callback,
+
+					// error handler
+					errorHandler;
+
+					try {
+
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							errorHandler = callbackOrHandlers.error;
+						}
+
+						collection.indexInformation(function(error, indexInfo) {
+							
+							var
+							// key map
+							keyMap;
+
+							if (error === TO_DELETE) {
+								
+								keyMap = [];
+								
+								EACH(indexInfo, function(pairs) {
+										
+									var
+									// keys
+									keys = {};
+									
+									EACH(pairs, function(pair) {
+										keys[pair[0]] = pair[1];
+									});
+									
+									keyMap.push(keys);
+								});
+
+								callback(keyMap);
+							}
+
+							// if error is not TO_DELETE
+							else {
+
+								logError({
+									method : 'findAllIndexes',
+									errorMsg : error.toString()
+								}, errorHandler);
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+						
+						logError({
+							method : 'findAllIndexes',
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
 
 				// run all waiting infos.
 
@@ -1504,6 +1740,18 @@ FOR_BOX(function(box) {
 				});
 
 				waitingAggregateInfos = undefined;
+				
+				EACH(waitingCreateIndexInfos, function(info) {
+					createIndex(info.keys, info.callbackOrHandlers);
+				});
+
+				waitingCreateIndexInfos = undefined;
+				
+				EACH(waitingRemoveIndexInfos, function(info) {
+					removeIndex(info.index, info.callbackOrHandlers);
+				});
+
+				waitingRemoveIndexInfos = undefined;
 			});
 		}
 	});
