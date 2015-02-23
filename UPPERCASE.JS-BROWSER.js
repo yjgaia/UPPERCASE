@@ -480,6 +480,9 @@ global.STORE = CLASS({
 
 		// get.
 		get,
+		
+		// list.
+		list,
 
 		// remove.
 		remove;
@@ -535,6 +538,50 @@ global.STORE = CLASS({
 			}
 
 			return value;
+		};
+		
+		self.list = list = function() {
+			
+			var
+			// values
+			values = {},
+			
+			// full name
+			fullName,
+			
+			// name
+			name,
+			
+			// i
+			i;
+			
+			// find session storage value.
+			for (i = 0; i < sessionStorage.length; i += 1) {
+				
+				fullName = sessionStorage.key(i);
+				
+				if (fullName.substring(0, storeName.length + 1) === storeName + '.') {
+					
+					name = fullName.substring(storeName.length + 1);
+					
+					values[name] = get(name);
+				}
+			}
+			
+			// find local storage value.
+			for (i = 0; i < localStorage.length; i += 1) {
+				
+				fullName = localStorage.key(i);
+				
+				if (fullName.substring(0, storeName.length + 1) === storeName + '.') {
+					
+					name = fullName.substring(storeName.length + 1);
+					
+					values[name] = get(name);
+				}
+			}
+			
+			return values;
 		};
 
 		self.remove = remove = function(name) {

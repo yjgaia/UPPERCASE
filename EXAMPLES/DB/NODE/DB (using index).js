@@ -9,7 +9,7 @@ require('../../../UPPERCASE.IO-BOX/NODE.js');
 // load UPPERCASE.IO-DB.
 require('../../../UPPERCASE.IO-DB/NODE.js');
 
-TEST('LOG_DB', function(ok) {
+TEST('DB', function(ok) {
 	'use strict';
 
 	BOX('TestBox');
@@ -21,12 +21,17 @@ TEST('LOG_DB', function(ok) {
 	}, function() {
 
 		var
-		// log db
-		logDB = TestBox.LOG_DB('testLog');
-
-		// log.
-		logDB.log({
-			ok : true
+		// db
+		db = TestBox.DB('test');
+		
+		// create index test
+		db.createIndex({
+			test : 1
+		}, function() {
+		
+			db.findAllIndexes(function(indexes) {
+				console.log(indexes);
+			});
 		});
 	});
 });

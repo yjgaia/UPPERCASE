@@ -490,6 +490,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: idOrParams.filter
 					//OPTIONAL: idOrParams.sort
 					//OPTIONAL: idOrParams.isRandom
+					//OPTIONAL: idOrParams.isToCache
 
 					var
 					// id
@@ -503,6 +504,9 @@ FOR_BOX(function(box) {
 
 					// is random
 					isRandom,
+					
+					// is to cache
+					isToCache,
 
 					// is not run next
 					isNotRunNext;
@@ -515,6 +519,7 @@ FOR_BOX(function(box) {
 						filter = idOrParams.filter;
 						sort = idOrParams.sort;
 						isRandom = idOrParams.isRandom;
+						isToCache = idOrParams.isToCache;
 					}
 
 					// get data in database.
@@ -522,7 +527,8 @@ FOR_BOX(function(box) {
 						id : id,
 						filter : filter,
 						sort : sort,
-						isRandom : isRandom
+						isRandom : isRandom,
+						isToCache : isToCache
 					}, {
 
 						error : function(errorMsg) {
@@ -745,6 +751,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params.start
 					//OPTIONAL: params.count
 					//OPTIONAL: params.isFindAll
+					//OPTIONAL: params.isToCache
 
 					var
 					// filter
@@ -761,6 +768,9 @@ FOR_BOX(function(box) {
 
 					// is find all
 					isFindAll,
+					
+					// is to cache
+					isToCache,
 
 					// is not run next
 					isNotRunNext;
@@ -771,6 +781,7 @@ FOR_BOX(function(box) {
 						start = INTEGER(params.start);
 						count = INTEGER(params.count);
 						isFindAll = params.isFindAll;
+						isToCache = params.isToCache;
 					}
 
 					// find data set in database.
@@ -779,7 +790,8 @@ FOR_BOX(function(box) {
 						sort : sort,
 						start : start,
 						count : count,
-						isFindAll : isFindAll
+						isFindAll : isFindAll,
+						isToCache : isToCache
 					}, {
 
 						error : function(errorMsg) {
@@ -815,21 +827,27 @@ FOR_BOX(function(box) {
 				innerCount = function(params, ret, clientInfo) {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
+					//OPTIONAL: params.isToCache
 
 					var
 					// filter
 					filter,
+					
+					// is to cache
+					isToCache,
 
 					// is not run next
 					isNotRunNext;
 
 					if (params !== undefined) {
 						filter = params.filter;
+						isToCache = params.isToCache;
 					}
 
 					// count data in database.
 					db.count({
-						filter : filter
+						filter : filter,
+						isToCache : isToCache
 					}, {
 
 						error : function(errorMsg) {
@@ -863,21 +881,29 @@ FOR_BOX(function(box) {
 				};
 
 				innerCheckIsExists = function(params, ret, clientInfo) {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.isToCache
 
 					var
 					// filter
 					filter,
+					
+					// is to cache
+					isToCache,
 
 					// is not run next
 					isNotRunNext;
 
 					if (params !== undefined) {
 						filter = params.filter;
+						isToCache = params.isToCache;
 					}
 
 					// check is exists data in database.
 					db.checkIsExists({
-						filter : filter
+						filter : filter,
+						isToCache : isToCache
 					}, {
 
 						error : function(errorMsg) {
@@ -980,6 +1006,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: idOrParams.filter
 					//OPTIONAL: idOrParams.sort
 					//OPTIONAL: idOrParams.isRandom
+					//OPTIONAL: idOrParams.isToCache
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -1169,6 +1196,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params.start
 					//OPTIONAL: params.count
 					//OPTIONAL: params.isFindAll
+					//OPTIONAL: params.isToCache
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -1217,6 +1245,7 @@ FOR_BOX(function(box) {
 				self.count = count = function(params, callbackOrHandlers) {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
+					//OPTIONAL: params.isToCache
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -1265,6 +1294,7 @@ FOR_BOX(function(box) {
 				self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
+					//OPTIONAL: params.isToCache
 					//REQUIRED: callbackOrHandlers
 
 					var
@@ -1369,6 +1399,12 @@ FOR_BOX(function(box) {
 								data : clientInfo.roles,
 								value : getRole
 							}) === true)) {
+								
+								if (idOrParams !== undefined && CHECK_IS_DATA(idOrParams) === true) {
+
+									// delete for server params.
+									delete idOrParams.isToCache;
+								}
 
 								innerGet(idOrParams, ret, clientInfo);
 
@@ -1538,8 +1574,9 @@ FOR_BOX(function(box) {
 
 								if (params !== undefined) {
 
-									// delete isFindAll.
+									// delete for server params.
 									delete params.isFindAll;
+									delete params.isToCache;
 								}
 
 								innerFind(params, ret, clientInfo);
@@ -1563,6 +1600,12 @@ FOR_BOX(function(box) {
 								data : clientInfo.roles,
 								value : countRole
 							}) === true)) {
+								
+								if (params !== undefined) {
+
+									// delete for server params.
+									delete params.isToCache;
+								}
 
 								innerCount(params, ret, clientInfo);
 
@@ -1585,6 +1628,12 @@ FOR_BOX(function(box) {
 								data : clientInfo.roles,
 								value : checkIsExistsRole
 							}) === true)) {
+								
+								if (params !== undefined) {
+
+									// delete for server params.
+									delete params.isToCache;
+								}
 
 								innerCheckIsExists(params, ret, clientInfo);
 

@@ -4,6 +4,7 @@ require('../../../UPPERCASE.JS-NODE.js');
 
 // load UPPERCASE.IO-BOX.
 require('../../../UPPERCASE.IO-BOX/CORE.js');
+require('../../../UPPERCASE.IO-BOX/NODE.js');
 
 // load UPPERCASE.IO-DB.
 require('../../../UPPERCASE.IO-DB/NODE.js');
@@ -127,16 +128,6 @@ TEST('DB', function(ok) {
 			}
 		}], function(result) {
 			console.log('Aggregate success!', result);
-		});
-		
-		// create index test
-		db.createIndex({
-			test : 1
-		}, function() {
-		
-			db.findAllIndexes(function(indexes) {
-				console.log(indexes);
-			});
 		});
 	});
 });

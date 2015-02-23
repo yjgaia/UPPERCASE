@@ -4,6 +4,7 @@ require('../../../../UPPERCASE.JS-NODE.js');
 
 // load UPPERCASE.IO-BOX.
 require('../../../../UPPERCASE.IO-BOX/CORE.js');
+require('../../../../UPPERCASE.IO-BOX/NODE.js');
 
 // load UPPERCASE.IO-TRANSPORT.
 require('../../../../UPPERCASE.IO-TRANSPORT/NODE.js');
@@ -49,21 +50,25 @@ TEST('ROOM', function(ok) {
 		TestBox.ROOM('testRoom', function(clientInfo, on, off) {
 
 			on('msg', function(data, ret) {
-
+				
 				console.log(data);
-
-				TestBox.BROADCAST({
-					roomName : 'testRoom',
-					methodName : 'msg',
-					data : {
-						result : 'good!',
-						test : new Date()
-					}
-				});
-
-				ret({
-					result : 'good!'
-				});
+				
+				// ignore undefined data attack.
+				if (data !== undefined) {
+	
+					TestBox.BROADCAST({
+						roomName : 'testRoom',
+						methodName : 'msg',
+						data : {
+							result : 'good!',
+							test : new Date()
+						}
+					});
+	
+					ret({
+						result : 'good!'
+					});
+				}
 			});
 		});
 

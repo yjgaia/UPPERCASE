@@ -4,6 +4,7 @@ require('../../../UPPERCASE.JS-NODE.js');
 
 // load UPPERCASE.IO-BOX.
 require('../../../UPPERCASE.IO-BOX/CORE.js');
+require('../../../UPPERCASE.IO-BOX/NODE.js');
 
 // load UPPERCASE.IO-DB.
 require('../../../UPPERCASE.IO-DB/NODE.js');
