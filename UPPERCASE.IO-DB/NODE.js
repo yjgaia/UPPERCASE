@@ -649,65 +649,8 @@ FOR_BOX(function(box) {
 					}
 				},
 				
-				// recache data.
-				recacheData = function(originData, callback) {
-					//REQUIRED: originData
-					//REQUIRED: callback
-					
-					var
-					// cached get infos
-					cachedGetInfos = [],
-					
-					// cached find infos
-					cachedFindInfos = [],
-					
-					// cached count infos
-					cachedCountInfos = [];
-					
-					EACH(cachedGetStore.list(), function(info, paramsStr) {
-						
-						var
-						// filter
-						filter = info.filter;
-						
-						if (sift(filter)(originData) === true) {
-						
-							cachedGetInfos.push({
-								filter : filter,
-								paramsStr : paramsStr
-							});
-						}
-					});
-					
-					EACH(cachedFindStore.list(), function(info, paramsStr) {
-						
-						var
-						// filter
-						filter = info.filter;
-						
-						if (sift(filter)(originData) === true) {
-						
-							cachedFindInfos.push({
-								filter : filter,
-								paramsStr : paramsStr
-							});
-						}
-					});
-					
-					EACH(cachedCountStore.list(), function(info, paramsStr) {
-						
-						var
-						// filter
-						filter = info.filter;
-						
-						if (sift(filter)(originData) === true) {
-						
-							cachedCountInfos.push({
-								filter : filter,
-								paramsStr : paramsStr
-							});
-						}
-					});
+				// inner recache data.
+				innerRecacheData = function(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback) {
 					
 					PARALLEL([
 					function(done) {
@@ -825,6 +768,133 @@ FOR_BOX(function(box) {
 					function() {
 						callback();
 					}]);
+				},
+				
+				// recache data.
+				recacheData = function(originData, callback) {
+					//REQUIRED: originData
+					//REQUIRED: callback
+					
+					var
+					// cached get infos
+					cachedGetInfos = [],
+					
+					// cached find infos
+					cachedFindInfos = [],
+					
+					// cached count infos
+					cachedCountInfos = [];
+					
+					EACH(cachedGetStore.list(), function(info, paramsStr) {
+						
+						var
+						// filter
+						filter = info.filter;
+						
+						if (sift(filter)(originData) === true) {
+						
+							cachedGetInfos.push({
+								filter : filter,
+								paramsStr : paramsStr
+							});
+						}
+					});
+					
+					EACH(cachedFindStore.list(), function(info, paramsStr) {
+						
+						var
+						// filter
+						filter = info.filter;
+						
+						if (sift(filter)(originData) === true) {
+						
+							cachedFindInfos.push({
+								filter : filter,
+								paramsStr : paramsStr
+							});
+						}
+					});
+					
+					EACH(cachedCountStore.list(), function(info, paramsStr) {
+						
+						var
+						// filter
+						filter = info.filter;
+						
+						if (sift(filter)(originData) === true) {
+						
+							cachedCountInfos.push({
+								filter : filter,
+								paramsStr : paramsStr
+							});
+						}
+					});
+					
+					innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
+				},
+				
+				// recache data for update.
+				recacheDataForUpdate = function(originData, savedData, callback) {
+					//REQUIRED: originData
+					//REQUIRED: savedData
+					//REQUIRED: callback
+					
+					var
+					// cached get infos
+					cachedGetInfos = [],
+					
+					// cached find infos
+					cachedFindInfos = [],
+					
+					// cached count infos
+					cachedCountInfos = [];
+					
+					EACH(cachedGetStore.list(), function(info, paramsStr) {
+						
+						var
+						// filter
+						filter = info.filter;
+						
+						if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+						
+							cachedGetInfos.push({
+								filter : filter,
+								paramsStr : paramsStr
+							});
+						}
+					});
+					
+					EACH(cachedFindStore.list(), function(info, paramsStr) {
+						
+						var
+						// filter
+						filter = info.filter;
+						
+						if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+						
+							cachedFindInfos.push({
+								filter : filter,
+								paramsStr : paramsStr
+							});
+						}
+					});
+					
+					EACH(cachedCountStore.list(), function(info, paramsStr) {
+						
+						var
+						// filter
+						filter = info.filter;
+						
+						if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+						
+							cachedCountInfos.push({
+								filter : filter,
+								paramsStr : paramsStr
+							});
+						}
+					});
+					
+					innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
 				},
 
 				// inner get.
@@ -1361,10 +1431,9 @@ FOR_BOX(function(box) {
 													}
 												}
 		
-												// aleady cleaned origin data
-												recacheData(originData, function() {
+												// aleady cleaned origin/saved data
+												recacheDataForUpdate(originData, savedData, function() {
 													
-													// aleady cleaned saved data
 													if (callback !== undefined) {
 														callback(savedData);
 													}
