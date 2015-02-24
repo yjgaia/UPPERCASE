@@ -1348,42 +1348,46 @@ FOR_BOX(function(box) {
 
 						// on create.
 						on('create', function(data, ret) {
+							
+							// ignore undefined data attack.
+							if (data !== undefined) {
 
-							if (createAdminRole !== undefined) {
-
-								if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-									data : clientInfo.roles,
-									value : createAdminRole
-								}) === true)) {
-
-									innerCreate(data, ret, clientInfo);
-
-								} else {
-
-									ret({
-										isNotAuthed : true
-									});
-								}
-
-							} else {
-
-								if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-									data : clientInfo.roles,
-									value : createRole
-								}) === true)) {
-
-									// inject auth key.
-									if (createAuthKey !== undefined) {
-										data[createAuthKey] = clientInfo.authKey;
+								if (createAdminRole !== undefined) {
+	
+									if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+										data : clientInfo.roles,
+										value : createAdminRole
+									}) === true)) {
+	
+										innerCreate(data, ret, clientInfo);
+	
+									} else {
+	
+										ret({
+											isNotAuthed : true
+										});
 									}
-
-									innerCreate(data, ret, clientInfo);
-
+	
 								} else {
-
-									ret({
-										isNotAuthed : true
-									});
+	
+									if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+										data : clientInfo.roles,
+										value : createRole
+									}) === true)) {
+	
+										// inject auth key.
+										if (createAuthKey !== undefined) {
+											data[createAuthKey] = clientInfo.authKey;
+										}
+	
+										innerCreate(data, ret, clientInfo);
+	
+									} else {
+	
+										ret({
+											isNotAuthed : true
+										});
+									}
 								}
 							}
 						});
@@ -1394,25 +1398,29 @@ FOR_BOX(function(box) {
 
 						// on get.
 						on('get', function(idOrParams, ret) {
+							
+							// ignore undefined data attack.
+							if (idOrParams !== undefined) {
 
-							if (getRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-								data : clientInfo.roles,
-								value : getRole
-							}) === true)) {
-								
-								if (idOrParams !== undefined && CHECK_IS_DATA(idOrParams) === true) {
-
-									// delete for server params.
-									delete idOrParams.isToCache;
+								if (getRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : getRole
+								}) === true)) {
+									
+									if (idOrParams !== undefined && CHECK_IS_DATA(idOrParams) === true) {
+	
+										// delete for server params.
+										delete idOrParams.isToCache;
+									}
+	
+									innerGet(idOrParams, ret, clientInfo);
+	
+								} else {
+	
+									ret({
+										isNotAuthed : true
+									});
 								}
-
-								innerGet(idOrParams, ret, clientInfo);
-
-							} else {
-
-								ret({
-									isNotAuthed : true
-								});
 							}
 						});
 					}
@@ -1422,63 +1430,67 @@ FOR_BOX(function(box) {
 
 						// on update.
 						on('update', function(data, ret) {
+							
+							// ignore undefined data attack.
+							if (data !== undefined) {
 
-							if (updateRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
-								data : clientInfo.roles,
-								value : updateRole
-							}) === true || CHECK_IS_IN({
-								data : clientInfo.roles,
-								value : updateAdminRole
-							}) === true))) {
-
-								// check and inject auth key. (when not admin)
-								if (updateAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
+								if (updateRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : updateRole
+								}) === true || CHECK_IS_IN({
 									data : clientInfo.roles,
 									value : updateAdminRole
-								}) === true) !== true) {
-
-									// get data in database.
-									db.get(data.id, {
-
-										error : function(errorMsg) {
-											ret({
-												errorMsg : errorMsg
-											});
-										},
-
-										notExists : function() {
-											ret();
-										},
-
-										success : function(savedData) {
-
-											// check auth key.
-											if (savedData[updateAuthKey] === clientInfo.authKey) {
-
-												// do not change auth key.
-												data[updateAuthKey] = clientInfo.authKey;
-
-												innerUpdate(data, ret, clientInfo);
-											}
-
-											// not authed
-											else {
+								}) === true))) {
+	
+									// check and inject auth key. (when not admin)
+									if (updateAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
+										data : clientInfo.roles,
+										value : updateAdminRole
+									}) === true) !== true) {
+	
+										// get data in database.
+										db.get(data.id, {
+	
+											error : function(errorMsg) {
 												ret({
-													isNotAuthed : true
+													errorMsg : errorMsg
 												});
+											},
+	
+											notExists : function() {
+												ret();
+											},
+	
+											success : function(savedData) {
+	
+												// check auth key.
+												if (savedData[updateAuthKey] === clientInfo.authKey) {
+	
+													// do not change auth key.
+													data[updateAuthKey] = clientInfo.authKey;
+	
+													innerUpdate(data, ret, clientInfo);
+												}
+	
+												// not authed
+												else {
+													ret({
+														isNotAuthed : true
+													});
+												}
 											}
-										}
-									});
-
+										});
+	
+									} else {
+										innerUpdate(data, ret, clientInfo);
+									}
+	
 								} else {
-									innerUpdate(data, ret, clientInfo);
+	
+									ret({
+										isNotAuthed : true
+									});
 								}
-
-							} else {
-
-								ret({
-									isNotAuthed : true
-								});
 							}
 						});
 					}
@@ -1488,75 +1500,79 @@ FOR_BOX(function(box) {
 
 						// on remove.
 						on('remove', function(id, ret) {
+							
+							// ignore undefined data attack.
+							if (id !== undefined) {
 
-							if (removeRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
-								data : clientInfo.roles,
-								value : removeRole
-							}) === true || CHECK_IS_IN({
-								data : clientInfo.roles,
-								value : removeAdminRole
-							}) === true))) {
-
-								// check auth key. (when not admin)
-								if (removeAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
+								if (removeRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : removeRole
+								}) === true || CHECK_IS_IN({
 									data : clientInfo.roles,
 									value : removeAdminRole
-								}) === true) !== true) {
-
-									// get data in database.
-									db.get(id, {
-
-										error : function(errorMsg) {
-											ret({
-												errorMsg : errorMsg
-											});
-										},
-
-										notExists : function() {
-											ret();
-										},
-
-										success : function(savedData) {
-
-											// check auth key.
-											if (savedData[removeAuthKey] === clientInfo.authKey) {
-												innerRemove(id, ret, clientInfo);
-											}
-
-											// not authed
-											else {
-												ret({
-													isNotAuthed : true
-												});
-											}
-										}
-									});
-
-								} else if (removeAuthKey === undefined && removeAdminRole !== undefined) {
-
-									if (clientInfo.roles !== undefined && CHECK_IS_IN({
+								}) === true))) {
+	
+									// check auth key. (when not admin)
+									if (removeAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
 										data : clientInfo.roles,
 										value : removeAdminRole
-									}) === true) {
-
-										innerRemove(id, ret, clientInfo);
-
-									} else {
-
-										ret({
-											isNotAuthed : true
+									}) === true) !== true) {
+	
+										// get data in database.
+										db.get(id, {
+	
+											error : function(errorMsg) {
+												ret({
+													errorMsg : errorMsg
+												});
+											},
+	
+											notExists : function() {
+												ret();
+											},
+	
+											success : function(savedData) {
+	
+												// check auth key.
+												if (savedData[removeAuthKey] === clientInfo.authKey) {
+													innerRemove(id, ret, clientInfo);
+												}
+	
+												// not authed
+												else {
+													ret({
+														isNotAuthed : true
+													});
+												}
+											}
 										});
+	
+									} else if (removeAuthKey === undefined && removeAdminRole !== undefined) {
+	
+										if (clientInfo.roles !== undefined && CHECK_IS_IN({
+											data : clientInfo.roles,
+											value : removeAdminRole
+										}) === true) {
+	
+											innerRemove(id, ret, clientInfo);
+	
+										} else {
+	
+											ret({
+												isNotAuthed : true
+											});
+										}
+	
+									} else {
+										innerRemove(id, ret, clientInfo);
 									}
-
+	
 								} else {
-									innerRemove(id, ret, clientInfo);
+	
+									ret({
+										isNotAuthed : true
+									});
 								}
-
-							} else {
-
-								ret({
-									isNotAuthed : true
-								});
 							}
 						});
 					}
@@ -1566,26 +1582,30 @@ FOR_BOX(function(box) {
 
 						// on find.
 						on('find', function(params, ret) {
+							
+							// ignore undefined data attack.
+							if (params !== undefined) {
 
-							if (findRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-								data : clientInfo.roles,
-								value : findRole
-							}) === true)) {
-
-								if (params !== undefined) {
-
-									// delete for server params.
-									delete params.isFindAll;
-									delete params.isToCache;
+								if (findRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : findRole
+								}) === true)) {
+	
+									if (params !== undefined) {
+	
+										// delete for server params.
+										delete params.isFindAll;
+										delete params.isToCache;
+									}
+	
+									innerFind(params, ret, clientInfo);
+	
+								} else {
+	
+									ret({
+										isNotAuthed : true
+									});
 								}
-
-								innerFind(params, ret, clientInfo);
-
-							} else {
-
-								ret({
-									isNotAuthed : true
-								});
 							}
 						});
 					}
@@ -1595,25 +1615,29 @@ FOR_BOX(function(box) {
 
 						// on count.
 						on('count', function(params, ret) {
+							
+							// ignore undefined data attack.
+							if (params !== undefined) {
 
-							if (countRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-								data : clientInfo.roles,
-								value : countRole
-							}) === true)) {
-								
-								if (params !== undefined) {
-
-									// delete for server params.
-									delete params.isToCache;
+								if (countRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : countRole
+								}) === true)) {
+									
+									if (params !== undefined) {
+	
+										// delete for server params.
+										delete params.isToCache;
+									}
+	
+									innerCount(params, ret, clientInfo);
+	
+								} else {
+	
+									ret({
+										isNotAuthed : true
+									});
 								}
-
-								innerCount(params, ret, clientInfo);
-
-							} else {
-
-								ret({
-									isNotAuthed : true
-								});
 							}
 						});
 					}
@@ -1623,25 +1647,29 @@ FOR_BOX(function(box) {
 
 						// on check is exists.
 						on('checkIsExists', function(params, ret) {
+							
+							// ignore undefined data attack.
+							if (params !== undefined) {
 
-							if (checkIsExistsRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-								data : clientInfo.roles,
-								value : checkIsExistsRole
-							}) === true)) {
-								
-								if (params !== undefined) {
-
-									// delete for server params.
-									delete params.isToCache;
+								if (checkIsExistsRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+									data : clientInfo.roles,
+									value : checkIsExistsRole
+								}) === true)) {
+									
+									if (params !== undefined) {
+	
+										// delete for server params.
+										delete params.isToCache;
+									}
+	
+									innerCheckIsExists(params, ret, clientInfo);
+	
+								} else {
+	
+									ret({
+										isNotAuthed : true
+									});
 								}
-
-								innerCheckIsExists(params, ret, clientInfo);
-
-							} else {
-
-								ret({
-									isNotAuthed : true
-								});
 							}
 						});
 					}

@@ -61,27 +61,37 @@ global.WEB_SOCKET_SERVER = METHOD({
 
 				var
 				// methods
-				methods = methodMap[methodName];
-
-				if (methods !== undefined) {
-
-					EACH(methods, function(method) {
-
-						// run method.
-						method(data,
-
-						// ret.
-						function(retData) {
-
-							if (sendKey !== undefined) {
-
-								send({
-									methodName : '__CALLBACK_' + sendKey,
-									data : retData
-								});
-							}
+				methods;
+				
+				try {
+					
+					methods = methodMap[methodName];
+	
+					if (methods !== undefined) {
+	
+						EACH(methods, function(method) {
+	
+							// run method.
+							method(data,
+	
+							// ret.
+							function(retData) {
+	
+								if (sendKey !== undefined) {
+	
+									send({
+										methodName : '__CALLBACK_' + sendKey,
+										data : retData
+									});
+								}
+							});
 						});
-					});
+					}
+				}
+				
+				// if catch error
+				catch(error) {
+					console.log(CONSOLE_RED('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:'), error.toString());
 				}
 			};
 
@@ -113,7 +123,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				// error msg
 				errorMsg = error.toString();
 
-				console.log('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:', errorMsg);
+				console.log(CONSOLE_RED('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:'), errorMsg);
 
 				runMethods('__ERROR', errorMsg);
 			});

@@ -3,7 +3,10 @@ FOR_BOX(function(box) {
 
 	var
 	//IMPORT: MongoDB ObjectID
-	ObjectID = require('mongodb').ObjectID;
+	ObjectID = require('mongodb').ObjectID,
+	
+	//IMPORT: sift.js
+	sift = require('sift');
 
 	/**
 	 * MongoDB collection wrapper class
@@ -84,8 +87,6 @@ FOR_BOX(function(box) {
 
 				// delete __RANDOM_KEY.
 				delete data.__RANDOM_KEY;
-
-				return data;
 			},
 
 			// remove empty values.
@@ -159,6 +160,96 @@ FOR_BOX(function(box) {
 				} else {
 					f(filter);
 				}
+			},
+
+			// clean filter.
+			cleanFilter = function(filter) {
+
+				var
+				// cleaned filter
+				cleanedFilter = {},
+				
+				// f.
+				f = function(cleanedFilter, filter) {
+
+					if (filter._id !== undefined) {
+						
+						if (filter._id instanceof ObjectID === true) {
+							cleanedFilter.id = filter._id.toString();
+						} else if (CHECK_IS_DATA(filter.id) === true) {
+							
+							cleanedFilter.id = {};
+
+							EACH(filter._id, function(values, i) {
+								
+								if (CHECK_IS_DATA(values) === true) {
+									
+									cleanedFilter.id[i] = {};
+									
+									EACH(values, function(value, j) {
+										cleanedFilter.id[i][j] = value.toString();
+									});
+									
+								} else if (CHECK_IS_ARRAY(values) === true) {
+									
+									cleanedFilter.id[i] = [];
+									
+									EACH(values, function(value) {
+										cleanedFilter.id[i].push(value.toString());
+									});
+									
+								} else {
+									cleanedFilter.id[i] = values.toString();
+								}
+							});
+							
+						} else {
+							cleanedFilter.id = filter._id;
+						}
+					}
+					
+					EACH(filter, function(value, name) {
+						if (name !== '_id') {
+							cleanedFilter[name] = value;
+						}
+					});
+				};
+
+				if (filter.$and !== undefined) {
+					
+					cleanedFilter.$and = [];
+
+					EACH(filter.$and, function(filter) {
+						
+						var
+						// sub cleaned filter
+						subCleanedFilter = {};
+						
+						cleanedFilter.$and.push(subCleanedFilter);
+						
+						f(subCleanedFilter, filter);
+					});
+
+				} else if (filter.$or !== undefined) {
+
+					cleanedFilter.$or = [];
+
+					EACH(filter.$or, function(filter) {
+						
+						var
+						// sub cleaned filter
+						subCleanedFilter = {};
+						
+						cleanedFilter.$or.push(subCleanedFilter);
+						
+						f(subCleanedFilter, filter);
+					});
+
+				} else {
+					f(cleanedFilter, filter);
+				}
+				
+				return cleanedFilter;
 			},
 
 			// create data.
@@ -477,12 +568,13 @@ FOR_BOX(function(box) {
 					if (errorHandler !== undefined) {
 						errorHandler(errorInfo.errorMsg);
 					} else {
-						console.log('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` ERROR:', errorInfo);
+						console.log(CONSOLE_RED('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` ERROR:'), errorInfo);
 					}
 				},
 				
 				// recache data.
-				recacheData = function(callback) {
+				recacheData = function(originData, callback) {
+					//REQUIRED: originData
 					//REQUIRED: callback
 					
 					var
@@ -495,25 +587,49 @@ FOR_BOX(function(box) {
 					// cached count infos
 					cachedCountInfos = [];
 					
-					EACH(cachedGetStore.list(), function(cachedData, paramsStr) {
-						cachedGetInfos.push({
-							cachedData : cachedData,
-							paramsStr : paramsStr
-						});
+					EACH(cachedGetStore.list(), function(info, paramsStr) {
+						
+						var
+						// filter
+						filter = info.filter;
+						
+						if (sift(filter)(originData) === true) {
+						
+							cachedGetInfos.push({
+								filter : filter,
+								paramsStr : paramsStr
+							});
+						}
 					});
 					
-					EACH(cachedFindStore.list(), function(cachedDataSet, paramsStr) {
-						cachedFindInfos.push({
-							cachedDataSet : cachedDataSet,
-							paramsStr : paramsStr
-						});
+					EACH(cachedFindStore.list(), function(info, paramsStr) {
+						
+						var
+						// filter
+						filter = info.filter;
+						
+						if (sift(filter)(originData) === true) {
+						
+							cachedFindInfos.push({
+								filter : filter,
+								paramsStr : paramsStr
+							});
+						}
 					});
 					
-					EACH(cachedCountStore.list(), function(cachedCount, paramsStr) {
-						cachedCountInfos.push({
-							cachedCount : cachedCount,
-							paramsStr : paramsStr
-						});
+					EACH(cachedCountStore.list(), function(info, paramsStr) {
+						
+						var
+						// filter
+						filter = info.filter;
+						
+						if (sift(filter)(originData) === true) {
+						
+							cachedCountInfos.push({
+								filter : filter,
+								paramsStr : paramsStr
+							});
+						}
 					});
 					
 					PARALLEL([
@@ -541,7 +657,10 @@ FOR_BOX(function(box) {
 									
 									cachedGetStore.save({
 										name : paramsStr,
-										value : savedData
+										value : {
+											filter : info.filter,
+											data : savedData
+										}
 									});
 									
 									done();
@@ -574,7 +693,10 @@ FOR_BOX(function(box) {
 									
 									cachedFindStore.save({
 										name : paramsStr,
-										value : savedDataSet
+										value : {
+											filter : info.filter,
+											dataSet : savedDataSet
+										}
 									});
 									
 									done();
@@ -607,7 +729,10 @@ FOR_BOX(function(box) {
 									
 									cachedCountStore.save({
 										name : paramsStr,
-										value : count
+										value : {
+											filter : info.filter,
+											count : count
+										}
 									});
 									
 									done();
@@ -695,7 +820,7 @@ FOR_BOX(function(box) {
 									addHistory('create', savedData.id, savedData, savedData.createTime);
 								}
 								
-								recacheData(function() {
+								recacheData(savedData, function() {
 									
 									if (callback !== undefined) {
 										callback(savedData);
@@ -757,9 +882,12 @@ FOR_BOX(function(box) {
 
 					// error message
 					errorMsg,
+								
+					// cleaned filter
+					cleanedFilter,
 					
-					// cached datac
-					cachedData;
+					// cached info
+					cachedInfo;
 
 					try {
 
@@ -774,15 +902,17 @@ FOR_BOX(function(box) {
 						}
 						
 						if (isToCache === true) {
+											
+							cleanedFilter = cleanFilter(filter);
 							
-							cachedData = cachedGetStore.get(STRINGIFY({
-								filter : filter,
+							cachedInfo = cachedGetStore.get(STRINGIFY({
+								filter : cleanedFilter,
 								sort : sort
 							}));
 						}
 						
-						if (cachedData !== undefined) {
-							callback(cachedData);
+						if (cachedInfo !== undefined) {
+							callback(cachedInfo.data);
 						} else {
 
 							collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
@@ -805,10 +935,13 @@ FOR_BOX(function(box) {
 											
 											cachedGetStore.save({
 												name : STRINGIFY({
-													filter : filter,
+													filter : cleanedFilter,
 													sort : sort
 												}),
-												value : savedData
+												value : {
+													filter : cleanedFilter,
+													data : savedData
+												}
 											});
 										}
 	
@@ -932,8 +1065,7 @@ FOR_BOX(function(box) {
 
 							innerGet({
 								filter : filter,
-								sort : sort,
-								isToCache : isToCache
+								sort : sort
 							}, {
 								error : errorHandler,
 								notExists : function() {
@@ -1064,91 +1196,116 @@ FOR_BOX(function(box) {
 						if ($inc !== undefined) {
 							updateData.$inc = $inc;
 						}
+						
+						get({
+							filter : filter
+						}, {
 
-						collection.update(filter, updateData, {
-							safe : true
-						}, function(error, result) {
+							error : function(errorMsg) {
 
-							if (result === 0) {
+								logError({
+									method : 'update',
+									data : data,
+									errorMsg : errorMsg
+								}, errorHandler);
+							},
+
+							notExists : function() {
 
 								if (notExistsHandler !== undefined) {
 									notExistsHandler();
 								} else {
 									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 								}
+							},
 
-							} else if (error === TO_DELETE) {
+							success : function(originData) {
 
-								get({
-									filter : filter
-								}, {
-
-									error : function(errorMsg) {
-
-										logError({
-											method : 'update',
-											data : data,
-											errorMsg : errorMsg
-										}, errorHandler);
-									},
-
-									notExists : function() {
-
+								collection.update(filter, updateData, {
+									safe : true
+								}, function(error, result) {
+		
+									if (result === 0) {
+		
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
 										} else {
 											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 										}
-									},
-
-									success : function(savedData) {
-
-										var
-										// update data
-										updateData;
-
-										if ($inc === undefined || isSetData === true || $unset !== undefined) {
-
-											updateData = {};
-
-											if (isSetData === true) {
-												EACH(data, function(value, name) {
-													updateData[name] = value;
+		
+									} else if (error === TO_DELETE) {
+		
+										get({
+											filter : filter
+										}, {
+		
+											error : function(errorMsg) {
+		
+												logError({
+													method : 'update',
+													data : data,
+													errorMsg : errorMsg
+												}, errorHandler);
+											},
+		
+											notExists : function() {
+		
+												if (notExistsHandler !== undefined) {
+													notExistsHandler();
+												} else {
+													console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+												}
+											},
+		
+											success : function(savedData) {
+		
+												var
+												// update data
+												updateData;
+		
+												if ($inc === undefined || isSetData === true || $unset !== undefined) {
+		
+													updateData = {};
+		
+													if (isSetData === true) {
+														EACH(data, function(value, name) {
+															updateData[name] = value;
+														});
+													}
+		
+													if ($unset !== undefined) {
+														EACH($unset, function(value, name) {
+															updateData[name] = TO_DELETE;
+														});
+													}
+													
+													if (isNotUsingHistory !== true) {
+														addHistory('update', id, updateData, savedData.lastUpdateTime);
+													}
+												}
+		
+												// aleady cleaned origin data
+												recacheData(originData, function() {
+													
+													// aleady cleaned saved data
+													if (callback !== undefined) {
+														callback(savedData);
+													}
 												});
-											}
-
-											if ($unset !== undefined) {
-												EACH($unset, function(value, name) {
-													updateData[name] = TO_DELETE;
-												});
-											}
-											
-											if (isNotUsingHistory !== true) {
-												addHistory('update', id, updateData, savedData.lastUpdateTime);
-											}
-										}
-
-										// clean saved data before callback.
-										cleanData(savedData);
-
-										recacheData(function() {
-											
-											if (callback !== undefined) {
-												callback(savedData);
 											}
 										});
 									}
+		
+									// if error is not TO_DELETE
+									else {
+		
+										logError({
+											method : 'update',
+											data : data,
+											errorMsg : error.toString()
+										}, errorHandler);
+									}
 								});
-							}
-
-							// if error is not TO_DELETE
-							else {
-
-								logError({
-									method : 'update',
-									data : data,
-									errorMsg : error.toString()
-								}, errorHandler);
 							}
 						});
 					}
@@ -1227,7 +1384,7 @@ FOR_BOX(function(box) {
 									}
 								},
 	
-								success : function(savedData) {
+								success : function(originData) {
 
 									collection.remove(filter, {
 										safe : true
@@ -1246,14 +1403,12 @@ FOR_BOX(function(box) {
 											if (isNotUsingHistory !== true) {
 												addHistory('remove', id, undefined, new Date());
 											}
-	
-											// clean saved data before callback.
-											cleanData(savedData);
-	
-											recacheData(function() {
+											
+											// aleady cleaned origin data
+											recacheData(originData, function() {
 												
 												if (callback !== undefined) {
-													callback(savedData);
+													callback(originData);
 												}
 											});
 										}
@@ -1323,9 +1478,12 @@ FOR_BOX(function(box) {
 
 					// error message
 					errorMsg,
+								
+					// cleaned filter
+					cleanedFilter,
 					
-					// cached data set
-					cachedDataSet,
+					// cached info
+					cachedInfo,
 
 					// proc.
 					proc;
@@ -1379,8 +1537,10 @@ FOR_BOX(function(box) {
 						
 						if (isToCache === true) {
 							
-							cachedDataSet = cachedFindStore.get(STRINGIFY({
-								filter : filter,
+							cleanedFilter = cleanFilter(filter);
+							
+							cachedInfo = cachedFindStore.get(STRINGIFY({
+								filter : cleanedFilter,
 								sort : sort,
 								start : start,
 								count : count,
@@ -1388,8 +1548,8 @@ FOR_BOX(function(box) {
 							}));
 						}
 						
-						if (cachedDataSet !== undefined) {
-							callback(cachedDataSet);
+						if (cachedInfo !== undefined) {
+							callback(cachedInfo.dataSet);
 						} else {
 	
 							proc = function(error, savedDataSet) {
@@ -1406,13 +1566,16 @@ FOR_BOX(function(box) {
 										
 										cachedFindStore.save({
 											name : STRINGIFY({
-												filter : filter,
+												filter : cleanedFilter,
 												sort : sort,
 												start : start,
 												count : count,
 												isFindAll : isFindAll
 											}),
-											value : savedDataSet
+											value : {
+												filter : cleanedFilter,
+												dataSet : savedDataSet
+											}
 										});
 									}
 	
@@ -1476,9 +1639,12 @@ FOR_BOX(function(box) {
 
 					// error message
 					errorMsg,
+								
+					// cleaned filter
+					cleanedFilter,
 					
-					// cached count
-					cachedCount;
+					// cached info
+					cachedInfo;
 
 					try {
 
@@ -1512,13 +1678,15 @@ FOR_BOX(function(box) {
 						
 						if (isToCache === true) {
 							
-							cachedCount = cachedCountStore.get(STRINGIFY({
-								filter : filter
+							cleanedFilter = cleanFilter(filter);
+							
+							cachedInfo = cachedCountStore.get(STRINGIFY({
+								filter : cleanedFilter
 							}));
 						}
 						
-						if (cachedCount !== undefined) {
-							callback(cachedCount);
+						if (cachedInfo !== undefined) {
+							callback(cachedInfo.count);
 						} else {
 
 							collection.find(filter).count(function(error, count) {
@@ -1530,9 +1698,12 @@ FOR_BOX(function(box) {
 										
 										cachedCountStore.save({
 											name : STRINGIFY({
-												filter : filter
+												filter : cleanedFilter
 											}),
-											value : count
+											value : {
+												filter : cleanedFilter,
+												count : count
+											}
 										});
 									}
 									
@@ -1586,6 +1757,12 @@ FOR_BOX(function(box) {
 
 					// error message
 					errorMsg,
+								
+					// cleaned filter
+					cleanedFilter,
+					
+					// cached incfo
+					cachedInfo,
 					
 					// cached count
 					cachedCount;
@@ -1631,13 +1808,19 @@ FOR_BOX(function(box) {
 						
 						if (isToCache === true) {
 							
-							cachedCount = cachedCountStore.get(STRINGIFY({
-								filter : filter
+							cleanedFilter = cleanFilter(filter);
+							
+							cachedInfo = cachedCountStore.get(STRINGIFY({
+								filter : cleanedFilter
 							}));
 						}
 						
-						if (cachedCount !== undefined) {
+						if (cachedInfo !== undefined) {
+							
+							cachedCount = cachedInfo.count;
+							
 							callback(cachedCount !== undefined && cachedCount > 0);
+							
 						} else {
 
 							collection.find(filter).count(function(error, count) {
@@ -1649,9 +1832,12 @@ FOR_BOX(function(box) {
 										
 										cachedCountStore.save({
 											name : STRINGIFY({
-												filter : filter
+												filter : cleanedFilter
 											}),
-											value : count
+											value : {
+												filter : cleanedFilter,
+												count : count
+											}
 										});
 									}
 	

@@ -30,8 +30,8 @@ TEST('DB', function(ok) {
 				msg : 'test'
 			},
 			isToCache : true
-		}, function(savedData) {
-			console.log('Find cached data successed!', savedData);
+		}, function(savedDataSet) {
+			console.log('Find cached data set successed!', savedDataSet);
 		});
 		
 		// create data test
@@ -48,9 +48,55 @@ TEST('DB', function(ok) {
 					msg : 'test'
 				},
 				isToCache : true
-			}, function(savedData) {
-				console.log('Find cached data successed!', savedData);
+			}, function(savedDataSet) {
+				console.log('Find cached data set successed!', savedDataSet);
 			});
+		});
+		
+		DELAY(3, function() {
+			
+			var
+			// start
+			start = new Date().getTime();
+			
+			PARALLEL(10000, [
+			function(i, done) {
+				
+				// find data cahced
+				db.find({
+					filter : {
+						msg : 'test'
+					}
+				}, function(savedDataSet) {
+					done();
+				});
+			},
+			
+			function() {
+				
+				console.log(new Date().getTime() - start);
+				
+				// restart
+				start = new Date().getTime();
+			
+				PARALLEL(10000, [
+				function(i, done) {
+					
+					// find data cahced
+					db.find({
+						filter : {
+							msg : 'test'
+						},
+						isToCache : true
+					}, function(savedDataSet) {
+						done();
+					});
+				},
+				
+				function() {
+					console.log(new Date().getTime() - start);
+				}]);
+			}]);
 		});
 	});
 });

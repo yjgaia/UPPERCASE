@@ -101,27 +101,37 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 
 				var
 				// methods
-				methods = methodMaps[clientId][methodName];
+				methods;
+				
+				try {
+					
+					methods = methodMaps[clientId][methodName];
 
-				if (methods !== undefined) {
-
-					EACH(methods, function(method) {
-
-						// run method.
-						method(data,
-
-						// ret.
-						function(retData) {
-
-							if (sendKey !== undefined) {
-
-								send(clientId, {
-									methodName : '__CALLBACK_' + sendKey,
-									data : retData
-								});
-							}
+					if (methods !== undefined) {
+	
+						EACH(methods, function(method) {
+	
+							// run method.
+							method(data,
+	
+							// ret.
+							function(retData) {
+	
+								if (sendKey !== undefined) {
+	
+									send(clientId, {
+										methodName : '__CALLBACK_' + sendKey,
+										data : retData
+									});
+								}
+							});
 						});
-					});
+					}
+				}
+				
+				// if catch error
+				catch(error) {
+					console.log(CONSOLE_RED('[UPPERCASE.IO-WEB_SOCKET_FIX_REQUEST_MANAGER] ERROR:'), error.toString());
 				}
 			},
 
