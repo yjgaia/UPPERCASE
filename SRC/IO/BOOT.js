@@ -320,6 +320,9 @@ global.BOOT = function(params) {
 				});
 			});
 		}
+		
+		// load UPPERCASE.IO-BOX/NODE.
+		loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/NODE.js');
 
 		// load UPPERCASE.IO-BOX/BROWSER.
 		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/CLIENT.js');
