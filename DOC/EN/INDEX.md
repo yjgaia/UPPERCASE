@@ -130,7 +130,7 @@ store.remove(name)
 ###### Browser package
 * `MATCH_VIEW({uri:, target:})` match view. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/VIEW.js)
 * `HREF(uri)` get href. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/HREF.js)
-* `GO()` `GO(uri)` go another view. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO.js)
+* `GO(uri)` go another view. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO.js)
 * `GO_NEW_WIN()` `GO_NEW_WIN(uri)` go another view on new window. [Example](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/BOX/BROWSER/VIEW/GO_NEW_WIN.js)
 
 

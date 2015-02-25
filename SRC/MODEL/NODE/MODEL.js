@@ -633,29 +633,26 @@ FOR_BOX(function(box) {
 
 									success : function(savedData) {
 
-										if (savedData !== undefined) {
+										// run after update listeners.
+										EACH(afterUpdateListeners, function(afterUpdateListener) {
+											afterUpdateListener(savedData, clientInfo);
+										});
 
-											// run after update listeners.
-											EACH(afterUpdateListeners, function(afterUpdateListener) {
-												afterUpdateListener(savedData, clientInfo);
-											});
+										// broadcast.
+										box.BROADCAST({
+											roomName : name + '/' + savedData.id,
+											methodName : 'update',
+											data : savedData
+										});
 
-											// broadcast.
+										// broadcast by property.
+										EACH(savedData, function(value, propertyName) {
 											box.BROADCAST({
-												roomName : name + '/' + savedData.id,
+												roomName : name + '/' + propertyName + '/' + value + '/update',
 												methodName : 'update',
 												data : savedData
 											});
-
-											// broadcast by property.
-											EACH(savedData, function(value, propertyName) {
-												box.BROADCAST({
-													roomName : name + '/' + propertyName + '/' + value + '/update',
-													methodName : 'update',
-													data : savedData
-												});
-											});
-										}
+										});
 
 										ret({
 											savedData : savedData

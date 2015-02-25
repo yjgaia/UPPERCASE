@@ -47,5 +47,5 @@ TEST('GO', function(ok) {
 	TestBox.GO('go/1');
 	
 	// go back.
-	GO();
+	GO('');
 });

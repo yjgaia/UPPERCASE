@@ -117,8 +117,8 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 								function(methodName, method) {
 									//REQUIRED: methodName
 									//REQUIRED: method
-
-									on(roomName + '/' + methodName, method);
+									
+									on(methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName, method);
 								},
 
 								// off.
@@ -126,7 +126,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 									//REQUIRED: methodName
 									//OPTIONAL: method
 
-									off(roomName + '/' + methodName, method);
+									off(methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName, method);
 								},
 
 								// send.

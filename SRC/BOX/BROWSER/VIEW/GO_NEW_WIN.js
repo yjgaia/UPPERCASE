@@ -7,9 +7,9 @@ FOR_BOX(function(box) {
 	box.GO_NEW_WIN = METHOD({
 
 		run : function(uri) {
-			//OPTIONAL: uri
+			//REQUIRED: uri
 
-			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
 		}
 	});
 });

@@ -6776,7 +6776,7 @@ global.GO = METHOD({
 
 	run : function(uri) {
 		'use strict';
-		//OPTIONAL: uri
+		//REQUIRED: uri
 
 		history.pushState(undefined, undefined, HREF(uri));
 		
@@ -6791,7 +6791,7 @@ global.GO_NEW_WIN = METHOD({
 
 	run : function(uri) {
 		'use strict';
-		//OPTIONAL: uri
+		//REQUIRED: uri
 
 		global.open(HREF(uri));
 	}
@@ -6804,9 +6804,9 @@ global.HREF = METHOD({
 
 	run : function(uri) {
 		'use strict';
-		//OPTIONAL: uri
+		//REQUIRED: uri
 
-		return '/' + (uri === undefined ? '' : uri);
+		return '/' + uri;
 	}
 });
 

@@ -9547,7 +9547,7 @@ global.GO = METHOD({
 
 	run : function(uri) {
 		'use strict';
-		//OPTIONAL: uri
+		//REQUIRED: uri
 
 		history.pushState(undefined, undefined, HREF(uri));
 		
@@ -9562,7 +9562,7 @@ global.GO_NEW_WIN = METHOD({
 
 	run : function(uri) {
 		'use strict';
-		//OPTIONAL: uri
+		//REQUIRED: uri
 
 		global.open(HREF(uri));
 	}
@@ -9575,9 +9575,9 @@ global.HREF = METHOD({
 
 	run : function(uri) {
 		'use strict';
-		//OPTIONAL: uri
+		//REQUIRED: uri
 
-		return '/' + (uri === undefined ? '' : uri);
+		return '/' + uri;
 	}
 });
 
@@ -10138,9 +10138,9 @@ FOR_BOX(function(box) {
 	box.GO = METHOD({
 
 		run : function(uri) {
-			//OPTIONAL: uri
+			//REQUIRED: uri
 
-			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
 		}
 	});
 });
@@ -10154,9 +10154,9 @@ FOR_BOX(function(box) {
 	box.GO_NEW_WIN = METHOD({
 
 		run : function(uri) {
-			//OPTIONAL: uri
+			//REQUIRED: uri
 
-			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
 		}
 	});
 });

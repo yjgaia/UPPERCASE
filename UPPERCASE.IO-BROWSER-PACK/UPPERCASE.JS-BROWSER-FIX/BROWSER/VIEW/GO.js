@@ -7,7 +7,7 @@ OVERRIDE(GO, function(origin) {
 	global.GO = METHOD({
 	
 		run : function(uri) {
-			//OPTIONAL: uri
+			//REQUIRED: uri
 	
 			location.href = HREF(uri);
 		}

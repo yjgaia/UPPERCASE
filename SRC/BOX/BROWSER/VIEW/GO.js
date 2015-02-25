@@ -7,9 +7,9 @@ FOR_BOX(function(box) {
 	box.GO = METHOD({
 
 		run : function(uri) {
-			//OPTIONAL: uri
+			//REQUIRED: uri
 
-			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
 		}
 	});
 });
