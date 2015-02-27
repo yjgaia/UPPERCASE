@@ -427,7 +427,7 @@ FOR_BOX(function(box) {
 
 								var
 								// b
-								b = beforeCreateListener(data, ret, next, clientInfo);
+								b = beforeCreateListener(data, next, ret, clientInfo);
 
 								if (isNotRunNext !== true && b === false) {
 									isNotRunNext = true;
@@ -603,7 +603,7 @@ FOR_BOX(function(box) {
 
 								var
 								// b
-								b = beforeUpdateListener(data, ret, next, clientInfo);
+								b = beforeUpdateListener(data, next, ret, clientInfo);
 
 								if (isNotRunNext !== true && b === false) {
 									isNotRunNext = true;
@@ -631,11 +631,11 @@ FOR_BOX(function(box) {
 										ret();
 									},
 
-									success : function(savedData) {
+									success : function(savedData, originData) {
 
 										// run after update listeners.
 										EACH(afterUpdateListeners, function(afterUpdateListener) {
-											afterUpdateListener(savedData, clientInfo);
+											afterUpdateListener(savedData, originData, clientInfo);
 										});
 
 										// broadcast.
@@ -655,7 +655,8 @@ FOR_BOX(function(box) {
 										});
 
 										ret({
-											savedData : savedData
+											savedData : savedData,
+											originData : originData
 										});
 									}
 								});
@@ -678,7 +679,7 @@ FOR_BOX(function(box) {
 
 							var
 							// b
-							b = beforeRemoveListener(id, ret, next, clientInfo);
+							b = beforeRemoveListener(id, next, ret, clientInfo);
 
 							if (isNotRunNext !== true && b === false) {
 								isNotRunNext = true;
@@ -706,34 +707,34 @@ FOR_BOX(function(box) {
 									ret();
 								},
 
-								success : function(savedData) {
+								success : function(originData) {
 
-									if (savedData !== undefined) {
+									if (originData !== undefined) {
 
 										// run after remove listeners.
 										EACH(afterRemoveListeners, function(afterRemoveListener) {
-											afterRemoveListener(savedData, clientInfo);
+											afterRemoveListener(originData, clientInfo);
 										});
 
 										// broadcast.
 										box.BROADCAST({
-											roomName : name + '/' + savedData.id,
+											roomName : name + '/' + originData.id,
 											methodName : 'remove',
-											data : savedData
+											data : originData
 										});
 
 										// broadcast by property.
-										EACH(savedData, function(value, propertyName) {
+										EACH(originData, function(value, propertyName) {
 											box.BROADCAST({
 												roomName : name + '/' + propertyName + '/' + value + '/remove',
 												methodName : 'remove',
-												data : savedData
+												data : originData
 											});
 										});
 									}
 
 									ret({
-										savedData : savedData
+										originData : originData
 									});
 								}
 							});
@@ -1095,12 +1096,16 @@ FOR_BOX(function(box) {
 						validErrors,
 
 						// saved data
-						savedData;
+						savedData,
+						
+						// origin data
+						originData;
 
 						if (result !== undefined) {
 							errorMsg = result.errorMsg;
 							validErrors = result.validErrors;
 							savedData = result.savedData;
+							originData = result.originData;
 						}
 
 						if (errorMsg !== undefined) {
@@ -1122,7 +1127,7 @@ FOR_BOX(function(box) {
 								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT EXISTS.'), data);
 							}
 						} else if (callback !== undefined) {
-							callback(savedData);
+							callback(savedData, originData);
 						}
 					});
 				};
@@ -1159,12 +1164,12 @@ FOR_BOX(function(box) {
 							// error msg
 							errorMsg,
 	
-							// saved data
-							savedData;
+							// origin data
+							originData;
 	
 							if (result !== undefined) {
 								errorMsg = result.errorMsg;
-								savedData = result.savedData;
+								originData = result.originData;
 							}
 	
 							if (errorMsg !== undefined) {
@@ -1173,14 +1178,14 @@ FOR_BOX(function(box) {
 								} else {
 									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg));
 								}
-							} else if (savedData === undefined) {
+							} else if (originData === undefined) {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler();
 								} else {
 									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS.'), id);
 								}
 							} else if (callback !== undefined) {
-								callback(savedData);
+								callback(originData);
 							}
 						});
 					};

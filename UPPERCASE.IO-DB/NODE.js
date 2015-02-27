@@ -1435,7 +1435,7 @@ FOR_BOX(function(box) {
 												recacheDataForUpdate(originData, savedData, function() {
 													
 													if (callback !== undefined) {
-														callback(savedData);
+														callback(savedData, originData);
 													}
 												});
 											}

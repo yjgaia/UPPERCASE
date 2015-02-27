@@ -399,8 +399,8 @@ FOR_BOX(function(box) {
 
 								// add remove handler.
 								function(callback) {
-									subRoom.on('remove', function(result) {
-										callback(result);
+									subRoom.on('remove', function(originData) {
+										callback(originData);
 										exit();
 									});
 								},
@@ -515,13 +515,17 @@ FOR_BOX(function(box) {
 							isNotAuthed,
 
 							// saved data
-							savedData;
+							savedData,
+							
+							// origin data
+							originData;
 
 							if (result !== undefined) {
 								errorMsg = result.errorMsg;
 								validErrors = result.validErrors;
 								isNotAuthed = result.isNotAuthed;
 								savedData = result.savedData;
+								originData = result.originData;
 							}
 
 							if (errorMsg !== undefined) {
@@ -549,7 +553,7 @@ FOR_BOX(function(box) {
 									console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT EXISTS!');
 								}
 							} else if (callback !== undefined) {
-								callback(savedData);
+								callback(savedData, originData);
 							}
 						});
 					}
@@ -599,13 +603,13 @@ FOR_BOX(function(box) {
 						// is not authed
 						isNotAuthed,
 
-						// saved data
-						savedData;
+						// origin data
+						originData;
 
 						if (result !== undefined) {
 							errorMsg = result.errorMsg;
 							isNotAuthed = result.isNotAuthed;
-							savedData = result.savedData;
+							originData = result.originData;
 						}
 
 						if (errorMsg !== undefined) {
@@ -620,14 +624,14 @@ FOR_BOX(function(box) {
 							} else {
 								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT AUTHED!');
 							}
-						} else if (savedData === undefined) {
+						} else if (originData === undefined) {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
 							} else {
 								console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS!');
 							}
 						} else if (callback !== undefined) {
-							callback(savedData);
+							callback(originData);
 						}
 					});
 				};
@@ -767,8 +771,8 @@ FOR_BOX(function(box) {
 
 								// add remove handler.
 								function(id, callback) {
-									subRooms[id].on('remove', function(result) {
-										callback(result);
+									subRooms[id].on('remove', function(originData) {
+										callback(originData);
 										exit(id);
 									});
 								},
@@ -1023,8 +1027,8 @@ FOR_BOX(function(box) {
 
 					// add remove handler.
 					function(callback) {
-						subRoom.on('remove', function(result) {
-							callback(result);
+						subRoom.on('remove', function(originData) {
+							callback(originData);
 							closeWatching();
 						});
 					},
@@ -1107,15 +1111,15 @@ FOR_BOX(function(box) {
 
 					EACH(properties, function(value, propertyName) {
 
-						( roomForRemove = box.ROOM(name + '/' + propertyName + '/' + value + '/remove')).on('remove', function(savedData) {
+						( roomForRemove = box.ROOM(name + '/' + propertyName + '/' + value + '/remove')).on('remove', function(originData) {
 
 							if (EACH(properties, function(value, propertyName) {
 
-								if (savedData[propertyName] !== value) {
+								if (originData[propertyName] !== value) {
 									return false;
 								}
 							}) === true) {
-								handler(savedData);
+								handler(originData);
 							}
 						});
 

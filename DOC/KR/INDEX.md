@@ -14,6 +14,16 @@
 * [MongoDB](http://www.mongodb.org)
 * [ImageMagick](http://www.imagemagick.org)
 
+#### 모듈
+* `[UPPERCASE.IO-BOX](BOX.md)` UPPERCASE.IO 기반의 모듈인 BOX를 지원하는 모듈입니다.
+* `[UPPERCASE.IO-TRANSPORT](TRANSPORT.md)` 서버와 클라이언트 통신을 담당하는 모듈입니다.
+* `[UPPERCASE.IO-ROOM](ROOM.md)` 통신 처리를 룸 방식으로 처리하는 모듈입니다.
+* `[UPPERCASE.IO-DB](DB.md)` 데이터베이스를 다루는 모듈입니다.
+* `[UPPERCASE.IO-MODEL](MODEL.md)` MVC 패턴에서 Model 부분을 담당하는 모듈입니다.
+* `[UPPERCASE.IO-UPLOAD](UPLOAD.md)` 업로드 관련 기능을 제공하는 모듈입니다.
+* `[UPPERCASE.IO-UTIL](UTIL.md)` npm 모듈을 사용하는 유틸리티를 모은 모듈입니다.
+* `[UPPERCASE.IO-IO](IO.md)` 통합 UPPERCASE.IO 솔루션 모듈입니다.
+
 #### 지원 플랫폼
 * 웹 브라우저 (최신 브라우저 및 인터넷 익스플로러 5.5 이상부터 지원)
 * [Apache Cordova](http://cordova.apache.org/)
