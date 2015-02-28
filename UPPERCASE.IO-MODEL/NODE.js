@@ -1400,29 +1400,25 @@ FOR_BOX(function(box) {
 
 						// on get.
 						on('get', function(idOrParams, ret) {
-							
-							// ignore undefined data attack.
-							if (idOrParams !== undefined) {
+						
+							if (getRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : getRole
+							}) === true)) {
+								
+								if (idOrParams !== undefined && CHECK_IS_DATA(idOrParams) === true) {
 
-								if (getRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-									data : clientInfo.roles,
-									value : getRole
-								}) === true)) {
-									
-									if (idOrParams !== undefined && CHECK_IS_DATA(idOrParams) === true) {
-	
-										// delete for server params.
-										delete idOrParams.isToCache;
-									}
-	
-									innerGet(idOrParams, ret, clientInfo);
-	
-								} else {
-	
-									ret({
-										isNotAuthed : true
-									});
+									// delete for server params.
+									delete idOrParams.isToCache;
 								}
+
+								innerGet(idOrParams, ret, clientInfo);
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
 							}
 						});
 					}
@@ -1584,30 +1580,26 @@ FOR_BOX(function(box) {
 
 						// on find.
 						on('find', function(params, ret) {
-							
-							// ignore undefined data attack.
-							if (params !== undefined) {
 
-								if (findRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-									data : clientInfo.roles,
-									value : findRole
-								}) === true)) {
-	
-									if (params !== undefined) {
-	
-										// delete for server params.
-										delete params.isFindAll;
-										delete params.isToCache;
-									}
-	
-									innerFind(params, ret, clientInfo);
-	
-								} else {
-	
-									ret({
-										isNotAuthed : true
-									});
+							if (findRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : findRole
+							}) === true)) {
+
+								if (params !== undefined) {
+
+									// delete for server params.
+									delete params.isFindAll;
+									delete params.isToCache;
 								}
+
+								innerFind(params, ret, clientInfo);
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
 							}
 						});
 					}
@@ -1617,29 +1609,25 @@ FOR_BOX(function(box) {
 
 						// on count.
 						on('count', function(params, ret) {
-							
-							// ignore undefined data attack.
-							if (params !== undefined) {
 
-								if (countRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-									data : clientInfo.roles,
-									value : countRole
-								}) === true)) {
-									
-									if (params !== undefined) {
-	
-										// delete for server params.
-										delete params.isToCache;
-									}
-	
-									innerCount(params, ret, clientInfo);
-	
-								} else {
-	
-									ret({
-										isNotAuthed : true
-									});
+							if (countRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : countRole
+							}) === true)) {
+								
+								if (params !== undefined) {
+
+									// delete for server params.
+									delete params.isToCache;
 								}
+
+								innerCount(params, ret, clientInfo);
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
 							}
 						});
 					}
@@ -1650,28 +1638,24 @@ FOR_BOX(function(box) {
 						// on check is exists.
 						on('checkIsExists', function(params, ret) {
 							
-							// ignore undefined data attack.
-							if (params !== undefined) {
+							if (checkIsExistsRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+								data : clientInfo.roles,
+								value : checkIsExistsRole
+							}) === true)) {
+								
+								if (params !== undefined) {
 
-								if (checkIsExistsRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-									data : clientInfo.roles,
-									value : checkIsExistsRole
-								}) === true)) {
-									
-									if (params !== undefined) {
-	
-										// delete for server params.
-										delete params.isToCache;
-									}
-	
-									innerCheckIsExists(params, ret, clientInfo);
-	
-								} else {
-	
-									ret({
-										isNotAuthed : true
-									});
+									// delete for server params.
+									delete params.isToCache;
 								}
+
+								innerCheckIsExists(params, ret, clientInfo);
+
+							} else {
+
+								ret({
+									isNotAuthed : true
+								});
 							}
 						});
 					}

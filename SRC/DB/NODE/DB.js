@@ -1590,7 +1590,7 @@ FOR_BOX(function(box) {
 							};
 						}
 
-						if (start === undefined) {
+						if (start === undefined || start < 0) {
 							start = 0;
 						}
 

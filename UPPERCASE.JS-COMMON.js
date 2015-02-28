@@ -2689,7 +2689,7 @@ global.REPEAT = METHOD({
 
 	run : function(countOrParams, func) {
 		'use strict';
-		//REQUIRED: countOrParams
+		//OPTIONAL: countOrParams
 		//REQUIRED: countOrParams.start
 		//OPTIONAL: countOrParams.end
 		//OPTIONAL: countOrParams.limit
@@ -2714,15 +2714,21 @@ global.REPEAT = METHOD({
 
 		// extras
 		i;
+		
+		if (func === undefined) {
+			func = countOrParams;
+			countOrParams = undefined;
+		}
 
-		// init maxOrParams.
-		if (CHECK_IS_DATA(countOrParams) !== true) {
-			count = countOrParams;
-		} else {
-			start = countOrParams.start;
-			end = countOrParams.end;
-			limit = countOrParams.limit;
-			step = countOrParams.step;
+		if (countOrParams !== undefined) {
+			if (CHECK_IS_DATA(countOrParams) !== true) {
+				count = countOrParams;
+			} else {
+				start = countOrParams.start;
+				end = countOrParams.end;
+				limit = countOrParams.limit;
+				step = countOrParams.step;
+			}
 		}
 
 		if (limit === undefined && end !== undefined) {
@@ -2755,13 +2761,21 @@ global.REPEAT = METHOD({
 		}
 
 		// limit mode
-		else {
+		else if (limit !== undefined) {
 
 			for ( i = start; i < limit; i += step) {
 				if (func(i) === false) {
 					return false;
 				}
 			}
+		}
+		
+		// func mode
+		else {
+			
+			return function(countOrParams) {
+				return REPEAT(countOrParams, func);
+			};
 		}
 
 		return true;
