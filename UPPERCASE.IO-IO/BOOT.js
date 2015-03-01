@@ -512,11 +512,9 @@ global.BOOT = function(params) {
 			indexPageContent += '<head>';
 			indexPageContent += '<meta charset="utf-8">';
 			indexPageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' + (CONFIG.isMobileFullScreen === true ? ', minimal-ui' : '') + '">';
-			indexPageContent += '<meta name="google" value="notranslate">';
-	
-			if (CONFIG.googleSiteVerificationKey !== undefined) {
-				indexPageContent += '<meta name="google-site-verification" content="' + CONFIG.googleSiteVerificationKey + '" />';
-			}
+			
+			// for ajax-crawling
+			indexPageContent += '<meta name="fragment" content="!">';
 	
 			indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
 	
