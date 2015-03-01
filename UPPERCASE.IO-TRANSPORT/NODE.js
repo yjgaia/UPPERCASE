@@ -534,7 +534,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 							clientId : clientId,
 							connectionKey : connectionKey,
 							requestKey : requestKey
-						})) + '\')'
+						})).replace(/'/g, '\\\'') + '\')'
 					});
 				}
 
@@ -606,7 +606,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 										clientId : clientId,
 										params : params,
 										requestKey : requestKey
-									})) + '\')'
+									})).replace(/'/g, '\\\'') + '\')'
 								});
 
 								removeSend(clientId);

@@ -52,6 +52,13 @@ OVERRIDE(EVENT_LOW, function(origin) {
 					el.attachEvent('on' + name, eventHandler);
 				};
 			}
+			
+			// if is not exists removeEventListener, link detachEvent.
+			if (el.removeEventListener === undefined) {
+				el.removeEventListener = function(name, eventHandler, b) {
+					el.detachEvent('on' + name, eventHandler);
+				};
+			}
 
 			return origin;
 		},
@@ -130,21 +137,6 @@ OVERRIDE(EVENT_LOW, function(origin) {
 							}
 						}
 					}), 100);
-				});
-			}
-
-			// if is exists detachEvent, remove work by detachEvent.
-			if (el.detachEvent !== undefined) {
-
-				OVERRIDE(self.remove, function(origin) {
-
-					self.remove = remove = function() {
-						origin();
-
-						if (name !== 'hashchange' || global.onhashchange !== undefined) {
-							el.detachEvent('on' + name, innerHandler);
-						}
-					};
 				});
 			}
 
