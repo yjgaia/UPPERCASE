@@ -13,6 +13,7 @@
 * [Node.js](http://nodejs.org)
 * [MongoDB](http://www.mongodb.org)
 * [ImageMagick](http://www.imagemagick.org)
+* (CONFIG.isUsingHTMLSnapshot가 true일 경우) [PhantomJS](http://phantomjs.org)
 
 #### 모듈
 * `[UPPERCASE.IO-BOX](BOX.md)` UPPERCASE.IO 기반의 모듈인 BOX를 지원하는 모듈입니다.

@@ -15,7 +15,10 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	waitingSendInfos = [],
 
 	// is connected
-	isConnected,
+	isConnected = false,
+	
+	// check is connected.
+	checkIsConnected,
 
 	// inner on.
 	innerOn,
@@ -40,6 +43,10 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 	// exit room.
 	exitRoom;
+	
+	m.checkIsConnected = checkIsConnected = function() {
+		return isConnected;
+	};
 
 	m.enterRoom = enterRoom = function(roomName) {
 		//REQUIRED: roomName
@@ -179,6 +186,8 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 					if (connectionListener !== undefined) {
 						connectionListener(on, off, send);
 					}
+					
+					isConnected = true;
 
 					// when disconnected, rewait.
 					on('__DISCONNECTED', function() {
@@ -188,6 +197,8 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 						innerSend = undefined;
 
 						waitingSendInfos = [];
+						
+						isConnected = false;
 					});
 				}
 			});

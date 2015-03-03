@@ -144,6 +144,16 @@ global.CHECK_STILL_ALIVE = OBJECT({
 });
 
 /**
+ * Node-side Configuration
+ */
+OVERRIDE(NODE_CONFIG, function(origin) {
+
+	global.NODE_CONFIG = COMBINE([{
+		isUsingHTMLSnapshot : false
+	}, origin]);
+});
+
+/**
  * Sync time object (Server-side)
  */
 global.SYNC_TIME = OBJECT({

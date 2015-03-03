@@ -513,8 +513,9 @@ global.BOOT = function(params) {
 			indexPageContent += '<meta charset="utf-8">';
 			indexPageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' + (CONFIG.isMobileFullScreen === true ? ', minimal-ui' : '') + '">';
 			
-			// for ajax-crawling
-			indexPageContent += '<meta name="fragment" content="!">';
+			if (NODE_CONFIG.isUsingHTMLSnapshot === true) {
+				indexPageContent += '<meta name="fragment" content="!">';
+			}
 	
 			indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
 	
@@ -1013,6 +1014,32 @@ global.BOOT = function(params) {
 							value : CONFIG.defaultBoxName
 						}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/R/favicon.ico' : CONFIG.defaultBoxName + '/R/favicon.ico';
 					}
+					
+					// serve HTML snapshot.
+					else if (NODE_CONFIG.isUsingHTMLSnapshot === true && params._escaped_fragment_ !== undefined) {
+						
+						RUN(function() {
+							
+							var
+							// content
+							content = '',
+							
+							// phantom
+						    phantom = require('child_process').spawn('phantomjs', [__dirname + '/PRINT_HTML_SNAPSHOT.js', CONFIG.webServerPort, params._escaped_fragment_]);
+						    
+						    phantom.stdout.setEncoding('utf8');
+						    
+						    phantom.stdout.on('data', function(data) {
+						        content += data.toString();
+						    });
+						    
+						    phantom.on('exit', function(code) {
+								response(content);
+						    });
+					    });
+					    
+					    return false;
+					}
 
 					// serve others.
 					else {
@@ -1064,28 +1091,15 @@ global.BOOT = function(params) {
 								
 								if (isGoingOn !== false) {
 									
-									// for SEO
-									if (params._escaped_fragment_ !== undefined) {
-										
-										response({
-											statusCode : 302,
-											headers : {
-												'Location' : params._escaped_fragment_
-											}
-										});
-										
-									} else {
-									
-										// when dev mode, re-generate index page.
-										if (CONFIG.isDevMode === true) {
-											generateIndexPage();
-										}
-										
-										response({
-											contentType : 'text/html',
-											content : indexPageContent
-										});
+									// when dev mode, re-generate index page.
+									if (CONFIG.isDevMode === true) {
+										generateIndexPage();
 									}
+									
+									response({
+										contentType : 'text/html',
+										content : indexPageContent
+									});
 								}
 								
 								return false;

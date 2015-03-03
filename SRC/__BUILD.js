@@ -152,7 +152,7 @@ RUN(function() {
 	},
 
 	// dist folder.
-	distFolder = function(modulePath, name) {
+	distFolder = function(modulePath, name, isToSaveMin) {
 
 		var
 		// scripts
@@ -161,7 +161,7 @@ RUN(function() {
 		scanFolder(scripts, modulePath + '/' + name);
 
 		if (scripts.length > 0) {
-			save(modulePath, scripts, name, true);
+			save(modulePath, scripts, name, isToSaveMin);
 		}
 	},
 
@@ -174,9 +174,9 @@ RUN(function() {
 
 		log('BUILD [' + name + ']');
 
-		distFolder(name, 'COMMON');
-		distFolder(name, 'BROWSER');
-		distFolder(name, 'CLIENT');
+		distFolder(name, 'COMMON', true);
+		distFolder(name, 'BROWSER', true);
+		distFolder(name, 'CLIENT', true);
 		distFolder(name, 'NODE');
 		copyFolder(name, 'R', 'R');
 	};
@@ -196,6 +196,7 @@ RUN(function() {
 	distModule('IO');
 	save('IO', ['IO/BOOT.js'], 'BOOT', false);
 	save('IO', ['IO/BROWSER_INIT.js'], 'BROWSER_INIT', true);
+	save('IO', ['IO/PRINT_HTML_SNAPSHOT.js'], 'PRINT_HTML_SNAPSHOT', false);
 	
 	WRITE_FILE({
 		path : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
