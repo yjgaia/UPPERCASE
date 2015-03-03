@@ -31,6 +31,11 @@ printHTMLSnapshot = function() {
 	console.log(html);
 };
 
+page.viewportSize = {
+	width : 1024,
+	height : 768
+};
+
 page.open('http://localhost:' + system.args[1] + '/' + (system.args[2] === undefined ? '' : system.args[2]), function(status) {
 	'use strict';
 	
