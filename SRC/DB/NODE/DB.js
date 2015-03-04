@@ -355,21 +355,18 @@ FOR_BOX(function(box) {
 				});
 			};
 			
-			if (isNotUsingObjectId !== true) {
+			self.remove = remove = function(id, callbackOrHandlers) {
+				//REQUIRED: id
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.error
 
-				self.remove = remove = function(id, callbackOrHandlers) {
-					//REQUIRED: id
-					//OPTIONAL: callbackOrHandlers
-					//OPTIONAL: callbackOrHandlers.success
-					//OPTIONAL: callbackOrHandlers.notExists
-					//OPTIONAL: callbackOrHandlers.error
-	
-					waitingRemoveInfos.push({
-						id : id,
-						callbackOrHandlers : callbackOrHandlers
-					});
-				};
-			}
+				waitingRemoveInfos.push({
+					id : id,
+					callbackOrHandlers : callbackOrHandlers
+				});
+			};
 
 			self.find = find = function(params, callbackOrHandlers) {
 				//OPTIONAL: params
@@ -1390,124 +1387,121 @@ FOR_BOX(function(box) {
 					}
 				};
 				
-				if (isNotUsingObjectId !== true) {
-	
-					self.remove = remove = function(id, callbackOrHandlers) {
-						//REQUIRED: id
-						//OPTIONAL: callbackOrHandlers
-						//OPTIONAL: callbackOrHandlers.success
-						//OPTIONAL: callbackOrHandlers.notExists
-						//OPTIONAL: callbackOrHandlers.error
-	
-						var
-						// filter
-						filter,
-	
-						// callback
-						callback,
-	
-						// not exists handler
-						notExistsHandler,
-	
-						// error handler
-						errorHandler,
-	
-						// error message
-						errorMsg;
-	
-						try {
-	
-							filter = {
-								_id : gen_id(id)
-							};
-	
-							if (callbackOrHandlers !== undefined) {
-								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-									callback = callbackOrHandlers;
-								} else {
-									callback = callbackOrHandlers.success;
-									notExistsHandler = callbackOrHandlers.notExists;
-									errorHandler = callbackOrHandlers.error;
-								}
+				self.remove = remove = function(id, callbackOrHandlers) {
+					//REQUIRED: id
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
+
+					var
+					// filter
+					filter,
+
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// error handler
+					errorHandler,
+
+					// error message
+					errorMsg;
+
+					try {
+
+						filter = {
+							_id : gen_id(id)
+						};
+
+						if (callbackOrHandlers !== undefined) {
+							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+								callback = callbackOrHandlers;
+							} else {
+								callback = callbackOrHandlers.success;
+								notExistsHandler = callbackOrHandlers.notExists;
+								errorHandler = callbackOrHandlers.error;
 							}
-	
-							get({
-								filter : filter
-							}, {
-	
-								error : function(errorMsg) {
-	
-									logError({
-										method : 'remove',
-										id : id,
-										errorMsg : errorMsg
-									}, errorHandler);
-								},
-	
-								notExists : function() {
-	
-									if (notExistsHandler !== undefined) {
-										notExistsHandler();
-									} else {
-										console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
-									}
-								},
-	
-								success : function(originData) {
+						}
 
-									collection.remove(filter, {
-										safe : true
-									}, function(error, result) {
-										
-										if (result === 0) {
-	
-											if (notExistsHandler !== undefined) {
-												notExistsHandler();
-											} else {
-												console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
-											}
-	
-										} else if (error === TO_DELETE) {
-	
-											if (isNotUsingHistory !== true) {
-												addHistory('remove', id, undefined, new Date());
-											}
-											
-											// aleady cleaned origin data
-											recacheData(originData, function() {
-												
-												if (callback !== undefined) {
-													callback(originData);
-												}
-											});
-										}
-	
-										// if error is not TO_DELETE
-										else {
-	
-											logError({
-												method : 'remove',
-												id : id,
-												errorMsg : error.toString()
-											}, errorHandler);
-										}
-									});
+						get({
+							filter : filter
+						}, {
+
+							error : function(errorMsg) {
+
+								logError({
+									method : 'remove',
+									id : id,
+									errorMsg : errorMsg
+								}, errorHandler);
+							},
+
+							notExists : function() {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
 								}
-							});
-						}
-	
-						// if catch error
-						catch (error) {
-	
-							logError({
-								method : 'remove',
-								id : id,
-								errorMsg : error.toString()
-							}, errorHandler);
-						}
-					};
-				}
+							},
 
+							success : function(originData) {
+
+								collection.remove(filter, {
+									safe : true
+								}, function(error, result) {
+									
+									if (result === 0) {
+
+										if (notExistsHandler !== undefined) {
+											notExistsHandler();
+										} else {
+											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
+										}
+
+									} else if (error === TO_DELETE) {
+
+										if (isNotUsingHistory !== true) {
+											addHistory('remove', id, undefined, new Date());
+										}
+										
+										// aleady cleaned origin data
+										recacheData(originData, function() {
+											
+											if (callback !== undefined) {
+												callback(originData);
+											}
+										});
+									}
+
+									// if error is not TO_DELETE
+									else {
+
+										logError({
+											method : 'remove',
+											id : id,
+											errorMsg : error.toString()
+										}, errorHandler);
+									}
+								});
+							}
+						});
+					}
+
+					// if catch error
+					catch (error) {
+
+						logError({
+							method : 'remove',
+							id : id,
+							errorMsg : error.toString()
+						}, errorHandler);
+					}
+				};
+				
 				self.find = find = function(params, callbackOrHandlers) {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter

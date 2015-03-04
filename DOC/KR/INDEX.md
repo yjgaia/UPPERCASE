@@ -81,7 +81,6 @@
 * `title` 프로젝트 제목을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
 * `description` 프로젝트에 대한 설명을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
 * `isMobileFullScreen` 모바일 브라우저에서 full screen으로 화면을 표시할지를 결정합니다. 기본값은 `false`입니다.
-* `googleSiteVerificationKey` google site verification key를 설정합니다.
 
 ###### NODE_CONFIG
 * `securedKeyFilePath` 보안 웹 서버를 위한 key file의 경로를 설정합니다.

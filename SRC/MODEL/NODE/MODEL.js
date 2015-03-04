@@ -1132,64 +1132,61 @@ FOR_BOX(function(box) {
 					});
 				};
 				
-				if (isNotUsingObjectId !== true) {
+				self.remove = remove = function(id, callbackOrHandlers) {
+					//REQUIRED: id
+					//OPTIONAL: callbackOrHandlers
 
-					self.remove = remove = function(id, callbackOrHandlers) {
-						//REQUIRED: id
-						//OPTIONAL: callbackOrHandlers
-	
-						var
-						// callback
-						callback,
-	
-						// not exists handler
-						notExistsHandler,
-	
-						// error handler
-						errorHandler;
-	
-						if (callbackOrHandlers !== undefined) {
-							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-								callback = callbackOrHandlers;
-							} else {
-								callback = callbackOrHandlers.success;
-								notExistsHandler = callbackOrHandlers.notExists;
-								errorHandler = callbackOrHandlers.error;
-							}
+					var
+					// callback
+					callback,
+
+					// not exists handler
+					notExistsHandler,
+
+					// error handler
+					errorHandler;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
+							errorHandler = callbackOrHandlers.error;
 						}
-	
-						innerRemove(id, function(result) {
-	
-							var
-							// error msg
-							errorMsg,
-	
-							// origin data
-							originData;
-	
-							if (result !== undefined) {
-								errorMsg = result.errorMsg;
-								originData = result.originData;
+					}
+
+					innerRemove(id, function(result) {
+
+						var
+						// error msg
+						errorMsg,
+
+						// origin data
+						originData;
+
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							originData = result.originData;
+						}
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg));
 							}
-	
-							if (errorMsg !== undefined) {
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									console.log(CONSOLE_RED('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg));
-								}
-							} else if (originData === undefined) {
-								if (notExistsHandler !== undefined) {
-									notExistsHandler();
-								} else {
-									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS.'), id);
-								}
-							} else if (callback !== undefined) {
-								callback(originData);
+						} else if (originData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS.'), id);
 							}
-						});
-					};
-				}
+						} else if (callback !== undefined) {
+							callback(originData);
+						}
+					});
+				};
 
 				self.find = find = function(params, callbackOrHandlers) {
 					//OPTIONAL: params
@@ -1494,7 +1491,7 @@ FOR_BOX(function(box) {
 					}
 
 					// init remove.
-					if (removeConfig !== false && isNotUsingObjectId !== true) {
+					if (removeConfig !== false) {
 
 						// on remove.
 						on('remove', function(id, ret) {
