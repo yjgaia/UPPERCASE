@@ -1,4 +1,5 @@
 # UPPERCASE.IO-DB
+※ 이 문서는 작성중인 문서입니다.
 
 `UPPERCASE.IO-DB`는 `UPPERCASE.JS`와 `UPPERCASE.IO-BOX` 모듈을 기반으로 합니다.
 
