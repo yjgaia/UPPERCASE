@@ -1,5 +1,5 @@
-# Build UPPERCASE.IO
-※ 이 문서는 작성중인 문서입니다.
+# UPPERCASE.IO 빌드
+SRC 폴더에 있는 `__BUILD.js` 스크립트를 실행하여 UPPERCASE.IO를 빌드합니다.
 
 ```
 cd SRC

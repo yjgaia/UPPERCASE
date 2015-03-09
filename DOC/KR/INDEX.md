@@ -7,18 +7,18 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 ## 시작하기
 * [설치하기](INSTALL.md)
 * [프로젝트 생성](CREATE_PROJECT.md)
-* 모델 생성
-* 간단 블로그 만들기
-* 블로그에 기능 추가하기
-* 블로그에 인증 추가하기
-* UPPERCASE.IO가 제공하는 기능들
-* CONFIG 설정 상세보기
+* [모델 생성](CREATE_MODEL.md) (작성중)
+* 간단 블로그 만들기 (작성중)
+* 블로그에 기능 추가하기 (작성중)
+* 블로그에 인증 추가하기 (작성중)
+* UPPERCASE.IO가 제공하는 기능들 (작성중)
+* [CONFIG 설정 상세보기](CONFIG.md) (작성중)
 * [UPPERCASE.IO 업데이트](UPDATE.md)
 
 ## 한걸음 더
-* [검색 최적화](SEO.md)
-* [프로젝트 성능 향상](SPEED_UP.md)
-* [분산 서버 구성](DISTRIBUTION.md)
+* [검색 최적화](SEO.md) (작성중)
+* [프로젝트 성능 향상](SPEED_UP.md) (작성중)
+* [분산 서버 구성](DISTRIBUTION.md) (작성중)
 
 ## 튜토리얼 (예정)
 * SNS 만들기
@@ -26,7 +26,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * 메신저 만들기
 * 게임 만들기
 
-## 모듈 상세보기
+## 모듈 상세보기 (작성중)
 * `[UPPERCASE.IO-BOX](UPPERCASE.IO-BOX.md)` UPPERCASE.IO의 모듈 시스템인 BOX를 지원하는 모듈입니다.
 * `[UPPERCASE.IO-TRANSPORT](UPPERCASE.IO-TRANSPORT.md)` 서버와 클라이언트간의 통신을 담당하는 모듈입니다.
 * `[UPPERCASE.IO-ROOM](UPPERCASE.IO-ROOM.md)` 통신 처리를 룸 방식으로 처리하는 모듈입니다.
@@ -52,4 +52,4 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 
 ## 문의하기
 * [UPPERCASE.IO 페이스북 그룹](https://www.facebook.com/groups/uppercase/)
-* [GitHub Issues](https://github.com/UPPERCASE-Series/UPPERCASE.IO/issues)
+* [GitHub Issues](https://github.com//UPPERCASE.IO/issues)
