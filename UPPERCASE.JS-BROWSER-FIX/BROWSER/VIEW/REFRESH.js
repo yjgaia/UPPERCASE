@@ -7,14 +7,11 @@ OVERRIDE(REFRESH, function(origin) {
 	global.REFRESH = METHOD(function(m) {
 	
 		var
-		// refreshing uri
-		refreshingURI = '__REFRESHING',
-		
 		// get refreshing uri.
 		getRefreshingURI;
 		
 		m.getRefreshingURI = getRefreshingURI = function() {
-			return refreshingURI;
+			return origin.getRefreshingURI();
 		};
 		
 		return {
@@ -32,7 +29,7 @@ OVERRIDE(REFRESH, function(origin) {
 					location.href = savedHash === '' ? '#!/' : savedHash;
 				});
 		
-				location.href = '#!/' + refreshingURI;
+				location.href = '#!/' + getRefreshingURI();
 			}
 		};
 	});

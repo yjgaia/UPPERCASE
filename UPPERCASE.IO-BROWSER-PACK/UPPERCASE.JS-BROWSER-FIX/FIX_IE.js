@@ -41,19 +41,20 @@ RUN(function() {
 		};
 	}
 
-	/**
-	 * fix COMMON.
-	 */
-
-	/**
-	 * fix COMMON/UTIL.
-	 */
-
-	// fix stack overflow bug at PACK_DATA, UNPACK_DATA, COPY.
+	// fix stack overflow bug at CHECK_ARE_SAME, PACK_DATA, UNPACK_DATA, COPY, COMBINE, NEXT, NODE.
 	if (IE.version <= 8) {
+		
+		loadFixScript('COMMON/UTIL/ARRAY/CHECK_ARE_SAME');
+		
 		loadFixScript('COMMON/UTIL/DATA/PACK_DATA');
 		loadFixScript('COMMON/UTIL/DATA/UNPACK_DATA');
+		
 		loadFixScript('COMMON/UTIL/DATA_AND_ARRAY/COPY');
+		loadFixScript('COMMON/UTIL/DATA_AND_ARRAY/COMBINE');
+		
+		loadFixScript('COMMON/UTIL/NEXT');
+		
+		loadFixScript('BROWSER/DOM/NODE');
 	}
 
 	/**

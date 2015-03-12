@@ -1,4 +1,4 @@
-# ![ScreenShot](https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/LOGO.png)
+# ![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE.IO/master/LOGO.png)
 UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [Node.js](http://nodejs.org)를 기반으로 합니다.
 * MVC 패턴을 따릅니다.
@@ -16,6 +16,9 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [UPPERCASE.IO 업데이트](UPDATE.md)
 
 ## 한걸음 더
+* [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](CORDOVA.md) (작성중)
+* [Android, iOS 모바일 네이티브 앱 개발](MOBILE_NATIVE.md) (작성중)
+* [Node-webkit을 이용한 데스크톱 앱 개발](NODE_WEBKIT.md) (작성중)
 * [검색 최적화](SEO.md) (작성중)
 * [프로젝트 성능 향상](SPEED_UP.md) (작성중)
 * [분산 서버 구성](DISTRIBUTION.md) (작성중)

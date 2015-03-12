@@ -121,7 +121,7 @@ global.BOOT_UDB = METHOD({
 			}
 		});
 		
-		console.log('[UPPERCASE.IO] UDB Tool BOOTed! => http://localhost:' + CONFIG.udbPort);
+		console.log('[UPPERCASE.IO] UDB Tool BOOTed! => http://localhost:' + UDB_CONFIG.port);
 	}
 });
 

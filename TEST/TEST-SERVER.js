@@ -1,6 +1,6 @@
 // load UPPERCASE.JS.
-require('./UPPERCASE.JS-COMMON.js');
-require('./UPPERCASE.JS-NODE.js');
+require('../UPPERCASE.JS-COMMON.js');
+require('../UPPERCASE.JS-NODE.js');
 
 RUN(function() {
 	'use strict';

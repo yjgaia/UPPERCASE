@@ -2789,10 +2789,13 @@ global.REPEAT = METHOD({
 global.BROWSER_CONFIG = {
 
 	host : location.hostname,
-	port : location.port
+	
+	port : location.port,
 
-	// isSupportingX2
-	// isUsingFlashCanvasPro
+	isSupportingX2 : false,
+	
+	isUsingFlashCanvasPro : false
+	
 	// fixScriptsFolderPath
 };
 
@@ -3092,14 +3095,13 @@ global.SOUND = CLASS(function(cls) {
 	'use strict';
 
 	var
-	// Audio Context
-	AudioContext = global.webkitAudioContext || global.mozAudioContext || global.oAudioContext || global.msAudioContext || global.AudioContext,
-
 	// audio context
 	audioContext;
-
-	if (AudioContext !== undefined) {
+	
+	if (global.AudioContext !== undefined) {
 		audioContext = new AudioContext();
+	} else if (global.webkitAudioContext !== undefined) {
+		audioContext = new webkitAudioContext();
 	}
 
 	return {

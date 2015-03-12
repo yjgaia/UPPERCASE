@@ -24,8 +24,8 @@ Sample
 
 ## 개발 시작
 1. 사용하는 JavaScript 개발툴을 엽니다. 사용하는 툴이 없다면, [Aptana Studio](http://www.aptana.com)나 [Sublime Text](http://www.sublimetext.com)를 추천합니다.
-2. 코딩 컨벤션을 익힙니다. 코딩 컨벤션은 [UPPERCASE.JS의 방식](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/CONVENTION.md)을 따릅니다.
-3. 코딩 컨벤션을 모두 익혔다면, 프로젝트 실행을 위한 코드를 작성합니다.
+2. 코드 컨벤션 규칙을 익힙니다. 코드 컨벤션 규칙은 [UPPERCASE.JS의 방식](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/CONVENTION.md)을 따릅니다.
+3. 코드 컨벤션 규칙을 모두 익혔다면, 프로젝트 실행을 위한 코드를 작성합니다.
 
 ## 프로젝트 실행을 위한 코드(Sample.js) 작성
 아래와 같이 Sample.js 코드를 작성합니다. 코드를 작성하기에 앞서 `UPPERCASE_IO_PATH 환경 변수`가 설정되어 있어야 합니다. 설정하는 방법은 [설치하기 문서](INSTALL.md)를 참고해주시기 바랍니다.
