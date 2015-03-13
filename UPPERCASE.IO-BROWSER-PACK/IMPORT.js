@@ -5599,8 +5599,8 @@ global.A = CLASS({
 		// style
 		style,
 		
-		// change href.
-		changeHref,
+		// set href.
+		setHref, 
 
 		// tap.
 		tap;
@@ -5612,7 +5612,7 @@ global.A = CLASS({
 			style = params.style;
 		}
 
-		self.changeHref = changeHref = function(href) {
+		self.setHref = setHref = function(href) {
 			inner.setAttr({
 				name : 'href',
 				value : href
@@ -5620,7 +5620,7 @@ global.A = CLASS({
 		};
 
 		if (href !== undefined) {
-			changeHref(href);
+			setHref(href);
 		}
 
 		if (target !== undefined) {
