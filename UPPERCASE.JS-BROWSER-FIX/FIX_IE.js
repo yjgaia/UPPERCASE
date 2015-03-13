@@ -41,7 +41,7 @@ RUN(function() {
 		};
 	}
 
-	// fix stack overflow bug at CHECK_ARE_SAME, PACK_DATA, UNPACK_DATA, COPY, COMBINE, NEXT, NODE.
+	// fix stack overflow bug at CHECK_ARE_SAME, PACK_DATA, UNPACK_DATA, CHECK_IS_IN, COPY, COMBINE, NEXT, NODE.
 	if (IE.version <= 8) {
 		
 		loadFixScript('COMMON/UTIL/ARRAY/CHECK_ARE_SAME');
@@ -49,6 +49,7 @@ RUN(function() {
 		loadFixScript('COMMON/UTIL/DATA/PACK_DATA');
 		loadFixScript('COMMON/UTIL/DATA/UNPACK_DATA');
 		
+		loadFixScript('COMMON/UTIL/DATA_AND_ARRAY/CHECK_IS_IN');
 		loadFixScript('COMMON/UTIL/DATA_AND_ARRAY/COPY');
 		loadFixScript('COMMON/UTIL/DATA_AND_ARRAY/COMBINE');
 		

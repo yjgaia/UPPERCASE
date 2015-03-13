@@ -102,12 +102,33 @@ OVERRIDE(ADD_STYLE, function(origin) {
 	
 							_style = {};
 							_style[name] = value;
+							
+							if (IE.version > 8) {
 	
-							// next to origin method.
-							origin({
-								node : node,
-								style : _style
-							});
+								// next to origin method.
+								origin({
+									node : node,
+									style : _style
+								});
+								
+							} else {
+								
+								if ((name === 'position' && value === 'fixed')
+								|| node.__FIXED === true
+								|| name === 'flt'
+								|| typeof value === 'number'
+								|| name === 'backgroundImage') {
+								
+									// next to origin method.
+									origin({
+										node : node,
+										style : _style
+									});
+									
+								} else {
+									el.style[name] = value;
+								}
+							}
 	
 						} catch(e) {
 							// ignore
