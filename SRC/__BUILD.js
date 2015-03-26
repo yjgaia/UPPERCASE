@@ -183,9 +183,6 @@ RUN(function() {
 
 	INIT_OBJECTS();
 
-	distModule('BOX');
-	save('BOX', ['BOX/BOX.js', 'BOX/FOR_BOX.js'], 'CORE', true);
-
 	distModule('DB');
 	distModule('TRANSPORT');
 	distModule('ROOM');
@@ -256,11 +253,6 @@ RUN(function() {
 		load('UPPERCASE.JS-COMMON.js');
 		load('UPPERCASE.JS-BROWSER.js');
 		copyFolder('UPPERCASE.JS-BROWSER-FIX');
-
-		// load UPPERCASE.IO-BOX.
-		load('UPPERCASE.IO-BOX/CORE.js');
-		load('UPPERCASE.IO-BOX/CLIENT.js');
-		load('UPPERCASE.IO-BOX/BROWSER.js');
 		
 		initScript += 'BOX(\'UPPERCASE.IO\');\n\n';
 

@@ -7,7 +7,6 @@ OVERRIDE(CONFIG, function(origin) {
 	global.CONFIG = COMBINE([{
 		defaultBoxName : 'UPPERCASE.IO',
 		title : 'UPPERCASE.IO PROJECT',
-		description : 'UPPERCASE.IO PROJECT',
 		baseBackgroundColor : '#000',
 		baseColor : '#fff'
 	}, origin]);

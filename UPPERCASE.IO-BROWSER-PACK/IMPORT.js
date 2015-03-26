@@ -10,7 +10,9 @@ global.TO_DELETE = null;
 /**
  * Configuration
  */
-global.CONFIG = {};
+global.CONFIG = {
+	isDevMode : false
+};
 
 /**
  * Create method.
@@ -418,6 +420,137 @@ global.INIT_OBJECTS = METHOD({
 });
 
 /**
+ * create box.
+ */
+global.BOX = METHOD(function(m) {
+	'use strict';
+
+	var
+	// boxes
+	boxes = {},
+
+	// get boxes.
+	getBoxes;
+
+	m.getBoxes = getBoxes = function() {
+		return boxes;
+	};
+
+	return {
+
+		run : function(boxName) {
+			//REQUIRED: boxName
+
+			var
+			// box.
+			box = function(packName) {
+				//REQUIRED: packName
+
+				var
+				// packNameSps
+				packNameSps = packName.split('.'),
+
+				// pack
+				pack;
+
+				EACH(packNameSps, function(packNameSp) {
+
+					if (pack === undefined) {
+
+						if (box[packNameSp] === undefined) {
+
+							//LOADED: PACK
+							box[packNameSp] = {};
+						}
+						pack = box[packNameSp];
+
+					} else {
+
+						if (pack[packNameSp] === undefined) {
+
+							//LOADED: PACK
+							pack[packNameSp] = {};
+						}
+						pack = pack[packNameSp];
+					}
+				});
+
+				return pack;
+			},
+
+			// box name splits
+			boxNameSplits = boxName.split('.'),
+
+			// before box split
+			beforeBoxSplit = global,
+
+			// before box name splits str
+			beforeBoxNameSplitsStr = '';
+
+			box.boxName = boxName;
+			box.type = BOX;
+
+			boxes[boxName] = box;
+
+			EACH(boxNameSplits, function(boxNameSplit, i) {
+
+				beforeBoxNameSplitsStr += (beforeBoxNameSplitsStr === '' ? '' : '.') + boxNameSplit;
+
+				if (i < boxNameSplits.length - 1) {
+
+					if (beforeBoxSplit[boxNameSplit] !== undefined) {
+						beforeBoxSplit = beforeBoxSplit[boxNameSplit];
+					} else {
+						beforeBoxSplit = beforeBoxSplit[boxNameSplit] = {};
+					}
+
+				} else {
+
+					beforeBoxSplit[boxNameSplit] = box;
+				}
+			});
+
+			FOR_BOX.inject(box);
+
+			return box;
+		}
+	};
+});
+
+/**
+ * inject method or class to box.
+ */
+global.FOR_BOX = METHOD(function(m) {
+	'use strict';
+
+	var
+	// funcs
+	funcs = [],
+
+	// inject.
+	inject;
+
+	m.inject = inject = function(box) {
+		EACH(funcs, function(func) {
+			func(box);
+		});
+	};
+
+	return {
+
+		run : function(func) {
+			//REQUIRED: func
+
+			EACH(BOX.getBoxes(), function(box) {
+				func(box);
+			});
+
+			funcs.push(func);
+		}
+	};
+});
+
+/**
  * async control-flow method that makes stepping through logic easy.
  */
 global.NEXT = METHOD({
@@ -673,13 +806,13 @@ global.PARALLEL = METHOD({
 });
 
 /**
- * parse stringified data.
+ * parse stringified value.
  */
 global.PARSE_STR = METHOD({
 
-	run : function(stringifiedData) {
+	run : function(stringifiedValue) {
 		'use strict';
-		//REQUIRED: stringifiedData
+		//REQUIRED: stringifiedValue
 
 		var
 		// value
@@ -687,7 +820,7 @@ global.PARSE_STR = METHOD({
 
 		try {
 
-			value = JSON.parse(stringifiedData);
+			value = JSON.parse(stringifiedValue);
 
 			return CHECK_IS_DATA(value) === true ? UNPACK_DATA(value) : value;
 
@@ -984,7 +1117,7 @@ global.VALID = CLASS(function(cls) {
 
 	cls.regex = regex = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.patten
+		//REQUIRED: params.pattern
 		//REQUIRED: params.value
 
 		var
@@ -998,7 +1131,7 @@ global.VALID = CLASS(function(cls) {
 	};
 
 	cls.size = size = function(params) {
-		//REQUIRED: params.min
+		//OPTIONAL: params.min
 		//REQUIRED: params.max
 		//REQUIRED: params.value
 
@@ -1128,15 +1261,15 @@ global.VALID = CLASS(function(cls) {
 
 	cls.one = one = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.value
 		//REQUIRED: params.array
+		//REQUIRED: params.value
 
 		var
-		// value
-		value = params.value,
-
 		// array
-		array = params.array;
+		array = params.array,
+		
+		// value
+		value = params.value;
 
 		return EACH(array, function(_value) {
 			if (value === _value) {
@@ -2416,7 +2549,6 @@ global.LOOP = CLASS(function(cls) {
 	return {
 
 		init : function(inner, self, fps, intervalOrFuncs) {
-			'use strict';
 			//OPTIONAL: fps
 			//OPTIONAL: intervalOrFuncs
 			//OPTIONAL: intervalOrFuncs.start
@@ -2602,14 +2734,14 @@ global.RANDOM = METHOD({
 });
 
 /**
- * convert real string to real number.
+ * convert real number string to real number.
  */
 global.REAL = METHOD({
 
-	run : function(realString) {'use strict';
-		//OPTIONAL: realString
+	run : function(realNumberString) {'use strict';
+		//OPTIONAL: realNumberString
 
-		return realString === undefined ? undefined : parseFloat(realString);
+		return realNumberString === undefined ? undefined : parseFloat(realNumberString);
 	}
 });
 
@@ -2787,6 +2919,8 @@ global.REPEAT = METHOD({
  * Browser-side Configuration
  */
 global.BROWSER_CONFIG = {
+	
+	// fixScriptsFolderPath
 
 	host : location.hostname,
 	
@@ -2795,8 +2929,6 @@ global.BROWSER_CONFIG = {
 	isSupportingX2 : false,
 	
 	isUsingFlashCanvasPro : false
-	
-	// fixScriptsFolderPath
 };
 
 /**
@@ -3382,6 +3514,36 @@ global.STORE = CLASS({
 			localStorage.removeItem(fullName);
 		};
 	}
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.STORE = CLASS({
+
+		init : function(inner, self, storeName) {
+			//REQUIRED: storeName
+
+			var
+			// store
+			store = STORE(box.boxName + '.' + storeName),
+
+			// save.
+			save,
+
+			// get.
+			get,
+
+			// remove.
+			remove;
+
+			self.save = save = store.save;
+
+			self.get = get = store.get;
+
+			self.remove = remove = store.remove;
+		}
+	});
 });
 
 /**
@@ -9345,7 +9507,7 @@ ImageInfo.range = 10240;
 
 
 /**
- * ajax DELETE request.
+ * AJAX DELETE request.
  */
 global.DELETE = METHOD({
 
@@ -9368,8 +9530,30 @@ global.DELETE = METHOD({
 	}
 });
 
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.DELETE = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: uriOrParams
+			//OPTIONAL: uriOrParams.host
+			//OPTIONAL: uriOrParams.port
+			//OPTIONAL: uriOrParams.isSecure
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.paramStr
+			//OPTIONAL: uriOrParams.data
+			//REQUIRED: responseListenerOrListeners
+
+			box.REQUEST(COMBINE([params, {
+				method : 'DELETE'
+			}]), responseListenerOrListeners);
+		}
+	});
+});
+
 /**
- * ajax GET request.
+ * AJAX GET request.
  */
 global.GET = METHOD({
 
@@ -9392,8 +9576,30 @@ global.GET = METHOD({
 	}
 });
 
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.GET = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: uriOrParams
+			//OPTIONAL: uriOrParams.host
+			//OPTIONAL: uriOrParams.port
+			//OPTIONAL: uriOrParams.isSecure
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.paramStr
+			//OPTIONAL: uriOrParams.data
+			//REQUIRED: responseListenerOrListeners
+
+			box.REQUEST(COMBINE([params, {
+				method : 'GET'
+			}]), responseListenerOrListeners);
+		}
+	});
+});
+
 /**
- * ajax POST request.
+ * AJAX POST request.
  */
 global.POST = METHOD({
 
@@ -9416,8 +9622,30 @@ global.POST = METHOD({
 	}
 });
 
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.POST = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: uriOrParams
+			//OPTIONAL: uriOrParams.host
+			//OPTIONAL: uriOrParams.port
+			//OPTIONAL: uriOrParams.isSecure
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.paramStr
+			//OPTIONAL: uriOrParams.data
+			//REQUIRED: responseListenerOrListeners
+
+			box.REQUEST(COMBINE([params, {
+				method : 'POST'
+			}]), responseListenerOrListeners);
+		}
+	});
+});
+
 /**
- * ajax PUT request.
+ * AJAX PUT request.
  */
 global.PUT = METHOD({
 
@@ -9440,8 +9668,30 @@ global.PUT = METHOD({
 	}
 });
 
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.PUT = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: uriOrParams
+			//OPTIONAL: uriOrParams.host
+			//OPTIONAL: uriOrParams.port
+			//OPTIONAL: uriOrParams.isSecure
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.paramStr
+			//OPTIONAL: uriOrParams.data
+			//REQUIRED: responseListenerOrListeners
+
+			box.REQUEST(COMBINE([params, {
+				method : 'PUT'
+			}]), responseListenerOrListeners);
+		}
+	});
+});
+
 /**
- * ajax request.
+ * AJAX request.
  */
 global.REQUEST = METHOD({
 
@@ -9499,7 +9749,7 @@ global.REQUEST = METHOD({
 		}
 
 		if (data !== undefined) {
-			paramStr = (paramStr === undefined ? '' : paramStr + '&') + 'data=' + encodeURIComponent(STRINGIFY(data));
+			paramStr = (paramStr === undefined ? '' : paramStr + '&') + '__DATA=' + encodeURIComponent(STRINGIFY(data));
 		}
 
 		paramStr = (paramStr === undefined ? '' : paramStr + '&') + Date.now();
@@ -9556,6 +9806,29 @@ global.REQUEST = METHOD({
 	}
 });
 
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.REQUEST = METHOD({
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: params
+			//OPTIONAL: params.host
+			//OPTIONAL: params.port
+			//OPTIONAL: params.isSecure
+			//REQUIRED: params.method
+			//REQUIRED: params.uri
+			//OPTIONAL: params.paramStr
+			//OPTIONAL: params.data
+			//REQUIRED: responseListenerOrListeners
+
+			REQUEST(COMBINE([params, {
+				uri : box.boxName + '/' + params.uri
+			}]), responseListenerOrListeners);
+		}
+	});
+});
+
 /**
  * go another view.
  */
@@ -9571,6 +9844,19 @@ global.GO = METHOD({
 	}
 });
 
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.GO = METHOD({
+
+		run : function(uri) {
+			//REQUIRED: uri
+
+			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
+		}
+	});
+});
+
 /**
  * go another view on new window.
  */
@@ -9584,6 +9870,19 @@ global.GO_NEW_WIN = METHOD({
 	}
 });
 
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.GO_NEW_WIN = METHOD({
+
+		run : function(uri) {
+			//REQUIRED: uri
+
+			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
+		}
+	});
+});
+
 /**
  * get href.
  */
@@ -9595,6 +9894,19 @@ global.HREF = METHOD({
 
 		return '/' + uri;
 	}
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.HREF = METHOD({
+
+		run : function(uri) {
+			//OPTIONAL: uri
+
+			return HREF((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+		}
+	});
 });
 
 /**
@@ -9696,6 +10008,50 @@ global.MATCH_VIEW = METHOD(function(m) {
 	};
 });
 
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.MATCH_VIEW = METHOD({
+
+		run : function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.uri
+			//REQUIRED: params.target
+
+			var
+			// uri
+			uri = params.uri,
+
+			// target
+			target = params.target,
+
+			// new uris
+			newURIs = [],
+
+			// push.
+			push = function(uri) {
+
+				if (box.boxName === CONFIG.defaultBoxName) {
+					newURIs.push(uri);
+				}
+
+				newURIs.push(box.boxName + '/' + uri);
+			};
+
+			if (CHECK_IS_ARRAY(uri) === true) {
+				EACH(uri, push);
+			} else {
+				push(uri);
+			}
+
+			MATCH_VIEW({
+				uri : newURIs,
+				target : target
+			});
+		}
+	});
+});
+
 /**
  * refresh view.
  */
@@ -9729,6 +10085,19 @@ global.REFRESH = METHOD(function(m) {
 			MATCH_VIEW.checkAll();
 		}
 	};
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.REFRESH = METHOD({
+
+		run : function(uri) {
+			//OPTIONAL: uri
+			
+			REFRESH((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
+		}
+	});
 });
 
 /**
@@ -9794,6 +10163,8 @@ global.VIEW = CLASS({
 		inner.checkIsClosed = checkIsClosed = function() {
 			return isClosed;
 		};
+		
+		scrollTo(0, 0);
 	}
 });
 
@@ -9856,404 +10227,6 @@ global.WIN_WIDTH = METHOD({
 
 		return global.innerWidth;
 	}
-});
-/**
- * create box.
- */
-global.BOX = METHOD(function(m) {
-	'use strict';
-
-	var
-	// boxes
-	boxes = {},
-
-	// get boxes.
-	getBoxes;
-
-	m.getBoxes = getBoxes = function() {
-		return boxes;
-	};
-
-	return {
-
-		run : function(boxName) {
-			//REQUIRED: boxName
-
-			var
-			// box.
-			box = function(packName) {
-				//REQUIRED: packName
-
-				var
-				// packNameSps
-				packNameSps = packName.split('.'),
-
-				// pack
-				pack;
-
-				EACH(packNameSps, function(packNameSp) {
-
-					if (pack === undefined) {
-
-						if (box[packNameSp] === undefined) {
-
-							//LOADED: PACK
-							box[packNameSp] = {};
-						}
-						pack = box[packNameSp];
-
-					} else {
-
-						if (pack[packNameSp] === undefined) {
-
-							//LOADED: PACK
-							pack[packNameSp] = {};
-						}
-						pack = pack[packNameSp];
-					}
-				});
-
-				return pack;
-			},
-
-			// box name splits
-			boxNameSplits = boxName.split('.'),
-
-			// before box split
-			beforeBoxSplit = global,
-
-			// before box name splits str
-			beforeBoxNameSplitsStr = '';
-
-			box.boxName = boxName;
-			box.type = BOX;
-
-			boxes[boxName] = box;
-
-			EACH(boxNameSplits, function(boxNameSplit, i) {
-
-				beforeBoxNameSplitsStr += (beforeBoxNameSplitsStr === '' ? '' : '.') + boxNameSplit;
-
-				if (i < boxNameSplits.length - 1) {
-
-					if (beforeBoxSplit[boxNameSplit] !== undefined) {
-						beforeBoxSplit = beforeBoxSplit[boxNameSplit];
-					} else {
-						beforeBoxSplit = beforeBoxSplit[boxNameSplit] = {};
-					}
-
-				} else {
-
-					beforeBoxSplit[boxNameSplit] = box;
-				}
-			});
-
-			FOR_BOX.inject(box);
-
-			return box;
-		}
-	};
-});
-
-/**
- * inject method or class to box.
- */
-global.FOR_BOX = METHOD(function(m) {
-	'use strict';
-
-	var
-	// funcs
-	funcs = [],
-
-	// inject.
-	inject;
-
-	m.inject = inject = function(box) {
-		EACH(funcs, function(func) {
-			func(box);
-		});
-	};
-
-	return {
-
-		run : function(func) {
-			//REQUIRED: func
-
-			EACH(BOX.getBoxes(), function(box) {
-				func(box);
-			});
-
-			funcs.push(func);
-		}
-	};
-});
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * Browser store class
-	 */
-	box.STORE = CLASS({
-
-		init : function(inner, self, storeName) {
-			//REQUIRED: storeName
-
-			var
-			// store
-			store = STORE(box.boxName + '.' + storeName),
-
-			// save.
-			save,
-
-			// get.
-			get,
-
-			// remove.
-			remove;
-
-			self.save = save = store.save;
-
-			self.get = get = store.get;
-
-			self.remove = remove = store.remove;
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * ajax DELETE request.
-	 */
-	box.DELETE = METHOD({
-
-		run : function(params, responseListenerOrListeners) {
-			//REQUIRED: uriOrParams
-			//OPTIONAL: uriOrParams.host
-			//OPTIONAL: uriOrParams.port
-			//OPTIONAL: uriOrParams.isSecure
-			//REQUIRED: uriOrParams.uri
-			//OPTIONAL: uriOrParams.paramStr
-			//OPTIONAL: uriOrParams.data
-			//REQUIRED: responseListenerOrListeners
-
-			box.REQUEST(COMBINE([params, {
-				method : 'DELETE'
-			}]), responseListenerOrListeners);
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * ajax GET request.
-	 */
-	box.GET = METHOD({
-
-		run : function(params, responseListenerOrListeners) {
-			//REQUIRED: uriOrParams
-			//OPTIONAL: uriOrParams.host
-			//OPTIONAL: uriOrParams.port
-			//OPTIONAL: uriOrParams.isSecure
-			//REQUIRED: uriOrParams.uri
-			//OPTIONAL: uriOrParams.paramStr
-			//OPTIONAL: uriOrParams.data
-			//REQUIRED: responseListenerOrListeners
-
-			box.REQUEST(COMBINE([params, {
-				method : 'GET'
-			}]), responseListenerOrListeners);
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * ajax POST request.
-	 */
-	box.POST = METHOD({
-
-		run : function(params, responseListenerOrListeners) {
-			//REQUIRED: uriOrParams
-			//OPTIONAL: uriOrParams.host
-			//OPTIONAL: uriOrParams.port
-			//OPTIONAL: uriOrParams.isSecure
-			//REQUIRED: uriOrParams.uri
-			//OPTIONAL: uriOrParams.paramStr
-			//OPTIONAL: uriOrParams.data
-			//REQUIRED: responseListenerOrListeners
-
-			box.REQUEST(COMBINE([params, {
-				method : 'POST'
-			}]), responseListenerOrListeners);
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * ajax PUT request.
-	 */
-	box.PUT = METHOD({
-
-		run : function(params, responseListenerOrListeners) {
-			//REQUIRED: uriOrParams
-			//OPTIONAL: uriOrParams.host
-			//OPTIONAL: uriOrParams.port
-			//OPTIONAL: uriOrParams.isSecure
-			//REQUIRED: uriOrParams.uri
-			//OPTIONAL: uriOrParams.paramStr
-			//OPTIONAL: uriOrParams.data
-			//REQUIRED: responseListenerOrListeners
-
-			box.REQUEST(COMBINE([params, {
-				method : 'PUT'
-			}]), responseListenerOrListeners);
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * ajax request.
-	 */
-	box.REQUEST = METHOD({
-
-		run : function(params, responseListenerOrListeners) {
-			//REQUIRED: params
-			//OPTIONAL: params.host
-			//OPTIONAL: params.port
-			//OPTIONAL: params.isSecure
-			//REQUIRED: params.method
-			//REQUIRED: params.uri
-			//OPTIONAL: params.paramStr
-			//OPTIONAL: params.data
-			//REQUIRED: responseListenerOrListeners
-
-			REQUEST(COMBINE([params, {
-				uri : box.boxName + '/' + params.uri
-			}]), responseListenerOrListeners);
-		}
-	});
-});
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * go another view.
-	 */
-	box.GO = METHOD({
-
-		run : function(uri) {
-			//REQUIRED: uri
-
-			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * go another view on new window.
-	 */
-	box.GO_NEW_WIN = METHOD({
-
-		run : function(uri) {
-			//REQUIRED: uri
-
-			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * get href.
-	 */
-	box.HREF = METHOD({
-
-		run : function(uri) {
-			//OPTIONAL: uri
-
-			return HREF((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * match view.
-	 */
-	box.MATCH_VIEW = METHOD({
-
-		run : function(params) {
-			//REQUIRED: params
-			//REQUIRED: params.uri
-			//REQUIRED: params.target
-
-			var
-			// uri
-			uri = params.uri,
-
-			// target
-			target = params.target,
-
-			// new uris
-			newURIs = [],
-
-			// push.
-			push = function(uri) {
-
-				if (box.boxName === CONFIG.defaultBoxName) {
-					newURIs.push(uri);
-				}
-
-				newURIs.push(box.boxName + '/' + uri);
-			};
-
-			if (CHECK_IS_ARRAY(uri) === true) {
-				EACH(uri, push);
-			} else {
-				push(uri);
-			}
-
-			MATCH_VIEW({
-				uri : newURIs,
-				target : target
-			});
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * refresh view.
-	 */
-	box.REFRESH = METHOD({
-
-		run : function(uri) {
-			//OPTIONAL: uri
-			
-			REFRESH((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
-		}
-	});
 });
 BOX('UPPERCASE.IO');
 

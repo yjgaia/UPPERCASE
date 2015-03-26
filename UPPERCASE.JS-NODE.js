@@ -750,6 +750,41 @@ global.SHARED_STORE = CLASS(function(cls) {
 	};
 });
 
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.SHARED_STORE = CLASS({
+
+		init : function(inner, self, name) {
+			//REQUIRED: name
+
+			var
+			// shared store
+			sharedStore = SHARED_STORE(box.boxName + '.' + name),
+
+			// save.
+			save,
+
+			// get.
+			get,
+			
+			// list.
+			list,
+
+			// remove.
+			remove;
+
+			self.save = save = sharedStore.save;
+
+			self.get = get = sharedStore.get;
+			
+			self.list = list = sharedStore.list;
+
+			self.remove = remove = sharedStore.remove;
+		}
+	});
+});
+
 /*
  * connect to socket server.
  */
@@ -1044,15 +1079,15 @@ global.SHA1 = METHOD({
 	run : function(params) {
 		'use strict';
 		//REQUIRED: params
-		//REQUIRED: params.key
 		//REQUIRED: params.password
+		//REQUIRED: params.key
 
 		var
-		// key
-		key = params.key,
-
 		// password
 		password = params.password,
+
+		// key
+		key = params.key,
 
 		// crypto
 		crypto = require('crypto');
@@ -2369,103 +2404,286 @@ global.WRITE_FILE = METHOD(function() {
 });
 
 /**
- * http DELETE request.
+ * HTTP DELETE request.
  */
 global.DELETE = METHOD({
 
-	run : function(uriOrParams, responseListenerOrListeners) {
+	run : function(params, responseListenerOrListeners) {
 		'use strict';
-		//REQUIRED: uriOrParams
-		//REQUIRED: uriOrParams.host
-		//OPTIONAL: uriOrParams.port
-		//OPTIONAL: uriOrParams.isSecure
-		//OPTIONAL: uriOrParams.uri
-		//OPTIONAL: uriOrParams.paramStr
-		//OPTIONAL: uriOrParams.data
+		//REQUIRED: params
+		//REQUIRED: params.host
+		//OPTIONAL: params.port
+		//OPTIONAL: params.isSecure
+		//OPTIONAL: params.uri
+		//OPTIONAL: params.paramStr
+		//OPTIONAL: params.data
 		//REQUIRED: responseListenerOrListeners
 
-		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
-			uri : uriOrParams
-		}, {
+		REQUEST(COMBINE([params, {
 			method : 'DELETE'
 		}]), responseListenerOrListeners);
 	}
 });
 
 /**
- * http GET request.
+ * download HTTP resource.
  */
-global.GET = METHOD({
+global.DOWNLOAD = METHOD(function() {
+	'use strict';
 
-	run : function(uriOrParams, responseListenerOrListeners) {
-		'use strict';
-		//REQUIRED: uriOrParams
-		//REQUIRED: uriOrParams.host
-		//OPTIONAL: uriOrParams.port
-		//OPTIONAL: uriOrParams.isSecure
-		//REQUIRED: uriOrParams.uri
-		//OPTIONAL: uriOrParams.paramStr
-		//OPTIONAL: uriOrParams.data
-		//REQUIRED: responseListenerOrListeners
+	var
+	//IMPORT: http
+	http = require('http'),
 
-		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
-			uri : uriOrParams
-		}, {
-			method : 'GET'
-		}]), responseListenerOrListeners);
-	}
+	//IMPORT: https
+	https = require('https'),
+	
+	//IMPORT: url
+	url = require('url');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params
+			//OPTIONAL: params.host
+			//OPTIONAL: params.port
+			//OPTIONAL: params.isSecure
+			//OPTIONAL: params.uri
+			//OPTIONAL: params.paramStr
+			//OPTIONAL: params.data
+			//OPTIONAL: params.url
+			//REQUIRED: params.path
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// host
+			host = params.host,
+
+			// is secure
+			isSecure = params.isSecure,
+
+			// port
+			port = params.port === undefined ? (isSecure !== true ? 80 : 443) : params.port,
+
+			// uri
+			uri = params.uri,
+
+			// param str
+			paramStr = params.paramStr,
+
+			// data
+			data = params.data,
+			
+			// _url
+			_url = params.url,
+			
+			// path
+			path = params.path,
+			
+			// url data
+			urlData,
+
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler,
+
+			// http request
+			req;
+			
+			if (_url !== undefined) {
+				
+				urlData = url.parse(_url);
+				
+				host = urlData.hostname === TO_DELETE ? undefined : urlData.hostname;
+				port = urlData.port === TO_DELETE ? undefined : INTEGER(urlData.port);
+				isSecure = urlData.protocol === 'https:';
+				uri = urlData.pathname === TO_DELETE ? undefined : urlData.pathname.substring(1);
+				paramStr = urlData.query === TO_DELETE ? undefined : urlData.query;
+				
+			} else {
+	
+				if (uri !== undefined && uri.indexOf('?') !== -1) {
+					paramStr = uri.substring(uri.indexOf('?') + 1) + (paramStr === undefined ? '' : '&' + paramStr);
+					uri = uri.substring(0, uri.indexOf('?'));
+				}
+	
+				if (data !== undefined) {
+					paramStr = (paramStr === undefined ? '' : paramStr + '&') + '__DATA=' + encodeURIComponent(STRINGIFY(data));
+				}
+	
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Date.now();
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			req = (isSecure !== true ? http : https).get({
+				hostname : host,
+				port : port,
+				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr
+			}, function(httpResponse) {
+				
+				var
+				// data
+				data;
+				
+				// redirect.
+				if (httpResponse.statusCode === 301 || httpResponse.statusCode === 302) {
+					
+					DOWNLOAD({
+						url : httpResponse.headers.location,
+						path : path
+					}, {
+						success : callback,
+						error : errorHandler
+					});
+					
+					httpResponse.destroy();
+					
+				} else {
+				
+					data = [];
+	
+					httpResponse.on('data', function(chunk) {
+						data.push(chunk);
+					});
+					httpResponse.on('end', function() {
+						
+						WRITE_FILE({
+							path : path,
+							buffer : Buffer.concat(data)
+						}, {
+							success : callback,
+							error : errorHandler
+						});
+					});
+				}
+			});
+
+			req.on('error', function(error) {
+
+				var
+				// error msg
+				errorMsg = error.toString();
+
+				if (errorHandler !== undefined) {
+					errorHandler(errorMsg);
+				} else {
+					console.log(CONSOLE_RED('[UPPERCASE.JS-NODE] DOWNLOAD FAILED: ' + errorMsg), params);
+				}
+			});
+		}
+	};
 });
 
 /**
- * http POST request.
+ * HTTP GET request.
+ */
+global.GET = METHOD(function(m) {
+	'use strict';
+	
+	var
+	//IMPORT: url
+	url = require('url');
+	
+	return {
+
+		run : function(urlOrParams, responseListenerOrListeners) {
+			//REQUIRED: urlOrParams
+			//REQUIRED: urlOrParams.host
+			//OPTIONAL: urlOrParams.port
+			//OPTIONAL: urlOrParams.isSecure
+			//REQUIRED: urlOrParams.uri
+			//OPTIONAL: urlOrParams.paramStr
+			//OPTIONAL: urlOrParams.data
+			//REQUIRED: responseListenerOrListeners
+			
+			var
+			// url data
+			urlData,
+			
+			// params
+			params;
+			
+			if (CHECK_IS_DATA(urlOrParams) !== true) {
+				
+				urlData = url.parse(urlOrParams);
+				
+				params = {
+					host : urlData.hostname === TO_DELETE ? undefined : urlData.hostname,
+					port : urlData.port === TO_DELETE ? undefined : INTEGER(urlData.port),
+					isSecure : urlData.protocol === 'https:',
+					uri : urlData.pathname === TO_DELETE ? undefined : urlData.pathname.substring(1),
+					paramStr : urlData.query === TO_DELETE ? undefined : urlData.query
+				};
+					
+			} else {
+				params = urlOrParams;
+			}
+	
+			REQUEST(COMBINE([params, {
+				method : 'GET'
+			}]), responseListenerOrListeners);
+		}
+		};
+	});
+
+/**
+ * HTTP POST request.
  */
 global.POST = METHOD({
 
-	run : function(uriOrParams, responseListenerOrListeners) {
+	run : function(params, responseListenerOrListeners) {
 		'use strict';
-		//REQUIRED: uriOrParams
-		//REQUIRED: uriOrParams.host
-		//OPTIONAL: uriOrParams.port
-		//OPTIONAL: uriOrParams.isSecure
-		//OPTIONAL: uriOrParams.uri
-		//OPTIONAL: uriOrParams.paramStr
-		//OPTIONAL: uriOrParams.data
+		//REQUIRED: params
+		//REQUIRED: params.host
+		//OPTIONAL: params.port
+		//OPTIONAL: params.isSecure
+		//OPTIONAL: params.uri
+		//OPTIONAL: params.paramStr
+		//OPTIONAL: params.data
 		//REQUIRED: responseListenerOrListeners
 
-		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
-			uri : uriOrParams
-		}, {
+		REQUEST(COMBINE([params, {
 			method : 'POST'
 		}]), responseListenerOrListeners);
 	}
 });
 
 /**
- * http PUT request.
+ * HTTP PUT request.
  */
 global.PUT = METHOD({
 
-	run : function(uriOrParams, responseListenerOrListeners) {
+	run : function(params, responseListenerOrListeners) {
 		'use strict';
-		//REQUIRED: uriOrParams
-		//REQUIRED: uriOrParams.host
-		//OPTIONAL: uriOrParams.port
-		//OPTIONAL: uriOrParams.isSecure
-		//OPTIONAL: uriOrParams.uri
-		//OPTIONAL: uriOrParams.paramStr
-		//OPTIONAL: uriOrParams.data
+		//REQUIRED: params
+		//REQUIRED: params.host
+		//OPTIONAL: params.port
+		//OPTIONAL: params.isSecure
+		//OPTIONAL: params.uri
+		//OPTIONAL: params.paramStr
+		//OPTIONAL: params.data
 		//REQUIRED: responseListenerOrListeners
 
-		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
-			uri : uriOrParams
-		}, {
+		REQUEST(COMBINE([params, {
 			method : 'PUT'
 		}]), responseListenerOrListeners);
 	}
 });
 
 /**
- * http request.
+ * HTTP request.
  */
 global.REQUEST = METHOD(function() {
 	'use strict';
@@ -2529,7 +2747,7 @@ global.REQUEST = METHOD(function() {
 			}
 
 			if (data !== undefined) {
-				paramStr = (paramStr === undefined ? '' : paramStr + '&') + 'data=' + encodeURIComponent(STRINGIFY(data));
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + '__DATA=' + encodeURIComponent(STRINGIFY(data));
 			}
 
 			paramStr = (paramStr === undefined ? '' : paramStr + '&') + Date.now();
@@ -2552,15 +2770,30 @@ global.REQUEST = METHOD(function() {
 
 					var
 					// content
-					content = '';
+					content;
+					
+					// redirect.
+					if (httpResponse.statusCode === 301 || httpResponse.statusCode === 302) {
+						
+						GET(httpResponse.headers.location, {
+							success : responseListener,
+							error : errorListener
+						});
+						
+						httpResponse.destroy();
+						
+					} else {
+						
+						content = '';
 
-					httpResponse.setEncoding('utf-8');
-					httpResponse.on('data', function(str) {
-						content += str;
-					});
-					httpResponse.on('end', function() {
-						responseListener(content, httpResponse.headers);
-					});
+						httpResponse.setEncoding('utf-8');
+						httpResponse.on('data', function(str) {
+							content += str;
+						});
+						httpResponse.on('end', function() {
+							responseListener(content, httpResponse.headers);
+						});
+					}
 				});
 			}
 
@@ -3192,7 +3425,7 @@ global.SOCKET_SERVER = METHOD({
 });
 
 /*
- * create udp server.
+ * create UDP server.
  */
 global.UDP_SERVER = METHOD({
 
@@ -3448,6 +3681,20 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 				function() {
 					return function() {
+						
+						var
+						// params
+						params = querystring.parse(paramStr),
+						
+						// data
+						data = params.__DATA;
+						
+						if (data !== undefined) {
+							
+							data = PARSE_STR(data);
+							
+							delete params.__DATA;
+						}
 
 						requestListener( requestInfo = {
 
@@ -3457,7 +3704,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 							method : method,
 
-							params : querystring.parse(paramStr),
+							params : params,
+							
+							data : data,
 
 							ip : ip,
 

@@ -101,7 +101,7 @@ global.BOOT_UDB = METHOD({
 						
 						if (model !== undefined && model[uriParams.method] !== undefined) {
 							
-							model[uriParams.method](PARSE_STR(requestInfo.params.data), function(result) {
+							model[uriParams.method](PARSE_STR(requestInfo.data), function(result) {
 								response(STRINGIFY(result));
 							});
 							

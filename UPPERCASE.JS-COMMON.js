@@ -8,7 +8,9 @@ global.TO_DELETE = null;
 /**
  * Configuration
  */
-global.CONFIG = {};
+global.CONFIG = {
+	isDevMode : false
+};
 
 /**
  * Create method.
@@ -416,6 +418,137 @@ global.INIT_OBJECTS = METHOD({
 });
 
 /**
+ * create box.
+ */
+global.BOX = METHOD(function(m) {
+	'use strict';
+
+	var
+	// boxes
+	boxes = {},
+
+	// get boxes.
+	getBoxes;
+
+	m.getBoxes = getBoxes = function() {
+		return boxes;
+	};
+
+	return {
+
+		run : function(boxName) {
+			//REQUIRED: boxName
+
+			var
+			// box.
+			box = function(packName) {
+				//REQUIRED: packName
+
+				var
+				// packNameSps
+				packNameSps = packName.split('.'),
+
+				// pack
+				pack;
+
+				EACH(packNameSps, function(packNameSp) {
+
+					if (pack === undefined) {
+
+						if (box[packNameSp] === undefined) {
+
+							//LOADED: PACK
+							box[packNameSp] = {};
+						}
+						pack = box[packNameSp];
+
+					} else {
+
+						if (pack[packNameSp] === undefined) {
+
+							//LOADED: PACK
+							pack[packNameSp] = {};
+						}
+						pack = pack[packNameSp];
+					}
+				});
+
+				return pack;
+			},
+
+			// box name splits
+			boxNameSplits = boxName.split('.'),
+
+			// before box split
+			beforeBoxSplit = global,
+
+			// before box name splits str
+			beforeBoxNameSplitsStr = '';
+
+			box.boxName = boxName;
+			box.type = BOX;
+
+			boxes[boxName] = box;
+
+			EACH(boxNameSplits, function(boxNameSplit, i) {
+
+				beforeBoxNameSplitsStr += (beforeBoxNameSplitsStr === '' ? '' : '.') + boxNameSplit;
+
+				if (i < boxNameSplits.length - 1) {
+
+					if (beforeBoxSplit[boxNameSplit] !== undefined) {
+						beforeBoxSplit = beforeBoxSplit[boxNameSplit];
+					} else {
+						beforeBoxSplit = beforeBoxSplit[boxNameSplit] = {};
+					}
+
+				} else {
+
+					beforeBoxSplit[boxNameSplit] = box;
+				}
+			});
+
+			FOR_BOX.inject(box);
+
+			return box;
+		}
+	};
+});
+
+/**
+ * inject method or class to box.
+ */
+global.FOR_BOX = METHOD(function(m) {
+	'use strict';
+
+	var
+	// funcs
+	funcs = [],
+
+	// inject.
+	inject;
+
+	m.inject = inject = function(box) {
+		EACH(funcs, function(func) {
+			func(box);
+		});
+	};
+
+	return {
+
+		run : function(func) {
+			//REQUIRED: func
+
+			EACH(BOX.getBoxes(), function(box) {
+				func(box);
+			});
+
+			funcs.push(func);
+		}
+	};
+});
+
+/**
  * async control-flow method that makes stepping through logic easy.
  */
 global.NEXT = METHOD({
@@ -671,13 +804,13 @@ global.PARALLEL = METHOD({
 });
 
 /**
- * parse stringified data.
+ * parse stringified value.
  */
 global.PARSE_STR = METHOD({
 
-	run : function(stringifiedData) {
+	run : function(stringifiedValue) {
 		'use strict';
-		//REQUIRED: stringifiedData
+		//REQUIRED: stringifiedValue
 
 		var
 		// value
@@ -685,7 +818,7 @@ global.PARSE_STR = METHOD({
 
 		try {
 
-			value = JSON.parse(stringifiedData);
+			value = JSON.parse(stringifiedValue);
 
 			return CHECK_IS_DATA(value) === true ? UNPACK_DATA(value) : value;
 
@@ -982,7 +1115,7 @@ global.VALID = CLASS(function(cls) {
 
 	cls.regex = regex = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.patten
+		//REQUIRED: params.pattern
 		//REQUIRED: params.value
 
 		var
@@ -996,7 +1129,7 @@ global.VALID = CLASS(function(cls) {
 	};
 
 	cls.size = size = function(params) {
-		//REQUIRED: params.min
+		//OPTIONAL: params.min
 		//REQUIRED: params.max
 		//REQUIRED: params.value
 
@@ -1126,15 +1259,15 @@ global.VALID = CLASS(function(cls) {
 
 	cls.one = one = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.value
 		//REQUIRED: params.array
+		//REQUIRED: params.value
 
 		var
-		// value
-		value = params.value,
-
 		// array
-		array = params.array;
+		array = params.array,
+		
+		// value
+		value = params.value;
 
 		return EACH(array, function(_value) {
 			if (value === _value) {
@@ -2414,7 +2547,6 @@ global.LOOP = CLASS(function(cls) {
 	return {
 
 		init : function(inner, self, fps, intervalOrFuncs) {
-			'use strict';
 			//OPTIONAL: fps
 			//OPTIONAL: intervalOrFuncs
 			//OPTIONAL: intervalOrFuncs.start
@@ -2600,14 +2732,14 @@ global.RANDOM = METHOD({
 });
 
 /**
- * convert real string to real number.
+ * convert real number string to real number.
  */
 global.REAL = METHOD({
 
-	run : function(realString) {'use strict';
-		//OPTIONAL: realString
+	run : function(realNumberString) {'use strict';
+		//OPTIONAL: realNumberString
 
-		return realString === undefined ? undefined : parseFloat(realString);
+		return realNumberString === undefined ? undefined : parseFloat(realNumberString);
 	}
 });
 

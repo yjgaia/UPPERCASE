@@ -7,6 +7,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 ## 시작하기
 * [설치하기](INSTALL.md)
 * [프로젝트 생성](CREATE_PROJECT.md)
+* [BOX 이해하기](BOX.md) (작성중)
 * [모델 생성](CREATE_MODEL.md) (작성중)
 * 간단 블로그 만들기 (작성중)
 * 블로그에 기능 추가하기 (작성중)
@@ -30,7 +31,6 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * 게임 만들기
 
 ## 모듈 상세보기 (작성중)
-* `[UPPERCASE.IO-BOX](UPPERCASE.IO-BOX.md)` UPPERCASE.IO의 모듈 시스템인 BOX를 지원하는 모듈입니다.
 * `[UPPERCASE.IO-TRANSPORT](UPPERCASE.IO-TRANSPORT.md)` 서버와 클라이언트간의 통신을 담당하는 모듈입니다.
 * `[UPPERCASE.IO-ROOM](UPPERCASE.IO-ROOM.md)` 통신 처리를 룸 방식으로 처리하는 모듈입니다.
 * `[UPPERCASE.IO-DB](UPPERCASE.IO-DB.md)` 데이터베이스를 다루는 모듈입니다.
@@ -43,7 +43,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [UPPERCASE.IO 빌드](BUILD.md)
 
 ## 특징
-* `모듈화` BOX라는 모듈 시스템을 제공하고 있습니다. 자세한 내용은 [BOX 문서](BOX.md)를 참고해주세요.
+* BOX라는 모듈 시스템을 제공하고 있습니다. 자세한 내용은 UPPERCASE.JS의 [UPPERCASE.JS-COMMON](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-COMMON.md) 문서를 참고해주세요.
 * 멀티 코어 CPU 지원을 자체적으로 지원합니다.
 * 현존하는 모든 웹 브라우저 지원 및 구형 브라우저에 대한 하위 호환성을 지니고 있습니다. (Internet Explorer 5.5나 Android 2.1 브라우저에서도 작동합니다.)
 

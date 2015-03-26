@@ -265,9 +265,6 @@ global.BOOT = function(params) {
 
 	initBoxes = function(next) {
 
-		// load UPPERCASE.IO-BOX/CORE.
-		loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/CORE.js');
-
 		// create UPPERCASE.IO box.
 		BOX('UPPERCASE.IO');
 
@@ -320,13 +317,6 @@ global.BOOT = function(params) {
 				});
 			});
 		}
-		
-		// load UPPERCASE.IO-BOX/NODE.
-		loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/NODE.js');
-
-		// load UPPERCASE.IO-BOX/BROWSER.
-		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/CLIENT.js');
-		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-BOX/BROWSER.js');
 	};
 
 	clustering = function(work) {
@@ -518,11 +508,7 @@ global.BOOT = function(params) {
 			}
 	
 			indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
-	
-			if (CONFIG.description !== undefined) {
-				indexPageContent += '<meta name="description" content="' + CONFIG.description + '">';
-			}
-	
+
 			indexPageContent += '<link href="/favicon.ico" rel="shortcut icon">';
 			indexPageContent += '<title>' + CONFIG.title + '</title>';
 	

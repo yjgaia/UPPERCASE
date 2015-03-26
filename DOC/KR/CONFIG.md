@@ -7,7 +7,6 @@
 * `socketServerPort` 소켓 서버의 포트를 설정합니다.
 * `defaultBoxName` 기본 BOX의 이름을 설정합니다. 기본값은 `'UPPERCASE.IO'` 입니다.
 * `title` 프로젝트 제목을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
-* `description` 프로젝트에 대한 설명을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
 * `isMobileFullScreen` 모바일 브라우저에서 full screen으로 화면을 표시할지를 결정합니다. 기본값은 `false`입니다.
 
 ###### NODE_CONFIG
