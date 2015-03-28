@@ -484,7 +484,7 @@ FOR_BOX(function(box) {
 					}
 
 					if (updateValid !== undefined) {
-						validResult = updateValid.checkExceptUndefined(data);
+						validResult = updateValid.checkForUpdate(data);
 					}
 
 					data.id = id;

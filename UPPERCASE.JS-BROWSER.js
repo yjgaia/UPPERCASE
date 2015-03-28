@@ -2894,6 +2894,30 @@ global.A = CLASS({
 				name : 'tap'
 			});
 		};
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.href
+		//OPTIONAL: params.c
+
+		var
+		// href
+		href,
+
+		// children
+		children;
+
+		// init params.
+		if (params !== undefined) {
+			href = params.href;
+			children = params.c;
+		}
+
+		if (children === undefined && href !== undefined) {
+			self.append(href);
+		}
 	}
 });
 

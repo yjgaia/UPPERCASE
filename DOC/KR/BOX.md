@@ -1,3 +1,6 @@
+ 자세한 내용은 UPPERCASE.JS의 [UPPERCASE.JS-COMMON](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-COMMON.md) 문서를 참고해주세요.
+
+
 프로젝트 폴더와 BOX폴더 내부의 각 폴더들의 이름으로 BOX들이 생성됩니다.
 예를 들어, 아래와 같이 폴더가 구성되어 있다면 `UUI`, `UANI`, `Yogurt`, `Sample` BOX들이 생성됩니다.
 ![ScreenShot](https://raw.githubusercontent.com/UPPERCASE-Series/UPPERCASE.IO/master/SampleBOXes.png)

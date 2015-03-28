@@ -818,11 +818,64 @@ global.BOOT = function(params) {
 										fileData.downloadCount = 0;
 
 										uploadFileDB.create(fileData, function(savedData) {
+											
+											var
+											// to path
+											toPath = rootPath + '/__RF/' + boxName + '/' + savedData.id;
 
 											MOVE_FILE({
 												from : tempPath,
-												to : rootPath + '/__RF/' + boxName + '/' + savedData.id
-											}, next);
+												to : toPath
+											}, function() {
+												
+												var
+												// dist path
+												distPath;
+												
+												// create thumbnail.
+												if (
+												// check is image
+												savedData.type !== undefined && savedData.type.substring(0, 6) === 'image/' &&
+												// check config exists
+												(CONFIG.maxThumbWidth !== undefined || CONFIG.maxThumbHeight !== undefined)) {
+													
+													distPath = rootPath + '/__RF/' + boxName + '/THUMB/' + savedData.id;
+													
+													IMAGEMAGICK_IDENTIFY(toPath, function(features) {
+							
+														var
+														// frs
+														frs;
+														
+														if (CONFIG.maxThumbWidth !== undefined && features.width !== undefined && features.width > CONFIG.maxThumbWidth) {
+							
+															IMAGEMAGICK_RESIZE({
+																srcPath : toPath,
+																distPath : distPath,
+																width : CONFIG.maxThumbWidth
+															}, next);
+							
+														} else if (CONFIG.maxThumbHeight !== undefined && features.height !== undefined && features.height > CONFIG.maxThumbHeight) {
+							
+															IMAGEMAGICK_RESIZE({
+																srcPath : toPath,
+																distPath : distPath,
+																height : CONFIG.maxThumbHeight
+															}, next);
+							
+														} else {
+							
+															COPY_FILE({
+																from : toPath,
+																to : distPath
+															}, next);
+														}
+													});
+													
+												} else {
+													next();
+												}
+											});
 										});
 									},
 

@@ -1,22 +1,25 @@
 # ![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE.IO/master/LOGO.png)
 UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [Node.js](http://nodejs.org)를 기반으로 합니다.
-* MVC 패턴을 따릅니다.
 * JavaScript 유틸리티 세트인 [UPPERCASE.JS](UPPERCASE.JS.md)를 기반으로 만들어졌습니다.
+* MVC 패턴을 따릅니다.
+* BOX라는 모듈 시스템을 제공하고 있습니다.
+* 멀티 코어 CPU 지원을 지원합니다.
+* 현대의 모든 웹 브라우저 및 구형 브라우저에 대한 호환성을 지니고 있습니다. (Internet Explorer 5.5나 Android 2.1 브라우저에서도 작동합니다.)
 
 ## 시작하기
 * [설치하기](INSTALL.md)
 * [프로젝트 생성](CREATE_PROJECT.md)
-* [BOX 이해하기](BOX.md) (작성중)
-* [모델 생성](CREATE_MODEL.md) (작성중)
-* 간단 블로그 만들기 (작성중)
-* 블로그에 기능 추가하기 (작성중)
-* 블로그에 인증 추가하기 (작성중)
+* [모델 생성](CREATE_MODEL.md)
+* [간단한 블로그 만들기](MAKE_BLOG.md) (작성중)
+* [블로그에 댓글 추가하기](ADD_COMMENT_TO_BLOG.md) (작성중)
+* [블로그에 인증 추가하기](ADD_AUTH_TO_BLOG.md) (작성중)
 * UPPERCASE.IO가 제공하는 기능들 (작성중)
-* [CONFIG 설정 상세보기](CONFIG.md) (작성중)
+* [Configuration](CONFIG.md) (작성중)
 * [UPPERCASE.IO 업데이트](UPDATE.md)
 
 ## 한걸음 더
+* [BOX 이해하기](BOX.md) (작성중)
 * [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](CORDOVA.md) (작성중)
 * [Android, iOS 모바일 네이티브 앱 개발](MOBILE_NATIVE.md) (작성중)
 * [Node-webkit을 이용한 데스크톱 앱 개발](NODE_WEBKIT.md) (작성중)
@@ -41,11 +44,6 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 
 ## UPPERCASE.IO 개발에 참여하기
 * [UPPERCASE.IO 빌드](BUILD.md)
-
-## 특징
-* BOX라는 모듈 시스템을 제공하고 있습니다. 자세한 내용은 UPPERCASE.JS의 [UPPERCASE.JS-COMMON](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-COMMON.md) 문서를 참고해주세요.
-* 멀티 코어 CPU 지원을 자체적으로 지원합니다.
-* 현존하는 모든 웹 브라우저 지원 및 구형 브라우저에 대한 하위 호환성을 지니고 있습니다. (Internet Explorer 5.5나 Android 2.1 브라우저에서도 작동합니다.)
 
 ## 라이센스
 [MIT](../../LICENSE)

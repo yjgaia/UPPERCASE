@@ -1386,14 +1386,14 @@ global.VALID = CLASS(function(cls) {
 				init : function(inner, self, params) {
 					//REQUIRED: params
 					//REQUIRED: params.data
-					//OPTIONAL: params.isExceptUndefined
+					//OPTIONAL: params.isForUpdate
 
 					var
 					// data
 					data = params.data,
 
-					// is except undefined
-					isExceptUndefined = params.isExceptUndefined,
+					// is for update
+					isForUpdate = params.isForUpdate,
 
 					// has error
 					hasError = false,
@@ -1418,17 +1418,16 @@ global.VALID = CLASS(function(cls) {
 								// value
 								value = data[attr];
 
-								if (isExceptUndefined === true && value === undefined) {
+								if (isForUpdate === true && value === undefined) {
 
 									// break.
 									return false;
 								}
 
 								if (name !== 'notEmpty' && notEmpty(value) !== true) {
-
-									// set TO_DELETE(null).
-									data[attr] = TO_DELETE;
-
+									
+									data[attr] = isForUpdate === true ? TO_DELETE : undefined;
+									
 									// continue.
 									return true;
 								}
@@ -1672,8 +1671,8 @@ global.VALID = CLASS(function(cls) {
 			// check.
 			check,
 
-			// check except undefined.
-			checkExceptUndefined,
+			// check for update.
+			checkForUpdate,
 			
 			// get valid data set.
 			getValidDataSet;
@@ -1684,10 +1683,10 @@ global.VALID = CLASS(function(cls) {
 				});
 			};
 
-			self.checkExceptUndefined = checkExceptUndefined = function(data) {
+			self.checkForUpdate = checkForUpdate = function(data) {
 				return Check({
 					data : data,
-					isExceptUndefined : true
+					isForUpdate : true
 				});
 			};
 			

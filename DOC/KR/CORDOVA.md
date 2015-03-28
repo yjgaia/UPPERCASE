@@ -7,12 +7,12 @@ Apache Cordova와 Crosswalk를 사용하여 하이브리드 앱을 만드는 방
 
 1. Cordova 설치
 
-Mac or Linux
+###### Mac or Linux
 ```
 sudo npm install -g cordova
 ```
 
-Windows
+###### Windows
 ```
 npm install -g cordova
 ```
