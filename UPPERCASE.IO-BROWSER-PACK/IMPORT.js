@@ -2914,6 +2914,59 @@ global.REPEAT = METHOD({
 		return true;
 	}
 });
+
+/**
+ * same as `foreach`, but reverse.
+ */
+global.REVERSE_EACH = METHOD({
+
+	run : function(array, func) {
+		'use strict';
+		//OPTIONAL: array
+		//REQUIRED: func
+
+		var
+		// length
+		length,
+
+		// name
+		name,
+
+		// extras
+		i;
+
+		// when array is undefined
+		if (array === undefined) {
+			return false;
+		}
+
+		// when array is func
+		else if (func === undefined) {
+
+			func = array;
+			array = undefined;
+
+			return function(array) {
+				return REVERSE_EACH(array, func);
+			};
+		}
+
+		// when array is not undefined
+		else {
+
+			length = array.length;
+
+			for ( i = length - 1; i >= 0; i -= 1) {
+
+				if (func(array[i], i) === false) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+});
 /**
  * Browser-side Configuration
  */
@@ -10974,6 +11027,12 @@ FOR_BOX(function(box) {
 
 			// on new watching.
 			onNewWatching,
+			
+			// on new and find.
+			onNewAndFind,
+
+			// on new and find watching.
+			onNewAndFindWatching,
 
 			// on remove.
 			onRemove;
@@ -11144,7 +11203,7 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
 					// not exists handler.
@@ -11321,7 +11380,7 @@ FOR_BOX(function(box) {
 					// id
 					id = data.id,
 
-					// callback
+					// callback.
 					callback,
 
 					// not valid handler.
@@ -11436,7 +11495,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
 					// not exists handler.
@@ -11517,7 +11576,7 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
 					// not valid handler.
@@ -11582,7 +11641,7 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
 					// not valid handler.
@@ -11688,7 +11747,7 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
 					// not valid handler.
@@ -11753,7 +11812,7 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
 					// not valid handler.
@@ -11823,6 +11882,10 @@ FOR_BOX(function(box) {
 
 					( roomForCreate = box.ROOM(name + '/create')).on('create', handler);
 
+				} else if (properties === undefined) {
+
+					( roomForCreate = box.ROOM(name + '/create')).on('create', handler);
+
 				} else {
 
 					EACH(properties, function(value, propertyName) {
@@ -11861,7 +11924,7 @@ FOR_BOX(function(box) {
 			};
 
 			self.onNewWatching = onNewWatching = function(properties, handler) {
-				//OPTIONAL: properties (or operation)
+				//OPTIONAL: properties
 				//REQUIRED: handler
 
 				var
@@ -11920,6 +11983,12 @@ FOR_BOX(function(box) {
 						innerHandler(savedData);
 					});
 
+				} else if (properties === undefined) {
+
+					( roomForCreate = box.ROOM(name + '/create')).on('create', function(savedData) {
+						innerHandler(savedData);
+					});
+					
 				} else {
 
 					EACH(properties, function(value, propertyName) {
@@ -11961,9 +12030,210 @@ FOR_BOX(function(box) {
 					}
 				});
 			};
+			
+			// find.
+			if (findConfig !== false) {
+				
+				self.onNewAndFind = onNewAndFind = function(params, handlerOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.properties
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//REQUIRED: handlerOrHandlers
+					
+					var
+					// properties
+					properties,
+					
+					// filter
+					filter,
+					
+					// sort
+					sort,
+					
+					// start
+					start,
+					
+					// count
+					count,
+					
+					// on new room
+					onNewRoom,
+					
+					// handler.
+					handler,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler;
+
+					// init params.
+					if (handlerOrHandlers === undefined) {
+						handlerOrHandlers = params;
+						params = undefined;
+					}
+					
+					if (params !== undefined) {
+						properties = params.properties;
+						filter = params.filter;
+						sort = params.sort;
+						start = params.start;
+						count = params.count;
+					}
+
+					if (CHECK_IS_DATA(handlerOrHandlers) !== true) {
+						handler = handlerOrHandlers;
+					} else {
+						handler = handlerOrHandlers.success;
+						notAuthedHandler = handlerOrHandlers.notAuthed;
+						errorHandler = handlerOrHandlers.error;
+					}
+					
+					if (filter === undefined && sort === undefined && (start === undefined || start === 0)) {
+						onNewRoom = onNew(properties, handler);
+					}
+					
+					find({
+						filter : COMBINE([properties, filter]),
+						sort : sort,
+						start : start,
+						count : count
+					}, {
+						success : REVERSE_EACH(handler),
+						notAuthed : notAuthedHandler,
+						error : errorHandler
+					});
+					
+					return OBJECT({
+	
+						init : function(inner, self) {
+	
+							var
+							// exit.
+							exit;
+	
+							self.exit = exit = function() {
+	
+								if (onNewRoom !== undefined) {
+									onNewRoom.exit();
+								}
+							};
+						}
+					});
+				};
+				
+				self.onNewAndFindWatching = onNewAndFindWatching = function(params, handlerOrHandlers) {
+					//OPTIONAL: params
+					//OPTIONAL: params.properties
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//REQUIRED: handlerOrHandlers
+					
+					var
+					// properties
+					properties,
+					
+					// filter
+					filter,
+					
+					// sort
+					sort,
+					
+					// start
+					start,
+					
+					// count
+					count,
+					
+					// on new watching room
+					onNewWatchingRoom,
+					
+					// find watching room
+					findWatchingRoom,
+					
+					// handler.
+					handler,
+
+					// not valid handler.
+					notAuthedHandler,
+
+					// error handler.
+					errorHandler;
+
+					// init params.
+					if (handlerOrHandlers === undefined) {
+						handlerOrHandlers = params;
+						params = undefined;
+					}
+					
+					if (params !== undefined) {
+						properties = params.properties;
+						filter = params.filter;
+						sort = params.sort;
+						start = params.start;
+						count = params.count;
+					}
+
+					if (CHECK_IS_DATA(handlerOrHandlers) !== true) {
+						handler = handlerOrHandlers;
+					} else {
+						handler = handlerOrHandlers.success;
+						notAuthedHandler = handlerOrHandlers.notAuthed;
+						errorHandler = handlerOrHandlers.error;
+					}
+					
+					if (filter === undefined && sort === undefined && (start === undefined || start === 0)) {
+						onNewWatchingRoom = onNewWatching(properties, handler);
+					}
+					
+					findWatchingRoom = findWatching({
+						filter : COMBINE([properties, filter]),
+						sort : sort,
+						start : start,
+						count : count
+					}, {
+						success : function(savedDataSet, addUpdateHandler, addRemoveHandler) {
+							REVERSE_EACH(savedDataSet, function(savedData) {
+								handler(savedData, function(handler) {
+									addUpdateHandler(savedData.id, handler);
+								}, function(handler) {
+									addRemoveHandler(savedData.id, handler);
+								});
+							});
+						},
+						notAuthed : notAuthedHandler,
+						error : errorHandler
+					});
+					
+					return OBJECT({
+	
+						init : function(inner, self) {
+	
+							var
+							// exit.
+							exit;
+	
+							self.exit = exit = function() {
+	
+								if (onNewWatchingRoom !== undefined) {
+									onNewWatchingRoom.exit();
+								}
+								
+								findWatchingRoom.exit();
+							};
+						}
+					});
+				};
+			}
 
 			self.onRemove = onRemove = function(properties, handler) {
-				//OPTIONAL: properties (or operation)
+				//OPTIONAL: properties
 				//REQUIRED: handler
 
 				var

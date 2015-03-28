@@ -11,10 +11,10 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [설치하기](INSTALL.md)
 * [프로젝트 생성](CREATE_PROJECT.md)
 * [모델 생성](CREATE_MODEL.md)
-* [간단한 블로그 만들기](MAKE_BLOG.md) (작성중)
+* [간단한 블로그 만들기](MAKE_BLOG.md)
 * [블로그에 댓글 추가하기](ADD_COMMENT_TO_BLOG.md) (작성중)
 * [블로그에 인증 추가하기](ADD_AUTH_TO_BLOG.md) (작성중)
-* UPPERCASE.IO가 제공하는 기능들 (작성중)
+* [UPPERCASE.IO가 제공하는 기능들 살펴보기](OVERVIEW.md) (작성중)
 * [Configuration](CONFIG.md) (작성중)
 * [UPPERCASE.IO 업데이트](UPDATE.md)
 
@@ -28,9 +28,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [분산 서버 구성](DISTRIBUTION.md) (작성중)
 
 ## 튜토리얼 (예정)
-* SNS 만들기
-* 실시간 게시판 만들기
-* 메신저 만들기
+* 채팅방 만들기
 * 게임 만들기
 
 ## 모듈 상세보기 (작성중)
@@ -44,6 +42,13 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 
 ## UPPERCASE.IO 개발에 참여하기
 * [UPPERCASE.IO 빌드](BUILD.md)
+
+## UPPERCASE.IO Client Modules
+UPPERCASE.IO는 웹 브라우저 혹은 하이브리드 앱과 같이 웹 기술 기반의 Client만을 공식 지원합니다. 따라서 다른 언어 및 시스템 기반에서 UPPERCASE.IO의 서버에 접근하기 위해서는 아래와 같이 해당 언어 및 시스템에 맞는 Client 모듈이 필요합니다.
+
+* `UPPERCASE.IO-Java-Client` https://github.com/Hanul/UPPERCASE.IO-Java-Client
+
+*기타 여러 언어 및 시스템으로의 포팅을 기다리고 있습니다!*
 
 ## 라이센스
 [MIT](../../LICENSE)

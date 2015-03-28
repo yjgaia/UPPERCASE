@@ -33,7 +33,7 @@ Sample
 
 ```javascript
 // UPPERCASE.IO의 BOOT.js를 import 합니다.
-require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
+require(process.env.UPPERCASE_IO_PATH + '/BOOT.js');
 
 // UPPERCASE.IO를 부팅합니다.
 BOOT({

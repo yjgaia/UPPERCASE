@@ -20,7 +20,7 @@ mongod
 프로젝트 실행을 위해 `BOOT` 코드가 작성되어 있는 소스 파일을 열어 데이터베이스 설정을 작성합니다.
 
 ```javascript
-require(process.env['UPPERCASE_IO_PATH'] + '/BOOT.js');
+require(process.env.UPPERCASE_IO_PATH + '/BOOT.js');
 
 BOOT({
 	CONFIG : {

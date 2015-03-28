@@ -1,9 +1,9 @@
 // load UPPERCASE.JS.
-require(process.env['UPPERCASE_IO_PATH'] + '/UPPERCASE.JS-COMMON.js');
-require(process.env['UPPERCASE_IO_PATH'] + '/UPPERCASE.JS-NODE.js');
+require(process.env.UPPERCASE_IO_PATH + '/UPPERCASE.JS-COMMON.js');
+require(process.env.UPPERCASE_IO_PATH + '/UPPERCASE.JS-NODE.js');
 
 // load UPPERCASE.IO-UTIL.
-require(process.env['UPPERCASE_IO_PATH'] + '/UPPERCASE.IO-UTIL/NODE.js');
+require(process.env.UPPERCASE_IO_PATH + '/UPPERCASE.IO-UTIL/NODE.js');
 
 /*
  * pack UPPERCASE.IO BOX.

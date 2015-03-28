@@ -939,13 +939,13 @@ FOR_BOX(function(box) {
 					//OPTIONAL: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
-					// not valid handler
+					// not valid handler.
 					notValidHandler,
 
-					// error handler
+					// error handler.
 					errorHandler;
 
 					if (callbackOrHandlers !== undefined) {
@@ -1008,13 +1008,13 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
-					// not exists handler
+					// not exists handler.
 					notExistsHandler,
 
-					// error handler
+					// error handler.
 					errorHandler;
 
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -1063,16 +1063,16 @@ FOR_BOX(function(box) {
 					//OPTIONAL: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
-					// not exists handler
+					// not exists handler.
 					notExistsHandler,
 
-					// not valid handler
+					// not valid handler.
 					notValidHandler,
 
-					// error handler
+					// error handler.
 					errorHandler;
 
 					if (callbackOrHandlers !== undefined) {
@@ -1137,13 +1137,13 @@ FOR_BOX(function(box) {
 					//OPTIONAL: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
-					// not exists handler
+					// not exists handler.
 					notExistsHandler,
 
-					// error handler
+					// error handler.
 					errorHandler;
 
 					if (callbackOrHandlers !== undefined) {
@@ -1199,10 +1199,10 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
-					// error handler
+					// error handler.
 					errorHandler;
 
 					// init params.
@@ -1248,10 +1248,10 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
-					// error handler
+					// error handler.
 					errorHandler;
 
 					// init params.
@@ -1297,10 +1297,10 @@ FOR_BOX(function(box) {
 					//REQUIRED: callbackOrHandlers
 
 					var
-					// callback
+					// callback.
 					callback,
 
-					// error handler
+					// error handler.
 					errorHandler;
 
 					// init params.
