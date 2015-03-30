@@ -20,6 +20,11 @@ npm install -g cordova
 2. 프로젝트 생성
 
 ```
+cordova create {폴더 이름} com.sample.Sample {프로젝트 이름}
+```
+
+ex)
+```
 cordova create Sample com.sample.Sample Sample
 ```
 

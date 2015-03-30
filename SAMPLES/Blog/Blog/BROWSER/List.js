@@ -47,7 +47,7 @@ Blog.List = CLASS({
 					
 					originArticleDom = articleDom;
 					
-					// 기존 DOM이 존재하면 기존 돔의 뒤에 새로운 DOM을 만들고 기존 돔을 제거한다.
+					// 기존 DOM이 존재하면 기존 DOM 뒤에 새로운 DOM을 만들고 기존 DOM을 제거한다.
 					// 기존 DOM이 존재하지 않으면 리스트의 맨 처음에 DOM을 만든다.
 					(originArticleDom === undefined ? list.prepend : originArticleDom.after)(articleDom = LI({
 						style : {
