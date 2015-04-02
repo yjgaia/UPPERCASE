@@ -8,6 +8,9 @@ BOOT({
 		webServerPort : 8328
 	},
 	NODE_CONFIG : {
-		dbName : 'Blog'
+		dbName : 'Blog',
+		Blog : {
+			password : '1234'
+		}
 	}
 });

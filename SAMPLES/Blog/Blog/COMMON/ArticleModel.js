@@ -32,10 +32,15 @@ Blog.ArticleModel = OBJECT({
 			name : 'Article',
 			methodConfig : {
 				create : {
-					valid : VALID(validDataSet)
+					valid : VALID(validDataSet),
+					role : 'ADMIN'
 				},
 				update : {
-					valid : VALID(validDataSet)
+					valid : VALID(validDataSet),
+					role : 'ADMIN'
+				},
+				remove : {
+					role : 'MASTER'
 				}
 			}
 		};

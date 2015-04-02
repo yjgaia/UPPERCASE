@@ -187,6 +187,7 @@ Blog.List = CLASS({
 		// wrapper
 		wrapper = DIV({
 			c : [
+			
 			// 글 작성 버튼
 			A({
 				c : '글 작성',
@@ -195,7 +196,11 @@ Blog.List = CLASS({
 						Blog.GO('form');
 					}
 				}
-			}), list = UL()]
+			}),
+			
+			// 글 목록
+			list = UL()]
+		
 		}).appendTo(BODY),
 		
 		// article watching room, 신규 데이터 감지 및 기존 데이터들을 불러오고 데이터의 변경을 감지하는 룸 생성
@@ -329,6 +334,6 @@ node Blog.js
 
 실행 후 브라우저를 켜서 http://localhost:8328 로 접속해 보시기 바랍니다. `MODEL`의 `onNewAndFindWatching` 기능을 사용하여, 처음에 글 목록을 가져오고, 이후에 새 글이 생길 때 자동으로 목록에 새 글이 추가되는 것을 확인할 수 있습니다.
 
-이제 간단한 블로그가 완성되었습니다! 다음 문서에서는 블로그에 댓글 기능을 추가하는 것을 실습해 보겠습니다.
+이제 간단한 블로그가 완성되었습니다! 다음 문서에서는 블로그에 인증을 추가하는 것을 실습해 보겠습니다.
 
-다음 문서: [블로그에 댓글 추가하기](ADD_COMMENT_TO_BLOG.md)
+다음 문서: [블로그에 인증 추가하기](ADD_AUTH_TO_BLOG.md)

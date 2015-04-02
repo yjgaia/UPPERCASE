@@ -12,5 +12,10 @@ Blog.MAIN = METHOD({
 			uri : ['form', 'form/{articleId}'],
 			target : Blog.Form
 		});
+		
+		Blog.MATCH_VIEW({
+			uri : 'login',
+			target : Blog.Login
+		});
 	}
 });

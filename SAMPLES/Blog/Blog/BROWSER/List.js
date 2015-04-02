@@ -16,6 +16,7 @@ Blog.List = CLASS({
 		// wrapper
 		wrapper = DIV({
 			c : [
+			
 			// 글 작성 버튼
 			A({
 				c : '글 작성',
@@ -24,7 +25,24 @@ Blog.List = CLASS({
 						Blog.GO('form');
 					}
 				}
-			}), list = UL()]
+			}),
+			
+			// 로그인 버튼
+			A({
+				style : {
+					marginLeft : 5
+				},
+				c : '로그인',
+				on : {
+					tap : function() {
+						Blog.GO('login');
+					}
+				}
+			}),
+			
+			// 글 목록
+			list = UL()]
+			
 		}).appendTo(BODY),
 		
 		// article watching room, 신규 데이터 감지 및 기존 데이터들을 불러오고 데이터의 변경을 감지하는 룸 생성

@@ -71,7 +71,7 @@ node Sample.js
 ...
 ```
 
-http://localhost:8080 으로 접속하여 까만 화면이 뜬다면 프로젝트 개발의 모든 준비가 끝났습니다. (까반 배경화면은 UPPERCASE.IO의 기본 스타일입니다.)
+http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝트 개발의 모든 준비가 끝났습니다. (까반 배경화면은 UPPERCASE.IO의 기본 스타일입니다.)
 
 ## 간단한 화면 띄우기
 이 과정을 진행하기 전에, [UPPERCASE.JS](UPPERCASE.JS.md)와 [BOX](BOX.md)에 대한 내용을 숙지하시기 바랍니다.
