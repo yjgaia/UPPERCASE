@@ -2,7 +2,7 @@ OVERRIDE(REQUEST, function(origin) {
 	'use strict';
 
 	/**
-	 * ajax request. (fix for IE)
+	 * AJAX request. (fix for IE)
 	 */
 	global.REQUEST = METHOD({
 	
@@ -59,7 +59,7 @@ OVERRIDE(REQUEST, function(origin) {
 			}
 	
 			if (data !== undefined) {
-				paramStr = (paramStr === undefined ? '' : paramStr + '&') + 'data=' + encodeURIComponent(STRINGIFY(params.data));
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + '__DATA=' + encodeURIComponent(STRINGIFY(params.data));
 			}
 	
 			paramStr = (paramStr === undefined ? '' : paramStr + '&') + Date.now();

@@ -76,6 +76,8 @@ OVERRIDE(MATCH_VIEW, function(origin) {
 							view.changeParams(uriParams);
 							preParams = uriParams;
 						}
+						
+						view.runURIChangeHandlers(hash.substring(3));
 					}
 		
 					// when view not founded, close before view
