@@ -345,6 +345,12 @@ FOR_BOX(function(box) {
 			// if not exists, callback undefined.
 			// if error, run error handler.
 			update,
+			
+			// update data, but not save history
+			// if success, callback saved data.
+			// if not exists, callback undefined.
+			// if error, run error handler.
+			updateNoHistory,
 
 			// remove data.
 			// if success, callback saved data.
@@ -429,6 +435,22 @@ FOR_BOX(function(box) {
 				waitingUpdateInfos.push({
 					data : data,
 					callbackOrHandlers : callbackOrHandlers
+				});
+			};
+			
+			self.updateNoHistory = updateNoHistory = function(data, callbackOrHandlers) {
+				//REQUIRED: data
+				//REQUIRED: data.id
+				//OPTIONAL: data.$inc
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.error
+
+				waitingUpdateInfos.push({
+					data : data,
+					callbackOrHandlers : callbackOrHandlers,
+					isNotToSaveHistory : true
 				});
 			};
 			
@@ -895,7 +917,10 @@ FOR_BOX(function(box) {
 				},
 
 				// inner get.
-				innerGet;
+				innerGet,
+
+				// inner update.
+				innerUpdate;
 
 				self.create = create = function(data, callbackOrHandlers) {
 					//REQUIRED: data
@@ -1253,7 +1278,7 @@ FOR_BOX(function(box) {
 					}
 				};
 
-				self.update = update = function(data, callbackOrHandlers) {
+				innerUpdate = innerUpdate = function(data, callbackOrHandlers, isNotToSaveHistory) {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
@@ -1261,13 +1286,11 @@ FOR_BOX(function(box) {
 					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: isNotToSaveHistory
 
 					var
 					// id
 					id = data.id,
-
-					// $unset
-					$unset,
 
 					// $inc
 					$inc = data.$inc,
@@ -1284,11 +1307,11 @@ FOR_BOX(function(box) {
 					// error handler
 					errorHandler,
 
+					// $unset
+					$unset,
+
 					// update data
 					updateData,
-
-					// is set data
-					isSetData,
 
 					// error message
 					errorMsg;
@@ -1319,9 +1342,6 @@ FOR_BOX(function(box) {
 								}
 
 								$unset[name] = '';
-
-							} else {
-								isSetData = true;
 							}
 						});
 
@@ -1405,27 +1425,26 @@ FOR_BOX(function(box) {
 		
 												var
 												// update data
-												updateData;
-		
-												if ($inc === undefined || isSetData === true || $unset !== undefined) {
-		
-													updateData = {};
-		
-													if (isSetData === true) {
-														EACH(data, function(value, name) {
-															updateData[name] = value;
-														});
-													}
-		
-													if ($unset !== undefined) {
-														EACH($unset, function(value, name) {
-															updateData[name] = TO_DELETE;
-														});
-													}
-													
-													if (isNotUsingHistory !== true) {
-														addHistory('update', id, updateData, savedData.lastUpdateTime);
-													}
+												updateData = {};
+
+												EACH(data, function(value, name) {
+													updateData[name] = value;
+												});
+	
+												if ($unset !== undefined) {
+													EACH($unset, function(value, name) {
+														updateData[name] = TO_DELETE;
+													});
+												}
+												
+												if ($inc !== undefined) {
+													EACH($inc, function(notUsing, name) {
+														updateData[name] = savedData[name];
+													});
+												}
+												
+												if (isNotUsingHistory !== true && isNotToSaveHistory !== true) {
+													addHistory('update', id, updateData, savedData.lastUpdateTime);
 												}
 		
 												// aleady cleaned origin/saved data
@@ -1462,6 +1481,30 @@ FOR_BOX(function(box) {
 							errorMsg : error.toString()
 						}, errorHandler);
 					}
+				};
+				
+				self.update = update = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//REQUIRED: data.id
+					//OPTIONAL: data.$inc
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
+
+					innerUpdate(data, callbackOrHandlers);
+				};
+				
+				self.updateNoHistory = updateNoHistory = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//REQUIRED: data.id
+					//OPTIONAL: data.$inc
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
+
+					innerUpdate(data, callbackOrHandlers, true);
 				};
 				
 				self.remove = remove = function(id, callbackOrHandlers) {
@@ -2259,7 +2302,7 @@ FOR_BOX(function(box) {
 				waitingGetInfos = undefined;
 
 				EACH(waitingUpdateInfos, function(info) {
-					update(info.data, info.callbackOrHandlers);
+					innerUpdate(info.data, info.callbackOrHandlers, info.isNotToSaveHistory);
 				});
 
 				waitingUpdateInfos = undefined;
