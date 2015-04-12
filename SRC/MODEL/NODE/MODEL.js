@@ -394,10 +394,7 @@ FOR_BOX(function(box) {
 
 					var
 					// valid result
-					validResult,
-
-					// is not run next
-					isNotRunNext;
+					validResult;
 
 					// init data.
 					if (initData !== undefined) {
@@ -424,15 +421,16 @@ FOR_BOX(function(box) {
 
 						NEXT([
 						function(next) {
+							
+							var
+							// is not run next
+							isNotRunNext;
 
 							// run before create listeners.
 							EACH(beforeCreateListeners, function(beforeCreateListener) {
-
-								var
-								// b
-								b = beforeCreateListener(data, next, ret, clientInfo);
-
-								if (isNotRunNext !== true && b === false) {
+								
+								if (beforeCreateListener(data, next, ret, clientInfo) === false) {
+									
 									isNotRunNext = true;
 								}
 							});
@@ -442,7 +440,7 @@ FOR_BOX(function(box) {
 							}
 						},
 
-						function() {
+						function(next) {
 							return function() {
 
 								// create data in database.
@@ -455,32 +453,51 @@ FOR_BOX(function(box) {
 									},
 
 									success : function(savedData) {
-
+										
+										var
+										// is not run next
+										isNotRunNext;
+										
 										// run after create listeners.
 										EACH(afterCreateListeners, function(afterCreateListener) {
-											afterCreateListener(savedData, clientInfo);
+											
+											if (afterCreateListener(savedData, function() {
+												next(savedData);
+											}, clientInfo) === false) {
+												
+												isNotRunNext = true;
+											}
 										});
-
-										// broadcast.
-										box.BROADCAST({
-											roomName : name + '/create',
-											methodName : 'create',
-											data : savedData
-										});
-
-										// broadcast by property.
-										EACH(savedData, function(value, propertyName) {
-											box.BROADCAST({
-												roomName : name + '/' + propertyName + '/' + value + '/create',
-												methodName : 'create',
-												data : savedData
-											});
-										});
-
-										ret({
-											savedData : savedData
-										});
+			
+										if (isNotRunNext !== true) {
+											next(savedData);
+										}
 									}
+								});
+							};
+						},
+						
+						function() {
+							return function(savedData) {
+								
+								// broadcast.
+								box.BROADCAST({
+									roomName : name + '/create',
+									methodName : 'create',
+									data : savedData
+								});
+
+								// broadcast by property.
+								EACH(savedData, function(value, propertyName) {
+									box.BROADCAST({
+										roomName : name + '/' + propertyName + '/' + value + '/create',
+										methodName : 'create',
+										data : savedData
+									});
+								});
+
+								ret({
+									savedData : savedData
 								});
 							};
 						}]);
@@ -509,10 +526,7 @@ FOR_BOX(function(box) {
 					isRandom,
 					
 					// is to cache
-					isToCache,
-
-					// is not run next
-					isNotRunNext;
+					isToCache;
 
 					// init params.
 					if (CHECK_IS_DATA(idOrParams) !== true) {
@@ -524,48 +538,59 @@ FOR_BOX(function(box) {
 						isRandom = idOrParams.isRandom;
 						isToCache = idOrParams.isToCache;
 					}
-
-					// get data in database.
-					db.get({
-						id : id,
-						filter : filter,
-						sort : sort,
-						isRandom : isRandom,
-						isToCache : isToCache
-					}, {
-
-						error : function(errorMsg) {
-							ret({
-								errorMsg : errorMsg
-							});
-						},
-
-						notExists : function() {
-							ret();
-						},
-
-						success : function(savedData) {
-
-							// run get listeners.
-							EACH(getListeners, function(getListener) {
-
-								var
-								// b
-								b = getListener(savedData, ret, clientInfo);
-
-								if (isNotRunNext !== true && b === false) {
-									isNotRunNext = true;
-								}
-							});
-
-							if (isNotRunNext !== true) {
-
+					
+					NEXT([
+					function(next) {
+						
+						// get data in database.
+						db.get({
+							id : id,
+							filter : filter,
+							sort : sort,
+							isRandom : isRandom,
+							isToCache : isToCache
+						}, {
+	
+							error : function(errorMsg) {
 								ret({
-									savedData : savedData
+									errorMsg : errorMsg
 								});
+							},
+	
+							notExists : function() {
+								ret();
+							},
+	
+							success : function(savedData) {
+								
+								var
+								// is not run next
+								isNotRunNext;
+	
+								// run get listeners.
+								EACH(getListeners, function(getListener) {
+									
+									if (getListener(savedData, next, ret, clientInfo) === false) {
+										
+										isNotRunNext = true;
+									}
+								});
+	
+								if (isNotRunNext !== true) {
+									next(savedData);
+								}
 							}
-						}
-					});
+						});
+					},
+					
+					function() {
+						return function(savedData) {
+
+							ret({
+								savedData : savedData
+							});
+						};
+					}]);
 				};
 
 				innerUpdate = function(data, ret, clientInfo, isNotToSaveHistory) {
@@ -575,10 +600,7 @@ FOR_BOX(function(box) {
 					id = data.id,
 
 					// valid result
-					validResult,
-
-					// is not run next
-					isNotRunNext;
+					validResult;
 
 					// valid data.
 					if (updateValid !== undefined) {
@@ -600,15 +622,16 @@ FOR_BOX(function(box) {
 
 						NEXT([
 						function(next) {
+										
+							var
+							// is not run next
+							isNotRunNext;
 
 							// run before update listeners.
 							EACH(beforeUpdateListeners, function(beforeUpdateListener) {
 
-								var
-								// b
-								b = beforeUpdateListener(data, next, ret, clientInfo);
+								if (beforeUpdateListener(data, next, ret, clientInfo) === false) {
 
-								if (isNotRunNext !== true && b === false) {
 									isNotRunNext = true;
 								}
 							});
@@ -618,7 +641,7 @@ FOR_BOX(function(box) {
 							}
 						},
 
-						function() {
+						function(next) {
 							return function() {
 
 								// update data in database.
@@ -635,33 +658,43 @@ FOR_BOX(function(box) {
 									},
 
 									success : function(savedData, originData) {
-
+										
+										var
+										// is not run next
+										isNotRunNext;
+										
 										// run after update listeners.
 										EACH(afterUpdateListeners, function(afterUpdateListener) {
-											afterUpdateListener(savedData, originData, clientInfo);
+			
+											if (afterUpdateListener(savedData, originData, function() {
+												next(savedData, originData);
+											}, clientInfo) === false) {
+												
+												isNotRunNext = true;
+											}
 										});
-
-										// broadcast.
-										box.BROADCAST({
-											roomName : name + '/' + savedData.id,
-											methodName : 'update',
-											data : savedData
-										});
-
-										// broadcast by property.
-										EACH(savedData, function(value, propertyName) {
-											box.BROADCAST({
-												roomName : name + '/' + propertyName + '/' + value + '/update',
-												methodName : 'update',
-												data : savedData
-											});
-										});
-
-										ret({
-											savedData : savedData,
-											originData : originData
-										});
+			
+										if (isNotRunNext !== true) {
+											next(savedData, originData);
+										}
 									}
+								});
+							};
+						},
+						
+						function() {
+							return function(savedData, originData) {
+
+								// broadcast.
+								box.BROADCAST({
+									roomName : name + '/' + savedData.id,
+									methodName : 'update',
+									data : savedData
+								});
+
+								ret({
+									savedData : savedData,
+									originData : originData
 								});
 							};
 						}]);
@@ -669,22 +702,19 @@ FOR_BOX(function(box) {
 				};
 
 				innerRemove = function(id, ret, clientInfo) {
-
-					var
-					// is not run next
-					isNotRunNext;
-
+					
 					NEXT([
 					function(next) {
+						
+						var
+						// is not run next
+						isNotRunNext;
 
 						// run before remove listeners.
 						EACH(beforeRemoveListeners, function(beforeRemoveListener) {
-
-							var
-							// b
-							b = beforeRemoveListener(id, next, ret, clientInfo);
-
-							if (isNotRunNext !== true && b === false) {
+							
+							if (beforeRemoveListener(id, next, ret, clientInfo) === false) {
+								
 								isNotRunNext = true;
 							}
 						});
@@ -694,7 +724,7 @@ FOR_BOX(function(box) {
 						}
 					},
 
-					function() {
+					function(next) {
 						return function() {
 
 							// remove data in database.
@@ -711,35 +741,51 @@ FOR_BOX(function(box) {
 								},
 
 								success : function(originData) {
+									
+									var
+									// is not run next
+									isNotRunNext;
 
-									if (originData !== undefined) {
-
-										// run after remove listeners.
-										EACH(afterRemoveListeners, function(afterRemoveListener) {
-											afterRemoveListener(originData, clientInfo);
-										});
-
-										// broadcast.
-										box.BROADCAST({
-											roomName : name + '/' + originData.id,
-											methodName : 'remove',
-											data : originData
-										});
-
-										// broadcast by property.
-										EACH(originData, function(value, propertyName) {
-											box.BROADCAST({
-												roomName : name + '/' + propertyName + '/' + value + '/remove',
-												methodName : 'remove',
-												data : originData
-											});
-										});
-									}
-
-									ret({
-										originData : originData
+									// run after remove listeners.
+									EACH(afterRemoveListeners, function(afterRemoveListener) {
+										
+										if (afterRemoveListener(originData, function() {
+											next(originData);
+										}, clientInfo) === false) {
+											
+											isNotRunNext = true;
+										}
 									});
+
+									if (isNotRunNext !== true) {
+										next(originData);
+									}
 								}
+							});
+						};
+					},
+						
+					function() {
+						return function(originData) {
+							
+							// broadcast.
+							box.BROADCAST({
+								roomName : name + '/' + originData.id,
+								methodName : 'remove',
+								data : originData
+							});
+
+							// broadcast by property.
+							EACH(originData, function(value, propertyName) {
+								box.BROADCAST({
+									roomName : name + '/' + propertyName + '/' + value + '/remove',
+									methodName : 'remove',
+									data : originData
+								});
+							});
+
+							ret({
+								originData : originData
 							});
 						};
 					}]);
@@ -771,10 +817,7 @@ FOR_BOX(function(box) {
 					isFindAll,
 					
 					// is to cache
-					isToCache,
-
-					// is not run next
-					isNotRunNext;
+					isToCache;
 
 					if (params !== undefined) {
 						filter = params.filter;
@@ -784,45 +827,56 @@ FOR_BOX(function(box) {
 						isFindAll = params.isFindAll;
 						isToCache = params.isToCache;
 					}
-
-					// find data set in database.
-					db.find({
-						filter : filter,
-						sort : sort,
-						start : start,
-						count : count,
-						isFindAll : isFindAll,
-						isToCache : isToCache
-					}, {
-
-						error : function(errorMsg) {
-							ret({
-								errorMsg : errorMsg
-							});
-						},
-
-						success : function(savedDataSet) {
-
-							// run find listeners.
-							EACH(findListeners, function(findListener) {
-
-								var
-								// b
-								b = findListener(savedDataSet, ret, clientInfo);
-
-								if (isNotRunNext !== true && b === false) {
-									isNotRunNext = true;
-								}
-							});
-
-							if (isNotRunNext !== true) {
-
+					
+					NEXT([
+					function(next) {
+						
+						// find data set in database.
+						db.find({
+							filter : filter,
+							sort : sort,
+							start : start,
+							count : count,
+							isFindAll : isFindAll,
+							isToCache : isToCache
+						}, {
+	
+							error : function(errorMsg) {
 								ret({
-									savedDataSet : savedDataSet
+									errorMsg : errorMsg
 								});
+							},
+	
+							success : function(savedDataSet) {
+						
+								var
+								// is not run next
+								isNotRunNext;
+	
+								// run find listeners.
+								EACH(findListeners, function(findListener) {
+	
+									if (findListener(savedDataSet, next, ret, clientInfo) === false) {
+										
+										isNotRunNext = true;
+									}
+								});
+	
+								if (isNotRunNext !== true) {
+									next(savedDataSet);
+								}
 							}
-						}
-					});
+						});
+					},
+					
+					function() {
+						return function(savedDataSet) {
+
+							ret({
+								savedDataSet : savedDataSet
+							});
+						};
+					}]);
 				};
 
 				innerCount = function(params, ret, clientInfo) {
@@ -835,50 +889,58 @@ FOR_BOX(function(box) {
 					filter,
 					
 					// is to cache
-					isToCache,
-
-					// is not run next
-					isNotRunNext;
+					isToCache;
 
 					if (params !== undefined) {
 						filter = params.filter;
 						isToCache = params.isToCache;
 					}
-
-					// count data in database.
-					db.count({
-						filter : filter,
-						isToCache : isToCache
-					}, {
-
-						error : function(errorMsg) {
-							ret({
-								errorMsg : errorMsg
-							});
-						},
-
-						success : function(count) {
-
-							// run count listeners.
-							EACH(countListeners, function(countListener) {
-
-								var
-								// b
-								b = countListener(count, ret, clientInfo);
-
-								if (isNotRunNext !== true && b === false) {
-									isNotRunNext = true;
-								}
-							});
-
-							if (isNotRunNext !== true) {
-
+					
+					NEXT([
+					function(next) {
+						
+						// count data in database.
+						db.count({
+							filter : filter,
+							isToCache : isToCache
+						}, {
+	
+							error : function(errorMsg) {
 								ret({
-									count : count
+									errorMsg : errorMsg
 								});
+							},
+	
+							success : function(count) {
+								
+								var
+								// is not run next
+								isNotRunNext;
+	
+								// run count listeners.
+								EACH(countListeners, function(countListener) {
+									
+									if (countListener(count, next, ret, clientInfo) === false) {
+										
+										isNotRunNext = true;
+									}
+								});
+	
+								if (isNotRunNext !== true) {
+									next(count);
+								}
 							}
-						}
-					});
+						});
+					},
+					
+					function() {
+						return function(count) {
+
+							ret({
+								count : count
+							});
+						};
+					}]);
 				};
 
 				innerCheckIsExists = function(params, ret, clientInfo) {
@@ -891,50 +953,58 @@ FOR_BOX(function(box) {
 					filter,
 					
 					// is to cache
-					isToCache,
-
-					// is not run next
-					isNotRunNext;
+					isToCache;
 
 					if (params !== undefined) {
 						filter = params.filter;
 						isToCache = params.isToCache;
 					}
-
-					// check is exists data in database.
-					db.checkIsExists({
-						filter : filter,
-						isToCache : isToCache
-					}, {
-
-						error : function(errorMsg) {
-							ret({
-								errorMsg : errorMsg
-							});
-						},
-
-						success : function(isExists) {
-
-							// run check is exists listeners.
-							EACH(checkIsExistsListeners, function(checkIsExistsListener) {
-
-								var
-								// b
-								b = checkIsExistsListeners(isExists, ret, clientInfo);
-
-								if (isNotRunNext !== true && b === false) {
-									isNotRunNext = true;
-								}
-							});
-
-							if (isNotRunNext !== true) {
-
+					
+					NEXT([
+					function(next) {
+						
+						// check is exists data in database.
+						db.checkIsExists({
+							filter : filter,
+							isToCache : isToCache
+						}, {
+	
+							error : function(errorMsg) {
 								ret({
-									isExists : isExists
+									errorMsg : errorMsg
 								});
+							},
+	
+							success : function(isExists) {
+								
+								var
+								// is not run next
+								isNotRunNext;
+	
+								// run check is exists listeners.
+								EACH(checkIsExistsListeners, function(checkIsExistsListener) {
+	
+									if (checkIsExistsListeners(isExists, next, ret, clientInfo) === false) {
+										
+										isNotRunNext = true;
+									}
+								});
+	
+								if (isNotRunNext !== true) {
+									next(isExists);
+								}
 							}
-						}
-					});
+						});
+					},
+					
+					function() {
+						return function(isExists) {
+
+							ret({
+								isExists : isExists
+							});
+						};
+					}]);
 				};
 
 				self.create = create = function(data, callbackOrHandlers) {

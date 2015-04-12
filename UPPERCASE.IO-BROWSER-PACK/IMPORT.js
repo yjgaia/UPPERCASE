@@ -7704,20 +7704,17 @@ global.CONTEXT = CLASS({
 		// native context
 		nativeContext = canvas.getEl().getContext('2d'),
 
-		// get native context.
-		getNativeContext,
-
 		// draw img.
 		drawImg,
 
-		// get img data.
-		getImgData,
+		// get image data.
+		getImageData,
 
 		// create image data.
-		createImgData,
+		createImageData,
 
 		// put image data.
-		putImgData,
+		putImageData,
 
 		// set scale.
 		setScale,
@@ -7732,19 +7729,39 @@ global.CONTEXT = CLASS({
 		restore,
 
 		// clear.
-		clear;
-
-		inner.getNativeContext = getNativeContext = function() {
-			return nativeContext;
-		};
+		clear,
+		
+		// begin path.
+		beginPath,
+		
+		// close path.
+		closePath,
+		
+		// move to.
+		moveTo,
+		
+		// line to.
+		lineTo,
+		
+		// strock.
+		strock,
+		
+		// set strock style.
+		setStrokeStyle,
+		
+		// fill.
+		fill,
+		
+		// set fill style.
+		setFillStyle;
 
 		self.drawImg = drawImg = function(params) {
 			//REQUIRED: params
 			//REQUIRED: params.img
-			//OPTIONAL: params.left
-			//OPTIONAL: params.top
-			//OPTIONAL: params.clipLeft
-			//OPTIONAL: params.clipTop
+			//OPTIONAL: params.x
+			//OPTIONAL: params.y
+			//OPTIONAL: params.clipX
+			//OPTIONAL: params.clipY
 			//OPTIONAL: params.clipWidth
 			//OPTIONAL: params.clipHeight
 			//OPTIONAL: params.width
@@ -7754,17 +7771,17 @@ global.CONTEXT = CLASS({
 			// img
 			img = params.img,
 
-			// left
-			left = params.left === undefined ? 0 : params.left,
+			// x
+			x = params.x === undefined ? 0 : params.x,
 
-			// top
-			top = params.top === undefined ? 0 : params.top,
+			// y
+			y = params.y === undefined ? 0 : params.y,
 
-			// clip left
-			clipLeft = params.clipLeft !== undefined ? params.clipLeft : 0,
+			// clip x
+			clipX = params.clipX !== undefined ? params.clipX : 0,
 
-			// clip top
-			clipTop = params.clipTop !== undefined ? params.clipTop : 0,
+			// clip y
+			clipY = params.clipY !== undefined ? params.clipY : 0,
 
 			// clip width
 			clipWidth = params.clipWidth,
@@ -7783,9 +7800,9 @@ global.CONTEXT = CLASS({
 
 			if (clipWidth === undefined && clipHeight === undefined) {
 				if (width > 0 && height > 0) {
-					nativeContext.drawImage(img.getEl(), left, top, width, height);
+					nativeContext.drawImage(img.getEl(), x, y, width, height);
 				} else {
-					nativeContext.drawImage(img.getEl(), left, top);
+					nativeContext.drawImage(img.getEl(), x, y);
 				}
 			} else {
 
@@ -7796,23 +7813,23 @@ global.CONTEXT = CLASS({
 					clipHeight = img.getHeight();
 				}
 
-				nativeContext.drawImage(img.getEl(), clipLeft * scale, clipTop * scale, clipWidth * scale, clipHeight * scale, left, top, width, height);
+				nativeContext.drawImage(img.getEl(), clipX * scale, clipY * scale, clipWidth * scale, clipHeight * scale, x, y, width, height);
 			}
 		};
 
-		self.getImgData = getImgData = function(params) {
+		self.getImageData = getImageData = function(params) {
 			//OPTIONAL: params
-			//OPTIONAL: params.left
-			//OPTIONAL: params.top
+			//OPTIONAL: params.x
+			//OPTIONAL: params.y
 			//OPTIONAL: params.width
 			//OPTIONAL: params.height
 
 			var
-			// left
-			left = params === undefined || params.left === undefined ? 0 : params.left,
+			// x
+			x = params === undefined || params.x === undefined ? 0 : params.x,
 
-			// top
-			top = params === undefined || params.top === undefined ? 0 : params.top,
+			// y
+			y = params === undefined || params.y === undefined ? 0 : params.y,
 
 			// width
 			width = params === undefined || params.width === undefined ? canvas.getWidth() : params.width,
@@ -7820,10 +7837,10 @@ global.CONTEXT = CLASS({
 			// height
 			height = params === undefined || params.height === undefined ? canvas.getHeight() : params.height;
 
-			return nativeContext.getImageData(left, top, width, height);
+			return nativeContext.getImageData(x, y, width, height);
 		};
 
-		self.createImgData = createImgData = function(params) {
+		self.createImageData = createImageData = function(params) {
 			//REQUIRED: params
 			//REQUIRED: params.width
 			//REQUIRED: params.height
@@ -7838,23 +7855,23 @@ global.CONTEXT = CLASS({
 			return nativeContext.createImageData(width, height);
 		};
 
-		self.putImgData = putImgData = function(params) {
+		self.putImageData = putImageData = function(params) {
 			//REQUIRED: params
 			//REQUIRED: params.data
-			//OPTIONAL: params.left
-			//OPTIONAL: params.top
+			//OPTIONAL: params.x
+			//OPTIONAL: params.y
 
 			var
 			// data
 			data = params.data,
 
-			// left
-			left = params.left === undefined ? 0 : params.left,
+			// x
+			x = params.x === undefined ? 0 : params.x,
 
-			// top
-			top = params.top === undefined ? 0 : params.top;
+			// y
+			y = params.y === undefined ? 0 : params.y;
 
-			nativeContext.putImageData(data, left, top);
+			nativeContext.putImageData(data, x, y);
 		};
 
 		self.setScale = setScale = function(scaleSize) {
@@ -7874,28 +7891,28 @@ global.CONTEXT = CLASS({
 
 		self.rotate = rotate = function(params) {
 			//REQUIRED: params
-			//REQUIRED: params.centerLeft
-			//REQUIRED: params.centerTop
+			//REQUIRED: params.centerX
+			//REQUIRED: params.centerY
 			//REQUIRED: params.degree
 
 			var
-			// center left
-			centerLeft = params.centerLeft,
+			// center x
+			centerX = params.centerX,
 
-			// center top
-			centerTop = params.centerTop,
+			// center y
+			centerY = params.centerY,
 
 			// degree
 			degree = params.degree;
 
 			// Move registration point to the center of the canvas
-			nativeContext.translate(centerLeft, centerTop);
+			nativeContext.translate(centerX, centerY);
 
 			// Rotate degree
 			nativeContext.rotate(degree * Math.PI / 180);
 
-			// Move registration point back to the top left corner of canvas
-			nativeContext.translate(-centerLeft, -centerTop);
+			// Move registration point back to the y x corner of canvas
+			nativeContext.translate(-centerX, -centerY);
 		};
 
 		self.save = save = function() {
@@ -7908,6 +7925,60 @@ global.CONTEXT = CLASS({
 
 		self.clear = clear = function() {
 			nativeContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		};
+		
+		self.beginPath = beginPath = function() {
+			nativeContext.beginPath();
+		};
+		
+		self.closePath = closePath = function() {
+			nativeContext.closePath();
+		};
+		
+		self.moveTo = moveTo = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.x
+			//REQUIRED: params.y
+			
+			var
+			// x
+			x = params.x,
+			
+			// y
+			y = params.y;
+			
+			nativeContext.moveTo(x, y);
+		};
+		
+		self.lineTo = lineTo = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.x
+			//REQUIRED: params.y
+			
+			var
+			// x
+			x = params.x,
+			
+			// y
+			y = params.y;
+			
+			nativeContext.lineTo(x, y);
+		};
+		
+		self.strock = strock = function(params) {
+			nativeContext.strock();
+		};
+		
+		self.setStrokeStyle = setStrokeStyle = function(strokeStyle) {
+			nativeContext.strokeStyle = strokeStyle;
+		};
+		
+		self.fill = fill = function() {
+			nativeContext.fill();
+		};
+		
+		self.setFillStyle = setFillStyle = function(fillStyle) {
+			nativeContext.fillStyle = fillStyle;
 		};
 	}
 });
