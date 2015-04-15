@@ -1,4 +1,4 @@
-UDB.Detail = CLASS({
+UADMIN.Detail = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -15,7 +15,7 @@ UDB.Detail = CLASS({
 			style : {
 				backgroundColor : '#fff'
 			}
-		}).appendTo(UDB.Layout.getContent());
+		}).appendTo(UADMIN.Layout.getContent());
 
 		inner.on('paramsChange', function(params) {
 			
@@ -34,13 +34,13 @@ UDB.Detail = CLASS({
 			GET({
 				uri : '__/' + boxName + '/' + modelName + '/get',
 				data : id
-			}, function(savedDataStr) {
+			}, function(resultStr) {
 				
 				var
-				// saved data
-				savedData = PARSE_STR(savedDataStr);
+				// result
+				result = PARSE_STR(resultStr);
 				
-				UDB.Layout.getToolbar().setTitle(savedData.id);
+				UADMIN.Layout.getToolbar().setTitle(result.savedData.id);
 				
 				wrapper.append(P({
 					style : {
@@ -54,7 +54,7 @@ UDB.Detail = CLASS({
 						// children
 						c = [];
 						
-						EACH(savedData, function(value, name) {
+						EACH(result.savedData, function(value, name) {
 							
 							if (name !== 'id') {
 							

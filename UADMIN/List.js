@@ -1,4 +1,4 @@
-UDB.List = CLASS({
+UADMIN.List = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -10,17 +10,8 @@ UDB.List = CLASS({
 		'use strict';
 		
 		var
-		// list
-		list,
-		
 		// wrapper
-		wrapper = DIV({
-			c : list = UUI.LIST({
-				style : {
-					backgroundColor : '#fff'
-				}
-			})
-		}).appendTo(UDB.Layout.getContent());
+		wrapper = DIV().appendTo(UADMIN.Layout.getContent());
 
 		inner.on('paramsChange', function(params) {
 			
@@ -29,24 +20,44 @@ UDB.List = CLASS({
 			boxName = params.boxName,
 			
 			// model name
-			modelName = params.modelName;
+			modelName = params.modelName,
 			
-			list.removeAllItems();
+			// list
+			list;
 			
-			UDB.Layout.getToolbar().setTitle(modelName + ' Model');
+			wrapper.empty();
+			wrapper.append(list = UUI.LIST({
+				style : {
+					backgroundColor : '#fff'
+				}
+			}));
+			
+			UADMIN.Layout.getToolbar().setTitle(modelName + ' Model');
 			
 			GET({
 				uri : '__/' + boxName + '/' + modelName + '/find',
 				data : {
 					count : 10
 				}
-			}, function(savedDataSetStr) {
+			}, function(resultStr) {
 				
 				var
-				// saved data set
-				savedDataSet = PARSE_STR(savedDataSetStr);
+				// result
+				result = PARSE_STR(resultStr);
 				
-				EACH(savedDataSet, function(savedData) {
+				wrapper.prepend(UUI.BUTTON({
+					style : {
+						padding : '10px 0'
+					},
+					title : 'NEW DATA',
+					on : {
+						tap : function() {
+							UADMIN.GO(boxName + '/' + modelName + '/f/new');
+						}
+					}
+				}));
+				
+				EACH(result.savedDataSet, function(savedData) {
 					
 					list.addItem({
 						key : savedData.id,
@@ -60,7 +71,7 @@ UDB.List = CLASS({
 							c : savedData.id,
 							on : {
 								tap : function() {
-									UDB.GO(boxName + '/' + modelName + '/' + savedData.id);
+									UADMIN.GO(boxName + '/' + modelName + '/' + savedData.id);
 								}
 							}
 						})

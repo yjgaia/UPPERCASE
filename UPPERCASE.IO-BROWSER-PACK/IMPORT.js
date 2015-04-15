@@ -4918,11 +4918,8 @@ global.EVENT = CLASS(function(cls) {
 
 				EACH(events, function(evt) {
 
-					var
-					// b
-					b = evt.fire();
-
-					if (b === false) {
+					if (evt.fire() === false) {
+						
 						ret = false;
 					}
 				});
@@ -6965,20 +6962,29 @@ global.OPTION = CLASS({
 		//OPTIONAL: params.name
 		//OPTIONAL: params.placeholder
 		//OPTIONAL: params.value
+		//OPTIONAL: params.c
 
 		var
 		// value
-		value;
+		value,
+		
+		// children
+		children;
 
 		// init params.
 		if (params !== undefined) {
 			value = params.value;
+			children = params.c;
 		}
 
 		if (value === undefined) {
 			self.setValue('');
 		} else {
 			self.setValue(value);
+			
+			if (children === undefined) {
+				self.append(value);
+			}
 		}
 	}
 });
@@ -11173,15 +11179,15 @@ FOR_BOX(function(box) {
 				return name;
 			};
 
-			inner.getInitData = getInitData = function() {
+			self.getInitData = getInitData = function() {
 				return initData;
 			};
 
-			inner.getCreateValid = getCreateValid = function() {
+			self.getCreateValid = getCreateValid = function() {
 				return createValid;
 			};
 
-			inner.getUpdateValid = getUpdateValid = function() {
+			self.getUpdateValid = getUpdateValid = function() {
 				return updateValid;
 			};
 

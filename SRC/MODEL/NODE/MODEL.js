@@ -297,15 +297,15 @@ FOR_BOX(function(box) {
 					return name;
 				};
 
-				inner.getInitData = getInitData = function() {
+				self.getInitData = getInitData = function() {
 					return initData;
 				};
 
-				inner.getCreateValid = getCreateValid = function() {
+				self.getCreateValid = getCreateValid = function() {
 					return createValid;
 				};
 
-				inner.getUpdateValid = getUpdateValid = function() {
+				self.getUpdateValid = getUpdateValid = function() {
 					return updateValid;
 				};
 

@@ -1,4 +1,4 @@
-UDB.Home = CLASS({
+UADMIN.Home = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -11,11 +11,11 @@ UDB.Home = CLASS({
 
 		var
 		// wrapper
-		wrapper = DIV().appendTo(UDB.Layout.getContent());
-			
-		UDB.Layout.getToolbar().setTitle('UDB');
+		wrapper = DIV().appendTo(UADMIN.Layout.getContent());
 		
-		EACH(UDB.MODEL_NAME_MAP, function(modelNames, boxName) {
+		UADMIN.Layout.getToolbar().setTitle('UADMIN');
+		
+		EACH(UADMIN.MODEL_NAME_MAP, function(modelNames, boxName) {
 			
 			var
 			// box wrapper
@@ -49,9 +49,15 @@ UDB.Home = CLASS({
 						style : {
 							padding : 10,
 							backgroundColor : '#ccc',
-							fontWeight : 'bold'
+							fontWeight : 'bold',
+							cursor : 'pointer'
 						},
-						c : modelName + ' Model'
+						c : modelName + ' Model',
+						on : {
+							tap : function() {
+								UADMIN.GO(boxName + '/' + modelName);
+							}
+						}
 					}), list = UUI.LIST()]
 				}).appendTo(boxWrapper);
 				
@@ -60,13 +66,13 @@ UDB.Home = CLASS({
 					data : {
 						count : 5
 					}
-				}, function(savedDataSetStr) {
-					
+				}, function(resultStr) {
+				
 					var
-					// saved data set
-					savedDataSet = PARSE_STR(savedDataSetStr);
+					// result
+					result = PARSE_STR(resultStr);
 					
-					EACH(savedDataSet, function(savedData) {
+					EACH(result.savedDataSet, function(savedData) {
 						
 						list.addItem({
 							key : savedData.id,
@@ -79,7 +85,7 @@ UDB.Home = CLASS({
 								c : savedData.id,
 								on : {
 									tap : function() {
-										UDB.GO(boxName + '/' + modelName + '/' + savedData.id);
+										UADMIN.GO(boxName + '/' + modelName + '/' + savedData.id);
 									}
 								}
 							})

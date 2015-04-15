@@ -5,6 +5,9 @@ page = require('webpage').create(),
 // system
 system = require('system'),
 
+// count
+count = 0,
+
 // check ready interval
 checkReadyInterval,
 
@@ -44,7 +47,7 @@ page.open('http://localhost:' + system.args[1] + '/' + (system.args[2] === undef
 	}
 });
 
-// check is ready per 0.1 seconds.
+// check is ready per 0.1 seconds. timeout : 10 seconds
 checkReadyInterval = setInterval(function() {
 	'use strict';
 	
@@ -61,4 +64,11 @@ checkReadyInterval = setInterval(function() {
 		
 		clearInterval(checkReadyInterval);
 	}
+	
+	count += 1;
+	
+	if (count === 100) {
+		phantom.exit();
+	}
+	
 }, 100);

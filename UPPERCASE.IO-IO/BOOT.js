@@ -4,7 +4,7 @@ global.BOOT = function(params) {
 	//OPTIONAL: params.CONFIG
 	//OPTIONAL: params.NODE_CONFIG
 	//OPTIONAL: params.BROWSER_CONFIG
-	//OPTIONAL: params.UDB_CONFIG
+	//OPTIONAL: params.UADMIN_CONFIG
 
 	var
 	//IMPORT: path
@@ -190,7 +190,7 @@ global.BOOT = function(params) {
 			_NODE_CONFIG = params.NODE_CONFIG;
 			_BROWSER_CONFIG = params.BROWSER_CONFIG;
 			
-			global.UDB_CONFIG = params.UDB_CONFIG;
+			global.UADMIN_CONFIG = params.UADMIN_CONFIG;
 		}
 
 		// override CONFIG.
@@ -943,7 +943,7 @@ global.BOOT = function(params) {
 										next({
 											contentType : savedData.type,
 											headers : {
-												'Content-Disposition' : 'attachment; filename="' + savedData.name + '"',
+												'Content-Disposition' : 'filename="' + savedData.name + '"',
 												'Access-Control-Allow-Origin' : '*'
 											},
 											isFinal : true
@@ -1201,9 +1201,9 @@ global.BOOT = function(params) {
 		// run.
 		run();
 		
-		// run UDB.
-		if (UDB_CONFIG !== undefined) {
-			BOOT_UDB(UPPERCASE_IO_PATH);
+		// run UADMIN.
+		if (UADMIN_CONFIG !== undefined) {
+			BOOT_UADMIN(UPPERCASE_IO_PATH);
 		}
 	});
 };

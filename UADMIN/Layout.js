@@ -1,4 +1,4 @@
-UDB.Layout = CLASS(function(cls) {
+UADMIN.Layout = CLASS(function(cls) {
 	'use strict';
 
 	var
@@ -63,7 +63,7 @@ UDB.Layout = CLASS(function(cls) {
 					}),
 	
 					// title
-					title : 'UDB'
+					title : 'UADMIN'
 				}),
 				
 				leftMenu : DIV({
@@ -80,12 +80,12 @@ UDB.Layout = CLASS(function(cls) {
 							title : 'Home',
 							on : {
 								tap : function() {
-									UDB.GO('');
+									UADMIN.GO('');
 								}
 							}
 						})];
 						
-						EACH(UDB.MODEL_NAME_MAP, function(modelNames, boxName) {
+						EACH(UADMIN.MODEL_NAME_MAP, function(modelNames, boxName) {
 							EACH(modelNames, function(modelName) {
 								
 								c.push(UUI.BUTTON_H({
@@ -97,7 +97,7 @@ UDB.Layout = CLASS(function(cls) {
 									title : boxName + ' / ' + modelName + ' Model',
 									on : {
 										tap : function() {
-											UDB.GO(boxName + '/' + modelName);
+											UADMIN.GO(boxName + '/' + modelName);
 										}
 									}
 								}));
