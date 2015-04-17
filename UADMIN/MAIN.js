@@ -8,32 +8,32 @@ UADMIN.MAIN = METHOD({
 			UADMIN.MODEL_NAME_MAP = PARSE_STR(json);
 			
 			UADMIN.MATCH_VIEW({
-				uri : ['**'],
+				uri : '**',
 				target : UADMIN.Layout
 			});
 			
 			UADMIN.MATCH_VIEW({
-				uri : [''],
+				uri : '',
 				target : UADMIN.Home
 			});
 			
 			UADMIN.MATCH_VIEW({
-				uri : ['{boxName}/{modelName}'],
+				uri : '{boxName}/{modelName}',
 				target : UADMIN.List
 			});
 			
 			UADMIN.MATCH_VIEW({
-				uri : ['{boxName}/{modelName}/{id}'],
+				uri : '{boxName}/{modelName}/{id}',
 				target : UADMIN.Detail
 			});
 			
 			UADMIN.MATCH_VIEW({
-				uri : ['{boxName}/{modelName}/f/new'],
+				uri : '{boxName}/{modelName}/f/new',
 				target : UADMIN.Form
 			});
 			
 			UADMIN.MATCH_VIEW({
-				uri : ['{boxName}/{modelName}/{id}/f/update'],
+				uri : '{boxName}/{modelName}/{id}/f/update',
 				target : UADMIN.Form
 			});
 		});

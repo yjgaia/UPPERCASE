@@ -11,11 +11,7 @@ UADMIN.Detail = CLASS({
 		
 		var
 		// wrapper
-		wrapper = DIV({
-			style : {
-				backgroundColor : '#fff'
-			}
-		}).appendTo(UADMIN.Layout.getContent());
+		wrapper = DIV().appendTo(UADMIN.Layout.getContent());
 
 		inner.on('paramsChange', function(params) {
 			
@@ -31,6 +27,49 @@ UADMIN.Detail = CLASS({
 			
 			wrapper.empty();
 			
+			wrapper.append(UUI.BUTTON({
+				style : {
+					padding : 10,
+					flt : 'left'
+				},
+				title : 'UPDATE DATA',
+				on : {
+					tap : function() {
+						UADMIN.GO(boxName + '/' + modelName + '/' + id + '/f/update');
+					}
+				}
+			}));
+			
+			wrapper.append(UUI.BUTTON({
+				style : {
+					padding : 10,
+					flt : 'right'
+				},
+				title : 'REMOVE DATA',
+				on : {
+					tap : function() {
+						if (confirm('REALLY?') === true) {
+							
+							GET({
+								uri : '__/' + boxName + '/' + modelName + '/remove',
+								data : id
+							}, function(resultStr) {
+								
+								var
+								// result
+								result = PARSE_STR(resultStr);
+								
+								if (result.originData !== undefined) {
+									UADMIN.GO(boxName + '/' + modelName);
+								}
+							});
+						}
+					}
+				}
+			}));
+			
+			wrapper.append(CLEAR_BOTH());
+			
 			GET({
 				uri : '__/' + boxName + '/' + modelName + '/get',
 				data : id
@@ -44,6 +83,7 @@ UADMIN.Detail = CLASS({
 				
 				wrapper.append(P({
 					style : {
+						backgroundColor : '#fff',
 						whiteSpace : 'pre',
 						padding : 20,
 						color : '#000'

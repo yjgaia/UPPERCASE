@@ -106,13 +106,38 @@ global.BOOT_UADMIN = METHOD({
 							
 							if (uriParams.method === '__GET_CREATE_VALID_DATA_SET') {
 								
-								validDataSet = model.getCreateValid().getValidDataSet();
+								if (model.getCreateValid() === undefined) {
+									
+									response('');
+									
+								} else {
+									
+									validDataSet = model.getCreateValid().getValidDataSet();
+									
+									EACH(model.getInitData(), function(notUsing, name) {
+										delete validDataSet[name];
+									});
+									
+									response(STRINGIFY(validDataSet));
+								}
+							}
+							
+							else if (uriParams.method === '__GET_UPDATE_VALID_DATA_SET') {
 								
-								EACH(model.getInitData(), function(notUsing, name) {
-									delete validDataSet[name];
-								});
-								
-								response(STRINGIFY(validDataSet));
+								if (model.getUpdateValid() === undefined) {
+									
+									response('');
+									
+								} else {
+									
+									validDataSet = model.getUpdateValid().getValidDataSet();
+									
+									EACH(model.getInitData(), function(notUsing, name) {
+										delete validDataSet[name];
+									});
+									
+									response(STRINGIFY(validDataSet));
+								}
 							}
 							
 							else if (uriParams.method === 'create' && model.create !== undefined) {
@@ -149,6 +174,48 @@ global.BOOT_UADMIN = METHOD({
 									success : function(savedData) {
 										response(STRINGIFY({
 											savedData : savedData
+										}));
+									}
+								});
+								
+								return false;
+							}
+							
+							else if (uriParams.method === 'update' && model.update !== undefined) {
+							
+								model.update(requestInfo.data, {
+									error : function(errorMsg) {
+										response(STRINGIFY({
+											errorMsg : errorMsg
+										}));
+									},
+									notValid : function(validErrors) {
+										response(STRINGIFY({
+											validErrors : validErrors
+										}));
+									},
+									success : function(savedData, originData) {
+										response(STRINGIFY({
+											savedData : savedData,
+											originData: originData
+										}));
+									}
+								});
+								
+								return false;
+							}
+							
+							else if (uriParams.method === 'remove' && model.remove !== undefined) {
+							
+								model.remove(requestInfo.data, {
+									error : function(errorMsg) {
+										response(STRINGIFY({
+											errorMsg : errorMsg
+										}));
+									},
+									success : function(originData) {
+										response(STRINGIFY({
+											originData: originData
 										}));
 									}
 								});
