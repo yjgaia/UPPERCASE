@@ -104,6 +104,21 @@ UADMIN.Layout = CLASS(function(cls) {
 							});
 						});
 						
+						c.push(UUI.BUTTON_H({
+							style : {
+								padding : 15,
+								fontSize : 12
+							},
+							title : 'LOGOUT',
+							on : {
+								tap : function() {
+									GET('__LOGOUT', function() {
+										location.reload();
+									});
+								}
+							}
+						}));
+						
 						return c;
 					})
 				}),

@@ -8,6 +8,9 @@ global.BOOT_UADMIN = METHOD({
 		//REQUIRED: UPPERCASE_IO_PATH
 
 		var
+		// session store
+		sessionStore = SHARED_STORE('sessionStore'),
+		
 		// model map
 		modelMap = {},
 		
@@ -47,11 +50,20 @@ global.BOOT_UADMIN = METHOD({
 			version : CONFIG.version
 		}, {
 
-			requestListener : function(requestInfo, response, onDisconnected, replaceRootPath, next) {
+			requestListener : function(requestInfo, _response, onDisconnected, replaceRootPath, next) {
 				
 				var
 				// uri
 				uri = requestInfo.uri,
+				
+				// session key
+				sessionKey = requestInfo.cookies.__SESSION_KEY,
+	
+				// session
+				session,
+				
+				// password
+				password,
 				
 				// match info
 				matchInfo,
@@ -66,20 +78,53 @@ global.BOOT_UADMIN = METHOD({
 				model,
 				
 				// valid data set
-				validDataSet;
+				validDataSet,
 				
-				// serve web server port.
-				if (uri.indexOf('__WEB_SERVER_PORT') === 0) {
+				// response.
+				response = function(content) {
+					_response({
+						content : content,
+						headers : sessionKey !== undefined ? undefined : {
+							'Set-Cookie' : CREATE_COOKIE_STR_ARRAY({
+								__SESSION_KEY : RANDOM_STR(40)
+							})
+						}
+					});
+				};
+				
+				if (uri === '__LOGIN') {
 					
-					response(CONFIG.webServerPort);
+					if (sessionKey !== undefined && requestInfo.data.password === UADMIN_CONFIG.password) {
+						sessionStore.save({
+							name : sessionKey,
+							value : {
+								password : requestInfo.data.password
+							},
+							removeAfterSeconds : 30 * 60 // 30 minutes
+						});
+						response('true');
+					} else {
+						response('false');
+					}
 					
 					return false;
 				}
 				
-				// serve model naem map.
-				if (uri.indexOf('__MODEL_NAME_MAP') === 0) {
+				if (uri === '__LOGOUT') {
 					
-					response(STRINGIFY(modelNameMap));
+					if (sessionKey !== undefined) {
+						sessionStore.remove(sessionKey);
+					}
+					
+					response('true');
+					
+					return false;
+				}
+					
+				// serve web server port.
+				if (uri === '__WEB_SERVER_PORT') {
+					
+					response(CONFIG.webServerPort);
 					
 					return false;
 				}
@@ -89,156 +134,186 @@ global.BOOT_UADMIN = METHOD({
 					replaceRootPath(UPPERCASE_IO_PATH);
 				}
 				
-				matchInfo = uriMatcher.check(uri);
+				if (sessionKey !== undefined) {
+					session = sessionStore.get(sessionKey);
+					if (session !== undefined) {
+						password = session.password;
+					}
+				}
 				
-				// serve model funcs.
-				if (matchInfo.checkIsMatched() === true) {
+				if (password !== UADMIN_CONFIG.password) {
 					
-					uriParams = matchInfo.getURIParams();
-					
-					models = modelMap[uriParams.boxName];
-					
-					if (models !== undefined) {
+					// serve login page.
+					if (uri === '') {
 						
-						model = models[uriParams.modelName];
+						READ_FILE(UPPERCASE_IO_PATH + '/UADMIN/login.html', function(content) {
+							response(content.toString());
+						});
 						
-						if (model !== undefined) {
+						return false;
+					}
+					
+				} else {
+					
+					// serve model naem map.
+					if (uri === '__MODEL_NAME_MAP') {
+						
+						response(STRINGIFY(modelNameMap));
+						
+						return false;
+					}
+					
+					matchInfo = uriMatcher.check(uri);
+					
+					// serve model funcs.
+					if (matchInfo.checkIsMatched() === true) {
+						
+						uriParams = matchInfo.getURIParams();
+						
+						models = modelMap[uriParams.boxName];
+						
+						if (models !== undefined) {
 							
-							if (uriParams.method === '__GET_CREATE_VALID_DATA_SET') {
+							model = models[uriParams.modelName];
+							
+							if (model !== undefined) {
 								
-								if (model.getCreateValid() === undefined) {
+								if (uriParams.method === '__GET_CREATE_VALID_DATA_SET') {
 									
-									response('');
+									if (model.getCreateValid() === undefined) {
+										
+										response('');
+										
+									} else {
+										
+										validDataSet = model.getCreateValid().getValidDataSet();
+										
+										EACH(model.getInitData(), function(notUsing, name) {
+											delete validDataSet[name];
+										});
+										
+										response(STRINGIFY(validDataSet));
+									}
+								}
+								
+								else if (uriParams.method === '__GET_UPDATE_VALID_DATA_SET') {
 									
-								} else {
-									
-									validDataSet = model.getCreateValid().getValidDataSet();
-									
-									EACH(model.getInitData(), function(notUsing, name) {
-										delete validDataSet[name];
+									if (model.getUpdateValid() === undefined) {
+										
+										response('');
+										
+									} else {
+										
+										validDataSet = model.getUpdateValid().getValidDataSet();
+										
+										EACH(model.getInitData(), function(notUsing, name) {
+											delete validDataSet[name];
+										});
+										
+										response(STRINGIFY(validDataSet));
+									}
+								}
+								
+								else if (uriParams.method === 'create' && model.create !== undefined) {
+								
+									model.create(requestInfo.data, {
+										error : function(errorMsg) {
+											response(STRINGIFY({
+												errorMsg : errorMsg
+											}));
+										},
+										notValid : function(validErrors) {
+											response(STRINGIFY({
+												validErrors : validErrors
+											}));
+										},
+										success : function(savedData) {
+											response(STRINGIFY({
+												savedData : savedData
+											}));
+										}
 									});
 									
-									response(STRINGIFY(validDataSet));
+									return false;
 								}
-							}
-							
-							else if (uriParams.method === '__GET_UPDATE_VALID_DATA_SET') {
 								
-								if (model.getUpdateValid() === undefined) {
-									
-									response('');
-									
-								} else {
-									
-									validDataSet = model.getUpdateValid().getValidDataSet();
-									
-									EACH(model.getInitData(), function(notUsing, name) {
-										delete validDataSet[name];
+								else if (uriParams.method === 'get' && model.get !== undefined) {
+								
+									model.get(requestInfo.data, {
+										error : function(errorMsg) {
+											response(STRINGIFY({
+												errorMsg : errorMsg
+											}));
+										},
+										success : function(savedData) {
+											response(STRINGIFY({
+												savedData : savedData
+											}));
+										}
 									});
 									
-									response(STRINGIFY(validDataSet));
+									return false;
 								}
-							}
-							
-							else if (uriParams.method === 'create' && model.create !== undefined) {
-							
-								model.create(requestInfo.data, {
-									error : function(errorMsg) {
-										response(STRINGIFY({
-											errorMsg : errorMsg
-										}));
-									},
-									notValid : function(validErrors) {
-										response(STRINGIFY({
-											validErrors : validErrors
-										}));
-									},
-									success : function(savedData) {
-										response(STRINGIFY({
-											savedData : savedData
-										}));
-									}
-								});
 								
-								return false;
-							}
-							
-							else if (uriParams.method === 'get' && model.get !== undefined) {
-							
-								model.get(requestInfo.data, {
-									error : function(errorMsg) {
-										response(STRINGIFY({
-											errorMsg : errorMsg
-										}));
-									},
-									success : function(savedData) {
-										response(STRINGIFY({
-											savedData : savedData
-										}));
-									}
-								});
+								else if (uriParams.method === 'update' && model.update !== undefined) {
 								
-								return false;
-							}
-							
-							else if (uriParams.method === 'update' && model.update !== undefined) {
-							
-								model.update(requestInfo.data, {
-									error : function(errorMsg) {
-										response(STRINGIFY({
-											errorMsg : errorMsg
-										}));
-									},
-									notValid : function(validErrors) {
-										response(STRINGIFY({
-											validErrors : validErrors
-										}));
-									},
-									success : function(savedData, originData) {
-										response(STRINGIFY({
-											savedData : savedData,
-											originData: originData
-										}));
-									}
-								});
+									model.update(requestInfo.data, {
+										error : function(errorMsg) {
+											response(STRINGIFY({
+												errorMsg : errorMsg
+											}));
+										},
+										notValid : function(validErrors) {
+											response(STRINGIFY({
+												validErrors : validErrors
+											}));
+										},
+										success : function(savedData, originData) {
+											response(STRINGIFY({
+												savedData : savedData,
+												originData: originData
+											}));
+										}
+									});
+									
+									return false;
+								}
 								
-								return false;
-							}
-							
-							else if (uriParams.method === 'remove' && model.remove !== undefined) {
-							
-								model.remove(requestInfo.data, {
-									error : function(errorMsg) {
-										response(STRINGIFY({
-											errorMsg : errorMsg
-										}));
-									},
-									success : function(originData) {
-										response(STRINGIFY({
-											originData: originData
-										}));
-									}
-								});
+								else if (uriParams.method === 'remove' && model.remove !== undefined) {
 								
-								return false;
-							}
-							
-							else if (uriParams.method === 'find' && model.find !== undefined) {
-							
-								model.find(requestInfo.data, {
-									error : function(errorMsg) {
-										response(STRINGIFY({
-											errorMsg : errorMsg
-										}));
-									},
-									success : function(savedDataSet) {
-										response(STRINGIFY({
-											savedDataSet : savedDataSet
-										}));
-									}
-								});
+									model.remove(requestInfo.data, {
+										error : function(errorMsg) {
+											response(STRINGIFY({
+												errorMsg : errorMsg
+											}));
+										},
+										success : function(originData) {
+											response(STRINGIFY({
+												originData: originData
+											}));
+										}
+									});
+									
+									return false;
+								}
 								
-								return false;
+								else if (uriParams.method === 'find' && model.find !== undefined) {
+								
+									model.find(requestInfo.data, {
+										error : function(errorMsg) {
+											response(STRINGIFY({
+												errorMsg : errorMsg
+											}));
+										},
+										success : function(savedDataSet) {
+											response(STRINGIFY({
+												savedDataSet : savedDataSet
+											}));
+										}
+									});
+									
+									return false;
+								}
 							}
 						}
 					}
@@ -247,9 +322,35 @@ global.BOOT_UADMIN = METHOD({
 			
 			notExistsResource : function(resourcePath, requestInfo, response) {
 				
-				READ_FILE(UPPERCASE_IO_PATH + '/UADMIN/index.html', function(content) {
-					response(content.toString());
-				});
+				var
+				// session key
+				sessionKey = requestInfo.cookies.__SESSION_KEY,
+				
+				// session
+				session,
+				
+				// password
+				password;
+				
+				if (sessionKey !== undefined) {
+					session = sessionStore.get(sessionKey);
+					if (session !== undefined) {
+						password = session.password;
+					}
+				}
+				
+				if (password !== UADMIN_CONFIG.password) {
+					
+					READ_FILE(UPPERCASE_IO_PATH + '/UADMIN/login.html', function(content) {
+						response(content.toString());
+					});
+					
+				} else {
+				
+					READ_FILE(UPPERCASE_IO_PATH + '/UADMIN/index.html', function(content) {
+						response(content.toString());
+					});
+				}
 				
 				return false;
 			}
