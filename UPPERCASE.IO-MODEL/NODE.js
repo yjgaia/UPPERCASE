@@ -856,7 +856,9 @@ FOR_BOX(function(box) {
 								// run find listeners.
 								EACH(findListeners, function(findListener) {
 	
-									if (findListener(savedDataSet, next, ret, clientInfo) === false) {
+									if (findListener(savedDataSet, function() {
+										next(savedDataSet);
+									}, ret, clientInfo) === false) {
 										
 										isNotRunNext = true;
 									}
@@ -920,7 +922,9 @@ FOR_BOX(function(box) {
 								// run count listeners.
 								EACH(countListeners, function(countListener) {
 									
-									if (countListener(count, next, ret, clientInfo) === false) {
+									if (countListener(count, function() {
+										next(count);
+									}, ret, clientInfo) === false) {
 										
 										isNotRunNext = true;
 									}
@@ -984,7 +988,9 @@ FOR_BOX(function(box) {
 								// run check is exists listeners.
 								EACH(checkIsExistsListeners, function(checkIsExistsListener) {
 	
-									if (checkIsExistsListeners(isExists, next, ret, clientInfo) === false) {
+									if (checkIsExistsListeners(isExists, function() {
+										next(isExists);
+									}, ret, clientInfo) === false) {
 										
 										isNotRunNext = true;
 									}
@@ -1500,42 +1506,30 @@ FOR_BOX(function(box) {
 							// ignore undefined data attack.
 							if (data !== undefined) {
 
-								if (createAdminRole !== undefined) {
-	
-									if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-										data : clientInfo.roles,
-										value : createAdminRole
-									}) === true)) {
-	
-										innerCreate(data, ret, clientInfo);
-	
-									} else {
-	
-										ret({
-											isNotAuthed : true
-										});
+								if (createAdminRole !== undefined && clientInfo.roles !== undefined && CHECK_IS_IN({
+									array : clientInfo.roles,
+									value : createAdminRole
+								}) === true) {
+
+									innerCreate(data, ret, clientInfo);
+
+								} else if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+									array : clientInfo.roles,
+									value : createRole
+								}) === true)) {
+
+									// inject auth key.
+									if (createAuthKey !== undefined) {
+										data[createAuthKey] = clientInfo.authKey;
 									}
-	
+
+									innerCreate(data, ret, clientInfo);
+
 								} else {
-	
-									if (createRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-										data : clientInfo.roles,
-										value : createRole
-									}) === true)) {
-	
-										// inject auth key.
-										if (createAuthKey !== undefined) {
-											data[createAuthKey] = clientInfo.authKey;
-										}
-	
-										innerCreate(data, ret, clientInfo);
-	
-									} else {
-	
-										ret({
-											isNotAuthed : true
-										});
-									}
+
+									ret({
+										isNotAuthed : true
+									});
 								}
 							}
 						});
@@ -1548,7 +1542,7 @@ FOR_BOX(function(box) {
 						on('get', function(idOrParams, ret) {
 						
 							if (getRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-								data : clientInfo.roles,
+								array : clientInfo.roles,
 								value : getRole
 							}) === true)) {
 								
@@ -1579,16 +1573,16 @@ FOR_BOX(function(box) {
 							if (data !== undefined) {
 
 								if (updateRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
-									data : clientInfo.roles,
+									array : clientInfo.roles,
 									value : updateRole
 								}) === true || CHECK_IS_IN({
-									data : clientInfo.roles,
+									array : clientInfo.roles,
 									value : updateAdminRole
 								}) === true))) {
 	
 									// check and inject auth key. (when not admin)
 									if (updateAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
-										data : clientInfo.roles,
+										array : clientInfo.roles,
 										value : updateAdminRole
 									}) === true) !== true) {
 	
@@ -1649,16 +1643,16 @@ FOR_BOX(function(box) {
 							if (id !== undefined) {
 
 								if (removeRole === undefined || (clientInfo.roles !== undefined && (CHECK_IS_IN({
-									data : clientInfo.roles,
+									array : clientInfo.roles,
 									value : removeRole
 								}) === true || CHECK_IS_IN({
-									data : clientInfo.roles,
+									array : clientInfo.roles,
 									value : removeAdminRole
 								}) === true))) {
 	
 									// check auth key. (when not admin)
 									if (removeAuthKey !== undefined && (clientInfo.roles !== undefined && CHECK_IS_IN({
-										data : clientInfo.roles,
+										array : clientInfo.roles,
 										value : removeAdminRole
 									}) === true) !== true) {
 	
@@ -1694,7 +1688,7 @@ FOR_BOX(function(box) {
 									} else if (removeAuthKey === undefined && removeAdminRole !== undefined) {
 	
 										if (clientInfo.roles !== undefined && CHECK_IS_IN({
-											data : clientInfo.roles,
+											array : clientInfo.roles,
 											value : removeAdminRole
 										}) === true) {
 	
@@ -1728,7 +1722,7 @@ FOR_BOX(function(box) {
 						on('find', function(params, ret) {
 
 							if (findRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-								data : clientInfo.roles,
+								array : clientInfo.roles,
 								value : findRole
 							}) === true)) {
 
@@ -1757,7 +1751,7 @@ FOR_BOX(function(box) {
 						on('count', function(params, ret) {
 
 							if (countRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-								data : clientInfo.roles,
+								array : clientInfo.roles,
 								value : countRole
 							}) === true)) {
 								
@@ -1785,7 +1779,7 @@ FOR_BOX(function(box) {
 						on('checkIsExists', function(params, ret) {
 							
 							if (checkIsExistsRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
-								data : clientInfo.roles,
+								array : clientInfo.roles,
 								value : checkIsExistsRole
 							}) === true)) {
 								

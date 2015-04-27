@@ -8,8 +8,8 @@ FOR_BOX(function(box) {
 
 		run : function(path) {
 			//REQUIRED: path
-
-			return '/__RF/' + box.boxName + '/' + path;
+			
+			return (BROWSER_CONFIG.isSecure === true ? 'https:' : 'http:') + '//' + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/__RF/' + box.boxName + '/' + path;
 		}
 	});
 });

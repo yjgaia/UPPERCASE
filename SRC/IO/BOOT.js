@@ -1109,40 +1109,36 @@ global.BOOT = function(params) {
 							requestInfo.uri = uri;
 						}
 						
-						// serve other.
-						else {
+						// serve resource.
+						else if (uri.substring(0, 2) === 'R/') {
+							
+							requestInfo.uri = CHECK_IS_IN({
+								array : boxNamesInBOXFolder,
+								value : boxName
+							}) === true ? 'BOX/' + boxName + '/' + uri : boxName + '/' + uri;
+						}
 						
-							// serve resource.
-							if (uri.substring(0, 2) === 'R/') {
-								
-								requestInfo.uri = CHECK_IS_IN({
-									array : boxNamesInBOXFolder,
-									value : boxName
-								}) === true ? 'BOX/' + boxName + '/' + uri : boxName + '/' + uri;
+						// response index page.
+						else {
+
+							if (boxRequestListeners[boxName] !== undefined) {
+								isGoingOn = boxRequestListeners[boxName](requestInfo, response, onDisconnected, replaceRootPath, next);
 							}
 							
-							// response index page.
-							else {
-	
-								if (boxRequestListeners[boxName] !== undefined) {
-									isGoingOn = boxRequestListeners[boxName](requestInfo, response, onDisconnected, replaceRootPath, next);
+							if (isGoingOn !== false) {
+								
+								// when dev mode, re-generate index page.
+								if (CONFIG.isDevMode === true) {
+									generateIndexPage();
 								}
 								
-								if (isGoingOn !== false) {
-									
-									// when dev mode, re-generate index page.
-									if (CONFIG.isDevMode === true) {
-										generateIndexPage();
-									}
-									
-									response({
-										contentType : 'text/html',
-										content : indexPageContent
-									});
-								}
-								
-								return false;
+								response({
+									contentType : 'text/html',
+									content : indexPageContent
+								});
 							}
+							
+							return false;
 						}
 					}
 				}

@@ -2747,9 +2747,9 @@ global.REAL = METHOD({
  */
 global.EACH = METHOD({
 
-	run : function(dataOrArray, func) {
+	run : function(dataOrArrayOrString, func) {
 		'use strict';
-		//OPTIONAL: dataOrArray
+		//OPTIONAL: dataOrArrayOrString
 		//REQUIRED: func
 
 		var
@@ -2762,51 +2762,51 @@ global.EACH = METHOD({
 		// extras
 		i;
 
-		// when dataOrArray is undefined
-		if (dataOrArray === undefined) {
+		// when dataOrArrayOrString is undefined
+		if (dataOrArrayOrString === undefined) {
 			return false;
 		}
 
-		// when dataOrArray is data
-		else if (CHECK_IS_DATA(dataOrArray) === true) {
+		// when dataOrArrayOrString is data
+		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
-			for (name in dataOrArray) {
-				if (dataOrArray.hasOwnProperty(name) === true) {
-					if (func(dataOrArray[name], name) === false) {
+			for (name in dataOrArrayOrString) {
+				if (dataOrArrayOrString.hasOwnProperty(name) === true) {
+					if (func(dataOrArrayOrString[name], name) === false) {
 						return false;
 					}
 				}
 			}
 		}
 
-		// when dataOrArray is array or arguments
-		else if (CHECK_IS_ARRAY(dataOrArray) === true || CHECK_IS_ARGUMENTS(dataOrArray) === true) {
+		// when dataOrArrayOrString is func
+		else if (func === undefined) {
 
-			length = dataOrArray.length;
+			func = dataOrArrayOrString;
+			dataOrArrayOrString = undefined;
+
+			return function(dataOrArrayOrString) {
+				return EACH(dataOrArrayOrString, func);
+			};
+		}
+
+		// when dataOrArrayOrString is array or arguments or string
+		else {
+
+			length = dataOrArrayOrString.length;
 
 			for ( i = 0; i < length; i += 1) {
 
-				if (func(dataOrArray[i], i) === false) {
+				if (func(dataOrArrayOrString[i], i) === false) {
 					return false;
 				}
 
 				// when shrink
-				if (dataOrArray.length === length - 1) {
+				if (dataOrArrayOrString.length === length - 1) {
 					i -= 1;
 					length -= 1;
 				}
 			}
-		}
-
-		// when dataOrArray is func
-		else if (func === undefined) {
-
-			func = dataOrArray;
-			dataOrArray = undefined;
-
-			return function(dataOrArray) {
-				return EACH(dataOrArray, func);
-			};
 		}
 
 		return true;
@@ -2918,9 +2918,9 @@ global.REPEAT = METHOD({
  */
 global.REVERSE_EACH = METHOD({
 
-	run : function(array, func) {
+	run : function(arrayOrString, func) {
 		'use strict';
-		//OPTIONAL: array
+		//OPTIONAL: arrayOrString
 		//REQUIRED: func
 
 		var
@@ -2933,30 +2933,30 @@ global.REVERSE_EACH = METHOD({
 		// extras
 		i;
 
-		// when array is undefined
-		if (array === undefined) {
+		// when arrayOrString is undefined
+		if (arrayOrString === undefined) {
 			return false;
 		}
 
-		// when array is func
+		// when arrayOrString is func
 		else if (func === undefined) {
 
-			func = array;
-			array = undefined;
+			func = arrayOrString;
+			arrayOrString = undefined;
 
-			return function(array) {
-				return REVERSE_EACH(array, func);
+			return function(arrayOrString) {
+				return REVERSE_EACH(arrayOrString, func);
 			};
 		}
 
-		// when array is not undefined
+		// when arrayOrString is array or arguments or string
 		else {
 
-			length = array.length;
+			length = arrayOrString.length;
 
 			for ( i = length - 1; i >= 0; i -= 1) {
 
-				if (func(array[i], i) === false) {
+				if (func(arrayOrString[i], i) === false) {
 					return false;
 				}
 			}

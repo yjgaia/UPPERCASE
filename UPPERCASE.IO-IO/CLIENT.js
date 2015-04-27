@@ -4,26 +4,49 @@ FOR_BOX(function(box) {
 	/**
 	 * get resource's real path with version.
 	 */
-	box.R = METHOD({
+	box.R = METHOD(function(m) {
+		
+		var
+		// base path
+		basePath,
+		
+		// set base path.
+		setBasePath;
+		
+		m.setBasePath = setBasePath = function(_basePath) {
+			basePath = _basePath;
+		};
+		
+		return {
 
-		run : function(path, callback) {
-			//REQUIRED: path
-			//OPTIONAL: callback
-
-			var
-			// uri
-			uri = box.boxName + '/R/' + path;
-
-			if (CONFIG.version !== undefined) {
-				uri += '?version=' + CONFIG.version;
+			run : function(path, callback) {
+				//REQUIRED: path
+				//OPTIONAL: callback
+	
+				var
+				// uri
+				uri = box.boxName + '/R/' + path;
+	
+				if (CONFIG.version !== undefined) {
+					uri += '?version=' + CONFIG.version;
+				}
+				
+				if (location.protocol !== 'file:') {
+					
+					if (basePath !== undefined) {
+						uri = basePath + '/' + uri;
+					}
+					
+					uri = '/' + uri;
+				}
+	
+				if (callback !== undefined) {
+					GET(uri, callback);
+				}
+	
+				return uri;
 			}
-
-			if (callback !== undefined) {
-				GET('/' + uri, callback);
-			}
-
-			return '/' + uri;
-		}
+		};
 	});
 });
 
@@ -37,8 +60,8 @@ FOR_BOX(function(box) {
 
 		run : function(path) {
 			//REQUIRED: path
-
-			return '/__RF/' + box.boxName + '/' + path;
+			
+			return (BROWSER_CONFIG.isSecure === true ? 'https:' : 'http:') + '//' + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/__RF/' + box.boxName + '/' + path;
 		}
 	});
 });

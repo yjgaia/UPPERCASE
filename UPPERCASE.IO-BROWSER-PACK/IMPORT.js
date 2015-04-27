@@ -2749,9 +2749,9 @@ global.REAL = METHOD({
  */
 global.EACH = METHOD({
 
-	run : function(dataOrArray, func) {
+	run : function(dataOrArrayOrString, func) {
 		'use strict';
-		//OPTIONAL: dataOrArray
+		//OPTIONAL: dataOrArrayOrString
 		//REQUIRED: func
 
 		var
@@ -2764,51 +2764,51 @@ global.EACH = METHOD({
 		// extras
 		i;
 
-		// when dataOrArray is undefined
-		if (dataOrArray === undefined) {
+		// when dataOrArrayOrString is undefined
+		if (dataOrArrayOrString === undefined) {
 			return false;
 		}
 
-		// when dataOrArray is data
-		else if (CHECK_IS_DATA(dataOrArray) === true) {
+		// when dataOrArrayOrString is data
+		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
-			for (name in dataOrArray) {
-				if (dataOrArray.hasOwnProperty(name) === true) {
-					if (func(dataOrArray[name], name) === false) {
+			for (name in dataOrArrayOrString) {
+				if (dataOrArrayOrString.hasOwnProperty(name) === true) {
+					if (func(dataOrArrayOrString[name], name) === false) {
 						return false;
 					}
 				}
 			}
 		}
 
-		// when dataOrArray is array or arguments
-		else if (CHECK_IS_ARRAY(dataOrArray) === true || CHECK_IS_ARGUMENTS(dataOrArray) === true) {
+		// when dataOrArrayOrString is func
+		else if (func === undefined) {
 
-			length = dataOrArray.length;
+			func = dataOrArrayOrString;
+			dataOrArrayOrString = undefined;
+
+			return function(dataOrArrayOrString) {
+				return EACH(dataOrArrayOrString, func);
+			};
+		}
+
+		// when dataOrArrayOrString is array or arguments or string
+		else {
+
+			length = dataOrArrayOrString.length;
 
 			for ( i = 0; i < length; i += 1) {
 
-				if (func(dataOrArray[i], i) === false) {
+				if (func(dataOrArrayOrString[i], i) === false) {
 					return false;
 				}
 
 				// when shrink
-				if (dataOrArray.length === length - 1) {
+				if (dataOrArrayOrString.length === length - 1) {
 					i -= 1;
 					length -= 1;
 				}
 			}
-		}
-
-		// when dataOrArray is func
-		else if (func === undefined) {
-
-			func = dataOrArray;
-			dataOrArray = undefined;
-
-			return function(dataOrArray) {
-				return EACH(dataOrArray, func);
-			};
 		}
 
 		return true;
@@ -2920,9 +2920,9 @@ global.REPEAT = METHOD({
  */
 global.REVERSE_EACH = METHOD({
 
-	run : function(array, func) {
+	run : function(arrayOrString, func) {
 		'use strict';
-		//OPTIONAL: array
+		//OPTIONAL: arrayOrString
 		//REQUIRED: func
 
 		var
@@ -2935,30 +2935,30 @@ global.REVERSE_EACH = METHOD({
 		// extras
 		i;
 
-		// when array is undefined
-		if (array === undefined) {
+		// when arrayOrString is undefined
+		if (arrayOrString === undefined) {
 			return false;
 		}
 
-		// when array is func
+		// when arrayOrString is func
 		else if (func === undefined) {
 
-			func = array;
-			array = undefined;
+			func = arrayOrString;
+			arrayOrString = undefined;
 
-			return function(array) {
-				return REVERSE_EACH(array, func);
+			return function(arrayOrString) {
+				return REVERSE_EACH(arrayOrString, func);
 			};
 		}
 
-		// when array is not undefined
+		// when arrayOrString is array or arguments or string
 		else {
 
-			length = array.length;
+			length = arrayOrString.length;
 
 			for ( i = length - 1; i >= 0; i -= 1) {
 
-				if (func(array[i], i) === false) {
+				if (func(arrayOrString[i], i) === false) {
 					return false;
 				}
 			}
@@ -2977,6 +2977,8 @@ global.BROWSER_CONFIG = {
 	host : location.hostname,
 	
 	port : location.port,
+	
+	isSecure : location.protocol === 'https:',
 
 	isSupportingX2 : false,
 	
@@ -6699,7 +6701,7 @@ global.INPUT = CLASS(function(cls) {
 				};
 
 				self.getValue = getValue = function() {
-					if (type === 'checkbox') {
+					if (type === 'checkbox' || type === 'radio') {
 						return self.getEl().checked;
 					}
 					return self.getEl().value;
@@ -6721,7 +6723,7 @@ global.INPUT = CLASS(function(cls) {
 					self.getEl().blur();
 				};
 
-				if (type === 'checkbox') {
+				if (type === 'checkbox' || type === 'radio') {
 
 					self.toggleCheck = toggleCheck = function(e) {
 
@@ -6762,7 +6764,7 @@ global.INPUT = CLASS(function(cls) {
 			self.setValue = setValue = function(value) {
 				//REQUIRED: value
 
-				if (type === 'checkbox') {
+				if (type === 'checkbox' || type === 'radio') {
 
 					if (value === true) {
 
@@ -6862,7 +6864,7 @@ global.INPUT = CLASS(function(cls) {
 
 			if (value !== undefined) {
 
-				if (type === 'checkbox') {
+				if (type === 'checkbox' || type === 'radio') {
 
 					if (value === true) {
 
@@ -11606,7 +11608,7 @@ FOR_BOX(function(box) {
 			}
 
 			// remove.
-			if (removeConfig !== false && isNotUsingObjectId !== true) {
+			if (removeConfig !== false) {
 
 				self.remove = remove = function(id, callbackOrHandlers) {
 					//REQUIRED: id
@@ -12408,26 +12410,49 @@ FOR_BOX(function(box) {
 	/**
 	 * get resource's real path with version.
 	 */
-	box.R = METHOD({
+	box.R = METHOD(function(m) {
+		
+		var
+		// base path
+		basePath,
+		
+		// set base path.
+		setBasePath;
+		
+		m.setBasePath = setBasePath = function(_basePath) {
+			basePath = _basePath;
+		};
+		
+		return {
 
-		run : function(path, callback) {
-			//REQUIRED: path
-			//OPTIONAL: callback
-
-			var
-			// uri
-			uri = box.boxName + '/R/' + path;
-
-			if (CONFIG.version !== undefined) {
-				uri += '?version=' + CONFIG.version;
+			run : function(path, callback) {
+				//REQUIRED: path
+				//OPTIONAL: callback
+	
+				var
+				// uri
+				uri = box.boxName + '/R/' + path;
+	
+				if (CONFIG.version !== undefined) {
+					uri += '?version=' + CONFIG.version;
+				}
+				
+				if (location.protocol !== 'file:') {
+					
+					if (basePath !== undefined) {
+						uri = basePath + '/' + uri;
+					}
+					
+					uri = '/' + uri;
+				}
+	
+				if (callback !== undefined) {
+					GET(uri, callback);
+				}
+	
+				return uri;
 			}
-
-			if (callback !== undefined) {
-				GET('/' + uri, callback);
-			}
-
-			return '/' + uri;
-		}
+		};
 	});
 });
 
@@ -12441,8 +12466,8 @@ FOR_BOX(function(box) {
 
 		run : function(path) {
 			//REQUIRED: path
-
-			return '/__RF/' + box.boxName + '/' + path;
+			
+			return (BROWSER_CONFIG.isSecure === true ? 'https:' : 'http:') + '//' + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/__RF/' + box.boxName + '/' + path;
 		}
 	});
 });

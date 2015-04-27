@@ -567,7 +567,7 @@ FOR_BOX(function(box) {
 			}
 
 			// remove.
-			if (removeConfig !== false && isNotUsingObjectId !== true) {
+			if (removeConfig !== false) {
 
 				self.remove = remove = function(id, callbackOrHandlers) {
 					//REQUIRED: id

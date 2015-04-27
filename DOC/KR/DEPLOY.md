@@ -17,7 +17,10 @@ MongoDB가 32bit 컴퓨터에서는 심각한 제한이 있습니다. 32bit 컴�
 
 배포시에는 보안을 위해 MongoDB를 인증 모드로 실행해주시기 바랍니다.
 
-
+MongoDB 유저 추가
+```javascript
+db.createUser({ user : '유저명', pwd : '비밀번호', roles : ['readWrite', 'dbAdmin'] })
+```
 
 인증 모드로 MongoDB를 실행한 경우에는 다음과 같이 설정에 MongoDB 접속에 필요한 `username`과 `password`를 추가합니다.
 
@@ -42,3 +45,7 @@ BOOT({
 	}
 });
 ```
+
+
+## V
+Git 등의 소스코드 버젼 관리 시에는 .gitignore 등의 설정으로 V 파일을 제외시킵니다.

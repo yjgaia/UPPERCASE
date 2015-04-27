@@ -31,6 +31,8 @@
         export UPPERCASE_IO_PATH="{{clone 한 폴더 위치}}"
         ```
 
+	`.profile` 혹은 `.bash_profile` 파일이 변경된 경우 터미널을 껏다 켜주시기 바랍니다.
+
 4. [프로젝트를 생성](CREATE_PROJECT.md)합니다.
 
 다음 문서: [프로젝트 생성](CREATE_PROJECT.md)
