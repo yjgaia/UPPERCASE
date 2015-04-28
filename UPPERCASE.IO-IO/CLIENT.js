@@ -31,12 +31,13 @@ FOR_BOX(function(box) {
 					uri += '?version=' + CONFIG.version;
 				}
 				
-				if (location.protocol !== 'file:') {
+				if (location.protocol === 'file:') {
 					
 					if (basePath !== undefined) {
 						uri = basePath + '/' + uri;
 					}
 					
+				} else {
 					uri = '/' + uri;
 				}
 	
