@@ -6839,6 +6839,28 @@ global.INPUT = CLASS(function(cls) {
 					value : self.id
 				});
 			});
+			
+			// can radio be false
+			if (type === 'radio') {
+				
+				EVENT({
+					node : self,
+					name : 'touchstart'
+				}, function() {
+					
+					if (checkIsChecked() === true) {
+						
+						EVENT_ONCE({
+							node : self,
+							name : 'touchend'
+						}, function() {
+							DELAY(function() {
+								setValue(false);
+							});
+						});
+					}
+				});
+			}
 		},
 
 		afterInit : function(inner, self, params) {
