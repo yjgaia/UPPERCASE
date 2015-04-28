@@ -685,7 +685,7 @@ FOR_BOX(function(box) {
 						function() {
 							return function(savedData, originData) {
 
-								// broadcast.
+								// broadcast for watching.
 								box.BROADCAST({
 									roomName : name + '/' + savedData.id,
 									methodName : 'update',
@@ -768,9 +768,16 @@ FOR_BOX(function(box) {
 					function() {
 						return function(originData) {
 							
-							// broadcast.
+							// broadcast for watching.
 							box.BROADCAST({
 								roomName : name + '/' + originData.id,
+								methodName : 'remove',
+								data : originData
+							});
+							
+							// broadcast.
+							box.BROADCAST({
+								roomName : name + '/remove',
 								methodName : 'remove',
 								data : originData
 							});
