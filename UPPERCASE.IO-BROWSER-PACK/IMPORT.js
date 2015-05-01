@@ -11569,6 +11569,15 @@ FOR_BOX(function(box) {
 					var
 					// id
 					id = data.id,
+					
+					// $inc
+					$inc = data.$inc,
+					
+					// $push
+					$push = data.$push,
+					
+					// $pull
+					$pull = data.$pull,
 
 					// callback.
 					callback,
@@ -11586,7 +11595,19 @@ FOR_BOX(function(box) {
 					errorHandler,
 
 					// valid result
-					validResult;
+					validResult,
+
+					// $inc valid result
+					$incValidResult,
+
+					// $push valid result
+					$pushValidResult,
+
+					// $pull valid result
+					$pullValidResult,
+					
+					// valied errors
+					validErrors;
 
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -11601,17 +11622,69 @@ FOR_BOX(function(box) {
 					}
 
 					if (updateValid !== undefined) {
+						
 						validResult = updateValid.checkForUpdate(data);
+						
+						if ($inc !== undefined) {
+							$incValidResult = updateValid.checkForUpdate($inc);
+						}
+						
+						if ($push !== undefined) {
+							
+							$pushValidResult = updateValid.checkForUpdate(RUN(function() {
+								
+								var
+								// data for valid
+								dataForValid = {};
+								
+								EACH($push, function(value, attr) {
+									dataForValid[attr] = [value];
+								});
+								
+								return dataForValid;
+							}));
+						}
+						
+						if ($pull !== undefined) {
+							
+							$pullValidResult = updateValid.checkForUpdate(RUN(function() {
+								
+								var
+								// data for valid
+								dataForValid = {};
+								
+								EACH($pull, function(value, attr) {
+									dataForValid[attr] = [value];
+								});
+								
+								return dataForValid;
+							}));
+						}
 					}
 
 					data.id = id;
+					data.$inc = $inc;
+					data.$push = $push;
+					data.$pull = $pull;
 
-					if (updateValid !== undefined && validResult.checkHasError() === true) {
+					if (updateValid !== undefined && (
+						validResult.checkHasError() === true ||
+						($incValidResult !== undefined && $incValidResult.checkHasError() === true) ||
+						($pushValidResult !== undefined && $pushValidResult.checkHasError() === true) ||
+						($pullValidResult !== undefined && $pullValidResult.checkHasError() === true)
+					)) {
+						
+						validErrors = COMBINE([
+							validResult.getErrors(),
+							$incValidResult === undefined ? {} : $incValidResult.getErrors(),
+							$pushValidResult === undefined ? {} : $pushValidResult.getErrors(),
+							$pullValidResult === undefined ? {} : $pullValidResult.getErrors()
+						]);
 
 						if (notValidHandler !== undefined) {
-							notValidHandler(validResult.getErrors());
+							notValidHandler(validErrors);
 						} else {
-							console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validResult.getErrors());
+							console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validErrors);
 						}
 
 					} else {

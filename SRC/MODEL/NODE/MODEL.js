@@ -107,8 +107,11 @@ FOR_BOX(function(box) {
 				// after create listeners
 				afterCreateListeners = [],
 
-				// get listeners
-				getListeners = [],
+				// before get listeners
+				beforeGetListeners = [],
+
+				// after get listeners
+				afterGetListeners = [],
 
 				// before update listeners
 				beforeUpdateListeners = [],
@@ -122,14 +125,23 @@ FOR_BOX(function(box) {
 				// after remove listeners
 				afterRemoveListeners = [],
 
-				// find listeners
-				findListeners = [],
+				// before find listeners
+				beforeFindListeners = [],
 
-				// count listeners
-				countListeners = [],
+				// after find listeners
+				afterFindListeners = [],
 
-				// check is exists listeners
-				checkIsExistsListeners = [],
+				// before count listeners
+				beforeCountListeners = [],
+
+				// after count listeners
+				afterCountListeners = [],
+
+				// before check is exists listeners
+				beforeCheckIsExistsListeners = [],
+
+				// after check is exists listeners
+				afterCheckIsExistsListeners = [],
 
 				// db
 				db = box.DB({
@@ -321,72 +333,156 @@ FOR_BOX(function(box) {
 
 					// when create method
 					if (methodName === 'create') {
+						
+						if (CHECK_IS_DATA(funcOrFuncs) === true) {
 
-						// add before listener.
-						if (funcOrFuncs.before !== undefined) {
-							beforeCreateListeners.push(funcOrFuncs.before);
-						}
-
-						// add after listener.
-						if (funcOrFuncs.after !== undefined) {
-							afterCreateListeners.push(funcOrFuncs.after);
+							// add before listener.
+							if (funcOrFuncs.before !== undefined) {
+								beforeCreateListeners.push(funcOrFuncs.before);
+							}
+	
+							// add after listener.
+							if (funcOrFuncs.after !== undefined) {
+								afterCreateListeners.push(funcOrFuncs.after);
+							}
+							
+						} else {
+							
+							// add after listener.
+							afterCreateListeners.push(funcOrFuncs);
 						}
 					}
 
 					// when get method
 					else if (methodName === 'get') {
 
-						// add listener.
-						getListeners.push(funcOrFuncs);
+						if (CHECK_IS_DATA(funcOrFuncs) === true) {
+
+							// add before listener.
+							if (funcOrFuncs.before !== undefined) {
+								beforeGetListeners.push(funcOrFuncs.before);
+							}
+	
+							// add after listener.
+							if (funcOrFuncs.after !== undefined) {
+								afterGetListeners.push(funcOrFuncs.after);
+							}
+							
+						} else {
+							
+							// add after listener.
+							afterGetListeners.push(funcOrFuncs);
+						}
 					}
 
 					// when update method
 					else if (methodName === 'update') {
 
-						// add before listener.
-						if (funcOrFuncs.before !== undefined) {
-							beforeUpdateListeners.push(funcOrFuncs.before);
-						}
+						if (CHECK_IS_DATA(funcOrFuncs) === true) {
 
-						// add after listener.
-						if (funcOrFuncs.after !== undefined) {
-							afterUpdateListeners.push(funcOrFuncs.after);
+							// add before listener.
+							if (funcOrFuncs.before !== undefined) {
+								beforeUpdateListeners.push(funcOrFuncs.before);
+							}
+	
+							// add after listener.
+							if (funcOrFuncs.after !== undefined) {
+								afterUpdateListeners.push(funcOrFuncs.after);
+							}
+							
+						} else {
+							
+							// add after listener.
+							afterUpdateListeners.push(funcOrFuncs);
 						}
 					}
 
 					// when remove method
 					else if (methodName === 'remove') {
 
-						// add before listener.
-						if (funcOrFuncs.before !== undefined) {
-							beforeRemoveListeners.push(funcOrFuncs.before);
-						}
+						if (CHECK_IS_DATA(funcOrFuncs) === true) {
 
-						// add after listener.
-						if (funcOrFuncs.after !== undefined) {
-							afterRemoveListeners.push(funcOrFuncs.after);
+							// add before listener.
+							if (funcOrFuncs.before !== undefined) {
+								beforeRemoveListeners.push(funcOrFuncs.before);
+							}
+	
+							// add after listener.
+							if (funcOrFuncs.after !== undefined) {
+								afterRemoveListeners.push(funcOrFuncs.after);
+							}
+							
+						} else {
+							
+							// add after listener.
+							afterRemoveListeners.push(funcOrFuncs);
 						}
 					}
 
 					// when find method
 					else if (methodName === 'find') {
 
-						// add listener.
-						findListeners.push(funcOrFuncs);
+						if (CHECK_IS_DATA(funcOrFuncs) === true) {
+
+							// add before listener.
+							if (funcOrFuncs.before !== undefined) {
+								beforeFindListeners.push(funcOrFuncs.before);
+							}
+	
+							// add after listener.
+							if (funcOrFuncs.after !== undefined) {
+								afterFindListeners.push(funcOrFuncs.after);
+							}
+							
+						} else {
+							
+							// add after listener.
+							afterFindListeners.push(funcOrFuncs);
+						}
 					}
 
 					// when count method
 					else if (methodName === 'count') {
 
-						// add listener.
-						countListeners.push(funcOrFuncs);
+						if (CHECK_IS_DATA(funcOrFuncs) === true) {
+
+							// add before listener.
+							if (funcOrFuncs.before !== undefined) {
+								beforeCountListeners.push(funcOrFuncs.before);
+							}
+	
+							// add after listener.
+							if (funcOrFuncs.after !== undefined) {
+								afterCountListeners.push(funcOrFuncs.after);
+							}
+							
+						} else {
+							
+							// add after listener.
+							afterCountListeners.push(funcOrFuncs);
+						}
 					}
 
 					// when check is exists method
 					else if (methodName === 'checkIsExists') {
 
-						// add listener.
-						checkIsExistsListeners.push(funcOrFuncs);
+						if (CHECK_IS_DATA(funcOrFuncs) === true) {
+
+							// add before listener.
+							if (funcOrFuncs.before !== undefined) {
+								beforeCheckIsExistsListeners.push(funcOrFuncs.before);
+							}
+	
+							// add after listener.
+							if (funcOrFuncs.after !== undefined) {
+								afterCheckIsExistsListeners.push(funcOrFuncs.after);
+							}
+							
+						} else {
+							
+							// add after listener.
+							afterCheckIsExistsListeners.push(funcOrFuncs);
+						}
 					}
 				};
 
@@ -542,45 +638,67 @@ FOR_BOX(function(box) {
 					NEXT([
 					function(next) {
 						
-						// get data in database.
-						db.get({
-							id : id,
-							filter : filter,
-							sort : sort,
-							isRandom : isRandom,
-							isToCache : isToCache
-						}, {
-	
-							error : function(errorMsg) {
-								ret({
-									errorMsg : errorMsg
-								});
-							},
-	
-							notExists : function() {
-								ret();
-							},
-	
-							success : function(savedData) {
+						var
+						// is not run next
+						isNotRunNext;
+
+						// run before get listeners.
+						EACH(beforeGetListeners, function(beforeGetListener) {
+							
+							if (beforeGetListener(idOrParams, next, ret, clientInfo) === false) {
 								
-								var
-								// is not run next
-								isNotRunNext;
-	
-								// run get listeners.
-								EACH(getListeners, function(getListener) {
-									
-									if (getListener(savedData, next, ret, clientInfo) === false) {
-										
-										isNotRunNext = true;
-									}
-								});
-	
-								if (isNotRunNext !== true) {
-									next(savedData);
-								}
+								isNotRunNext = true;
 							}
 						});
+
+						if (isNotRunNext !== true) {
+							next();
+						}
+					},
+
+					function(next) {
+						return function() {
+						
+							// get data in database.
+							db.get({
+								id : id,
+								filter : filter,
+								sort : sort,
+								isRandom : isRandom,
+								isToCache : isToCache
+							}, {
+		
+								error : function(errorMsg) {
+									ret({
+										errorMsg : errorMsg
+									});
+								},
+		
+								notExists : function() {
+									ret();
+								},
+		
+								success : function(savedData) {
+									
+									var
+									// is not run next
+									isNotRunNext;
+		
+									// run after get listeners.
+									EACH(afterGetListeners, function(afterGetListener) {
+										
+										if (afterGetListener(savedData, next, ret, clientInfo) === false) {
+											
+											isNotRunNext = true;
+										}
+									});
+		
+									if (isNotRunNext !== true) {
+										next(savedData);
+									}
+								}
+							});
+						};
 					},
 					
 					function() {
@@ -598,22 +716,89 @@ FOR_BOX(function(box) {
 					var
 					// id
 					id = data.id,
+					
+					// $inc
+					$inc = data.$inc,
+					
+					// $push
+					$push = data.$push,
+					
+					// $pull
+					$pull = data.$pull,
 
 					// valid result
-					validResult;
+					validResult,
+
+					// $inc valid result
+					$incValidResult,
+
+					// $push valid result
+					$pushValidResult,
+
+					// $pull valid result
+					$pullValidResult;
 
 					// valid data.
 					if (updateValid !== undefined) {
+						
 						validResult = updateValid.checkForUpdate(data);
+						
+						if ($inc !== undefined) {
+							$incValidResult = updateValid.checkForUpdate($inc);
+						}
+						
+						if ($push !== undefined) {
+							
+							$pushValidResult = updateValid.checkForUpdate(RUN(function() {
+								
+								var
+								// data for valid
+								dataForValid = {};
+								
+								EACH($push, function(value, attr) {
+									dataForValid[attr] = [value];
+								});
+								
+								return dataForValid;
+							}));
+						}
+						
+						if ($pull !== undefined) {
+							
+							$pullValidResult = updateValid.checkForUpdate(RUN(function() {
+								
+								var
+								// data for valid
+								dataForValid = {};
+								
+								EACH($pull, function(value, attr) {
+									dataForValid[attr] = [value];
+								});
+								
+								return dataForValid;
+							}));
+						}
 					}
 
 					data.id = id;
+					data.$inc = $inc;
+					data.$push = $push;
+					data.$pull = $pull;
 
-					// when has error
-					if (validResult !== undefined && validResult.checkHasError() === true) {
+					if (updateValid !== undefined && (
+						validResult.checkHasError() === true ||
+						($incValidResult !== undefined && $incValidResult.checkHasError() === true) ||
+						($pushValidResult !== undefined && $pushValidResult.checkHasError() === true) ||
+						($pullValidResult !== undefined && $pullValidResult.checkHasError() === true)
+					)) {
 
 						ret({
-							validErrors : validResult.getErrors()
+							validErrors : COMBINE([
+								validResult.getErrors(),
+								$incValidResult === undefined ? {} : $incValidResult.getErrors(),
+								$pushValidResult === undefined ? {} : $pushValidResult.getErrors(),
+								$pullValidResult === undefined ? {} : $pullValidResult.getErrors()
+							])
 						});
 					}
 
@@ -838,44 +1023,73 @@ FOR_BOX(function(box) {
 					NEXT([
 					function(next) {
 						
-						// find data set in database.
-						db.find({
-							filter : filter,
-							sort : sort,
-							start : start,
-							count : count,
-							isFindAll : isFindAll,
-							isToCache : isToCache
-						}, {
-	
-							error : function(errorMsg) {
-								ret({
-									errorMsg : errorMsg
-								});
-							},
-	
-							success : function(savedDataSet) {
-						
-								var
-								// is not run next
-								isNotRunNext;
-	
-								// run find listeners.
-								EACH(findListeners, function(findListener) {
-	
-									if (findListener(savedDataSet, function() {
-										next(savedDataSet);
-									}, ret, clientInfo) === false) {
-										
-										isNotRunNext = true;
-									}
-								});
-	
-								if (isNotRunNext !== true) {
-									next(savedDataSet);
-								}
+						var
+						// is not run next
+						isNotRunNext;
+
+						// run before find listeners.
+						EACH(beforeFindListeners, function(beforeFindListener) {
+							
+							if (beforeFindListener({
+								filter : filter,
+								sort : sort,
+								start : start,
+								count : count,
+								isFindAll : isFindAll,
+								isToCache : isToCache
+							}, next, ret, clientInfo) === false) {
+								
+								isNotRunNext = true;
 							}
 						});
+
+						if (isNotRunNext !== true) {
+							next();
+						}
+					},
+
+					function(next) {
+						return function() {
+							
+							// find data set in database.
+							db.find({
+								filter : filter,
+								sort : sort,
+								start : start,
+								count : count,
+								isFindAll : isFindAll,
+								isToCache : isToCache
+							}, {
+		
+								error : function(errorMsg) {
+									ret({
+										errorMsg : errorMsg
+									});
+								},
+		
+								success : function(savedDataSet) {
+							
+									var
+									// is not run next
+									isNotRunNext;
+		
+									// run after find listeners.
+									EACH(afterFindListeners, function(afterFindListener) {
+		
+										if (afterFindListener(savedDataSet, function() {
+											next(savedDataSet);
+										}, ret, clientInfo) === false) {
+											
+											isNotRunNext = true;
+										}
+									});
+		
+									if (isNotRunNext !== true) {
+										next(savedDataSet);
+									}
+								}
+							});
+						};
 					},
 					
 					function() {
@@ -908,40 +1122,65 @@ FOR_BOX(function(box) {
 					NEXT([
 					function(next) {
 						
-						// count data in database.
-						db.count({
-							filter : filter,
-							isToCache : isToCache
-						}, {
-	
-							error : function(errorMsg) {
-								ret({
-									errorMsg : errorMsg
-								});
-							},
-	
-							success : function(count) {
+						var
+						// is not run next
+						isNotRunNext;
+
+						// run before count listeners.
+						EACH(beforeCountListeners, function(beforeCountListener) {
+							
+							if (beforeCountListener({
+								filter : filter,
+								isToCache : isToCache
+							}, next, ret, clientInfo) === false) {
 								
-								var
-								// is not run next
-								isNotRunNext;
-	
-								// run count listeners.
-								EACH(countListeners, function(countListener) {
-									
-									if (countListener(count, function() {
-										next(count);
-									}, ret, clientInfo) === false) {
-										
-										isNotRunNext = true;
-									}
-								});
-	
-								if (isNotRunNext !== true) {
-									next(count);
-								}
+								isNotRunNext = true;
 							}
 						});
+
+						if (isNotRunNext !== true) {
+							next();
+						}
+					},
+
+					function(next) {
+						return function() {
+							
+							// count data in database.
+							db.count({
+								filter : filter,
+								isToCache : isToCache
+							}, {
+		
+								error : function(errorMsg) {
+									ret({
+										errorMsg : errorMsg
+									});
+								},
+		
+								success : function(count) {
+									
+									var
+									// is not run next
+									isNotRunNext;
+		
+									// run after count listeners.
+									EACH(afterCountListeners, function(afterCountListener) {
+										
+										if (afterCountListener(count, function() {
+											next(count);
+										}, ret, clientInfo) === false) {
+											
+											isNotRunNext = true;
+										}
+									});
+		
+									if (isNotRunNext !== true) {
+										next(count);
+									}
+								}
+							});
+						};
 					},
 					
 					function() {
@@ -974,40 +1213,65 @@ FOR_BOX(function(box) {
 					NEXT([
 					function(next) {
 						
-						// check is exists data in database.
-						db.checkIsExists({
-							filter : filter,
-							isToCache : isToCache
-						}, {
-	
-							error : function(errorMsg) {
-								ret({
-									errorMsg : errorMsg
-								});
-							},
-	
-							success : function(isExists) {
+						var
+						// is not run next
+						isNotRunNext;
+
+						// run before check is exists listeners.
+						EACH(beforeCheckIsExistsListeners, function(beforeCheckIsExistsListener) {
+							
+							if (beforeCheckIsExistsListener({
+								filter : filter,
+								isToCache : isToCache
+							}, next, ret, clientInfo) === false) {
 								
-								var
-								// is not run next
-								isNotRunNext;
-	
-								// run check is exists listeners.
-								EACH(checkIsExistsListeners, function(checkIsExistsListener) {
-	
-									if (checkIsExistsListeners(isExists, function() {
-										next(isExists);
-									}, ret, clientInfo) === false) {
-										
-										isNotRunNext = true;
-									}
-								});
-	
-								if (isNotRunNext !== true) {
-									next(isExists);
-								}
+								isNotRunNext = true;
 							}
 						});
+
+						if (isNotRunNext !== true) {
+							next();
+						}
+					},
+
+					function(next) {
+						return function() {
+						
+							// check is exists data in database.
+							db.checkIsExists({
+								filter : filter,
+								isToCache : isToCache
+							}, {
+		
+								error : function(errorMsg) {
+									ret({
+										errorMsg : errorMsg
+									});
+								},
+		
+								success : function(isExists) {
+									
+									var
+									// is not run next
+									isNotRunNext;
+		
+									// run after check is exists listeners.
+									EACH(afterCheckIsExistsListeners, function(afterCheckIsExistsListener) {
+		
+										if (afterCheckIsExistsListener(isExists, function() {
+											next(isExists);
+										}, ret, clientInfo) === false) {
+											
+											isNotRunNext = true;
+										}
+									});
+		
+									if (isNotRunNext !== true) {
+										next(isExists);
+									}
+								}
+							});
+						};
 					},
 					
 					function() {

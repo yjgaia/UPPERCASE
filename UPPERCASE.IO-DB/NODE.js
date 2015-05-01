@@ -427,6 +427,8 @@ FOR_BOX(function(box) {
 				//REQUIRED: data
 				//REQUIRED: data.id
 				//OPTIONAL: data.$inc
+				//OPTIONAL: data.$push
+				//OPTIONAL: data.$pull
 				//OPTIONAL: callbackOrHandlers
 				//OPTIONAL: callbackOrHandlers.success
 				//OPTIONAL: callbackOrHandlers.notExists
@@ -1282,6 +1284,8 @@ FOR_BOX(function(box) {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
+					//OPTIONAL: data.$push
+					//OPTIONAL: data.$pull
 					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists
@@ -1294,6 +1298,12 @@ FOR_BOX(function(box) {
 
 					// $inc
 					$inc = data.$inc,
+
+					// $push
+					$push = data.$push,
+
+					// $pull
+					$pull = data.$pull,
 
 					// filter
 					filter,
@@ -1333,7 +1343,7 @@ FOR_BOX(function(box) {
 						}
 
 						EACH(data, function(value, name) {
-							if (name === 'id' || name === '_id' || name === 'createTime' || name === '$inc') {
+							if (name === 'id' || name === '_id' || name === 'createTime' || name === '$inc' || name === '$push' || name === '$pull') {
 								delete data[name];
 							} else if (value === TO_DELETE) {
 
@@ -1359,6 +1369,14 @@ FOR_BOX(function(box) {
 
 						if ($inc !== undefined) {
 							updateData.$inc = $inc;
+						}
+						
+						if ($push !== undefined) {
+							updateData.$push = $push;
+						}
+						
+						if ($pull !== undefined) {
+							updateData.$pull = $pull;
 						}
 						
 						get({
@@ -1443,6 +1461,18 @@ FOR_BOX(function(box) {
 													});
 												}
 												
+												if ($push !== undefined) {
+													EACH($push, function(notUsing, name) {
+														updateData[name] = savedData[name];
+													});
+												}
+												
+												if ($pull !== undefined) {
+													EACH($pull, function(notUsing, name) {
+														updateData[name] = savedData[name];
+													});
+												}
+												
 												if (isNotUsingHistory !== true && isNotToSaveHistory !== true) {
 													addHistory('update', id, updateData, savedData.lastUpdateTime);
 												}
@@ -1487,6 +1517,8 @@ FOR_BOX(function(box) {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
+					//OPTIONAL: data.$push
+					//OPTIONAL: data.$pull
 					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists
@@ -1499,6 +1531,8 @@ FOR_BOX(function(box) {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
+					//OPTIONAL: data.$push
+					//OPTIONAL: data.$pull
 					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists

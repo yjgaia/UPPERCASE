@@ -257,10 +257,6 @@ global.BOOT = function(params) {
 		// set fix scripts folder path.
 		addContentToBrowserScript('BROWSER_CONFIG.fixScriptsFolderPath = \'/UPPERCASE.JS-BROWSER-FIX\';\n');
 		addContentToBrowserScript('BROWSER_CONFIG.fixTransportScriptsFolderPath = \'/UPPERCASE.IO-TRANSPORT\';\n');
-
-		// add ignore attr $inc to VALID.
-		VALID.addIgnoreAttr('$inc');
-		addContentToBrowserScript('VALID.addIgnoreAttr(\'$inc\');\n');
 	};
 
 	initBoxes = function(next) {
