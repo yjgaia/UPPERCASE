@@ -168,19 +168,27 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 
 				var
 				// room counts
-				roomCounts = {};
+				roomCounts = {},
+				
+				// method maps
+				methodMaps = {};
 
 				on('__ENTER_ROOM', function(roomName) {
 
 					var
 					// init room funcs
 					initRoomFuncs = initRoomFuncMap[roomName],
-
+					
 					// sends
-					sends = sendMap[roomName];
-
+					sends = sendMap[roomName],
+					
+					// method map
+					methodMap;
+					
 					if (roomCounts[roomName] === undefined) {
 						roomCounts[roomName] = 1;
+						
+						methodMap = methodMaps[roomName] = {};
 
 						if (initRoomFuncs !== undefined) {
 
@@ -192,15 +200,49 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 									//REQUIRED: methodName
 									//REQUIRED: method
 									
-									on(methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName, method);
+									var
+									// real method name
+									realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName,
+									
+									// methods
+									methods = methodMap[realMethodName];
+					
+									if (methods === undefined) {
+										methods = methodMap[realMethodName] = [];
+									}
+					
+									methods.push(method);
+									
+									on(realMethodName, method);
 								},
 
 								// off.
 								function(methodName, method) {
 									//REQUIRED: methodName
 									//OPTIONAL: method
+									
+									var
+									// real method name
+									realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName,
+									
+									// methods
+									methods = methodMap[realMethodName];
+					
+									if (methods !== undefined) {
+					
+										if (method !== undefined) {
+					
+											REMOVE({
+												array : methods,
+												value : method
+											});
+					
+										} else {
+											delete methodMap[realMethodName];
+										}
+									}
 
-									off(methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName, method);
+									off(realMethodName, method);
 								},
 
 								// send.
@@ -230,7 +272,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 				});
 
 				on('__EXIT_ROOM', function(roomName) {
-
+					
 					if (roomCounts[roomName] !== undefined) {
 						roomCounts[roomName] -= 1;
 
@@ -245,6 +287,13 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 								delete sendMap[roomName];
 							}
 							delete roomCounts[roomName];
+							
+							// off all room's methods.
+							EACH(methodMaps[roomName], function(methods, methodName) {
+								EACH(methods, function(method) {
+									off(methodName, method);
+								});
+							});
 						}
 					}
 				});
@@ -261,9 +310,17 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 						if (sendMap[roomName].length === 0) {
 							delete sendMap[roomName];
 						}
+						
+						// off all room's methods.
+						EACH(methodMaps[roomName], function(methods, methodName) {
+							EACH(methods, function(method) {
+								off(methodName, method);
+							});
+						});
 					});
 
 					roomCounts = undefined;
+					methodMaps = undefined;
 				});
 			});
 
