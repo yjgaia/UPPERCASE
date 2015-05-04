@@ -41,6 +41,10 @@ cordova platform add android
 cordova run
 ```
 
+### Cordova에 플러그인 설치
+```
+cordova plugin add {{플러그인의 주소}}
+```
 
 ## Crosswalk
 
@@ -65,4 +69,9 @@ crosswalk-cordova-11.40.277.7-arm\bin\create Sample com.sample.Sample Sample
 ```
 cd Sample
 ./cordova/run
+```
+
+### Crosswalk에 플러그인 설치
+```
+plugman install --platform android --project . --plugin {{플러그인의 주소}}
 ```

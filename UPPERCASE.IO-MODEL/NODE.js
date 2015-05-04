@@ -687,7 +687,9 @@ FOR_BOX(function(box) {
 									// run after get listeners.
 									EACH(afterGetListeners, function(afterGetListener) {
 										
-										if (afterGetListener(savedData, next, ret, clientInfo) === false) {
+										if (afterGetListener(savedData, function() {
+											next(savedData);
+										}, ret, clientInfo) === false) {
 											
 											isNotRunNext = true;
 										}
