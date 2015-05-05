@@ -12579,14 +12579,12 @@ FOR_BOX(function(box) {
 				if (CONFIG.version !== undefined) {
 					uri += '?version=' + CONFIG.version;
 				}
+					
+				if (basePath !== undefined) {
+					uri = basePath + '/' + uri;
+				}
 				
-				if (location.protocol === 'file:') {
-					
-					if (basePath !== undefined) {
-						uri = basePath + '/' + uri;
-					}
-					
-				} else {
+				if (location.protocol !== 'file:') {
 					uri = '/' + uri;
 				}
 	
