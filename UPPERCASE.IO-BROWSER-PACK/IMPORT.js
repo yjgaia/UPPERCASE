@@ -1036,9 +1036,6 @@ global.VALID = CLASS(function(cls) {
 	'use strict';
 
 	var
-	// ignore attrs
-	ignoreAttrs = [],
-
 	// not empty.
 	notEmpty,
 
@@ -1100,10 +1097,7 @@ global.VALID = CLASS(function(cls) {
 	detail,
 
 	// equal.
-	equal,
-
-	// add ignore attr.
-	addIgnoreAttr;
+	equal;
 
 	cls.notEmpty = notEmpty = function(value) {
 		//REQUIRED: value
@@ -1370,10 +1364,6 @@ global.VALID = CLASS(function(cls) {
 		validStr = String(validValue);
 
 		return str === validStr;
-	};
-
-	cls.addIgnoreAttr = addIgnoreAttr = function(attr) {
-		ignoreAttrs.push(attr);
 	};
 
 	return {
@@ -1652,10 +1642,7 @@ global.VALID = CLASS(function(cls) {
 					});
 
 					EACH(data, function(value, attr) {
-						if (CHECK_IS_IN({
-							array : ignoreAttrs,
-							value : attr
-						}) !== true && validDataSet[attr] === undefined) {
+						if (validDataSet[attr] === undefined) {
 							delete data[attr];
 						}
 					});
@@ -2742,12 +2729,12 @@ global.INTEGER = METHOD({
  */
 global.RANDOM = METHOD({
 
-	run : function(maxOrParams) {
+	run : function(limitOrParams) {
 		'use strict';
-		//REQUIRED: maxOrParams
-		//OPTIONAL: maxOrParams.min
-		//OPTIONAL: maxOrParams.max
-		//OPTIONAL: maxOrParams.limit
+		//REQUIRED: limitOrParams
+		//OPTIONAL: limitOrParams.min
+		//OPTIONAL: limitOrParams.max
+		//OPTIONAL: limitOrParams.limit
 
 		var
 		// min
@@ -2759,13 +2746,13 @@ global.RANDOM = METHOD({
 		// limit
 		limit;
 
-		// init maxOrParams.
-		if (CHECK_IS_DATA(maxOrParams) !== true) {
-			max = maxOrParams;
+		// init limitOrParams.
+		if (CHECK_IS_DATA(limitOrParams) !== true) {
+			limit = limitOrParams;
 		} else {
-			min = maxOrParams.min;
-			max = maxOrParams.max;
-			limit = maxOrParams.limit;
+			min = limitOrParams.min;
+			max = limitOrParams.max;
+			limit = limitOrParams.limit;
 		}
 
 		if (min === undefined) {

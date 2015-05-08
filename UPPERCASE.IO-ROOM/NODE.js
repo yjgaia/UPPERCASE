@@ -10,7 +10,7 @@ FOR_BOX(function(box) {
 			//REQUIRED: params
 			//REQUIRED: params.roomName
 			//REQUIRED: params.methodName
-			//REQUIRED: params.data
+			//OPTIONAL: params.data
 
 			var
 			// room name
@@ -106,7 +106,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.roomName
 		//REQUIRED: params.methodName
-		//REQUIRED: params.data
+		//OPTIONAL: params.data
 
 		var
 		// room name
@@ -249,7 +249,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 								function(params, callback) {
 									//REQUIRED: params
 									//REQUIRED: params.methodName
-									//REQUIRED: params.data
+									//OPTIONAL: params.data
 									//OPTIONAL: callback
 
 									send({

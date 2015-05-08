@@ -10,7 +10,7 @@ FOR_BOX(function(box) {
 			//REQUIRED: params
 			//REQUIRED: params.roomName
 			//REQUIRED: params.methodName
-			//REQUIRED: params.data
+			//OPTIONAL: params.data
 
 			var
 			// room name
