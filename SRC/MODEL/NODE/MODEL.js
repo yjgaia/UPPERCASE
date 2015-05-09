@@ -559,7 +559,7 @@ FOR_BOX(function(box) {
 											
 											if (afterCreateListener(savedData, function() {
 												next(savedData);
-											}, clientInfo) === false) {
+											}, ret, clientInfo) === false) {
 												
 												isNotRunNext = true;
 											}
@@ -855,7 +855,7 @@ FOR_BOX(function(box) {
 			
 											if (afterUpdateListener(savedData, originData, function() {
 												next(savedData, originData);
-											}, clientInfo) === false) {
+											}, ret, clientInfo) === false) {
 												
 												isNotRunNext = true;
 											}
@@ -938,7 +938,7 @@ FOR_BOX(function(box) {
 										
 										if (afterRemoveListener(originData, function() {
 											next(originData);
-										}, clientInfo) === false) {
+										}, ret, clientInfo) === false) {
 											
 											isNotRunNext = true;
 										}
