@@ -310,15 +310,9 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 						if (sendMap[roomName].length === 0) {
 							delete sendMap[roomName];
 						}
-						
-						// off all room's methods.
-						EACH(methodMaps[roomName], function(methods, methodName) {
-							EACH(methods, function(method) {
-								off(methodName, method);
-							});
-						});
 					});
 
+					// free memory.
 					roomCounts = undefined;
 					methodMaps = undefined;
 				});
