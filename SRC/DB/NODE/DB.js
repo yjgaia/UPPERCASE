@@ -1656,9 +1656,11 @@ FOR_BOX(function(box) {
 						}
 
 						if (sort === undefined) {
-							sort = {
-								createTime : -1
-							};
+							sort = {};
+						}
+						
+						if (sort.createTime === undefined) {
+							sort.createTime = -1;
 						}
 
 						if (start === undefined || start < 0) {
