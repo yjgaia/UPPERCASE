@@ -10367,6 +10367,12 @@ global.VIEW = CLASS({
 
 		// close handlers
 		closeHandlers = [],
+		
+		// now params
+		nowParams,
+		
+		// now uri
+		nowURI,
 
 		// on.
 		on,
@@ -10389,11 +10395,17 @@ global.VIEW = CLASS({
 			// when change params
 			if (methodName === 'paramsChange') {
 				paramsChangeHandlers.push(handler);
+				if (nowParams !== undefined) {
+					handler(nowParams);
+				}
 			}
 			
 			// when change uri
 			if (methodName === 'uriChange') {
 				uriChangeHandlers.push(handler);
+				if (nowURI !== undefined) {
+					handler(nowURI);
+				}
 			}
 
 			// when close
@@ -10403,6 +10415,8 @@ global.VIEW = CLASS({
 		};
 
 		self.changeParams = changeParams = function(params) {
+			
+			nowParams = params;
 
 			EACH(paramsChangeHandlers, function(handler) {
 				handler(params);
@@ -10410,6 +10424,8 @@ global.VIEW = CLASS({
 		};
 		
 		self.runURIChangeHandlers = runURIChangeHandlers = function(uri) {
+			
+			nowURI = uri;
 			
 			EACH(uriChangeHandlers, function(handler) {
 				handler(uri);
