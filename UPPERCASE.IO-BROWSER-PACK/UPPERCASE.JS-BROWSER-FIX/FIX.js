@@ -96,13 +96,17 @@ RUN(function() {
 	 * fix BROWSER/VIEW.
 	 */
 
-	if (history.pushState === undefined) {
+	// when protocol is 'file:', use hashbang.
+	if (history.pushState === undefined || location.protocol === 'file:') {
 		
 		// fix HREF.
 		loadFixScript('BROWSER/VIEW/HREF');
 		
 		// fix GO.
 		loadFixScript('BROWSER/VIEW/GO');
+		
+		// fix URI.
+		loadFixScript('BROWSER/VIEW/URI');
 		
 		// fix MATCH_VIEW.
 		loadFixScript('BROWSER/VIEW/MATCH_VIEW');

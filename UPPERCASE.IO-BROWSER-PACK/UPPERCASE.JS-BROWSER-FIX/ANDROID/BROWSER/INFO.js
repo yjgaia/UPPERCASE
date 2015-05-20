@@ -65,7 +65,7 @@ OVERRIDE(INFO, function(origin) {
 	
 				var
 				// browser info
-				browserInfo = getBrowserInfo();
+				browserInfo = self.getBrowserInfo();
 	
 				if (browserInfo.name !== 'Chrome' || INTEGER(browserInfo.version) < 32) {
 					return true;

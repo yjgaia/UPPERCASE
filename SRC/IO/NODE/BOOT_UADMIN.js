@@ -314,6 +314,24 @@ global.BOOT_UADMIN = METHOD({
 									
 									return false;
 								}
+								
+								else if (uriParams.method === 'count' && model.count !== undefined) {
+								
+									model.count(requestInfo.data, {
+										error : function(errorMsg) {
+											response(STRINGIFY({
+												errorMsg : errorMsg
+											}));
+										},
+										success : function(count) {
+											response(STRINGIFY({
+												count : count
+											}));
+										}
+									});
+									
+									return false;
+								}
 							}
 						}
 					}

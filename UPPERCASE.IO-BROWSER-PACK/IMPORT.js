@@ -10189,7 +10189,7 @@ global.MATCH_VIEW = METHOD(function(m) {
 	
 				var
 				// uri
-				uri = decodeURIComponent(location.pathname.substring(1)),
+				uri = URI(),
 	
 				// result
 				result,
@@ -10333,6 +10333,18 @@ FOR_BOX(function(box) {
 			REFRESH((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
 		}
 	});
+});
+
+/**
+ * get now page's URI.
+ */
+global.URI = METHOD({
+
+	run : function() {
+		'use strict';
+		
+		return decodeURIComponent(location.pathname.substring(1));
+	}
 });
 
 /**

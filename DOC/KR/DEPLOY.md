@@ -18,7 +18,14 @@ MongoDB가 32bit 컴퓨터에서는 심각한 제한이 있습니다. 32bit 컴�
 배포시에는 보안을 위해 MongoDB를 인증 모드로 실행해주시기 바랍니다.
 
 MongoDB 유저 추가
+- 우선 관리자로 접근합니다.
 ```javascript
+use admin
+db.auth('root 유저명', 'root 비밀번호')
+```
+
+```javascript
+use DB명
 db.createUser({ user : '유저명', pwd : '비밀번호', roles : ['readWrite', 'dbAdmin'] })
 ```
 

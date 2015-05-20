@@ -18,7 +18,7 @@ UADMIN.MAIN = METHOD({
 			});
 			
 			UADMIN.MATCH_VIEW({
-				uri : '{boxName}/{modelName}',
+				uri : ['{boxName}/{modelName}', '{boxName}/{modelName}/p/{page}'],
 				target : UADMIN.List
 			});
 			
@@ -28,12 +28,7 @@ UADMIN.MAIN = METHOD({
 			});
 			
 			UADMIN.MATCH_VIEW({
-				uri : '{boxName}/{modelName}/f/new',
-				target : UADMIN.Form
-			});
-			
-			UADMIN.MATCH_VIEW({
-				uri : '{boxName}/{modelName}/{id}/f/update',
+				uri : ['{boxName}/{modelName}/f/new', '{boxName}/{modelName}/{id}/f/update'],
 				target : UADMIN.Form
 			});
 		});

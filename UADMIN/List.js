@@ -22,8 +22,18 @@ UADMIN.List = CLASS({
 			// model name
 			modelName = params.modelName,
 			
+			// page
+			page = params.page,
+			
 			// list
-			list;
+			list,
+			
+			// page numbers
+			pageNumbers;
+			
+			if (page === undefined) {
+				page = 1;
+			}
 			
 			wrapper.empty();
 			wrapper.append(list = UUI.LIST({
@@ -31,13 +41,15 @@ UADMIN.List = CLASS({
 					backgroundColor : '#fff'
 				}
 			}));
+			wrapper.append(pageNumbers = DIV());
 			
 			UADMIN.Layout.getToolbar().setTitle(modelName + ' Model');
 			
 			GET({
 				uri : '__/' + boxName + '/' + modelName + '/find',
 				data : {
-					count : 10
+					count : 10,
+					start : (page - 1) * 10
 				}
 			}, function(resultStr) {
 				
@@ -76,6 +88,29 @@ UADMIN.List = CLASS({
 							}
 						})
 					});
+				});
+			});
+		
+			GET({
+				uri : '__/' + boxName + '/' + modelName + '/count'
+			}, function(resultStr) {
+				
+				var
+				// result
+				result = PARSE_STR(resultStr),
+				
+				// count
+				count = result.count;
+				
+				REPEAT(Math.ceil(count / 10), function(i) {
+					pageNumbers.append(A({
+						c : i + 1,
+						on : {
+							tap : function() {
+								UADMIN.GO(boxName + '/' + modelName + '/p/' + (i + 1));
+							}
+						}
+					}));
 				});
 			});
 		});
