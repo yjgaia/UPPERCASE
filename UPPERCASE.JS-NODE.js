@@ -3100,6 +3100,11 @@ global.RESOURCE_SERVER = CLASS(function(cls) {
 			return 'audio/mpeg';
 		}
 
+		// exe
+		if (extname === '.exe') {
+			return 'application/x-msdownload';
+		}
+
 		return 'application/octet-stream';
 	};
 
