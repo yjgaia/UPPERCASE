@@ -3970,6 +3970,41 @@ global.LI = CLASS({
 });
 
 /**
+ * Optgroup class
+ */
+global.OPTGROUP = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'optgroup'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.label
+
+		var
+		// label
+		label = params.label;
+
+		inner.setAttr({
+			name : 'label',
+			value : label
+		});
+	}
+});
+
+/**
  * Option class
  */
 global.OPTION = CLASS({
@@ -3992,6 +4027,7 @@ global.OPTION = CLASS({
 		'use strict';
 		//OPTIONAL: params
 		//OPTIONAL: params.value
+		//OPTIONAL: params.c
 
 		var
 		// get value.
@@ -4014,8 +4050,6 @@ global.OPTION = CLASS({
 	afterInit : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
-		//OPTIONAL: params.name
-		//OPTIONAL: params.placeholder
 		//OPTIONAL: params.value
 		//OPTIONAL: params.c
 
@@ -5125,7 +5159,7 @@ global.EXPORT_IMG_DATA = METHOD(function(m) {
 					});
 
 					// get img data.
-					imgData = context.getImgData();
+					imgData = context.getImageData();
 
 					// cache.
 					exportedImgDataSet[uri] = imgData;
@@ -6990,7 +7024,7 @@ global.REQUEST = METHOD({
 			errorListener = responseListenerOrListeners.error;
 		}
 
-		url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + (uri === undefined ? '' : uri);
+		url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + (uri === undefined ? '' : (uri[0] === '/' ? uri.substring(1) : uri));
 
 		req = new XMLHttpRequest();
 

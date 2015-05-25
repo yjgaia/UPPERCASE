@@ -1,5 +1,6 @@
 # ![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE.IO/master/LOGO.png)
 UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
+
 * [Node.js](http://nodejs.org)를 기반으로 합니다.
 * JavaScript 유틸리티 세트인 [UPPERCASE.JS](UPPERCASE.JS.md)를 기반으로 만들어졌습니다.
 * MVC 패턴을 따릅니다.
@@ -18,7 +19,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [UPPERCASE.IO 업데이트](UPDATE.md)
 
 ## 한걸음 더
-* [BOX 이해하기](BOX.md) (작성중)
+* [BOX 이해하기](BOX.md)
 * [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](CORDOVA.md) (작성중)
 * [Android, iOS 모바일 네이티브 앱 개발](MOBILE_NATIVE.md) (작성중)
 * [Node-webkit을 이용한 데스크톱 앱 개발](NODE_WEBKIT.md) (작성중)
@@ -28,16 +29,16 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 
 ## 튜토리얼 (예정)
 * 채팅방 만들기
-* 게임 만들기
+* 온라인 게임 만들기
 
 ## 모듈 상세보기 (작성중)
-* `[UPPERCASE.IO-TRANSPORT](UPPERCASE.IO-TRANSPORT.md)` 서버와 클라이언트간의 통신을 담당하는 모듈입니다.
-* `[UPPERCASE.IO-ROOM](UPPERCASE.IO-ROOM.md)` 통신 처리를 룸 방식으로 처리하는 모듈입니다.
-* `[UPPERCASE.IO-DB](UPPERCASE.IO-DB.md)` 데이터베이스를 다루는 모듈입니다.
-* `[UPPERCASE.IO-MODEL](UPPERCASE.IO-MODEL.md)` MVC 패턴에서 Model 부분을 다루는 모듈입니다.
-* `[UPPERCASE.IO-UPLOAD](UPPERCASE.IO-UPLOAD.md)` 업로드 관련 기능을 제공하는 모듈입니다.
-* `[UPPERCASE.IO-UTIL](UPPERCASE.IO-UTIL.md)` npm 모듈을 사용하는 유틸리티를 모은 모듈입니다.
-* `[UPPERCASE.IO-IO](UPPERCASE.IO-IO.md)` UPPERCASE.IO 통합을 위한 모듈입니다.
+* [UPPERCASE.IO-TRANSPORT](UPPERCASE.IO-TRANSPORT.md) 서버와 클라이언트간의 통신을 담당하는 모듈입니다.
+* [UPPERCASE.IO-ROOM](UPPERCASE.IO-ROOM.md) 통신 처리를 룸 방식으로 처리하는 모듈입니다.
+* [UPPERCASE.IO-DB](UPPERCASE.IO-DB.md) 데이터베이스를 다루는 모듈입니다.
+* [UPPERCASE.IO-MODEL](UPPERCASE.IO-MODEL.md) MVC 패턴에서 Model 부분을 다루는 모듈입니다.
+* [UPPERCASE.IO-UPLOAD](UPPERCASE.IO-UPLOAD.md) 업로드 관련 기능을 제공하는 모듈입니다.
+* [UPPERCASE.IO-UTIL](UPPERCASE.IO-UTIL.md) npm 모듈을 사용하는 유틸리티를 모은 모듈입니다.
+* [UPPERCASE.IO-IO](UPPERCASE.IO-IO.md) UPPERCASE.IO 통합을 위한 모듈입니다.
 
 ## UPPERCASE.IO 개발에 참여하기
 * [UPPERCASE.IO 빌드](BUILD.md)

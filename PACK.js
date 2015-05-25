@@ -38,18 +38,9 @@ RUN(function() {
 		console.log('PACK: ' + msg);
 	},
 
-	// check is allowed folder.
-	checkIsAllowedFolder = function(params) {
-		//REQUIRED: params
-		//REQUIRED: params.path
-		//REQUIRED: params.name
-
-		var
-		// path
-		path = params.path,
-
-		// name
-		name = params.name;
+	// check is allowed folder name.
+	checkIsAllowedFolderName = function(name) {
+		//REQUIRED: name
 
 		return (
 			// hide folder
@@ -132,7 +123,9 @@ RUN(function() {
 
 				success : function(folderNames) {
 					EACH(folderNames, function(folderName) {
-						scanFolder(path + '/' + folderName, func);
+						if (checkIsAllowedFolderName(folderName) === true) {
+							scanFolder(path + '/' + folderName, func);
+						}
 					});
 				}
 			});

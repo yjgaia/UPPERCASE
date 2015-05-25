@@ -27,7 +27,6 @@ global.UPLOAD_REQUEST = METHOD(function(m) {
 	return {
 
 		run : function(params, callbackOrHandlers) {
-			'use strict';
 			//REQUIRED: params
 			//OPTIONAL: params.requestInfo
 			//REQUIRED: params.uploadPath
@@ -114,7 +113,10 @@ global.UPLOAD_REQUEST = METHOD(function(m) {
 							path = fileData.path,
 
 							// file size
-							fileSize = fileData.size;
+							fileSize = fileData.size,
+
+							// file type
+							fileType = fileData.type;
 
 							fileData.ip = ip;
 
@@ -141,11 +143,7 @@ global.UPLOAD_REQUEST = METHOD(function(m) {
 									fileData[name] = value;
 								}
 							});
-
-							var
-							// file type
-							fileType = fileData.type;
-
+							
 							if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
 
 								IMAGEMAGICK_READ_METADATA(path, {
