@@ -2,9 +2,6 @@
 require('../../../UPPERCASE.JS-COMMON.js');
 require('../../../UPPERCASE.JS-NODE.js');
 
-// load UPPERCASE.IO-BOX
-require('../../../UPPERCASE.IO-BOX/CORE.js');
-
 TEST('BOX', function(ok) {
 	'use strict';
 

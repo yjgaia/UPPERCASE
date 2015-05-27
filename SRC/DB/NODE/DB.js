@@ -1618,7 +1618,7 @@ FOR_BOX(function(box) {
 
 					// error message
 					errorMsg,
-								
+					
 					// cleaned filter
 					cleanedFilter,
 					
