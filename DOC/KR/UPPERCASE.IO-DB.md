@@ -124,53 +124,53 @@ filter : {
 * `$inc`
 ```javascript
 // num이 2 증가합니다.
-{
+SampleModel.update({
     ...
     $inc : {
         num : 2
     }
-}
+})
 ```
 ```javascript
 // num이 2 감소합니다.
-{
+SampleModel.update({
     ...
     $inc : {
         num : -2
     }
-}
+})
 ```
 * `$push`
 ```javascript
 // 배열 array에 3을 추가합니다.
-{
+SampleModel.update({
     ...
     $push : {
         array : 3
     }
-}
+})
 ```
 * `$pull`
 ```javascript
 // 배열 array에서 3을 제거합니다.
-{
+SampleModel.update({
     ...
     $pull : {
         array : 3
     }
-}
+})
 ```
 * `$pull`
 ```javascript
 // 배열 array에서 a가 3인 데이터를 제거합니다.
-{
+SampleModel.update({
     ...
     $pull : {
         array : {
             a : 3
         }
     }
-}
+})
 ```
 
 ## MongoDB 사용 시 주의사항
