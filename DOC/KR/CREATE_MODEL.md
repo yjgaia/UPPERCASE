@@ -1,5 +1,5 @@
 # 모델 생성
-UPPERCASE.IO는 MVC 패턴을 따릅니다. 여기서는 Model에 해당하는 부분을 만드는 방법을 알아보겠습니다.
+UPPERCASE.IO는 Model-View 패턴을 따릅니다. 여기서는 Model에 해당하는 부분을 만드는 방법을 알아보겠습니다.
 
 ## MongoDB 실행하기
 UPPERCASE.IO는 데이터베이스로 MongoDB를 사용합니다. 콘솔 혹은 터미널에서 MongoDB를 실행합니다.

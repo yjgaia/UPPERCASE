@@ -84,6 +84,9 @@ INIT_OBJECTS();
 <!-- import UPPERCASE.IO-TRANSPORT -->
 <script src="UPPERCASE.IO-TRANSPORT/BROWSER.js"></script>
 
+<!-- import UPPERCASE.IO-ROOM -->
+<script src="UPPERCASE.IO-ROOM/BROWSER.js"></script>
+
 <script>
 	READY(function() {
 	

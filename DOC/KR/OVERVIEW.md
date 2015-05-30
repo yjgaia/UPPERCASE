@@ -10,7 +10,7 @@ UPPERCASE.IO-ROOM
 ## 데이터베이스 관련 기능
 UPPERCASE.IO-DB
 
-## MVC 패턴에서의 Model 관련 기능
+## Model-View 패턴에서의 Model 관련 기능
 UPPERCASE.IO-MODEL
 
 ## UPPERCASE.IO 기반 하이브리드 앱 개발에 필요한 BROWSER-PACK 제공

@@ -3,7 +3,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 
 * [Node.js](http://nodejs.org)를 기반으로 합니다.
 * JavaScript 유틸리티 세트인 [UPPERCASE.JS](UPPERCASE.JS.md)를 기반으로 만들어졌습니다.
-* MVC 패턴을 따릅니다.
+* Model-View 패턴을 따릅니다.
 * BOX라는 모듈 시스템을 제공하고 있습니다.
 * 멀티 코어 CPU 지원을 지원합니다.
 * 현대의 모든 웹 브라우저 및 구형 브라우저에 대한 호환성을 지니고 있습니다. (Internet Explorer 5.5나 Android 2.1 브라우저에서도 작동합니다.)
@@ -35,7 +35,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [UPPERCASE.IO-TRANSPORT](UPPERCASE.IO-TRANSPORT.md) 서버와 클라이언트간의 통신을 담당하는 모듈입니다.
 * [UPPERCASE.IO-ROOM](UPPERCASE.IO-ROOM.md) 통신 처리를 룸 방식으로 처리하는 모듈입니다.
 * [UPPERCASE.IO-DB](UPPERCASE.IO-DB.md) 데이터베이스를 다루는 모듈입니다.
-* [UPPERCASE.IO-MODEL](UPPERCASE.IO-MODEL.md) MVC 패턴에서 Model 부분을 다루는 모듈입니다.
+* [UPPERCASE.IO-MODEL](UPPERCASE.IO-MODEL.md) Model-View 패턴에서 Model 부분을 다루는 모듈입니다.
 * [UPPERCASE.IO-UPLOAD](UPPERCASE.IO-UPLOAD.md) 업로드 관련 기능을 제공하는 모듈입니다.
 * [UPPERCASE.IO-UTIL](UPPERCASE.IO-UTIL.md) npm 모듈을 사용하는 유틸리티를 모은 모듈입니다.
 * [UPPERCASE.IO-IO](UPPERCASE.IO-IO.md) UPPERCASE.IO 통합을 위한 모듈입니다.
