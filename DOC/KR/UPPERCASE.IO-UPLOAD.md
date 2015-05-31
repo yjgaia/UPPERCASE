@@ -30,6 +30,7 @@ webServer = WEB_SERVER({
 
 		UPLOAD_REQUEST({
 			requestInfo : requestInfo,
+			// 업로드 한 파일들이 UPLOAD_FILES 폴더에 저장됩니다.
 			uploadPath : __dirname + '/UPLOAD_FILES'
 		}, {
 			error : function(errorMsg) {
