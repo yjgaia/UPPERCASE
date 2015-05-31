@@ -57,6 +57,10 @@ INIT_OBJECTS();
 `UPPERCASE.IO-TRANSPORT`는 `UPPERCASE.JS`를 기반으로 합니다. `on`, `off` 및 `send` 등의 기본적인 사용법은 [UPPERCASE.JS의  CONNECT_TO_SOCKET_SERVER](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-NODE.md#각종-서버-구현체들)와 같습니다.
 
 ```html
+<script>
+	global = window;
+</script>
+
 <!-- import UPPERCASE.JS -->
 <script src="UPPERCASE.JS-COMMON.js"></script>
 <script src="UPPERCASE.JS-BROWSER.js"></script>

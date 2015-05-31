@@ -36,8 +36,8 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [UPPERCASE.IO-ROOM](UPPERCASE.IO-ROOM.md) 통신 처리를 룸 방식으로 처리하는 모듈입니다.
 * [UPPERCASE.IO-DB](UPPERCASE.IO-DB.md) 데이터베이스를 다루는 모듈입니다.
 * [UPPERCASE.IO-MODEL](UPPERCASE.IO-MODEL.md) Model-View 패턴에서 Model 부분을 다루는 모듈입니다.
-* [UPPERCASE.IO-UPLOAD](UPPERCASE.IO-UPLOAD.md) 업로드 관련 기능을 제공하는 모듈입니다.
 * [UPPERCASE.IO-UTIL](UPPERCASE.IO-UTIL.md) npm 모듈을 사용하는 유틸리티를 모은 모듈입니다.
+* [UPPERCASE.IO-UPLOAD](UPPERCASE.IO-UPLOAD.md) 업로드 관련 기능을 제공하는 모듈입니다.
 * [UPPERCASE.IO-IO](UPPERCASE.IO-IO.md) UPPERCASE.IO 통합을 위한 모듈입니다.
 
 ## UPPERCASE.IO 개발에 참여하기

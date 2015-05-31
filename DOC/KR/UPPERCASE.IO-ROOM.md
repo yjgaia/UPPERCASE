@@ -73,6 +73,10 @@ INIT_OBJECTS();
 `UPPERCASE.IO-ROOM`은 `UPPERCASE.JS`와 `UPPERCASE.IO-TRANSPORT`를 기반으로 합니다.
 
 ```html
+<script>
+	global = window;
+</script>
+
 <!-- import UPPERCASE.JS -->
 <script src="UPPERCASE.JS-COMMON.js"></script>
 <script src="UPPERCASE.JS-BROWSER.js"></script>

@@ -27,6 +27,10 @@ require('../../../UPPERCASE.IO-MODEL/NODE.js');
 ### 웹 브라우저 환경에서 필요한 모듈 import
 
 ```html
+<script>
+	global = window;
+</script>
+
 <!-- import UPPERCASE.JS -->
 <script src="UPPERCASE.JS-COMMON.js"></script>
 <script src="UPPERCASE.JS-BROWSER.js"></script>
