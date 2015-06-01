@@ -1,6 +1,13 @@
 # UPPERCASE.IO-UTIL
 node.js 모듈이 필요하여, 의존성이 없는 [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)가 제공하지 않는 유틸리티 기능들을 추가로 제공하는 모듈입니다.
 
+*※ UPPERCASE.IO 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
+
+## 파일 구성
+* UPPERCASE.IO-UTIL 폴더
+* UPPERCASE.JS-COMMON.js
+* UPPERCASE.JS-NODE.js
+
 ## 사용 방법
 `UPPERCASE.IO-UTIL`는 `UPPERCASE.JS`를 기반으로 합니다.
 

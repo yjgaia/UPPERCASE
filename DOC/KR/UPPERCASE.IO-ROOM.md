@@ -1,6 +1,16 @@
 # UPPERCASE.IO-ROOM
 통신 처리를 룸 방식으로 처리하는 모듈입니다. 서버에서 룸을 만들고, 특정 룸에 접속한 사람들에게만 메시지를 전달할 수 있습니다. 따라서 특징에 맞는 여러 룸을 만들어 각각에 접속한 유저들에게 필요한 메시지를 전달하는 프로젝트 구조를 설계할 수 있습니다.
 
+*※ UPPERCASE.IO 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
+
+## 파일 구성
+* UPPERCASE.IO-ROOM 폴더
+* UPPERCASE.IO-TRANSPORT 폴더
+* UPPERCASE.JS-COMMON.js
+* UPPERCASE.JS-NODE.js
+* UPPERCASE.JS-BROWSER.js
+* UPPERCASE.JS-BROWSER-FIX 폴더
+
 ## 룸 서버와 룸 생성 방법
 `UPPERCASE.IO-ROOM`은 `UPPERCASE.JS`와 `UPPERCASE.IO-TRANSPORT`를 기반으로 합니다.
 

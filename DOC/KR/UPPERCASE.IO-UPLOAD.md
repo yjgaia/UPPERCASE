@@ -1,6 +1,17 @@
 # UPPERCASE.IO-UPLOAD
 클라이언트에서 서버로의 파일 업로드 처리를 쉽게 하는 모듈입니다.
 
+*※ UPPERCASE.IO 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
+
+## 파일 구성
+* UPPERCASE.IO-UPLOAD 폴더
+* UPPERCASE.IO-UTIL 폴더
+* UPPERCASE.IO-TRANSPORT 폴더
+* UPPERCASE.JS-COMMON.js
+* UPPERCASE.JS-NODE.js
+* UPPERCASE.JS-BROWSER.js
+* UPPERCASE.JS-BROWSER-FIX 폴더
+
 ## 서버에서 파일 업로드 요청을 받아오는 방법
 `UPPERCASE.IO-UPLOAD`는 `UPPERCASE.JS`와 `UPPERCASE.IO-TRANSPORT`, `UPPERCASE.IO-UTIL`을 기반으로 합니다.
 

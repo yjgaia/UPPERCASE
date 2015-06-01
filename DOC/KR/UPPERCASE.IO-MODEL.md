@@ -1,6 +1,18 @@
 # UPPERCASE.IO-MODEL
 UPPERCASE.IO는 Model-View 패턴을 따릅니다. 이 모듈은 Model-View 패턴에서 Model 부분을 다루고 있습니다. 자체적으로 제공하는 기본적인 기능들 외에도 모델에 복잡한 Business Logic을 추가하여 확장시킬 수 있습니다.
 
+*※ UPPERCASE.IO 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
+
+## 파일 구성
+* UPPERCASE.IO-MODEL 폴더
+* UPPERCASE.IO-DB 폴더
+* UPPERCASE.IO-ROOM 폴더
+* UPPERCASE.IO-TRANSPORT 폴더
+* UPPERCASE.JS-COMMON.js
+* UPPERCASE.JS-NODE.js
+* UPPERCASE.JS-BROWSER.js
+* UPPERCASE.JS-BROWSER-FIX 폴더
+
 ## 사용 방법
 `UPPERCASE.IO-MODEL`은 `UPPERCASE.JS`와 `UPPERCASE.IO-ROOM`, `UPPERCASE.IO-DB`를 기반으로 합니다.
 
