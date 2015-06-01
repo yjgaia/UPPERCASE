@@ -3,6 +3,15 @@ TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UPPERCAS
 
 또한 TCP 소켓과 웹 소켓 프로토콜을 통합하여 제공하는 멀티 프로토콜 소켓 서버 구현체가 포함되어 있습니다.
 
+*※ UPPERCASE.IO 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
+
+## 파일 구성
+* UPPERCASE.IO-TRANSPORT 폴더
+* UPPERCASE.JS-COMMON.js
+* UPPERCASE.JS-NODE.js
+* UPPERCASE.JS-BROWSER.js
+* UPPERCASE.JS-BROWSER-FIX 폴더
+
 ## 멀티 프로토콜 서버 생성 방법
 `UPPERCASE.IO-TRANSPORT`는 `UPPERCASE.JS`를 기반으로 합니다. `on`, `off` 및 `send` 등의 기본적인 사용법은 [UPPERCASE.JS의 SOCKET_SERVER](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-NODE.md#각종-서버-구현체들)와 같습니다.
 

@@ -27,6 +27,9 @@ global.BOOT = function(params) {
 
 	// browser script
 	browserScript = '',
+	
+	// box browser scripts
+	boxBrowserScripts = {},
 
 	// index page content
 	indexPageContent,
@@ -49,36 +52,51 @@ global.BOOT = function(params) {
 	},
 
 	// load for browser.
-	loadForBrowser = function(path, isNotToSavePath) {
-
-		browserScript += READ_FILE({
+	loadForBrowser = function(path, boxName, isNotToSavePath) {
+		
+		var
+		// content
+		content = READ_FILE({
 			path : path,
 			isSync : true
 		}).toString() + '\n';
 
-		if (isNotToSavePath !== true) {
-			browserScriptContentInfos.push({
-				type : 'js',
-				path : path
-			});
+		browserScript += content;
+		
+		if (boxName !== undefined) {
+			
+			if (boxBrowserScripts[boxName] === undefined) {
+				boxBrowserScripts[boxName] = '';
+			}
+			
+			boxBrowserScripts[boxName] += content;
+					
+			if (isNotToSavePath !== true) {
+				browserScriptContentInfos.push({
+					type : 'js',
+					boxName : boxName,
+					path : path
+				});
+			}
 		}
 	},
 
 	// load for client.
-	loadForClient = function(path) {
-		loadForBrowser(path);
+	loadForClient = function(path, boxName) {
+		loadForBrowser(path, boxName);
 	},
 
 	// load for common.
-	loadForCommon = function(path) {
+	loadForCommon = function(path, boxName) {
 		loadForNode(path);
-		loadForBrowser(path);
+		loadForClient(path, boxName);
 	},
 
 	// reload browser script.
 	reloadBrowserScript = function() {
 
 		browserScript = '';
+		boxBrowserScripts = {};
 
 		EACH(browserScriptContentInfos, function(browserScriptContentInfo) {
 
@@ -89,7 +107,7 @@ global.BOOT = function(params) {
 
 			// js
 			else if (browserScriptContentInfo.type === 'js') {
-				loadForBrowser(browserScriptContentInfo.path, true);
+				loadForBrowser(browserScriptContentInfo.path, browserScriptContentInfo.boxName, true);
 			}
 		});
 	},
@@ -151,8 +169,8 @@ global.BOOT = function(params) {
 		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.JS-COMMON.js');
 		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.JS-NODE.js');
 
-		// load for browser.
-		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.JS-COMMON.js');
+		// load for client.
+		loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.JS-COMMON.js');
 		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.JS-BROWSER.js');
 	};
 
@@ -375,7 +393,7 @@ global.BOOT = function(params) {
 
 			var
 			// scan folder
-			scanFolder = function(folderPath) {
+			scanFolder = function(folderPath, boxName) {
 
 				FIND_FILE_NAMES({
 					path : folderPath,
@@ -398,7 +416,7 @@ global.BOOT = function(params) {
 							extname = path.extname(fileName).toLowerCase();
 
 							if (extname === '.js') {
-								funcForJS(fullPath);
+								funcForJS(fullPath, boxName);
 							}
 						});
 					}
@@ -417,7 +435,7 @@ global.BOOT = function(params) {
 
 						EACH(folderNames, function(folderName) {
 							if (checkIsAllowedFolderName(folderName) === true) {
-								scanFolder(folderPath + '/' + folderName);
+								scanFolder(folderPath + '/' + folderName, boxName);
 							}
 						});
 					}
@@ -433,7 +451,7 @@ global.BOOT = function(params) {
 					value : box.boxName
 				}) === true ? rootPath + '/BOX' : rootPath;
 
-				scanFolder(boxRootPath + '/' + box.boxName + '/' + folderName);
+				scanFolder(boxRootPath + '/' + box.boxName + '/' + folderName, box.boxName);
 
 				FIND_FILE_NAMES({
 					path : boxRootPath + '/' + box.boxName,
@@ -457,7 +475,7 @@ global.BOOT = function(params) {
 
 							if (fileName === folderName + extname) {
 								if (extname === '.js') {
-									funcForJS(fullPath);
+									funcForJS(fullPath, box.boxName);
 								}
 							}
 						});
@@ -685,14 +703,16 @@ global.BOOT = function(params) {
 
 					// serve browser script.
 					else if (uri === '__SCRIPT') {
+						
+						boxName = params.boxName;
 
 						if (CONFIG.isDevMode === true) {
 
 							reloadBrowserScript();
-
+							
 							response({
 								contentType : 'text/javascript',
-								content : browserScript
+								content : boxName === undefined ? browserScript : boxBrowserScripts[boxName]
 							});
 
 						} else {
@@ -712,7 +732,7 @@ global.BOOT = function(params) {
 								response({
 									statusCode : 302,
 									headers : {
-										'Location' : '/__SCRIPT?version=' + version
+										'Location' : '/__SCRIPT?version=' + version + (boxName === undefined ? '' : '&boxName=' + boxName)
 									}
 								});
 							}
@@ -722,7 +742,7 @@ global.BOOT = function(params) {
 
 								response({
 									contentType : 'text/javascript',
-									content : browserScript,
+									content : boxName === undefined ? browserScript : boxBrowserScripts[boxName],
 									version : version
 								});
 							}

@@ -47,6 +47,10 @@ cordova plugin add {{플러그인의 주소}}
 ```
 
 ## Crosswalk
+### Crosswalk을 사용해야 하는 이유
+* Chromium 기반이 아닌 안드로이드 4.x 이전 버젼에서의 웹뷰는 웹 표준을 제대로 지원하지 않고, 온갖 버그가 산재합니다.
+* 안드로이드 4.x 버젼까지의 웹뷰는 하드웨어 가속을 사용하지 않아 매우 느립니다.
+* 안드로이드 4.4의 웹뷰에서 파일 업로드 시 input을 눌러도 작동을 하지 않는 버그가 있습니다.
 
 1. Crosswalk 설치
 https://crosswalk-project.org 에 방문하여 `Cordova Android (ARM)`를 다운로드 하여 적당한 폴더에 풀어줍니다.
