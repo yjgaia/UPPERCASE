@@ -63,21 +63,22 @@ global.BOOT = function(params) {
 
 		browserScript += content;
 		
-		if (boxName !== undefined) {
+		if (boxName === undefined) {
+			boxName = 'UPPERCASE.IO';
+		}
 			
-			if (boxBrowserScripts[boxName] === undefined) {
-				boxBrowserScripts[boxName] = '';
-			}
-			
-			boxBrowserScripts[boxName] += content;
-					
-			if (isNotToSavePath !== true) {
-				browserScriptContentInfos.push({
-					type : 'js',
-					boxName : boxName,
-					path : path
-				});
-			}
+		if (boxBrowserScripts[boxName] === undefined) {
+			boxBrowserScripts[boxName] = '';
+		}
+		
+		boxBrowserScripts[boxName] += content;
+				
+		if (isNotToSavePath !== true) {
+			browserScriptContentInfos.push({
+				type : 'js',
+				boxName : boxName,
+				path : path
+			});
 		}
 	},
 
@@ -1185,8 +1186,8 @@ global.BOOT = function(params) {
 	// load UPPERCASE.IO-IO.
 	loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/COMMON.js');
 	loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/CLIENT.js');
-	loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER.js');
-	loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER_INIT.js');
+	loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER.js');
+	loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER_INIT.js');
 	loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/NODE.js');
 
 	// clustering cpus and servers.
