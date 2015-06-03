@@ -15,7 +15,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [간단한 블로그 만들기](MAKE_BLOG.md)
 * [블로그에 인증 추가하기](ADD_AUTH_TO_BLOG.md)
 * [UPPERCASE.IO가 제공하는 기능들 살펴보기](OVERVIEW.md) (작성중)
-* [Configuration](CONFIG.md) (작성중)
+* [Configuration](CONFIG.md)
 * [UPPERCASE.IO 업데이트](UPDATE.md)
 
 ## 한걸음 더
@@ -27,13 +27,13 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [프로젝트 혼합하기](MIX_PROJECT.md) (작성중)
 * [검색 최적화](SEO.md) (작성중)
 * [프로젝트 성능 향상](SPEED_UP.md) (작성중)
-* [분산 서버 구성](DISTRIBUTION.md) (작성중)
+* [분산 서버 구성](CLUSTERING.md) (작성중)
 
 ## 튜토리얼 (예정)
 * 채팅방 만들기
 * 온라인 게임 만들기
 
-## 모듈 상세보기 (작성중)
+## 모듈 상세보기
 * [UPPERCASE.IO-TRANSPORT](UPPERCASE.IO-TRANSPORT.md) 서버와 클라이언트간의 통신을 담당하는 모듈입니다.
 * [UPPERCASE.IO-ROOM](UPPERCASE.IO-ROOM.md) 통신 처리를 룸 방식으로 처리하는 모듈입니다.
 * [UPPERCASE.IO-DB](UPPERCASE.IO-DB.md) 데이터베이스를 다루는 모듈입니다.

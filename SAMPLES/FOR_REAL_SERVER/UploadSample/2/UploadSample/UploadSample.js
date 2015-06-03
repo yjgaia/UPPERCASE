@@ -9,7 +9,7 @@ BOOT({
 	NODE_CONFIG : {
 		dbName : 'UploadSample',
 
-		uploadServers : {
+		uploadServerHosts : {
 			serverA : '1.btncafe.com',
 			serverB : '2.btncafe.com'
 		},

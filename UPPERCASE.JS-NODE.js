@@ -352,14 +352,14 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 
 		run : function(params, work) {
 			//REQUIRED: params
-			//REQUIRED: params.servers
+			//REQUIRED: params.hosts
 			//REQUIRED: params.thisServerName
 			//REQUIRED: params.port
 			//OPTIONAL: work
 
 			var
-			// servers
-			servers = params.servers,
+			// hosts
+			hosts = params.hosts,
 
 			// this server name
 			thisServerName = params.thisServerName,
@@ -397,7 +397,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 					isConnectings[serverName] = true;
 
 					CONNECT_TO_SOCKET_SERVER({
-						host : servers[serverName],
+						host : hosts[serverName],
 						port : port
 					}, {
 						error : function() {
@@ -452,8 +452,8 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				CPU_CLUSTERING.on('__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER', connectToClusteringServer);
 			}
 
-			// try connect to all clustering servers.
-			EACH(servers, function(host, serverName) {
+			// try connect to all clustering hosts.
+			EACH(hosts, function(host, serverName) {
 				if (serverName !== thisServerName) {
 					connectToClusteringServer(serverName);
 				}

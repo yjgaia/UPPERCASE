@@ -22,8 +22,8 @@ global.BOOT = function(params) {
 	// root path
 	rootPath = process.cwd(),
 
-	// browser script content infos
-	browserScriptContentInfos = [],
+	// browser script contents
+	browserScriptContents = [],
 
 	// browser script
 	browserScript = '',
@@ -45,14 +45,11 @@ global.BOOT = function(params) {
 	// add content to browser script.
 	addContentToBrowserScript = function(content) {
 		browserScript += content;
-		browserScriptContentInfos.push({
-			type : 'content',
-			content : content
-		});
+		browserScriptContents.push(content);
 	},
 
 	// load for browser.
-	loadForBrowser = function(path, boxName, isNotToSavePath) {
+	loadForBrowser = function(path, boxName) {
 		
 		var
 		// content
@@ -60,25 +57,18 @@ global.BOOT = function(params) {
 			path : path,
 			isSync : true
 		}).toString() + '\n';
-
-		browserScript += content;
 		
 		if (boxName === undefined) {
-			boxName = 'UPPERCASE.IO';
-		}
+			addContentToBrowserScript(content);
+		} else {
+
+			browserScript += content;
 			
-		if (boxBrowserScripts[boxName] === undefined) {
-			boxBrowserScripts[boxName] = '';
-		}
-		
-		boxBrowserScripts[boxName] += content;
-				
-		if (isNotToSavePath !== true) {
-			browserScriptContentInfos.push({
-				type : 'js',
-				boxName : boxName,
-				path : path
-			});
+			if (boxBrowserScripts[boxName] === undefined) {
+				boxBrowserScripts[boxName] = '';
+			}
+			
+			boxBrowserScripts[boxName] += content;
 		}
 	},
 
@@ -92,27 +82,7 @@ global.BOOT = function(params) {
 		loadForNode(path);
 		loadForClient(path, boxName);
 	},
-
-	// reload browser script.
-	reloadBrowserScript = function() {
-
-		browserScript = '';
-		boxBrowserScripts = {};
-
-		EACH(browserScriptContentInfos, function(browserScriptContentInfo) {
-
-			// content
-			if (browserScriptContentInfo.type === 'content') {
-				browserScript += browserScriptContentInfo.content;
-			}
-
-			// js
-			else if (browserScriptContentInfo.type === 'js') {
-				loadForBrowser(browserScriptContentInfo.path, browserScriptContentInfo.boxName, true);
-			}
-		});
-	},
-
+	
 	// check is allowed folder name.
 	checkIsAllowedFolderName = function(name) {
 
@@ -134,6 +104,117 @@ global.BOOT = function(params) {
 			name[0] !== '_'
 		);
 	},
+	
+	// scan all box folders.
+	scanAllBoxFolders = function(folderName, funcForJS) {
+
+		var
+		// scan folder
+		scanFolder = function(folderPath, boxName) {
+
+			FIND_FILE_NAMES({
+				path : folderPath,
+				isSync : true
+			}, {
+
+				notExists : function() {
+					// ignore.
+				},
+
+				success : function(fileNames) {
+
+					EACH(fileNames, function(fileName) {
+
+						var
+						// full path
+						fullPath = folderPath + '/' + fileName,
+
+						// extname
+						extname = path.extname(fileName).toLowerCase();
+
+						if (extname === '.js') {
+							funcForJS(fullPath, boxName);
+						}
+					});
+				}
+			});
+
+			FIND_FOLDER_NAMES({
+				path : folderPath,
+				isSync : true
+			}, {
+
+				notExists : function() {
+					// ignore.
+				},
+
+				success : function(folderNames) {
+
+					EACH(folderNames, function(folderName) {
+						if (checkIsAllowedFolderName(folderName) === true) {
+							scanFolder(folderPath + '/' + folderName, boxName);
+						}
+					});
+				}
+			});
+		};
+
+		FOR_BOX(function(box) {
+
+			var
+			// box root path
+			boxRootPath = CHECK_IS_IN({
+				array : boxNamesInBOXFolder,
+				value : box.boxName
+			}) === true ? rootPath + '/BOX' : rootPath;
+
+			scanFolder(boxRootPath + '/' + box.boxName + '/' + folderName, box.boxName);
+
+			FIND_FILE_NAMES({
+				path : boxRootPath + '/' + box.boxName,
+				isSync : true
+			}, {
+
+				notExists : function() {
+					// ignore.
+				},
+
+				success : function(fileNames) {
+
+					EACH(fileNames, function(fileName) {
+
+						var
+						// full path
+						fullPath = boxRootPath + '/' + box.boxName + '/' + fileName,
+
+						// extname
+						extname = path.extname(fileName).toLowerCase();
+
+						if (fileName === folderName + extname) {
+							if (extname === '.js') {
+								funcForJS(fullPath, box.boxName);
+							}
+						}
+					});
+				}
+			});
+		});
+	},
+
+	// reload browser script.
+	reloadBrowserScript = function() {
+
+		browserScript = '';
+		boxBrowserScripts = {};
+
+		EACH(browserScriptContents, function(browserScriptContent) {
+			browserScript += browserScriptContent;
+		});
+		
+		scanAllBoxFolders('COMMON', loadForBrowser);
+		scanAllBoxFolders('BROWSER', loadForBrowser);
+		scanAllBoxFolders('CLIENT', loadForBrowser);
+	},
 
 	// load UPPERCASE.JS.
 	loadUJS,
@@ -152,9 +233,6 @@ global.BOOT = function(params) {
 
 	// init model system.
 	initModelSystem,
-
-	// load all scripts.
-	loadAllScripts,
 
 	// generate index page.
 	generateIndexPage,
@@ -338,10 +416,10 @@ global.BOOT = function(params) {
 
 		CPU_CLUSTERING(function() {
 
-			if (NODE_CONFIG.clusteringServers !== undefined && NODE_CONFIG.thisServerName !== undefined && NODE_CONFIG.clusteringPort !== undefined) {
+			if (NODE_CONFIG.clusteringServerHosts !== undefined && NODE_CONFIG.thisServerName !== undefined && NODE_CONFIG.clusteringPort !== undefined) {
 
 				SERVER_CLUSTERING({
-					servers : NODE_CONFIG.clusteringServers,
+					hosts : NODE_CONFIG.clusteringServerHosts,
 					thisServerName : NODE_CONFIG.thisServerName,
 					port : NODE_CONFIG.clusteringPort
 				}, work);
@@ -384,111 +462,6 @@ global.BOOT = function(params) {
 		loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/COMMON.js');
 		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/NODE.js');
 		loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/CLIENT.js');
-	};
-
-	loadAllScripts = function() {
-
-		var
-		// scan all box folders.
-		scanAllBoxFolders = function(folderName, funcForJS) {
-
-			var
-			// scan folder
-			scanFolder = function(folderPath, boxName) {
-
-				FIND_FILE_NAMES({
-					path : folderPath,
-					isSync : true
-				}, {
-
-					notExists : function() {
-						// ignore.
-					},
-
-					success : function(fileNames) {
-
-						EACH(fileNames, function(fileName) {
-
-							var
-							// full path
-							fullPath = folderPath + '/' + fileName,
-
-							// extname
-							extname = path.extname(fileName).toLowerCase();
-
-							if (extname === '.js') {
-								funcForJS(fullPath, boxName);
-							}
-						});
-					}
-				});
-
-				FIND_FOLDER_NAMES({
-					path : folderPath,
-					isSync : true
-				}, {
-
-					notExists : function() {
-						// ignore.
-					},
-
-					success : function(folderNames) {
-
-						EACH(folderNames, function(folderName) {
-							if (checkIsAllowedFolderName(folderName) === true) {
-								scanFolder(folderPath + '/' + folderName, boxName);
-							}
-						});
-					}
-				});
-			};
-
-			FOR_BOX(function(box) {
-
-				var
-				// box root path
-				boxRootPath = CHECK_IS_IN({
-					array : boxNamesInBOXFolder,
-					value : box.boxName
-				}) === true ? rootPath + '/BOX' : rootPath;
-
-				scanFolder(boxRootPath + '/' + box.boxName + '/' + folderName, box.boxName);
-
-				FIND_FILE_NAMES({
-					path : boxRootPath + '/' + box.boxName,
-					isSync : true
-				}, {
-
-					notExists : function() {
-						// ignore.
-					},
-
-					success : function(fileNames) {
-
-						EACH(fileNames, function(fileName) {
-
-							var
-							// full path
-							fullPath = boxRootPath + '/' + box.boxName + '/' + fileName,
-
-							// extname
-							extname = path.extname(fileName).toLowerCase();
-
-							if (fileName === folderName + extname) {
-								if (extname === '.js') {
-									funcForJS(fullPath, box.boxName);
-								}
-							}
-						});
-					}
-				});
-			});
-		};
-
-		scanAllBoxFolders('COMMON', loadForCommon);
-		scanAllBoxFolders('NODE', loadForNode);
-		scanAllBoxFolders('BROWSER', loadForBrowser);
-		scanAllBoxFolders('CLIENT', loadForClient);
 	};
 
 	generateIndexPage = function() {
@@ -591,32 +564,32 @@ global.BOOT = function(params) {
 		// cal
 		cal = CALENDAR();
 
-		if (NODE_CONFIG.uploadServers !== undefined) {
+		if (NODE_CONFIG.uploadServerHosts !== undefined) {
 
 			uploadServerHosts = [];
 			nextUploadServerHostIndex = 0;
 
-			EACH(NODE_CONFIG.uploadServers, function(host) {
+			EACH(NODE_CONFIG.uploadServerHosts, function(host) {
 				uploadServerHosts.push(host);
 			});
 		}
 
-		if (NODE_CONFIG.socketServers !== undefined) {
+		if (NODE_CONFIG.socketServerHosts !== undefined) {
 
 			socketServerHosts = [];
 			nextSocketServerHostIndex = 0;
 
-			EACH(NODE_CONFIG.socketServers, function(host) {
+			EACH(NODE_CONFIG.socketServerHosts, function(host) {
 				socketServerHosts.push(host);
 			});
 		}
 
-		if (NODE_CONFIG.webSocketServers !== undefined) {
+		if (NODE_CONFIG.webSocketServerHosts !== undefined) {
 
 			webSocketServerHosts = [];
 			nextWebSocketServerHostIndex = 0;
 
-			EACH(NODE_CONFIG.webSocketServers, function(host) {
+			EACH(NODE_CONFIG.webSocketServerHosts, function(host) {
 				webSocketServerHosts.push(host);
 			});
 		}
@@ -978,7 +951,7 @@ global.BOOT = function(params) {
 										response({
 											statusCode : 302,
 											headers : {
-												'Location' : 'http://' + NODE_CONFIG.uploadServers[savedData.serverName] + ':' + CONFIG.webServerPort + '/__RF/' + boxName + '/' + uri
+												'Location' : 'http://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.webServerPort + '/__RF/' + boxName + '/' + uri
 											}
 										});
 									}
@@ -1200,8 +1173,11 @@ global.BOOT = function(params) {
 		initModelSystem();
 
 		// load all scripts.
-		loadAllScripts();
-
+		scanAllBoxFolders('COMMON', loadForCommon);
+		scanAllBoxFolders('NODE', loadForNode);
+		scanAllBoxFolders('BROWSER', loadForBrowser);
+		scanAllBoxFolders('CLIENT', loadForClient);
+		
 		if (CONFIG.isDevMode !== true) {
 
 			// minify browser script.

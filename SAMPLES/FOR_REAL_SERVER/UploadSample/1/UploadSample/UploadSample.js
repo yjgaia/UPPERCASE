@@ -12,7 +12,7 @@ BOOT({
 		dbUsername : 'test',
 		dbPassword : 'test',
 
-		uploadServers : {
+		uploadServerHosts : {
 			serverA : '1.btncafe.com',
 			serverB : '2.btncafe.com'
 		},

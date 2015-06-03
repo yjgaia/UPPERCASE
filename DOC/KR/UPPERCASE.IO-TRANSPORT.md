@@ -6,6 +6,7 @@ TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UPPERCAS
 *※ UPPERCASE.IO 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
 
 ## 파일 구성
+아래 파일들을 다운로드 받아 아래 사용 방법 항목을 참고하여 사용합니다.
 * UPPERCASE.IO-TRANSPORT 폴더
 * UPPERCASE.JS-COMMON.js
 * UPPERCASE.JS-NODE.js
