@@ -104,6 +104,10 @@ UADMIN.List = CLASS({
 				
 				REPEAT(Math.ceil(count / 10), function(i) {
 					pageNumbers.append(A({
+						style : {
+							flt : 'left',
+							padding : 5
+						},
 						c : i + 1,
 						on : {
 							tap : function() {
@@ -112,6 +116,8 @@ UADMIN.List = CLASS({
 						}
 					}));
 				});
+				
+				pageNumbers.append(CLEAR_BOTH());
 			});
 		});
 
