@@ -1,5 +1,5 @@
 # UPPERCASE.IO-DB
-`node-mongodb-client`를 사용하기 쉽게 Wrapping한 모듈입니다.
+MongoDB를 사용하기 쉽게 CRUD 기능을 구현한 모듈입니다.
 
 *※ UPPERCASE.IO 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
 

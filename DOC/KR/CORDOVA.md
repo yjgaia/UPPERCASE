@@ -79,3 +79,6 @@ cd Sample
 ```
 plugman install --platform android --project . --plugin {{플러그인의 주소}}
 ```
+
+## BROWSER-PACK
+
