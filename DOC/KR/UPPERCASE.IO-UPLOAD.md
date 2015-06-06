@@ -116,3 +116,7 @@ webServer = WEB_SERVER({
 	});
 </script>
 ```
+
+## 설정
+이하 설정을 적용하면 작동 방식이 결정됩니다.
+* `NODE_CONFIG.maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
