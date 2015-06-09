@@ -20,7 +20,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 
 ## 한걸음 더
 * [BOX 이해하기](BOX.md)
-* [기본 스타일](BASE_STYLE.md) (작성중)
+* [기본 스타일](BASE_STYLE.md)
 * [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](CORDOVA.md) (작성중)
 * [Android, iOS 모바일 네이티브 앱 개발](MOBILE_NATIVE.md) (작성중)
 * [Node-webkit을 이용한 데스크톱 앱 개발](NODE_WEBKIT.md) (작성중)
