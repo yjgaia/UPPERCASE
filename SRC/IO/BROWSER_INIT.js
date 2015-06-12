@@ -10,7 +10,14 @@ if (BROWSER_CONFIG.fixTransportScriptsFolderPath !== undefined) {
 
 READY(function() {
 	'use strict';
+	
+	FOR_BOX(function(box) {
+		if (box.OVERRIDE !== undefined) {
+			box.OVERRIDE();
+		}
+	});
 
+	// init objects.
 	INIT_OBJECTS();
 	
 	SYNC_TIME();

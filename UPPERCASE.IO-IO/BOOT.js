@@ -7,6 +7,9 @@ global.BOOT = function(params) {
 	//OPTIONAL: params.UADMIN_CONFIG
 
 	var
+	// UPPERCASE_IO_PATH
+	UPPERCASE_IO_PATH = __dirname + '/..',
+	
 	//IMPORT: path
 	path = require('path'),
 
@@ -15,9 +18,6 @@ global.BOOT = function(params) {
 
 	// version
 	version,
-
-	// UPPERCASE_IO_PATH
-	UPPERCASE_IO_PATH = __dirname + '/..',
 
 	// root path
 	rootPath = process.cwd(),
@@ -593,6 +593,12 @@ global.BOOT = function(params) {
 				webSocketServerHosts.push(host);
 			});
 		}
+		
+		FOR_BOX(function(box) {
+			if (box.OVERRIDE !== undefined) {
+				box.OVERRIDE();
+			}
+		});
 
 		// init objects.
 		INIT_OBJECTS();

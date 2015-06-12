@@ -6,12 +6,17 @@ FOR_BOX(function(box) {
 	 */
 	box.ROOM = CLASS({
 
-		init : function(inner, self, name) {
-			//REQUIRED: name
+		init : function(inner, self, nameOrParams) {
+			//REQUIRED: nameOrParams
+			//OPTIONAL: nameOrParams.roomServerName
+			//REQUIRED: nameOrParams.name
 
 			var
+			// room server name
+			roomServerName,
+			
 			// room name
-			roomName = box.boxName + '/' + name,
+			roomName,
 
 			// method map
 			methodMap = {},
@@ -36,8 +41,18 @@ FOR_BOX(function(box) {
 
 			// exit.
 			exit;
+			
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				roomName = box.boxName + '/' + nameOrParams;
+			} else {
+				roomServerName = nameOrParams.roomServerName;
+				roomName = box.boxName + '/' + nameOrParams.name;
+			}
 
-			CONNECT_TO_ROOM_SERVER.enterRoom(roomName);
+			CONNECT_TO_ROOM_SERVER.enterRoom({
+				roomServerName : roomServerName,
+				roomName : roomName
+			});
 
 			inner.getRoomName = getRoomName = function() {
 				return roomName;
@@ -55,7 +70,10 @@ FOR_BOX(function(box) {
 				// methods
 				methods = methodMap[methodName];
 
-				CONNECT_TO_ROOM_SERVER.on(roomName + '/' + methodName, method);
+				CONNECT_TO_ROOM_SERVER.on({
+					roomServerName : roomServerName,
+					methodName : roomName + '/' + methodName
+				}, method);
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -76,7 +94,10 @@ FOR_BOX(function(box) {
 
 					if (method !== undefined) {
 
-						CONNECT_TO_ROOM_SERVER.off(roomName + '/' + methodName, method);
+						CONNECT_TO_ROOM_SERVER.off({
+							roomServerName : roomServerName,
+							methodName : roomName + '/' + methodName
+						}, method);
 
 						REMOVE({
 							array : methods,
@@ -90,7 +111,10 @@ FOR_BOX(function(box) {
 					} else {
 
 						EACH(methods, function(method) {
-							CONNECT_TO_ROOM_SERVER.off(roomName + '/' + methodName, method);
+							CONNECT_TO_ROOM_SERVER.off({
+								roomServerName : roomServerName,
+								methodName : roomName + '/' + methodName
+							}, method);
 						});
 						delete methodMap[methodName];
 					}
@@ -106,12 +130,13 @@ FOR_BOX(function(box) {
 				if (isExited !== true) {
 
 					CONNECT_TO_ROOM_SERVER.send({
+						roomServerName : roomServerName,
 						methodName : roomName + '/' + params.methodName,
 						data : params.data
 					}, callback);
 
 				} else {
-					console.log(CONSOLE_RED('[UPPERCASE.IO-ROOM] `ROOM.send` ERROR! ROOM EXITED!'));
+					console.log('[UPPERCASE.IO-ROOM] `ROOM.send` ERROR! ROOM EXITED!');
 				}
 			};
 
@@ -119,7 +144,10 @@ FOR_BOX(function(box) {
 
 				if (isExited !== true) {
 
-					CONNECT_TO_ROOM_SERVER.exitRoom(roomName);
+					CONNECT_TO_ROOM_SERVER.exitRoom({
+						roomServerName : roomServerName,
+						roomName : roomName
+					});
 
 					EACH(methodMap, function(methods, methodName) {
 						off(methodName);

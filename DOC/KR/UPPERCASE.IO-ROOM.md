@@ -105,37 +105,37 @@ INIT_OBJECTS();
 <script>
 	READY(function() {
 	
-    	// init all singleton classes.
+		// init all singleton classes.
 		INIT_OBJECTS();
 		
 		BOX('TestBox');
 
 		CONNECT_TO_ROOM_SERVER({
-    		port : 9127,
-    		fixRequestURI : '__WEB_SOCKET_FIX'
-    	}, function() {
-    
-    		var
-    		// room
-    		room = TestBox.ROOM('testRoom');
-    		
-    		room.on('msg', function(data) {
-    			console.log(data);
-    		});
-    
-    		DELAY(1, function() {
-    		
-    			room.send({
-    				methodName : 'msg',
-    				data : {
-    					test2 : 'Hello, Test!',
-    					date : new Date()
-    				}
-    			}, function(result) {
-    				console.log(result);
-    			});
-    		});
-    	});
+			port : 9127,
+			fixRequestURI : '__WEB_SOCKET_FIX'
+		}, function() {
+	
+			var
+			// room
+			room = TestBox.ROOM('testRoom');
+			
+			room.on('msg', function(data) {
+				console.log(data);
+			});
+	
+			DELAY(1, function() {
+			
+				room.send({
+					methodName : 'msg',
+					data : {
+						test2 : 'Hello, Test!',
+						date : new Date()
+					}
+				}, function(result) {
+					console.log(result);
+				});
+			});
+		});
 	});
 </script>
 ```
@@ -145,15 +145,35 @@ INIT_OBJECTS();
 * `ROOM(name, connectionListener)` 룸을 생성합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
 ```javascript
 TestBox.ROOM('testRoom', function(clientInfo, on, off) {
-    on(methodName, function(data, ret) {
-    	...
-    	// ret(..); is necessary.
-        ret(resultData);
-    });
-    off(methodName);
+	
+	on(methodName, function(data, ret) {
+	
+		// ignore undefined data attack.
+		if (data !== undefined) {
+			
+			...
+			// ret(..); is necessary.
+			ret(resultData);
+		}
+	});
+	
+	off(methodName);
 });
 ```
 * `BROADCAST({roomName:, methodName:, data:})` 특정 룸에 접속한 사람들에게 메시지를 전송합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
+
+### 주의사항
+`on`으로 클라이언트에서 넘어온 값을 다룰 때, `undefined`가 넘어올 수 있음을 유의하시기 바랍니다. 따라서 값이 반드시 필요한 로직을 구성할 때에는 다음과 같이 `undefined`를 무시하는 코드를 작성합니다.
+
+```javascript
+on(methodName, function(data, ret) {
+
+	// ignore undefined data attack.
+	if (data !== undefined) {
+		...
+	}
+});
+```
 
 ## BROWSER API
 * `CONNECT_TO_ROOM_SERVER({methodName:, data:})` * `CONNECT_TO_ROOM_SERVER({methodName:, data:}, function(on, off, send) {...})` 룸 서버에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/BROWSER/CONNECT/CONNECT_TO_ROOM_SERVER.js)

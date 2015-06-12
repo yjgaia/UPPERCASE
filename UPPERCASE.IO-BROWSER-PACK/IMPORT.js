@@ -3011,7 +3011,7 @@ global.BROWSER_CONFIG = {
 
 	host : location.hostname,
 	
-	port : location.port,
+	port : location.port === '' ? (location.protocol === 'https:' ? 443 : 80) : INTEGER(location.port),
 	
 	isSecure : location.protocol === 'https:',
 
@@ -8506,7 +8506,7 @@ global.MSG = METHOD({
 
 !function (name, definition) {
   if (typeof module != 'undefined' && module.exports) module.exports['browser'] = definition()
-  else if (typeof define == 'function') define(definition)
+  else if (typeof define == 'function' && define.amd) define(definition)
   else this[name] = definition()
 }('bowser', function () {
   /**
@@ -8522,9 +8522,15 @@ global.MSG = METHOD({
       return (match && match.length > 1 && match[1]) || '';
     }
 
+    function getSecondMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[2]) || '';
+    }
+
     var iosdevice = getFirstMatch(/(ipod|iphone|ipad)/i).toLowerCase()
       , likeAndroid = /like android/i.test(ua)
       , android = !likeAndroid && /android/i.test(ua)
+      , edgeVersion = getFirstMatch(/edge\/(\d+(\.\d+)?)/i)
       , versionIdentifier = getFirstMatch(/version\/(\d+(\.\d+)?)/i)
       , tablet = /tablet/i.test(ua)
       , mobile = !tablet && /[^-]mobi/i.test(ua)
@@ -8537,12 +8543,25 @@ global.MSG = METHOD({
       , version: versionIdentifier || getFirstMatch(/(?:opera|opr)[\s\/](\d+(\.\d+)?)/i)
       }
     }
+    else if (/yabrowser/i.test(ua)) {
+      result = {
+        name: 'Yandex Browser'
+      , yandexbrowser: t
+      , version: versionIdentifier || getFirstMatch(/(?:yabrowser)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
     else if (/windows phone/i.test(ua)) {
       result = {
         name: 'Windows Phone'
       , windowsphone: t
-      , msie: t
-      , version: getFirstMatch(/iemobile\/(\d+(\.\d+)?)/i)
+      }
+      if (edgeVersion) {
+        result.msedge = t
+        result.version = edgeVersion
+      }
+      else {
+        result.msie = t
+        result.version = getFirstMatch(/iemobile\/(\d+(\.\d+)?)/i)
       }
     }
     else if (/msie|trident/i.test(ua)) {
@@ -8550,6 +8569,13 @@ global.MSG = METHOD({
         name: 'Internet Explorer'
       , msie: t
       , version: getFirstMatch(/(?:msie |rv:)(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/chrome.+? edge/i.test(ua)) {
+      result = {
+        name: 'Microsoft Edge'
+      , msedge: t
+      , version: edgeVersion
       }
     }
     else if (/chrome|crios|crmo/i.test(ua)) {
@@ -8648,10 +8674,15 @@ global.MSG = METHOD({
       , version: versionIdentifier
       }
     }
-    else result = {}
+    else {
+      result = {
+        name: getFirstMatch(/^(.*)\/(.*) /),
+        version: getSecondMatch(/^(.*)\/(.*) /)
+     };
+   }
 
     // set webkit or gecko flag for browsers based on these engines
-    if (/(apple)?webkit/i.test(ua)) {
+    if (!result.msedge && /(apple)?webkit/i.test(ua)) {
       result.name = result.name || "Webkit"
       result.webkit = t
       if (!result.version && versionIdentifier) {
@@ -8664,7 +8695,7 @@ global.MSG = METHOD({
     }
 
     // set OS flags for platforms that have multiple browsers
-    if (android || result.silk) {
+    if (!result.msedge && (android || result.silk)) {
       result.android = t
     } else if (iosdevice) {
       result[iosdevice] = t
@@ -8673,13 +8704,13 @@ global.MSG = METHOD({
 
     // OS version extraction
     var osVersion = '';
-    if (iosdevice) {
+    if (result.windowsphone) {
+      osVersion = getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i);
+    } else if (iosdevice) {
       osVersion = getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i);
       osVersion = osVersion.replace(/[_\s]/g, '.');
     } else if (android) {
       osVersion = getFirstMatch(/android[ \/-](\d+(\.\d+)*)/i);
-    } else if (result.windowsphone) {
-      osVersion = getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i);
     } else if (result.webos) {
       osVersion = getFirstMatch(/(?:web|hpw)os\/(\d+(\.\d+)*)/i);
     } else if (result.blackberry) {
@@ -8703,12 +8734,15 @@ global.MSG = METHOD({
 
     // Graded Browser Support
     // http://developer.yahoo.com/yui/articles/gbs
-    if ((result.msie && result.version >= 10) ||
+    if (result.msedge ||
+        (result.msie && result.version >= 10) ||
+        (result.yandexbrowser && result.version >= 15) ||
         (result.chrome && result.version >= 20) ||
         (result.firefox && result.version >= 20.0) ||
         (result.safari && result.version >= 6) ||
         (result.opera && result.version >= 10.0) ||
-        (result.ios && result.osversion && result.osversion.split(".")[0] >= 6)
+        (result.ios && result.osversion && result.osversion.split(".")[0] >= 6) ||
+        (result.blackberry && result.version >= 10.1)
         ) {
       result.a = t;
     }
@@ -8727,6 +8761,17 @@ global.MSG = METHOD({
 
   var bowser = detect(typeof navigator !== 'undefined' ? navigator.userAgent : '')
 
+  bowser.test = function (browserList) {
+    for (var i = 0; i < browserList.length; ++i) {
+      var browserItem = browserList[i];
+      if (typeof browserItem=== 'string') {
+        if (browserItem in bowser) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   /*
    * Set our detect method to the main bowser object so we can
@@ -8737,7 +8782,6 @@ global.MSG = METHOD({
 
   return bowser
 });
-
 
 /*
  * Binary Ajax 0.1.5
@@ -10766,12 +10810,17 @@ FOR_BOX(function(box) {
 	 */
 	box.ROOM = CLASS({
 
-		init : function(inner, self, name) {
-			//REQUIRED: name
+		init : function(inner, self, nameOrParams) {
+			//REQUIRED: nameOrParams
+			//OPTIONAL: nameOrParams.roomServerName
+			//REQUIRED: nameOrParams.name
 
 			var
+			// room server name
+			roomServerName,
+			
 			// room name
-			roomName = box.boxName + '/' + name,
+			roomName,
 
 			// method map
 			methodMap = {},
@@ -10796,8 +10845,18 @@ FOR_BOX(function(box) {
 
 			// exit.
 			exit;
+			
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				roomName = box.boxName + '/' + nameOrParams;
+			} else {
+				roomServerName = nameOrParams.roomServerName;
+				roomName = box.boxName + '/' + nameOrParams.name;
+			}
 
-			CONNECT_TO_ROOM_SERVER.enterRoom(roomName);
+			CONNECT_TO_ROOM_SERVER.enterRoom({
+				roomServerName : roomServerName,
+				roomName : roomName
+			});
 
 			inner.getRoomName = getRoomName = function() {
 				return roomName;
@@ -10815,7 +10874,10 @@ FOR_BOX(function(box) {
 				// methods
 				methods = methodMap[methodName];
 
-				CONNECT_TO_ROOM_SERVER.on(roomName + '/' + methodName, method);
+				CONNECT_TO_ROOM_SERVER.on({
+					roomServerName : roomServerName,
+					methodName : roomName + '/' + methodName
+				}, method);
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -10836,7 +10898,10 @@ FOR_BOX(function(box) {
 
 					if (method !== undefined) {
 
-						CONNECT_TO_ROOM_SERVER.off(roomName + '/' + methodName, method);
+						CONNECT_TO_ROOM_SERVER.off({
+							roomServerName : roomServerName,
+							methodName : roomName + '/' + methodName
+						}, method);
 
 						REMOVE({
 							array : methods,
@@ -10850,7 +10915,10 @@ FOR_BOX(function(box) {
 					} else {
 
 						EACH(methods, function(method) {
-							CONNECT_TO_ROOM_SERVER.off(roomName + '/' + methodName, method);
+							CONNECT_TO_ROOM_SERVER.off({
+								roomServerName : roomServerName,
+								methodName : roomName + '/' + methodName
+							}, method);
 						});
 						delete methodMap[methodName];
 					}
@@ -10866,12 +10934,13 @@ FOR_BOX(function(box) {
 				if (isExited !== true) {
 
 					CONNECT_TO_ROOM_SERVER.send({
+						roomServerName : roomServerName,
 						methodName : roomName + '/' + params.methodName,
 						data : params.data
 					}, callback);
 
 				} else {
-					console.log(CONSOLE_RED('[UPPERCASE.IO-ROOM] `ROOM.send` ERROR! ROOM EXITED!'));
+					console.log('[UPPERCASE.IO-ROOM] `ROOM.send` ERROR! ROOM EXITED!');
 				}
 			};
 
@@ -10879,7 +10948,10 @@ FOR_BOX(function(box) {
 
 				if (isExited !== true) {
 
-					CONNECT_TO_ROOM_SERVER.exitRoom(roomName);
+					CONNECT_TO_ROOM_SERVER.exitRoom({
+						roomServerName : roomServerName,
+						roomName : roomName
+					});
 
 					EACH(methodMap, function(methods, methodName) {
 						off(methodName);
@@ -10894,50 +10966,6 @@ FOR_BOX(function(box) {
 		}
 	});
 });
-FOR_BOX(function(box) {
-	'use strict';
-
-	OVERRIDE(box.ROOM, function(origin) {
-
-		/**
-		 * Connection room class
-		 */
-		box.ROOM = CLASS({
-
-			preset : function() {
-				return origin;
-			},
-
-			init : function(inner, self, name) {
-				//REQUIRED: name
-
-				var
-				// send.
-				send;
-
-				//OVERRIDE: self.send
-				self.send = send = function(params, callback) {
-					//REQUIRED: params
-					//REQUIRED: params.methodName
-					//REQUIRED: params.data
-					//OPTIONAL: callback
-
-					if (inner.checkIsExited() !== true) {
-
-						CONNECT_TO_ROOM_SERVER.send({
-							methodName : inner.getRoomName() + '/' + params.methodName,
-							data : params.data
-						}, callback);
-
-					} else {
-						console.log(CONSOLE_RED('[UPPERCASE.IO-ROOM] `ROOM.send` ERROR! ROOM EXITED!'));
-					}
-				};
-			}
-		});
-	});
-});
-
 /*
  * connect to room server.
  */
@@ -10945,29 +10973,32 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	'use strict';
 
 	var
-	// enter room names
-	enterRoomNames = [],
+	// DEFAULT_ROOM_SERVER_NAME
+	DEFAULT_ROOM_SERVER_NAME = '__',
+	
+	// enter room name map
+	enterRoomNameMap = {},
 
-	// on infos
-	onInfos = [],
+	// on info map
+	onInfoMap = {},
 
-	// waiting send infos
-	waitingSendInfos = [],
+	// waiting send info map
+	waitingSendInfoMap = {},
 
-	// is connected
-	isConnected = false,
+	// is connecteds
+	isConnecteds = {},
+
+	// inner ons
+	innerOns = {},
+
+	// inner offs
+	innerOffs = {},
+
+	// inner sends
+	innerSends = {},
 	
 	// check is connected.
 	checkIsConnected,
-
-	// inner on.
-	innerOn,
-
-	// inner off.
-	innerOff,
-
-	// inner send.
-	innerSend,
 
 	// enter room.
 	enterRoom,
@@ -10984,83 +11015,214 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	// exit room.
 	exitRoom;
 	
-	m.checkIsConnected = checkIsConnected = function() {
-		return isConnected;
+	m.checkIsConnected = checkIsConnected = function(roomServerName) {
+		//OPTIONAL: roomServerName
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
+		
+		if (isConnecteds[roomServerName] === undefined) {
+			isConnecteds[roomServerName] = false;
+		}
+		
+		return isConnecteds[roomServerName];
 	};
 
-	m.enterRoom = enterRoom = function(roomName) {
-		//REQUIRED: roomName
+	m.enterRoom = enterRoom = function(params) {
+		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
+		//REQUIRED: params.roomName
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// room name
+		roomName = params.roomName,
+		
+		// enter room names
+		enterRoomNames;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
+		
+		enterRoomNames = enterRoomNameMap[roomServerName];
+		
+		if (enterRoomNames === undefined) {
+			enterRoomNames = enterRoomNameMap[roomServerName] = [];
+		}
 
 		enterRoomNames.push(roomName);
 
-		if (innerSend !== undefined) {
-			innerSend({
+		if (innerSends[roomServerName] !== undefined) {
+			innerSends[roomServerName]({
 				methodName : '__ENTER_ROOM',
 				data : roomName
 			});
 		}
 	};
 
-	m.on = on = function(methodName, method) {
-		//REQUIRED: methodName
+	m.on = on = function(params, method) {
+		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
+		//REQUIRED: params.methodName
 		//REQUIRED: method
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// method name
+		methodName = params.methodName,
+		
+		// on infos
+		onInfos;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
+		
+		onInfos = onInfoMap[roomServerName];
+		
+		if (onInfos === undefined) {
+			onInfos = onInfoMap[roomServerName] = [];
+		}
 
 		onInfos.push({
 			methodName : methodName,
 			method : method
 		});
 
-		if (innerOn !== undefined) {
-			innerOn(methodName, method);
+		if (innerOns[roomServerName] !== undefined) {
+			innerOns[roomServerName](methodName, method);
 		}
 	};
 
-	m.off = off = function(methodName, method) {
-		//REQUIRED: methodName
+	m.off = off = function(params, method) {
+		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
+		//REQUIRED: params.methodName
 		//OPTIONAL: method
-
-		if (innerOff !== undefined) {
-			innerOff(methodName, method);
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// method name
+		methodName = params.methodName,
+		
+		// on infos
+		onInfos;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
 		}
+		
+		onInfos = onInfoMap[roomServerName];
+		
+		if (innerOffs[roomServerName] !== undefined) {
+			innerOffs[roomServerName](methodName, method);
+		}
+		
+		if (onInfos !== undefined) {
 
-		if (method !== undefined) {
-
-			REMOVE(onInfos, function(onInfo) {
-				return onInfo.methodName === methodName && onInfo.method === method;
-			});
-
-		} else {
-
-			REMOVE(onInfos, function(onInfo) {
-				return onInfo.methodName === methodName;
-			});
+			if (method !== undefined) {
+	
+				REMOVE(onInfos, function(onInfo) {
+					return onInfo.methodName === methodName && onInfo.method === method;
+				});
+	
+			} else {
+	
+				REMOVE(onInfos, function(onInfo) {
+					return onInfo.methodName === methodName;
+				});
+			}
+			
+			if (onInfos.length === 0) {
+				delete onInfoMap[roomServerName];
+			}
 		}
 	};
 
 	m.send = send = function(params, callback) {
 		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
 		//REQUIRED: params.methodName
 		//REQUIRED: params.data
 		//OPTIONAL: callback
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// method name
+		methodName = params.methodName,
+		
+		// data
+		data = params.data,
+		
+		// waiting send infos
+		waitingSendInfos;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
 
-		if (innerSend === undefined) {
+		if (innerSends[roomServerName] === undefined) {
+			
+			waitingSendInfos = waitingSendInfoMap[roomServerName];
+		
+			if (waitingSendInfos === undefined) {
+				waitingSendInfos = waitingSendInfoMap[roomServerName] = [];
+			}
 
 			waitingSendInfos.push({
-				params : params,
+				params : {
+					methodName : methodName,
+					data : data
+				},
 				callback : callback
 			});
 
 		} else {
 
-			innerSend(params, callback);
+			innerSends[roomServerName]({
+				methodName : methodName,
+				data : data
+			}, callback);
 		}
 	};
 
-	m.exitRoom = exitRoom = function(roomName) {
-		//REQUIRED: roomName
+	m.exitRoom = exitRoom = function(params) {
+		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
+		//REQUIRED: params.roomName
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// room name
+		roomName = params.roomName,
+		
+		// enter room names
+		enterRoomNames;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
+		
+		enterRoomNames = enterRoomNameMap[roomServerName];
+		
+		if (enterRoomNames === undefined) {
+			enterRoomNames = enterRoomNameMap[roomServerName] = [];
+		}
 
-		if (innerSend !== undefined) {
-			innerSend({
+		if (innerSends[roomServerName] !== undefined) {
+			innerSends[roomServerName]({
 				methodName : '__EXIT_ROOM',
 				data : roomName
 			});
@@ -11076,69 +11238,97 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 		run : function(params, connectionListenerOrListeners) {
 			//REQUIRED: params
+			//OPTIONAL: params.name
 			//OPTIONAL: params.host
 			//REQUIRED: params.port
 			//OPTIONAL: params.fixRequestURI
-			//REQUIRED: connectionListenerOrListeners
+			//OPTIONAL: connectionListenerOrListeners
+			//OPTIONAL: connectionListenerOrListeners.success
+			//OPTIONAL: connectionListenerOrListeners.error
 
 			var
+			// name
+			name = params.name,
+			
 			// connection listener
 			connectionListener,
 
 			// error listener
 			errorListener;
-
-			if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
-				connectionListener = connectionListenerOrListeners;
-			} else {
-				connectionListener = connectionListenerOrListeners.success;
-				errorListener = connectionListenerOrListeners.error;
+			
+			if (name === undefined) {
+				name = DEFAULT_ROOM_SERVER_NAME;
 			}
 
-			CONNECT_TO_WEB_SOCKET_SERVER(params, {
+			if (connectionListenerOrListeners !== undefined) {
+				if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
+					connectionListener = connectionListenerOrListeners;
+				} else {
+					connectionListener = connectionListenerOrListeners.success;
+					errorListener = connectionListenerOrListeners.error;
+				}
+			}
+
+			CONNECT_TO_WEB_SOCKET_SERVER({
+				host : params.host,
+				port : params.port,
+				fixRequestURI : params.fixRequestURI
+			}, {
 
 				error : errorListener,
 
 				success : function(on, off, send) {
+					
+					var
+					// enter room names
+					enterRoomNames = enterRoomNameMap[name],
+					
+					// on infos
+					onInfos = onInfoMap[name],
+					
+					// waiting send infos
+					waitingSendInfos = waitingSendInfoMap[name];
 
-					innerOn = on;
-					innerOff = off;
-					innerSend = send;
+					innerOns[name] = on;
+					innerOffs[name] = off;
+					innerSends[name] = send;
 
-					EACH(enterRoomNames, function(roomName) {
-
-						innerSend({
-							methodName : '__ENTER_ROOM',
-							data : roomName
+					if (enterRoomNames !== undefined) {
+						EACH(enterRoomNames, function(roomName) {
+							send({
+								methodName : '__ENTER_ROOM',
+								data : roomName
+							});
 						});
-					});
+					}
 
-					EACH(onInfos, function(onInfo) {
-						innerOn(onInfo.methodName, onInfo.method);
-					});
-
-					EACH(waitingSendInfos, function(sendInfo) {
-						innerSend(sendInfo.params, sendInfo.callback);
-					});
-
-					waitingSendInfos = undefined;
+					if (onInfos !== undefined) {
+						EACH(onInfos, function(onInfo) {
+							on(onInfo.methodName, onInfo.method);
+						});
+					}
+					
+					if (waitingSendInfos !== undefined) {
+						EACH(waitingSendInfos, function(sendInfo) {
+							send(sendInfo.params, sendInfo.callback);
+						});
+					}
+					delete waitingSendInfoMap[name];
 
 					if (connectionListener !== undefined) {
 						connectionListener(on, off, send);
 					}
 					
-					isConnected = true;
+					isConnecteds[name] = true;
 
 					// when disconnected, rewait.
 					on('__DISCONNECTED', function() {
 
-						innerOn = undefined;
-						innerOff = undefined;
-						innerSend = undefined;
-
-						waitingSendInfos = [];
+						delete innerOns[name];
+						delete innerOffs[name];
+						delete innerSends[name];
 						
-						isConnected = false;
+						isConnecteds[name] = false;
 					});
 				}
 			});
@@ -11171,12 +11361,16 @@ FOR_BOX(function(box) {
 
 		init : function(inner, self, params) {
 			//REQUIRED: params
+			//OPTIONAL: params.roomServerName
 			//REQUIRED: params.name
 			//OPTIONAL: params.initData
 			//OPTIONAL: params.methodConfig
 			//OPTIONAL: params.isNotUsingObjectId
 
 			var
+			// room server name
+			roomServerName = params.roomServerName,
+			
 			// name
 			name = params.name,
 
@@ -11220,7 +11414,10 @@ FOR_BOX(function(box) {
 			is_idAssignable,
 
 			// room
-			room = box.ROOM(name),
+			room = box.ROOM({
+				roomServerName : roomServerName,
+				name : name
+			}),
 
 			// get name.
 			getName,
@@ -12755,35 +12952,85 @@ global.TIME = METHOD(function(m) {
  */
 global.CONNECT_TO_IO_SERVER = METHOD({
 
-	run : function(connectionListenerOrListeners) {
+	run : function(params, connectionListenerOrListeners) {
 		'use strict';
-		//REQUIRED: connectionListenerOrListeners
+		//OPTIONAL: params
+		//OPTIONAL: params.roomServerName
+		//OPTIONAL: params.webServerHost
+		//OPTIONAL: params.webServerPort
+		//OPTIONAL: connectionListenerOrListeners
+		//OPTIONAL: connectionListenerOrListeners.success
+		//OPTIONAL: connectionListenerOrListeners.error
 
 		var
+		// room server name
+		roomServerName,
+		
+		// web server host
+		webServerHost,
+		
+		// web server port
+		webServerPort,
+		
 		// connection listener
 		connectionListener,
 
 		// error listener
 		errorListener;
-
-		if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
-			connectionListener = connectionListenerOrListeners;
-		} else {
-			connectionListener = connectionListenerOrListeners.success;
-			errorListener = connectionListenerOrListeners.error;
+		
+		if (connectionListenerOrListeners === undefined) {
+			
+			if (params !== undefined) {
+				
+				if (CHECK_IS_DATA(params) !== true) {
+					connectionListener = params;
+				} else {
+					roomServerName = params.roomServerName;
+					webServerHost = params.webServerHost;
+					webServerPort = params.webServerPort;
+					connectionListener = params.success;
+					errorListener = params.error;
+				}
+			}
+		}
+		
+		else {
+			
+			if (params !== undefined) {
+				roomServerName = params.roomServerName;
+				webServerHost = params.webServerHost;
+				webServerPort = params.webServerPort;
+			}
+			
+			if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
+				connectionListener = connectionListenerOrListeners;
+			} else {
+				connectionListener = connectionListenerOrListeners.success;
+				errorListener = connectionListenerOrListeners.error;
+			}
+		}
+		
+		if (webServerHost === undefined) {
+			webServerHost = BROWSER_CONFIG.host;
+		}
+		
+		if (webServerPort === undefined) {
+			webServerPort = CONFIG.webServerPort;
 		}
 
 		GET({
-			port : CONFIG.webServerPort,
+			host : webServerHost,
+			port : webServerPort,
 			uri : '__WEB_SOCKET_SERVER_HOST',
-			paramStr : 'defaultHost=' + BROWSER_CONFIG.host
+			paramStr : 'defaultHost=' + webServerHost
 		}, {
 			error : errorListener,
 			success : function(host) {
 
 				CONNECT_TO_ROOM_SERVER({
+					name : roomServerName,
 					host : host,
-					port : CONFIG.webServerPort,
+					port : webServerPort,
 					fixRequestURI : '__WEB_SOCKET_FIX'
 				}, connectionListener);
 			}

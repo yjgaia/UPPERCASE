@@ -8,6 +8,14 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * 멀티 코어 CPU 지원을 지원합니다.
 * 현대의 모든 웹 브라우저 및 구형 브라우저에 대한 호환성을 지니고 있습니다. (Internet Explorer 5.5나 Android 2.1 브라우저에서도 작동합니다.)
 
+## 사전 지식
+UPPERCASE.IO를 사용하기 위해서는 이하 기술셋을 알고있어야 합니다.
+* JavaScript
+* HTML, CSS
+* Git
+* node.js
+* MongoDB
+
 ## 시작하기
 * [설치하기](INSTALL.md)
 * [프로젝트 생성](CREATE_PROJECT.md)
@@ -22,6 +30,7 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [BOX 이해하기](BOX.md)
 * [기본 스타일](BASE_STYLE.md)
 * [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](CORDOVA.md) (작성중)
+* [소셜 연동](SOCIAL.md) (작성중)
 * [Android, iOS 모바일 네이티브 앱 개발](MOBILE_NATIVE.md) (작성중)
 * [Node-webkit을 이용한 데스크톱 앱 개발](NODE_WEBKIT.md) (작성중)
 * [다중 프로젝트 구성](MULTI_PROJECT.md) (작성중)
@@ -47,11 +56,11 @@ UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
 * [UPPERCASE.IO 빌드](BUILD.md)
 
 ## UPPERCASE.IO Client Modules
-UPPERCASE.IO는 웹 브라우저 혹은 하이브리드 앱과 같이 웹 기술 기반의 Client만을 공식 지원합니다. 따라서 다른 언어 및 시스템 기반에서 UPPERCASE.IO의 서버에 접근하기 위해서는 아래와 같이 해당 언어 및 시스템에 맞는 Client 모듈이 필요합니다.
+UPPERCASE.IO는 웹 브라우저 혹은 하이브리드 앱과 같이 웹 기술 기반의 Client를 지원합니다. 따라서 다른 언어/시스템 기반에서 UPPERCASE.IO 서버에 접근하기 위해서는 아래와 같이 해당 언어/시스템에 맞는 Client 모듈이 필요합니다.
 
 * `UPPERCASE.IO-Java-Client` https://github.com/Hanul/UPPERCASE.IO-Java-Client
 
-*기타 여러 언어 및 시스템으로의 포팅을 기다리고 있습니다!*
+*기타 여러 언어/시스템으로의 포팅을 기다리고 있습니다!*
 
 ## 라이센스
 [MIT](../../LICENSE)

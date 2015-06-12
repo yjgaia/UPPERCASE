@@ -1,47 +1,3 @@
-FOR_BOX(function(box) {
-	'use strict';
-
-	OVERRIDE(box.ROOM, function(origin) {
-
-		/**
-		 * Connection room class
-		 */
-		box.ROOM = CLASS({
-
-			preset : function() {
-				return origin;
-			},
-
-			init : function(inner, self, name) {
-				//REQUIRED: name
-
-				var
-				// send.
-				send;
-
-				//OVERRIDE: self.send
-				self.send = send = function(params, callback) {
-					//REQUIRED: params
-					//REQUIRED: params.methodName
-					//REQUIRED: params.data
-					//OPTIONAL: callback
-
-					if (inner.checkIsExited() !== true) {
-
-						CONNECT_TO_ROOM_SERVER.send({
-							methodName : inner.getRoomName() + '/' + params.methodName,
-							data : params.data
-						}, callback);
-
-					} else {
-						console.log(CONSOLE_RED('[UPPERCASE.IO-ROOM] `ROOM.send` ERROR! ROOM EXITED!'));
-					}
-				};
-			}
-		});
-	});
-});
-
 /*
  * connect to room server.
  */
@@ -49,29 +5,32 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	'use strict';
 
 	var
-	// enter room names
-	enterRoomNames = [],
+	// DEFAULT_ROOM_SERVER_NAME
+	DEFAULT_ROOM_SERVER_NAME = '__',
+	
+	// enter room name map
+	enterRoomNameMap = {},
 
-	// on infos
-	onInfos = [],
+	// on info map
+	onInfoMap = {},
 
-	// waiting send infos
-	waitingSendInfos = [],
+	// waiting send info map
+	waitingSendInfoMap = {},
 
-	// is connected
-	isConnected = false,
+	// is connecteds
+	isConnecteds = {},
+
+	// inner ons
+	innerOns = {},
+
+	// inner offs
+	innerOffs = {},
+
+	// inner sends
+	innerSends = {},
 	
 	// check is connected.
 	checkIsConnected,
-
-	// inner on.
-	innerOn,
-
-	// inner off.
-	innerOff,
-
-	// inner send.
-	innerSend,
 
 	// enter room.
 	enterRoom,
@@ -88,83 +47,214 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 	// exit room.
 	exitRoom;
 	
-	m.checkIsConnected = checkIsConnected = function() {
-		return isConnected;
+	m.checkIsConnected = checkIsConnected = function(roomServerName) {
+		//OPTIONAL: roomServerName
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
+		
+		if (isConnecteds[roomServerName] === undefined) {
+			isConnecteds[roomServerName] = false;
+		}
+		
+		return isConnecteds[roomServerName];
 	};
 
-	m.enterRoom = enterRoom = function(roomName) {
-		//REQUIRED: roomName
+	m.enterRoom = enterRoom = function(params) {
+		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
+		//REQUIRED: params.roomName
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// room name
+		roomName = params.roomName,
+		
+		// enter room names
+		enterRoomNames;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
+		
+		enterRoomNames = enterRoomNameMap[roomServerName];
+		
+		if (enterRoomNames === undefined) {
+			enterRoomNames = enterRoomNameMap[roomServerName] = [];
+		}
 
 		enterRoomNames.push(roomName);
 
-		if (innerSend !== undefined) {
-			innerSend({
+		if (innerSends[roomServerName] !== undefined) {
+			innerSends[roomServerName]({
 				methodName : '__ENTER_ROOM',
 				data : roomName
 			});
 		}
 	};
 
-	m.on = on = function(methodName, method) {
-		//REQUIRED: methodName
+	m.on = on = function(params, method) {
+		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
+		//REQUIRED: params.methodName
 		//REQUIRED: method
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// method name
+		methodName = params.methodName,
+		
+		// on infos
+		onInfos;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
+		
+		onInfos = onInfoMap[roomServerName];
+		
+		if (onInfos === undefined) {
+			onInfos = onInfoMap[roomServerName] = [];
+		}
 
 		onInfos.push({
 			methodName : methodName,
 			method : method
 		});
 
-		if (innerOn !== undefined) {
-			innerOn(methodName, method);
+		if (innerOns[roomServerName] !== undefined) {
+			innerOns[roomServerName](methodName, method);
 		}
 	};
 
-	m.off = off = function(methodName, method) {
-		//REQUIRED: methodName
+	m.off = off = function(params, method) {
+		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
+		//REQUIRED: params.methodName
 		//OPTIONAL: method
-
-		if (innerOff !== undefined) {
-			innerOff(methodName, method);
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// method name
+		methodName = params.methodName,
+		
+		// on infos
+		onInfos;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
 		}
+		
+		onInfos = onInfoMap[roomServerName];
+		
+		if (innerOffs[roomServerName] !== undefined) {
+			innerOffs[roomServerName](methodName, method);
+		}
+		
+		if (onInfos !== undefined) {
 
-		if (method !== undefined) {
-
-			REMOVE(onInfos, function(onInfo) {
-				return onInfo.methodName === methodName && onInfo.method === method;
-			});
-
-		} else {
-
-			REMOVE(onInfos, function(onInfo) {
-				return onInfo.methodName === methodName;
-			});
+			if (method !== undefined) {
+	
+				REMOVE(onInfos, function(onInfo) {
+					return onInfo.methodName === methodName && onInfo.method === method;
+				});
+	
+			} else {
+	
+				REMOVE(onInfos, function(onInfo) {
+					return onInfo.methodName === methodName;
+				});
+			}
+			
+			if (onInfos.length === 0) {
+				delete onInfoMap[roomServerName];
+			}
 		}
 	};
 
 	m.send = send = function(params, callback) {
 		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
 		//REQUIRED: params.methodName
 		//REQUIRED: params.data
 		//OPTIONAL: callback
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// method name
+		methodName = params.methodName,
+		
+		// data
+		data = params.data,
+		
+		// waiting send infos
+		waitingSendInfos;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
 
-		if (innerSend === undefined) {
+		if (innerSends[roomServerName] === undefined) {
+			
+			waitingSendInfos = waitingSendInfoMap[roomServerName];
+		
+			if (waitingSendInfos === undefined) {
+				waitingSendInfos = waitingSendInfoMap[roomServerName] = [];
+			}
 
 			waitingSendInfos.push({
-				params : params,
+				params : {
+					methodName : methodName,
+					data : data
+				},
 				callback : callback
 			});
 
 		} else {
 
-			innerSend(params, callback);
+			innerSends[roomServerName]({
+				methodName : methodName,
+				data : data
+			}, callback);
 		}
 	};
 
-	m.exitRoom = exitRoom = function(roomName) {
-		//REQUIRED: roomName
+	m.exitRoom = exitRoom = function(params) {
+		//REQUIRED: params
+		//OPTIONAL: params.roomServerName
+		//REQUIRED: params.roomName
+		
+		var
+		// room server name
+		roomServerName = params.roomServerName,
+		
+		// room name
+		roomName = params.roomName,
+		
+		// enter room names
+		enterRoomNames;
+		
+		if (roomServerName === undefined) {
+			roomServerName = DEFAULT_ROOM_SERVER_NAME;
+		}
+		
+		enterRoomNames = enterRoomNameMap[roomServerName];
+		
+		if (enterRoomNames === undefined) {
+			enterRoomNames = enterRoomNameMap[roomServerName] = [];
+		}
 
-		if (innerSend !== undefined) {
-			innerSend({
+		if (innerSends[roomServerName] !== undefined) {
+			innerSends[roomServerName]({
 				methodName : '__EXIT_ROOM',
 				data : roomName
 			});
@@ -180,69 +270,97 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 		run : function(params, connectionListenerOrListeners) {
 			//REQUIRED: params
+			//OPTIONAL: params.name
 			//OPTIONAL: params.host
 			//REQUIRED: params.port
 			//OPTIONAL: params.fixRequestURI
-			//REQUIRED: connectionListenerOrListeners
+			//OPTIONAL: connectionListenerOrListeners
+			//OPTIONAL: connectionListenerOrListeners.success
+			//OPTIONAL: connectionListenerOrListeners.error
 
 			var
+			// name
+			name = params.name,
+			
 			// connection listener
 			connectionListener,
 
 			// error listener
 			errorListener;
-
-			if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
-				connectionListener = connectionListenerOrListeners;
-			} else {
-				connectionListener = connectionListenerOrListeners.success;
-				errorListener = connectionListenerOrListeners.error;
+			
+			if (name === undefined) {
+				name = DEFAULT_ROOM_SERVER_NAME;
 			}
 
-			CONNECT_TO_WEB_SOCKET_SERVER(params, {
+			if (connectionListenerOrListeners !== undefined) {
+				if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
+					connectionListener = connectionListenerOrListeners;
+				} else {
+					connectionListener = connectionListenerOrListeners.success;
+					errorListener = connectionListenerOrListeners.error;
+				}
+			}
+
+			CONNECT_TO_WEB_SOCKET_SERVER({
+				host : params.host,
+				port : params.port,
+				fixRequestURI : params.fixRequestURI
+			}, {
 
 				error : errorListener,
 
 				success : function(on, off, send) {
+					
+					var
+					// enter room names
+					enterRoomNames = enterRoomNameMap[name],
+					
+					// on infos
+					onInfos = onInfoMap[name],
+					
+					// waiting send infos
+					waitingSendInfos = waitingSendInfoMap[name];
 
-					innerOn = on;
-					innerOff = off;
-					innerSend = send;
+					innerOns[name] = on;
+					innerOffs[name] = off;
+					innerSends[name] = send;
 
-					EACH(enterRoomNames, function(roomName) {
-
-						innerSend({
-							methodName : '__ENTER_ROOM',
-							data : roomName
+					if (enterRoomNames !== undefined) {
+						EACH(enterRoomNames, function(roomName) {
+							send({
+								methodName : '__ENTER_ROOM',
+								data : roomName
+							});
 						});
-					});
+					}
 
-					EACH(onInfos, function(onInfo) {
-						innerOn(onInfo.methodName, onInfo.method);
-					});
-
-					EACH(waitingSendInfos, function(sendInfo) {
-						innerSend(sendInfo.params, sendInfo.callback);
-					});
-
-					waitingSendInfos = undefined;
+					if (onInfos !== undefined) {
+						EACH(onInfos, function(onInfo) {
+							on(onInfo.methodName, onInfo.method);
+						});
+					}
+					
+					if (waitingSendInfos !== undefined) {
+						EACH(waitingSendInfos, function(sendInfo) {
+							send(sendInfo.params, sendInfo.callback);
+						});
+					}
+					delete waitingSendInfoMap[name];
 
 					if (connectionListener !== undefined) {
 						connectionListener(on, off, send);
 					}
 					
-					isConnected = true;
+					isConnecteds[name] = true;
 
 					// when disconnected, rewait.
 					on('__DISCONNECTED', function() {
 
-						innerOn = undefined;
-						innerOff = undefined;
-						innerSend = undefined;
-
-						waitingSendInfos = [];
+						delete innerOns[name];
+						delete innerOffs[name];
+						delete innerSends[name];
 						
-						isConnected = false;
+						isConnecteds[name] = false;
 					});
 				}
 			});

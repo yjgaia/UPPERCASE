@@ -8,12 +8,16 @@ FOR_BOX(function(box) {
 
 		init : function(inner, self, params) {
 			//REQUIRED: params
+			//OPTIONAL: params.roomServerName
 			//REQUIRED: params.name
 			//OPTIONAL: params.initData
 			//OPTIONAL: params.methodConfig
 			//OPTIONAL: params.isNotUsingObjectId
 
 			var
+			// room server name
+			roomServerName = params.roomServerName,
+			
 			// name
 			name = params.name,
 
@@ -57,7 +61,10 @@ FOR_BOX(function(box) {
 			is_idAssignable,
 
 			// room
-			room = box.ROOM(name),
+			room = box.ROOM({
+				roomServerName : roomServerName,
+				name : name
+			}),
 
 			// get name.
 			getName,
