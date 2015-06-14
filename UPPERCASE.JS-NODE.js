@@ -1,3 +1,9 @@
+/*
+
+Welcome to UPPERCASE.JS! (http://uppercase.io)
+
+*/
+
 /**
  * Node-side Configuration
  */
@@ -3085,6 +3091,11 @@ global.RESOURCE_SERVER = CLASS(function(cls) {
 			return 'text/plain';
 		}
 
+		// markdown
+		if (extname === '.markdown' || extname === '.md') {
+			return 'text/x-markdown';
+		}
+
 		// html document
 		if (extname === '.html') {
 			return 'text/html';
@@ -3715,6 +3726,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 		}
 
 		if (contentType === 'text/plain') {
+			return 'utf-8';
+		}
+		
+		if (contentType === 'text/x-markdown') {
 			return 'utf-8';
 		}
 
