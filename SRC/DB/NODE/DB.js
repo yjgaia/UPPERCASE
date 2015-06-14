@@ -1131,12 +1131,6 @@ FOR_BOX(function(box) {
 							errorHandler = callbackOrHandlers.error;
 						}
 
-						if (sort === undefined) {
-							sort = {
-								createTime : -1
-							};
-						}
-
 						if (isRandom === true) {
 
 							if (filter === undefined) {
@@ -1147,7 +1141,9 @@ FOR_BOX(function(box) {
 								$gte : randomKey = Math.random()
 							};
 
-							sort.__RANDOM_KEY = 1;
+							sort = {
+								__RANDOM_KEY : 1
+							};
 
 							innerGet({
 								filter : filter,
@@ -1173,6 +1169,12 @@ FOR_BOX(function(box) {
 							if (filter === undefined) {
 								filter = {
 									_id : gen_id(id)
+								};
+							}
+
+							if (sort === undefined) {
+								sort = {
+									createTime : -1
 								};
 							}
 
