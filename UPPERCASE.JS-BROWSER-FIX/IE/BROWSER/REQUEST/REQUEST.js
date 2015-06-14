@@ -109,21 +109,21 @@ OVERRIDE(REQUEST, function(origin) {
 			if (method === 'GET') {
 				try {
 					req.open(method, url + '?' + paramStr);
+					req.send();
 				} catch (e) {
 					// ignore.
 				}
-				req.send();
 			}
 	
 			// other request.
 			else {
 				try {
 					req.open(method, url);
+					req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+					req.send(paramStr);
 				} catch (e) {
 					// ignore.
 				}
-				req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-				req.send(paramStr);
 			}
 		}
 	});
