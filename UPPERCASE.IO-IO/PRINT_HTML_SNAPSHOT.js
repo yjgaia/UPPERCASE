@@ -1,3 +1,9 @@
+/*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
 var
 // page
 page = require('webpage').create(),

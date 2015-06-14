@@ -101,7 +101,7 @@ OVERRIDE(EXPORT_IMG_DATA, function(origin) {
 							} else {
 
 								// get img data.
-								imgData = context.getImgData();
+								imgData = context.getImageData();
 
 								// cache.
 								exportedImgDataSet[uri] = imgData;

@@ -3002,6 +3002,12 @@ global.REVERSE_EACH = METHOD({
 		return true;
 	}
 });
+/*
+
+Welcome to UPPERCASE.JS! (http://uppercase.io)
+
+*/
+
 /**
  * Browser-side Configuration
  */
@@ -10247,17 +10253,24 @@ global.MATCH_VIEW = METHOD(function(m) {
 		run : function(params) {
 			//REQUIRED: params
 			//REQUIRED: params.uri
+			//OPTIONAL: params.excludeURI
 			//REQUIRED: params.target
 	
 			var
 			// uri
 			uri = params.uri,
+			
+			// exclude uri
+			excludeURI = params.excludeURI,
 	
 			// target
 			target = params.target,
 	
 			// uri matcher
 			uriMatcher = URI_MATCHER(uri),
+	
+			// exclude uri matcher
+			excludeURIMatcher = excludeURI === undefined ? undefined : URI_MATCHER(excludeURI),
 	
 			// view
 			view,
@@ -10279,7 +10292,7 @@ global.MATCH_VIEW = METHOD(function(m) {
 				uriParams;
 	
 				// when view founded
-				if (uri !== REFRESH.getRefreshingURI() && ( result = uriMatcher.check(uri)).checkIsMatched() === true) {
+				if (uri !== REFRESH.getRefreshingURI() && ( result = uriMatcher.check(uri)).checkIsMatched() === true && (excludeURI === undefined || excludeURIMatcher.check(uri).checkIsMatched() !== true)) {
 	
 					uriParams = result.getURIParams();
 	
@@ -10332,36 +10345,62 @@ FOR_BOX(function(box) {
 		run : function(params) {
 			//REQUIRED: params
 			//REQUIRED: params.uri
+			//OPTIONAL: params.excludeURI
 			//REQUIRED: params.target
 
 			var
 			// uri
 			uri = params.uri,
+			
+			// exclude uri
+			excludeURI = params.excludeURI,
 
 			// target
 			target = params.target,
 
 			// new uris
 			newURIs = [],
+			
+			// new exclude uris
+			newExcludeURIs = [],
 
-			// push.
-			push = function(uri) {
+			// push uri.
+			pushURI = function(uri) {
 
 				if (box.boxName === CONFIG.defaultBoxName) {
 					newURIs.push(uri);
 				}
 
 				newURIs.push(box.boxName + '/' + uri);
+			},
+
+			// push exclude uri.
+			pushExcludeURI = function(uri) {
+
+				if (box.boxName === CONFIG.defaultBoxName) {
+					newExcludeURIs.push(uri);
+				}
+
+				newExcludeURIs.push(box.boxName + '/' + uri);
 			};
 
 			if (CHECK_IS_ARRAY(uri) === true) {
-				EACH(uri, push);
+				EACH(uri, pushURI);
 			} else {
-				push(uri);
+				pushURI(uri);
+			}
+			
+			if (excludeURI !== undefined) {
+				if (CHECK_IS_ARRAY(excludeURI) === true) {
+					EACH(excludeURI, pushExcludeURI);
+				} else {
+					pushExcludeURI(excludeURI);
+				}
 			}
 
 			MATCH_VIEW({
 				uri : newURIs,
+				excludeURI : newExcludeURIs,
 				target : target
 			});
 		}
@@ -10593,6 +10632,12 @@ global.WIN_WIDTH = METHOD({
 BOX('UPPERCASE.IO');
 
 /*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
+/*
  * connect to web socket server.
  */
 global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
@@ -10802,6 +10847,12 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		};
 	}
 });
+/*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
 FOR_BOX(function(box) {
 	'use strict';
 
@@ -10966,6 +11017,12 @@ FOR_BOX(function(box) {
 		}
 	});
 });
+/*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
 /*
  * connect to room server.
  */
@@ -11335,6 +11392,12 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		}
 	};
 });
+/*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
 FOR_BOX(function(box) {'use strict';
 
 	/**
@@ -11351,6 +11414,12 @@ FOR_BOX(function(box) {'use strict';
 		}
 	});
 });
+/*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
 FOR_BOX(function(box) {
 	'use strict';
 
@@ -12796,6 +12865,12 @@ FOR_BOX(function(box) {
 		}
 	});
 });
+/*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
 FOR_BOX(function(box) {
 	'use strict';
 
@@ -12947,6 +13022,12 @@ global.TIME = METHOD(function(m) {
 		}
 	};
 });
+/*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
 /*
  * connect to UPPERCASE.IO server.
  */

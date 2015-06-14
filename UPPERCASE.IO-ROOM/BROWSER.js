@@ -1,4 +1,10 @@
 /*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
+/*
  * connect to room server.
  */
 global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {

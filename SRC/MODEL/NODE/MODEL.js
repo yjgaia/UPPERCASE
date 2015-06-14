@@ -725,6 +725,9 @@ FOR_BOX(function(box) {
 					// $push
 					$push = data.$push,
 					
+					// $addToSet
+					$addToSet = data.$addToSet,
+					
 					// $pull
 					$pull = data.$pull,
 
@@ -736,6 +739,9 @@ FOR_BOX(function(box) {
 
 					// $push valid result
 					$pushValidResult,
+					
+					// $addToSet valid result
+					$addToSetValidResult,
 
 					// $pull valid result
 					$pullValidResult;
@@ -765,6 +771,22 @@ FOR_BOX(function(box) {
 							}));
 						}
 						
+						if ($addToSet !== undefined) {
+							
+							$addToSetValidResult = updateValid.checkForUpdate(RUN(function() {
+								
+								var
+								// data for valid
+								dataForValid = {};
+								
+								EACH($addToSet, function(value, attr) {
+									dataForValid[attr] = [value];
+								});
+								
+								return dataForValid;
+							}));
+						}
+						
 						if ($pull !== undefined) {
 							
 							$pullValidResult = updateValid.checkForUpdate(RUN(function() {
@@ -785,12 +807,14 @@ FOR_BOX(function(box) {
 					data.id = id;
 					data.$inc = $inc;
 					data.$push = $push;
+					data.$addToSet = $addToSet;
 					data.$pull = $pull;
 
 					if (updateValid !== undefined && (
 						validResult.checkHasError() === true ||
 						($incValidResult !== undefined && $incValidResult.checkHasError() === true) ||
 						($pushValidResult !== undefined && $pushValidResult.checkHasError() === true) ||
+						($addToSetValidResult !== undefined && $addToSetValidResult.checkHasError() === true) ||
 						($pullValidResult !== undefined && $pullValidResult.checkHasError() === true)
 					)) {
 
@@ -799,6 +823,7 @@ FOR_BOX(function(box) {
 								validResult.getErrors(),
 								$incValidResult === undefined ? {} : $incValidResult.getErrors(),
 								$pushValidResult === undefined ? {} : $pushValidResult.getErrors(),
+								$addToSetValidResult === undefined ? {} : $addToSetValidResult.getErrors(),
 								$pullValidResult === undefined ? {} : $pullValidResult.getErrors()
 							])
 						});

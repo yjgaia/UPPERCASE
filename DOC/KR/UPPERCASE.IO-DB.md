@@ -36,20 +36,20 @@ CONNECT_TO_DB_SERVER({
 * `DB(name)` MongoDB collection wrapper [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
 ```javascript
 db = TestBox.DB('test');
-db.create(data, function() {...})
+db.create(data, function(savedData) {...})
 db.create(data, {error:, success:})
-db.get(id, function() {...})
+db.get(id, function(savedData) {...})
 db.get(id, {success:, notExists:, error:})
 db.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
-db.update(data, function() {...})
+db.update(data, function(savedData, originData) {...})
 db.update(data, {success:, notExists:, error:})
-db.remove(id, function() {...})
+db.remove(id, function(originData) {...})
 db.remove(id, {success:, notExists:, error:})
-db.find({filter:, sort:, start:, count:}, function() {...})
+db.find({filter:, sort:, start:, count:}, function(savedDataSet) {...})
 db.find({filter:, sort:, start:, count:}, {error:, success:})
-db.count({filter:}, function() {...})
+db.count({filter:}, function(count) {...})
 db.count({filter:}, {error:, success:})
-db.checkIsExists({filter:}, function() {...})
+db.checkIsExists({filter:}, function(isExists) {...})
 db.checkIsExists({filter:}, {error:, success:})
 ```
 * `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/LOG_DB.js)
@@ -148,6 +148,16 @@ SampleModel.update({
     }
 })
 ```
+* `$addToSet`
+```javascript
+// 배열 array에 3이 없는 경우에만 3을 추가합니다.
+SampleModel.update({
+    ...
+    $addToSet : {
+        array : 3
+    }
+})
+```
 * `$push`
 ```javascript
 // 배열 array에 3을 추가합니다.
@@ -179,6 +189,16 @@ SampleModel.update({
         }
     }
 })
+```
+
+## 특정 문서의 수정 내역을 가져오는 방법
+특정 문서의 수정 내역은 문서가 저장된 데이터베이스 이름 뒤에 `__HISTORY`를 붙혀 `DB` 오브젝트를 만들고, `find`로 가져올 수 있습니다. 
+```javascript
+var
+// history db
+historyDB = TestBox.DB('test__HISTORY');
+
+db.find({filter:}, function(historyDataSet) {...})
 ```
 
 ## 설정

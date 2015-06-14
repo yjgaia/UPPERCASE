@@ -351,6 +351,7 @@ FOR_BOX(function(box) {
 				//REQUIRED: data.id
 				//OPTIONAL: data.$inc
 				//OPTIONAL: data.$push
+				//OPTIONAL: data.$addToSet
 				//OPTIONAL: data.$pull
 				//OPTIONAL: callbackOrHandlers
 				//OPTIONAL: callbackOrHandlers.success
@@ -491,10 +492,10 @@ FOR_BOX(function(box) {
 				collection = nativeDB.collection(box.boxName + '.' + name),
 
 				// MongoDB collection for history
-				historyCollection = nativeDB.collection(box.boxName + '.' + name + '__HISTORY'),
+				historyCollection,
 
 				// MongoDB collection for error log
-				errorLogCollection = nativeDB.collection(box.boxName + '.' + name + '__ERROR'),
+				errorLogCollection,
 			
 				// cached get store
 				cachedGetStore = box.SHARED_STORE('cachedGetStore'),
@@ -511,48 +512,35 @@ FOR_BOX(function(box) {
 					//REQUIRED: id
 					//OPTIONAL: change
 					//REQUIRED: time
+					
+					var
+					// history data
+					historyData = {
+						docId : id,
+						method : method,
+						time : time
+					};
+					
+					if (change !== undefined) {
+						historyData.change = change;
+					}
+					
+					if (historyCollection === undefined) {
+						
+						historyCollection = nativeDB.collection(box.boxName + '.' + name + '__HISTORY');
+						
+						// create history index.
+						historyCollection.ensureIndex({
+							docId : 1
+						}, {
+							safe : true
+						}, function() {
+							// ignore.
+						});
+					}
 
-					historyCollection.findOne({
-						_id : id
-					}, function(error, savedData) {
-
-						var
-						// info
-						info;
-
-						if (error === TO_DELETE) {
-
-							info = {
-								method : method,
-								time : time
-							};
-							
-							if (change !== undefined) {
-								info.change = change;
-							}
-
-							if (savedData === TO_DELETE) {
-
-								historyCollection.insert({
-									_id : id,
-									timeline : [info]
-								}, {
-									w : 0
-								});
-
-							} else {
-
-								historyCollection.update({
-									_id : id
-								}, {
-									$push : {
-										timeline : info
-									}
-								}, {
-									w : 0
-								});
-							}
-						}
+					historyCollection.insert(historyData, {
+						w : 0
 					});
 
 					if (NODE_CONFIG.isDBLogMode === true) {
@@ -570,6 +558,10 @@ FOR_BOX(function(box) {
 					//REQUIRED: errorInfo
 					//REQUIRED: errorInfo.errorMsg
 					//OPTIONAL: errorHandler
+					
+					if (errorLogCollection === undefined) {
+						errorLogCollection = nativeDB.collection(box.boxName + '.' + name + '__ERROR');
+					}
 
 					// now
 					errorInfo.time = new Date();
@@ -1203,11 +1195,12 @@ FOR_BOX(function(box) {
 					}
 				};
 
-				innerUpdate = innerUpdate = function(data, callbackOrHandlers, isNotToSaveHistory) {
+				innerUpdate = function(data, callbackOrHandlers, isNotToSaveHistory) {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
 					//OPTIONAL: data.$push
+					//OPTIONAL: data.$addToSet
 					//OPTIONAL: data.$pull
 					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.success
@@ -1224,6 +1217,9 @@ FOR_BOX(function(box) {
 
 					// $push
 					$push = data.$push,
+
+					// $addToSet
+					$addToSet = data.$addToSet,
 
 					// $pull
 					$pull = data.$pull,
@@ -1266,7 +1262,7 @@ FOR_BOX(function(box) {
 						}
 
 						EACH(data, function(value, name) {
-							if (name === 'id' || name === '_id' || name === 'createTime' || name === '$inc' || name === '$push' || name === '$pull') {
+							if (name === 'id' || name === '_id' || name === 'createTime' || name[0] === '$') {
 								delete data[name];
 							} else if (value === TO_DELETE) {
 
@@ -1278,13 +1274,17 @@ FOR_BOX(function(box) {
 							}
 						});
 
-						data.lastUpdateTime = new Date();
+						if (isNotToSaveHistory !== true) {
+							data.lastUpdateTime = new Date();
+						}
 
 						removeEmptyValues(data);
 
-						updateData = {
-							$set : data
-						};
+						updateData = {};
+						
+						if (CHECK_IS_EMPTY_DATA(data) !== true) {
+							updateData.$set = data;
+						}
 
 						if ($unset !== undefined) {
 							updateData.$unset = $unset;
@@ -1296,6 +1296,10 @@ FOR_BOX(function(box) {
 						
 						if ($push !== undefined) {
 							updateData.$push = $push;
+						}
+						
+						if ($addToSet !== undefined) {
+							updateData.$addToSet = $addToSet;
 						}
 						
 						if ($pull !== undefined) {
@@ -1325,102 +1329,118 @@ FOR_BOX(function(box) {
 							},
 
 							success : function(originData) {
+								
+								//!! if update data is empty, data to be empty.
+								if (CHECK_IS_EMPTY_DATA(updateData) === true) {
+									
+									if (callback !== undefined) {
+										callback(originData, originData);
+									}
+									
+								} else {
 
-								collection.update(filter, updateData, {
-									safe : true
-								}, function(error, result) {
-		
-									if (result === 0) {
-		
-										if (notExistsHandler !== undefined) {
-											notExistsHandler();
-										} else {
-											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
-										}
-		
-									} else if (error === TO_DELETE) {
-		
-										get({
-											filter : filter
-										}, {
-		
-											error : function(errorMsg) {
-		
-												logError({
-													method : 'update',
-													data : data,
-													errorMsg : errorMsg
-												}, errorHandler);
-											},
-		
-											notExists : function() {
-		
-												if (notExistsHandler !== undefined) {
-													notExistsHandler();
-												} else {
-													console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
-												}
-											},
-		
-											success : function(savedData) {
-		
-												var
-												// update data
-												updateData = {};
-
-												EACH(data, function(value, name) {
-													updateData[name] = value;
-												});
-	
-												if ($unset !== undefined) {
-													EACH($unset, function(value, name) {
-														updateData[name] = TO_DELETE;
-													});
-												}
-												
-												if ($inc !== undefined) {
-													EACH($inc, function(notUsing, name) {
-														updateData[name] = savedData[name];
-													});
-												}
-												
-												if ($push !== undefined) {
-													EACH($push, function(notUsing, name) {
-														updateData[name] = savedData[name];
-													});
-												}
-												
-												if ($pull !== undefined) {
-													EACH($pull, function(notUsing, name) {
-														updateData[name] = savedData[name];
-													});
-												}
-												
-												if (isNotUsingHistory !== true && isNotToSaveHistory !== true) {
-													addHistory('update', id, updateData, savedData.lastUpdateTime);
-												}
-		
-												// aleady cleaned origin/saved data
-												recacheDataForUpdate(originData, savedData, function() {
-													
-													if (callback !== undefined) {
-														callback(savedData, originData);
-													}
-												});
+									collection.update(filter, updateData, {
+										safe : true
+									}, function(error, result) {
+			
+										if (result === 0) {
+			
+											if (notExistsHandler !== undefined) {
+												notExistsHandler();
+											} else {
+												console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 											}
-										});
-									}
+			
+										} else if (error === TO_DELETE) {
+			
+											get({
+												filter : filter
+											}, {
+			
+												error : function(errorMsg) {
+			
+													logError({
+														method : 'update',
+														data : data,
+														errorMsg : errorMsg
+													}, errorHandler);
+												},
+			
+												notExists : function() {
+			
+													if (notExistsHandler !== undefined) {
+														notExistsHandler();
+													} else {
+														console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+													}
+												},
+			
+												success : function(savedData) {
+			
+													var
+													// update data
+													updateData = {};
+	
+													EACH(data, function(value, name) {
+														updateData[name] = value;
+													});
 		
-									// if error is not TO_DELETE
-									else {
-		
-										logError({
-											method : 'update',
-											data : data,
-											errorMsg : error.toString()
-										}, errorHandler);
-									}
-								});
+													if ($unset !== undefined) {
+														EACH($unset, function(value, name) {
+															updateData[name] = TO_DELETE;
+														});
+													}
+													
+													if ($inc !== undefined) {
+														EACH($inc, function(notUsing, name) {
+															updateData[name] = savedData[name];
+														});
+													}
+													
+													if ($push !== undefined) {
+														EACH($push, function(notUsing, name) {
+															updateData[name] = savedData[name];
+														});
+													}
+													
+													if ($addToSet !== undefined) {
+														EACH($addToSet, function(notUsing, name) {
+															updateData[name] = savedData[name];
+														});
+													}
+													
+													if ($pull !== undefined) {
+														EACH($pull, function(notUsing, name) {
+															updateData[name] = savedData[name];
+														});
+													}
+													
+													if (isNotUsingHistory !== true && isNotToSaveHistory !== true) {
+														addHistory('update', id, updateData, savedData.lastUpdateTime);
+													}
+			
+													// aleady cleaned origin/saved data
+													recacheDataForUpdate(originData, savedData, function() {
+														
+														if (callback !== undefined) {
+															callback(savedData, originData);
+														}
+													});
+												}
+											});
+										}
+			
+										// if error is not TO_DELETE
+										else {
+			
+											logError({
+												method : 'update',
+												data : data,
+												errorMsg : error.toString()
+											}, errorHandler);
+										}
+									});
+								}
 							}
 						});
 					}
@@ -1441,6 +1461,7 @@ FOR_BOX(function(box) {
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
 					//OPTIONAL: data.$push
+					//OPTIONAL: data.$addToSet
 					//OPTIONAL: data.$pull
 					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.success
@@ -1455,6 +1476,7 @@ FOR_BOX(function(box) {
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
 					//OPTIONAL: data.$push
+					//OPTIONAL: data.$addToSet
 					//OPTIONAL: data.$pull
 					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.success
@@ -2189,7 +2211,7 @@ FOR_BOX(function(box) {
 
 					// error handler
 					errorHandler;
-
+					
 					try {
 
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -2307,6 +2329,12 @@ FOR_BOX(function(box) {
 				});
 
 				waitingRemoveIndexInfos = undefined;
+				
+				EACH(waitingFindAllIndexesInfos, function(info) {
+					findAllIndexes(info.callbackOrHandlers);
+				});
+
+				waitingFindAllIndexesInfos = undefined;
 			});
 		}
 	});

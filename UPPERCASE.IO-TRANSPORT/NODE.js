@@ -1,4 +1,10 @@
 /*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
+/*
  * create multi protocol socket server.
  */
 global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({

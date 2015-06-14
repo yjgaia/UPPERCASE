@@ -1,4 +1,10 @@
 /*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
+/*
  * connect to UPPERCASE.IO server.
  */
 global.CONNECT_TO_IO_SERVER = METHOD({

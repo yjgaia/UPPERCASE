@@ -1,3 +1,9 @@
+/*
+
+Welcome to UPPERCASE.IO! (http://uppercase.io)
+
+*/
+
 global.BOOT = function(params) {
 	'use strict';
 	//OPTIONAL: params
