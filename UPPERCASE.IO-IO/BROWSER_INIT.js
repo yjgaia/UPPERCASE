@@ -46,8 +46,13 @@ READY(function() {
 					port : CONFIG.webServerPort,
 					uri : '__CHECK_ALIVE'
 				}, function() {
-					reloadInterval.remove();
-					location.reload();
+					
+					if (reloadInterval !== undefined) {
+						reloadInterval.remove();
+						reloadInterval = undefined;
+						
+						location.reload();
+					}
 				});
 			}));
 		});
