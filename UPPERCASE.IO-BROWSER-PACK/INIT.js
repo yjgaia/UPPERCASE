@@ -38,13 +38,15 @@ READY(function() {
 
 		on('__DISCONNECTED', function() {
 
-			// retry.
-			INTERVAL(1, RAR(function() {
+			var
+			// reload interval
+			reloadInterval = INTERVAL(1, RAR(function() {
 
 				GET({
 					port : CONFIG.webServerPort,
 					uri : '__CHECK_ALIVE'
 				}, function() {
+					reloadInterval.remove();
 					location.reload();
 				});
 			}));
