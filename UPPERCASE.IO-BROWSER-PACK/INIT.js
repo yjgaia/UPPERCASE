@@ -50,4 +50,10 @@ READY(function() {
 			}));
 		});
 	});
+	
+	EVENT('beforeunload', function() {
+		if (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT') {
+			return BROWSER_CONFIG.beforeUnloadMessage;
+		}
+	});
 });

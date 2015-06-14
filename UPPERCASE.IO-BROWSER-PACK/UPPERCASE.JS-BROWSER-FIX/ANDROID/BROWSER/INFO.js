@@ -61,13 +61,14 @@ OVERRIDE(INFO, function(origin) {
 			};
 			
 			// android chrome above 32 version, not exists tap delay.
+			// android stuck browser? whatever...
 			self.checkIsExistsTapDelay = checkIsExistsTapDelay = function() {
 	
 				var
 				// browser info
 				browserInfo = self.getBrowserInfo();
 	
-				if (browserInfo.name !== 'Chrome' || INTEGER(browserInfo.version) < 32) {
+				if (browserInfo.name === 'Chrome' && INTEGER(browserInfo.version) < 32) {
 					return true;
 				}
 				

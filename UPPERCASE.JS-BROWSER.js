@@ -2434,11 +2434,19 @@ global.EVENT_LOW = CLASS({
 
 		inner.innerHandler = innerHandler = function(e) {
 			//REQUIRED: e
-
-			return eventHandler(E({
+			
+			var
+			// result
+			result = eventHandler(E({
 				e : e,
 				el : el
 			}), node);
+			
+			if (name === 'beforeunload' && result !== undefined) {
+				e.returnValue = result;
+			}
+
+			return result;
 		};
 
 		el.addEventListener(name, innerHandler, false);

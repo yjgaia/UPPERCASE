@@ -55,4 +55,6 @@ NODE_CONFIG : {
 * `uploadServerHosts` 업로드 서버들의 host를 설정합니다.
 
 ## BROWSER_CONFIG
-[UPPERCASE.JS의 BROWSER_CONFIG 설정](https://github.com/UPPERCASE-Series/UPPERCASE.JS/blob/master/README_KOR.md#configuration)과 같습니다.
+[UPPERCASE.JS의 BROWSER_CONFIG 설정](https://github.com/UPPERCASE-Series/UPPERCASE.JS/blob/master/README_KOR.md#configuration)에 아래 설정들을 추가로 지정할 수 있습니다.
+
+* `beforeUnloadMessage` `INPUT`이나 `TEXTAREA` 등에 포커스 되어 있을때, 페이지가 이동하려 하면 띄어주는 메시지를 설정합니다.

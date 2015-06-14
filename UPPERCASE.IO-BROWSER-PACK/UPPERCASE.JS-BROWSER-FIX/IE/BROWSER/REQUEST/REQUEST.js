@@ -107,15 +107,23 @@ OVERRIDE(REQUEST, function(origin) {
 	
 			// GET request.
 			if (method === 'GET') {
-				req.open(method, url + '?' + paramStr);
-				req.send();
+				try {
+					req.open(method, url + '?' + paramStr);
+					req.send();
+				} catch (e) {
+					// ignore.
+				}
 			}
 	
 			// other request.
 			else {
-				req.open(method, url);
-				req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-				req.send(paramStr);
+				try {
+					req.open(method, url);
+					req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+					req.send(paramStr);
+				} catch (e) {
+					// ignore.
+				}
 			}
 		}
 	});
