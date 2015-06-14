@@ -23,6 +23,25 @@ RUN(function() {
 	// fix INFO.
 	loadFixScript('BROWSER/INFO');
 
+	// when Android version is less than 4.2, use hashbang.
+	if (ANDROID.version < 4.2) {
+		
+		// fix HREF.
+		loadFixScript('../BROWSER/VIEW/HREF');
+		
+		// fix GO.
+		loadFixScript('../BROWSER/VIEW/GO');
+		
+		// fix URI.
+		loadFixScript('../BROWSER/VIEW/URI');
+		
+		// fix MATCH_VIEW.
+		loadFixScript('BROWSER/VIEW/MATCH_VIEW');
+		
+		// fix REFRESH.
+		loadFixScript('../BROWSER/VIEW/REFRESH');
+	}
+
 	/**
 	 * fix BROWSER/DOM.
 	 */
