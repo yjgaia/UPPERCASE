@@ -11,6 +11,9 @@ RUN(function() {
 	};
 
 	global.IOS = {};
+	
+	// get iOS version.
+	IOS.version = REAL((navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/)[1]);
 
 	/**
 	 * fix BROWSER.
