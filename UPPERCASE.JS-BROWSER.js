@@ -779,6 +779,9 @@ global.NODE = CLASS({
 
 		// origin display
 		originDisplay,
+		
+		// data
+		data,
 
 		// set wrapper dom.
 		setWrapperDom,
@@ -834,11 +837,11 @@ global.NODE = CLASS({
 		// empty.
 		empty,
 
-		// get parent.
-		getParent,
-
 		// set parent.
 		setParent,
+
+		// get parent.
+		getParent,
 
 		// get children.
 		getChildren,
@@ -880,7 +883,13 @@ global.NODE = CLASS({
 		show,
 
 		// check is showing.
-		checkIsShowing;
+		checkIsShowing,
+		
+		// set data.
+		setData,
+		
+		// get data.
+		getData;
 
 		inner.setWrapperDom = setWrapperDom = function(dom) {
 			//REQUIRED: dom
@@ -1261,9 +1270,13 @@ global.NODE = CLASS({
 					node : self
 				});
 
+				// free memory.
 				wrapperEl = undefined;
 				contentEl = undefined;
 			}
+			
+			// free memory.
+			data = undefined;
 		};
 
 		self.empty = empty = function() {
@@ -1272,14 +1285,14 @@ global.NODE = CLASS({
 			});
 		};
 
-		self.getParent = getParent = function() {
-			return parentNode;
-		};
-
 		self.setParent = setParent = function(node) {
 			//OPTIONAL: node
 
 			parentNode = node;
+		};
+		
+		self.getParent = getParent = function() {
+			return parentNode;
 		};
 
 		self.getChildren = getChildren = function() {
@@ -1432,6 +1445,16 @@ global.NODE = CLASS({
 			} else {
 				return parentNode !== undefined && parentNode.checkIsShowing() === true && getStyle('display') !== 'none';
 			}
+		};
+		
+		self.setData = setData = function(_data) {
+			//REQUIRED: _data
+			
+			data = _data;
+		};
+		
+		self.getData = getData = function() {
+			return data;
 		};
 	},
 
@@ -3198,56 +3221,68 @@ global.FORM = CLASS({
 			});
 		}
 
-		self.getData = getData = function() {
-
-			var
-			// data
-			data = {},
-
-			// f.
-			f = function(node) {
-				//REQUIRED: node
-
-				EACH(node.getChildren(), function(child) {
-
-					if (child.getValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
-						data[child.getName()] = child.getValue();
-					}
-
-					f(child);
-				});
+		OVERRIDE(self.setData, function(origin) {
+			
+			self.getData = getData = function() {
+	
+				var
+				// data
+				data = origin(),
+	
+				// f.
+				f = function(node) {
+					//REQUIRED: node
+	
+					EACH(node.getChildren(), function(child) {
+	
+						if (child.getValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
+							data[child.getName()] = child.getValue();
+						}
+	
+						f(child);
+					});
+				};
+				
+				if (data === undefined) {
+					data = {};
+				}
+	
+				f(self);
+	
+				return data;
 			};
+		});
 
-			f(self);
-
-			return data;
-		};
-
-		self.setData = setData = function(data) {
-			//REQUIRED: data
-
-			var
-			// f.
-			f = function(node) {
-				//REQUIRED: node
-
-				EACH(node.getChildren(), function(child) {
-
-					var
-					// value
-					value;
-
-					if (child.setValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
-						value = data[child.getName()];
-						child.setValue(value === undefined ? '' : value);
-					}
-
-					f(child);
-				});
+		OVERRIDE(self.setData, function(origin) {
+			
+			self.setData = setData = function(data) {
+				//REQUIRED: data
+	
+				var
+				// f.
+				f = function(node) {
+					//REQUIRED: node
+	
+					EACH(node.getChildren(), function(child) {
+	
+						var
+						// value
+						value;
+	
+						if (child.setValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
+							value = data[child.getName()];
+							child.setValue(value === undefined ? '' : value);
+						}
+	
+						f(child);
+					});
+				};
+	
+				f(self);
+				
+				origin(data);
 			};
-
-			f(self);
-		};
+		});
 
 		self.submit = submit = function(isRealSubmit) {
 			//OPTIONAL: isRealSubmit
