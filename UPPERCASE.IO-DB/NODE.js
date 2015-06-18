@@ -1435,7 +1435,7 @@ FOR_BOX(function(box) {
 											} else {
 												console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 											}
-			
+
 										} else if (error === TO_DELETE) {
 			
 											get({
