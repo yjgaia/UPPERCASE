@@ -324,27 +324,76 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 		}
 		
 		if ($push !== undefined) {
+			
 			EACH($push, function(value, name) {
+				
 				if (CHECK_IS_ARRAY(savedData[name]) === true) {
-					savedData[name].push(value);
+					
+					if (CHECK_IS_DATA(value) === true) {
+						
+						if (value.$each !== undefined) {
+							
+							EACH(value.$each, function(v, i) {
+								if (value.$position !== undefined) {
+									savedData[name].splice(value.$position + i, 0, v);
+								} else {
+									savedData[name].push(v);
+								}
+							});
+							
+						} else {
+							savedData[name].push(value);
+						}
+						
+					} else {
+						savedData[name].push(value);
+					}
 				}
 			});
 		}
 		
 		if ($addToSet !== undefined) {
+			
 			EACH($addToSet, function(value, name) {
-				if (CHECK_IS_ARRAY(savedData[name]) === true && CHECK_IS_IN({
-					array : savedData[name],
-					value : value
-				}) !== true) {
-					savedData[name].push(value);
+				
+				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+					
+					if (CHECK_IS_DATA(value) === true) {
+						
+						if (value.$each !== undefined) {
+							
+							EACH(value.$each, function(value) {
+								if (CHECK_IS_IN({
+									array : savedData[name],
+									value : value
+								}) !== true) {
+									savedData[name].push(value);
+								}
+							});
+							
+						} else if (CHECK_IS_IN({
+							array : savedData[name],
+							value : value
+						}) !== true) {
+							savedData[name].push(value);
+						}
+						
+					} else if (CHECK_IS_IN({
+						array : savedData[name],
+						value : value
+					}) !== true) {
+						savedData[name].push(value);
+					}
 				}
 			});
 		}
 		
 		if ($pull !== undefined) {
+			
 			EACH($pull, function(value, name) {
+				
 				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+					
 					REMOVE({
 						array : savedData[name],
 						value : value
@@ -1245,27 +1294,76 @@ global.SHARED_DB = CLASS(function(cls) {
 		}
 		
 		if ($push !== undefined) {
+			
 			EACH($push, function(value, name) {
+				
 				if (CHECK_IS_ARRAY(savedData[name]) === true) {
-					savedData[name].push(value);
+					
+					if (CHECK_IS_DATA(value) === true) {
+						
+						if (value.$each !== undefined) {
+							
+							EACH(value.$each, function(v, i) {
+								if (value.$position !== undefined) {
+									savedData[name].splice(value.$position + i, 0, v);
+								} else {
+									savedData[name].push(v);
+								}
+							});
+							
+						} else {
+							savedData[name].push(value);
+						}
+						
+					} else {
+						savedData[name].push(value);
+					}
 				}
 			});
 		}
 		
 		if ($addToSet !== undefined) {
+			
 			EACH($addToSet, function(value, name) {
-				if (CHECK_IS_ARRAY(savedData[name]) === true && CHECK_IS_IN({
-					array : savedData[name],
-					value : value
-				}) !== true) {
-					savedData[name].push(value);
+				
+				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+					
+					if (CHECK_IS_DATA(value) === true) {
+						
+						if (value.$each !== undefined) {
+							
+							EACH(value.$each, function(value) {
+								if (CHECK_IS_IN({
+									array : savedData[name],
+									value : value
+								}) !== true) {
+									savedData[name].push(value);
+								}
+							});
+							
+						} else if (CHECK_IS_IN({
+							array : savedData[name],
+							value : value
+						}) !== true) {
+							savedData[name].push(value);
+						}
+						
+					} else if (CHECK_IS_IN({
+						array : savedData[name],
+						value : value
+					}) !== true) {
+						savedData[name].push(value);
+					}
 				}
 			});
 		}
 		
 		if ($pull !== undefined) {
+			
 			EACH($pull, function(value, name) {
+				
 				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+					
 					REMOVE({
 						array : savedData[name],
 						value : value
