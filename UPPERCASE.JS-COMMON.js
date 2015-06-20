@@ -2268,7 +2268,7 @@ global.REMOVE = METHOD({
 
 					EACH(data, function(_value, name) {
 
-						if (_value === value) {
+						if (CHECK_ARE_SAME([_value, value]) === true) {
 
 							REMOVE({
 								data : data,
@@ -2282,7 +2282,7 @@ global.REMOVE = METHOD({
 
 					EACH(array, function(_value, key) {
 
-						if (_value === value) {
+						if (CHECK_ARE_SAME([_value, value]) === true) {
 
 							REMOVE({
 								array : array,

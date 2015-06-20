@@ -145,6 +145,24 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					// remove cpu shared value.
 					on('__CPU_SHARED_STORE_REMOVE', CPU_SHARED_STORE.remove);
 
+					// create shared data.
+					on('__SHARED_DB_CREATE', SHARED_DB.create);
+					
+					// update shared data.
+					on('__SHARED_DB_UPDATE', SHARED_DB.update);
+
+					// remove shared data.
+					on('__SHARED_DB_REMOVE', SHARED_DB.remove);
+
+					// create cpu shared data.
+					on('__CPU_SHARED_DB_CREATE', CPU_SHARED_DB.create);
+					
+					// update cpu shared data.
+					on('__CPU_SHARED_DB_UPDATE', CPU_SHARED_DB.update);
+
+					// remove cpu shared data.
+					on('__CPU_SHARED_DB_REMOVE', CPU_SHARED_DB.remove);
+
 					m.off = off = function(methodName) {
 						delete methodMap[methodName];
 					};
@@ -167,17 +185,432 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 });
 
 /**
+ * CPU clustering shared db class
+ */
+global.CPU_SHARED_DB = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// storages
+	storages = {},
+
+	// remove delay map
+	removeDelayMap = {},
+
+	// create.
+	create,
+	
+	// update.
+	update,
+
+	// get.
+	get,
+	
+	// list.
+	list,
+
+	// remove.
+	remove;
+
+	cls.create = create = function(params, remove) {
+		//REQUIRED: params
+		//REQUIRED: params.dbName
+		//REQUIRED: params.id
+		//REQUIRED: params.data
+		//OPTIONAL: params.removeAfterSeconds
+		//OPTIONAL: remove
+
+		var
+		// db name
+		dbName = params.dbName,
+		
+		// id
+		id = params.id,
+
+		// data
+		data = params.data,
+
+		// remove after seconds
+		removeAfterSeconds = params.removeAfterSeconds,
+		
+		// storage
+		storage = storages[dbName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[dbName];
+		
+		if (storage === undefined) {
+			storage = storages[dbName] = {};
+		}
+
+		storage[id] = data;
+		
+		if (removeDelays === undefined) {
+			removeDelays = removeDelayMap[dbName] = {};
+		}
+
+		if (removeDelays[id] !== undefined) {
+			removeDelays[id].remove();
+			delete removeDelays[id];
+		}
+
+		if (removeAfterSeconds !== undefined) {
+			removeDelays[id] = DELAY(removeAfterSeconds, remove);
+		}
+	};
+	
+	cls.update = update = function(params, remove) {
+		//REQUIRED: params
+		//REQUIRED: params.dbName
+		//REQUIRED: params.id
+		//REQUIRED: params.data
+		//OPTIONAL: params.data.$inc
+		//OPTIONAL: params.data.$push
+		//OPTIONAL: params.data.$addToSet
+		//OPTIONAL: params.data.$pull
+		//OPTIONAL: params.removeAfterSeconds
+		//OPTIONAL: remove
+
+		var
+		// db name
+		dbName = params.dbName,
+		
+		// id
+		id = params.id,
+
+		// data
+		data = params.data,
+		
+		// $inc
+		$inc = data.$inc,
+		
+		// $push
+		$push = data.$push,
+		
+		// $addToSet
+		$addToSet = data.$addToSet,
+		
+		// $pull
+		$pull = data.$pull,
+
+		// remove after seconds
+		removeAfterSeconds = params.removeAfterSeconds,
+		
+		// storage
+		storage = storages[dbName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[dbName],
+		
+		// saved data
+		savedData;
+		
+		if (storage === undefined) {
+			storage = storages[dbName] = {};
+		}
+		
+		delete data.$inc;
+		delete data.$push;
+		delete data.$addToSet;
+		delete data.$pull;
+		
+		savedData = storage[id];
+		savedData = storage[id] = savedData === undefined ? COPY(data) : COMBINE([savedData, data]);
+		
+		if ($inc !== undefined) {
+			EACH($inc, function(value, name) {
+				savedData[name] += value;
+			});
+		}
+		
+		if ($push !== undefined) {
+			EACH($push, function(value, name) {
+				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+					savedData[name].push(value);
+				}
+			});
+		}
+		
+		if ($addToSet !== undefined) {
+			EACH($addToSet, function(value, name) {
+				if (CHECK_IS_ARRAY(savedData[name]) === true && CHECK_IS_IN({
+					array : savedData[name],
+					value : value
+				}) !== true) {
+					savedData[name].push(value);
+				}
+			});
+		}
+		
+		if ($pull !== undefined) {
+			EACH($pull, function(value, name) {
+				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+					REMOVE({
+						array : savedData[name],
+						value : value
+					});
+				}
+			});
+		}
+		
+		if (removeDelays === undefined) {
+			removeDelays = removeDelayMap[dbName] = {};
+		}
+
+		if (removeDelays[id] !== undefined) {
+			removeDelays[id].remove();
+			delete removeDelays[id];
+		}
+
+		if (removeAfterSeconds !== undefined) {
+			removeDelays[id] = DELAY(removeAfterSeconds, remove);
+		}
+	};
+
+	cls.get = get = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.dbName
+		//REQUIRED: params.id
+		
+		var
+		// db name
+		dbName = params.dbName,
+		
+		// id
+		id = params.id,
+		
+		// storage
+		storage = storages[dbName];
+		
+		if (storage !== undefined) {
+			return storage[id];
+		}
+	};
+	
+	cls.list = list = function(dbName) {
+		//REQUIRED: dbName
+		
+		var
+		// storage
+		storage = storages[dbName];
+		
+		return storage === undefined ? {} : storage;
+	};
+
+	cls.remove = remove = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.dbName
+		//REQUIRED: params.id
+		
+		var
+		// db name
+		dbName = params.dbName,
+		
+		// id
+		id = params.id,
+		
+		// storage
+		storage = storages[dbName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[dbName];
+		
+		if (storage !== undefined) {
+			delete storage[id];
+		}
+
+		if (removeDelays !== undefined && removeDelays[id] !== undefined) {
+			removeDelays[id].remove();
+			delete removeDelays[id];
+		}
+	};
+
+	return {
+
+		init : function(inner, self, dbName) {
+			//REQUIRED: dbName
+
+			var
+			// create.
+			create,
+			
+			// update.
+			update,
+			
+			// list.
+			list,
+
+			// remove.
+			remove;
+
+			self.create = create = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.id
+				//REQUIRED: params.data
+				//OPTIONAL: params.removeAfterSeconds
+
+				var
+				// id
+				id = params.id,
+
+				// data
+				data = params.data,
+
+				// remove after seconds
+				removeAfterSeconds = params.removeAfterSeconds;
+
+				cls.create({
+					dbName : dbName,
+					id : id,
+					data : data,
+					removeAfterSeconds : removeAfterSeconds
+				}, function() {
+					remove(id);
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_DB_CREATE',
+						data : {
+							dbName : dbName,
+							id : id,
+							data : data
+						}
+					});
+				}
+			};
+			
+			self.update = update = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.id
+				//REQUIRED: params.data
+				//OPTIONAL: params.data.$inc
+				//OPTIONAL: params.data.$push
+				//OPTIONAL: params.data.$addToSet
+				//OPTIONAL: params.data.$pull
+				//OPTIONAL: params.removeAfterSeconds
+
+				var
+				// id
+				id = params.id,
+
+				// data
+				data = params.data,
+
+				// remove after seconds
+				removeAfterSeconds = params.removeAfterSeconds;
+
+				cls.update({
+					dbName : dbName,
+					id : id,
+					data : data,
+					removeAfterSeconds : removeAfterSeconds
+				}, function() {
+					remove(id);
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_DB_UPDATE',
+						data : {
+							dbName : dbName,
+							id : id,
+							data : data
+						}
+					});
+				}
+			};
+
+			self.get = get = function(id) {
+				//REQUIRED: id
+
+				return cls.get({
+					dbName : dbName,
+					id : id
+				});
+			};
+			
+			self.list = list = function() {
+				return cls.list(dbName);
+			};
+
+			self.remove = remove = function(id) {
+				//REQUIRED: id
+
+				cls.remove({
+					dbName : dbName,
+					id : id
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_DB_REMOVE',
+						data : {
+							dbName : dbName,
+							id : id
+						}
+					});
+				}
+			};
+		}
+	};
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.CPU_SHARED_DB = CLASS({
+
+		init : function(inner, self, name) {
+			//REQUIRED: name
+
+			var
+			// shared db
+			sharedDB = CPU_SHARED_DB(box.boxName + '.' + name),
+
+			// create.
+			create,
+			
+			// update.
+			update,
+
+			// get.
+			get,
+			
+			// list.
+			list,
+
+			// remove.
+			remove;
+
+			self.create = create = sharedDB.create;
+
+			self.update = update = sharedDB.update;
+
+			self.get = get = sharedDB.get;
+			
+			self.list = list = sharedDB.list;
+
+			self.remove = remove = sharedDB.remove;
+		}
+	});
+});
+
+/**
  * CPU clustering shared store class
  */
 global.CPU_SHARED_STORE = CLASS(function(cls) {
 	'use strict';
 
 	var
-	// static storage
-	storage = {},
+	// storages
+	storages = {},
 
-	// remove delays
-	removeDelays = {},
+	// remove delay map
+	removeDelayMap = {},
 
 	// save.
 	save,
@@ -193,62 +626,212 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params
-		//REQUIRED: params.fullName
+		//REQUIRED: params.storeName
+		//REQUIRED: params.name
 		//REQUIRED: params.value
 		//OPTIONAL: params.removeAfterSeconds
 		//OPTIONAL: remove
 
 		var
-		// full name
-		fullName = params.fullName,
+		// store name
+		storeName = params.storeName,
+
+		// name
+		name = params.name,
 
 		// value
 		value = params.value,
 
 		// remove after seconds
-		removeAfterSeconds = params.removeAfterSeconds;
+		removeAfterSeconds = params.removeAfterSeconds,
+		
+		// storage
+		storage = storages[storeName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[storeName];
+		
+		if (storage === undefined) {
+			storage = storages[storeName] = {};
+		}
 
-		storage[fullName] = value;
+		storage[name] = value;
 
-		if (removeDelays[fullName] !== undefined) {
-			removeDelays[fullName].remove();
-			delete removeDelays[fullName];
+		if (removeDelays === undefined) {
+			removeDelays = removeDelayMap[storeName] = {};
+		}
+
+		if (removeDelays[name] !== undefined) {
+			removeDelays[name].remove();
+			delete removeDelays[name];
 		}
 
 		if (removeAfterSeconds !== undefined) {
-			removeDelays[fullName] = DELAY(removeAfterSeconds, remove);
+			removeDelays[name] = DELAY(removeAfterSeconds, remove);
 		}
 	};
 
-	cls.get = get = function(fullName) {
-		//REQUIRED: fullName
-
-		return storage[fullName];
+	cls.get = get = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//REQUIRED: params.name
+		
+		var
+		// store name
+		storeName = params.storeName,
+		
+		// name
+		name = params.name,
+		
+		// storage
+		storage = storages[storeName];
+		
+		if (storage !== undefined) {
+			return storage[name];
+		}
 	};
 	
-	cls.list = list = function() {
-		return storage;
+	cls.list = list = function(storeName) {
+		//REQUIRED: storeName
+		
+		var
+		// storage
+		storage = storages[storeName];
+		
+		return storage === undefined ? {} : storage;
 	};
 
-	cls.remove = remove = function(fullName) {
-		//REQUIRED: fullName
+	cls.remove = remove = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//REQUIRED: params.name
+		
+		var
+		// store name
+		storeName = params.storeName,
+		
+		// name
+		name = params.name,
+		
+		// storage
+		storage = storages[storeName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[storeName];
+		
+		if (storage !== undefined) {
+			delete storage[name];
+		}
 
-		delete storage[fullName];
-
-		if (removeDelays[fullName] !== undefined) {
-			removeDelays[fullName].remove();
-			delete removeDelays[fullName];
+		if (removeDelays !== undefined && removeDelays[name] !== undefined) {
+			removeDelays[name].remove();
+			delete removeDelays[name];
 		}
 	};
 
 	return {
 
+		init : function(inner, self, storeName) {
+			//REQUIRED: storeName
+
+			var
+			// save.
+			save,
+
+			// get.
+			get,
+			
+			// list.
+			list,
+
+			// remove.
+			remove;
+
+			self.save = save = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.name
+				//REQUIRED: params.value
+				//OPTIONAL: params.removeAfterSeconds
+
+				var
+				// name
+				name = params.name,
+
+				// value
+				value = params.value,
+
+				// remove after seconds
+				removeAfterSeconds = params.removeAfterSeconds;
+
+				cls.save({
+					storeName : storeName,
+					name : name,
+					value : value,
+					removeAfterSeconds : removeAfterSeconds
+				}, function() {
+					remove(name);
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_STORE_SAVE',
+						data : {
+							storeName : storeName,
+							name : name,
+							value : value
+						}
+					});
+				}
+			};
+
+			self.get = get = function(name) {
+				//REQUIRED: name
+
+				return cls.get({
+					storeName : storeName,
+					name : name
+				});
+			};
+			
+			self.list = list = function() {
+				return cls.list(storeName);
+			};
+
+			self.remove = remove = function(name) {
+				//REQUIRED: name
+
+				cls.remove({
+					storeName : storeName,
+					name : name
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_STORE_REMOVE',
+						data : {
+							storeName : storeName,
+							name : name
+						}
+					});
+				}
+			};
+		}
+	};
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.CPU_SHARED_STORE = CLASS({
+
 		init : function(inner, self, name) {
 			//REQUIRED: name
 
 			var
-			// gen full name.
-			getFullName,
+			// shared store
+			sharedStore = CPU_SHARED_STORE(box.boxName + '.' + name),
 
 			// save.
 			save,
@@ -262,90 +845,15 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 			// remove.
 			remove;
 
-			inner.getFullName = getFullName = function(_name) {
-				return name + '.' + _name;
-			};
+			self.save = save = sharedStore.save;
 
-			self.save = save = function(params) {
-				//REQUIRED: params
-				//REQUIRED: params.name
-				//REQUIRED: params.value
-				//OPTIONAL: params.removeAfterSeconds
-
-				var
-				// name
-				name = params.name,
-
-				// full name
-				fullName = getFullName(name),
-
-				// value
-				value = params.value,
-
-				// remove after seconds
-				removeAfterSeconds = params.removeAfterSeconds;
-
-				cls.save({
-					fullName : fullName,
-					value : value,
-					removeAfterSeconds : removeAfterSeconds
-				}, function() {
-					remove(name);
-				});
-
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
-						methodName : '__CPU_SHARED_STORE_SAVE',
-						data : {
-							fullName : fullName,
-							value : value
-						}
-					});
-				}
-			};
-
-			self.get = get = function(name) {
-				//REQUIRED: name
-
-				return cls.get(getFullName(name));
-			};
+			self.get = get = sharedStore.get;
 			
-			self.list = list = function() {
-				
-				var
-				// values
-				values = {};
-				
-				EACH(cls.list(), function(value, fullName) {
-					
-					if (fullName.substring(0, name.length + 1) === name + '.') {
-						values[fullName.substring(name.length + 1)] = value;
-					}
-				});
-				
-				return values;
-			};
+			self.list = list = sharedStore.list;
 
-			self.remove = remove = function(name) {
-				//REQUIRED: name
-
-				var
-				// full name
-				fullName = getFullName(name);
-
-				cls.remove(fullName);
-
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
-						methodName : '__CPU_SHARED_STORE_REMOVE',
-						data : fullName
-					});
-				}
-			};
+			self.remove = remove = sharedStore.remove;
 		}
-	};
+	});
 });
 
 /*
@@ -519,15 +1027,57 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// remove shared value.
-			on('__SHARED_STORE_REMOVE', function(fullName) {
+			on('__SHARED_STORE_REMOVE', function(params) {
 
-				SHARED_STORE.remove(fullName);
+				SHARED_STORE.remove(params);
 
 				if (CPU_CLUSTERING.broadcast !== undefined) {
 
 					CPU_CLUSTERING.broadcast({
 						methodName : '__SHARED_STORE_REMOVE',
-						data : fullName
+						data : params
+					});
+				}
+			});
+
+			// create shared data.
+			on('__SHARED_DB_CREATE', function(params) {
+
+				SHARED_DB.create(params);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_CREATE',
+						data : params
+					});
+				}
+			});
+			
+			// update shared data.
+			on('__SHARED_DB_UPDATE', function(params) {
+
+				SHARED_DB.update(params);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_UPDATE',
+						data : params
+					});
+				}
+			});
+
+			// remove shared data.
+			on('__SHARED_DB_REMOVE', function(params) {
+
+				SHARED_DB.remove(params);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_REMOVE',
+						data : params
 					});
 				}
 			});
@@ -556,17 +1106,470 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 });
 
 /**
+ * CPU and server clustering shared db class
+ */
+global.SHARED_DB = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// storages
+	storages = {},
+
+	// remove delay map
+	removeDelayMap = {},
+
+	// create.
+	create,
+	
+	// update.
+	update,
+
+	// get.
+	get,
+	
+	// list.
+	list,
+
+	// remove.
+	remove;
+
+	cls.create = create = function(params, remove) {
+		//REQUIRED: params
+		//REQUIRED: params.dbName
+		//REQUIRED: params.id
+		//REQUIRED: params.data
+		//OPTIONAL: params.removeAfterSeconds
+		//OPTIONAL: remove
+
+		var
+		// db name
+		dbName = params.dbName,
+		
+		// id
+		id = params.id,
+
+		// data
+		data = params.data,
+
+		// remove after seconds
+		removeAfterSeconds = params.removeAfterSeconds,
+		
+		// storage
+		storage = storages[dbName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[dbName];
+		
+		if (storage === undefined) {
+			storage = storages[dbName] = {};
+		}
+
+		storage[id] = data;
+		
+		if (removeDelays === undefined) {
+			removeDelays = removeDelayMap[dbName] = {};
+		}
+
+		if (removeDelays[id] !== undefined) {
+			removeDelays[id].remove();
+			delete removeDelays[id];
+		}
+
+		if (removeAfterSeconds !== undefined) {
+			removeDelays[id] = DELAY(removeAfterSeconds, remove);
+		}
+	};
+	
+	cls.update = update = function(params, remove) {
+		//REQUIRED: params
+		//REQUIRED: params.dbName
+		//REQUIRED: params.id
+		//REQUIRED: params.data
+		//OPTIONAL: params.data.$inc
+		//OPTIONAL: params.data.$push
+		//OPTIONAL: params.data.$addToSet
+		//OPTIONAL: params.data.$pull
+		//OPTIONAL: params.removeAfterSeconds
+		//OPTIONAL: remove
+
+		var
+		// db name
+		dbName = params.dbName,
+		
+		// id
+		id = params.id,
+
+		// data
+		data = params.data,
+		
+		// $inc
+		$inc = data.$inc,
+		
+		// $push
+		$push = data.$push,
+		
+		// $addToSet
+		$addToSet = data.$addToSet,
+		
+		// $pull
+		$pull = data.$pull,
+
+		// remove after seconds
+		removeAfterSeconds = params.removeAfterSeconds,
+		
+		// storage
+		storage = storages[dbName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[dbName],
+		
+		// saved data
+		savedData;
+		
+		if (storage === undefined) {
+			storage = storages[dbName] = {};
+		}
+		
+		delete data.$inc;
+		delete data.$push;
+		delete data.$addToSet;
+		delete data.$pull;
+		
+		savedData = storage[id];
+		savedData = storage[id] = savedData === undefined ? COPY(data) : COMBINE([savedData, data]);
+		
+		if ($inc !== undefined) {
+			EACH($inc, function(value, name) {
+				savedData[name] += value;
+			});
+		}
+		
+		if ($push !== undefined) {
+			EACH($push, function(value, name) {
+				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+					savedData[name].push(value);
+				}
+			});
+		}
+		
+		if ($addToSet !== undefined) {
+			EACH($addToSet, function(value, name) {
+				if (CHECK_IS_ARRAY(savedData[name]) === true && CHECK_IS_IN({
+					array : savedData[name],
+					value : value
+				}) !== true) {
+					savedData[name].push(value);
+				}
+			});
+		}
+		
+		if ($pull !== undefined) {
+			EACH($pull, function(value, name) {
+				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+					REMOVE({
+						array : savedData[name],
+						value : value
+					});
+				}
+			});
+		}
+		
+		if (removeDelays === undefined) {
+			removeDelays = removeDelayMap[dbName] = {};
+		}
+
+		if (removeDelays[id] !== undefined) {
+			removeDelays[id].remove();
+			delete removeDelays[id];
+		}
+
+		if (removeAfterSeconds !== undefined) {
+			removeDelays[id] = DELAY(removeAfterSeconds, remove);
+		}
+	};
+
+	cls.get = get = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.dbName
+		//REQUIRED: params.id
+		
+		var
+		// db name
+		dbName = params.dbName,
+		
+		// id
+		id = params.id,
+		
+		// storage
+		storage = storages[dbName];
+		
+		if (storage !== undefined) {
+			return storage[id];
+		}
+	};
+	
+	cls.list = list = function(dbName) {
+		//REQUIRED: dbName
+		
+		var
+		// storage
+		storage = storages[dbName];
+		
+		return storage === undefined ? {} : storage;
+	};
+
+	cls.remove = remove = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.dbName
+		//REQUIRED: params.id
+		
+		var
+		// db name
+		dbName = params.dbName,
+		
+		// id
+		id = params.id,
+		
+		// storage
+		storage = storages[dbName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[dbName];
+		
+		if (storage !== undefined) {
+			delete storage[id];
+		}
+
+		if (removeDelays !== undefined && removeDelays[id] !== undefined) {
+			removeDelays[id].remove();
+			delete removeDelays[id];
+		}
+	};
+
+	return {
+
+		init : function(inner, self, dbName) {
+			//REQUIRED: dbName
+
+			var
+			// create.
+			create,
+			
+			// update.
+			update,
+
+			// get.
+			get,
+			
+			// list.
+			list,
+
+			// remove.
+			remove;
+
+			self.create = create = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.id
+				//REQUIRED: params.data
+				//OPTIONAL: params.removeAfterSeconds
+
+				var
+				// id
+				id = params.id,
+
+				// data
+				data = params.data,
+
+				// remove after seconds
+				removeAfterSeconds = params.removeAfterSeconds;
+
+				cls.create({
+					dbName : dbName,
+					id : id,
+					data : data,
+					removeAfterSeconds : removeAfterSeconds
+				}, function() {
+					remove(id);
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_CREATE',
+						data : {
+							dbName : dbName,
+							id : id,
+							data : data
+						}
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_CREATE',
+						data : {
+							dbName : dbName,
+							id : id,
+							data : data
+						}
+					});
+				}
+			};
+			
+			self.update = update = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.id
+				//REQUIRED: params.data
+				//OPTIONAL: params.data.$inc
+				//OPTIONAL: params.data.$push
+				//OPTIONAL: params.data.$addToSet
+				//OPTIONAL: params.data.$pull
+				//OPTIONAL: params.removeAfterSeconds
+
+				var
+				// id
+				id = params.id,
+
+				// data
+				data = params.data,
+
+				// remove after seconds
+				removeAfterSeconds = params.removeAfterSeconds;
+
+				cls.update({
+					dbName : dbName,
+					id : id,
+					data : data,
+					removeAfterSeconds : removeAfterSeconds
+				}, function() {
+					remove(id);
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_UPDATE',
+						data : {
+							dbName : dbName,
+							id : id,
+							data : data
+						}
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_UPDATE',
+						data : {
+							dbName : dbName,
+							id : id,
+							data : data
+						}
+					});
+				}
+			};
+
+			self.get = get = function(id) {
+				//REQUIRED: id
+
+				return cls.get({
+					dbName : dbName,
+					id : id
+				});
+			};
+			
+			self.list = list = function() {
+				return cls.list(dbName);
+			};
+
+			self.remove = remove = function(id) {
+				//REQUIRED: id
+
+				cls.remove({
+					dbName : dbName,
+					id : id
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_REMOVE',
+						data : {
+							dbName : dbName,
+							id : id
+						}
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_REMOVE',
+						data : {
+							dbName : dbName,
+							id : id
+						}
+					});
+				}
+			};
+		}
+	};
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.SHARED_DB = CLASS({
+
+		init : function(inner, self, name) {
+			//REQUIRED: name
+
+			var
+			// shared db
+			sharedDB = SHARED_DB(box.boxName + '.' + name),
+
+			// create.
+			create,
+			
+			// update.
+			update,
+
+			// get.
+			get,
+			
+			// list.
+			list,
+
+			// remove.
+			remove;
+
+			self.create = create = sharedDB.create;
+
+			self.update = update = sharedDB.update;
+
+			self.get = get = sharedDB.get;
+			
+			self.list = list = sharedDB.list;
+
+			self.remove = remove = sharedDB.remove;
+		}
+	});
+});
+
+/**
  * CPU and server clustering shared store class
  */
 global.SHARED_STORE = CLASS(function(cls) {
 	'use strict';
 
 	var
-	// static storage
-	storage = {},
+	// storages
+	storages = {},
 
-	// remove delays
-	removeDelays = {},
+	// remove delay map
+	removeDelayMap = {},
 
 	// save.
 	save,
@@ -582,63 +1585,115 @@ global.SHARED_STORE = CLASS(function(cls) {
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params
-		//REQUIRED: params.fullName
+		//REQUIRED: params.storeName
+		//REQUIRED: params.name
 		//REQUIRED: params.value
 		//OPTIONAL: params.removeAfterSeconds
 		//OPTIONAL: remove
 
 		var
-		// full name
-		fullName = params.fullName,
+		// store name
+		storeName = params.storeName,
+
+		// name
+		name = params.name,
 
 		// value
 		value = params.value,
 
 		// remove after seconds
-		removeAfterSeconds = params.removeAfterSeconds;
+		removeAfterSeconds = params.removeAfterSeconds,
+		
+		// storage
+		storage = storages[storeName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[storeName];
+		
+		if (storage === undefined) {
+			storage = storages[storeName] = {};
+		}
 
-		storage[fullName] = value;
+		storage[name] = value;
 
-		if (removeDelays[fullName] !== undefined) {
-			removeDelays[fullName].remove();
-			delete removeDelays[fullName];
+		if (removeDelays === undefined) {
+			removeDelays = removeDelayMap[storeName] = {};
+		}
+
+		if (removeDelays[name] !== undefined) {
+			removeDelays[name].remove();
+			delete removeDelays[name];
 		}
 
 		if (removeAfterSeconds !== undefined) {
-			removeDelays[fullName] = DELAY(removeAfterSeconds, remove);
+			removeDelays[name] = DELAY(removeAfterSeconds, remove);
 		}
 	};
 
-	cls.get = get = function(fullName) {
-		//REQUIRED: fullName
-
-		return storage[fullName];
+	cls.get = get = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//REQUIRED: params.name
+		
+		var
+		// store name
+		storeName = params.storeName,
+		
+		// name
+		name = params.name,
+		
+		// storage
+		storage = storages[storeName];
+		
+		if (storage !== undefined) {
+			return storage[name];
+		}
 	};
 	
-	cls.list = list = function() {
-		return storage;
+	cls.list = list = function(storeName) {
+		//REQUIRED: storeName
+		
+		var
+		// storage
+		storage = storages[storeName];
+		
+		return storage === undefined ? {} : storage;
 	};
 
-	cls.remove = remove = function(fullName) {
-		//REQUIRED: fullName
+	cls.remove = remove = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//REQUIRED: params.name
+		
+		var
+		// store name
+		storeName = params.storeName,
+		
+		// name
+		name = params.name,
+		
+		// storage
+		storage = storages[storeName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[storeName];
+		
+		if (storage !== undefined) {
+			delete storage[name];
+		}
 
-		delete storage[fullName];
-
-		if (removeDelays[fullName] !== undefined) {
-			removeDelays[fullName].remove();
-			delete removeDelays[fullName];
+		if (removeDelays !== undefined && removeDelays[name] !== undefined) {
+			removeDelays[name].remove();
+			delete removeDelays[name];
 		}
 	};
 
 	return {
 
-		init : function(inner, self, name) {
-			//REQUIRED: name
+		init : function(inner, self, storeName) {
+			//REQUIRED: storeName
 
 			var
-			// gen full name.
-			genFullName,
-
 			// save.
 			save,
 
@@ -651,10 +1706,6 @@ global.SHARED_STORE = CLASS(function(cls) {
 			// remove.
 			remove;
 
-			genFullName = function(_name) {
-				return name + '.' + _name;
-			};
-
 			self.save = save = function(params) {
 				//REQUIRED: params
 				//REQUIRED: params.name
@@ -665,9 +1716,6 @@ global.SHARED_STORE = CLASS(function(cls) {
 				// name
 				name = params.name,
 
-				// full name
-				fullName = genFullName(name),
-
 				// value
 				value = params.value,
 
@@ -675,7 +1723,8 @@ global.SHARED_STORE = CLASS(function(cls) {
 				removeAfterSeconds = params.removeAfterSeconds;
 
 				cls.save({
-					fullName : fullName,
+					storeName : storeName,
+					name : name,
 					value : value,
 					removeAfterSeconds : removeAfterSeconds
 				}, function() {
@@ -687,7 +1736,8 @@ global.SHARED_STORE = CLASS(function(cls) {
 					CPU_CLUSTERING.broadcast({
 						methodName : '__SHARED_STORE_SAVE',
 						data : {
-							fullName : fullName,
+							storeName : storeName,
+							name : name,
 							value : value
 						}
 					});
@@ -698,7 +1748,8 @@ global.SHARED_STORE = CLASS(function(cls) {
 					SERVER_CLUSTERING.broadcast({
 						methodName : '__SHARED_STORE_SAVE',
 						data : {
-							fullName : fullName,
+							storeName : storeName,
+							name : name,
 							value : value
 						}
 					});
@@ -708,39 +1759,32 @@ global.SHARED_STORE = CLASS(function(cls) {
 			self.get = get = function(name) {
 				//REQUIRED: name
 
-				return cls.get(genFullName(name));
+				return cls.get({
+					storeName : storeName,
+					name : name
+				});
 			};
 			
 			self.list = list = function() {
-				
-				var
-				// values
-				values = {};
-				
-				EACH(cls.list(), function(value, fullName) {
-					
-					if (fullName.substring(0, name.length + 1) === name + '.') {
-						values[fullName.substring(name.length + 1)] = value;
-					}
-				});
-				
-				return values;
+				return cls.list(storeName);
 			};
 
 			self.remove = remove = function(name) {
 				//REQUIRED: name
-
-				var
-				// full name
-				fullName = genFullName(name);
-
-				cls.remove(fullName);
+				
+				cls.remove({
+					storeName : storeName,
+					name : name
+				});
 
 				if (CPU_CLUSTERING.broadcast !== undefined) {
 
 					CPU_CLUSTERING.broadcast({
 						methodName : '__SHARED_STORE_REMOVE',
-						data : fullName
+						data : {
+							storeName : storeName,
+							name : name
+						}
 					});
 				}
 
@@ -748,7 +1792,10 @@ global.SHARED_STORE = CLASS(function(cls) {
 
 					SERVER_CLUSTERING.broadcast({
 						methodName : '__SHARED_STORE_REMOVE',
-						data : fullName
+						data : {
+							storeName : storeName,
+							name : name
+						}
 					});
 				}
 			};
