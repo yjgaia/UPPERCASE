@@ -14,8 +14,8 @@ global.BOOT_UADMIN = METHOD({
 		//REQUIRED: UPPERCASE_IO_PATH
 
 		var
-		// session store
-		sessionStore = SHARED_STORE('sessionStore'),
+		// session db
+		sessionDB = SHARED_DB('sessionDB'),
 		
 		// model map
 		modelMap = {},
@@ -101,9 +101,9 @@ global.BOOT_UADMIN = METHOD({
 				if (uri === '__LOGIN') {
 					
 					if (sessionKey !== undefined && requestInfo.data.password === UADMIN_CONFIG.password) {
-						sessionStore.save({
-							name : sessionKey,
-							value : {
+						sessionDB.save({
+							id : sessionKey,
+							data : {
 								password : requestInfo.data.password
 							},
 							removeAfterSeconds : 30 * 60 // 30 minutes
@@ -119,7 +119,7 @@ global.BOOT_UADMIN = METHOD({
 				if (uri === '__LOGOUT') {
 					
 					if (sessionKey !== undefined) {
-						sessionStore.remove(sessionKey);
+						sessionDB.remove(sessionKey);
 					}
 					
 					response('true');
@@ -141,7 +141,7 @@ global.BOOT_UADMIN = METHOD({
 				}
 				
 				if (sessionKey !== undefined) {
-					session = sessionStore.get(sessionKey);
+					session = sessionDB.get(sessionKey);
 					if (session !== undefined) {
 						password = session.password;
 					}
@@ -357,7 +357,7 @@ global.BOOT_UADMIN = METHOD({
 				password;
 				
 				if (sessionKey !== undefined) {
-					session = sessionStore.get(sessionKey);
+					session = sessionDB.get(sessionKey);
 					if (session !== undefined) {
 						password = session.password;
 					}
