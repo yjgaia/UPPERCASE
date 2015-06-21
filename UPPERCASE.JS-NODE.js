@@ -145,8 +145,8 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					// remove cpu shared value.
 					on('__CPU_SHARED_STORE_REMOVE', CPU_SHARED_STORE.remove);
 
-					// create shared data.
-					on('__SHARED_DB_CREATE', SHARED_DB.create);
+					// save shared data.
+					on('__SHARED_DB_SAVE', SHARED_DB.save);
 					
 					// update shared data.
 					on('__SHARED_DB_UPDATE', SHARED_DB.update);
@@ -154,8 +154,8 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					// remove shared data.
 					on('__SHARED_DB_REMOVE', SHARED_DB.remove);
 
-					// create cpu shared data.
-					on('__CPU_SHARED_DB_CREATE', CPU_SHARED_DB.create);
+					// save cpu shared data.
+					on('__CPU_SHARED_DB_SAVE', CPU_SHARED_DB.save);
 					
 					// update cpu shared data.
 					on('__CPU_SHARED_DB_UPDATE', CPU_SHARED_DB.update);
@@ -197,8 +197,8 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 	// remove delay map
 	removeDelayMap = {},
 
-	// create.
-	create,
+	// save.
+	save,
 	
 	// update.
 	update,
@@ -212,7 +212,7 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 	// remove.
 	remove;
 
-	cls.create = create = function(params, remove) {
+	cls.save = save = function(params, remove) {
 		//REQUIRED: params
 		//REQUIRED: params.dbName
 		//REQUIRED: params.id
@@ -480,8 +480,8 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 			//REQUIRED: dbName
 
 			var
-			// create.
-			create,
+			// save.
+			save,
 			
 			// update.
 			update,
@@ -492,7 +492,7 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 			// remove.
 			remove;
 
-			self.create = create = function(params) {
+			self.save = save = function(params) {
 				//REQUIRED: params
 				//REQUIRED: params.id
 				//REQUIRED: params.data
@@ -508,7 +508,7 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 				// remove after seconds
 				removeAfterSeconds = params.removeAfterSeconds;
 
-				cls.create({
+				cls.save({
 					dbName : dbName,
 					id : id,
 					data : data,
@@ -520,7 +520,7 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 				if (CPU_CLUSTERING.broadcast !== undefined) {
 
 					CPU_CLUSTERING.broadcast({
-						methodName : '__CPU_SHARED_DB_CREATE',
+						methodName : '__CPU_SHARED_DB_SAVE',
 						data : {
 							dbName : dbName,
 							id : id,
@@ -620,8 +620,8 @@ FOR_BOX(function(box) {
 			// shared db
 			sharedDB = CPU_SHARED_DB(box.boxName + '.' + name),
 
-			// create.
-			create,
+			// save.
+			save,
 			
 			// update.
 			update,
@@ -635,7 +635,7 @@ FOR_BOX(function(box) {
 			// remove.
 			remove;
 
-			self.create = create = sharedDB.create;
+			self.save = save = sharedDB.save;
 
 			self.update = update = sharedDB.update;
 
@@ -1089,15 +1089,15 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				}
 			});
 
-			// create shared data.
-			on('__SHARED_DB_CREATE', function(params) {
+			// save shared data.
+			on('__SHARED_DB_SAVE', function(params) {
 
-				SHARED_DB.create(params);
+				SHARED_DB.save(params);
 
 				if (CPU_CLUSTERING.broadcast !== undefined) {
 
 					CPU_CLUSTERING.broadcast({
-						methodName : '__SHARED_DB_CREATE',
+						methodName : '__SHARED_DB_SAVE',
 						data : params
 					});
 				}
@@ -1167,8 +1167,8 @@ global.SHARED_DB = CLASS(function(cls) {
 	// remove delay map
 	removeDelayMap = {},
 
-	// create.
-	create,
+	// save.
+	save,
 	
 	// update.
 	update,
@@ -1182,7 +1182,7 @@ global.SHARED_DB = CLASS(function(cls) {
 	// remove.
 	remove;
 
-	cls.create = create = function(params, remove) {
+	cls.save = save = function(params, remove) {
 		//REQUIRED: params
 		//REQUIRED: params.dbName
 		//REQUIRED: params.id
@@ -1450,8 +1450,8 @@ global.SHARED_DB = CLASS(function(cls) {
 			//REQUIRED: dbName
 
 			var
-			// create.
-			create,
+			// save.
+			save,
 			
 			// update.
 			update,
@@ -1465,7 +1465,7 @@ global.SHARED_DB = CLASS(function(cls) {
 			// remove.
 			remove;
 
-			self.create = create = function(params) {
+			self.save = save = function(params) {
 				//REQUIRED: params
 				//REQUIRED: params.id
 				//REQUIRED: params.data
@@ -1481,7 +1481,7 @@ global.SHARED_DB = CLASS(function(cls) {
 				// remove after seconds
 				removeAfterSeconds = params.removeAfterSeconds;
 
-				cls.create({
+				cls.save({
 					dbName : dbName,
 					id : id,
 					data : data,
@@ -1493,7 +1493,7 @@ global.SHARED_DB = CLASS(function(cls) {
 				if (CPU_CLUSTERING.broadcast !== undefined) {
 
 					CPU_CLUSTERING.broadcast({
-						methodName : '__SHARED_DB_CREATE',
+						methodName : '__SHARED_DB_SAVE',
 						data : {
 							dbName : dbName,
 							id : id,
@@ -1505,7 +1505,7 @@ global.SHARED_DB = CLASS(function(cls) {
 				if (SERVER_CLUSTERING.broadcast !== undefined) {
 
 					SERVER_CLUSTERING.broadcast({
-						methodName : '__SHARED_DB_CREATE',
+						methodName : '__SHARED_DB_SAVE',
 						data : {
 							dbName : dbName,
 							id : id,
@@ -1628,8 +1628,8 @@ FOR_BOX(function(box) {
 			// shared db
 			sharedDB = SHARED_DB(box.boxName + '.' + name),
 
-			// create.
-			create,
+			// save.
+			save,
 			
 			// update.
 			update,
@@ -1643,7 +1643,7 @@ FOR_BOX(function(box) {
 			// remove.
 			remove;
 
-			self.create = create = sharedDB.create;
+			self.save = save = sharedDB.save;
 
 			self.update = update = sharedDB.update;
 
