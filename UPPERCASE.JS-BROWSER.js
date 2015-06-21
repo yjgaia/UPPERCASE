@@ -949,13 +949,18 @@ global.NODE = CLASS({
 			return contentEl;
 		};
 
-		attach = function(node) {
+		attach = function(node, index) {
 			//REQUIRED: node
+			//OPTIOANL: index
 
 			setParent(node);
 
-			parentNode.getChildren().push(self);
-
+			if (index === undefined) {
+				parentNode.getChildren().push(self);
+			} else {
+				parentNode.getChildren().splice(index, 0, self);
+			}
+			
 			EVENT.fireAll({
 				node : self,
 				name : 'attach'
@@ -1104,7 +1109,7 @@ global.NODE = CLASS({
 					parentEl.insertBefore(wrapperEl, parentEl.childNodes[0]);
 				}
 
-				attach(node);
+				attach(node, 0);
 			}
 
 			return self;
@@ -1172,7 +1177,10 @@ global.NODE = CLASS({
 				
 				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
 
-				attach(node.getParent());
+				attach(node.getParent(), FIND({
+					array : node.getParent().getChildren(),
+					value : node
+				}) + 1);
 			}
 
 			return self;
@@ -1237,7 +1245,10 @@ global.NODE = CLASS({
 				
 				afterEl.parentNode.insertBefore(wrapperEl, afterEl);
 
-				attach(node.getParent());
+				attach(node.getParent(), FIND({
+					array : node.getParent().getChildren(),
+					value : node
+				}));
 			}
 
 			return self;

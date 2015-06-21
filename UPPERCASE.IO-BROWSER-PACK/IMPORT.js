@@ -4029,13 +4029,18 @@ global.NODE = CLASS({
 			return contentEl;
 		};
 
-		attach = function(node) {
+		attach = function(node, index) {
 			//REQUIRED: node
+			//OPTIOANL: index
 
 			setParent(node);
 
-			parentNode.getChildren().push(self);
-
+			if (index === undefined) {
+				parentNode.getChildren().push(self);
+			} else {
+				parentNode.getChildren().splice(index, 0, self);
+			}
+			
 			EVENT.fireAll({
 				node : self,
 				name : 'attach'
@@ -4184,7 +4189,7 @@ global.NODE = CLASS({
 					parentEl.insertBefore(wrapperEl, parentEl.childNodes[0]);
 				}
 
-				attach(node);
+				attach(node, 0);
 			}
 
 			return self;
@@ -4252,7 +4257,10 @@ global.NODE = CLASS({
 				
 				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
 
-				attach(node.getParent());
+				attach(node.getParent(), FIND({
+					array : node.getParent().getChildren(),
+					value : node
+				}) + 1);
 			}
 
 			return self;
@@ -4317,7 +4325,10 @@ global.NODE = CLASS({
 				
 				afterEl.parentNode.insertBefore(wrapperEl, afterEl);
 
-				attach(node.getParent());
+				attach(node.getParent(), FIND({
+					array : node.getParent().getChildren(),
+					value : node
+				}));
 			}
 
 			return self;
@@ -12749,6 +12760,10 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params.start
 					//OPTIONAL: params.count
 					//REQUIRED: handlerOrHandlers
+					//REQUIRED: handlerOrHandlers.handler
+					//OPTIONAL: handlerOrHandlers.success
+					//OPTIONAL: handlerOrHandlers.notAuthed
+					//OPTIONAL: handlerOrHandlers.error
 					
 					var
 					// properties
@@ -12771,6 +12786,9 @@ FOR_BOX(function(box) {
 					
 					// handler.
 					handler,
+					
+					// callback.
+					callback,
 
 					// not valid handler.
 					notAuthedHandler,
@@ -12795,7 +12813,8 @@ FOR_BOX(function(box) {
 					if (CHECK_IS_DATA(handlerOrHandlers) !== true) {
 						handler = handlerOrHandlers;
 					} else {
-						handler = handlerOrHandlers.success;
+						handler = handlerOrHandlers.handler;
+						callback = handlerOrHandlers.success;
 						notAuthedHandler = handlerOrHandlers.notAuthed;
 						errorHandler = handlerOrHandlers.error;
 					}
@@ -12810,7 +12829,14 @@ FOR_BOX(function(box) {
 						start : start,
 						count : count
 					}, {
-						success : REVERSE_EACH(handler),
+						success : function(savedDataSet) {
+							
+							if (callback !== undefined) {
+								callback(savedDataSet);
+							}
+							
+							REVERSE_EACH(savedDataSet, handler);
+						},
 						notAuthed : notAuthedHandler,
 						error : errorHandler
 					});
@@ -12841,6 +12867,10 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params.start
 					//OPTIONAL: params.count
 					//REQUIRED: handlerOrHandlers
+					//REQUIRED: handlerOrHandlers.handler
+					//OPTIONAL: handlerOrHandlers.success
+					//OPTIONAL: handlerOrHandlers.notAuthed
+					//OPTIONAL: handlerOrHandlers.error
 					
 					var
 					// properties
@@ -12866,6 +12896,9 @@ FOR_BOX(function(box) {
 					
 					// handler.
 					handler,
+					
+					// callback.
+					callback,
 
 					// not valid handler.
 					notAuthedHandler,
@@ -12890,7 +12923,8 @@ FOR_BOX(function(box) {
 					if (CHECK_IS_DATA(handlerOrHandlers) !== true) {
 						handler = handlerOrHandlers;
 					} else {
-						handler = handlerOrHandlers.success;
+						handler = handlerOrHandlers.handler;
+						callback = handlerOrHandlers.success;
 						notAuthedHandler = handlerOrHandlers.notAuthed;
 						errorHandler = handlerOrHandlers.error;
 					}
@@ -12906,6 +12940,11 @@ FOR_BOX(function(box) {
 						count : count
 					}, {
 						success : function(savedDataSet, addUpdateHandler, addRemoveHandler) {
+							
+							if (callback !== undefined) {
+								callback(savedDataSet, addUpdateHandler, addRemoveHandler);
+							}
+							
 							REVERSE_EACH(savedDataSet, function(savedData) {
 								handler(savedData, function(handler) {
 									addUpdateHandler(savedData.id, handler);
