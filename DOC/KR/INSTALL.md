@@ -14,7 +14,7 @@
 
 3. UPPERCASE.IO를 clone한 곳을 환경 변수에 등록합니다.
 
-	* `Windows` 내 컴퓨터 - 속성 - 고급 시스템 설정 - 환경 변수에서 `UPPERCASE_IO_PATH`에 clone 한 폴더 위치를 등록합니다.
+	* `Windows` 내 컴퓨터 - 속성 - 고급 시스템 설정 - 환경 변수에서 `UPPERCASE_IO_PATH`에 clone 한 폴더 위치를 등록합니다. (등록 후 CMD를 껏다가 다시 켜야 합니다.)
 	* `Mac`
 
         ```
