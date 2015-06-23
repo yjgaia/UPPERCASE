@@ -217,6 +217,11 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 							// off all room's methods.
 							EACH(methodMaps[roomName], function(methods, methodName) {
 								EACH(methods, function(method) {
+									
+									if (methodName === '__DISCONNECTED') {
+										method();
+									}
+									
 									off(methodName, method);
 								});
 							});

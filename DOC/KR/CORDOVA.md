@@ -20,7 +20,7 @@ npm install -g cordova
 2. 프로젝트 생성
 
 ```
-cordova create {폴더 이름} com.sample.Sample {프로젝트 이름}
+cordova create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
 ```
 
 ex)
@@ -41,10 +41,13 @@ cordova platform add android
 cordova run
 ```
 
-### Cordova에 플러그인 설치
+### 플러그인 설치
 ```
 cordova plugin add {{플러그인의 주소}}
 ```
+
+### 배포하기
+
 
 ## Crosswalk
 ### Crosswalk을 사용해야 하는 이유
@@ -59,12 +62,12 @@ https://crosswalk-project.org 에 방문하여 `Cordova Android (ARM)`를 다운
 
 Mac or Linux
 ```
-crosswalk-cordova-11.40.277.7-arm/bin/create Sample com.sample.Sample Sample
+crosswalk-cordova-11.40.277.7-arm/bin/create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
 ```
 
 Windows
 ```
-crosswalk-cordova-11.40.277.7-arm\bin\create Sample com.sample.Sample Sample
+crosswalk-cordova-11.40.277.7-arm\bin\create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
 ```
 
 3. 코드 작성
@@ -75,10 +78,32 @@ cd Sample
 ./cordova/run
 ```
 
-### Crosswalk에 플러그인 설치
+### 플러그인 설치
 ```
 plugman install --platform android --project . --plugin {{플러그인의 주소}}
 ```
 
+### 배포하기
+```
+keytool -genkey -v -keystore {{키스토어 파일명}} -alias {{alias 이름}} -keyalg {{암호화 방식}} -keysize {{key 크기}} -validity {{유효기간}}
+```
+
+```
+keytool -genkey -v -keystore sample-keystore.keystore -alias sample-01 -keyalg RSA -keysize 2048 -validity 18250
+```
+
+```
+cordova\build --release
+mv bin\{{프로젝트 이름}}-release-unsigned.apk {{프로젝트 이름}}-release-unsigned.apk
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore {{keystore 경로}} {{프로젝트 이름}}-release-unsigned.apk {{alias 이름}}
+zipalign -v 4 {{프로젝트 이름}}-release-unsigned.apk {{프로젝트 이름}}.apk
+```
+
 ## BROWSER-PACK
+
+## 웹앱 만들기
+단순히 웹 사이트를 보여주는 애플리케이션을 만드려면 `config.xml`의 `content` 태그를 다음과 같이 변경합니다.
+```xml
+<content src="http://sample.com" />
+```
 
