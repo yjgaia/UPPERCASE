@@ -1071,7 +1071,7 @@ global.BOOT = function(params) {
 							content = '',
 							
 							// phantom
-						    phantom = require('child_process').spawn('phantomjs', [__dirname + '/PRINT_HTML_SNAPSHOT.js', CONFIG.webServerPort, params._escaped_fragment_ === '' ? uri : params._escaped_fragment_]);
+						    phantom = require('child_process').spawn('phantomjs', [__dirname + '/PRINT_HTML_SNAPSHOT.js', CONFIG.webServerPort, params._escaped_fragment_ === '' ? decodeURIComponent(uri) : params._escaped_fragment_]);
 						    
 						    phantom.stdout.setEncoding('utf8');
 						    
