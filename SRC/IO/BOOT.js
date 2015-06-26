@@ -497,7 +497,7 @@ global.BOOT = function(params) {
 	
 			indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
 
-			indexPageContent += '<link href="/favicon.ico" rel="shortcut icon">';
+			indexPageContent += '<link href="/R/favicon.ico" rel="shortcut icon">';
 			indexPageContent += '<title>' + CONFIG.title + '</title>';
 	
 			// load css.

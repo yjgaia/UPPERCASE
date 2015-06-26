@@ -24,6 +24,7 @@ UPPERCASE.IO를 사용하기 위해서는 이하 기술셋을 알고있어야 �
 * [블로그에 인증 추가하기](ADD_AUTH_TO_BLOG.md)
 * [UPPERCASE.IO가 제공하는 기능들 살펴보기](OVERVIEW.md)
 * [Configuration](CONFIG.md)
+* [배포하기](DEPLOY.md) (작성중)
 * [UPPERCASE.IO 업데이트](UPDATE.md)
 
 ## 한걸음 더
