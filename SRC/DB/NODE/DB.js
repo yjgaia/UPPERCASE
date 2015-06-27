@@ -530,18 +530,12 @@ FOR_BOX(function(box) {
 						historyCollection = nativeDB.collection(box.boxName + '.' + name + '__HISTORY');
 						
 						// create history index.
-						historyCollection.ensureIndex({
+						historyCollection.createIndex({
 							docId : 1
-						}, {
-							safe : true
-						}, function() {
-							// ignore.
 						});
 					}
 
-					historyCollection.insert(historyData, {
-						w : 0
-					});
+					historyCollection.insertOne(historyData);
 
 					if (NODE_CONFIG.isDBLogMode === true) {
 						
@@ -567,10 +561,7 @@ FOR_BOX(function(box) {
 					errorInfo.time = new Date();
 
 					try {
-
-						errorLogCollection.insert(errorInfo, {
-							w : 0
-						});
+						errorLogCollection.insert(errorInfo);
 					}
 
 					// if catch error
@@ -887,15 +878,18 @@ FOR_BOX(function(box) {
 							}
 						}
 
-						collection.insert(data, {
-							safe : true
-						}, function(error, savedDataSet) {
+						collection.insertOne(data, {
+							w : 1
+						}, function(error, result) {
 
 							var
+							// saved data set
+							savedDataSet = result.ops,
+							
 							// saved data
 							savedData;
 
-							if (error === TO_DELETE) {
+							if (error === TO_DELETE && savedDataSet.length > 0) {
 
 								savedData = savedDataSet[0];
 
@@ -920,7 +914,7 @@ FOR_BOX(function(box) {
 								logError({
 									method : 'create',
 									data : data,
-									errorMsg : error.toString()
+									errorMsg : error !== TO_DELETE ? error.toString() : '_id existed.'
 								}, errorHandler);
 							}
 						});
@@ -1341,19 +1335,29 @@ FOR_BOX(function(box) {
 									
 								} else {
 
-									collection.update(filter, updateData, {
-										safe : true
+									collection.updateOne(filter, updateData, {
+										w : 1
 									}, function(error, result) {
+
+										if (error !== TO_DELETE) {
 			
-										if (result === 0) {
+											logError({
+												method : 'update',
+												data : data,
+												errorMsg : error.toString()
+											}, errorHandler);
+										}
+										
+										else if (result.result.n === 0) {
 			
 											if (notExistsHandler !== undefined) {
 												notExistsHandler();
 											} else {
 												console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 											}
-
-										} else if (error === TO_DELETE) {
+										}
+										
+										else {
 			
 											get({
 												filter : filter
@@ -1430,16 +1434,6 @@ FOR_BOX(function(box) {
 													});
 												}
 											});
-										}
-			
-										// if error is not TO_DELETE
-										else {
-			
-											logError({
-												method : 'update',
-												data : data,
-												errorMsg : error.toString()
-											}, errorHandler);
 										}
 									});
 								}
@@ -1551,19 +1545,29 @@ FOR_BOX(function(box) {
 
 							success : function(originData) {
 
-								collection.remove(filter, {
-									safe : true
+								collection.deleteOne(filter, {
+									w : 1
 								}, function(error, result) {
 									
-									if (result === 0) {
+									if (error !== TO_DELETE) {
+
+										logError({
+											method : 'remove',
+											id : id,
+											errorMsg : error.toString()
+										}, errorHandler);
+									}
+									
+									else if (result.result.n === 0) {
 
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
 										} else {
 											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
 										}
+									}
 
-									} else if (error === TO_DELETE) {
+									else {
 
 										if (isNotUsingHistory !== true) {
 											addHistory('remove', id, undefined, new Date());
@@ -1576,16 +1580,6 @@ FOR_BOX(function(box) {
 												callback(originData);
 											}
 										});
-									}
-
-									// if error is not TO_DELETE
-									else {
-
-										logError({
-											method : 'remove',
-											id : id,
-											errorMsg : error.toString()
-										}, errorHandler);
 									}
 								});
 							}
@@ -2056,7 +2050,7 @@ FOR_BOX(function(box) {
 							errorHandler = callbackOrHandlers.error;
 						}
 
-						collection.aggregate(params, function(error, result) {
+						collection.aggregate(params).toArray(function(error, result) {
 
 							if (error === TO_DELETE) {
 
@@ -2110,8 +2104,8 @@ FOR_BOX(function(box) {
 							}
 						}
 						
-						collection.ensureIndex(keys, {
-							safe : true
+						collection.createIndex(keys, {
+							w : 1
 						}, function(error) {
 	
 							if (error === TO_DELETE) {
@@ -2169,7 +2163,7 @@ FOR_BOX(function(box) {
 						}
 						
 						collection.dropIndex(index, {
-							safe : true
+							w : 1
 						}, function(error) {
 	
 							if (error === TO_DELETE) {
