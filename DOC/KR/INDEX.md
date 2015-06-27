@@ -56,12 +56,9 @@ UPPERCASE.IO를 사용하기 위해서는 이하 기술셋을 알고있어야 �
 ## UPPERCASE.IO 개발에 참여하기
 * [UPPERCASE.IO 빌드](BUILD.md)
 
-## UPPERCASE.IO Client Modules
-UPPERCASE.IO는 웹 브라우저 혹은 하이브리드 앱과 같이 웹 기술 기반의 Client를 지원합니다. 따라서 다른 언어/시스템 기반에서 UPPERCASE.IO 서버에 접근하기 위해서는 아래와 같이 해당 언어/시스템에 맞는 Client 모듈이 필요합니다.
-
-* `UPPERCASE.IO-Java-Client` https://github.com/Hanul/UPPERCASE.IO-Java-Client
-
-*기타 여러 언어/시스템으로의 포팅을 기다리고 있습니다!*
+## Unicorn
+객체지향 언어들로 포팅한 UPPERCASE.IO의 다른 구현체 입니다.
+[Unicorn](https://github.com/Hanul/Unicorn)
 
 ## 라이센스
 [MIT](../../LICENSE)

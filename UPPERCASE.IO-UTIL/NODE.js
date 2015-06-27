@@ -280,7 +280,10 @@ global.MINIFY_JS = METHOD(function() {
 
 			return uglifyJS.minify(code.toString(), {
 				fromString : true,
-				mangle : true
+				mangle : true,
+				output : {
+					comments : /@license|@preserve|^!/
+				}
 			}).code;
 		}
 	};
