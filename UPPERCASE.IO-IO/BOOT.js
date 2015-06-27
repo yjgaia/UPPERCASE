@@ -667,8 +667,20 @@ global.BOOT = function(params) {
 						return params.callback !== undefined ? params.callback + '(\'' + str + '\')' : str;
 					};
 					
+					if (uri === '__CHECK_ALIVE') {
+
+						response({
+							content : '',
+							headers : {
+								'Access-Control-Allow-Origin' : '*'
+							}
+						});
+
+						return false;
+					}
+					
 					// serve version.
-					if (uri === '__VERSION') {
+					else if (uri === '__VERSION') {
 
 						response({
 							content : CONFIG.version,

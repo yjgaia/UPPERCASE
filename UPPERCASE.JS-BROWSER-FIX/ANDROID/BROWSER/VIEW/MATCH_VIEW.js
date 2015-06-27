@@ -101,7 +101,14 @@ OVERRIDE(MATCH_VIEW, function(origin) {
 	
 				EVENT({
 					name : 'hashchange'
-				}, changeURIHandler);
+				}, function() {
+					
+					changeURIHandler();
+					
+					if (decodeURIComponent(location.hash) === '#!/' + REFRESH.getRefreshingURI()) {
+						history.back();
+					}
+				});
 			}
 		};
 	});

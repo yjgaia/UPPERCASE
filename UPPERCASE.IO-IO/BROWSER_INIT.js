@@ -18,9 +18,6 @@ READY(function() {
 	'use strict';
 	
 	var
-	// connect count
-	connectCount = 0,
-	
 	// connect.
 	connect;
 	
@@ -42,19 +39,19 @@ READY(function() {
 	});
 
 	connect = RAR(function() {
-			
-		connectCount += 1;
 		
 		CONNECT_TO_IO_SERVER(function(on) {
-			
-			var
-			// now connect count
-			nowConnectCount = connectCount;
-	
+		
 			on('__DISCONNECTED', function() {
 	
 				var
 				// reload interval
+				reloadInterval;
+				
+				if (BROWSER_CONFIG.disconnected !== undefined) {
+					BROWSER_CONFIG.disconnected();
+				}
+				
 				reloadInterval = INTERVAL(1, RAR(function() {
 	
 					GET({
@@ -66,26 +63,28 @@ READY(function() {
 							reloadInterval.remove();
 							reloadInterval = undefined;
 							
-							// if versions are same, 
-							if (CONFIG.version === version && connectCount === nowConnectCount) {
-								REFRESH();
-								connect();
-							}
-							
-							// if versions are not same, reload page.
-							else {
-								location.reload();
+							if ((document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT')
+							|| BROWSER_CONFIG.beforeUnloadMessage === undefined
+							|| confirm(BROWSER_CONFIG.beforeUnloadMessage) === true) {
+								
+								if (BROWSER_CONFIG.reconnect === undefined || BROWSER_CONFIG.reconnect(CONFIG.version === version, connect) !== false) {
+									
+									// if versions are same, REFRESH.
+									if (CONFIG.version === version) {
+										REFRESH();
+										connect();
+									}
+									
+									// if versions are not same, reload page.
+									else {
+										location.reload();
+									}
+								}
 							}
 						}
 					});
 				}));
 			});
 		});
-	});
-	
-	EVENT('beforeunload', function() {
-		if (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT') {
-			return BROWSER_CONFIG.beforeUnloadMessage;
-		}
 	});
 });

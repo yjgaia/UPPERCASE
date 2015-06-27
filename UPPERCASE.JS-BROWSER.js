@@ -7398,7 +7398,14 @@ global.MATCH_VIEW = METHOD(function(m) {
 	
 			EVENT({
 				name : 'popstate'
-			}, changeURIHandler);
+			}, function() {
+				
+				changeURIHandler();
+				
+				if (URI() === REFRESH.getRefreshingURI()) {
+					history.back();
+				}
+			});
 			
 			changeURIHandler();
 		}
