@@ -51,6 +51,8 @@ db.count({filter:}, function(count) {...})
 db.count({filter:}, {error:, success:})
 db.checkIsExists({filter:}, function(isExists) {...})
 db.checkIsExists({filter:}, {error:, success:})
+db.aggregate(params, function(dataSet) {...})
+db.aggregate(params, {error:, success:})
 ```
 * `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/LOG_DB.js)
 ```javascript

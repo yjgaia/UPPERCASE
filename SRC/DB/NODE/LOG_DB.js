@@ -34,9 +34,7 @@ FOR_BOX(function(box) {
 					// now
 					data.time = new Date();
 
-					collection.insert(data, {
-						w : 0
-					});
+					collection.insertOne(data);
 				};
 
 				EACH(waitingLogDataSet, function(data) {
