@@ -17,6 +17,13 @@ if (BROWSER_CONFIG.fixTransportScriptsFolderPath !== undefined) {
 READY(function() {
 	'use strict';
 	
+	var
+	// connect count
+	connectCount = 0,
+	
+	// connect.
+	connect;
+	
 	FOR_BOX(function(box) {
 		if (box.OVERRIDE !== undefined) {
 			box.OVERRIDE();
@@ -34,27 +41,45 @@ READY(function() {
 		}
 	});
 
-	CONNECT_TO_IO_SERVER(function(on) {
-
-		on('__DISCONNECTED', function() {
-
+	connect = RAR(function() {
+			
+		connectCount += 1;
+		
+		CONNECT_TO_IO_SERVER(function(on) {
+			
 			var
-			// reload interval
-			reloadInterval = INTERVAL(1, RAR(function() {
-
-				GET({
-					port : CONFIG.webServerPort,
-					uri : '__CHECK_ALIVE'
-				}, function() {
-					
-					if (reloadInterval !== undefined) {
-						reloadInterval.remove();
-						reloadInterval = undefined;
+			// now connect count
+			nowConnectCount = connectCount;
+	
+			on('__DISCONNECTED', function() {
+	
+				var
+				// reload interval
+				reloadInterval = INTERVAL(1, RAR(function() {
+	
+					GET({
+						port : CONFIG.webServerPort,
+						uri : '__VERSION'
+					}, function(version) {
 						
-						location.reload();
-					}
-				});
-			}));
+						if (reloadInterval !== undefined) {
+							reloadInterval.remove();
+							reloadInterval = undefined;
+							
+							// if versions are same, 
+							if (CONFIG.version === version && connectCount === nowConnectCount) {
+								REFRESH();
+								connect();
+							}
+							
+							// if versions are not same, reload page.
+							else {
+								location.reload();
+							}
+						}
+					});
+				}));
+			});
 		});
 	});
 	

@@ -322,7 +322,7 @@ global.BOOT = function(params) {
 
 			notExists : function() {
 				console.log(CONSOLE_RED('[UPPERCASE.IO] NOT EXISTS `V` VERSION FILE!'));
-				version = 'V__NOT_EXISTS';
+				version = 'V__NOT_EXISTS__' + Date.now();
 			},
 
 			success : function(buffer) {
@@ -660,23 +660,16 @@ global.BOOT = function(params) {
 					wrapCallback = function(str) {
 						return params.callback !== undefined ? params.callback + '(\'' + str + '\')' : str;
 					};
-
-					if (uri === '__CHECK_ALIVE') {
+					
+					// serve version.
+					if (uri === '__VERSION') {
 
 						response({
-							content : '',
+							content : CONFIG.version,
 							headers : {
 								'Access-Control-Allow-Origin' : '*'
 							}
 						});
-
-						return false;
-					}
-					
-					// serve version.
-					else if (uri === '__VERSION') {
-
-						response(CONFIG.version);
 
 						return false;
 					}
