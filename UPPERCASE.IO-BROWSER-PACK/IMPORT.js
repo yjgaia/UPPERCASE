@@ -12649,7 +12649,7 @@ FOR_BOX(function(box) {
 							name : name + '/create'
 						})).on('create', function(savedData) {
 							
-							onNewInfos[infoId].lastCreateTime = savedData.id;
+							onNewInfos[infoId].lastCreateTime = savedData.createTime;
 							
 							handler(savedData);
 						});
@@ -12661,7 +12661,7 @@ FOR_BOX(function(box) {
 							name : name + '/create'
 						})).on('create', function(savedData) {
 							
-							onNewInfos[infoId].lastCreateTime = savedData.id;
+							onNewInfos[infoId].lastCreateTime = savedData.createTime;
 							
 							handler(savedData);
 						});
@@ -12682,7 +12682,7 @@ FOR_BOX(function(box) {
 									}
 								}) === true) {
 									
-									onNewInfos[infoId].lastCreateTime = savedData.id;
+									onNewInfos[infoId].lastCreateTime = savedData.createTime;
 									
 									handler(savedData);
 								}
@@ -12699,12 +12699,12 @@ FOR_BOX(function(box) {
 								
 								find({
 									filter : properties !== undefined ? COMBINE([properties, {
-										$gt : {
-											createTime : onNewInfos[infoId].lastCreateTime
+										createTime : {
+											$gt : onNewInfos[infoId].lastCreateTime
 										}
 									}]) : {
-										$gt : {
-											createTime : onNewInfos[infoId].lastCreateTime
+										createTime : {
+											$gt : onNewInfos[infoId].lastCreateTime
 										}
 									}
 								}, REVERSE_EACH(handler));
@@ -12852,15 +12852,15 @@ FOR_BOX(function(box) {
 								
 								find({
 									filter : properties !== undefined ? COMBINE([properties, {
-										$gt : {
-											createTime : onNewInfos[infoId].lastCreateTime
+										createTime : {
+											$gt : onNewInfos[infoId].lastCreateTime
 										}
 									}]) : {
-										$gt : {
-											createTime : onNewInfos[infoId].lastCreateTime
+										createTime : {
+											$gt : onNewInfos[infoId].lastCreateTime
 										}
 									}
-								}, REVERSE_EACH(handler));
+								}, REVERSE_EACH(innerHandler));
 							}
 						}
 					};
