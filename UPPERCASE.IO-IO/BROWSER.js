@@ -89,7 +89,26 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 					host : host,
 					port : webServerPort,
 					fixRequestURI : '__WEB_SOCKET_FIX'
-				}, connectionListener);
+				}, function(on, off, send) {
+					
+					FOR_BOX(function(box) {
+						EACH(box.MODEL.getOnNewInfos(), function(onNewInfo) {
+							onNewInfo.findMissingDataSet();
+						});
+					});
+					
+					on('__DISCONNECTED', function() {
+						FOR_BOX(function(box) {
+							EACH(box.MODEL.getOnNewInfos(), function(onNewInfo) {
+								onNewInfo.lastCreateTime = SERVER_TIME(new Date());
+							});
+						});
+					});
+					
+					if (connectionListener !== undefined) {
+						connectionListener(on, off, send);
+					}
+				});
 			}
 		});
 	}
