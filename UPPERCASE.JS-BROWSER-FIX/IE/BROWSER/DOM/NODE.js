@@ -136,7 +136,13 @@ OVERRIDE(NODE, function(origin) {
 			show,
 	
 			// check is showing.
-			checkIsShowing;
+			checkIsShowing,
+			
+			// set data.
+			setData,
+			
+			// get data.
+			getData;
 	
 			inner.setWrapperDom = setWrapperDom = function(dom) {
 				//REQUIRED: dom
@@ -711,6 +717,16 @@ OVERRIDE(NODE, function(origin) {
 				} else {
 					return parentNode !== undefined && parentNode.checkIsShowing() === true && getStyle('display') !== 'none';
 				}
+			};
+			
+			self.setData = setData = function(_data) {
+				//REQUIRED: _data
+				
+				data = _data;
+			};
+			
+			self.getData = getData = function() {
+				return data;
 			};
 		},
 	

@@ -26,6 +26,7 @@ UPPERCASE.IO를 사용하기 위해서는 이하 기술셋을 알고있어야 �
 * [Configuration](CONFIG.md)
 * [배포하기](DEPLOY.md) (작성중)
 * [UPPERCASE.IO 업데이트](UPDATE.md)
+* [UADMIN](UADMIN.md) (작성중)
 
 ## 한걸음 더
 * [BOX 이해하기](BOX.md)

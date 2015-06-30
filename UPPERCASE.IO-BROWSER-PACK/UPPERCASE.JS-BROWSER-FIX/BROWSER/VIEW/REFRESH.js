@@ -26,7 +26,7 @@ OVERRIDE(REFRESH, function(origin) {
 				EVENT_ONCE({
 					name : 'hashchange'
 				}, function() {
-					location.href = savedHash === '' ? '#!/' : savedHash;
+					location.replace(savedHash === '' ? '#!/' : savedHash);
 				});
 		
 				location.href = '#!/' + getRefreshingURI();

@@ -27,7 +27,7 @@ OVERRIDE(REFRESH, function(origin) {
 					name : 'hashchange'
 				}, function() {
 					DELAY(function() {
-						location.href = savedHash === '' ? '#!/' : savedHash;
+						location.replace(savedHash === '' ? '#!/' : savedHash);
 					});
 				});
 	
