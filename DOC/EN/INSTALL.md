@@ -1,4 +1,4 @@
-# UPPERCASE.IO 설치하기
+#INSTALL UPPERCASE.IO
 
 1. Install all prerequisites below.
 
