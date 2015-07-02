@@ -31,6 +31,8 @@
 
 ### 업로드 관련 설정
 * `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
+* `maxThumbWidth` 자동으로 만들어지는 섬네일의 최대 가로 길이를 설정합니다.
+* `maxThumbHeight` 자동으로 만들어지는 섬네일의 최대 세로 길이를 설정합니다.
 
 ### 보안 웹서버 관련 설정
 * `securedKeyFilePath` https 프로토콜을 사용하는 보안 웹서버를 위한 key file의 경로를 설정합니다.

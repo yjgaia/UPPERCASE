@@ -42,6 +42,16 @@ OVERRIDE(FORM, function(origin) {
 			}
 
 			inner.setEl(document.createElement('<form action="' + action + '" target="' + target + '" method="' + method + '" enctype="' + enctype + '" />'));
+		
+			if (action === undefined) {
+				
+				EVENT({
+					node : self,
+					name : 'submit'
+				}, function(e) {
+					e.stop();
+				});
+			}
 		}
 	});
 });

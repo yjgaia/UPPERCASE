@@ -22,6 +22,7 @@ UPPERCASE.IO를 사용하기 위해서는 이하 기술셋을 알고있어야 �
 * [모델 생성](CREATE_MODEL.md)
 * [간단한 블로그 만들기](MAKE_BLOG.md)
 * [블로그에 인증 추가하기](ADD_AUTH_TO_BLOG.md)
+* [업로드 기능 만들기](UPLOAD.md) (작성중)
 * [UPPERCASE.IO가 제공하는 기능들 살펴보기](OVERVIEW.md)
 * [Configuration](CONFIG.md)
 * [배포하기](DEPLOY.md) (작성중)
