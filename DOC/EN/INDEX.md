@@ -31,7 +31,7 @@ You must know following stacks in order to use UPPERCASE.IO.
 * [Understand BOX](BOX.md)
 * [Basic Styles](BASE_STYLE.md)
 * [Building hybrid app with Apache Cordova and Crosswalk](CORDOVA.md) (writing)
-* [소셜 연동](SOCIAL.md) (writing)
+* [Social Integration](SOCIAL.md) (writing)
 * [Building Android and iOS Mobile Native Apps](MOBILE_NATIVE.md) (writing)
 * [Building Desktop Applicaiton using Node-webkit](NODE_WEBKIT.md) (writing)
 * [Structuring Multiple Projects](MULTI_PROJECT.md) (writing)
@@ -68,6 +68,9 @@ UPPERCASE.IO provides web based client suited for developing web apps. In order 
 
 ## Writer
 [Young Jae Sim](https://github.com/Hanul)
+
+## Translator
+English: [Keon Woo Kim](https://github.com/KeonKim)
 
 ## Contact
 * [UPPERCASE.IO facebook group](https://www.facebook.com/groups/uppercase/)
