@@ -1,5 +1,5 @@
 # Create Project
-This document is for users who have general understanding of Javascript and Web Development. Please refer to the Sample Project made in this article is generated in [Sample folder](https://github.com/Hanul/UPPERCASE.IO/tree/master/Sample).
+This document is for users who have general understanding of Javascript and Web Development. Please note that the Sample Project made in this article is generated in [Sample folder](https://github.com/Hanul/UPPERCASE.IO/tree/master/Sample).
 
 ## Create Project Folder
 1. Create Project Folder in proper place (can be anywhere).
@@ -86,7 +86,7 @@ Now we are going to make basic screen saying Hello, UPPERCASE.IO!. Create `MAIN.
     
     	run : function() {
     		'use strict';
-    		// ''로 접속하면 Home 뷰를 생성합니다.
+    		// Accessing '' generates Home view
     		Sample.MATCH_VIEW({
     			uri : '',
     			target : Sample.Home
