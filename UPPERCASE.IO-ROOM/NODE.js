@@ -61,7 +61,6 @@ FOR_BOX(function(box) {
 	});
 });
 
-
 FOR_BOX(function(box) {
 	'use strict';
 
@@ -78,7 +77,6 @@ FOR_BOX(function(box) {
 		}
 	});
 });
-
 
 /*
  * Launch room server class

@@ -4,7 +4,6 @@ Welcome to UPPERCASE.IO! (http://uppercase.io)
 
 */
 
-
 FOR_BOX(function(box) {
 	'use strict';
 

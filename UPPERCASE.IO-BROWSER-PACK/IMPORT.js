@@ -11432,10 +11432,18 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 				data : roomName
 			});
 		}
+		
+		EACH(enterRoomNames, function(enterRoomName, key) {
 
-		REMOVE({
-			array : enterRoomNames,
-			value : roomName
+			if (enterRoomName === roomName) {
+
+				REMOVE({
+					array : enterRoomNames,
+					key : key
+				});
+				
+				return false;
+			}
 		});
 	};
 
