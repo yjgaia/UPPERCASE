@@ -263,9 +263,6 @@ RUN(function() {
 		load('UPPERCASE.IO-TRANSPORT/BROWSER.js');
 		copyFolder('UPPERCASE.IO-TRANSPORT/R');
 
-		// load UPPERCASE.IO-UPLOAD.
-		copyFolder('UPPERCASE.IO-UPLOAD/R');
-
 		// load UPPERCASE.IO-ROOM.
 		load('UPPERCASE.IO-ROOM/CLIENT.js');
 		load('UPPERCASE.IO-ROOM/BROWSER.js');

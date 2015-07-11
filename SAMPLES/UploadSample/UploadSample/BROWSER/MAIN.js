@@ -21,7 +21,7 @@ UploadSample.MAIN = METHOD({
 
 			var
 			// callback url
-			callbackURL = global.location.protocol + '//' + global.location.host + '/__UPLOAD_CALLBACK',
+			callbackURL = global.location.protocol + '//' + global.location.host + '/__CORS_CALLBACK',
 
 			// form
 			form,

@@ -984,10 +984,10 @@ global.BOOT = function(params) {
 						return false;
 					}
 
-					// serve upload callback.
-					else if (uri === '__UPLOAD_CALLBACK') {
-						replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.IO-UPLOAD/R');
-						requestInfo.uri = 'UPLOAD_CALLBACK.html';
+					// serve cors callback.
+					else if (uri === '__CORS_CALLBACK') {
+						replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/R');
+						requestInfo.uri = 'CORS_CALLBACK.html';
 					}
 
 					// serve socket server host.

@@ -162,6 +162,73 @@ TestBox.ROOM('testRoom', function(clientInfo, on, off) {
 ```
 * `BROADCAST({roomName:, methodName:, data:})` 특정 룸에 접속한 사람들에게 메시지를 전송합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
 
+### 룸 서버의 접속사 수 가져오기 예제
+```javascript
+TestBox.ConnectionRoom = OBJECT({
+	
+	init : function() {
+		'use strict';
+		
+		var
+		// connection db
+		connectionDB = TestBox.SHARED_DB('connectionDB');
+		
+		// 초기화
+		connectionDB.save({
+			id : 'connectionCountInfo',
+			data : {
+				count : 0
+			}
+		});
+		
+		// 룸 생성
+		TestBox.ROOM('connectionRoom', function(clientInfo, on, off) {
+			
+			// 새로운 유저 접속 시 count를 1 올림
+			connectionDB.update({
+				id : 'connectionCountInfo',
+				data : {
+					$inc : {
+						count : 1
+					}
+				}
+			});
+			
+			// 새 유저가 접속했음을 클라이언트에 알림
+			TestBox.BROADCAST({
+				roomName : 'connectionRoom',
+				methodName : 'newUser'
+			});
+			
+			// 접속이 끊어질 경우
+			on('__DISCONNECTED', function() {
+				
+				// count를 1 내림
+				connectionDB.update({
+					id : 'connectionCountInfo',
+					data : {
+						$inc : {
+							count : -1
+						}
+					}
+				});
+				
+				// 유저가 접속을 끊었음을 클라이언트에 알림
+				HanulWiki.BROADCAST({
+					roomName : 'connectionRoom',
+					methodName : 'leaveUser'
+				});
+			});
+			
+			// 접속자 수 전송
+			on('getConnectionCount', function(notUsing, ret) {
+				ret(connectionDB.get('connectionCountInfo').count);
+			});
+		});
+	}
+});
+```
+
 ### 주의사항
 `on`으로 클라이언트에서 넘어온 값을 다룰 때, `undefined`가 넘어올 수 있음을 유의하시기 바랍니다. 따라서 값이 반드시 필요한 로직을 구성할 때에는 다음과 같이 `undefined`를 무시하는 코드를 작성합니다.
 
