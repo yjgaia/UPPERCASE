@@ -320,12 +320,6 @@ global.SOUND = CLASS(function(cls) {
 	var
 	// audio context
 	audioContext;
-	
-	if (global.AudioContext !== undefined) {
-		audioContext = new AudioContext();
-	} else if (global.webkitAudioContext !== undefined) {
-		audioContext = new webkitAudioContext();
-	}
 
 	return {
 
@@ -369,6 +363,11 @@ global.SOUND = CLASS(function(cls) {
 			// Check if we can play mp3, if not then fall back to ogg
 			if (audio.canPlayType('audio/mpeg;') === '' && audio.canPlayType('audio/ogg;')) {
 				src = ogg;
+			}
+			
+			// init audioContext.
+			if (audioContext === undefined && global.AudioContext !== undefined) {
+				audioContext = new AudioContext();
 			}
 
 			// if exists audio context

@@ -28,6 +28,11 @@ RUN(function() {
 			return new Date().getTime();
 		};
 	}
+	
+	// fix AudioContext.
+	if (global.AudioContext === undefined && global.webkitAudioContext !== undefined) {
+		global.AudioContext = global.webkitAudioContext;
+	}
 
 	// fix JSON.
 	if (global.JSON === undefined) {
