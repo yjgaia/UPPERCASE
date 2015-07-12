@@ -201,7 +201,7 @@ global.LOAD = METHOD({
 		currentScript = scriptEls[scriptEls.length - 1];
 
 		scriptEl = document.createElement('script');
-		scriptEl.src = (url.indexOf('?') === -1 ? url + '?' : url + '&') + (isNoCache !== true ? (CONFIG.version !== undefined ? 'version=' + CONFIG.version : '') : (new Date()).getTime());
+		scriptEl.src = (url.indexOf('?') === -1 ? url + '?' : url + '&') + (isNoCache !== true && CONFIG.version !== undefined ? 'version=' + CONFIG.version : (new Date()).getTime());
 
 		scriptEl.onload = function() {
 
