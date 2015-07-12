@@ -126,4 +126,30 @@ http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝�
 
 축하합니다! 첫 UPPERCASE.IO 프로젝트를 생성하셨습니다! 이제 UPPERCASE.IO 프로젝트의 기본이 되는 [모델 생성](CREATE_MODEL.md)에 대해 알아보도록 하겠습니다.
 
+## MAIN 메소드
+`MAIN`은 프로젝트가 실행될 때 맨 처음 실행되는 메소드입니다. `NODE` 폴더의 `MAIN`은 프로젝트 자체를 실행할 때, `BROWSER` 폴더의 `MAIN`은 브라우저로 최초 접속 시 실행됩니다.
+
+참고로 `NODE`의 `MAIN` 메소드에는 파라미터로 `requestHandler`를 지정할 수 있는 함수를 받습니다. 이를 통해 특정 `URI`에 대한 행동을 정의할 수 있습니다.
+
+```javascript
+Sample.MAIN = METHOD({
+	
+	run : function(addRequestListener) {
+		'use strict';
+		
+		addRequestListener(function(requestInfo, response) {
+
+			var
+			// uri
+			uri = requestInfo.uri,
+			
+			// user agent
+			userAgent = requestInfo.headers['user-agent'];
+			
+			...
+		});
+	}
+});
+```
+
 다음 문서: [모델 생성](CREATE_MODEL.md)

@@ -791,7 +791,7 @@ global.BOOT = function(params) {
 								response({
 									statusCode : 302,
 									headers : {
-										'Location' : params.callbackURL + '?maxUploadFileMB=' + NODE_CONFIG.maxUploadFileMB
+										'Location' : params.callbackURL + '?maxUploadFileMB=' + encodeURIComponent(NODE_CONFIG.maxUploadFileMB)
 									}
 								});
 							},
