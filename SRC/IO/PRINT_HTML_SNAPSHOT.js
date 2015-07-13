@@ -39,7 +39,7 @@ page.viewportSize = {
 	height : 768
 };
 
-page.open('http://localhost:' + system.args[1] + '/' + system.args[2] === undefined ? '' : encodeURIComponent(system.args[2][0] === '/' ? system.args[2].substring(1) : system.args[2]), function(status) {
+page.open('http://localhost:' + system.args[1] + '/' + (system.args[2] === undefined ? '' : encodeURIComponent(system.args[2][0] === '/' ? system.args[2].substring(1) : system.args[2])), function(status) {
 	'use strict';
 	
 	if (status === 'fail') {
