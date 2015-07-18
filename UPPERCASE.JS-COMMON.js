@@ -2913,9 +2913,14 @@ global.EACH = METHOD({
 				}
 
 				// when shrink
-				if (dataOrArrayOrString.length === length - 1) {
-					i -= 1;
-					length -= 1;
+				if (dataOrArrayOrString.length < length) {
+					i -= length - dataOrArrayOrString.length;
+					length -= length - dataOrArrayOrString.length;
+				}
+
+				// when stretch
+				else if (dataOrArrayOrString.length > length) {
+					length += dataOrArrayOrString.length - length;
 				}
 			}
 		}
@@ -3069,6 +3074,11 @@ global.REVERSE_EACH = METHOD({
 
 				if (func(arrayOrString[i], i) === false) {
 					return false;
+				}
+				
+				// when shrink
+				if (arrayOrString.length < length) {
+					i += length - arrayOrString.length;
 				}
 			}
 		}

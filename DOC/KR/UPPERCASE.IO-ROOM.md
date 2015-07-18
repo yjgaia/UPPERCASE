@@ -161,6 +161,17 @@ TestBox.ROOM('testRoom', function(clientInfo, on, off) {
 });
 ```
 * `BROADCAST({roomName:, methodName:, data:})` 특정 룸에 접속한 사람들에게 메시지를 전송합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
+* `CONNECT_TO_ROOM_SERVER({host:, port:}, function(on, off, send) {...})` `CONNECT_TO_ROOM_SERVER({name:, host:, port:}, function(on, off, send) {...})` 룸 서버에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/CONNECT/CONNECT_TO_ROOM_SERVER.js)
+* `CLIENT_ROOM(name)` `CLIENT_ROOM({roomServerName:, name:})` 룸에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/NODE/CLIENT_ROOM.js)
+```javascript
+room = TestBox.CLIENT_ROOM('testRoom');
+room.on(methodName, function(data) {...})
+room.off(methodName)
+room.send(methodName, function(data) {...})
+room.exit()
+```
+
+`CONNECT_TO_ROOM_SERVER`의 `name`을 지정하면, 여러 룸 서버에 접속할 수 있습니다. `CLIENT_ROOM`의 `roomServerName` 설정으로 룸이 연결될 룸 서버를 선택할 수 있습니다.
 
 ### 룸 서버의 접속사 수 가져오기 예제
 ```javascript
@@ -243,8 +254,8 @@ on(methodName, function(data, ret) {
 ```
 
 ## BROWSER API
-* `CONNECT_TO_ROOM_SERVER({methodName:, data:})` * `CONNECT_TO_ROOM_SERVER({methodName:, data:}, function(on, off, send) {...})` 룸 서버에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/BROWSER/CONNECT/CONNECT_TO_ROOM_SERVER.js)
-* `ROOM(name)` 룸에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/CLIENT/ROOM.js)
+* `CONNECT_TO_ROOM_SERVER({port:}, function(on, off, send) {...})` `CONNECT_TO_ROOM_SERVER({host:, port:}, function(on, off, send) {...})` `CONNECT_TO_ROOM_SERVER({name:, host:, port:}, function(on, off, send) {...})` 룸 서버에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/BROWSER/CONNECT/CONNECT_TO_ROOM_SERVER.js)
+* `ROOM(name)` `ROOM({roomServerName:, name:})` 룸에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/ROOM/CLIENT/ROOM.js)
 ```javascript
 room = TestBox.ROOM('testRoom');
 room.on(methodName, function(data) {...})
@@ -252,3 +263,5 @@ room.off(methodName)
 room.send(methodName, function(data) {...})
 room.exit()
 ```
+
+`CONNECT_TO_ROOM_SERVER`의 `name`을 지정하면, 여러 룸 서버에 접속할 수 있습니다. `ROOM`의 `roomServerName` 설정으로 룸이 연결될 룸 서버를 선택할 수 있습니다.
