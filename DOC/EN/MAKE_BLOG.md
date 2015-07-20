@@ -73,7 +73,7 @@ Blog.Form = CLASS({
 		// wrapper
 		wrapper = DIV().appendTo(BODY);
 		
-		// 뷰의 파라미터가 변경될 때 (이 경우에는 {articleId})
+		// When parameter of view changes ({articleId} for this example)
 		inner.on('paramsChange', function(params) {
 		
 			var
@@ -117,34 +117,34 @@ Blog.Form = CLASS({
 						
 						data.id = articleId;
 						
-						// articleId가 undefined면 데이터 생성, 아니면 수정
+						// create if articleId is undefined, else edit
 						(articleId === undefined ? Blog.ArticleModel.create : Blog.ArticleModel.update)(data, {
 							
-							// 데이터 검증 실패
+							// Data is invalid
 							notValid : function(validErrors) {
 								if (validErrors.title !== undefined) {
 									if (validErrors.title.type === 'notEmpty') {
-										alert('제목을 입력해주세요.');
+										alert('Please Enter Title.');
 									} else if (validErrors.title.type === 'size') {
-										alert('제목의 길이는 최대 ' + validErrors.title.validParams.max + '글자 입니다.');
+										alert('Maximum length of title is ' + validErrors.title.validParams.max + '.');
 									}
 								} else if (validErrors.content !== undefined) {
 									if (validErrors.content.type === 'notEmpty') {
-										alert('내용을 입력해주세요.');
+										alert('Please Enter Content.');
 									} else if (validErrors.content.type === 'size') {
-										alert('내용의 길이는 최대 ' + validErrors.content.validParams.max + '글자 입니다.');
+										alert('Maximum length of content is ' + validErrors.content.validParams.max + '.');
 									}
 								}
 							},
 							
-							// 오류 발생
+							// error occured
 							error : function() {
-								alert('오류가 발생하였습니다.');
+								alert('Error Occured.');
 							},
 							
-							// 글 작성 완료
+							// Writing Done
 							success : function() {
-								// 글 목록으로 이동
+								// Go back to list
 								Blog.GO('');
 							}
 						});
@@ -152,15 +152,15 @@ Blog.Form = CLASS({
 				}
 			}).appendTo(wrapper);
 			
-			// article id가 undefined가 아니면 article 데이터를 불러옴
+			// if article id is undefined call article
 			if (articleId !== undefined) {
 				Blog.ArticleModel.get(articleId, form.setData);
 			}
 		});
 		
-		// 뷰에서 나가면
+		// if one gets out of view
 		inner.on('close', function() {
-			// wrapper 제거
+			// remove wrapper
 			wrapper.remove();
 		});
 	}
@@ -168,7 +168,7 @@ Blog.Form = CLASS({
 ```
 
 ###### Blog/BROWSER/List.js
-작성된 글 목록을 보는 기능입니다. 아래 코드와 주석을 살펴보시기 바랍니다.
+Function to List of written articles. Please read the code and comment carefully.
 ```javascript
 Blog.List = CLASS({
 
@@ -189,9 +189,9 @@ Blog.List = CLASS({
 		wrapper = DIV({
 			c : [
 			
-			// 글 작성 버튼
+			// Write Button
 			A({
-				c : '글 작성',
+				c : 'Write',
 				on : {
 					tap : function() {
 						Blog.GO('form');
@@ -199,12 +199,12 @@ Blog.List = CLASS({
 				}
 			}),
 			
-			// 글 목록
+			// Article List
 			list = UL()]
 		
 		}).appendTo(BODY),
 		
-		// article watching room, 신규 데이터 감지 및 기존 데이터들을 불러오고 데이터의 변경을 감지하는 룸 생성
+		// article watching room, it detacts any changes and imports previous data.
 		articleWatchingRoom = Blog.ArticleModel.onNewAndFindWatching(function(articleData, addUpdateHandler, addRemoveHandler) {
 			
 			var
@@ -214,46 +214,46 @@ Blog.List = CLASS({
 			// article dom
 			articleDom;
 			
-			// 뷰가 열려있으면 내용 추가
+			// add content if view is open
 			if (inner.checkIsClosed() !== true) {
 				
-				// 데이터가 수정된 경우 다시 DOM 생성
+				// create dom again if data is collected.
 				addUpdateHandler(
-					// function을 한번 실행하고 해당 function을 다시 반환한다.
+					// excute function once and return function it self.
 					RAR(articleData, function(articleData) {
 					
 					originArticleDom = articleDom;
 					
-					// 기존 DOM이 존재하면 기존 DOM 뒤에 새로운 DOM을 만들고 기존 DOM을 제거한다.
-					// 기존 DOM이 존재하지 않으면 리스트의 맨 처음에 DOM을 만든다.
+					// if previous DOM exists make new DOM after the previous one and delete the previous one.
+					// If previous DOM does not exist create DOM in the very beginning of the list.
 					(originArticleDom === undefined ? list.prepend : originArticleDom.after)(articleDom = LI({
 						style : {
 							marginTop : 10
 						},
 						c : [
-						// 제목
+						// Title
 						H3({
 							c : articleData.title
 						}),
-						// 내용
+						// Content
 						P({
 							c : articleData.content
 						}),
-						// 글 수정 버튼
+						// Edit Button
 						A({
-							c : '글 수정',
+							c : 'Edit Article',
 							on : {
 								tap : function() {
 									Blog.GO('form/' + articleData.id);
 								}
 							}
 						}),
-						// 글 삭제 버튼
+						// Delete Button
 						A({
 							style : {
 								marginLeft : 5
 							},
-							c : '글 삭제',
+							c : 'Delete',
 							on : {
 								tap : function() {
 									Blog.ArticleModel.remove(articleData.id);
@@ -267,18 +267,18 @@ Blog.List = CLASS({
 					}
 				}));
 				
-				// 데이터가 삭제된 경우 DOM 제거
+				// Delete DOM when data is deleted
 				addRemoveHandler(function() {
 					articleDom.remove();
 				});
 			}
 		});
 		
-		// 뷰에서 나가면
+		// If view is closed
 		inner.on('close', function() {
-			// wrapper 제거
+			// remove wrapper
 			wrapper.remove();
-			// article 데이터의 변경을 감지하는 룸에서 나감
+			// exit the article watching room
 			articleWatchingRoom.exit();
 		});
 	}
@@ -286,7 +286,7 @@ Blog.List = CLASS({
 ```
 
 ## MAIN.js
-MAIN.js는 URI와 각 뷰들을 연결해주는 기능을 합니다.
+MAIN.js connects each URI and views.
 
 ###### Blog/BROWSER/MAIN.js
 ```javascript
@@ -308,8 +308,8 @@ Blog.MAIN = METHOD({
 });
 ```
 
-## BOOT 파일 만들기
-거의 다 완성되었습니다! 마지막으로 프로젝트 실행을 위한 BOOT 파일인 Blog.js를 만들어 보겠습니다. CONFIG 및 NODE_CONFIG 등 설정에 관한 자세한 정보는 [Configuration](CONFIG.md) 문서를 살펴보시기 바랍니다.
+## Create BOOT file
+We're almost done! Lastly we need to make Blog.js, a BOOT file needed to initiate the project. Please refer to [Configuration](CONFIG.md) document for more information on CONFIG, NODE_CONFIG and other configurations.
 
 ###### Blog.js
 ```javascript
@@ -328,13 +328,14 @@ BOOT({
 });
 ```
 
-## 실행
+## Execute
 ```
 node Blog.js
 ```
 
-실행 후 브라우저를 켜서 http://localhost:8328 로 접속해 보시기 바랍니다. `MODEL`의 `onNewAndFindWatching` 기능을 사용하여, 처음에 글 목록을 가져오고, 이후에 새 글이 생길 때 자동으로 목록에 새 글이 추가되는 것을 확인할 수 있습니다.
+After that, go to http://localhost:8328 to access your blog.
+You will be able to see that the site fetches the list of articles using `onNewAndFindWatching` function of `MODEL` and automatically updates when new article is added.
 
-이제 간단한 블로그가 완성되었습니다! 다음 문서에서는 블로그에 인증을 추가하는 것을 실습해 보겠습니다.
+We are done with the simple blog project! We will add authorization feature to our simple blog on the next document.
 
-다음 문서: [블로그에 인증 추가하기](ADD_AUTH_TO_BLOG.md)
+Next Up: [Add Authorization to Blog](ADD_AUTH_TO_BLOG.md)
