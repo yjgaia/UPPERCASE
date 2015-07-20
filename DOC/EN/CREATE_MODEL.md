@@ -47,7 +47,7 @@ Sample.SomeModel = OBJECT({
 	preset : function() {
 		'use strict';
 
-		// 모델은 각 BOX에 할당되어 있는 MODEL을 상속하여 만듭니다.??
+		// Model in Box is inherited to the model.
 		return Sample.MODEL;
 	},
 
@@ -96,7 +96,7 @@ Sample.SomeModel = OBJECT({
 ```
 
 ## Confirm that Model Works Properly
-모델 작동을 확인하기 위해 프로젝트의 NODE 폴더 이하에 MAIN.js를 만들어, 다음과 같은 코드를 추가해 보겠습니다. MAIN.js는 UPPERCASE.IO가 프로젝트 부팅 시 맨 처음 실행하는 코드입니다.
+In order to confirm that our model works, I made MAIN.js under NODE folder and added the code below. MAIN.js is what UPPERCASE.IO executes first when booted.
 
 ###### MAIN.js
 ```javascript
@@ -105,10 +105,10 @@ Sample.MAIN = METHOD({
 	run : function() {
 		'use strict';
 		
-		// 멀티 코어 CPU에서 하나의 코어에서만 아래 내용 실행
+		// Use the code below only under multicore CPU environment
 		if (CPU_CLUSTERING.getWorkerId() === 1) {
 			
-			// 부팅 후 1초 후에 실행
+			// Execute a second later when booted
 			DELAY(1, function() {
 				
 				// Create Model
