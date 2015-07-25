@@ -2467,15 +2467,32 @@ global.CREATE_DATE = METHOD({
 		
 		// now cal
 		nowCal = CALENDAR(new Date());
+		
+		if (year === undefined) {
+			year = nowCal.getYear();
+		}
+		
+		if (month === undefined) {
+			month = date === undefined ? 0 : nowCal.getMonth();
+		}
+		
+		if (date === undefined) {
+			date = hour === undefined ? 0 : nowCal.getDate();
+		}
+		
+		if (hour === undefined) {
+			hour = minute === undefined ? 0 : nowCal.getHour();
+		}
+		
+		if (minute === undefined) {
+			minute = second === undefined ? 0 : nowCal.getMinute();
+		}
+		
+		if (second === undefined) {
+			second = 0;
+		}
 
-		return new Date(
-			year === undefined ? nowCal.getYear() : year,
-			(month === undefined ? nowCal.getYear() : month) - 1,
-			date === undefined ? nowCal.getDate() : date,
-			hour === undefined ? nowCal.getHour() : hour,
-			minute === undefined ? nowCal.getMinute() : minute,
-			second === undefined ? nowCal.getSecond() : second
-		);
+		return new Date(year, month - 1, date, hour, minute, second);
 	}
 });
 
