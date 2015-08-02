@@ -1502,10 +1502,10 @@ FOR_BOX(function(box) {
 							start : start,
 							count : count
 						}, {
-							success : function(savedDataSet, addUpdateHandler, addRemoveHandler) {
+							success : function(savedDataSet, addUpdateHandler, addRemoveHandler, exit) {
 								
 								if (callback !== undefined) {
-									callback(savedDataSet, addUpdateHandler, addRemoveHandler);
+									callback(savedDataSet, addUpdateHandler, addRemoveHandler, exit);
 								}
 								
 								REVERSE_EACH(savedDataSet, function(savedData) {
@@ -1513,6 +1513,11 @@ FOR_BOX(function(box) {
 										addUpdateHandler(savedData.id, handler);
 									}, function(handler) {
 										addRemoveHandler(savedData.id, handler);
+									},
+
+									// close watching.
+									function() {
+										exit(savedData.id);
 									});
 								});
 							},

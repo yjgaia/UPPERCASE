@@ -66,20 +66,6 @@ RUN(function() {
 	loadFixScript('BROWSER/INFO');
 
 	/**
-	 * fix BROWSER/WINDOW.
-	 */
-
-	// fix WIN_WIDTH.
-	if (global.innerWidth === undefined) {
-		loadFixScript('BROWSER/WINDOW/WIN_WIDTH');
-	}
-
-	// fix WIN_HEIGHT.
-	if (global.innerHeight === undefined) {
-		loadFixScript('BROWSER/WINDOW/WIN_HEIGHT');
-	}
-
-	/**
 	 * fix BROWSER/DOM.
 	 */
 

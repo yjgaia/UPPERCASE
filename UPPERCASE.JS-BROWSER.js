@@ -2969,9 +2969,18 @@ global.A = CLASS({
 		var
 		// href
 		href,
+		
+		// is content href
+		isContentHref = false,
 
 		// children
-		children;
+		children,
+		
+		// append.
+		append,
+		
+		// prepend.
+		prepend;
 
 		// init params.
 		if (params !== undefined) {
@@ -2980,7 +2989,36 @@ global.A = CLASS({
 		}
 
 		if (children === undefined && href !== undefined) {
+			
 			self.append(href);
+			
+			isContentHref = true;
+			
+			OVERRIDE(self.append, function(origin) {
+				self.append = append = function(node) {
+					//REQUIRED: node
+					
+					if (isContentHref === true) {
+						self.empty();
+						isContentHref = false;
+					}
+					
+					origin(node);
+				};
+			});
+			
+			OVERRIDE(self.prepend, function(origin) {
+				self.prepend = prepend = function(node) {
+					//REQUIRED: node
+					
+					if (isContentHref === true) {
+						self.empty();
+						isContentHref = false;
+					}
+					
+					origin(node);
+				};
+			});
 		}
 	}
 });
@@ -7681,7 +7719,7 @@ global.WIN_HEIGHT = METHOD({
 	run : function() {
 		'use strict';
 
-		return global.innerHeight;
+		return document.documentElement.clientHeight;
 	}
 });
 
@@ -7693,6 +7731,6 @@ global.WIN_WIDTH = METHOD({
 	run : function() {
 		'use strict';
 
-		return global.innerWidth;
+		return document.documentElement.clientWidth;
 	}
 });

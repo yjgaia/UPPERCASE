@@ -967,7 +967,7 @@ global.BOOT = function(params) {
 											isFinal : true
 										});
 
-										uploadFileDB.update({
+										uploadFileDB.updateNoHistory({
 											id : savedData.id,
 											$inc : {
 												downloadCount : 1
