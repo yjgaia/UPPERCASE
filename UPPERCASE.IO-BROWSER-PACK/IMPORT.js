@@ -4370,11 +4370,6 @@ global.NODE = CLASS({
 				// remove from parent node.
 				wrapperEl.parentNode.removeChild(wrapperEl);
 
-				REMOVE({
-					array : parentNode.getChildren(),
-					value : self
-				});
-
 				setParent(undefined);
 
 				// fire remove event.
@@ -4404,6 +4399,13 @@ global.NODE = CLASS({
 
 		self.setParent = setParent = function(node) {
 			//OPTIONAL: node
+			
+			if (parentNode !== undefined) {
+				REMOVE({
+					array : parentNode.getChildren(),
+					value : self
+				});
+			}
 
 			parentNode = node;
 		};
@@ -5347,7 +5349,11 @@ global.EVENT = CLASS(function(cls) {
 								lastTapTime = Date.now();
 								
 								if (nodeId !== 'body') {
+									
 									e.stopDefault();
+									
+									// clear text selections.
+									getSelection().removeAllRanges();
 								}
 								
 								return eventHandler(e, node);
@@ -5370,7 +5376,11 @@ global.EVENT = CLASS(function(cls) {
 							lastTapTime = Date.now();
 							
 							if (nodeId !== 'body') {
+								
 								e.stopDefault();
+								
+								// clear text selections.
+								getSelection().removeAllRanges();
 							}
 							
 							return eventHandler(e, node);
@@ -10689,7 +10699,7 @@ global.VIEW = CLASS({
 
 		var
 		// is closed
-		isClosed,
+		isClosed = false,
 
 		// params change handlers
 		paramsChangeHandlers = [],
