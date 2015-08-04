@@ -3995,7 +3995,10 @@ global.NODE = CLASS({
 		setData,
 		
 		// get data.
-		getData;
+		getData,
+		
+		// scroll to.
+		scrollTo;
 
 		inner.setWrapperDom = setWrapperDom = function(dom) {
 			//REQUIRED: dom
@@ -4574,6 +4577,27 @@ global.NODE = CLASS({
 		
 		self.getData = getData = function() {
 			return data;
+		};
+		
+		self.scrollTo = scrollTo = function(params) {
+			//REQUIRED: params
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			
+			var
+			// left
+			left = params.left,
+			
+			// top
+			top = params.top;
+			
+			if (left !== undefined) {
+				contentEl.scrollLeft = left;
+			}
+			
+			if (top !== undefined) {
+				contentEl.scrollTop = top;
+			}
 		};
 	},
 
@@ -5349,11 +5373,7 @@ global.EVENT = CLASS(function(cls) {
 								lastTapTime = Date.now();
 								
 								if (nodeId !== 'body') {
-									
 									e.stopDefault();
-									
-									// clear text selections.
-									getSelection().removeAllRanges();
 								}
 								
 								return eventHandler(e, node);
@@ -5376,11 +5396,7 @@ global.EVENT = CLASS(function(cls) {
 							lastTapTime = Date.now();
 							
 							if (nodeId !== 'body') {
-								
 								e.stopDefault();
-								
-								// clear text selections.
-								getSelection().removeAllRanges();
 							}
 							
 							return eventHandler(e, node);
@@ -12964,7 +12980,7 @@ FOR_BOX(function(box) {
 					});
 				};
 				
-				// find.
+				// on new and find.
 				if (findConfig !== false) {
 					
 					self.onNewAndFind = onNewAndFind = function(params, handlerOrHandlers) {
@@ -12974,6 +12990,7 @@ FOR_BOX(function(box) {
 						//OPTIONAL: params.sort
 						//OPTIONAL: params.start
 						//OPTIONAL: params.count
+						//OPTIONAL: params.isNotOnNew
 						//REQUIRED: handlerOrHandlers
 						//REQUIRED: handlerOrHandlers.handler
 						//OPTIONAL: handlerOrHandlers.success
@@ -12995,6 +13012,9 @@ FOR_BOX(function(box) {
 						
 						// count
 						count,
+						
+						// is not on new
+						isNotOnNew,
 						
 						// on new room
 						onNewRoom,
@@ -13023,6 +13043,7 @@ FOR_BOX(function(box) {
 							sort = params.sort;
 							start = params.start;
 							count = params.count;
+							isNotOnNew = params.isNotOnNew;
 						}
 	
 						if (CHECK_IS_DATA(handlerOrHandlers) !== true) {
@@ -13034,8 +13055,10 @@ FOR_BOX(function(box) {
 							errorHandler = handlerOrHandlers.error;
 						}
 						
-						if (filter === undefined && sort === undefined && (start === undefined || start === 0)) {
-							onNewRoom = onNew(properties, handler);
+						if (isNotOnNew !== true) {
+							onNewRoom = onNew(properties, function(savedData) {
+								handler(savedData, true);
+							});
 						}
 						
 						find({
@@ -13050,7 +13073,9 @@ FOR_BOX(function(box) {
 									callback(savedDataSet);
 								}
 								
-								REVERSE_EACH(savedDataSet, handler);
+								REVERSE_EACH(savedDataSet, function(savedData) {
+									handler(savedData, false);
+								});
 							},
 							notAuthed : notAuthedHandler,
 							error : errorHandler
@@ -13081,6 +13106,7 @@ FOR_BOX(function(box) {
 						//OPTIONAL: params.sort
 						//OPTIONAL: params.start
 						//OPTIONAL: params.count
+						//OPTIONAL: params.isNotOnNew
 						//REQUIRED: handlerOrHandlers
 						//REQUIRED: handlerOrHandlers.handler
 						//OPTIONAL: handlerOrHandlers.success
@@ -13102,6 +13128,9 @@ FOR_BOX(function(box) {
 						
 						// count
 						count,
+						
+						// is not on new
+						isNotOnNew,
 						
 						// on new watching room
 						onNewWatchingRoom,
@@ -13133,6 +13162,7 @@ FOR_BOX(function(box) {
 							sort = params.sort;
 							start = params.start;
 							count = params.count;
+							isNotOnNew = params.isNotOnNew;
 						}
 	
 						if (CHECK_IS_DATA(handlerOrHandlers) !== true) {
@@ -13144,8 +13174,10 @@ FOR_BOX(function(box) {
 							errorHandler = handlerOrHandlers.error;
 						}
 						
-						if (filter === undefined && sort === undefined && (start === undefined || start === 0)) {
-							onNewWatchingRoom = onNewWatching(properties, handler);
+						if (isNotOnNew !== true) {
+							onNewWatchingRoom = onNewWatching(properties, function(savedData, addUpdateHandler, addRemoveHandler, closeWatching) {
+								handler(savedData, addUpdateHandler, addRemoveHandler, closeWatching, true);
+							});
 						}
 						
 						findWatchingRoom = findWatching({
@@ -13170,7 +13202,10 @@ FOR_BOX(function(box) {
 									// close watching.
 									function() {
 										exit(savedData.id);
-									});
+									},
+									
+									// is new data
+									false);
 								});
 							},
 							notAuthed : notAuthedHandler,

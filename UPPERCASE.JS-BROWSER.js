@@ -888,7 +888,10 @@ global.NODE = CLASS({
 		setData,
 		
 		// get data.
-		getData;
+		getData,
+		
+		// scroll to.
+		scrollTo;
 
 		inner.setWrapperDom = setWrapperDom = function(dom) {
 			//REQUIRED: dom
@@ -1467,6 +1470,27 @@ global.NODE = CLASS({
 		
 		self.getData = getData = function() {
 			return data;
+		};
+		
+		self.scrollTo = scrollTo = function(params) {
+			//REQUIRED: params
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			
+			var
+			// left
+			left = params.left,
+			
+			// top
+			top = params.top;
+			
+			if (left !== undefined) {
+				contentEl.scrollLeft = left;
+			}
+			
+			if (top !== undefined) {
+				contentEl.scrollTop = top;
+			}
 		};
 	},
 
