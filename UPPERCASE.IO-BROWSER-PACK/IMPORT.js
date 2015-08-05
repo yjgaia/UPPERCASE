@@ -4591,12 +4591,15 @@ global.NODE = CLASS({
 			// top
 			top = params.top;
 			
-			if (left !== undefined) {
-				contentEl.scrollLeft = left;
-			}
+			if (contentEl !== undefined) {
 			
-			if (top !== undefined) {
-				contentEl.scrollTop = top;
+				if (left !== undefined) {
+					contentEl.scrollLeft = left;
+				}
+				
+				if (top !== undefined) {
+					contentEl.scrollTop = top;
+				}
 			}
 		};
 	},
