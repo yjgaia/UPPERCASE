@@ -498,13 +498,13 @@ FOR_BOX(function(box) {
 				errorLogCollection,
 			
 				// cached get db
-				cachedGetDB = box.SHARED_DB('cachedGetDB'),
+				cachedGetDB = box.SHARED_DB(box.boxName + '.' + name + '.cachedGetDB'),
 				
 				// cached find db
-				cachedFindDB = box.SHARED_DB('cachedFindDB'),
+				cachedFindDB = box.SHARED_DB(box.boxName + '.' + name + '.cachedFindDB'),
 				
 				// cached count db
-				cachedCountDB = box.SHARED_DB('cachedCountDB'),
+				cachedCountDB = box.SHARED_DB(box.boxName + '.' + name + '.cachedCountDB'),
 				
 				// add history.
 				addHistory = function(method, id, change, time) {
