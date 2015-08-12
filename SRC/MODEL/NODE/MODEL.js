@@ -284,24 +284,27 @@ FOR_BOX(function(box) {
 								$or.push(filter);
 							}
 						});
+						
+						if ($or.length > 0) {
 
-						db.find({
-							filter : {
-								$or : $or
-							},
-							isFindAll : true
-						}, EACH(function(notInitedData) {
-							
-							console.log('[UPPERCASE.IO-MODEL] Found not inited data in `' + box.boxName + '.' + name + '`.', notInitedData);
-
-							EACH(initData, function(value, name) {
-								if (notInitedData[name] === undefined) {
-									notInitedData[name] = value;
-								}
-							});
-
-							db.update(notInitedData);
-						}));
+							db.find({
+								filter : {
+									$or : $or
+								},
+								isFindAll : true
+							}, EACH(function(notInitedData) {
+								
+								console.log('[UPPERCASE.IO-MODEL] Found not inited data in `' + box.boxName + '.' + name + '`.', notInitedData);
+	
+								EACH(initData, function(value, name) {
+									if (notInitedData[name] === undefined) {
+										notInitedData[name] = value;
+									}
+								});
+	
+								db.update(notInitedData);
+							}));
+						}
 					});
 				}
 

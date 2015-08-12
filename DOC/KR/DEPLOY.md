@@ -16,6 +16,12 @@ use admin
 db.auth('root 유저명', 'root 비밀번호')
 ```
 
+* 만약 관리자 계정이 없다면 생성합니다.
+```javascript
+use admin
+db.createUser({ user : 'root 유저명', pwd : 'root 비밀번호', roles : ['root'] })
+```
+
 ```javascript
 use DB명
 db.createUser({ user : '유저명', pwd : '비밀번호', roles : ['readWrite', 'dbAdmin'] })
