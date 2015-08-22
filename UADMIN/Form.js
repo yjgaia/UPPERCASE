@@ -150,7 +150,7 @@ UADMIN.Form = CLASS({
 							
 						} else {
 						
-							form.append(UUI.FULL_INPUT({
+							form.append(UUI.FULL_TEXTAREA({
 								style : {
 									marginTop : 10,
 									border : '1px solid #ccc'
