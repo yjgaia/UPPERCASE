@@ -14,7 +14,8 @@ UADMIN.Form = CLASS({
 		wrapper = DIV({
 			style : {
 				padding : 20,
-				backgroundColor : '#fff'
+				backgroundColor : '#fff',
+				color : '#000'
 			}
 		}).appendTo(UADMIN.Layout.getContent());
 		
@@ -115,22 +116,39 @@ UADMIN.Form = CLASS({
 						// select
 						select;
 						
+						form.append(H5({
+							style : {
+								marginTop : 10,
+								marginBottom : 5,
+								fontWeight : 'bold'
+							},
+							c : name
+						}));
+						
 						if (validData.bool === true) {
 							
 							form.append(UUI.FULL_CHECKBOX({
 								style : {
-									marginTop : 10,
 									color : '#000'
 								},
 								name : name,
 								label : name
 							}));
 							
+						} else if (validData.integer === true || validData.real === true) {
+							
+							form.append(UUI.FULL_INPUT({
+								style : {
+									border : '1px solid #ccc'
+								},
+								name : name,
+								placeholder : name
+							}));
+							
 						} else if (validData.one !== undefined) {
 							
 							form.append(select = UUI.FULL_SELECT({
 								style : {
-									marginTop : 10,
 									border : '1px solid #ccc'
 								},
 								name : name
@@ -152,7 +170,6 @@ UADMIN.Form = CLASS({
 						
 							form.append(UUI.FULL_TEXTAREA({
 								style : {
-									marginTop : 10,
 									border : '1px solid #ccc'
 								},
 								name : name,
@@ -172,15 +189,62 @@ UADMIN.Form = CLASS({
 							// result
 							result = PARSE_STR(resultStr);
 							
+							wrapper.prepend(DIV({
+								style : {
+									padding : 10,
+									border : '1px solid #ccc',
+									marginBottom : 20
+								},
+								c : [H2({
+									style : {
+										marginBottom : 10,
+										fontWeight : 'bold'
+									},
+									c : 'Original data of ' + result.savedData.id
+								}), P({
+									style : {
+										backgroundColor : '#fff',
+										whiteSpace : 'pre',
+										color : '#000'
+									},
+									c : RUN(function() {
+										
+										var
+										// children
+										c = [];
+										
+										EACH(result.savedData, function(value, name) {
+											
+											if (name !== 'id') {
+											
+												c.push(DIV({
+													c : [SPAN({
+														style : {
+															fontWeight : 'bold'
+														},
+														c : name
+													}), ' : ', JSON.stringify(value, TO_DELETE, 4)]
+												}));
+											}
+										});
+										
+										return c;
+									})
+								})]
+							}));
+							
 							form.setData(result.savedData);
 						});
 					}
 					
 					form.append(UUI.FULL_SUBMIT({
 						style : {
-							marginTop : 10
+							marginTop : 10,
+							fontWeight : 'bold',
+							backgroundColor : '#ccc'
 						},
-						title : name
+						title : name,
+						value : 'SAVE'
 					}));
 				}
 			});

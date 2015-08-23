@@ -77,9 +77,6 @@ global.BOOT_UADMIN = METHOD({
 				// model
 				model,
 				
-				// valid data set
-				validDataSet,
-				
 				// response.
 				response = function(content) {
 					_response({
@@ -186,13 +183,7 @@ global.BOOT_UADMIN = METHOD({
 										
 									} else {
 										
-										validDataSet = model.getCreateValid().getValidDataSet();
-										
-										EACH(model.getInitData(), function(notUsing, name) {
-											delete validDataSet[name];
-										});
-										
-										response(STRINGIFY(validDataSet));
+										response(STRINGIFY(model.getCreateValid().getValidDataSet()));
 									}
 								}
 								
@@ -204,13 +195,7 @@ global.BOOT_UADMIN = METHOD({
 										
 									} else {
 										
-										validDataSet = model.getUpdateValid().getValidDataSet();
-										
-										EACH(model.getInitData(), function(notUsing, name) {
-											delete validDataSet[name];
-										});
-										
-										response(STRINGIFY(validDataSet));
+										response(STRINGIFY(model.getUpdateValid().getValidDataSet()));
 									}
 								}
 								
