@@ -1901,7 +1901,7 @@ FOR_BOX(function(box) {
 											},
 	
 											success : function(savedData) {
-	
+												
 												// check auth key.
 												if (savedData[updateAuthKey] === clientInfo.authKey) {
 	

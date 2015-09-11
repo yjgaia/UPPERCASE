@@ -1161,13 +1161,13 @@ global.BOOT = function(params) {
 					}
 				}
 			});
-
-			webSocketFixRequest = LAUNCH_ROOM_SERVER({
-				socketServerPort : CONFIG.socketServerPort,
-				webServer : webServer,
-				isCreateWebSocketFixRequestManager : true
-			}).getWebSocketFixRequest();
 		}
+
+		webSocketFixRequest = LAUNCH_ROOM_SERVER({
+			socketServerPort : CONFIG.socketServerPort,
+			webServer : webServer,
+			isCreateWebSocketFixRequestManager : true
+		}).getWebSocketFixRequest();
 
 		console.log('[UPPERCASE.IO] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.title + '` WORKER #' + CPU_CLUSTERING.getWorkerId() + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
