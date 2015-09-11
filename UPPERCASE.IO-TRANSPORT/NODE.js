@@ -47,11 +47,11 @@ global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
 
 			// create web socket server.
 			WEB_SOCKET_SERVER(webSocketServerPort !== undefined ? webSocketServerPort : webServer, connectionListener);
-		}
 
-		if (isCreateWebSocketFixRequestManager === true) {
-
-			webSocketFixRequestManager = WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener);
+			if (isCreateWebSocketFixRequestManager === true) {
+	
+				webSocketFixRequestManager = WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener);
+			}
 		}
 
 		self.getWebSocketFixRequest = getWebSocketFixRequest = function() {
