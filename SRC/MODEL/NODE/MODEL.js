@@ -274,15 +274,11 @@ FOR_BOX(function(box) {
 
 							var
 							// filter
-							filter;
+							filter = {};
 							
-							if (createValid !== undefined && createValid.getValidDataSet()[name].notEmpty === true) {
-							
-								filter = {};
-								filter[name] = TO_DELETE;
-							
-								$or.push(filter);
-							}
+							filter[name] = TO_DELETE;
+						
+							$or.push(filter);
 						});
 						
 						if ($or.length > 0) {
@@ -678,7 +674,7 @@ FOR_BOX(function(box) {
 								},
 		
 								notExists : function() {
-									ret();
+									ret({});
 								},
 		
 								success : function(savedData) {
@@ -869,7 +865,7 @@ FOR_BOX(function(box) {
 									},
 
 									notExists : function() {
-										ret();
+										ret({});
 									},
 
 									success : function(savedData, originData) {
@@ -952,7 +948,7 @@ FOR_BOX(function(box) {
 								},
 
 								notExists : function() {
-									ret();
+									ret({});
 								},
 
 								success : function(originData) {
@@ -1897,7 +1893,7 @@ FOR_BOX(function(box) {
 											},
 	
 											notExists : function() {
-												ret();
+												ret({});
 											},
 	
 											success : function(savedData) {
@@ -1967,7 +1963,7 @@ FOR_BOX(function(box) {
 											},
 	
 											notExists : function() {
-												ret();
+												ret({});
 											},
 	
 											success : function(savedData) {
