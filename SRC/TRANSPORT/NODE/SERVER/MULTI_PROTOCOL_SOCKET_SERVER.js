@@ -49,7 +49,7 @@ global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
 		}
 
 		self.getWebSocketFixRequest = getWebSocketFixRequest = function() {
-			return webSocketFixRequestManager.request;
+			return webSocketFixRequestManager === undefined ? undefined : webSocketFixRequestManager.request;
 		};
 	}
 });

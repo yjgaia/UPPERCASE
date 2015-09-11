@@ -1053,7 +1053,7 @@ global.BOOT = function(params) {
 					}
 
 					// serve web socket fix request.
-					else if (uri === '__WEB_SOCKET_FIX') {
+					else if (uri === '__WEB_SOCKET_FIX' && webSocketFixRequest !== undefined) {
 
 						webSocketFixRequest(requestInfo, {
 							response : response,
