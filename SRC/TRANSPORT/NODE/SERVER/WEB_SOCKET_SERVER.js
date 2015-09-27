@@ -189,22 +189,26 @@ global.WEB_SOCKET_SERVER = METHOD({
 				//REQUIRED: params.methodName
 				//OPTIONAL: params.data
 				//OPTIONAL: callback
-
+				
 				var
 				// callback name
-				callbackName = '__CALLBACK_' + sendKey;
-
-				params.sendKey = sendKey;
-
-				sendKey += 1;
-
+				callbackName;
+				
 				try {
-					conn.send(STRINGIFY(params));
+					
+					conn.write(STRINGIFY({
+						methodName : params.methodName,
+						data : params.data,
+						sendKey : sendKey
+					}));
+					
 				} catch(error) {
 					console.log('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:', error.toString());
 				}
 
 				if (callback !== undefined) {
+					
+					callbackName = '__CALLBACK_' + sendKey;
 
 					// on callback.
 					on(callbackName, function(data) {
@@ -216,6 +220,8 @@ global.WEB_SOCKET_SERVER = METHOD({
 						off(callbackName);
 					});
 				}
+
+				sendKey += 1;
 			},
 
 			// disconnect.

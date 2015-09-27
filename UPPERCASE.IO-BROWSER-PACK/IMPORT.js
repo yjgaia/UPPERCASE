@@ -11019,18 +11019,20 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
 				//OPTIONAL: callback
-
+				
 				var
 				// callback name
-				callbackName = '__CALLBACK_' + sendKey;
-
-				params.sendKey = sendKey;
-
-				sendKey += 1;
-
-				conn.send(STRINGIFY(params));
+				callbackName;
+				
+				conn.send(STRINGIFY({
+					methodName : params.methodName,
+					data : params.data,
+					sendKey : sendKey
+				}));
 
 				if (callback !== undefined) {
+					
+					callbackName = '__CALLBACK_' + sendKey;
 
 					// on callback.
 					on(callbackName, function(data) {
@@ -11042,6 +11044,8 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 						off(callbackName);
 					});
 				}
+
+				sendKey += 1;
 			},
 
 			// disconnect.
