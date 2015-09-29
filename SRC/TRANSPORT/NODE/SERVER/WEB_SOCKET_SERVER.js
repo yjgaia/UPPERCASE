@@ -196,7 +196,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				
 				try {
 					
-					conn.write(STRINGIFY({
+					conn.send(STRINGIFY({
 						methodName : params.methodName,
 						data : params.data,
 						sendKey : sendKey
