@@ -283,7 +283,25 @@ global.BOOT_UADMIN = METHOD({
 								}
 								
 								else if (uriParams.method === 'find' && model.find !== undefined) {
-								
+									
+									if (requestInfo.data !== undefined && requestInfo.data.filter !== undefined) {
+										
+										EACH(requestInfo.data.filter, function(value, name) {
+											
+											if (value === '' || value === false) {
+												delete requestInfo.data.filter[name];
+											}
+											
+											else if (name === 'id' || value === true) {
+												requestInfo.data.filter[name] = value;
+											}
+											
+											else if (value !== false) {
+												requestInfo.data.filter[name] = new RegExp(value, 'g');
+											}
+										});
+									}
+									
 									model.find(requestInfo.data, {
 										error : function(errorMsg) {
 											response(STRINGIFY({

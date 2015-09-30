@@ -19,9 +19,18 @@ OVERRIDE(COPY, function(origin) {
 
 				// value
 				value,
+				
+				// pattern
+				pattern,
+				
+				// flags
+				flags,
 
 				// i
-				i;
+				i,
+				
+				// j
+				j;
 
 				if (CHECK_IS_DATA(data) === true) {
 
@@ -33,9 +42,28 @@ OVERRIDE(COPY, function(origin) {
 
 							if ( value instanceof Date === true) {
 								copy[i] = new Date(value.getTime());
-							} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
+							}
+							
+							if ( value instanceof RegExp === true) {
+								
+								pattern = value.toString();
+								
+								for (j = pattern.length - 1; j >= 0; j -= 1) {
+									if (pattern[j] === '/') {
+										flags = pattern.substring(j + 1);
+										pattern = pattern.substring(1, j);
+										break;
+									}
+								}
+								
+								copy[i] = new RegExp(pattern, flags);
+							}
+							
+							else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
 								copy[i] = f(value);
-							} else {
+							}
+							
+							else {
 								copy[i] = value;
 							}
 						}
@@ -50,9 +78,28 @@ OVERRIDE(COPY, function(origin) {
 
 						if ( value instanceof Date === true) {
 							copy.push(new Date(value.getTime()));
-						} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
+						}
+						
+						if ( value instanceof RegExp === true) {
+							
+							pattern = value.toString();
+							
+							for (j = pattern.length - 1; j >= 0; j -= 1) {
+								if (pattern[j] === '/') {
+									flags = pattern.substring(j + 1);
+									pattern = pattern.substring(1, j);
+									break;
+								}
+							}
+							
+							copy.push(new RegExp(pattern, flags));
+						}
+						
+						else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
 							copy.push(f(value));
-						} else {
+						}
+						
+						else {
 							copy.push(value);
 						}
 					}

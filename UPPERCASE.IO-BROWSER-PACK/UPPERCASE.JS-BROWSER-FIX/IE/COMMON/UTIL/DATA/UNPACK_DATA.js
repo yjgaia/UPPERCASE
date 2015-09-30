@@ -15,11 +15,43 @@ OVERRIDE(UNPACK_DATA, function(origin) {
 				// result
 				result = COPY(data);
 
+				// when date attribute names exists
 				if (result.__DATE_ATTR_NAMES !== undefined) {
+					
+					// change timestamp integer to Date type.
 					EACH(result.__DATE_ATTR_NAMES, function(dateAttrName, i) {
 						result[dateAttrName] = new Date(result[dateAttrName]);
 					});
 					delete result.__DATE_ATTR_NAMES;
+				}
+				
+				// when regex attribute names exists
+				if (result.__REGEX_ATTR_NAMES !== undefined) {
+		
+					// change string to RegExp type.
+					EACH(result.__REGEX_ATTR_NAMES, function(regexAttrName, i) {
+						
+						var
+						// pattern
+						pattern = result[regexAttrName],
+						
+						// flags
+						flags,
+						
+						// j
+						j;
+						
+						for (j = pattern.length - 1; j >= 0; j -= 1) {
+							if (pattern[j] === '/') {
+								flags = pattern.substring(j + 1);
+								pattern = pattern.substring(1, j);
+								break;
+							}
+						}
+						
+						result[regexAttrName] = new RegExp(pattern, flags);
+					});
+					delete result.__REGEX_ATTR_NAMES;
 				}
 
 				EACH(result, function(value, name) {

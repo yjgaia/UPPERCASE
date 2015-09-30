@@ -1728,6 +1728,11 @@ global.CHECK_ARE_SAME = METHOD({
 			if ( a instanceof Date === true && b instanceof Date === true) {
 				return a.getTime() === b.getTime();
 			}
+			
+			// when a, b are regex
+			else if ( a instanceof RegExp === true && b instanceof RegExp === true) {
+				return a.toString() === b.toString();
+			}
 
 			// when a, b are data (JS object)
 			else if (CHECK_IS_DATA(a) === true && CHECK_IS_DATA(b) === true) {
@@ -1789,7 +1794,7 @@ global.CHECK_IS_DATA = METHOD({
 	run : function(it) {'use strict';
 		//OPTIONAL: it
 
-		if (it !== undefined && it !== TO_DELETE && CHECK_IS_ARGUMENTS(it) !== true && CHECK_IS_ARRAY(it) !== true && it instanceof Date !== true && typeof it === 'object') {
+		if (it !== undefined && it !== TO_DELETE && CHECK_IS_ARGUMENTS(it) !== true && CHECK_IS_ARRAY(it) !== true && it instanceof Date !== true && it instanceof RegExp !== true && typeof it === 'object') {
 			return true;
 		}
 
@@ -1824,7 +1829,10 @@ global.PACK_DATA = METHOD({
 		result = COPY(data),
 
 		// date attribute names
-		dateAttrNames = [];
+		dateAttrNames = [],
+		
+		// regex attribute names
+		regexAttrNames = [];
 
 		EACH(result, function(value, name) {
 
@@ -1834,6 +1842,14 @@ global.PACK_DATA = METHOD({
 				// change to timestamp integer.
 				result[name] = INTEGER(value.getTime());
 				dateAttrNames.push(name);
+			}
+			
+			// when value is RegExp type
+			else if ( value instanceof RegExp === true) {
+
+				// change to string.
+				result[name] = value.toString();
+				regexAttrNames.push(name);
 			}
 
 			// when value is data
@@ -1854,6 +1870,7 @@ global.PACK_DATA = METHOD({
 		});
 
 		result.__DATE_ATTR_NAMES = dateAttrNames;
+		result.__REGEX_ATTR_NAMES = regexAttrNames;
 
 		return result;
 	}
@@ -1880,6 +1897,35 @@ global.UNPACK_DATA = METHOD({
 				result[dateAttrName] = new Date(result[dateAttrName]);
 			});
 			delete result.__DATE_ATTR_NAMES;
+		}
+		
+		// when regex attribute names exists
+		if (result.__REGEX_ATTR_NAMES !== undefined) {
+
+			// change string to RegExp type.
+			EACH(result.__REGEX_ATTR_NAMES, function(regexAttrName, i) {
+				
+				var
+				// pattern
+				pattern = result[regexAttrName],
+				
+				// flags
+				flags,
+				
+				// j
+				j;
+				
+				for (j = pattern.length - 1; j >= 0; j -= 1) {
+					if (pattern[j] === '/') {
+						flags = pattern.substring(j + 1);
+						pattern = pattern.substring(1, j);
+						break;
+					}
+				}
+				
+				result[regexAttrName] = new RegExp(pattern, flags);
+			});
+			delete result.__REGEX_ATTR_NAMES;
 		}
 
 		EACH(result, function(value, name) {
@@ -2057,12 +2103,41 @@ global.EXTEND = METHOD({
 		if (CHECK_IS_DATA(origin) === true) {
 
 			EACH(extend, function(value, name) {
-
+				
+				var
+				// pattern
+				pattern,
+				
+				// flags
+				flags,
+				
+				// j
+				i;
+				
 				if ( value instanceof Date === true) {
 					origin[name] = new Date(value.getTime());
-				} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
+				}
+				
+				else if ( value instanceof RegExp === true) {
+					
+					pattern = value.toString();
+					
+					for (i = pattern.length - 1; i >= 0; i -= 1) {
+						if (pattern[i] === '/') {
+							flags = pattern.substring(i + 1);
+							pattern = pattern.substring(1, i);
+							break;
+						}
+					}
+					
+					origin[name] = new RegExp(pattern, flags);
+				}
+				
+				else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
 					origin[name] = COPY(value);
-				} else {
+				}
+				
+				else {
 					origin[name] = value;
 				}
 			});
@@ -2072,12 +2147,41 @@ global.EXTEND = METHOD({
 		else if (CHECK_IS_ARRAY(origin) === true) {
 
 			EACH(extend, function(value) {
+				
+				var
+				// pattern
+				pattern,
+				
+				// flags
+				flags,
+				
+				// j
+				i;
 
 				if ( value instanceof Date === true) {
 					origin.push(new Date(value.getTime()));
-				} else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
+				}
+				
+				else if ( value instanceof RegExp === true) {
+					
+					pattern = value.toString();
+					
+					for (i = pattern.length - 1; i >= 0; i -= 1) {
+						if (pattern[i] === '/') {
+							flags = pattern.substring(i + 1);
+							pattern = pattern.substring(1, i);
+							break;
+						}
+					}
+					
+					origin.push(new RegExp(pattern, flags));
+				}
+				
+				else if (CHECK_IS_DATA(value) === true || CHECK_IS_ARRAY(value) === true) {
 					origin.push(COPY(value));
-				} else {
+				}
+				
+				else {
 					origin.push(value);
 				}
 			});
