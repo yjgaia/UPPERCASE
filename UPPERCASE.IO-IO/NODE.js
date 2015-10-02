@@ -298,7 +298,7 @@ global.BOOT_UADMIN = METHOD({
 												delete requestInfo.data.filter[name];
 											}
 											
-											else if (name === 'id' || value === true) {
+											else if (name === 'id' || value === true || VALID.real(value) === true) {
 												requestInfo.data.filter[name] = value;
 											}
 											
