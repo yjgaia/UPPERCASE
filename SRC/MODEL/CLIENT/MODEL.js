@@ -1098,26 +1098,29 @@ FOR_BOX(function(box) {
 						} else {
 		
 							EACH(properties, function(value, propertyName) {
+								
+								if (value !== TO_DELETE) {
 		
-								( roomForCreate = box.ROOM({
-									roomServerName : roomServerName,
-									name : name + '/' + propertyName + '/' + value + '/create'
-								})).on('create', function(savedData) {
-		
-									if (EACH(properties, function(value, propertyName) {
-		
-										if (savedData[propertyName] !== value) {
-											return false;
+									( roomForCreate = box.ROOM({
+										roomServerName : roomServerName,
+										name : name + '/' + propertyName + '/' + value + '/create'
+									})).on('create', function(savedData) {
+			
+										if (EACH(properties, function(value, propertyName) {
+											
+											if (value !== TO_DELETE && savedData[propertyName] !== value) {
+												return false;
+											}
+										}) === true) {
+											
+											onNewInfos[infoId].lastCreateTime = savedData.createTime;
+											
+											handler(savedData);
 										}
-									}) === true) {
-										
-										onNewInfos[infoId].lastCreateTime = savedData.createTime;
-										
-										handler(savedData);
-									}
-								});
-		
-								return false;
+									});
+			
+									return false;
+								}
 							});
 						}
 						
