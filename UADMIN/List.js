@@ -143,7 +143,7 @@ UADMIN.List = CLASS({
 				
 				REPEAT({
 					start : firstPage,
-					end : firstPage + 10 > lastPage ? lastPage : firstPage + 10
+					end : firstPage + 9 > lastPage ? lastPage : firstPage + 9
 				}, function(i) {
 					pageNumbers.append(A({
 						style : {
@@ -154,7 +154,7 @@ UADMIN.List = CLASS({
 						c : i,
 						on : {
 							tap : function() {
-								UADMIN.GO(boxName + '/' + modelName + '/p/' + i);
+								UADMIN.GO(boxName + '/' + modelName + '/p/' + i + '/' + STRINGIFY(filter).replace(/\//g, '@!'));
 							}
 						}
 					}));
