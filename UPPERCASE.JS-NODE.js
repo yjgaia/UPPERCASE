@@ -2083,18 +2083,20 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
 				//OPTIONAL: callback
-
+				
 				var
 				// callback name
-				callbackName = '__CALLBACK_' + sendKey;
+				callbackName;
 
-				params.sendKey = sendKey;
-
-				sendKey += 1;
-
-				conn.write(STRINGIFY(params) + '\r\n');
+				conn.write(STRINGIFY({
+					methodName : params.methodName,
+					data : params.data,
+					sendKey : sendKey
+				}) + '\r\n');
 
 				if (callback !== undefined) {
+					
+					callbackName = '__CALLBACK_' + sendKey;
 
 					// on callback.
 					on(callbackName, function(data) {
@@ -2106,6 +2108,8 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 						off(callbackName);
 					});
 				}
+
+				sendKey += 1;
 			},
 
 			// disconnect.
@@ -4727,15 +4731,17 @@ global.SOCKET_SERVER = METHOD({
 
 				var
 				// callback name
-				callbackName = '__CALLBACK_' + sendKey;
-
-				params.sendKey = sendKey;
-
-				sendKey += 1;
-
-				conn.write(STRINGIFY(params) + '\r\n');
+				callbackName;
+				
+				conn.write(STRINGIFY({
+					methodName : params.methodName,
+					data : params.data,
+					sendKey : sendKey
+				}) + '\r\n');
 
 				if (callback !== undefined) {
+					
+					callbackName = '__CALLBACK_' + sendKey;
 
 					// on callback.
 					on(callbackName, function(data) {
@@ -4747,6 +4753,8 @@ global.SOCKET_SERVER = METHOD({
 						off(callbackName);
 					});
 				}
+
+				sendKey += 1;
 			},
 
 			// disconnect.

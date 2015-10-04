@@ -341,7 +341,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 
 				// method map
 				methodMap,
-
+				
 				// on.
 				on,
 
@@ -444,33 +444,37 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 
 						var
 						// callback name
-						callbackName = '__CALLBACK_' + sendKey;
-
-						params.sendKey = sendKey;
-
-						sendKey += 1;
-
-						send(clientId, params);
-
+						callbackName;
+						
+						send(clientId, {
+							methodName : params.methodName,
+							data : params.data,
+							sendKey : sendKey
+						});
+		
 						if (callback !== undefined) {
-
+							
+							callbackName = '__CALLBACK_' + sendKey;
+		
 							// on callback.
 							on(callbackName, function(data) {
-
+		
 								// run callback.
 								callback(data);
-
+		
 								// off callback.
 								off(callbackName);
 							});
 						}
+		
+						sendKey += 1;
 					},
 
 					// disconnect.
 					function() {
 						runMethodsOrBroadcast('__DISCONNECTED');
 					});
-
+					
 					// response.
 					response({
 						contentType : 'text/javascript',

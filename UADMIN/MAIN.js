@@ -18,7 +18,7 @@ UADMIN.MAIN = METHOD({
 			});
 			
 			UADMIN.MATCH_VIEW({
-				uri : ['{boxName}/{modelName}', '{boxName}/{modelName}/p/{page}'],
+				uri : ['{boxName}/{modelName}', '{boxName}/{modelName}/p/{page}', '{boxName}/{modelName}/p/{page}/{filter}'],
 				target : UADMIN.List
 			});
 			

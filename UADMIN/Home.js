@@ -20,6 +20,10 @@ UADMIN.Home = CLASS({
 			var
 			// box wrapper
 			boxWrapper = DIV({
+				style : {
+					paddingRight : 10,
+					paddingBottom : 10
+				},
 				c : H2({
 					style : {
 						marginTop : 10,
