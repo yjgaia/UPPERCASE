@@ -7,6 +7,10 @@ FOR_BOX(function(box) {
 		 * Model(include CRUD functions) class
 		 */
 		box.MODEL = CLASS({
+			
+			preset : function() {
+				return origin;
+			},
 
 			init : function(inner, self, params) {
 				//REQUIRED: params

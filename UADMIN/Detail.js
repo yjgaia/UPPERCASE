@@ -92,7 +92,14 @@ UADMIN.Detail = CLASS({
 						
 						var
 						// children
-						c = [];
+						c = [DIV({
+							c : [SPAN({
+								style : {
+									fontWeight : 'bold'
+								},
+								c : 'id'
+							}), ' : ', result.savedData.id]
+						})];
 						
 						EACH(result.savedData, function(value, name) {
 							

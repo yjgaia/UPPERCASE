@@ -200,7 +200,7 @@ UADMIN.Form = CLASS({
 										marginBottom : 10,
 										fontWeight : 'bold'
 									},
-									c : 'Original data of ' + result.savedData.id
+									c : 'ORIGIN DATA'
 								}), P({
 									style : {
 										backgroundColor : '#fff',
@@ -211,7 +211,14 @@ UADMIN.Form = CLASS({
 										
 										var
 										// children
-										c = [];
+										c = [DIV({
+											c : [SPAN({
+												style : {
+													fontWeight : 'bold'
+												},
+												c : 'id'
+											}), ' : ', result.savedData.id]
+										})];
 										
 										EACH(result.savedData, function(value, name) {
 											

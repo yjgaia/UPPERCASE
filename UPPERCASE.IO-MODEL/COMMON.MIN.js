@@ -1,1 +1,1 @@
-FOR_BOX(function(i){"use strict";i.MODEL=CLASS({init:function(){}})});
+FOR_BOX(function(n){"use strict";n.MODEL=CLASS({init:function(t,i){var e;i.getBoxName=e=function(){return n.boxName}}})});

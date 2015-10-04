@@ -15,6 +15,14 @@ FOR_BOX(function(box) {'use strict';
 			//REQUIRED: params
 			//REQUIRED: params.name
 			//OPTIONAL: params.config
+			
+			var
+			// get box name.
+			getBoxName;
+			
+			self.getBoxName = getBoxName = function() {
+				return box.boxName;
+			};
 
 			// to implement.
 		}

@@ -23,22 +23,25 @@ global.BOOT_UADMIN = METHOD({
 		// UADMIN server
 		uadminServer;
 		
-		UADMIN_CONFIG.init(function(box, model) {
+		UADMIN_CONFIG.init(function(model) {
 			
 			var
+			// box name
+			boxName = model.getBoxName(),
+			
 			// models
-			models = modelMap[box.boxName],
+			models = modelMap[boxName],
 			
 			// name
 			name = model.getName();
 			
 			if (models === undefined) {
-				models = modelMap[box.boxName] = {};
-				modelNameMap[box.boxName] = [];
+				models = modelMap[boxName] = {};
+				modelNameMap[boxName] = [];
 			}
 			
 			models[name] = model;
-			modelNameMap[box.boxName].push(name);
+			modelNameMap[boxName].push(name);
 		});
 		
 		uadminServer = RESOURCE_SERVER({
