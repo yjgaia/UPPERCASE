@@ -502,7 +502,7 @@ global.BOOT = function(params) {
 			}
 			
 			if (CONFIG.description !== undefined) {
-				indexPageContent += '<meta name="description" content="' + CONFIG.description + '">';'
+				indexPageContent += '<meta name="description" content="' + CONFIG.description + '">';
 			}
 			
 			indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
