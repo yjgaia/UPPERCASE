@@ -494,7 +494,11 @@ global.BOOT = function(params) {
 			if (NODE_CONFIG.isUsingHTMLSnapshot === true) {
 				indexPageContent += '<meta name="fragment" content="!">';
 			}
-	
+			
+			if (CONFIG.description !== undefined) {
+				indexPageContent += '<meta name="description" content="' + CONFIG.description + '">';'
+			}
+			
 			indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
 
 			indexPageContent += '<link href="/R/favicon.ico" rel="shortcut icon">';
