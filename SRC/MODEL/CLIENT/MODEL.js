@@ -1084,7 +1084,7 @@ FOR_BOX(function(box) {
 							});
 		
 						} else if (properties === undefined) {
-		
+							
 							( roomForCreate = box.ROOM({
 								roomServerName : roomServerName,
 								name : name + '/create'
@@ -1264,27 +1264,40 @@ FOR_BOX(function(box) {
 						} else {
 		
 							EACH(properties, function(value, propertyName) {
+								
+								if (value !== TO_DELETE) {
 		
-								( roomForCreate = box.ROOM({
-									roomServerName : roomServerName,
-									name : name + '/' + propertyName + '/' + value + '/create'
-								})).on('create', function(savedData) {
-		
-									if (EACH(properties, function(value, propertyName) {
-		
-										if (savedData[propertyName] !== value) {
-											return false;
+									( roomForCreate = box.ROOM({
+										roomServerName : roomServerName,
+										name : name + '/' + propertyName + '/' + value + '/create'
+									})).on('create', function(savedData) {
+			
+										if (EACH(properties, function(value, propertyName) {
+											
+											if (value === TO_DELETE) {
+												if (savedData[propertyName] !== undefined) {
+													return false;
+												}
+											} else if (savedData[propertyName] !== value) {
+												return false;
+											}
+											
+										}) === true) {
+											
+											onNewInfos[infoId].lastCreateTime = savedData.createTime;
+											
+											innerHandler(savedData);
 										}
-									}) === true) {
-										
-										onNewInfos[infoId].lastCreateTime = savedData.createTime;
-										
-										innerHandler(savedData);
-									}
-								});
-		
-								return false;
+									});
+			
+									return false;
+								}
 							});
+							
+							if (roomForCreate === undefined) {
+								onNewWatching(undefined, handler);
+								return;
+							}
 						}
 						
 						onNewInfos[infoId] = {
