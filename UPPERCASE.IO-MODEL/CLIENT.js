@@ -1114,9 +1114,14 @@ FOR_BOX(function(box) {
 			
 										if (EACH(properties, function(value, propertyName) {
 											
-											if (value !== TO_DELETE && savedData[propertyName] !== value) {
+											if (value === TO_DELETE) {
+												if (savedData[propertyName] !== undefined) {
+													return false;
+												}
+											} else if (savedData[propertyName] !== value) {
 												return false;
 											}
+											
 										}) === true) {
 											
 											onNewInfos[infoId].lastCreateTime = savedData.createTime;
@@ -1128,6 +1133,11 @@ FOR_BOX(function(box) {
 									return false;
 								}
 							});
+							
+							if (roomForCreate === undefined) {
+								onNew(undefined, handler);
+								return;
+							}
 						}
 						
 						onNewInfos[infoId] = {
