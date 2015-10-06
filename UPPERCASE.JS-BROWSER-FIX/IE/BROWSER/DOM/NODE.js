@@ -210,16 +210,21 @@ OVERRIDE(NODE, function(origin) {
 				return contentEl;
 			};
 	
-			attach = function(node) {
+			attach = function(node, index) {
 				//REQUIRED: node
+				//OPTIOANL: index
 				
 				var
 				// i
 				i;
 	
 				setParent(node);
-	
-				parentNode.getChildren().push(self);
+				
+				if (index === undefined) {
+					parentNode.getChildren().push(self);
+				} else {
+					parentNode.getChildren().splice(index, 0, self);
+				}
 	
 				EVENT.fireAll({
 					node : self,
@@ -431,16 +436,39 @@ OVERRIDE(NODE, function(origin) {
 	
 			self.insertAfter = insertAfter = function(node) {
 				//REQUIRED: node
-	
+
 				var
 				// before el
-				beforeEl = node.getWrapperEl();
+				beforeEl = node.getWrapperEl(),
+				
+				// now index
+				nowIndex,
+				
+				// to index
+				toIndex,
+				
+				// i
+				i;
 				
 				if (beforeEl !== undefined) {
 					
 					beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
-	
-					attach(node.getParent());
+					
+					for (i = 0; i < node.getParent().getChildren().length; i += 1) {
+						if (node.getParent().getChildren()[i] === self) {
+							nowIndex = i;
+							break;
+						}
+					}
+					
+					for (i = 0; i < node.getParent().getChildren().length; i += 1) {
+						if (node.getParent().getChildren()[i] === node) {
+							toIndex = i + 1;
+							break;
+						}
+					}
+					
+					attach(node.getParent(), nowIndex < toIndex ? toIndex - 1 : toIndex);
 				}
 	
 				return self;
@@ -502,13 +530,26 @@ OVERRIDE(NODE, function(origin) {
 	
 				var
 				// after el
-				afterEl = node.getWrapperEl();
+				afterEl = node.getWrapperEl(),
+				
+				// to index
+				toIndex,
+				
+				// i
+				i;
 	
 				if (afterEl !== undefined) {
 					
 					afterEl.parentNode.insertBefore(wrapperEl, afterEl);
+					
+					for (i = 0; i < node.getParent().getChildren().length; i += 1) {
+						if (node.getParent().getChildren()[i] === node) {
+							toIndex = i;
+							break;
+						}
+					}
 	
-					attach(node.getParent());
+					attach(node.getParent(), toIndex);
 				}
 	
 				return self;

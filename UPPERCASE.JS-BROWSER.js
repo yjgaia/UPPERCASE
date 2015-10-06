@@ -1231,16 +1231,29 @@ global.NODE = CLASS({
 
 			var
 			// before el
-			beforeEl = node.getWrapperEl();
+			beforeEl = node.getWrapperEl(),
+			
+			// now index
+			nowIndex,
+			
+			// to index
+			toIndex;
 			
 			if (beforeEl !== undefined) {
 				
 				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
-
-				attach(node.getParent(), FIND({
+				
+				nowIndex = FIND({
+					array : node.getParent().getChildren(),
+					value : self
+				});
+				
+				toIndex = FIND({
 					array : node.getParent().getChildren(),
 					value : node
-				}) + 1);
+				}) + 1;
+
+				attach(node.getParent(), nowIndex < toIndex ? toIndex - 1 : toIndex);
 			}
 
 			return self;
