@@ -11,11 +11,16 @@ OVERRIDE(CONFIG, function(origin) {
 		title : 'UPPERCASE.IO PROJECT',
 		
 		baseBackgroundColor : '#000',
-		baseColor : '#fff'
+		baseColor : '#fff',
 		
 		// maxThumbWidth
 		// or
 		// maxThumbHeight
+		
+		isMobileFullScreen : false,
+		isUsingHTMLSnapshot : false,
+		
+		isAAEncodeMode : false
 
 	}, origin]);
 });

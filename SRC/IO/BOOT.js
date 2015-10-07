@@ -214,6 +214,15 @@ global.BOOT = function(params) {
 		scanAllBoxFolders('COMMON', loadForBrowser);
 		scanAllBoxFolders('BROWSER', loadForBrowser);
 		scanAllBoxFolders('CLIENT', loadForBrowser);
+		
+		if (CONFIG.isAAEncodeMode === true) {
+		
+			browserScript = AAENCODE(browserScript);
+			
+			EACH(boxBrowserScripts, function(script, boxName) {
+				boxBrowserScripts[boxName] = AAENCODE(script);
+			});
+		}
 	},
 
 	// load UPPERCASE.JS.
@@ -500,8 +509,11 @@ global.BOOT = function(params) {
 			}
 			
 			indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
-
-			indexPageContent += '<link href="/R/favicon.ico" rel="shortcut icon">';
+			
+			// icons
+			indexPageContent += '<link rel="shortcut icon" href="/R/favicon.ico?' + CONFIG.version + '" />';
+			indexPageContent += '<link rel="apple-touch-icon-precomposed" href="/R/apple-touch-icon.png?' + CONFIG.version + '" />';
+			
 			indexPageContent += '<title>' + CONFIG.title + '</title>';
 	
 			// load css.
@@ -1208,6 +1220,19 @@ global.BOOT = function(params) {
 
 			// minify browser script.
 			browserScript = MINIFY_JS(browserScript);
+			
+			EACH(boxBrowserScripts, function(script, boxName) {
+				boxBrowserScripts[boxName] = MINIFY_JS(script);
+			});
+			
+			if (CONFIG.isAAEncodeMode === true) {
+			
+				browserScript = AAENCODE(browserScript);
+				
+				EACH(boxBrowserScripts, function(script, boxName) {
+					boxBrowserScripts[boxName] = AAENCODE(script);
+				});
+			}
 		}
 		
 		// generate index page.
