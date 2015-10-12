@@ -24,9 +24,7 @@ OVERRIDE(CONFIG, function(origin) {
 		// maxThumbHeight
 		
 		isMobileFullScreen : false,
-		isUsingHTMLSnapshot : false,
+		isUsingHTMLSnapshot : false
 		
-		isAAEncodeMode : false
-
 	}, origin]);
 });
