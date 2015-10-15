@@ -141,24 +141,27 @@ UADMIN.List = CLASS({
 				// first page
 				firstPage = Math.ceil(page / 10);
 				
-				REPEAT({
-					start : firstPage,
-					end : firstPage + 9 > lastPage ? lastPage : firstPage + 9
-				}, function(i) {
-					pageNumbers.append(A({
-						style : {
-							flt : 'left',
-							padding : 10,
-							paddingRight : 5
-						},
-						c : i,
-						on : {
-							tap : function() {
-								UADMIN.GO(boxName + '/' + modelName + '/p/' + i + '/' + STRINGIFY(filter).replace(/\//g, '@!'));
+				if (firstPage < lastPage) {
+				
+					REPEAT({
+						start : firstPage,
+						end : firstPage + 9 > lastPage ? lastPage : firstPage + 9
+					}, function(i) {
+						pageNumbers.append(A({
+							style : {
+								flt : 'left',
+								padding : 10,
+								paddingRight : 5
+							},
+							c : i,
+							on : {
+								tap : function() {
+									UADMIN.GO(boxName + '/' + modelName + '/p/' + i + '/' + STRINGIFY(filter).replace(/\//g, '@!'));
+								}
 							}
-						}
-					}));
-				});
+						}));
+					});
+				}
 				
 				pageNumbers.append(CLEAR_BOTH());
 			});
