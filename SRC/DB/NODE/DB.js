@@ -1257,8 +1257,6 @@ FOR_BOX(function(box) {
 							}
 						}
 
-						removeEmptyValues(data);
-
 						EACH(data, function(value, name) {
 							if (name === 'id' || name === '_id' || name === 'createTime' || name[0] === '$') {
 								delete data[name];
@@ -1271,6 +1269,8 @@ FOR_BOX(function(box) {
 								$unset[name] = '';
 							}
 						});
+						
+						removeEmptyValues(data);
 
 						if (isNotToSaveHistory !== true) {
 							data.lastUpdateTime = new Date();
@@ -1287,18 +1287,22 @@ FOR_BOX(function(box) {
 						}
 
 						if ($inc !== undefined) {
+							removeEmptyValues($inc);
 							updateData.$inc = $inc;
 						}
 						
 						if ($push !== undefined) {
+							removeEmptyValues($push);
 							updateData.$push = $push;
 						}
 						
 						if ($addToSet !== undefined) {
+							removeEmptyValues($addToSet);
 							updateData.$addToSet = $addToSet;
 						}
 						
 						if ($pull !== undefined) {
+							removeEmptyValues($pull);
 							updateData.$pull = $pull;
 						}
 						
