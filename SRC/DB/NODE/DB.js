@@ -851,13 +851,13 @@ FOR_BOX(function(box) {
 
 					try {
 
+						removeEmptyValues(data);
+
 						// set random key.
 						data.__RANDOM_KEY = Math.random();
 
 						// set create time.
 						data.createTime = new Date();
-
-						removeEmptyValues(data);
 
 						// remove _id.
 						delete data._id;
@@ -1257,6 +1257,8 @@ FOR_BOX(function(box) {
 							}
 						}
 
+						removeEmptyValues(data);
+
 						EACH(data, function(value, name) {
 							if (name === 'id' || name === '_id' || name === 'createTime' || name[0] === '$') {
 								delete data[name];
@@ -1273,8 +1275,6 @@ FOR_BOX(function(box) {
 						if (isNotToSaveHistory !== true) {
 							data.lastUpdateTime = new Date();
 						}
-
-						removeEmptyValues(data);
 
 						updateData = {};
 						
