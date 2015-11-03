@@ -1254,6 +1254,10 @@ FOR_BOX(function(box) {
 									createTime : -1
 								};
 							}
+							
+							else if (sort.createTime === undefined) {
+								sort.createTime = -1;
+							}
 
 							innerGet({
 								filter : filter,
@@ -1761,10 +1765,12 @@ FOR_BOX(function(box) {
 						}
 
 						if (sort === undefined) {
-							sort = {};
+							sort = {
+								createTime : -1
+							};
 						}
 						
-						if (sort.createTime === undefined) {
+						else if (sort.createTime === undefined) {
 							sort.createTime = -1;
 						}
 
@@ -1839,7 +1845,7 @@ FOR_BOX(function(box) {
 									}, errorHandler);
 								}
 							};
-	
+							
 							if (isFindAll === true) {
 	
 								// find all data set.
