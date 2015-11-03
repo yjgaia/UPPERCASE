@@ -208,6 +208,25 @@ global.BOOT_UADMIN = METHOD({
 									}
 								}
 								
+								else if (uriParams.method === '__GET_VALID_DATA_SET') {
+									
+									if (model.getCreateValid() === undefined && model.getUpdateValid() === undefined) {
+										
+										response('');
+										
+									} else if (model.getCreateValid() === undefined) {
+										
+										response(STRINGIFY(model.getUpdateValid().getValidDataSet()));
+										
+									} else if (model.getUpdateValid() === undefined) {
+										
+										response(STRINGIFY(model.getCreateValid().getValidDataSet()));
+									
+									} else {
+										response(STRINGIFY(COMBINE([model.getUpdateValid().getValidDataSet(), model.getCreateValid().getValidDataSet()])));
+									}
+								}
+								
 								else if (uriParams.method === 'create' && model.create !== undefined) {
 								
 									model.create(requestInfo.data, {

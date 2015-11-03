@@ -166,7 +166,7 @@ UADMIN.List = CLASS({
 				pageNumbers.append(CLEAR_BOTH());
 			});
 			
-			GET('__/' + boxName + '/' + modelName + '/__GET_CREATE_VALID_DATA_SET', function(validDataSetStr) {
+			GET('__/' + boxName + '/' + modelName + '/__GET_VALID_DATA_SET', function(validDataSetStr) {
 				
 				var
 				// valid data set
@@ -182,59 +182,62 @@ UADMIN.List = CLASS({
 						// select
 						select;
 						
-						if (validData.bool === true) {
+						if (name !== 'id') {
 							
-							searchForm.append(UUI.FULL_CHECKBOX({
-								style : {
-									marginTop : 10
-								},
-								name : name,
-								label : name
-							}));
+							if (validData.bool === true) {
+								
+								searchForm.append(UUI.FULL_CHECKBOX({
+									style : {
+										marginTop : 10
+									},
+									name : name,
+									label : name
+								}));
+								
+							} else if (validData.integer === true || validData.real === true) {
+								
+								searchForm.append(UUI.FULL_INPUT({
+									style : {
+										marginTop : 10,
+										border : '1px solid #ccc'
+									},
+									name : name,
+									placeholder : name
+								}));
+								
+							} else if (validData.one !== undefined) {
+								
+								searchForm.append(select = UUI.FULL_SELECT({
+									style : {
+										marginTop : 10,
+										border : '1px solid #ccc'
+									},
+									name : name
+								}));
+								
+								if (validData.notEmpty !== true) {
+									select.addOption(OPTION({
+										c : 'undefined'
+									}));
+								}
+								
+								EACH(validData.one, function(value) {
+									select.addOption(OPTION({
+										value : value
+									}));
+								});
+								
+							} else {
 							
-						} else if (validData.integer === true || validData.real === true) {
-							
-							searchForm.append(UUI.FULL_INPUT({
-								style : {
-									marginTop : 10,
-									border : '1px solid #ccc'
-								},
-								name : name,
-								placeholder : name
-							}));
-							
-						} else if (validData.one !== undefined) {
-							
-							searchForm.append(select = UUI.FULL_SELECT({
-								style : {
-									marginTop : 10,
-									border : '1px solid #ccc'
-								},
-								name : name
-							}));
-							
-							if (validData.notEmpty !== true) {
-								select.addOption(OPTION({
-									c : 'undefined'
+								searchForm.append(UUI.FULL_INPUT({
+									style : {
+										marginTop : 10,
+										border : '1px solid #ccc'
+									},
+									name : name,
+									placeholder : name
 								}));
 							}
-							
-							EACH(validData.one, function(value) {
-								select.addOption(OPTION({
-									value : value
-								}));
-							});
-							
-						} else {
-						
-							searchForm.append(UUI.FULL_INPUT({
-								style : {
-									marginTop : 10,
-									border : '1px solid #ccc'
-								},
-								name : name,
-								placeholder : name
-							}));
 						}
 					});
 				}
