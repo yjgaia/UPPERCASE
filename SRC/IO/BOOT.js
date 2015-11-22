@@ -214,15 +214,6 @@ global.BOOT = function(params) {
 		scanAllBoxFolders('COMMON', loadForBrowser);
 		scanAllBoxFolders('BROWSER', loadForBrowser);
 		scanAllBoxFolders('CLIENT', loadForBrowser);
-		
-		if (CONFIG.isAAEncodeMode === true) {
-		
-			browserScript = AAENCODE(browserScript);
-			
-			EACH(boxBrowserScripts, function(script, boxName) {
-				boxBrowserScripts[boxName] = AAENCODE(script);
-			});
-		}
 	},
 
 	// load UPPERCASE.JS.
@@ -1224,15 +1215,6 @@ global.BOOT = function(params) {
 			EACH(boxBrowserScripts, function(script, boxName) {
 				boxBrowserScripts[boxName] = MINIFY_JS(script);
 			});
-			
-			if (CONFIG.isAAEncodeMode === true) {
-			
-				browserScript = AAENCODE(browserScript);
-				
-				EACH(boxBrowserScripts, function(script, boxName) {
-					boxBrowserScripts[boxName] = AAENCODE(script);
-				});
-			}
 		}
 		
 		// generate index page.

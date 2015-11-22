@@ -851,13 +851,13 @@ FOR_BOX(function(box) {
 
 					try {
 
+						removeEmptyValues(data);
+
 						// set random key.
 						data.__RANDOM_KEY = Math.random();
 
 						// set create time.
 						data.createTime = new Date();
-
-						removeEmptyValues(data);
 
 						// remove _id.
 						delete data._id;
@@ -1171,6 +1171,10 @@ FOR_BOX(function(box) {
 									createTime : -1
 								};
 							}
+							
+							else if (sort.createTime === undefined) {
+								sort.createTime = -1;
+							}
 
 							innerGet({
 								filter : filter,
@@ -1269,12 +1273,12 @@ FOR_BOX(function(box) {
 								$unset[name] = '';
 							}
 						});
+						
+						removeEmptyValues(data);
 
 						if (isNotToSaveHistory !== true) {
 							data.lastUpdateTime = new Date();
 						}
-
-						removeEmptyValues(data);
 
 						updateData = {};
 						
@@ -1287,18 +1291,22 @@ FOR_BOX(function(box) {
 						}
 
 						if ($inc !== undefined) {
+							removeEmptyValues($inc);
 							updateData.$inc = $inc;
 						}
 						
 						if ($push !== undefined) {
+							removeEmptyValues($push);
 							updateData.$push = $push;
 						}
 						
 						if ($addToSet !== undefined) {
+							removeEmptyValues($addToSet);
 							updateData.$addToSet = $addToSet;
 						}
 						
 						if ($pull !== undefined) {
+							removeEmptyValues($pull);
 							updateData.$pull = $pull;
 						}
 						
@@ -1674,10 +1682,12 @@ FOR_BOX(function(box) {
 						}
 
 						if (sort === undefined) {
-							sort = {};
+							sort = {
+								createTime : -1
+							};
 						}
 						
-						if (sort.createTime === undefined) {
+						else if (sort.createTime === undefined) {
 							sort.createTime = -1;
 						}
 
@@ -1752,7 +1762,7 @@ FOR_BOX(function(box) {
 									}, errorHandler);
 								}
 							};
-	
+							
 							if (isFindAll === true) {
 	
 								// find all data set.

@@ -1,5 +1,5 @@
 # ![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE.IO/master/LOGO.png)
-UPPERCASE.IO는 웹 애플리케이션 프레임워크입니다.
+UPPERCASE.IO는 웹 애플리케이션/서버 프레임워크입니다.
 
 * [Node.js](http://nodejs.org)를 기반으로 합니다.
 * JavaScript 유틸리티 세트인 [UPPERCASE.JS](UPPERCASE.JS.md)를 기반으로 만들어졌습니다.

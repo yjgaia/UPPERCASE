@@ -9,7 +9,6 @@
 * `title` 프로젝트 제목을 입력합니다. 기본값은 `'UPPERCASE.IO PROJECT'` 입니다.
 * `isMobileFullScreen` 모바일 브라우저에서 full screen으로 화면을 표시할지를 결정합니다. 기본값은 `false`입니다.
 * `isUsingHTMLSnapshot` 검색엔진의 크롤러들이 Single Page 웹 애플리케이션을 방문할 때 HTML 스냅샷을 제공할 지 여부를 설정합니다. 기본값은 `false`입니다. 이 기능을 사용하려면 [PhantomJS](http://phantomjs.org)가 서버에 설치되어 있어야 합니다.
-* `isAAEncodeMode` 스크립트(`__SCRIPT` 등)에 aaencode(http://utf-8.jp/public/aaencode.html)를 적용합니다. 기본값은 `false`입니다.
 
 ### 개발 모드
 개발 모드일 때는 다음과 같은 기능들이 작동합니다.
