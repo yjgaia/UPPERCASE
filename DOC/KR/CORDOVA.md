@@ -62,12 +62,12 @@ https://crosswalk-project.org 에 방문하여 `Cordova Android (ARM)`를 다운
 
 Mac or Linux
 ```
-crosswalk-cordova-11.40.277.7-arm/bin/create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
+crosswalk-cordova-15.44.384.12-arm/bin/create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
 ```
 
 Windows
 ```
-crosswalk-cordova-11.40.277.7-arm\bin\create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
+crosswalk-cordova-15.44.384.12-arm\bin\create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
 ```
 
 3. 코드 작성
