@@ -84,10 +84,12 @@ plugman install --platform android --project . --plugin {{플러그인의 주소
 ```
 
 ### 배포하기
+우선은 배포를 위한 키 저장소를 만듭니다. 이 저장소는 여러 앱에서 사용될 수 있습니다.
 ```
-keytool -genkey -v -keystore {{키스토어 파일명}} -alias {{alias 이름}} -keyalg {{암호화 방식}} -keysize {{key 크기}} -validity {{유효기간}}
+keytool -genkey -v -keystore {{키 저장소 파일명}} -alias {{alias 이름}} -keyalg {{암호화 방식}} -keysize {{key 크기}} -validity {{유효기간 (일)}}
 ```
 
+예시)
 ```
 keytool -genkey -v -keystore sample-keystore.keystore -alias sample-01 -keyalg RSA -keysize 2048 -validity 18250
 ```
