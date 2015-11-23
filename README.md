@@ -1,20 +1,18 @@
 # UPPERCASE
-MVP 패턴을 기반으로 서버에서 클라이언트를 아우르는 풀스택 프레임워크입니다.
-
-* [Node.js](http://nodejs.org)를 기반으로 합니다.
-* JavaScript 유틸리티 세트인 [UPPERCASE.JS](UPPERCASE.JS.md)를 기반으로 만들어졌습니다.
-* Model-View 패턴을 따릅니다.
-* BOX라는 모듈 시스템을 제공하고 있습니다.
-* 멀티 코어 CPU 지원을 지원합니다.
-* 현대의 모든 웹 브라우저 및 구형 브라우저에 대한 호환성을 지니고 있습니다. (Internet Explorer 5.5나 Android 2.1 브라우저에서도 작동합니다.)
+UPPERCASE는 실시간성에 특화된 풀스택 프레임워크입니다.
+* [Node.js](http://nodejs.org) 기반
+* JavaScript 유틸리티 셋 [UPPERCASE.JS](UPPERCASE.JS.md) 기반
+* Model-View 패턴
+* 모듈 시스템 [BOX](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-COMMON.md#box) 기반
+* 멀티 코어 CPU 지원
+* 구형 브라우저 호환
 
 ## 사전 지식
 UPPERCASE.IO를 사용하기 위해서는 이하 기술셋을 알고있어야 합니다.
-* JavaScript
+* JavaScript, Node.js
+* MongoDB
 * HTML, CSS
 * Git
-* node.js
-* MongoDB
 
 ## 시작하기
 * [설치하기](INSTALL.md)
@@ -56,7 +54,7 @@ UPPERCASE.IO를 사용하기 위해서는 이하 기술셋을 알고있어야 �
 * [UPPERCASE.IO-UPLOAD](UPPERCASE.IO-UPLOAD.md) 업로드 관련 기능을 제공하는 모듈입니다.
 * [UPPERCASE.IO-IO](UPPERCASE.IO-IO.md) UPPERCASE.IO 통합을 위한 모듈입니다.
 
-## UPPERCASE.IO 개발에 참여하기
+## 기타
 * [UPPERCASE.IO 빌드](BUILD.md)
 
 ## Unicorn
@@ -71,4 +69,4 @@ UPPERCASE.IO를 사용하기 위해서는 이하 기술셋을 알고있어야 �
 
 ## 문의하기
 * [UPPERCASE.IO 페이스북 그룹](https://www.facebook.com/groups/uppercase/)
-* [GitHub Issues](https://github.com//UPPERCASE.IO/issues)
+* [GitHub Issues](https://github.com/Hanul/UPPERCASE.IO/issues)
