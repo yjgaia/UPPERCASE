@@ -1,7 +1,7 @@
 # 프로젝트 혼합하기
 여러 프로젝트를 혼합하여 사용할 수 있습니다. 일례로, SSO(Single Sign On)과 같은 기능을 구현하기 위해서는 반드시 이러한 기능이 필요하게 됩니다.
 
-본 문서에서는, UPPERCASE.IO 기반의 프로젝트들을 어떻게 혼합하여 사용할 수 있는지 순서대로 소개합니다.
+본 문서에서는, UPPERCASE 기반의 프로젝트들을 어떻게 혼합하여 사용할 수 있는지 순서대로 소개합니다.
 
 ## 1. 공유 프로젝트 BOX 패키징
 공유할 프로젝트의 BOX를 패키징 합니다. BOX를 패키징 하는 방법은 [BOX 이해하기](BOX.md) 문서를 참고해주시기 바랍니다.
@@ -31,7 +31,7 @@ Sample.OVERRIDE = METHOD({
 
 
 ## 3. 공유 프로젝트의 룸 서버 연결
-이제 `SP_ROOM_SERVER`로 연결하는 코드를 작성해 보겠습니다. 아래와 같은 코드를 `NODE/MAIN.js`에 추가합니다. 아래 코드는 [UPPERCASE.IO-IO 모듈](UPPERCASE.IO-IO.md)의 [BROWSER_INIT.js](../../UPPERCASE.IO-IO/BROWSER_INIT.js)을 참고한 것입니다.
+이제 `SP_ROOM_SERVER`로 연결하는 코드를 작성해 보겠습니다. 아래와 같은 코드를 `NODE/MAIN.js`에 추가합니다. 아래 코드는 [UPPERCASE-IO 모듈](UPPERCASE-IO.md)의 [BROWSER_INIT.js](../../UPPERCASE-IO/BROWSER_INIT.js)을 참고한 것입니다.
 
 ```javascript
 var

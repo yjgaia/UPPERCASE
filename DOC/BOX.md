@@ -2,7 +2,7 @@
 
 UPPERCASE.JS 기반 프로젝트에서, BOX는 모듈과 같은 개념입니다. 자세한 내용은 UPPERCASE.JS의 [UPPERCASE.JS-COMMON](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-COMMON.md) 문서의 `BOX` 항목을 참고해주세요.
 
-UPPERCASE.IO 기반 프로젝트에서는 *프로젝트 폴더*와 BOX폴더 내부의 각 폴더들의 이름으로 BOX가 생성됩니다.
+UPPERCASE 기반 프로젝트에서는 *프로젝트 폴더*와 BOX폴더 내부의 각 폴더들의 이름으로 BOX가 생성됩니다.
 예를 들어, 아래와 같이 폴더가 구성되어 있다면 `UUI`, `UANI`, `Yogurt`, `Sample` BOX들이 생성됩니다. (`Sample`은 프로젝트 폴더)
 
 ```
@@ -33,7 +33,7 @@ Sample
 프로젝트 폴더를 패키징하여 다른 프로젝트에서 재사용 할 수 있습니다.
 
 1. PACK.js를 다운로드합니다. (오른쪽 클릭 후 다른 이름으로 저장)
-	https://raw.githubusercontent.com/Hanul/UPPERCASE.IO/master/PACK.js
+	https://raw.githubusercontent.com/Hanul/UPPERCASE/master/PACK.js
 2. PACK.js를 아래와 같이 실행합니다.
 	`node PACK {{패키징 할 프로젝트 폴더 이름}}`
 

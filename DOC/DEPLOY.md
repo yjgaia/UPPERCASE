@@ -100,7 +100,7 @@ zip -r {{프로젝트 폴더 명.zip}} {{프로젝트 폴더 명}}
 mongodump -d {{데이터베이스 이름}} -u {{데이터베이스 접속 username}} -p {{데이터베이스 접속 password}}
 ```
 
-4. 이전 할 서버에 [UPPERCASE.IO를 세팅](INSTALL.md)합니다.
+4. 이전 할 서버에 [UPPERCASE를 세팅](INSTALL.md)합니다.
 
 5. 이전 할 서버에 백업한 프로젝트의 압축을 풉니다.
 ```
@@ -121,4 +121,4 @@ cd {{프로젝트 폴더 명}}
 forever start {{프로젝트 명.js}}
 ```
 
-다음 문서: [UPPERCASE.IO 업데이트](UPDATE.md)
+다음 문서: [UPPERCASE 업데이트](UPDATE.md)

@@ -1,24 +1,24 @@
-# UPPERCASE.IO-DB
+# UPPERCASE-DB
 MongoDB를 사용하기 쉽게 CRUD 기능을 구현한 모듈입니다.
 
-*※ UPPERCASE.IO 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
+*※ UPPERCASE 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
 
 ## 파일 구성
 아래 파일들을 다운로드 받아 아래 사용 방법 항목을 참고하여 사용합니다.
-* UPPERCASE.IO-DB 폴더
+* UPPERCASE-DB 폴더
 * UPPERCASE.JS-COMMON.js
 * UPPERCASE.JS-NODE.js
 
 ## 사용 방법
-`UPPERCASE.IO-DB`는 `UPPERCASE.JS`를 기반으로 합니다.
+`UPPERCASE-DB`는 `UPPERCASE.JS`를 기반으로 합니다.
 
 ```javascript
 // load UPPERCASE.JS.
 require('../../../UPPERCASE.JS-COMMON.js');
 require('../../../UPPERCASE.JS-NODE.js');
 
-// load UPPERCASE.IO-DB.
-require('../../../UPPERCASE.IO-DB/NODE.js');
+// load UPPERCASE-DB.
+require('../../../UPPERCASE-DB/NODE.js');
 
 CONNECT_TO_DB_SERVER({
 	name : 'test'
@@ -32,8 +32,8 @@ CONNECT_TO_DB_SERVER({
 ```
 
 ## API
-* `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
-* `DB(name)` MongoDB collection wrapper [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/DB.js)
+* `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/DB/NODE/DB.js)
+* `DB(name)` MongoDB collection wrapper [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/DB/NODE/DB.js)
 ```javascript
 db = TestBox.DB('test');
 db.create(data, function(savedData) {...})
@@ -54,7 +54,7 @@ db.checkIsExists({filter:}, {error:, success:})
 db.aggregate(params, function(dataSet) {...})
 db.aggregate(params, {error:, success:})
 ```
-* `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE.IO/blob/master/EXAMPLES/DB/NODE/LOG_DB.js)
+* `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/DB/NODE/LOG_DB.js)
 ```javascript
 logDB = TestBox.LOG_DB('testLog');
 logDB.log(data)

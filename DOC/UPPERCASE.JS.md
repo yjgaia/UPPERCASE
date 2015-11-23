@@ -1,18 +1,18 @@
 # UPPERCASE.JS
 ※ 이 문서는 작성중인 문서입니다.
 
-UPPERCASE.IO는 UPPERCASE.JS를 기반으로 개발되어 있습니다. 따라서 UPPERCASE.IO 기반 프로젝트를 개발하시려면, 먼저 UPPERCASE.JS에 대해 숙지하셔야 합니다.
+UPPERCASE는 UPPERCASE.JS를 기반으로 개발되어 있습니다. 따라서 UPPERCASE 기반 프로젝트를 개발하시려면, 먼저 UPPERCASE.JS에 대해 숙지하셔야 합니다.
 
 * [UPPERCASE.JS 저장소](https://github.com/Hanul/UPPERCASE.JS)
 
 다행히, UPPERCASE.JS의 모든 내용을 이해하실 필요는 없습니다! 아래 서술된 내용들만 익히셔도 프로젝트를 개발하는데에는 아무런 문제가 없습니다. 자세한 내용은 UPPERCASE.JS의 문서를 참고하시기 바랍니다.
 
-앞에 `SomeBox.`라고 붙은 기능들은 UPPERCASE.IO가 각 BOX들에서 사용할 수 있도록 wrapping한 기능들입니다. 이를 통해 각 BOX끼리 겹치지 않게 사용할 수 있습니다.
+앞에 `SomeBox.`라고 붙은 기능들은 UPPERCASE가 각 BOX들에서 사용할 수 있도록 wrapping한 기능들입니다. 이를 통해 각 BOX끼리 겹치지 않게 사용할 수 있습니다.
 ```javascript
 // UPPERCASE.JS
 var store = STORE('store');
 
-// UPPERCASE.IO, Sample BOX의 기능으로 사용한다.
+// UPPERCASE, Sample BOX의 기능으로 사용한다.
 var store = Sample.STORE('store');
 ```
 

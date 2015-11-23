@@ -1,4 +1,4 @@
-# UPPERCASE.IO 변경 내역
+# UPPERCASE 변경 내역
 
 ### 1.4 -> 1.5
 * 기존 모델의 beforeListener 구조가 `function(data, ret, next, clientInfo)` 에서 `function(data, next, ret, clientInfo)`로 변경 (자주 쓰는 순서대로 변경)

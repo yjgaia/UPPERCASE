@@ -1,9 +1,9 @@
 # 프로젝트 생성하기
-이 문서는 독자가 JavaScript와 웹 개발의 전반적인 내용을 알고 있다고 가정합니다. 이 문서에서 생성된 Sample 프로젝트는 UPPERCASE.IO 저장소의 최상단의 [Sample 폴더](https://github.com/Hanul/UPPERCASE.IO/tree/master/Sample)에 만들어져 있습니다. 참고하시기 바랍니다.
+이 문서는 독자가 JavaScript와 웹 개발의 전반적인 내용을 알고 있다고 가정합니다. 이 문서에서 생성된 Sample 프로젝트는 UPPERCASE 저장소의 최상단의 [Sample 폴더](https://github.com/Hanul/UPPERCASE/tree/master/Sample)에 만들어져 있습니다. 참고하시기 바랍니다.
 
 ## 프로젝트 폴더 생성
 1. 적당한 위치에 프로젝트 폴더를 생성합니다.
-2. 프로젝트 폴더 내에 프로젝트 BOX 폴더를 생성합니다. **BOX는 UPPERCASE.IO에서 모듈과 같은 개념**입니다. BOX에 대한 자세한 설명은 [이 문서](BOX.md)를 참고해주세요. 여기서는 BOX 폴더명을 `Sample`이라고 가정합니다.
+2. 프로젝트 폴더 내에 프로젝트 BOX 폴더를 생성합니다. **BOX는 UPPERCASE에서 모듈과 같은 개념**입니다. BOX에 대한 자세한 설명은 [이 문서](BOX.md)를 참고해주세요. 여기서는 BOX 폴더명을 `Sample`이라고 가정합니다.
 2. Sample 폴더 내에 아래와 같은 서브 폴더들을 만듭니다.
 	* `NODE` Node.js를 기반으로 동작할 코드들을 작성할 폴더입니다.
 	* `BROWSER` 브라우저에서 동작할 코드들을 작성할 폴더입니다.
@@ -32,10 +32,10 @@ Sample
 아래와 같이 Sample.js 코드를 작성합니다. 코드를 작성하기에 앞서 `UPPERCASE_IO_PATH 환경 변수`가 설정되어 있어야 합니다. 설정하는 방법은 [설치하기 문서](INSTALL.md)를 참고해주시기 바랍니다.
 
 ```javascript
-// UPPERCASE.IO의 BOOT.js를 import 합니다.
+// UPPERCASE의 BOOT.js를 import 합니다.
 require(process.env.UPPERCASE_IO_PATH + '/BOOT.js');
 
-// UPPERCASE.IO를 부팅합니다.
+// UPPERCASE를 부팅합니다.
 BOOT({
 	CONFIG : {
 		// 개발 모드로 부팅합니다.
@@ -50,7 +50,7 @@ BOOT({
 });
 ```
 
-BOOT.js를 import 하고, BOOT 메소드를 실행합니다. 이때 CONFIG라는 설정을 통해 UPPERCASE.IO의 작동 방식을 설정합니다. CONFIG에 대한 자세한 내용은 [이 문서](CONFIG.md)를 참고해주세요.
+BOOT.js를 import 하고, BOOT 메소드를 실행합니다. 이때 CONFIG라는 설정을 통해 UPPERCASE의 작동 방식을 설정합니다. CONFIG에 대한 자세한 내용은 [이 문서](CONFIG.md)를 참고해주세요.
 
 ## 프로젝트 실행
 콘솔 혹은 터미널에서 프로젝트 폴더로 이동하여 다음과 같은 명령을 실행합니다.
@@ -64,21 +64,21 @@ node Sample.js
 ```
 [UPPERCASE.JS-WEB_SERVER] RUNNING WEB SERVER... (PORT:8888)
 [UPPERCASE.JS-RESOURCE_SERVER] RUNNING RESOURCE SERVER... (PORT:8888)
-[UPPERCASE.IO-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...
-[UPPERCASE.IO-WEB_SOCKET_FIX_REQUEST_MANAGER] RUNNING WEB SOCKET FIX REQUEST MANAGER...
-[UPPERCASE.IO] <2015-3-8 18:25:53> `Sample` WORKER #1 BOOTed! => http://localhost:8888
+[UPPERCASE-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...
+[UPPERCASE-WEB_SOCKET_FIX_REQUEST_MANAGER] RUNNING WEB SOCKET FIX REQUEST MANAGER...
+[UPPERCASE] <2015-3-8 18:25:53> `Sample` WORKER #1 BOOTed! => http://localhost:8888
 [UPPERCASE.JS-CPU_CLUSTERING] RUNNING WORKER... (ID:1)
 ...
 ```
 
-http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝트 개발의 모든 준비가 끝났습니다. (까반 배경화면은 UPPERCASE.IO의 기본 스타일입니다.)
+http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝트 개발의 모든 준비가 끝났습니다. (까반 배경화면은 UPPERCASE의 기본 스타일입니다.)
 
 ## 간단한 화면 띄우기
 이 과정을 진행하기 전에, [UPPERCASE.JS](UPPERCASE.JS.md)와 [BOX](BOX.md)에 대한 내용을 숙지하시기 바랍니다.
 
 이제 간단한 화면을 생성하도록 하겠습니다. `BROWSER 폴더` 아래에 이하 두 파일을 만들어주기 바랍니다.
 
-* `MAIN.js` UPPERCASE.IO가 맨 처음 실행하는 코드입니다.
+* `MAIN.js` UPPERCASE가 맨 처음 실행하는 코드입니다.
 
     ```javascript
     // MAIN 메소드를 생성합니다.
@@ -112,7 +112,7 @@ http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝�
     		var
     		// div
     		div = DIV({
-    			c : 'Hello, UPPERCASE.IO!'
+    			c : 'Hello, UPPERCASE!'
     		}).appendTo(BODY);
     		
     		inner.on('close', function() {
@@ -122,9 +122,9 @@ http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝�
     });
     ```
 
-그런 뒤에 `Ctrl + C` 등으로 실행중인 Sample.js를 종료하고 다시 실행한 후, http://localhost:8080 으로 접속하시면 `Hello, UPPERCASE.IO!` 라는 문구를 보실 수 있습니다.
+그런 뒤에 `Ctrl + C` 등으로 실행중인 Sample.js를 종료하고 다시 실행한 후, http://localhost:8080 으로 접속하시면 `Hello, UPPERCASE!` 라는 문구를 보실 수 있습니다.
 
-축하합니다! 첫 UPPERCASE.IO 프로젝트를 생성하셨습니다! 이제 UPPERCASE.IO 프로젝트의 기본이 되는 [모델 생성](CREATE_MODEL.md)에 대해 알아보도록 하겠습니다.
+축하합니다! 첫 UPPERCASE 프로젝트를 생성하셨습니다! 이제 UPPERCASE 프로젝트의 기본이 되는 [모델 생성](CREATE_MODEL.md)에 대해 알아보도록 하겠습니다.
 
 ## MAIN 메소드
 `MAIN`은 프로젝트가 실행될 때 맨 처음 실행되는 메소드입니다. `NODE` 폴더의 `MAIN`은 프로젝트 자체를 실행할 때, `BROWSER` 폴더의 `MAIN`은 브라우저로 최초 접속 시 실행됩니다.

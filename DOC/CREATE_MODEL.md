@@ -1,8 +1,8 @@
 # 모델 생성
-UPPERCASE.IO는 Model-View 패턴을 따릅니다. 여기서는 Model에 해당하는 부분을 만드는 방법을 알아보겠습니다.
+UPPERCASE는 Model-View 패턴을 따릅니다. 여기서는 Model에 해당하는 부분을 만드는 방법을 알아보겠습니다.
 
 ## MongoDB 실행하기
-UPPERCASE.IO는 데이터베이스로 MongoDB를 사용합니다. 콘솔 혹은 터미널에서 MongoDB를 실행합니다.
+UPPERCASE는 데이터베이스로 MongoDB를 사용합니다. 콘솔 혹은 터미널에서 MongoDB를 실행합니다.
 
 ###### Mac or Linux
 ```
@@ -96,7 +96,7 @@ Sample.SomeModel = OBJECT({
 ```
 
 ## 모델 작동 확인하기
-모델 작동을 확인하기 위해 프로젝트의 NODE 폴더 이하에 MAIN.js를 만들어, 다음과 같은 코드를 추가해 보겠습니다. MAIN.js는 UPPERCASE.IO가 프로젝트 부팅 시 맨 처음 실행하는 코드입니다.
+모델 작동을 확인하기 위해 프로젝트의 NODE 폴더 이하에 MAIN.js를 만들어, 다음과 같은 코드를 추가해 보겠습니다. MAIN.js는 UPPERCASE가 프로젝트 부팅 시 맨 처음 실행하는 코드입니다.
 
 ###### MAIN.js
 ```javascript
@@ -138,7 +138,7 @@ node Sample.js
 콘솔 혹은 터미널에 아래와 같이 출력된다면 모델이 잘 만들어진 것입니다!
 
 ```
-[UPPERCASE.IO-MODEL] `Sample.Some/create` NOT VALID. { kind: { type: 'notEmpty', value: undefined } }
+[UPPERCASE-MODEL] `Sample.Some/create` NOT VALID. { kind: { type: 'notEmpty', value: undefined } }
 { name: 'Maru',
   kind: 'dog',
   createTime: Thu Mar 26 2015 13:35:30 GMT+0900 (대한민국 표준시),

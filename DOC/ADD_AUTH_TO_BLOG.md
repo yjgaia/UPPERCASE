@@ -33,7 +33,7 @@ BOOT({
 ```
 
 ## 로그인을 처리하는 로직 만들기
-UPPERCASE.IO의 `ROOM` 기능을 이용하여 로그인을 처리하는 로직을 만들어 보겠습니다.
+UPPERCASE의 `ROOM` 기능을 이용하여 로그인을 처리하는 로직을 만들어 보겠습니다.
 
 ###### Blog/NODE/AuthRoom.js
 `auth` 메소드로 넘어온 `password`와 `NODE_CONFIG.Blog.password`를 비교하여 같으면 `ADMIN` 롤을 `clientInfo`에 삽입하므로써 로그인을 처리합니다.
@@ -270,6 +270,6 @@ Blog.ArticleModel = OBJECT({
 
 이제 다시 프로젝트를 껐다가 실행해보면, 로그인 하지 않은 상태에서는 폼 화면에서 글쓰기 버튼이 작동하지 않는것을 알 수 있습니다.
 
-인증 기능이 추가된 블로그 까지 만들어 보았으니 UPPERCASE.IO의 기본적인 내용은 모두 익혔습니다. 이제 UPPERCASE.IO가 제공하는 기능들을 하나씩 살펴보도록 하겠습니다.
+인증 기능이 추가된 블로그 까지 만들어 보았으니 UPPERCASE의 기본적인 내용은 모두 익혔습니다. 이제 UPPERCASE가 제공하는 기능들을 하나씩 살펴보도록 하겠습니다.
 
-다음 문서: [UPPERCASE.IO가 제공하는 기능들 살펴보기](OVERVIEW.md)
+다음 문서: [UPPERCASE가 제공하는 기능들 살펴보기](OVERVIEW.md)
