@@ -83,6 +83,11 @@ cd Sample
 plugman install --platform android --project . --plugin {{플러그인의 주소}}
 ```
 
+### 플러그인 삭제
+```
+plugman uninstall --platform android --project . --plugin {{플러그인의 패키지 명}}
+```
+
 ### 배포하기
 우선은 배포를 위한 키 저장소를 만듭니다. 이 저장소는 여러 앱에서 사용될 수 있습니다.
 ```
