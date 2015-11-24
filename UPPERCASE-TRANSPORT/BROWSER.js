@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -209,7 +209,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 				if (errorListener !== undefined) {
 					errorListener(errorMsg);
 				} else {
-					console.log('[UPPERCASE.IO-CONNECT_TO_WEB_SOCKET_SERVER] CONNECT TO WEB SOCKET SERVER FAILED: ' + errorMsg);
+					console.log('[UPPERCASE-CONNECT_TO_WEB_SOCKET_SERVER] CONNECT TO WEB SOCKET SERVER FAILED: ' + errorMsg);
 				}
 
 			} else {

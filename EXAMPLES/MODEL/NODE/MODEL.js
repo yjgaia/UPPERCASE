@@ -2,18 +2,18 @@
 require('../../../UPPERCASE.JS-COMMON.js');
 require('../../../UPPERCASE.JS-NODE.js');
 
-// load UPPERCASE.IO-DB.
-require('../../../UPPERCASE.IO-DB/NODE.js');
+// load UPPERCASE-DB.
+require('../../../UPPERCASE-DB/NODE.js');
 
-// load UPPERCASE.IO-TRANSPORT.
-require('../../../UPPERCASE.IO-TRANSPORT/NODE.js');
+// load UPPERCASE-TRANSPORT.
+require('../../../UPPERCASE-TRANSPORT/NODE.js');
 
-// load UPPERCASE.IO-ROOM.
-require('../../../UPPERCASE.IO-ROOM/NODE.js');
+// load UPPERCASE-ROOM.
+require('../../../UPPERCASE-ROOM/NODE.js');
 
-// load UPPERCASE.IO-MODEL.
-require('../../../UPPERCASE.IO-MODEL/COMMON.js');
-require('../../../UPPERCASE.IO-MODEL/NODE.js');
+// load UPPERCASE-MODEL.
+require('../../../UPPERCASE-MODEL/COMMON.js');
+require('../../../UPPERCASE-MODEL/NODE.js');
 
 TEST('MODEL', function(ok) {
 	'use strict';

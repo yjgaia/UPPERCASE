@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 

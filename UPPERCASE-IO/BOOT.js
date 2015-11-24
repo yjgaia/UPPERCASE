@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -327,7 +327,7 @@ global.BOOT = function(params) {
 		}, {
 
 			notExists : function() {
-				console.log(CONSOLE_RED('[UPPERCASE.IO] NOT EXISTS `V` VERSION FILE!'));
+				console.log(CONSOLE_RED('[UPPERCASE] NOT EXISTS `V` VERSION FILE!'));
 				version = 'V__NOT_EXISTS__' + Date.now();
 			},
 
@@ -359,16 +359,16 @@ global.BOOT = function(params) {
 
 		// set fix scripts folder path.
 		addContentToBrowserScript('BROWSER_CONFIG.fixScriptsFolderPath = \'/UPPERCASE.JS-BROWSER-FIX\';\n');
-		addContentToBrowserScript('BROWSER_CONFIG.fixTransportScriptsFolderPath = \'/UPPERCASE.IO-TRANSPORT\';\n');
+		addContentToBrowserScript('BROWSER_CONFIG.fixTransportScriptsFolderPath = \'/UPPERCASE-TRANSPORT\';\n');
 	};
 
 	initBoxes = function(next) {
 
-		// create UPPERCASE.IO box.
-		BOX('UPPERCASE.IO');
+		// create UPPERCASE box.
+		BOX('UPPERCASE');
 
-		// add UPPERCASE.IO box to browser script.
-		addContentToBrowserScript('BOX(\'UPPERCASE.IO\');\n');
+		// add UPPERCASE box to browser script.
+		addContentToBrowserScript('BOX(\'UPPERCASE\');\n');
 
 		// init boxes in root folder.
 		FIND_FOLDER_NAMES({
@@ -438,8 +438,8 @@ global.BOOT = function(params) {
 
 	initDatabase = function() {
 
-		// load UPPERCASE.IO-DB.
-		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-DB/NODE.js');
+		// load UPPERCASE-DB.
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE-DB/NODE.js');
 
 		if (NODE_CONFIG.dbName !== undefined) {
 
@@ -455,19 +455,19 @@ global.BOOT = function(params) {
 
 	initModelSystem = function() {
 
-		// load UPPERCASE.IO-TRANSPORT.
-		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-TRANSPORT/NODE.js');
-		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-TRANSPORT/BROWSER.js');
+		// load UPPERCASE-TRANSPORT.
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE-TRANSPORT/NODE.js');
+		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE-TRANSPORT/BROWSER.js');
 
-		// load UPPERCASE.IO-ROOM.
-		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-ROOM/NODE.js');
-		loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-ROOM/CLIENT.js');
-		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-ROOM/BROWSER.js');
+		// load UPPERCASE-ROOM.
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE-ROOM/NODE.js');
+		loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE-ROOM/CLIENT.js');
+		loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE-ROOM/BROWSER.js');
 
-		// load UPPERCASE.IO-MODEL.
-		loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/COMMON.js');
-		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/NODE.js');
-		loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-MODEL/CLIENT.js');
+		// load UPPERCASE-MODEL.
+		loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE-MODEL/COMMON.js');
+		loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE-MODEL/NODE.js');
+		loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE-MODEL/CLIENT.js');
 	};
 
 	generateIndexPage = function() {
@@ -627,8 +627,8 @@ global.BOOT = function(params) {
 
 		if (CONFIG.webServerPort !== undefined || CONFIG.sercuredWebServerPort !== undefined) {
 
-			// load UPPERCASE.IO-UPLOAD.
-			loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-UPLOAD/NODE.js');
+			// load UPPERCASE-UPLOAD.
+			loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE-UPLOAD/NODE.js');
 
 			webServer = RESOURCE_SERVER({
 
@@ -752,7 +752,7 @@ global.BOOT = function(params) {
 					// serve base style css.
 					else if (uri === '__CSS') {
 						replaceRootPath(UPPERCASE_IO_PATH);
-						requestInfo.uri = 'UPPERCASE.IO-IO/R/BASE_STYLE.css';
+						requestInfo.uri = 'UPPERCASE-IO/R/BASE_STYLE.css';
 					}
 
 					// serve upload server host.
@@ -937,7 +937,7 @@ global.BOOT = function(params) {
 
 							boxName = uri.substring(0, i);
 
-							if (boxName === 'UPPERCASE.IO' || BOX.getBoxes()[boxName] !== undefined) {
+							if (boxName === 'UPPERCASE' || BOX.getBoxes()[boxName] !== undefined) {
 								uri = uri.substring(i + 1);
 							} else {
 								boxName = CONFIG.defaultBoxName;
@@ -999,7 +999,7 @@ global.BOOT = function(params) {
 
 					// serve cors callback.
 					else if (uri === '__CORS_CALLBACK') {
-						replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/R');
+						replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE-IO/R');
 						requestInfo.uri = 'CORS_CALLBACK.html';
 					}
 
@@ -1115,20 +1115,20 @@ global.BOOT = function(params) {
 						} else {
 							boxName = uri.substring(0, i);
 
-							if (BOX.getBoxes()[boxName] !== undefined || boxName === 'UPPERCASE.IO-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX') {
+							if (BOX.getBoxes()[boxName] !== undefined || boxName === 'UPPERCASE-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX') {
 								uri = uri.substring(i + 1);
 							} else {
 								boxName = CONFIG.defaultBoxName;
 							}
 						}
 
-						// serve UPPERCASE.IO-TRANSPORT-FIX.
-						if (boxName === 'UPPERCASE.IO-TRANSPORT') {
-							replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.IO-TRANSPORT/R');
+						// serve UPPERCASE-TRANSPORT-FIX.
+						if (boxName === 'UPPERCASE-TRANSPORT') {
+							replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE-TRANSPORT/R');
 							requestInfo.uri = uri;
 						}
 						
-						// serve UPPERCASE.IO-BROWSER-FIX.
+						// serve UPPERCASE-BROWSER-FIX.
 						else if (boxName === 'UPPERCASE.JS-BROWSER-FIX') {
 							replaceRootPath(UPPERCASE_IO_PATH + '/UPPERCASE.JS-BROWSER-FIX');
 							requestInfo.uri = uri;
@@ -1176,7 +1176,7 @@ global.BOOT = function(params) {
 			isCreateWebSocketFixRequestManager : true
 		}).getWebSocketFixRequest();
 
-		console.log('[UPPERCASE.IO] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.title + '` WORKER #' + CPU_CLUSTERING.getWorkerId() + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
+		console.log('[UPPERCASE] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.title + '` WORKER #' + CPU_CLUSTERING.getWorkerId() + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
 
 	// load UPPERCASE.JS.
@@ -1188,15 +1188,15 @@ global.BOOT = function(params) {
 	// init boxes.
 	initBoxes();
 
-	// load UPPERCASE.IO-UTIL.
-	loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-UTIL/NODE.js');
+	// load UPPERCASE-UTIL.
+	loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE-UTIL/NODE.js');
 
-	// load UPPERCASE.IO-IO.
-	loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/COMMON.js');
-	loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/CLIENT.js');
-	loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER.js');
-	loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/BROWSER_INIT.js');
-	loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE.IO-IO/NODE.js');
+	// load UPPERCASE-IO.
+	loadForCommon(UPPERCASE_IO_PATH + '/UPPERCASE-IO/COMMON.js');
+	loadForClient(UPPERCASE_IO_PATH + '/UPPERCASE-IO/CLIENT.js');
+	loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE-IO/BROWSER.js');
+	loadForBrowser(UPPERCASE_IO_PATH + '/UPPERCASE-IO/BROWSER_INIT.js');
+	loadForNode(UPPERCASE_IO_PATH + '/UPPERCASE-IO/NODE.js');
 
 	// clustering cpus and servers.
 	clustering(function() {

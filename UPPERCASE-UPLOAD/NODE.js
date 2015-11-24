@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -193,7 +193,7 @@ global.UPLOAD_REQUEST = METHOD(function(m) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorMsg);
 						} else {
-							console.log('[UPPERCASE.IO-UPLOAD_REQUEST] ERROR: ' + errorMsg);
+							console.log('[UPPERCASE-UPLOAD_REQUEST] ERROR: ' + errorMsg);
 						}
 					});
 

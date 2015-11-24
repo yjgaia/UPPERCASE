@@ -131,7 +131,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 				
 				// if catch error
 				catch(error) {
-					console.log(CONSOLE_RED('[UPPERCASE.IO-WEB_SOCKET_FIX_REQUEST_MANAGER] ERROR:'), error.toString());
+					console.log(CONSOLE_RED('[UPPERCASE-WEB_SOCKET_FIX_REQUEST_MANAGER] ERROR:'), error.toString());
 				}
 			},
 
@@ -599,7 +599,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 				}
 			};
 
-			console.log('[UPPERCASE.IO-WEB_SOCKET_FIX_REQUEST_MANAGER] RUNNING WEB SOCKET FIX REQUEST MANAGER...');
+			console.log('[UPPERCASE-WEB_SOCKET_FIX_REQUEST_MANAGER] RUNNING WEB SOCKET FIX REQUEST MANAGER...');
 		}
 	};
 });

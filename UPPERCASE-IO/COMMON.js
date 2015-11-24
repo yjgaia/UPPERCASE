@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -12,9 +12,9 @@ OVERRIDE(CONFIG, function(origin) {
 
 	global.CONFIG = COMBINE([{
 		
-		defaultBoxName : 'UPPERCASE.IO',
+		defaultBoxName : 'UPPERCASE',
 		
-		title : 'UPPERCASE.IO PROJECT',
+		title : 'UPPERCASE PROJECT',
 		
 		baseBackgroundColor : '#000',
 		baseColor : '#fff',

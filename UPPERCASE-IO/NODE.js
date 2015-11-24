@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -135,8 +135,8 @@ global.BOOT_UADMIN = METHOD({
 					return false;
 				}
 				
-				// serve UPPERCASE.IO-BROWSER-PACK.
-				if (uri.indexOf('UPPERCASE.IO-BROWSER-PACK/') === 0) {
+				// serve UPPERCASE-BROWSER-PACK.
+				if (uri.indexOf('UPPERCASE-BROWSER-PACK/') === 0) {
 					replaceRootPath(UPPERCASE_IO_PATH);
 				}
 				
@@ -405,7 +405,7 @@ global.BOOT_UADMIN = METHOD({
 			}
 		});
 		
-		console.log('[UPPERCASE.IO] UADMIN Tool BOOTed! => http://localhost:' + UADMIN_CONFIG.port);
+		console.log('[UPPERCASE] UADMIN Tool BOOTed! => http://localhost:' + UADMIN_CONFIG.port);
 	}
 });
 
@@ -417,7 +417,7 @@ global.CHECK_STILL_ALIVE = OBJECT({
 	init : function() {
 		'use strict';
 
-		UPPERCASE.IO.ROOM('checkStillAliveRoom', function(clientInfo, on, off, send) {
+		UPPERCASE.ROOM('checkStillAliveRoom', function(clientInfo, on, off, send) {
 			
 			// I'm still alive!!
 			on('check', function(notUsing, ret) {
@@ -445,7 +445,7 @@ global.SYNC_TIME = OBJECT({
 	init : function() {
 		'use strict';
 
-		UPPERCASE.IO.ROOM('timeSyncRoom', function(clientInfo, on) {
+		UPPERCASE.ROOM('timeSyncRoom', function(clientInfo, on) {
 
 			// return diff. (diff: client time - server time)
 			on('sync', function(clientNow, ret) {

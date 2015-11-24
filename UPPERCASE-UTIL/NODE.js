@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -49,7 +49,7 @@ global.IMAGEMAGICK_CONVERT = METHOD(function() {
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
 					} else {
-						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_CONVERT] ERROR: ' + errorMsg));
+						console.log(CONSOLE_RED('[UPPERCASE-IMAGEMAGICK_CONVERT] ERROR: ' + errorMsg));
 					}
 
 				} else {
@@ -106,7 +106,7 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
 					} else {
-						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_IDENTIFY] ERROR: ' + errorMsg));
+						console.log(CONSOLE_RED('[UPPERCASE-IMAGEMAGICK_IDENTIFY] ERROR: ' + errorMsg));
 					}
 
 				} else {
@@ -160,7 +160,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
 					} else {
-						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_READ_METADATA] ERROR: ' + errorMsg));
+						console.log(CONSOLE_RED('[UPPERCASE-IMAGEMAGICK_READ_METADATA] ERROR: ' + errorMsg));
 					}
 
 				} else {

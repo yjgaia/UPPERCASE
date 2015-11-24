@@ -268,7 +268,7 @@ OVERRIDE(CONNECT_TO_WEB_SOCKET_SERVER, function(origin) {
 					if (errorListener !== undefined) {
 						errorListener('CONNECT TO WEB SOCKET FIX SERVER FAILED.');
 					} else {
-						console.log('[UPPERCASE.IO-CONNECT_TO_WEB_SOCKET_SERVER (FIX)] CONNECT TO WEB SOCKET FIX SERVER FAILED.');
+						console.log('[UPPERCASE-CONNECT_TO_WEB_SOCKET_SERVER (FIX)] CONNECT TO WEB SOCKET FIX SERVER FAILED.');
 					}
 				});
 

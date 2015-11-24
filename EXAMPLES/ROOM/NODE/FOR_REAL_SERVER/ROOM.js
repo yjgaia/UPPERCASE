@@ -2,11 +2,11 @@
 require('../../../../UPPERCASE.JS-COMMON.js');
 require('../../../../UPPERCASE.JS-NODE.js');
 
-// load UPPERCASE.IO-TRANSPORT.
-require('../../../../UPPERCASE.IO-TRANSPORT/NODE.js');
+// load UPPERCASE-TRANSPORT.
+require('../../../../UPPERCASE-TRANSPORT/NODE.js');
 
-// load UPPERCASE.IO-ROOM.
-require('../../../../UPPERCASE.IO-ROOM/NODE.js');
+// load UPPERCASE-ROOM.
+require('../../../../UPPERCASE-ROOM/NODE.js');
 
 TEST('ROOM', function(ok) {
 	'use strict';

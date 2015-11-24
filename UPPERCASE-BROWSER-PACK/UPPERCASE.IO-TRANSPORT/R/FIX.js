@@ -1,5 +1,5 @@
 /**
- * Fix codes for UPPERCASE.IO-TRANSPORT.
+ * Fix codes for UPPERCASE-TRANSPORT.
  */
 RUN(function() {
 	'use strict';

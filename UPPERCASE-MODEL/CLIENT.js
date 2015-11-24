@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -245,7 +245,7 @@ FOR_BOX(function(box) {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validResult.getErrors());
 								} else {
-									console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` NOT VALID!: ', validResult.getErrors());
+									console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/create` NOT VALID!: ', validResult.getErrors());
 								}
 		
 							} else {
@@ -279,19 +279,19 @@ FOR_BOX(function(box) {
 											if (errorHandler !== undefined) {
 												errorHandler(errorMsg);
 											} else {
-												console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` ERROR: ' + errorMsg);
+												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/create` ERROR: ' + errorMsg);
 											}
 										} else if (validErrors !== undefined) {
 											if (notValidHandler !== undefined) {
 												notValidHandler(validErrors);
 											} else {
-												console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` NOT VALID!: ', validErrors);
+												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/create` NOT VALID!: ', validErrors);
 											}
 										} else if (isNotAuthed === true) {
 											if (notAuthedHandler !== undefined) {
 												notAuthedHandler();
 											} else {
-												console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/create` NOT AUTHED!');
+												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/create` NOT AUTHED!');
 											}
 										} else if (callback !== undefined) {
 											callback(savedData);
@@ -363,19 +363,19 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/get` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/get` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/get` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/get` NOT AUTHED!');
 									}
 								} else if (savedData === undefined) {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/get` NOT EXISTS!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/get` NOT EXISTS!');
 									}
 								} else if (callback !== undefined) {
 									callback(savedData);
@@ -611,7 +611,7 @@ FOR_BOX(function(box) {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validErrors);
 								} else {
-									console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validErrors);
+									console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validErrors);
 								}
 		
 							} else {
@@ -649,25 +649,25 @@ FOR_BOX(function(box) {
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` ERROR: ' + errorMsg);
+											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` ERROR: ' + errorMsg);
 										}
 									} else if (validErrors !== undefined) {
 										if (notValidHandler !== undefined) {
 											notValidHandler(validErrors);
 										} else {
-											console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validErrors);
+											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validErrors);
 										}
 									} else if (isNotAuthed === true) {
 										if (notAuthedHandler !== undefined) {
 											notAuthedHandler();
 										} else {
-											console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT AUTHED!');
+											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT AUTHED!');
 										}
 									} else if (savedData === undefined) {
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
 										} else {
-											console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/update` NOT EXISTS!');
+											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT EXISTS!');
 										}
 									} else if (callback !== undefined) {
 										callback(savedData, originData);
@@ -733,19 +733,19 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/remove` NOT AUTHED!');
 									}
 								} else if (originData === undefined) {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS!');
 									}
 								} else if (callback !== undefined) {
 									callback(originData);
@@ -808,13 +808,13 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/find` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/find` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/find` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/find` NOT AUTHED!');
 									}
 								} else if (callback !== undefined) {
 									callback(savedDataSet);
@@ -982,13 +982,13 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/count` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/count` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/count` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/count` NOT AUTHED!');
 									}
 								} else if (callback !== undefined) {
 									callback(count);
@@ -1047,13 +1047,13 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/checkIsExists` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/checkIsExists` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE.IO-MODEL] `' + box.boxName + '.' + name + '/checkIsExists` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/checkIsExists` NOT AUTHED!');
 									}
 								} else if (callback !== undefined) {
 									callback(isExists);

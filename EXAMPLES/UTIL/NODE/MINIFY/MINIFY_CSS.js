@@ -2,8 +2,8 @@
 require('../../../../UPPERCASE.JS-COMMON.js');
 require('../../../../UPPERCASE.JS-NODE.js');
 
-// load UPPERCASE.IO-UTIL.
-require('../../../../UPPERCASE.IO-UTIL/NODE.js');
+// load UPPERCASE-UTIL.
+require('../../../../UPPERCASE-UTIL/NODE.js');
 
 TEST('MINIFY_CSS', function(ok) {
 	'use strict';

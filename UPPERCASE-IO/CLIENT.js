@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -108,7 +108,7 @@ global.SYNC_TIME = METHOD({
 
 		var
 		// time sync room
-		timeSyncRoom = UPPERCASE.IO.ROOM('timeSyncRoom'),
+		timeSyncRoom = UPPERCASE.ROOM('timeSyncRoom'),
 
 		// now time
 		now = new Date();

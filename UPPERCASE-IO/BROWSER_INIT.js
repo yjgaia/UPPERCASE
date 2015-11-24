@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -9,7 +9,7 @@ if (BROWSER_CONFIG.fixScriptsFolderPath !== undefined) {
 	LOAD(BROWSER_CONFIG.fixScriptsFolderPath + '/FIX.js');
 }
 
-// load UPPERCASE.IO-TRANSPORT FIX.
+// load UPPERCASE-TRANSPORT FIX.
 if (BROWSER_CONFIG.fixTransportScriptsFolderPath !== undefined) {
 	LOAD(BROWSER_CONFIG.fixTransportScriptsFolderPath + '/FIX.js');
 }

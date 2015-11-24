@@ -2,25 +2,25 @@
 require('../UPPERCASE.JS-COMMON.js');
 require('../UPPERCASE.JS-NODE.js');
 
-// load UPPERCASE.IO-UTIL.
-require('../UPPERCASE.IO-UTIL/NODE.js');
+// load UPPERCASE-UTIL.
+require('../UPPERCASE-UTIL/NODE.js');
 
 /*
- * distribute UPPERCASE.IO.
+ * distribute UPPERCASE.
  */
 RUN(function() {
 	'use strict';
 
 	var
 	// BASE_CONTENT
-	BASE_CONTENT = '/*\n\nWelcome to UPPERCASE.IO! (http://uppercase.io)\n\n*/\n\n',
+	BASE_CONTENT = '/*\n\nWelcome to UPPERCASE! (http://uppercase.io)\n\n*/\n\n',
 	
 	//IMPORT: path
 	path = require('path'),
 
 	// log.
 	log = function(msg) {
-		console.log('UPPERCASE.IO BUILD: ' + msg);
+		console.log('UPPERCASE BUILD: ' + msg);
 	},
 
 	// scan folder.
@@ -86,7 +86,7 @@ RUN(function() {
 		});
 		
 		WRITE_FILE({
-			path : '../UPPERCASE.IO-' + modulePath + '/' + path + '.js',
+			path : '../UPPERCASE-' + modulePath + '/' + path + '.js',
 			content : content,
 			isSync : true
 		});
@@ -103,7 +103,7 @@ RUN(function() {
 			});
 	
 			WRITE_FILE({
-				path : '../UPPERCASE.IO-' + modulePath + '/' + path + '.MIN.js',
+				path : '../UPPERCASE-' + modulePath + '/' + path + '.MIN.js',
 				content : content,
 				isSync : true
 			});
@@ -115,7 +115,7 @@ RUN(function() {
 
 		var
 		// real to
-		realTo = '../UPPERCASE.IO-' + modulePath + '/' + to;
+		realTo = '../UPPERCASE-' + modulePath + '/' + to;
 
 		FIND_FILE_NAMES({
 			path : modulePath + '/' + from,
@@ -199,9 +199,9 @@ RUN(function() {
 	save('IO', ['IO/PRINT_HTML_SNAPSHOT.js'], 'PRINT_HTML_SNAPSHOT', false);
 	
 	WRITE_FILE({
-		path : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
+		path : '../UPPERCASE-IO/R/BASE_STYLE.css',
 		content : MINIFY_CSS(READ_FILE({
-			path : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
+			path : '../UPPERCASE-IO/R/BASE_STYLE.css',
 			isSync : true
 		})),
 		isSync : true
@@ -234,7 +234,7 @@ RUN(function() {
 				EACH(fileNames, function(fileName) {
 					COPY_FILE({
 						from : '../' + path + '/' + fileName,
-						to : '../UPPERCASE.IO-BROWSER-PACK/' + path + '/' + fileName,
+						to : '../UPPERCASE-BROWSER-PACK/' + path + '/' + fileName,
 						isSync : true
 					});
 				});
@@ -257,52 +257,52 @@ RUN(function() {
 		load('UPPERCASE.JS-BROWSER.js');
 		copyFolder('UPPERCASE.JS-BROWSER-FIX');
 		
-		initScript += 'BOX(\'UPPERCASE.IO\');\n\n';
+		initScript += 'BOX(\'UPPERCASE\');\n\n';
 
-		// load UPPERCASE.IO-TRANSPORT.
-		load('UPPERCASE.IO-TRANSPORT/BROWSER.js');
-		copyFolder('UPPERCASE.IO-TRANSPORT/R');
+		// load UPPERCASE-TRANSPORT.
+		load('UPPERCASE-TRANSPORT/BROWSER.js');
+		copyFolder('UPPERCASE-TRANSPORT/R');
 
-		// load UPPERCASE.IO-ROOM.
-		load('UPPERCASE.IO-ROOM/CLIENT.js');
-		load('UPPERCASE.IO-ROOM/BROWSER.js');
+		// load UPPERCASE-ROOM.
+		load('UPPERCASE-ROOM/CLIENT.js');
+		load('UPPERCASE-ROOM/BROWSER.js');
 
-		// load UPPERCASE.IO-MODEL.
-		load('UPPERCASE.IO-MODEL/COMMON.js');
-		load('UPPERCASE.IO-MODEL/CLIENT.js');
+		// load UPPERCASE-MODEL.
+		load('UPPERCASE-MODEL/COMMON.js');
+		load('UPPERCASE-MODEL/CLIENT.js');
 
-		// load UPPERCASE.IO-IO.
-		load('UPPERCASE.IO-IO/CLIENT.js');
-		load('UPPERCASE.IO-IO/BROWSER.js');
+		// load UPPERCASE-IO.
+		load('UPPERCASE-IO/CLIENT.js');
+		load('UPPERCASE-IO/BROWSER.js');
 
 		// write IMPORT.js
 		WRITE_FILE({
-			path : '../UPPERCASE.IO-BROWSER-PACK/IMPORT.js',
+			path : '../UPPERCASE-BROWSER-PACK/IMPORT.js',
 			content : initScript,
 			isSync : true
 		});
 		WRITE_FILE({
-			path : '../UPPERCASE.IO-BROWSER-PACK/IMPORT.MIN.js',
+			path : '../UPPERCASE-BROWSER-PACK/IMPORT.MIN.js',
 			content : MINIFY_JS(initScript),
 			isSync : true
 		});
 
 		// copy BASE_STYLE
 		COPY_FILE({
-			from : '../UPPERCASE.IO-IO/R/BASE_STYLE.css',
-			to : '../UPPERCASE.IO-BROWSER-PACK/BASE_STYLE.css',
+			from : '../UPPERCASE-IO/R/BASE_STYLE.css',
+			to : '../UPPERCASE-BROWSER-PACK/BASE_STYLE.css',
 			isSync : true
 		});
 
 		// copy BROWSER_INIT
 		COPY_FILE({
-			from : '../UPPERCASE.IO-IO/BROWSER_INIT.js',
-			to : '../UPPERCASE.IO-BROWSER-PACK/INIT.js',
+			from : '../UPPERCASE-IO/BROWSER_INIT.js',
+			to : '../UPPERCASE-BROWSER-PACK/INIT.js',
 			isSync : true
 		});
 		COPY_FILE({
-			from : '../UPPERCASE.IO-IO/BROWSER_INIT.MIN.js',
-			to : '../UPPERCASE.IO-BROWSER-PACK/INIT.MIN.js',
+			from : '../UPPERCASE-IO/BROWSER_INIT.MIN.js',
+			to : '../UPPERCASE-BROWSER-PACK/INIT.MIN.js',
 			isSync : true
 		});
 	});

@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.IO! (http://uppercase.io)
+Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
@@ -199,7 +199,7 @@ FOR_BOX(function(box) {
 					}, callback);
 
 				} else {
-					console.log('[UPPERCASE.IO-ROOM] `ROOM.send` ERROR! ROOM EXITED!');
+					console.log('[UPPERCASE-ROOM] `ROOM.send` ERROR! ROOM EXITED!');
 				}
 			};
 
