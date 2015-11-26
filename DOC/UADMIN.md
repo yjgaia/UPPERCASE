@@ -2,7 +2,7 @@
 데이터베이스에 저장된 데이터를 다루고, 트래픽 등을 분석하는 기능을 가지고 있는 관리 툴입니다.
 UADMIN을 작동시키기 위해서는 프로젝트 실행을 위한 코드에 다음과 같이 `UADMIN_CONFIG` 설정을 추가하여 실행합니다.
 ```javascript
-require(process.env.UPPERCASE_IO_PATH + '/BOOT.js');
+require(process.env.UPPERCASE_PATH + '/BOOT.js');
 
 BOOT({
 	CONFIG : {

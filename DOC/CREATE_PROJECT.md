@@ -29,11 +29,11 @@ Sample
 3. 코드 컨벤션 규칙을 모두 익혔다면, 프로젝트 실행을 위한 코드를 작성합니다.
 
 ## 프로젝트 실행을 위한 코드(Sample.js) 작성
-아래와 같이 Sample.js 코드를 작성합니다. 코드를 작성하기에 앞서 `UPPERCASE_IO_PATH 환경 변수`가 설정되어 있어야 합니다. 설정하는 방법은 [설치하기 문서](INSTALL.md)를 참고해주시기 바랍니다.
+아래와 같이 Sample.js 코드를 작성합니다. 코드를 작성하기에 앞서 `UPPERCASE_PATH 환경 변수`가 설정되어 있어야 합니다. 설정하는 방법은 [설치하기 문서](INSTALL.md)를 참고해주시기 바랍니다.
 
 ```javascript
 // UPPERCASE의 BOOT.js를 import 합니다.
-require(process.env.UPPERCASE_IO_PATH + '/BOOT.js');
+require(process.env.UPPERCASE_PATH + '/BOOT.js');
 
 // UPPERCASE를 부팅합니다.
 BOOT({

@@ -3,9 +3,9 @@
  */
 global.BOOT_UADMIN = METHOD({
 
-	run : function(UPPERCASE_IO_PATH) {
+	run : function(UPPERCASE_PATH) {
 		'use strict';
-		//REQUIRED: UPPERCASE_IO_PATH
+		//REQUIRED: UPPERCASE_PATH
 
 		var
 		// session db
@@ -48,7 +48,7 @@ global.BOOT_UADMIN = METHOD({
 
 			port : UADMIN_CONFIG.port,
 			
-			rootPath : UPPERCASE_IO_PATH + '/UADMIN',
+			rootPath : UPPERCASE_PATH + '/UADMIN',
 
 			version : CONFIG.version
 		}, {
@@ -131,7 +131,7 @@ global.BOOT_UADMIN = METHOD({
 				
 				// serve UPPERCASE-BROWSER-PACK.
 				if (uri.indexOf('UPPERCASE-BROWSER-PACK/') === 0) {
-					replaceRootPath(UPPERCASE_IO_PATH);
+					replaceRootPath(UPPERCASE_PATH);
 				}
 				
 				if (sessionKey !== undefined) {
@@ -146,7 +146,7 @@ global.BOOT_UADMIN = METHOD({
 					// serve login page.
 					if (uri === '') {
 						
-						READ_FILE(UPPERCASE_IO_PATH + '/UADMIN/login.html', function(content) {
+						READ_FILE(UPPERCASE_PATH + '/UADMIN/login.html', function(content) {
 							response(content.toString());
 						});
 						
@@ -384,13 +384,13 @@ global.BOOT_UADMIN = METHOD({
 				
 				if (password !== UADMIN_CONFIG.password) {
 					
-					READ_FILE(UPPERCASE_IO_PATH + '/UADMIN/login.html', function(content) {
+					READ_FILE(UPPERCASE_PATH + '/UADMIN/login.html', function(content) {
 						response(content.toString());
 					});
 					
 				} else {
 				
-					READ_FILE(UPPERCASE_IO_PATH + '/UADMIN/index.html', function(content) {
+					READ_FILE(UPPERCASE_PATH + '/UADMIN/index.html', function(content) {
 						response(content.toString());
 					});
 				}

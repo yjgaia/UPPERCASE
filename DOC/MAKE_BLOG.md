@@ -312,7 +312,7 @@ Blog.MAIN = METHOD({
 
 ###### Blog.js
 ```javascript
-require(process.env.UPPERCASE_IO_PATH + '/BOOT.js');
+require(process.env.UPPERCASE_PATH + '/BOOT.js');
 
 BOOT({
 	CONFIG : {
