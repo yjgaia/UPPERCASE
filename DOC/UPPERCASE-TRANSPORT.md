@@ -14,7 +14,7 @@ TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UPPERCAS
 * UPPERCASE.JS-BROWSER-FIX 폴더
 
 ## 멀티 프로토콜 서버 생성 방법
-`UPPERCASE-TRANSPORT`는 `UPPERCASE.JS`를 기반으로 합니다. `on`, `off` 및 `send` 등의 기본적인 사용법은 [UPPERCASE.JS의 SOCKET_SERVER](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-NODE.md#각종-서버-구현체들)와 같습니다.
+`UPPERCASE-TRANSPORT`는 `UPPERCASE.JS`에 의존성이 있습니다. `on`, `off` 및 `send` 등의 기본적인 사용법은 [UPPERCASE.JS의 SOCKET_SERVER](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-NODE.md#각종-서버-구현체들)와 같습니다.
 
 ```javascript
 // load UPPERCASE.JS.

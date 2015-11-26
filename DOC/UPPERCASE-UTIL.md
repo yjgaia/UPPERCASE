@@ -10,7 +10,7 @@ node.js 모듈이 필요하여, 의존성이 없는 [UPPERCASE.JS](https://githu
 * UPPERCASE.JS-NODE.js
 
 ## 사용 방법
-`UPPERCASE-UTIL`는 `UPPERCASE.JS`를 기반으로 합니다.
+`UPPERCASE-UTIL`는 `UPPERCASE.JS`에 의존성이 있습니다.
 
 ```javascript
 // load UPPERCASE.JS.

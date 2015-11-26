@@ -13,7 +13,7 @@
 * UPPERCASE.JS-BROWSER-FIX 폴더
 
 ## 룸 서버와 룸 생성 방법
-`UPPERCASE-ROOM`은 `UPPERCASE.JS`와 `UPPERCASE-TRANSPORT`를 기반으로 합니다.
+`UPPERCASE-ROOM`은 `UPPERCASE.JS`와 `UPPERCASE-TRANSPORT`에 의존성이 있습니다.
 
 ```javascript
 // load UPPERCASE.JS.

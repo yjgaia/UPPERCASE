@@ -10,7 +10,7 @@ MongoDB를 사용하기 쉽게 CRUD 기능을 구현한 모듈입니다.
 * UPPERCASE.JS-NODE.js
 
 ## 사용 방법
-`UPPERCASE-DB`는 `UPPERCASE.JS`를 기반으로 합니다.
+`UPPERCASE-DB`는 `UPPERCASE.JS`에 의존성이 있습니다.
 
 ```javascript
 // load UPPERCASE.JS.

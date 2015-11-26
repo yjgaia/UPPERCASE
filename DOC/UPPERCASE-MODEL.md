@@ -15,7 +15,7 @@ UPPERCASE는 Model-View 패턴을 따릅니다. 이 모듈은 Model-View 패턴�
 * UPPERCASE.JS-BROWSER-FIX 폴더
 
 ## 사용 방법
-`UPPERCASE-MODEL`은 `UPPERCASE.JS`와 `UPPERCASE-ROOM`, `UPPERCASE-DB`를 기반으로 합니다.
+`UPPERCASE-MODEL`은 `UPPERCASE.JS`와 `UPPERCASE-ROOM`, `UPPERCASE-DB`에 의존성이 있습니다.
 
 ### node.js 환경에서 필요한 모듈 import
 
