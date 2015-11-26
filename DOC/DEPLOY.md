@@ -51,7 +51,7 @@ forever start {{프로젝트 명.js}}
 
 3. 다음과 같이 프로젝트 실행을 위한 설정 파일(프로젝트 명.js)에 MongoDB 접속에 필요한 `유저명`과 `비밀번호`를 추가합니다.
 	```javascript
-	require(process.env.UPPERCASE_IO_PATH + '/BOOT.js');
+	require(process.env.UPPERCASE_PATH + '/BOOT.js');
 	
 	BOOT({
 		CONFIG : {
