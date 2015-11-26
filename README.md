@@ -57,9 +57,15 @@ UPPERCASE를 사용하기 위해서는 이하 기술셋을 알고있어야 합�
 ## 기타
 * [UPPERCASE 빌드](BUILD.md)
 
-## Unicorn
-객체지향 언어들로 포팅한 UPPERCASE의 다른 구현체 입니다.
-[Unicorn](https://github.com/Hanul/Unicorn)
+## UPPERCASE 클라이언트
+UPPERCASE는 기본적으로 웹 클라이언트만을 내장하고 있기 때문에, 다른 플랫폼에서의 동작을 보장하기 위해 플랫폼 별로 클라이언트가 존재합니다.
+- [UPPERCASE-GameMakerStudio-Client](https://github.com/Hanul/UPPERCASE-GameMakerStudio-Client)
+
+### Unicorn
+Unicorn은 객체 지향 언어들을 지원하기 위해 개발된 UPPERCASE 클라이언트들의 API 원형입니다.
+- [Unicorn](https://github.com/Hanul/Unicorn)
+- [Unicorn-Android](https://github.com/Hanul/Unicorn-Android)
+- [Unicorn-iOS](https://github.com/Hanul/Unicorn-iOS)
 
 ## 라이센스
 [MIT](../../LICENSE)

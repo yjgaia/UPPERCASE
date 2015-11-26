@@ -99,6 +99,7 @@ keytool -genkey -v -keystore {{키 저장소 파일명}} -alias {{alias 이름}}
 keytool -genkey -v -keystore sample-keystore.keystore -alias sample-01 -keyalg RSA -keysize 2048 -validity 18250
 ```
 
+그리고 아래 명령어들을 순서대로 입력하여 최종 배포판 apk 파일을 만듭니다. 그 전에, `jdk`에서 제공하는 `jarsigner`와 `Android build-tools`가 제공하는 `zipalign`를 사용할 수 있도록 `PATH`가 등록되어 있는지 확인합니다.
 ```
 cordova\build --release
 mv bin\{{프로젝트 이름}}-release-unsigned.apk {{프로젝트 이름}}-release-unsigned.apk
