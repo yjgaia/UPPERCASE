@@ -57,5 +57,5 @@ RUN(function() {
 		}
 	});
 
-	console.log('UPPERCASE.IO test server running. - http://localhost:' + port);
+	console.log('UPPERCASE test server running. - http://localhost:' + port);
 });

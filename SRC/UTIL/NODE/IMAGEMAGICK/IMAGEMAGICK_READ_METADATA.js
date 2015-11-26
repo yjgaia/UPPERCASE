@@ -41,7 +41,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
 					} else {
-						console.log(CONSOLE_RED('[UPPERCASE.IO-IMAGEMAGICK_READ_METADATA] ERROR: ' + errorMsg));
+						console.log(CONSOLE_RED('[UPPERCASE-IMAGEMAGICK_READ_METADATA] ERROR: ' + errorMsg));
 					}
 
 				} else {

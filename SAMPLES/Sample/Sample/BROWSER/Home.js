@@ -12,7 +12,7 @@ Sample.Home = CLASS({
 		var
 		// div
 		div = DIV({
-			c : 'Hello, UPPERCASE.IO!'
+			c : 'Hello, UPPERCASE!'
 		}).appendTo(BODY);
 		
 		inner.on('close', function() {

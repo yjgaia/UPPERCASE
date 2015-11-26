@@ -129,8 +129,8 @@ global.BOOT_UADMIN = METHOD({
 					return false;
 				}
 				
-				// serve UPPERCASE.IO-BROWSER-PACK.
-				if (uri.indexOf('UPPERCASE.IO-BROWSER-PACK/') === 0) {
+				// serve UPPERCASE-BROWSER-PACK.
+				if (uri.indexOf('UPPERCASE-BROWSER-PACK/') === 0) {
 					replaceRootPath(UPPERCASE_IO_PATH);
 				}
 				
@@ -399,6 +399,6 @@ global.BOOT_UADMIN = METHOD({
 			}
 		});
 		
-		console.log('[UPPERCASE.IO] UADMIN Tool BOOTed! => http://localhost:' + UADMIN_CONFIG.port);
+		console.log('[UPPERCASE] UADMIN Tool BOOTed! => http://localhost:' + UADMIN_CONFIG.port);
 	}
 });

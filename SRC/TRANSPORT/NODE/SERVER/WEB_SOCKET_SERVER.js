@@ -91,7 +91,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				
 				// if catch error
 				catch(error) {
-					console.log(CONSOLE_RED('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:'), error.toString());
+					console.log(CONSOLE_RED('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:'), error.toString());
 				}
 			};
 
@@ -123,7 +123,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				// error msg
 				errorMsg = error.toString();
 
-				console.log(CONSOLE_RED('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:'), errorMsg);
+				console.log(CONSOLE_RED('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:'), errorMsg);
 
 				runMethods('__ERROR', errorMsg);
 			});
@@ -203,7 +203,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 					}));
 					
 				} catch(error) {
-					console.log('[UPPERCASE.IO-WEB_SOCEKT_SERVER] ERROR:', error.toString());
+					console.log('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString());
 				}
 
 				if (callback !== undefined) {
@@ -230,6 +230,6 @@ global.WEB_SOCKET_SERVER = METHOD({
 			});
 		});
 
-		console.log('[UPPERCASE.IO-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...' + (port === undefined ? '' : ' (PORT:' + port + ')'));
+		console.log('[UPPERCASE-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...' + (port === undefined ? '' : ' (PORT:' + port + ')'));
 	}
 });

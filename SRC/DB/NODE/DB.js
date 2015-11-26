@@ -540,9 +540,9 @@ FOR_BOX(function(box) {
 					if (NODE_CONFIG.isDBLogMode === true) {
 						
 						if (method === 'remove') {
-							console.log('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` DATA(' + id + ') REMOVED.');
+							console.log('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` DATA(' + id + ') REMOVED.');
 						} else {
-							console.log('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` DATA(' + id + ') SAVED:', change);
+							console.log('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` DATA(' + id + ') SAVED:', change);
 						}
 					}
 				},
@@ -572,7 +572,7 @@ FOR_BOX(function(box) {
 					if (errorHandler !== undefined) {
 						errorHandler(errorInfo.errorMsg);
 					} else {
-						console.log(CONSOLE_RED('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '` ERROR:'), errorInfo);
+						console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` ERROR:'), errorInfo);
 					}
 				},
 				
@@ -1032,7 +1032,7 @@ FOR_BOX(function(box) {
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
 										} else {
-											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
+											console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
 										}
 									}
 								}
@@ -1328,7 +1328,7 @@ FOR_BOX(function(box) {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler();
 								} else {
-									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+									console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 								}
 							},
 
@@ -1361,7 +1361,7 @@ FOR_BOX(function(box) {
 											if (notExistsHandler !== undefined) {
 												notExistsHandler();
 											} else {
-												console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+												console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 											}
 										}
 										
@@ -1385,7 +1385,7 @@ FOR_BOX(function(box) {
 													if (notExistsHandler !== undefined) {
 														notExistsHandler();
 													} else {
-														console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+														console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
 													}
 												},
 			
@@ -1547,7 +1547,7 @@ FOR_BOX(function(box) {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler();
 								} else {
-									console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
+									console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
 								}
 							},
 
@@ -1571,7 +1571,7 @@ FOR_BOX(function(box) {
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
 										} else {
-											console.log(CONSOLE_YELLOW('[UPPERCASE.IO-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
+											console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
 										}
 									}
 

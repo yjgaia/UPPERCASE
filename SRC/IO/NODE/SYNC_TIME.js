@@ -6,7 +6,7 @@ global.SYNC_TIME = OBJECT({
 	init : function() {
 		'use strict';
 
-		UPPERCASE.IO.ROOM('timeSyncRoom', function(clientInfo, on) {
+		UPPERCASE.ROOM('timeSyncRoom', function(clientInfo, on) {
 
 			// return diff. (diff: client time - server time)
 			on('sync', function(clientNow, ret) {

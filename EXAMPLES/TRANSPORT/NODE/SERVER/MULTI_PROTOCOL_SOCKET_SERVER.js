@@ -2,8 +2,8 @@
 require('../../../../UPPERCASE.JS-COMMON.js');
 require('../../../../UPPERCASE.JS-NODE.js');
 
-// load UPPERCASE.IO-TRANSPORT.
-require('../../../../UPPERCASE.IO-TRANSPORT/NODE.js');
+// load UPPERCASE-TRANSPORT.
+require('../../../../UPPERCASE-TRANSPORT/NODE.js');
 
 TEST('MULTI_PROTOCOL_SOCKET_SERVER', function(ok) {
 	'use strict';

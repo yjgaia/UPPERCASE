@@ -2,14 +2,14 @@
 require('../../../UPPERCASE.JS-COMMON.js');
 require('../../../UPPERCASE.JS-NODE.js');
 
-// load UPPERCASE.IO-TRANSPORT.
-require('../../../UPPERCASE.IO-TRANSPORT/NODE.js');
+// load UPPERCASE-TRANSPORT.
+require('../../../UPPERCASE-TRANSPORT/NODE.js');
 
-// load UPPERCASE.IO-UTIL.
-require('../../../UPPERCASE.IO-UTIL/NODE.js');
+// load UPPERCASE-UTIL.
+require('../../../UPPERCASE-UTIL/NODE.js');
 
-// load UPPERCASE.IO-UPLOAD.
-require('../../../UPPERCASE.IO-UPLOAD/NODE.js');
+// load UPPERCASE-UPLOAD.
+require('../../../UPPERCASE-UPLOAD/NODE.js');
 
 TEST('UPLOAD_REQUEST', function(ok) {
 	'use strict';

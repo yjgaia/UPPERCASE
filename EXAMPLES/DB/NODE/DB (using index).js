@@ -2,8 +2,8 @@
 require('../../../UPPERCASE.JS-COMMON.js');
 require('../../../UPPERCASE.JS-NODE.js');
 
-// load UPPERCASE.IO-DB.
-require('../../../UPPERCASE.IO-DB/NODE.js');
+// load UPPERCASE-DB.
+require('../../../UPPERCASE-DB/NODE.js');
 
 TEST('DB', function(ok) {
 	'use strict';

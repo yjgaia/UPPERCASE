@@ -1,5 +1,5 @@
 /*
- * connect to UPPERCASE.IO server.
+ * connect to UPPERCASE server.
  */
 global.CONNECT_TO_IO_SERVER = METHOD({
 

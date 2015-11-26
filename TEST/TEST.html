@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-		<title>UPPERCASE.IO TESTCASE</title>
+		<title>UPPERCASE TESTCASE</title>
 		<style>
 			#container div {
 				margin-left: 20px;
@@ -18,7 +18,7 @@
 		</style>
 	</head>
 	<body>
-		<h1>UPPERCASE.IO TESTCASE</h1>
+		<h1>UPPERCASE TESTCASE</h1>
 		<p>
 			Check JavaScript Console.
 		</p>
@@ -121,10 +121,10 @@
 		</div>
 		<footer>
 			<div>
-				UPPERCASE.IO TEST CASE by <a href="http://hanul.me" target="_blank">YOUNG JAE SIM</a> @ <a href="http://www.btncafe.com" target="_blank">BTNcafe Co</a>.
+				UPPERCASE TEST CASE by <a href="http://hanul.me" target="_blank">YOUNG JAE SIM</a> @ <a href="http://www.btncafe.com" target="_blank">BTNcafe Co</a>.
 			</div>
 			<div>
-				<a href="https://bitbucket.org/uppercaseio/uppercase.io" target="_blank">UPPERCASE.IO @ Bitbucket</a>
+				<a href="https://uppercase.io" target="_blank">https://uppercase.io</a>
 			</div>
 		</footer>
 		<!-- JS WORLD -->
@@ -144,28 +144,28 @@
 			LOAD('UPPERCASE.JS-BROWSER-FIX/FIX.js');
 		</script>
 
-		<!-- import UPPERCASE.IO-TRANSPORT -->
-		<script src="UPPERCASE.IO-TRANSPORT/BROWSER.js"></script>
+		<!-- import UPPERCASE-TRANSPORT -->
+		<script src="UPPERCASE-TRANSPORT/BROWSER.js"></script>
 		<script>
 			// simulate WebSocket not exists.
 			global.WebSocket = undefined;
 
-			BROWSER_CONFIG.fixTransportScriptsFolderPath = 'UPPERCASE.IO-TRANSPORT/R';
-			LOAD('UPPERCASE.IO-TRANSPORT/R/FIX.js');
+			BROWSER_CONFIG.fixTransportScriptsFolderPath = 'UPPERCASE-TRANSPORT/R';
+			LOAD('UPPERCASE-TRANSPORT/R/FIX.js');
 		</script>
 
-		<!-- import UPPERCASE.IO-ROOM -->
-		<script src="UPPERCASE.IO-ROOM/CLIENT.js"></script>
-		<script src="UPPERCASE.IO-ROOM/BROWSER.js"></script>
+		<!-- import UPPERCASE-ROOM -->
+		<script src="UPPERCASE-ROOM/CLIENT.js"></script>
+		<script src="UPPERCASE-ROOM/BROWSER.js"></script>
 
-		<!-- import UPPERCASE.IO-MODEL -->
-		<script src="UPPERCASE.IO-MODEL/COMMON.js"></script>
-		<script src="UPPERCASE.IO-MODEL/CLIENT.js"></script>
+		<!-- import UPPERCASE-MODEL -->
+		<script src="UPPERCASE-MODEL/COMMON.js"></script>
+		<script src="UPPERCASE-MODEL/CLIENT.js"></script>
 
-		<!-- import UPPERCASE.IO-IO -->
-		<script src="UPPERCASE.IO-IO/COMMON.js"></script>
-		<script src="UPPERCASE.IO-IO/CLIENT.js"></script>
-		<script src="UPPERCASE.IO-IO/BROWSER.js"></script>
+		<!-- import UPPERCASE-IO -->
+		<script src="UPPERCASE-IO/COMMON.js"></script>
+		<script src="UPPERCASE-IO/CLIENT.js"></script>
+		<script src="UPPERCASE-IO/BROWSER.js"></script>
 
 		<script>
 			READY(function() {
@@ -184,7 +184,7 @@
 					LOAD('EXAMPLES/' + path + '.js');
 				};
 
-				console.log('[UPPERCASE.IO TEST START] BROWSER: ' + INFO.getBrowserInfo().name + ' ' + INFO.getBrowserInfo().version);
+				console.log('[UPPERCASE TEST START] BROWSER: ' + INFO.getBrowserInfo().name + ' ' + INFO.getBrowserInfo().version);
 
 				console.log('[BOX TEST]');
 				test('BOX/CLIENT/STORE');
