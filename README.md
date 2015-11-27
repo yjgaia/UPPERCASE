@@ -1,4 +1,4 @@
-# UPPERCASE
+# ![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/LOGO.png)
 UPPERCASE는 실시간성에 특화된 풀스택 프레임워크입니다.
 * [Node.js](http://nodejs.org) 기반
 * JavaScript 유틸리티 셋 [UPPERCASE.JS](UPPERCASE.JS.md) 기반
@@ -54,12 +54,8 @@ UPPERCASE를 사용하기 위해서는 이하 기술셋을 알고있어야 합�
 * [UPPERCASE-UPLOAD](UPPERCASE-UPLOAD.md) 업로드 관련 기능을 제공하는 모듈입니다.
 * [UPPERCASE-IO](UPPERCASE-IO.md) UPPERCASE 통합을 위한 모듈입니다.
 
-## 기타
-* [UPPERCASE 빌드](BUILD.md)
-
 ## UPPERCASE 클라이언트
 UPPERCASE는 기본적으로 웹 클라이언트만을 내장하고 있기 때문에, 다른 플랫폼에서의 동작을 보장하기 위해 플랫폼 별로 클라이언트가 존재합니다.
-- [UPPERCASE-GameMakerStudio-Client](https://github.com/Hanul/UPPERCASE-GameMakerStudio-Client)
 
 ### Unicorn
 Unicorn은 객체 지향 언어들을 지원하기 위해 개발된 UPPERCASE 클라이언트들의 API 원형입니다.
@@ -67,8 +63,19 @@ Unicorn은 객체 지향 언어들을 지원하기 위해 개발된 UPPERCASE �
 - [Unicorn-Android](https://github.com/Hanul/Unicorn-Android)
 - [Unicorn-iOS](https://github.com/Hanul/Unicorn-iOS)
 
+### 기타 클라이언트
+- [UPPERCASE-GameMakerStudio-Client](https://github.com/Hanul/UPPERCASE-GameMakerStudio-Client)
+
+## 파생 프로젝트
+- [Node Server Pages](https://github.com/Hanul/NSP)
+- [UPPERCASE.SWIFT](https://github.com/Hanul/UPPERCASE.SWIFT)
+- [UPPERCASE.GML](https://github.com/Hanul/UPPERCASE.GML)
+
+## 기타
+* [UPPERCASE 빌드](BUILD.md)
+
 ## 라이센스
-[MIT](../../LICENSE)
+[MIT](LICENSE)
 
 ## 작성자
 [Young Jae Sim](https://github.com/Hanul)

@@ -10,6 +10,9 @@
 * [Configuration](CONFIG.md)
 * [UPPERCASE 업데이트](UPDATE.md)
 
+## 설정
+UPPERCASE의 설정은 [Configuration](CONFIG.md) 문서를 참고해 주시기 바랍니다.
+
 ## BROWSER API
 * `CONNECT_TO_IO_SERVER(function(on, off, send) {...})` `CONNECT_TO_IO_SERVER({error:, success:})` UPPERCASE 서버에 접속합니다.
 
@@ -22,6 +25,3 @@
 클라이언트와 서버 시간을 동기화하기 위한 API 입니다.
 * `TIME(date)` 브라우저와 서버 시간의 차이를 계산하여, 데이터베이스에 저장되어 있던 시간을 브라우저의 국가 설정에 맞는 시간대로 변경합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/IO/CLIENT/TIME.js)
 * `SERVER_TIME(date)` `TIME`과 반대 역할을 합니다. 변경된 시간을 서버의 시간대로 변경합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/IO/CLIENT/SERVER_TIME.js)
-
-## 설정
-UPPERCASE의 설정은 [Configuration](CONFIG.md) 문서를 참고해 주시기 바랍니다.
