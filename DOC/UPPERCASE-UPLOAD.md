@@ -9,20 +9,74 @@
 * `UPLOAD_REQUEST({requestInfo:, uploadPath:}, function() {...})` `UPLOAD_REQUEST({requestInfo:, uploadPath:}, {overFileSize:, error:, success:})` create upload request handler. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/UPLOAD/NODE/UPLOAD_REQUEST.js)
 	* UPLOAD_REQUEST가 업로드 파일을 처리할 수 있도록 반드시 웹 서버에 noParsingParamsURI 설정을 추가해야 합니다. 예제를 참고해주세요.
 
-## 업로드 폼 생성
-웹 브라우저 환경에서는 `UPPERCASE-UPLOAD`는 `UPPERCASE.JS`와 `UPPERCASE-TRANSPORT`를 기반으로 합니다.
+## UPPERCASE-UPLOAD 단독 사용
+`UPPERCASE-UPLOAD`는 `UPPERCASE`에 포함되어 있으나, 단독으로 사용할 수도 있습니다.
 
+### 의존 모듈
+`UPPERCASE-UPLOAD`는 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-UPLOAD` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
+* UPPERCASE-UTIL
+* UPPERCASE-TRANSPORT
+* UJS-COMMON.js
+* UJS-NODE.js
+
+## 사용 방법
+아래 코드는 서버에서 파일 업로드 요청을 받아옵니다. 웹 서버 생성 시 `noParsingParamsURI`를 지정하는 것에 유의해주시기 바랍니다.
+```javascript
+// load UJS.
+require('../../../UJS-COMMON.js');
+require('../../../UJS-NODE.js');
+
+// load UPPERCASE-TRANSPORT.
+require('../../../UPPERCASE-TRANSPORT/NODE.js');
+
+// load UPPERCASE-UTIL.
+require('../../../UPPERCASE-UTIL/NODE.js');
+
+// load UPPERCASE-UPLOAD.
+require('../../../UPPERCASE-UPLOAD/NODE.js');
+
+var
+// web server
+webServer = WEB_SERVER({
+	port : 8124,
+	// __UPLOAD라는 경로는 업로드 처리를 위해 웹 서버에서 따로 parsing 하지 않는다.
+	noParsingParamsURI : '__UPLOAD'
+}, function(requestInfo, response, onDisconnected) {
+
+	if (requestInfo.uri === '__UPLOAD') {
+
+		UPLOAD_REQUEST({
+			requestInfo : requestInfo,
+			// 업로드 한 파일들이 UPLOAD_FILES 폴더에 저장됩니다.
+			uploadPath : __dirname + '/UPLOAD_FILES'
+		}, {
+			error : function(errorMsg) {
+				response(errorMsg);
+			},
+			overFileSize : function() {
+				response('OVER FILE SIZE!');
+			},
+			success : function(fileDataSet) {
+				response(STRINGIFY(fileDataSet));
+			}
+		});
+	}
+});
+```
+
+### 업로드 폼 예제
+`UJS`와 `UPPERCASE-TRANSPORT`를 기반으로 업로드 폼을 만들어 보겠습니다.
 ```html
 <script>
 	global = window;
 </script>
 
-<!-- import UPPERCASE.JS -->
-<script src="UPPERCASE.JS-COMMON.js"></script>
-<script src="UPPERCASE.JS-BROWSER.js"></script>
+<!-- import UJS -->
+<script src="UJS-COMMON.js"></script>
+<script src="UJS-BROWSER.js"></script>
 <script>
-	BROWSER_CONFIG.fixScriptsFolderPath = 'UPPERCASE.JS-BROWSER-FIX';
-	LOAD('UPPERCASE.JS-BROWSER-FIX/FIX.js');
+	BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';
+	LOAD('UJS-BROWSER-FIX/FIX.js');
 </script>
 
 <!-- import UPPERCASE-TRANSPORT -->
@@ -61,62 +115,4 @@
 		}).appendTo(BODY)
 	});
 </script>
-```
-
-## UPPERCASE-UPLOAD 단독 사용
-`UPPERCASE-UPLOAD`는 `UPPERCASE`에 포함되어 있으나, 단독으로 사용할 수도 있습니다.
-
-### 의존 모듈
-`UPPERCASE-UPLOAD`는 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-UPLOAD` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
-* UPPERCASE-UPLOAD
-* UPPERCASE-UTIL
-* UPPERCASE-TRANSPORT
-* UPPERCASE.JS-COMMON.js
-* UPPERCASE.JS-NODE.js
-* UPPERCASE.JS-BROWSER.js
-* UPPERCASE.JS-BROWSER-FIX
-
-## 사용 방법
-아래 코드는 서버에서 파일 업로드 요청을 받아옵니다.
-```javascript
-// load UPPERCASE.JS.
-require('../../../UPPERCASE.JS-COMMON.js');
-require('../../../UPPERCASE.JS-NODE.js');
-
-// load UPPERCASE-TRANSPORT.
-require('../../../UPPERCASE-TRANSPORT/NODE.js');
-
-// load UPPERCASE-UTIL.
-require('../../../UPPERCASE-UTIL/NODE.js');
-
-// load UPPERCASE-UPLOAD.
-require('../../../UPPERCASE-UPLOAD/NODE.js');
-
-var
-// web server
-webServer = WEB_SERVER({
-	port : 8124,
-	// __UPLOAD라는 경로는 업로드 처리를 위해 웹 서버에서 따로 parsing 하지 않는다.
-	noParsingParamsURI : '__UPLOAD'
-}, function(requestInfo, response, onDisconnected) {
-
-	if (requestInfo.uri === '__UPLOAD') {
-
-		UPLOAD_REQUEST({
-			requestInfo : requestInfo,
-			// 업로드 한 파일들이 UPLOAD_FILES 폴더에 저장됩니다.
-			uploadPath : __dirname + '/UPLOAD_FILES'
-		}, {
-			error : function(errorMsg) {
-				response(errorMsg);
-			},
-			overFileSize : function() {
-				response('OVER FILE SIZE!');
-			},
-			success : function(fileDataSet) {
-				response(STRINGIFY(fileDataSet));
-			}
-		});
-	}
-});
 ```

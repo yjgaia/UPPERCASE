@@ -97,7 +97,7 @@ OVERRIDE(EXPORT_IMG_DATA, function(origin) {
 						DELAY(0.5, function() {
 
 							if (BROWSER_CONFIG.isUsingFlashCanvasPro !== true) {
-								console.log('[UPPERCASE.JS-EXPORT_IMG_DATA] ERROR: You can use this method if you use FlashCanvas Pro.');
+								console.log('[UJS-EXPORT_IMG_DATA] ERROR: You can use this method if you use FlashCanvas Pro.');
 							} else {
 
 								// get img data.

@@ -1,5 +1,5 @@
 # UPPERCASE-TRANSPORT
-TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UPPERCASE.JS 서버 구현체들](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-NODE.md#각종-서버-구현체들)에 더하여, 웹 소켓 서버 및 웹 소켓을 지원하지 않는 브라우저에서도 웹 소켓과 같은 형태로 통신을 가능하게 해주는 서버 구현체를 포함하고 있습니다.
+TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UJS 서버 구현체들](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-NODE.md#각종-서버-구현체들)에 더하여, 웹 소켓 서버 및 웹 소켓을 지원하지 않는 브라우저에서도 웹 소켓과 같은 형태로 통신을 가능하게 해주는 서버 구현체를 포함하고 있습니다.
 
 또한 TCP 소켓과 웹 소켓 프로토콜을 통합하여 제공하는 멀티 프로토콜 소켓 서버 구현체가 포함되어 있습니다.
 
@@ -16,18 +16,18 @@ TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UPPERCAS
 
 ### 의존 모듈
 `UPPERCASE-TRANSPORT`는 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-TRANSPORT` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
-* UPPERCASE.JS-COMMON.js
-* UPPERCASE.JS-NODE.js
-* UPPERCASE.JS-BROWSER.js
-* UPPERCASE.JS-BROWSER-FIX
+* UJS-COMMON.js
+* UJS-NODE.js
+* UJS-BROWSER.js
+* UJS-BROWSER-FIX
 
 ## 사용 방법
 ### 웹소켓 서버 생성
-`on`, `off` 및 `send` 등의 기본적인 사용법은 [UPPERCASE.JS의 SOCKET_SERVER](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-NODE.md#각종-서버-구현체들)와 같습니다.
+`on`, `off` 및 `send` 등의 기본적인 사용법은 [UJS의 SOCKET_SERVER](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-NODE.md#각종-서버-구현체들)와 같습니다.
 ```javascript
-// load UPPERCASE.JS.
-require('../../../../UPPERCASE.JS-COMMON.js');
-require('../../../../UPPERCASE.JS-NODE.js');
+// load UJS.
+require('../../../../UJS-COMMON.js');
+require('../../../../UJS-NODE.js');
 
 // load UPPERCASE-TRANSPORT.
 require('../../../../UPPERCASE-TRANSPORT/NODE.js');
@@ -72,18 +72,18 @@ INIT_OBJECTS();
 ```
 
 ### 브라우저에서 웹소켓 서버 접속
-`on`, `off` 및 `send` 등의 기본적인 사용법은 [UPPERCASE.JS의  CONNECT_TO_SOCKET_SERVER](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-NODE.md#각종-서버-구현체들)와 같습니다.
+`on`, `off` 및 `send` 등의 기본적인 사용법은 [UJS의  CONNECT_TO_SOCKET_SERVER](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-NODE.md#각종-서버-구현체들)와 같습니다.
 ```html
 <script>
 	global = window;
 </script>
 
-<!-- import UPPERCASE.JS -->
-<script src="UPPERCASE.JS-COMMON.js"></script>
-<script src="UPPERCASE.JS-BROWSER.js"></script>
+<!-- import UJS -->
+<script src="UJS-COMMON.js"></script>
+<script src="UJS-BROWSER.js"></script>
 <script>
-	BROWSER_CONFIG.fixScriptsFolderPath = 'UPPERCASE.JS-BROWSER-FIX';
-	LOAD('UPPERCASE.JS-BROWSER-FIX/FIX.js');
+	BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';
+	LOAD('UJS-BROWSER-FIX/FIX.js');
 </script>
 
 <!-- import UPPERCASE-TRANSPORT -->

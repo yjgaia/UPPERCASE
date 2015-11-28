@@ -1,5 +1,5 @@
 # UPPERCASE-UTIL
-`npm` 모듈이 필요하여, 모듈 의존성이 없는 [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)가 제공하지 않는 기능들을 추가로 제공하는 모듈입니다.
+`npm` 모듈이 필요하여, 모듈 의존성이 없는 [UJS](https://github.com/Hanul/UJS)가 제공하지 않는 기능들을 추가로 제공하는 모듈입니다.
 
 ## API
 * `MINIFY_CSS(code)` CSS 코드를 압축합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/UTIL/NODE/MINIFY/MINIFY_CSS.js)
@@ -14,14 +14,14 @@
 
 ### 의존 모듈
 `UPPERCASE-UTIL`은 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-UTIL` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
-* UPPERCASE.JS-COMMON.js
-* UPPERCASE.JS-NODE.js
+* UJS-COMMON.js
+* UJS-NODE.js
 
 ## 사용 방법
 ```javascript
-// load UPPERCASE.JS.
-require('../../../../UPPERCASE.JS-COMMON.js');
-require('../../../../UPPERCASE.JS-NODE.js');
+// load UJS.
+require('../../../../UJS-COMMON.js');
+require('../../../../UJS-NODE.js');
 
 // load UPPERCASE-UTIL.
 require('../../../../UPPERCASE-UTIL/NODE.js');

@@ -1,22 +1,22 @@
-# UPPERCASE.JS
+# UJS
 ※ 이 문서는 작성중인 문서입니다.
 
-UPPERCASE는 UPPERCASE.JS를 기반으로 개발되어 있습니다. 따라서 UPPERCASE 기반 프로젝트를 개발하시려면, 먼저 UPPERCASE.JS에 대해 숙지하셔야 합니다.
+UPPERCASE는 UJS를 기반으로 개발되어 있습니다. 따라서 UPPERCASE 기반 프로젝트를 개발하시려면, 먼저 UJS에 대해 숙지하셔야 합니다.
 
-* [UPPERCASE.JS 저장소](https://github.com/Hanul/UPPERCASE.JS)
+* [UJS 저장소](https://github.com/Hanul/UJS)
 
-다행히, UPPERCASE.JS의 모든 내용을 이해하실 필요는 없습니다! 아래 서술된 내용들만 익히셔도 프로젝트를 개발하는데에는 아무런 문제가 없습니다. 자세한 내용은 UPPERCASE.JS의 문서를 참고하시기 바랍니다.
+다행히, UJS의 모든 내용을 이해하실 필요는 없습니다! 아래 서술된 내용들만 익히셔도 프로젝트를 개발하는데에는 아무런 문제가 없습니다. 자세한 내용은 UJS의 문서를 참고하시기 바랍니다.
 
 앞에 `SomeBox.`라고 붙은 기능들은 UPPERCASE가 각 BOX들에서 사용할 수 있도록 wrapping한 기능들입니다. 이를 통해 각 BOX끼리 겹치지 않게 사용할 수 있습니다.
 ```javascript
-// UPPERCASE.JS
+// UJS
 var store = STORE('store');
 
 // UPPERCASE, Sample BOX의 기능으로 사용한다.
 var store = Sample.STORE('store');
 ```
 
-## UPPERCASE.JS-COMMON 부분
+## UJS-COMMON 부분
 브라우저와 Node 양쪽에서 구동가능한 기능들의 모음입니다.
 
 ### 객체지향 프로그래밍
@@ -54,7 +54,7 @@ var store = Sample.STORE('store');
 * `TO_DELETE`
 
 
-## UPPERCASE.JS-BROWSER 부분
+## UJS-BROWSER 부분
 
 ### Window 관련
 * `SCROLL_LEFT`
@@ -94,7 +94,7 @@ var store = Sample.STORE('store');
 * `SomeBox.STORE`
 
 
-## UPPERCASE.JS-NODE 부분
+## UJS-NODE 부분
 
 ### File 관련
 * `CHECK_IS_EXISTS_FILE`

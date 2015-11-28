@@ -134,17 +134,17 @@ room.exit()
 ### 의존 모듈
 `UPPERCASE-ROOM`은 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-ROOM` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
 * UPPERCASE-TRANSPORT
-* UPPERCASE.JS-COMMON.js
-* UPPERCASE.JS-NODE.js
-* UPPERCASE.JS-BROWSER.js
-* UPPERCASE.JS-BROWSER-FIX
+* UJS-COMMON.js
+* UJS-NODE.js
+* UJS-BROWSER.js
+* UJS-BROWSER-FIX
 
 ## 사용 방법
 ### 룸 서버와 룸 생성
 ```javascript
-// load UPPERCASE.JS.
-require('../../../UPPERCASE.JS-COMMON.js');
-require('../../../UPPERCASE.JS-NODE.js');
+// load UJS.
+require('../../../UJS-COMMON.js');
+require('../../../UJS-NODE.js');
 
 // load UPPERCASE-TRANSPORT.
 require('../../../UPPERCASE-TRANSPORT/NODE.js');
@@ -212,12 +212,12 @@ INIT_OBJECTS();
 	global = window;
 </script>
 
-<!-- import UPPERCASE.JS -->
-<script src="UPPERCASE.JS-COMMON.js"></script>
-<script src="UPPERCASE.JS-BROWSER.js"></script>
+<!-- import UJS -->
+<script src="UJS-COMMON.js"></script>
+<script src="UJS-BROWSER.js"></script>
 <script>
-	BROWSER_CONFIG.fixScriptsFolderPath = 'UPPERCASE.JS-BROWSER-FIX';
-	LOAD('UPPERCASE.JS-BROWSER-FIX/FIX.js');
+	BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';
+	LOAD('UJS-BROWSER-FIX/FIX.js');
 </script>
 
 <!-- import UPPERCASE-TRANSPORT -->

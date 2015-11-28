@@ -168,18 +168,18 @@ OVERRIDE(TestBox.TestModel, function(origin) {
 * UPPERCASE-DB
 * UPPERCASE-ROOM
 * UPPERCASE-TRANSPORT
-* UPPERCASE.JS-COMMON.js
-* UPPERCASE.JS-NODE.js
-* UPPERCASE.JS-BROWSER.js
-* UPPERCASE.JS-BROWSER-FIX
+* UJS-COMMON.js
+* UJS-NODE.js
+* UJS-BROWSER.js
+* UJS-BROWSER-FIX
 
 또한 `UPPERCASE-MODEL`은 `UPPERCASE-ROOM`을 기반으로 하기 때문에 룸 서버 설정을 완료한 후 사용 가능합니다. 이에 대한 자세한 사항은 [UPPERCASE-ROOM](UPPERCASE-ROOM.md) 문서를 살펴보시기 바랍니다. 실제 모델 구현은 node.js 환경과 웹 브라우저 환경에서 동일한 코드로 작성할 수 있습니다.
 
 ### node.js 환경에서 필요한 모듈 import
 ```javascript
-// load UPPERCASE.JS.
-require('../../../UPPERCASE.JS-COMMON.js');
-require('../../../UPPERCASE.JS-NODE.js');
+// load UJS.
+require('../../../UJS-COMMON.js');
+require('../../../UJS-NODE.js');
 
 // load UPPERCASE-TRANSPORT.
 require('../../../UPPERCASE-TRANSPORT/NODE.js');
@@ -200,12 +200,12 @@ require('../../../UPPERCASE-MODEL/NODE.js');
 	global = window;
 </script>
 
-<!-- import UPPERCASE.JS -->
-<script src="UPPERCASE.JS-COMMON.js"></script>
-<script src="UPPERCASE.JS-BROWSER.js"></script>
+<!-- import UJS -->
+<script src="UJS-COMMON.js"></script>
+<script src="UJS-BROWSER.js"></script>
 <script>
-	BROWSER_CONFIG.fixScriptsFolderPath = 'UPPERCASE.JS-BROWSER-FIX';
-	LOAD('UPPERCASE.JS-BROWSER-FIX/FIX.js');
+	BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';
+	LOAD('UJS-BROWSER-FIX/FIX.js');
 </script>
 
 <!-- import UPPERCASE-TRANSPORT -->
