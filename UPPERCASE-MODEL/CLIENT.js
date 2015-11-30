@@ -309,7 +309,7 @@ FOR_BOX(function(box) {
 					if (getConfig !== false) {
 		
 						self.get = get = function(idOrParams, callbackOrHandlers) {
-							//REQUIRED: idOrParams
+							//OPTIONAL: idOrParams
 							//OPTIONAL: idOrParams.id
 							//OPTIONAL: idOrParams.filter
 							//OPTIONAL: idOrParams.sort
@@ -328,6 +328,12 @@ FOR_BOX(function(box) {
 		
 							// error handler.
 							errorHandler;
+							
+							// init params.
+							if (callbackOrHandlers === undefined) {
+								callbackOrHandlers = idOrParams;
+								idOrParams = undefined;
+							}
 		
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
@@ -384,7 +390,7 @@ FOR_BOX(function(box) {
 						};
 		
 						self.getWatching = getWatching = function(idOrParams, callbackOrHandlers) {
-							//REQUIRED: idOrParams
+							//OPTIONAL: idOrParams
 							//OPTIONAL: idOrParams.id
 							//OPTIONAL: idOrParams.filter
 							//OPTIONAL: idOrParams.sort
@@ -409,6 +415,12 @@ FOR_BOX(function(box) {
 		
 							// sub room
 							subRoom;
+							
+							// init params.
+							if (callbackOrHandlers === undefined) {
+								callbackOrHandlers = idOrParams;
+								idOrParams = undefined;
+							}
 		
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;

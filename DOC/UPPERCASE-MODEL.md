@@ -73,7 +73,7 @@ TestBox.TestModel = OBJECT({
 });
 TestBox.TestModel.create(data, function() {...})
 TestBox.TestModel.create(data, {error:, success:})
-TestBox.TestModel.get(id, function() {...})
+TestBox.TestModel.get(id, function() {...}) // id가 undefined 일 수도 있습니다. 이 때는 가장 최근 데이터를 가져옵니다.
 TestBox.TestModel.get(id, {success:, notExists:, error:})
 TestBox.TestModel.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
 TestBox.TestModel.update(data, function() {...})
@@ -109,7 +109,7 @@ OVERRIDE(TestBox.TestModel, function(origin) {
 
 		init : function(inner, self, params) {
 
-            // 이 방법으로 기본적으로 제공하는 create, get, update, remove, find, count, checkIsExists를 확장할 수 있습니다.
+            // 아래와 같은 방법으로 기본적으로 제공하는 create, get, update, remove, find, count, checkIsExists를 확장할 수 있습니다.
 			inner.on('create', {
 
 				before : function(data, next, ret, clientInfo) {
@@ -124,6 +124,24 @@ OVERRIDE(TestBox.TestModel, function(origin) {
 					// 데이터가 생성되고 난 후 실행되는 함수입니다.
 					// return false; 를 하면, 이 함수가 실행되고 난 후 자동으로 클라이언트에 값을 전달하지 않고, 클라이언트에 값을 전달하기 위해서는 반드시 next(); 를 실행해야 합니다.
 					// ret 함수는 클라이언트에 직접 데이터를 전달할 때 사용합니다.
+				}
+			});
+			
+			// 그냥 함수를 추가하게 되면 after로 인식됩니다.
+			inner.on('get', function(savedData, next, ret, clientInfo) {
+				...
+			});
+			
+			inner.on('get', {
+
+				before : function(idOrParams, next, ret, clientInfo) {
+					
+					// get의 경우엔 맨 첫 파라미터가 id가 될 수도, filter와 sort 등이 담긴 params가 될 수도 있습니다.
+					// 또한 idOrParams가 undefined가 될 수 있기 때문에 관련 처리를 해 주어야 합니다. 
+				},
+
+				after : function(savedData, next, ret, clientInfo) {
+					...
 				}
 			});
 			
