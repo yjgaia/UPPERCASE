@@ -414,7 +414,7 @@ global.BOOT = function(params) {
 
 	clustering = function(work) {
 
-		CPU_CLUSTERING(function() {
+		(NODE_CONFIG.isNotUsingMulticore !== true ? CPU_CLUSTERING : RUN)(function() {
 
 			if (NODE_CONFIG.clusteringServerHosts !== undefined && NODE_CONFIG.thisServerName !== undefined && NODE_CONFIG.clusteringPort !== undefined) {
 

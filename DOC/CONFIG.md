@@ -56,6 +56,10 @@ NODE_CONFIG : {
 * `webSocketServerHosts` 웹소켓 서버들의 host를 설정합니다.
 * `uploadServerHosts` 업로드 서버들의 host를 설정합니다.
 
+### 기타 설정
+* `isUsingHTMLSnapshot` HTML Snapshot을 생성할지 여부를 설정합니다. 기본은 `false`입니다.
+* `isNotUsingMulticore` 기본적으로 UPPERCASE는 멀티코어 CPU의 개수만큼 프로세서가 실행되어, 멀티코어 CPU에서 최상의 성능을 낼 수 있도록 합니다. 그러나 마이크로 서비스 등을 제작할 때에는 이러한 기능이 불필요할 수 있습니다. 이 때 `true`로 지정하면 프로세스를 하나만 만듭니다. 기본은 `false`입니다.
+
 ## BROWSER_CONFIG
 [UJS의 BROWSER_CONFIG 설정](https://github.com/UPPERCASE-Series/UJS/blob/master/README_KOR.md#configuration)에 아래 설정들을 추가로 지정할 수 있습니다.
 
