@@ -2,7 +2,7 @@
 UPPERCASE는 동적인 웹 애플리케이션을 개발하기 위해 필요한 다양한 기능들을 제공합니다.
 
 ## 여러가지 통신 프로토콜 서버 지원
-TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UPPERCASE.JS 서버 구현체들](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/UPPERCASE.JS-NODE.md#각종-서버-구현체들)에 더하여, 웹 소켓 서버 및 웹 소켓을 지원하지 않는 브라우저에서도 웹 소켓과 같은 형태로 통신을 가능하게 해주는 서버 구현체를 포함하고 있습니다.
+TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UJS 서버 구현체들](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-NODE.md#각종-서버-구현체들)에 더하여, 웹 소켓 서버 및 웹 소켓을 지원하지 않는 브라우저에서도 웹 소켓과 같은 형태로 통신을 가능하게 해주는 서버 구현체를 포함하고 있습니다.
 
 또한 TCP 소켓과 웹 소켓 프로토콜을 통합하여 제공하는 멀티 프로토콜 소켓 서버 구현체가 포함되어 있습니다.
 
@@ -36,7 +36,7 @@ UPPERCASE를 사용하면 파일 업로드 기능을 쉽게 구현할 수 있습
 ## 각종 유틸리티 기능
 UPPERCASE는 각종 유틸리티 기능들을 제공합니다.
 
-자세한 내용은 [UPPERCASE.JS](UPPERCASE.JS.md) 문서와 [UPPERCASE-UTIL](UPPERCASE-UTIL.md) 문서를 참고하시기 바랍니다.
+자세한 내용은 [UJS](UJS.md) 문서와 [UPPERCASE-UTIL](UPPERCASE-UTIL.md) 문서를 참고하시기 바랍니다.
 
 ## 기본 스타일 제공
 UPPERCASE는 웹 브라우저에 상관 없이 같은 모양이 출력되게 하는 기본 스타일을 제공합니다.

@@ -1,35 +1,15 @@
 # UPPERCASE-DB
 MongoDB를 사용하기 쉽게 CRUD 기능을 구현한 모듈입니다.
 
-*※ UPPERCASE 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
+## 설정
+이하 설정을 적용하면 작동 방식이 결정됩니다.
+* `NODE_CONFIG.isDBLogMode` 데이터베이스 로그 모드를 켜고자 할 때 `true`로 설정합니다. 데이터가 수정 될 경우 console에 로그를 띄어줍니다. 기본값은 `false` 입니다.
+* `NODE_CONFIG.maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000` 입니다.
 
-## 파일 구성
-아래 파일들을 다운로드 받아 아래 사용 방법 항목을 참고하여 사용합니다.
-* UPPERCASE-DB 폴더
-* UPPERCASE.JS-COMMON.js
-* UPPERCASE.JS-NODE.js
-
-## 사용 방법
-`UPPERCASE-DB`는 `UPPERCASE.JS`에 의존성이 있습니다.
-
-```javascript
-// load UPPERCASE.JS.
-require('../../../UPPERCASE.JS-COMMON.js');
-require('../../../UPPERCASE.JS-NODE.js');
-
-// load UPPERCASE-DB.
-require('../../../UPPERCASE-DB/NODE.js');
-
-CONNECT_TO_DB_SERVER({
-	name : 'test'
-}, function() {
-
-	var
-	// db
-	db = TestBox.DB('test');
-	...
-});
-```
+### MongoDB 사용 시 주의사항
+* **MongoDB는 32bit 컴퓨터에서는 심각한 제한이 있습니다. 32bit 컴퓨터가 다룰 수 있는 크기가 최대 4gb 이기 때문입니다. 따라서 실제 운영 시에는 반드시 64bit 운영체제 위에서 구동하시기 바랍니다.**
+* DB의 update명령어가 동시에 여러번 호출 될 경우 비동기 처리에 의해 모든 update는 같은 데이터(수정된)를 반환합니다.
+* find 명령시 filter의 모든 property가 `undefined`로만 이루어진 경우, 모든 값을 가져옵니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려는 경우에는, `CHECK_ARE_SAME([{}, filter])`로 filter가 비어있는지 검사해 주시기 바랍니다.
 
 ## API
 * `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/DB/NODE/DB.js)
@@ -203,12 +183,30 @@ historyDB = TestBox.DB('test__HISTORY');
 db.find({filter:}, function(historyDataSet) {...})
 ```
 
-## 설정
-이하 설정을 적용하면 작동 방식이 결정됩니다.
-* `NODE_CONFIG.isDBLogMode` 데이터베이스 로그 모드를 켜고자 할 때 `true`로 설정합니다. 데이터가 수정 될 경우 console에 로그를 띄어줍니다. 기본값은 `false` 입니다.
-* `NODE_CONFIG.maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000` 입니다.
+## UPPERCASE-DB 단독 사용
+`UPPERCASE-DB`는 `UPPERCASE`에 포함되어 있으나, 단독으로 사용할 수도 있습니다.
 
-## MongoDB 사용 시 주의사항
-* **MongoDB는 32bit 컴퓨터에서는 심각한 제한이 있습니다. 32bit 컴퓨터가 다룰 수 있는 크기가 최대 4gb 이기 때문입니다. 따라서 실제 운영 시에는 반드시 64bit 운영체제 위에서 구동하시기 바랍니다.**
-* DB의 update명령어가 동시에 여러번 호출 될 경우 비동기 처리에 의해 모든 update는 같은 데이터(수정된)를 반환합니다.
-* find 명령시 filter의 모든 property가 `undefined`로만 이루어진 경우, 모든 값을 가져옵니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려는 경우에는, `CHECK_ARE_SAME([{}, filter])`로 filter가 비어있는지 검사해 주시기 바랍니다.
+### 의존 모듈
+`UPPERCASE-DB`는 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-DB` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
+* UJS-COMMON.js
+* UJS-NODE.js
+
+## 사용 방법
+```javascript
+// load UJS.
+require('../../../UJS-COMMON.js');
+require('../../../UJS-NODE.js');
+
+// load UPPERCASE-DB.
+require('../../../UPPERCASE-DB/NODE.js');
+
+CONNECT_TO_DB_SERVER({
+	name : 'test'
+}, function() {
+
+	var
+	// db
+	db = TestBox.DB('test');
+	...
+});
+```

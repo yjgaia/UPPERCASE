@@ -4,6 +4,7 @@
 OVERRIDE(NODE_CONFIG, function(origin) {
 
 	global.NODE_CONFIG = COMBINE([{
-		isUsingHTMLSnapshot : false
+		isUsingHTMLSnapshot : false,
+		isNotUsingMulticore : false
 	}, origin]);
 });

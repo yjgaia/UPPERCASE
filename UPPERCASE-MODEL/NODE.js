@@ -610,7 +610,7 @@ FOR_BOX(function(box) {
 				};
 
 				innerGet = function(idOrParams, ret, clientInfo) {
-					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams
 					//OPTIONAL: idOrParams.id
 					//OPTIONAL: idOrParams.filter
 					//OPTIONAL: idOrParams.sort
@@ -634,14 +634,17 @@ FOR_BOX(function(box) {
 					isToCache;
 
 					// init params.
-					if (CHECK_IS_DATA(idOrParams) !== true) {
-						id = idOrParams;
-					} else {
-						id = idOrParams.id;
-						filter = idOrParams.filter;
-						sort = idOrParams.sort;
-						isRandom = idOrParams.isRandom;
-						isToCache = idOrParams.isToCache;
+					if (idOrParams !== undefined) {
+						
+						if (CHECK_IS_DATA(idOrParams) !== true) {
+							id = idOrParams;
+						} else {
+							id = idOrParams.id;
+							filter = idOrParams.filter;
+							sort = idOrParams.sort;
+							isRandom = idOrParams.isRandom;
+							isToCache = idOrParams.isToCache;
+						}
 					}
 					
 					NEXT([
@@ -1385,7 +1388,7 @@ FOR_BOX(function(box) {
 				};
 
 				self.get = get = function(idOrParams, callbackOrHandlers) {
-					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams
 					//OPTIONAL: idOrParams.id
 					//OPTIONAL: idOrParams.filter
 					//OPTIONAL: idOrParams.sort
@@ -1402,6 +1405,12 @@ FOR_BOX(function(box) {
 
 					// error handler.
 					errorHandler;
+					
+					// init params.
+					if (callbackOrHandlers === undefined) {
+						callbackOrHandlers = idOrParams;
+						idOrParams = undefined;
+					}
 
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 						callback = callbackOrHandlers;

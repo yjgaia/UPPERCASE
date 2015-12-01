@@ -1,6 +1,6 @@
-// load UPPERCASE.JS.
-require(process.env.UPPERCASE_PATH + '/UPPERCASE.JS-COMMON.js');
-require(process.env.UPPERCASE_PATH + '/UPPERCASE.JS-NODE.js');
+// load UJS.
+require(process.env.UPPERCASE_PATH + '/UJS-COMMON.js');
+require(process.env.UPPERCASE_PATH + '/UJS-NODE.js');
 
 // load UPPERCASE-UTIL.
 require(process.env.UPPERCASE_PATH + '/UPPERCASE-UTIL/NODE.js');

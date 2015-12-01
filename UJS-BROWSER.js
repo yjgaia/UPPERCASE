@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.JS! (http://uppercase.io)
+Welcome to UJS! (http://uppercase.io)
 
 */
 
@@ -7310,7 +7310,7 @@ global.REQUEST = METHOD({
 					if (errorListener !== undefined) {
 						errorListener(error);
 					} else {
-						console.log('[UPPERCASE.JS-REQUEST] REQUEST FAILED:', params, error);
+						console.log('[UJS-REQUEST] REQUEST FAILED:', params, error);
 					}
 				}
 			}

@@ -1,6 +1,6 @@
 /*
 
-Welcome to UPPERCASE.JS! (http://uppercase.io)
+Welcome to UJS! (http://uppercase.io)
 
 */
 

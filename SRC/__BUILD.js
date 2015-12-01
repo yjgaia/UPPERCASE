@@ -1,6 +1,6 @@
-// load UPPERCASE.JS.
-require('../UPPERCASE.JS-COMMON.js');
-require('../UPPERCASE.JS-NODE.js');
+// load UJS.
+require('../UJS-COMMON.js');
+require('../UJS-NODE.js');
 
 // load UPPERCASE-UTIL.
 require('../UPPERCASE-UTIL/NODE.js');
@@ -252,10 +252,10 @@ RUN(function() {
 
 		log('MAKE [BROWSER-PACK]');
 
-		// load UPPERCASE.JS.
-		load('UPPERCASE.JS-COMMON.js');
-		load('UPPERCASE.JS-BROWSER.js');
-		copyFolder('UPPERCASE.JS-BROWSER-FIX');
+		// load UJS.
+		load('UJS-COMMON.js');
+		load('UJS-BROWSER.js');
+		copyFolder('UJS-BROWSER-FIX');
 		
 		initScript += 'BOX(\'UPPERCASE\');\n\n';
 

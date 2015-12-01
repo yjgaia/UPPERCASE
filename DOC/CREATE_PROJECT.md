@@ -25,7 +25,7 @@ Sample
 
 ## 개발 시작
 1. 사용하는 JavaScript 개발툴을 엽니다. 사용하는 툴이 없다면, [Aptana Studio](http://www.aptana.com)나 [Sublime Text](http://www.sublimetext.com)를 추천합니다.
-2. 코드 컨벤션 규칙을 익힙니다. 코드 컨벤션 규칙은 [UPPERCASE.JS의 방식](https://github.com/Hanul/UPPERCASE.JS/blob/master/DOC/KR/CONVENTION.md)을 따릅니다.
+2. 코드 컨벤션 규칙을 익힙니다. 코드 컨벤션 규칙은 [UJS의 방식](https://github.com/Hanul/UJS/blob/master/DOC/KR/CONVENTION.md)을 따릅니다.
 3. 코드 컨벤션 규칙을 모두 익혔다면, 프로젝트 실행을 위한 코드를 작성합니다.
 
 ## 프로젝트 실행을 위한 코드(Sample.js) 작성
@@ -62,19 +62,19 @@ node Sample.js
 아래와 같은 화면이 출력된다면 정상적으로 프로젝트가 실행된 것입니다.
 
 ```
-[UPPERCASE.JS-WEB_SERVER] RUNNING WEB SERVER... (PORT:8888)
-[UPPERCASE.JS-RESOURCE_SERVER] RUNNING RESOURCE SERVER... (PORT:8888)
+[UJS-WEB_SERVER] RUNNING WEB SERVER... (PORT:8888)
+[UJS-RESOURCE_SERVER] RUNNING RESOURCE SERVER... (PORT:8888)
 [UPPERCASE-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...
 [UPPERCASE-WEB_SOCKET_FIX_REQUEST_MANAGER] RUNNING WEB SOCKET FIX REQUEST MANAGER...
 [UPPERCASE] <2015-3-8 18:25:53> `Sample` WORKER #1 BOOTed! => http://localhost:8888
-[UPPERCASE.JS-CPU_CLUSTERING] RUNNING WORKER... (ID:1)
+[UJS-CPU_CLUSTERING] RUNNING WORKER... (ID:1)
 ...
 ```
 
 http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝트 개발의 모든 준비가 끝났습니다. (까반 배경화면은 UPPERCASE의 기본 스타일입니다.)
 
 ## 간단한 화면 띄우기
-이 과정을 진행하기 전에, [UPPERCASE.JS](UPPERCASE.JS.md)와 [BOX](BOX.md)에 대한 내용을 숙지하시기 바랍니다.
+이 과정을 진행하기 전에, [UJS](UJS.md)와 [BOX](BOX.md)에 대한 내용을 숙지하시기 바랍니다.
 
 이제 간단한 화면을 생성하도록 하겠습니다. `BROWSER 폴더` 아래에 이하 두 파일을 만들어주기 바랍니다.
 

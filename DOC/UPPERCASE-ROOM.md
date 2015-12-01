@@ -1,145 +1,6 @@
 # UPPERCASE-ROOM
 통신 처리를 룸 방식으로 처리하는 모듈입니다. 서버에서 룸을 만들고, 특정 룸에 접속한 사람들에게만 메시지를 전달할 수 있습니다. 따라서 특징에 맞는 여러 룸을 만들어 각각에 접속한 유저들에게 필요한 메시지를 전달하는 프로젝트 구조를 설계할 수 있습니다.
 
-*※ UPPERCASE 기반 프로젝트는 이 모듈이 자동으로 포함됩니다. 이하 내용들은 이 모듈을 따로 사용할 때 필요한 내용입니다.*
-
-## 파일 구성
-아래 파일들을 다운로드 받아 아래 사용 방법 항목을 참고하여 사용합니다.
-* UPPERCASE-ROOM 폴더
-* UPPERCASE-TRANSPORT 폴더
-* UPPERCASE.JS-COMMON.js
-* UPPERCASE.JS-NODE.js
-* UPPERCASE.JS-BROWSER.js
-* UPPERCASE.JS-BROWSER-FIX 폴더
-
-## 룸 서버와 룸 생성 방법
-`UPPERCASE-ROOM`은 `UPPERCASE.JS`와 `UPPERCASE-TRANSPORT`에 의존성이 있습니다.
-
-```javascript
-// load UPPERCASE.JS.
-require('../../../UPPERCASE.JS-COMMON.js');
-require('../../../UPPERCASE.JS-NODE.js');
-
-// load UPPERCASE-TRANSPORT.
-require('../../../UPPERCASE-TRANSPORT/NODE.js');
-
-// load UPPERCASE-ROOM.
-require('../../../UPPERCASE-ROOM/NODE.js');
-
-var
-// web socket fix request
-webSocketFixRequest,
-
-// web server
-webServer = WEB_SERVER(9127, function(requestInfo, response, onDisconnected) {
-
-	// serve web socket fix request
-	if (requestInfo.uri === '__WEB_SOCKET_FIX') {
-
-		webSocketFixRequest(requestInfo, {
-			response : response,
-			onDisconnected : onDisconnected
-		});
-	}
-});
-
-LAUNCH_ROOM_SERVER({
-	socketServerPort : 9126,
-	webServer : webServer,
-	isCreateWebSocketFixRequestManager : true
-});
-
-BOX('TestBox');
-
-TestBox.ROOM('testRoom', function(clientInfo, on, off) {
-
-	on('msg', function(data, ret) {
-
-		console.log(data);
-		
-		// ignore undefined data attack.
-		if (data !== undefined) {
-
-			TestBox.BROADCAST({
-				roomName : 'testRoom',
-				methodName : 'msg',
-				data : {
-					result : 'good!',
-					test : new Date()
-				}
-			});
-
-			ret({
-				result : 'good!'
-			});
-		}
-	});
-});
-
-// init all singleton classes.
-INIT_OBJECTS();
-```
-
-## 룸 서버와 룸에 접속하는 방법
-`UPPERCASE-ROOM`은 `UPPERCASE.JS`와 `UPPERCASE-TRANSPORT`를 기반으로 합니다.
-
-```html
-<script>
-	global = window;
-</script>
-
-<!-- import UPPERCASE.JS -->
-<script src="UPPERCASE.JS-COMMON.js"></script>
-<script src="UPPERCASE.JS-BROWSER.js"></script>
-<script>
-	BROWSER_CONFIG.fixScriptsFolderPath = 'UPPERCASE.JS-BROWSER-FIX';
-	LOAD('UPPERCASE.JS-BROWSER-FIX/FIX.js');
-</script>
-
-<!-- import UPPERCASE-TRANSPORT -->
-<script src="UPPERCASE-TRANSPORT/BROWSER.js"></script>
-
-<!-- import UPPERCASE-ROOM -->
-<script src="UPPERCASE-ROOM/BROWSER.js"></script>
-
-<script>
-	READY(function() {
-	
-		// init all singleton classes.
-		INIT_OBJECTS();
-		
-		BOX('TestBox');
-
-		CONNECT_TO_ROOM_SERVER({
-			port : 9127,
-			fixRequestURI : '__WEB_SOCKET_FIX'
-		}, function() {
-	
-			var
-			// room
-			room = TestBox.ROOM('testRoom');
-			
-			room.on('msg', function(data) {
-				console.log(data);
-			});
-	
-			DELAY(1, function() {
-			
-				room.send({
-					methodName : 'msg',
-					data : {
-						test2 : 'Hello, Test!',
-						date : new Date()
-					}
-				}, function(result) {
-					console.log(result);
-				});
-			});
-		});
-	});
-</script>
-```
-
 ## NODE API
 * `LAUNCH_ROOM_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:})` 룸 서버를 실행하는 클래스입니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
 * `ROOM(name, connectionListener)` 룸을 생성합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
@@ -265,3 +126,140 @@ room.exit()
 ```
 
 `CONNECT_TO_ROOM_SERVER`의 `name`을 지정하면, 여러 룸 서버에 접속할 수 있습니다. `ROOM`의 `roomServerName` 설정으로 룸이 연결될 룸 서버를 선택할 수 있습니다.
+
+
+## UPPERCASE-ROOM 단독 사용
+`UPPERCASE-ROOM`은 `UPPERCASE`에 포함되어 있으나, 단독으로 사용할 수도 있습니다.
+
+### 의존 모듈
+`UPPERCASE-ROOM`은 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-ROOM` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
+* UPPERCASE-TRANSPORT
+* UJS-COMMON.js
+* UJS-NODE.js
+* UJS-BROWSER.js
+* UJS-BROWSER-FIX
+
+## 사용 방법
+### 룸 서버와 룸 생성
+```javascript
+// load UJS.
+require('../../../UJS-COMMON.js');
+require('../../../UJS-NODE.js');
+
+// load UPPERCASE-TRANSPORT.
+require('../../../UPPERCASE-TRANSPORT/NODE.js');
+
+// load UPPERCASE-ROOM.
+require('../../../UPPERCASE-ROOM/NODE.js');
+
+var
+// web socket fix request
+webSocketFixRequest,
+
+// web server
+webServer = WEB_SERVER(9127, function(requestInfo, response, onDisconnected) {
+
+	// serve web socket fix request
+	if (requestInfo.uri === '__WEB_SOCKET_FIX') {
+
+		webSocketFixRequest(requestInfo, {
+			response : response,
+			onDisconnected : onDisconnected
+		});
+	}
+});
+
+LAUNCH_ROOM_SERVER({
+	socketServerPort : 9126,
+	webServer : webServer,
+	isCreateWebSocketFixRequestManager : true
+});
+
+BOX('TestBox');
+
+TestBox.ROOM('testRoom', function(clientInfo, on, off) {
+
+	on('msg', function(data, ret) {
+
+		console.log(data);
+		
+		// ignore undefined data attack.
+		if (data !== undefined) {
+
+			TestBox.BROADCAST({
+				roomName : 'testRoom',
+				methodName : 'msg',
+				data : {
+					result : 'good!',
+					test : new Date()
+				}
+			});
+
+			ret({
+				result : 'good!'
+			});
+		}
+	});
+});
+
+// init all singleton classes.
+INIT_OBJECTS();
+```
+
+## 룸 서버 접속 및 룸 접속
+```html
+<script>
+	global = window;
+</script>
+
+<!-- import UJS -->
+<script src="UJS-COMMON.js"></script>
+<script src="UJS-BROWSER.js"></script>
+<script>
+	BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';
+	LOAD('UJS-BROWSER-FIX/FIX.js');
+</script>
+
+<!-- import UPPERCASE-TRANSPORT -->
+<script src="UPPERCASE-TRANSPORT/BROWSER.js"></script>
+
+<!-- import UPPERCASE-ROOM -->
+<script src="UPPERCASE-ROOM/BROWSER.js"></script>
+
+<script>
+	READY(function() {
+	
+		// init all singleton classes.
+		INIT_OBJECTS();
+		
+		BOX('TestBox');
+
+		CONNECT_TO_ROOM_SERVER({
+			port : 9127,
+			fixRequestURI : '__WEB_SOCKET_FIX'
+		}, function() {
+	
+			var
+			// room
+			room = TestBox.ROOM('testRoom');
+			
+			room.on('msg', function(data) {
+				console.log(data);
+			});
+	
+			DELAY(1, function() {
+			
+				room.send({
+					methodName : 'msg',
+					data : {
+						test2 : 'Hello, Test!',
+						date : new Date()
+					}
+				}, function(result) {
+					console.log(result);
+				});
+			});
+		});
+	});
+</script>
+```

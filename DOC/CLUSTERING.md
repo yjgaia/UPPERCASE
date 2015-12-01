@@ -1,6 +1,6 @@
 
 ## UPPERCASE의 분산 처리 전략
-* 업로드 파일들을 분산 서버로 구성할 경우 CORS가 지원되지 않는 Internet Explorer 9 이하 버젼들과 같은 곳에서는 UPPERCASE.JS의 GRAPHIC API들을 사용할 수 없습니다.
+* 업로드 파일들을 분산 서버로 구성할 경우 CORS가 지원되지 않는 Internet Explorer 9 이하 버젼들과 같은 곳에서는 UJS의 GRAPHIC API들을 사용할 수 없습니다.
 
 UPPERCASE의 분산 처리 전략을 설명합니다.
 UPPERCASE 기반 프로젝트의 기능별 서버 파트는 다음과 같습니다.

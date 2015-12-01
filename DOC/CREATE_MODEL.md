@@ -38,7 +38,7 @@ BOOT({
 ```
 
 ## 모델 코드 작성
-이제, 모델 코드를 작성해보겠습니다. 프로젝트의 COMMON 폴더 이하에 SomeModel.js를 만들어 봅시다. 이 때, 데이터 검증을 위해 UPPERCASE.JS의 VALID 기능을 사용하므로 해당 내용을 숙지하시기 바랍니다.
+이제, 모델 코드를 작성해보겠습니다. 프로젝트의 COMMON 폴더 이하에 SomeModel.js를 만들어 봅시다. 이 때, 데이터 검증을 위해 UJS의 VALID 기능을 사용하므로 해당 내용을 숙지하시기 바랍니다.
 
 ###### SomeModel.js
 ```javascript

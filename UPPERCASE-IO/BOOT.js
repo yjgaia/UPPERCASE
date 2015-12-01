@@ -222,7 +222,7 @@ global.BOOT = function(params) {
 		scanAllBoxFolders('CLIENT', loadForBrowser);
 	},
 
-	// load UPPERCASE.JS.
+	// load UJS.
 	loadUJS,
 
 	// configuration.
@@ -251,12 +251,12 @@ global.BOOT = function(params) {
 	loadUJS = function() {
 
 		// load for node.
-		loadForNode(UPPERCASE_PATH + '/UPPERCASE.JS-COMMON.js');
-		loadForNode(UPPERCASE_PATH + '/UPPERCASE.JS-NODE.js');
+		loadForNode(UPPERCASE_PATH + '/UJS-COMMON.js');
+		loadForNode(UPPERCASE_PATH + '/UJS-NODE.js');
 
 		// load for client.
-		loadForClient(UPPERCASE_PATH + '/UPPERCASE.JS-COMMON.js');
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE.JS-BROWSER.js');
+		loadForClient(UPPERCASE_PATH + '/UJS-COMMON.js');
+		loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js');
 	};
 
 	configuration = function() {
@@ -358,7 +358,7 @@ global.BOOT = function(params) {
 		}
 
 		// set fix scripts folder path.
-		addContentToBrowserScript('BROWSER_CONFIG.fixScriptsFolderPath = \'/UPPERCASE.JS-BROWSER-FIX\';\n');
+		addContentToBrowserScript('BROWSER_CONFIG.fixScriptsFolderPath = \'/UJS-BROWSER-FIX\';\n');
 		addContentToBrowserScript('BROWSER_CONFIG.fixTransportScriptsFolderPath = \'/UPPERCASE-TRANSPORT\';\n');
 	};
 
@@ -420,7 +420,7 @@ global.BOOT = function(params) {
 
 	clustering = function(work) {
 
-		CPU_CLUSTERING(function() {
+		(NODE_CONFIG.isNotUsingMulticore !== true ? CPU_CLUSTERING : RUN)(function() {
 
 			if (NODE_CONFIG.clusteringServerHosts !== undefined && NODE_CONFIG.thisServerName !== undefined && NODE_CONFIG.clusteringPort !== undefined) {
 
@@ -1115,7 +1115,7 @@ global.BOOT = function(params) {
 						} else {
 							boxName = uri.substring(0, i);
 
-							if (BOX.getBoxes()[boxName] !== undefined || boxName === 'UPPERCASE-TRANSPORT' || boxName === 'UPPERCASE.JS-BROWSER-FIX') {
+							if (BOX.getBoxes()[boxName] !== undefined || boxName === 'UPPERCASE-TRANSPORT' || boxName === 'UJS-BROWSER-FIX') {
 								uri = uri.substring(i + 1);
 							} else {
 								boxName = CONFIG.defaultBoxName;
@@ -1129,8 +1129,8 @@ global.BOOT = function(params) {
 						}
 						
 						// serve UPPERCASE-BROWSER-FIX.
-						else if (boxName === 'UPPERCASE.JS-BROWSER-FIX') {
-							replaceRootPath(UPPERCASE_PATH + '/UPPERCASE.JS-BROWSER-FIX');
+						else if (boxName === 'UJS-BROWSER-FIX') {
+							replaceRootPath(UPPERCASE_PATH + '/UJS-BROWSER-FIX');
 							requestInfo.uri = uri;
 						}
 						
@@ -1179,7 +1179,7 @@ global.BOOT = function(params) {
 		console.log('[UPPERCASE] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.title + '` WORKER #' + CPU_CLUSTERING.getWorkerId() + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
 
-	// load UPPERCASE.JS.
+	// load UJS.
 	loadUJS();
 
 	// configuration.

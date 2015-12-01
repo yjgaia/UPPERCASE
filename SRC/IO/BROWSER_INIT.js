@@ -1,4 +1,4 @@
-// load UPPERCASE.JS-BROWSER-FIX.
+// load UJS-BROWSER-FIX.
 if (BROWSER_CONFIG.fixScriptsFolderPath !== undefined) {
 	LOAD(BROWSER_CONFIG.fixScriptsFolderPath + '/FIX.js');
 }

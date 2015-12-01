@@ -329,7 +329,7 @@ FOR_BOX(function(box) {
 			};
 
 			self.get = get = function(idOrParams, callbackOrHandlers) {
-				//REQUIRED: idOrParams
+				//OPTIONAL: idOrParams
 				//OPTIONAL: idOrParams.id
 				//OPTIONAL: idOrParams.filter
 				//OPTIONAL: idOrParams.sort
@@ -1062,7 +1062,7 @@ FOR_BOX(function(box) {
 				};
 
 				self.get = get = function(idOrParams, callbackOrHandlers) {
-					//REQUIRED: idOrParams
+					//OPTIONAL: idOrParams
 					//OPTIONAL: idOrParams.id
 					//OPTIONAL: idOrParams.filter
 					//OPTIONAL: idOrParams.sort
@@ -1105,16 +1105,24 @@ FOR_BOX(function(box) {
 					errorMsg;
 
 					try {
+						
+						if (callbackOrHandlers === undefined) {
+							callbackOrHandlers = idOrParams;
+							idOrParams = undefined;
+						}
 
 						// init params.
-						if (CHECK_IS_DATA(idOrParams) !== true) {
-							id = idOrParams;
-						} else {
-							id = idOrParams.id;
-							filter = idOrParams.filter;
-							sort = idOrParams.sort;
-							isRandom = idOrParams.isRandom;
-							isToCache = idOrParams.isToCache;
+						if (idOrParams !== undefined) {
+							
+							if (CHECK_IS_DATA(idOrParams) !== true) {
+								id = idOrParams;
+							} else {
+								id = idOrParams.id;
+								filter = idOrParams.filter;
+								sort = idOrParams.sort;
+								isRandom = idOrParams.isRandom;
+								isToCache = idOrParams.isToCache;
+							}
 						}
 
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -1159,11 +1167,13 @@ FOR_BOX(function(box) {
 							});
 
 						} else {
-
+							
 							if (filter === undefined) {
-								filter = {
-									_id : gen_id(id)
-								};
+								filter = {};
+							}
+
+							if (id !== undefined) {
+								filter._id = gen_id(id);
 							}
 
 							if (sort === undefined) {
