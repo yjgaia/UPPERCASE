@@ -28,8 +28,14 @@ global.BOOT = function(params) {
 	// browser script
 	browserScript = '',
 	
+	// browser UJS script
+	browserUJSScript = '',
+	
 	// box browser scripts
 	boxBrowserScripts = {},
+	
+	// 404 page content
+	_404PageContent,
 
 	// index page content
 	indexPageContent,
@@ -70,11 +76,13 @@ global.BOOT = function(params) {
 			
 			boxBrowserScripts[boxName] += content;
 		}
+		
+		return content;
 	},
 
 	// load for client.
 	loadForClient = function(path, boxName) {
-		loadForBrowser(path, boxName);
+		return loadForBrowser(path, boxName);
 	},
 
 	// load for common.
@@ -233,6 +241,9 @@ global.BOOT = function(params) {
 
 	// init model system.
 	initModelSystem,
+	
+	// generate 404 page.
+	generate404Page,
 
 	// generate index page.
 	generateIndexPage,
@@ -249,8 +260,8 @@ global.BOOT = function(params) {
 		loadForNode(UPPERCASE_PATH + '/UJS-NODE.js');
 
 		// load for client.
-		loadForClient(UPPERCASE_PATH + '/UJS-COMMON.js');
-		loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js');
+		browserUJSScript += loadForClient(UPPERCASE_PATH + '/UJS-COMMON.js');
+		browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js');
 	};
 
 	configuration = function() {
@@ -463,6 +474,74 @@ global.BOOT = function(params) {
 		loadForNode(UPPERCASE_PATH + '/UPPERCASE-MODEL/NODE.js');
 		loadForClient(UPPERCASE_PATH + '/UPPERCASE-MODEL/CLIENT.js');
 	};
+	
+	generate404Page = function() {
+		
+		var
+		// custom 404 path
+		custom404Path = rootPath + '/' + CHECK_IS_IN({
+			array : boxNamesInBOXFolder,
+			value : CONFIG.defaultBoxName
+		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/404.html' : CONFIG.defaultBoxName + '/404.html';
+		
+		if (CHECK_IS_EXISTS_FILE({
+			path : custom404Path,
+			isSync : true
+		}) === true) {
+			
+			_404PageContent = READ_FILE({
+				path : custom404Path,
+				isSync : true
+			}).toString();
+			
+		} else {
+
+			_404PageContent = '<!DOCTYPE html>';
+			_404PageContent += '<html>';
+			_404PageContent += '<head>';
+			_404PageContent += '<meta charset="utf-8">';
+			_404PageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' + (CONFIG.isMobileFullScreen === true ? ', minimal-ui' : '') + '">';
+			
+			_404PageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
+			
+			// icons
+			_404PageContent += '<link rel="shortcut icon" href="/R/favicon.ico?' + CONFIG.version + '" />';
+			_404PageContent += '<link rel="apple-touch-icon-precomposed" href="/R/apple-touch-icon.png?' + CONFIG.version + '" />';
+			
+			_404PageContent += '<title>Page not found</title>';
+	
+			// load css.
+			_404PageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?' + CONFIG.version + '" />';
+			
+			// set base color.
+			_404PageContent += '<style>';
+			_404PageContent += 'html, body {';
+			_404PageContent += 'background-color : ' + CONFIG.baseBackgroundColor + ';';
+			_404PageContent += 'color : ' + CONFIG.baseColor + ';';
+			_404PageContent += '}';
+			_404PageContent += '</style>';
+			
+			_404PageContent += '</head>';
+			_404PageContent += '<body>';
+			
+			// show please enable JavaScript msg.
+			_404PageContent += '<noscript>';
+			_404PageContent += '<p style="padding:15px;">';
+			_404PageContent += 'JavaScript is disabled. Please enable JavaScript in your browser.';
+			_404PageContent += '</p>';
+			_404PageContent += '</noscript>';
+			
+			// load script.
+			_404PageContent += '<script type="text/javascript">global=window;</script>';
+			_404PageContent += '<script type="text/javascript" src="/__UJS?' + CONFIG.version + '"></script>';
+			_404PageContent += '<script>' + READ_FILE({
+				path : UPPERCASE_PATH + '/UPPERCASE-IO/404.js',
+				isSync : true
+			}).toString() + '</script>';
+			_404PageContent += '</body>';
+			_404PageContent += '</html>';
+		}
+	};
 
 	generateIndexPage = function() {
 		
@@ -638,6 +717,19 @@ global.BOOT = function(params) {
 
 				version : version
 			}, {
+				
+				notExistsResource : function(resourcePath, requestInfo, response) {
+					
+					// when dev mode, re-generate 404 page.
+					if (CONFIG.isDevMode === true) {
+						generate404Page();
+					}
+					
+					response({
+						statusCode : 404,
+						content : _404PageContent
+					});
+				},
 
 				requestListener : function(requestInfo, response, onDisconnected, replaceRootPath, next) {
 
@@ -735,6 +827,52 @@ global.BOOT = function(params) {
 								response({
 									contentType : 'text/javascript',
 									content : boxName === undefined ? browserScript : boxBrowserScripts[boxName],
+									version : version
+								});
+							}
+						}
+
+						return false;
+					}
+					
+					// serve browser ujs script.
+					else if (uri === '__UJS') {
+						
+						if (CONFIG.isDevMode === true) {
+							
+							response({
+								contentType : 'text/javascript',
+								content : browserUJSScript
+							});
+
+						} else {
+
+							// check ETag.
+							if (headers['if-none-match'] === version) {
+
+								// response cached.
+								response({
+									statusCode : 304
+								});
+							}
+
+							// redirect correct version uri.
+							else if (params.version !== version) {
+
+								response({
+									statusCode : 302,
+									headers : {
+										'Location' : '/__UJS?version=' + version
+									}
+								});
+							}
+
+							// response browser UJS script.
+							else {
+
+								response({
+									contentType : 'text/javascript',
+									content : browserUJSScript,
 									version : version
 								});
 							}
@@ -1216,6 +1354,9 @@ global.BOOT = function(params) {
 				boxBrowserScripts[boxName] = MINIFY_JS(script);
 			});
 		}
+		
+		// generate 404 page.
+		generate404Page();
 		
 		// generate index page.
 		generateIndexPage();

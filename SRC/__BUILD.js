@@ -197,6 +197,7 @@ RUN(function() {
 	save('IO', ['IO/BOOT.js'], 'BOOT', false);
 	save('IO', ['IO/BROWSER_INIT.js'], 'BROWSER_INIT', true);
 	save('IO', ['IO/PRINT_HTML_SNAPSHOT.js'], 'PRINT_HTML_SNAPSHOT', false);
+	save('IO', ['IO/404.js'], '404', false);
 	
 	WRITE_FILE({
 		path : '../UPPERCASE-IO/R/BASE_STYLE.css',

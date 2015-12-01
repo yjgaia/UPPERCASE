@@ -110,4 +110,10 @@ NODE_CONFIG : {
 - `favicon.ico` 일반적인 웹 브라우저에 지정되는 favicon입니다.
 - `apple-touch-icon.png` 애플사의 기기에서 지정되는 아이콘입니다.
 
+## 404 페이지 설정
+UPPERCASE는 기본적으로 404 페이지를 제공하나, `defaultBoxName`로 설정된 기본 BOX에 404.html 파일이 있으면 해당 파일로 대체됩니다.
+
+## index 페이지 설정
+UPPERCASE는 기본적으로 index 페이지를 제공하나, `defaultBoxName`로 설정된 기본 BOX에 index.html 파일이 있으면 해당 파일로 대체됩니다.
+
 다음 문서: [패키징](PACK.md)
