@@ -5311,7 +5311,14 @@ global.CREATE_COOKIE_STR_ARRAY = CREATE_COOKIE_STR_ARRAY = METHOD({
 		strs = [];
 
 		EACH(data, function(value, name) {
-			strs.push(name + '=' + encodeURIComponent(value));
+			if (CHECK_IS_DATA(value) === true) {
+				strs.push(name + '=' + encodeURIComponent(value.value)
+					+ (value.expireSeconds === undefined ? '' : '; expires=' + new Date(Date.now() + value.expireSeconds * 1000).toGMTString())
+					+ (value.path === undefined ? '' : '; path=' + value.path)
+					+ (value.domain === undefined ? '' : '; domain=' + value.domain));
+			} else {
+				strs.push(name + '=' + encodeURIComponent(value));
+			}
 		});
 
 		return strs;
