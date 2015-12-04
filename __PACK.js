@@ -1,5 +1,4 @@
 // load UJS.
-require(process.env.UPPERCASE_PATH + '/UJS-COMMON.js');
 require(process.env.UPPERCASE_PATH + '/UJS-NODE.js');
 
 // load UPPERCASE-UTIL.
@@ -24,11 +23,14 @@ RUN(function() {
 	// box name
 	boxName = process.argv[2],
 
-	// browser script
-	browserScript = '',
-
 	// common script
 	commonScript = '',
+
+	// client script
+	clientScript = '',
+
+	// browser script
+	browserScript = '',
 
 	// node script
 	nodeScript = '',
@@ -158,20 +160,6 @@ RUN(function() {
 		});
 	},
 
-	// load for browser.
-	loadForBrowser = function(relativePath) {
-		//REQUIRED: relativePath
-
-		if (path.extname(relativePath) === '.js') {
-
-			// add to browser script.
-			browserScript += READ_FILE({
-				path : rootPath + '/' + relativePath,
-				isSync : true
-			}) + '\n';
-		}
-	},
-
 	// load for common.
 	loadForCommon = function(relativePath) {
 		//REQUIRED: relativePath
@@ -180,6 +168,34 @@ RUN(function() {
 
 			// add to common script.
 			commonScript += READ_FILE({
+				path : rootPath + '/' + relativePath,
+				isSync : true
+			}) + '\n';
+		}
+	},
+
+	// load for client.
+	loadForClient = function(relativePath) {
+		//REQUIRED: relativePath
+
+		if (path.extname(relativePath) === '.js') {
+
+			// add to client script.
+			clientScript += READ_FILE({
+				path : rootPath + '/' + relativePath,
+				isSync : true
+			}) + '\n';
+		}
+	},
+
+	// load for browser.
+	loadForBrowser = function(relativePath) {
+		//REQUIRED: relativePath
+
+		if (path.extname(relativePath) === '.js') {
+
+			// add to browser script.
+			browserScript += READ_FILE({
 				path : rootPath + '/' + relativePath,
 				isSync : true
 			}) + '\n';
@@ -203,11 +219,14 @@ RUN(function() {
 	// minify
 	minify = function() {
 
-		// minify browser script.
-		browserScript = MINIFY_JS(browserScript);
-
 		// minify common script.
 		commonScript = MINIFY_JS(commonScript);
+
+		// minify client script.
+		clientScript = MINIFY_JS(clientScript);
+
+		// minify browser script.
+		browserScript = MINIFY_JS(browserScript);
 
 		// minify node script.
 		nodeScript = MINIFY_JS(nodeScript);
@@ -253,20 +272,6 @@ RUN(function() {
 		copyFolder(path, '__PACK/' + boxName + '/' + path.substring(boxName.length + 1));
 	});
 
-	// save browser script.
-	if (browserScript !== '') {
-
-		log('SAVING BROWSER SCRIPT...');
-
-		WRITE_FILE({
-			path : '__PACK/' + boxName + '/BROWSER.js',
-			content : browserScript,
-			isSync : true
-		});
-
-		log('SAVED BROWSER SCRIPT!');
-	}
-
 	// save common script.
 	if (commonScript !== '') {
 
@@ -281,6 +286,34 @@ RUN(function() {
 		log('SAVED COMMON SCRIPT!');
 	}
 
+	// save client script.
+	if (clientScript !== '') {
+
+		log('SAVING CLIENT SCRIPT...');
+
+		WRITE_FILE({
+			path : '__PACK/' + boxName + '/CLIENT.js',
+			content : commonScript + clientScript,
+			isSync : true
+		});
+
+		log('SAVED CLIENT SCRIPT!');
+	}
+
+	// save browser script.
+	if (browserScript !== '') {
+
+		log('SAVING BROWSER SCRIPT...');
+
+		WRITE_FILE({
+			path : '__PACK/' + boxName + '/BROWSER.js',
+			content : commonScript + clientScript + browserScript,
+			isSync : true
+		});
+
+		log('SAVED BROWSER SCRIPT!');
+	}
+
 	// save node script.
 	if (nodeScript !== '') {
 
@@ -288,7 +321,7 @@ RUN(function() {
 
 		WRITE_FILE({
 			path : '__PACK/' + boxName + '/NODE.js',
-			content : nodeScript,
+			content : commonScript + nodeScript,
 			isSync : true
 		});
 

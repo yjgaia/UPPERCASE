@@ -1,5 +1,4 @@
 // load UJS.
-require('../../../UJS-COMMON.js');
 require('../../../UJS-NODE.js');
 
 // load UPPERCASE-DB.
@@ -12,7 +11,6 @@ require('../../../UPPERCASE-TRANSPORT/NODE.js');
 require('../../../UPPERCASE-ROOM/NODE.js');
 
 // load UPPERCASE-MODEL.
-require('../../../UPPERCASE-MODEL/COMMON.js');
 require('../../../UPPERCASE-MODEL/NODE.js');
 
 TEST('MODEL', function(ok) {

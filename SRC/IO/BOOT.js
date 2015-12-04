@@ -251,16 +251,12 @@ global.BOOT = function(params) {
 	// run.
 	run;
 
-	addContentToBrowserScript('global = window;\n');
-
 	loadUJS = function() {
 
 		// load for node.
-		loadForNode(UPPERCASE_PATH + '/UJS-COMMON.js');
 		loadForNode(UPPERCASE_PATH + '/UJS-NODE.js');
 
 		// load for client.
-		browserUJSScript += loadForClient(UPPERCASE_PATH + '/UJS-COMMON.js');
 		browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js');
 	};
 
@@ -466,11 +462,9 @@ global.BOOT = function(params) {
 
 		// load UPPERCASE-ROOM.
 		loadForNode(UPPERCASE_PATH + '/UPPERCASE-ROOM/NODE.js');
-		loadForClient(UPPERCASE_PATH + '/UPPERCASE-ROOM/CLIENT.js');
 		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-ROOM/BROWSER.js');
 
 		// load UPPERCASE-MODEL.
-		loadForCommon(UPPERCASE_PATH + '/UPPERCASE-MODEL/COMMON.js');
 		loadForNode(UPPERCASE_PATH + '/UPPERCASE-MODEL/NODE.js');
 		loadForClient(UPPERCASE_PATH + '/UPPERCASE-MODEL/CLIENT.js');
 	};
@@ -1324,8 +1318,6 @@ global.BOOT = function(params) {
 	loadForNode(UPPERCASE_PATH + '/UPPERCASE-UTIL/NODE.js');
 
 	// load UPPERCASE-IO.
-	loadForCommon(UPPERCASE_PATH + '/UPPERCASE-IO/COMMON.js');
-	loadForClient(UPPERCASE_PATH + '/UPPERCASE-IO/CLIENT.js');
 	loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-IO/BROWSER.js');
 	loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-IO/BROWSER_INIT.js');
 	loadForNode(UPPERCASE_PATH + '/UPPERCASE-IO/NODE.js');

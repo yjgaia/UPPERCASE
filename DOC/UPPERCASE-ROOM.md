@@ -134,7 +134,6 @@ room.exit()
 ### 의존 모듈
 `UPPERCASE-ROOM`은 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-ROOM` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
 * UPPERCASE-TRANSPORT
-* UJS-COMMON.js
 * UJS-NODE.js
 * UJS-BROWSER.js
 * UJS-BROWSER-FIX
@@ -143,7 +142,6 @@ room.exit()
 ### 룸 서버와 룸 생성
 ```javascript
 // load UJS.
-require('../../../UJS-COMMON.js');
 require('../../../UJS-NODE.js');
 
 // load UPPERCASE-TRANSPORT.
@@ -208,12 +206,7 @@ INIT_OBJECTS();
 
 ## 룸 서버 접속 및 룸 접속
 ```html
-<script>
-	global = window;
-</script>
-
 <!-- import UJS -->
-<script src="UJS-COMMON.js"></script>
 <script src="UJS-BROWSER.js"></script>
 <script>
 	BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';

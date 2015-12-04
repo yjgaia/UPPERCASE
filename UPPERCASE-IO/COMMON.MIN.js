@@ -1,1 +1,0 @@
-OVERRIDE(CONFIG,function(o){"use strict";global.CONFIG=COMBINE([{defaultBoxName:"UPPERCASE",title:"UPPERCASE PROJECT",baseBackgroundColor:"#000",baseColor:"#fff",isMobileFullScreen:!1,isUsingHTMLSnapshot:!1},o])});

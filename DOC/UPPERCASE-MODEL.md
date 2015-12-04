@@ -186,7 +186,6 @@ OVERRIDE(TestBox.TestModel, function(origin) {
 * UPPERCASE-DB
 * UPPERCASE-ROOM
 * UPPERCASE-TRANSPORT
-* UJS-COMMON.js
 * UJS-NODE.js
 * UJS-BROWSER.js
 * UJS-BROWSER-FIX
@@ -196,7 +195,6 @@ OVERRIDE(TestBox.TestModel, function(origin) {
 ### node.js 환경에서 필요한 모듈 import
 ```javascript
 // load UJS.
-require('../../../UJS-COMMON.js');
 require('../../../UJS-NODE.js');
 
 // load UPPERCASE-TRANSPORT.
@@ -214,12 +212,7 @@ require('../../../UPPERCASE-MODEL/NODE.js');
 
 ### 웹 브라우저 환경에서 필요한 모듈 import
 ```html
-<script>
-	global = window;
-</script>
-
 <!-- import UJS -->
-<script src="UJS-COMMON.js"></script>
 <script src="UJS-BROWSER.js"></script>
 <script>
 	BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';

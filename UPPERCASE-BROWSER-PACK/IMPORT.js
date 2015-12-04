@@ -1,10 +1,10 @@
-global = window;
-
 /*
 
 Welcome to UJS! (http://uppercase.io)
 
 */
+
+global = window;
 
 /**
  * when database update, set to delete value.
@@ -3209,11 +3209,6 @@ global.REVERSE_EACH = METHOD({
 		return true;
 	}
 });
-/*
-
-Welcome to UJS! (http://uppercase.io)
-
-*/
 
 /**
  * Browser-side Configuration
@@ -11470,11 +11465,6 @@ FOR_BOX(function(box) {
 		}
 	});
 });
-/*
-
-Welcome to UPPERCASE! (http://uppercase.io)
-
-*/
 
 /*
  * connect to room server.
@@ -11883,11 +11873,6 @@ FOR_BOX(function(box) {'use strict';
 		}
 	});
 });
-/*
-
-Welcome to UPPERCASE! (http://uppercase.io)
-
-*/
 
 FOR_BOX(function(box) {
 	'use strict';
@@ -13717,11 +13702,6 @@ global.TIME = METHOD(function(m) {
 		}
 	};
 });
-/*
-
-Welcome to UPPERCASE! (http://uppercase.io)
-
-*/
 
 /*
  * connect to UPPERCASE server.

@@ -16,7 +16,6 @@ TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UJS 서�
 
 ### 의존 모듈
 `UPPERCASE-TRANSPORT`는 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-TRANSPORT` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
-* UJS-COMMON.js
 * UJS-NODE.js
 * UJS-BROWSER.js
 * UJS-BROWSER-FIX
@@ -26,7 +25,6 @@ TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UJS 서�
 `on`, `off` 및 `send` 등의 기본적인 사용법은 [UJS의 SOCKET_SERVER](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-NODE.md#각종-서버-구현체들)와 같습니다.
 ```javascript
 // load UJS.
-require('../../../../UJS-COMMON.js');
 require('../../../../UJS-NODE.js');
 
 // load UPPERCASE-TRANSPORT.
@@ -74,12 +72,7 @@ INIT_OBJECTS();
 ### 브라우저에서 웹소켓 서버 접속
 `on`, `off` 및 `send` 등의 기본적인 사용법은 [UJS의  CONNECT_TO_SOCKET_SERVER](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-NODE.md#각종-서버-구현체들)와 같습니다.
 ```html
-<script>
-	global = window;
-</script>
-
 <!-- import UJS -->
-<script src="UJS-COMMON.js"></script>
 <script src="UJS-BROWSER.js"></script>
 <script>
 	BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';
