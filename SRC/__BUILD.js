@@ -1,5 +1,4 @@
 // load UJS.
-require('../UJS-COMMON.js');
 require('../UJS-NODE.js');
 
 // load UPPERCASE-UTIL.
@@ -108,6 +107,8 @@ RUN(function() {
 				isSync : true
 			});
 		}
+		
+		return content;
 	},
 
 	// copy folder.
@@ -155,7 +156,7 @@ RUN(function() {
 	},
 
 	// dist folder.
-	distFolder = function(modulePath, name, isToSaveMin) {
+	distFolder = function(modulePath, preScripts, name, isToSaveMin) {
 
 		var
 		// scripts
@@ -164,23 +165,28 @@ RUN(function() {
 		scanFolder(scripts, modulePath + '/' + name);
 
 		if (scripts.length > 0) {
-			save(modulePath, scripts, name, isToSaveMin);
+			save(modulePath, COMBINE([preScripts, scripts]), name, isToSaveMin);
 		}
+		
+		return scripts;
 	},
 
 	// dist module.
 	distModule = function(name) {
 
 		var
-		// script
-		script = '';
+		// common scripts
+		commonScripts,
+		
+		// client scripts
+		clientScripts;
 
 		log('BUILD [' + name + ']');
 
-		distFolder(name, 'COMMON', true);
-		distFolder(name, 'BROWSER', true);
-		distFolder(name, 'CLIENT', true);
-		distFolder(name, 'NODE');
+		commonScripts = distFolder(name, '', 'COMMON', true);
+		clientScripts = distFolder(name, commonScripts, 'CLIENT', true);
+		distFolder(name, clientScripts, 'BROWSER', true);
+		distFolder(name, commonScripts, 'NODE');
 		copyFolder(name, 'R', 'R');
 	};
 
@@ -197,6 +203,7 @@ RUN(function() {
 	save('IO', ['IO/BOOT.js'], 'BOOT', false);
 	save('IO', ['IO/BROWSER_INIT.js'], 'BROWSER_INIT', true);
 	save('IO', ['IO/PRINT_HTML_SNAPSHOT.js'], 'PRINT_HTML_SNAPSHOT', false);
+	save('IO', ['IO/404.js'], '404', false);
 	
 	WRITE_FILE({
 		path : '../UPPERCASE-IO/R/BASE_STYLE.css',
@@ -212,7 +219,7 @@ RUN(function() {
 
 		var
 		// init script
-		initScript = 'global = window;\n\n',
+		initScript = '',
 
 		// load.
 		load = function(path) {
@@ -253,7 +260,6 @@ RUN(function() {
 		log('MAKE [BROWSER-PACK]');
 
 		// load UJS.
-		load('UJS-COMMON.js');
 		load('UJS-BROWSER.js');
 		copyFolder('UJS-BROWSER-FIX');
 		
@@ -264,15 +270,12 @@ RUN(function() {
 		copyFolder('UPPERCASE-TRANSPORT/R');
 
 		// load UPPERCASE-ROOM.
-		load('UPPERCASE-ROOM/CLIENT.js');
 		load('UPPERCASE-ROOM/BROWSER.js');
 
 		// load UPPERCASE-MODEL.
-		load('UPPERCASE-MODEL/COMMON.js');
 		load('UPPERCASE-MODEL/CLIENT.js');
 
 		// load UPPERCASE-IO.
-		load('UPPERCASE-IO/CLIENT.js');
 		load('UPPERCASE-IO/BROWSER.js');
 
 		// write IMPORT.js

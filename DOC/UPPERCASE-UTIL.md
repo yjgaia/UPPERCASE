@@ -14,13 +14,11 @@
 
 ### 의존 모듈
 `UPPERCASE-UTIL`은 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-UTIL` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
-* UJS-COMMON.js
 * UJS-NODE.js
 
 ## 사용 방법
 ```javascript
 // load UJS.
-require('../../../../UJS-COMMON.js');
 require('../../../../UJS-NODE.js');
 
 // load UPPERCASE-UTIL.

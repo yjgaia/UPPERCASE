@@ -16,14 +16,12 @@
 `UPPERCASE-UPLOAD`는 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-UPLOAD` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
 * UPPERCASE-UTIL
 * UPPERCASE-TRANSPORT
-* UJS-COMMON.js
 * UJS-NODE.js
 
 ## 사용 방법
 아래 코드는 서버에서 파일 업로드 요청을 받아옵니다. 웹 서버 생성 시 `noParsingParamsURI`를 지정하는 것에 유의해주시기 바랍니다.
 ```javascript
 // load UJS.
-require('../../../UJS-COMMON.js');
 require('../../../UJS-NODE.js');
 
 // load UPPERCASE-TRANSPORT.
@@ -67,12 +65,7 @@ webServer = WEB_SERVER({
 ### 업로드 폼 예제
 `UJS`와 `UPPERCASE-TRANSPORT`를 기반으로 업로드 폼을 만들어 보겠습니다.
 ```html
-<script>
-	global = window;
-</script>
-
 <!-- import UJS -->
-<script src="UJS-COMMON.js"></script>
 <script src="UJS-BROWSER.js"></script>
 <script>
 	BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';

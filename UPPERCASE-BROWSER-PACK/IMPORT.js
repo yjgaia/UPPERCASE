@@ -1,10 +1,10 @@
-global = window;
-
 /*
 
 Welcome to UJS! (http://uppercase.io)
 
 */
+
+global = window;
 
 /**
  * when database update, set to delete value.
@@ -556,95 +556,6 @@ global.FOR_BOX = METHOD(function(m) {
 	};
 });
 
-/**
- * aaencode - Encode any JavaScript program to Japanese style emoticons (^_^)
- * http://utf-8.jp/public/aaencode.html
- * (c) Yosuke Hasegawa
- */
-global.AAENCODE = METHOD({
-
-	run : function(text) {
-		'use strict';
-		//REQUIRED: text
-		
-		var
-		// emoticons
-		emoticons = [
-			'(c^_^o)',
-			'(ﾟΘﾟ)',
-			'((o^_^o) - (ﾟΘﾟ))',
-			'(o^_^o)',
-			'(ﾟｰﾟ)',
-			'((ﾟｰﾟ) + (ﾟΘﾟ))',
-			'((o^_^o) +(o^_^o))',
-			'((ﾟｰﾟ) + (o^_^o))',
-			'((ﾟｰﾟ) + (ﾟｰﾟ))',
-			'((ﾟｰﾟ) + (ﾟｰﾟ) + (ﾟΘﾟ))',
-			'(ﾟДﾟ) .ﾟωﾟﾉ',
-			'(ﾟДﾟ) .ﾟΘﾟﾉ',
-			'(ﾟДﾟ) [\'c\']',
-			'(ﾟДﾟ) .ﾟｰﾟﾉ',
-			'(ﾟДﾟ) .ﾟДﾟﾉ',
-			'(ﾟДﾟ) [ﾟΘﾟ]'
-		],
-		
-		// result
-		result = 'ﾟωﾟﾉ= /｀ｍ´）ﾉ ~┻━┻   //*´∇｀*/ [\'_\']; o=(ﾟｰﾟ)  =_=3; c=(ﾟΘﾟ) =(ﾟｰﾟ)-(ﾟｰﾟ); ',
-		
-		// others
-		i, t, n, m;
-		
-		if (/ひだまりスケッチ×(365|３５６)\s*来週も見てくださいね[!！]/.test(text) === true){
-			result += 'X=_=3; ';
-			result += '\r\n\r\n	X / _ / X < \'来週も見てくださいね!\';\r\n\r\n';
-		}
-		
-		result += '(ﾟДﾟ) =(ﾟΘﾟ)= (o^_^o)/ (o^_^o);' +
-			'(ﾟДﾟ)={ﾟΘﾟ: \'_\' ,ﾟωﾟﾉ : ((ﾟωﾟﾉ==3) +\'_\') [ﾟΘﾟ] ' +
-			',ﾟｰﾟﾉ :(ﾟωﾟﾉ+ \'_\')[o^_^o -(ﾟΘﾟ)] ' +
-			',ﾟДﾟﾉ:((ﾟｰﾟ==3) +\'_\')[ﾟｰﾟ] }; (ﾟДﾟ) [ﾟΘﾟ] =((ﾟωﾟﾉ==3) +\'_\') [c^_^o];' +
-			'(ﾟДﾟ) [\'c\'] = ((ﾟДﾟ)+\'_\') [ (ﾟｰﾟ)+(ﾟｰﾟ)-(ﾟΘﾟ) ];' +
-			'(ﾟДﾟ) [\'o\'] = ((ﾟДﾟ)+\'_\') [ﾟΘﾟ];' +
-			'(ﾟoﾟ)=(ﾟДﾟ) [\'c\']+(ﾟДﾟ) [\'o\']+(ﾟωﾟﾉ +\'_\')[ﾟΘﾟ]+ ((ﾟωﾟﾉ==3) +\'_\') [ﾟｰﾟ] + ' +
-			'((ﾟДﾟ) +\'_\') [(ﾟｰﾟ)+(ﾟｰﾟ)]+ ((ﾟｰﾟ==3) +\'_\') [ﾟΘﾟ]+' +
-			'((ﾟｰﾟ==3) +\'_\') [(ﾟｰﾟ) - (ﾟΘﾟ)]+(ﾟДﾟ) [\'c\']+' +
-			'((ﾟДﾟ)+\'_\') [(ﾟｰﾟ)+(ﾟｰﾟ)]+ (ﾟДﾟ) [\'o\']+' +
-			'((ﾟｰﾟ==3) +\'_\') [ﾟΘﾟ];(ﾟДﾟ) [\'_\'] =(o^_^o) [ﾟoﾟ] [ﾟoﾟ];' +
-			'(ﾟεﾟ)=((ﾟｰﾟ==3) +\'_\') [ﾟΘﾟ]+ (ﾟДﾟ) .ﾟДﾟﾉ+' +
-			'((ﾟДﾟ)+\'_\') [(ﾟｰﾟ) + (ﾟｰﾟ)]+((ﾟｰﾟ==3) +\'_\') [o^_^o -ﾟΘﾟ]+' +
-			'((ﾟｰﾟ==3) +\'_\') [ﾟΘﾟ]+ (ﾟωﾟﾉ +\'_\') [ﾟΘﾟ]; ' +
-			'(ﾟｰﾟ)+=(ﾟΘﾟ); (ﾟДﾟ)[ﾟεﾟ]=\'\\\\\'; ' +
-			'(ﾟДﾟ).ﾟΘﾟﾉ=(ﾟДﾟ+ ﾟｰﾟ)[o^_^o -(ﾟΘﾟ)];' + 
-			'(oﾟｰﾟo)=(ﾟωﾟﾉ +\'_\')[c^_^o];' +
-			'(ﾟДﾟ) [ﾟoﾟ]=\'\\\'\';' + 
-			'(ﾟДﾟ) [\'_\'] ( (ﾟДﾟ) [\'_\'] (ﾟεﾟ+(ﾟДﾟ)[ﾟoﾟ]+ ';
-		
-		for (i = 0; i < text.length; i += 1) {
-			
-			n = text.charCodeAt(i);
-			t = '(ﾟДﾟ)[ﾟεﾟ]+';
-			
-			if (n <= 127) {
-				t += n.toString(8).replace(/[0-7]/g, function(c) {
-					return emoticons[c] + '+ ';
-				});
-			}
-			
-			else {
-				m = /[0-9a-f]{4}$/.exec('000' + n.toString(16))[0];
-				t += '(oﾟｰﾟo)+ ' + m.replace(/[0-9a-f]/gi, function(c) {
-					return emoticons[parseInt(c, 16)] + '+ ';
-				});
-			}
-			
-			result += t;
-		}
-				
-		result += '(ﾟДﾟ)[ﾟoﾟ]) (ﾟΘﾟ)) (\'_\');';
-		
-		return result;
-	}
-});
 /**
  * async control-flow method that makes stepping through logic easy.
  */
@@ -3298,11 +3209,6 @@ global.REVERSE_EACH = METHOD({
 		return true;
 	}
 });
-/*
-
-Welcome to UJS! (http://uppercase.io)
-
-*/
 
 /**
  * Browser-side Configuration
@@ -3546,59 +3452,77 @@ global.LOAD = METHOD({
 /**
  * get/set meta description.
  */
-global.META_DESCRIPTION = METHOD({
-
-	run : function(description) {
-		'use strict';
-		
-		var
-		// meta tags
-		metaTags,
-		
-		// i
-		i,
-		
-		// is set
-		isSet = false,
-		
-		// new meta tag
-		newMetaTag;
-		
-		// get.
-		if (description === undefined) {
-			description = '';
+global.META_DESCRIPTION = METHOD(function() {
+	
+	var
+	// map
+	map = {
+		'&' : '&amp;',
+		'<' : '&lt;',
+		'>' : '&gt;',
+		'"' : '&quot;',
+		'\'' : '&#039;'
+	};
+	
+	return {
+	
+		run : function(description) {
+			'use strict';
 			
-			metaTags = document.getElementsByTagName('meta');
+			var
+			// meta tags
+			metaTags,
 			
-			for (i = 0; i < metaTags.length; i += 1) {
-				if (metaTags[i].name.toLowerCase() === 'description') {
-					description = metaTags[i].content;
-				}
-			}
-		}
-		
-		// set.
-		else {
-			metaTags = document.getElementsByTagName('meta');
+			// i
+			i,
 			
-			for (i = 0; i < metaTags.length; i += 1) {
-				if (metaTags[i].name.toLowerCase() === 'description') {
-					metaTags[i].content = description;
-					isSet = true;
-				}
-			}
+			// is set
+			isSet = false,
 			
-			if (isSet !== true) {
-				newMetaTag = document.createElement('meta');
-				newMetaTag.name = 'description';
-				newMetaTag.content = description;
+			// new meta tag
+			newMetaTag;
+			
+			// get.
+			if (description === undefined) {
+				description = '';
 				
-				document.getElementsByTagName('head')[0].appendChild(newMetaTag);
+				metaTags = document.getElementsByTagName('meta');
+				
+				for (i = 0; i < metaTags.length; i += 1) {
+					if (metaTags[i].name.toLowerCase() === 'description') {
+						description = metaTags[i].content;
+					}
+				}
 			}
+			
+			// set.
+			else {
+				
+				description = description.replace(/[&<>"']/g, function(c) {
+					return map[c];
+				});
+				
+				metaTags = document.getElementsByTagName('meta');
+				
+				for (i = 0; i < metaTags.length; i += 1) {
+					if (metaTags[i].name.toLowerCase() === 'description') {
+						metaTags[i].content = description;
+						isSet = true;
+					}
+				}
+				
+				if (isSet !== true) {
+					newMetaTag = document.createElement('meta');
+					newMetaTag.name = 'description';
+					newMetaTag.content = description;
+					
+					document.getElementsByTagName('head')[0].appendChild(newMetaTag);
+				}
+			}
+	
+			return description;
 		}
-
-		return description;
-	}
+	};
 });
 
 /**
@@ -10657,16 +10581,49 @@ FOR_BOX(function(box) {
 /**
  * go another view.
  */
-global.GO = METHOD({
+global.GO = METHOD(function(m) {
+	'use strict';
+	
+	var
+	// is ctrl key down
+	isCTRLKeyDown;
 
-	run : function(uri) {
-		'use strict';
-		//REQUIRED: uri
-
-		history.pushState(undefined, undefined, HREF(uri));
+	return {
 		
-		MATCH_VIEW.checkAll();
-	}
+		run : function(uri) {
+			//REQUIRED: uri
+			
+			if (isCTRLKeyDown === undefined) {
+				isCTRLKeyDown = false;
+							
+				EVENT('keydown', function(e) {
+					if (e.getKeyCode() === 17) {
+						isCTRLKeyDown = true;
+					}
+				});
+				
+				EVENT('keyup', function(e) {
+					if (e.getKeyCode() === 17) {
+						isCTRLKeyDown = false;
+					}
+				});
+			}
+			
+			if (isCTRLKeyDown === true) {
+				
+				GO_NEW_WIN(uri);
+				
+				isCTRLKeyDown = false;
+			}
+			
+			else {
+				
+				history.pushState(undefined, undefined, HREF(uri));
+				
+				MATCH_VIEW.checkAll();
+			}
+		}
+	};
 });
 
 FOR_BOX(function(box) {
@@ -11526,11 +11483,6 @@ FOR_BOX(function(box) {
 		}
 	});
 });
-/*
-
-Welcome to UPPERCASE! (http://uppercase.io)
-
-*/
 
 /*
  * connect to room server.
@@ -11939,11 +11891,6 @@ FOR_BOX(function(box) {'use strict';
 		}
 	});
 });
-/*
-
-Welcome to UPPERCASE! (http://uppercase.io)
-
-*/
 
 FOR_BOX(function(box) {
 	'use strict';
@@ -13773,11 +13720,6 @@ global.TIME = METHOD(function(m) {
 		}
 	};
 });
-/*
-
-Welcome to UPPERCASE! (http://uppercase.io)
-
-*/
 
 /*
  * connect to UPPERCASE server.
