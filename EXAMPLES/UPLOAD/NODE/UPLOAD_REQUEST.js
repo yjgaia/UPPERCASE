@@ -36,6 +36,9 @@ TEST('UPLOAD_REQUEST', function(ok) {
 					overFileSize : function() {
 						response('OVER FILE SIZE!');
 					},
+					progress : function(bytesRecieved, bytesExpected) {
+						console.log('(' + bytesRecieved + '/' + bytesExpected + ')');
+					},
 					success : function(fileDataSet) {
 						response(STRINGIFY(fileDataSet));
 					}
@@ -53,6 +56,9 @@ TEST('UPLOAD_REQUEST', function(ok) {
 					},
 					overFileSize : function() {
 						response('OVER FILE SIZE!');
+					},
+					progress : function(bytesRecieved, bytesExpected) {
+						console.log('(' + bytesRecieved + '/' + bytesExpected + ')');
 					},
 					success : function(fileDataSet) {
 						response(STRINGIFY(fileDataSet));
