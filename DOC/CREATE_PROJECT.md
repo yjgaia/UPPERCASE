@@ -78,7 +78,7 @@ http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝�
 
 이제 간단한 화면을 생성하도록 하겠습니다. `BROWSER 폴더` 아래에 이하 두 파일을 만들어주기 바랍니다.
 
-* `MAIN.js` UPPERCASE가 맨 처음 실행하는 코드입니다.
+* `MAIN.js` UPPERCASE가 각 BOX에서 맨 처음 실행하는 코드입니다.
 
     ```javascript
     // MAIN 메소드를 생성합니다.

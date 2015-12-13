@@ -54,6 +54,10 @@ webServer = WEB_SERVER({
 			overFileSize : function() {
 				response('OVER FILE SIZE!');
 			},
+			// 업로드 진행 중
+			progress : function(bytesRecieved, bytesExpected) {
+				console.log('(' + bytesRecieved + '/' + bytesExpected + ')');
+			},
 			success : function(fileDataSet) {
 				response(STRINGIFY(fileDataSet));
 			}

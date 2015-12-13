@@ -12,6 +12,9 @@ READY(function() {
 	'use strict';
 	
 	var
+	// is connecting
+	isConnecting = false,
+	
 	// connect.
 	connect;
 	
@@ -34,51 +37,65 @@ READY(function() {
 
 	connect = RAR(function() {
 		
-		CONNECT_TO_IO_SERVER(function(on) {
+		if (isConnecting !== true) {
+			isConnecting = true;
+			
+			CONNECT_TO_IO_SERVER(function(on) {
+				
+				FOR_BOX(function(box) {
+					if (box.CONNECTED !== undefined) {
+						box.CONNECTED();
+					}
+				});
+			
+				on('__DISCONNECTED', function() {
+					
+					var
+					// reload interval
+					reloadInterval;
+					
+					FOR_BOX(function(box) {
+						if (box.DISCONNECTED !== undefined) {
+							box.DISCONNECTED();
+						}
+					});
+					
+					isConnecting = false;
+					
+					reloadInterval = INTERVAL(1, RAR(function() {
 		
-			on('__DISCONNECTED', function() {
-	
-				var
-				// reload interval
-				reloadInterval;
-				
-				if (BROWSER_CONFIG.disconnected !== undefined) {
-					BROWSER_CONFIG.disconnected();
-				}
-				
-				reloadInterval = INTERVAL(1, RAR(function() {
-	
-					GET({
-						port : CONFIG.webServerPort,
-						uri : '__VERSION'
-					}, function(version) {
-						
-						if (reloadInterval !== undefined) {
-							reloadInterval.remove();
-							reloadInterval = undefined;
+						GET({
+							port : CONFIG.webServerPort,
+							uri : '__VERSION'
+						}, function(version) {
 							
-							if ((document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT')
-							|| BROWSER_CONFIG.beforeUnloadMessage === undefined
-							|| confirm(BROWSER_CONFIG.beforeUnloadMessage) === true) {
+							if (reloadInterval !== undefined) {
+								reloadInterval.remove();
+								reloadInterval = undefined;
 								
-								if (BROWSER_CONFIG.reconnect === undefined || BROWSER_CONFIG.reconnect(CONFIG.version === version, connect) !== false) {
+								if ((document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT')
+								|| BROWSER_CONFIG.beforeUnloadMessage === undefined
+								|| confirm(BROWSER_CONFIG.beforeUnloadMessage) === true) {
 									
-									// if versions are same, REFRESH.
-									if (CONFIG.version === version) {
-										REFRESH();
-										connect();
-									}
-									
-									// if versions are not same, reload page.
-									else {
-										location.reload();
+									if (BROWSER_CONFIG.reconnect === undefined || BROWSER_CONFIG.reconnect(CONFIG.version === version, connect) !== false) {
+										
+										// if versions are same, REFRESH.
+										if (CONFIG.version === version) {
+											REFRESH();
+											connect();
+										}
+										
+										// if versions are not same, reload page.
+										else {
+											location.reload();
+										}
 									}
 								}
 							}
-						}
-					});
-				}));
+						});
+					}));
+				});
 			});
-		});
+		}
 	});
 });

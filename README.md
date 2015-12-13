@@ -59,20 +59,16 @@ Unicorn은 객체 지향 언어들을 지원하기 위해 개발된 UPPERCASE �
 - [Unicorn-Android](https://github.com/Hanul/Unicorn-Android)
 - [Unicorn-iOS](https://github.com/Hanul/Unicorn-iOS)
 
-### 기타 클라이언트
-- [UPPERCASE-GameMakerStudio-Client](https://github.com/Hanul/UPPERCASE-GameMakerStudio-Client)
-
 ## 공식 지원 BOX
 - [UUI](https://github.com/Hanul/UUI)
 - [UANI](https://github.com/Hanul/UANI)
 - [Yogurt](https://github.com/Hanul/Yogurt)
+- [USOCIAL](https://github.com/Hanul/USOCIAL)
 - [UPUSH](https://github.com/Hanul/UPUSH)
 - [UMAIL](https://github.com/Hanul/UMAIL)
-- [Facebook-BOX](https://github.com/Hanul/Facebook-BOX)
-- [USCREEN](https://github.com/Hanul/USCREEN)
+- [UMongoBackup](https://github.com/Hanul/UMongoBackup)
 
 ## 파생 프로젝트
-- [UMongoBackup](https://github.com/Hanul/UMongoBackup)
 - [Node Server Pages](https://github.com/Hanul/NSP)
 
 ## 기타

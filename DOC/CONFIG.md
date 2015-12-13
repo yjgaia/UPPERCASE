@@ -1,7 +1,7 @@
 # Configuration
 
 ## CONFIG
-* `isDevMode` 개발 모드를 활성화합니다. 기본값은 `false`입니다. 이 모드가 활성화되면, 코드 압축이나 캐싱등의 작업을 건너뛰게 됩니다. 개발을 할 때에는 `true`로 설정하는것이 좋습니다. 자세한 사항은 아래 [개발 모드](#개발-모드) 항목을 참고해 주시기 바랍니다.
+* `isDevMode` 개발 모드를 활성화합니다. 기본값은 `false`입니다. 이 모드가 활성화되면, 코드 압축이나 캐싱등의 작업을 건너뛰게 됩니다. 또한 `BROWSER` 및 `COMMON` 폴더의 코드가 변경된 경우 웹 브라우저에서 새로고침하여 변경된 사항을 적용할 수 있습니다. (Node.js 환경에서의 `COMMON`이나 `NODE`의 변경사항은 서버를 재시작하여야 반영됩니다.) 개발할 때에는 `true`로 설정하는것이 좋습니다. 자세한 사항은 아래 [개발 모드](#개발-모드) 항목을 참고해 주시기 바랍니다.
 * `webServerPort` 웹서버 및 웹소켓 서버의 포트를 설정합니다. 설정하지 않으면 웹 서버 및 웹 소켓 서버를 구동하지 않습니다.
 * `sercuredWebServerPort` https 프로토콜을 사용하는 보안 웹서버의 포트를 설정합니다. 설정하지 않으면 보안 웹서버를 구동시키지 않습니다.
 * `socketServerPort` 소켓 서버의 포트를 설정합니다.
@@ -64,45 +64,7 @@ NODE_CONFIG : {
 [UJS의 BROWSER_CONFIG 설정](https://github.com/UPPERCASE-Series/UJS/blob/master/README_KOR.md#configuration)에 아래 설정들을 추가로 지정할 수 있습니다.
 
 ### 접속 관련 설정
-* `beforeUnloadMessage` `INPUT`이나 `TEXTAREA`에 포커스 되어 있을때, 페이지가 이동하려 하면 띄어주는 메시지를 설정합니다.
-* `disconnected()` 서버와의 접속이 끊어졌을 때 실행되는 함수입니다.
-* `reconnect(isVersionSame, reconnect)` 서버에 다시 접속될 때 실행되는 함수입니다. 서버의 버젼이 달라지면 `isVersionSame`이 `false`로 설정됩니다. 또한 `false`를 `return`하면, 서버에 재접속 되지 않습니다. 그러나 파라미터로 설정된 `reconnect` 함수로 서버에 재접속하는 코드를 작성할 수 있습니다. `reconnect` 하기 전 페이지를 새로고침 하고자 할 때는 `REFRESH` 메소드를 사용합니다. 인증 등을 사용할 때에는 **서버와의 접속이 끊어지면 인증이 풀리**기 때문에, 재접속 시 인증을 수행하는 코드를 작성해주시기 바랍니다. (로그인 화면으로 넘어가는 방법도 있습니다.)
-
-	```javascript
-	BROWSER_CONFIG.reconnect = function(isVersionSame, reconnect) {
-		
-		// if versions are same, REFRESH.
-		if (isVersionSame === true) {
-			REFRESH();
-			reconnect();
-		}
-		
-		// if versions are not same, reload page.
-		else {
-			location.reload();
-		}
-	};
-	```
-	```javascript
-	BROWSER_CONFIG.reconnect = function(isVersionSame, reconnect) {
-		
-		// if versions are same, reconnect.
-		if (isVersionSame === true) {
-			
-			Sample.UserModel.login({
-				username : rememberMeStore.get('username'),
-				password : rememberMeStore.get('password')
-			});
-			
-			reconnect(false);
-		}
-		
-		// if versions are not same, reload page.
-		else {
-			location.reload();
-		}
-	};
-	```
+* `beforeUnloadMessage` `INPUT`이나 `TEXTAREA`에 포커스 되어 있을때, 페이지가 이동하려 하면 메시지를 띄웁니다.
 
 ## 아이콘 설정
 아이콘은 `defaultBoxName`로 설정된 기본 BOX의 R 폴더에 위치한 다음 파일들로 설정됩니다.

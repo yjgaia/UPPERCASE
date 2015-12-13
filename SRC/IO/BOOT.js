@@ -742,6 +742,9 @@ global.BOOT = function(params) {
 
 					// box name
 					boxName,
+					
+					// box
+					box,
 
 					// upload file database
 					uploadFileDB,
@@ -914,11 +917,15 @@ global.BOOT = function(params) {
 
 					// serve upload request.
 					else if (uri === '__UPLOAD') {
+						
+						boxName = params.boxName;
+						box = BOX.getBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName];
 
 						UPLOAD_REQUEST({
 							requestInfo : requestInfo,
 							uploadPath : rootPath + '/__RF/__TEMP'
 						}, {
+							
 							overFileSize : function() {
 
 								response({
@@ -928,15 +935,26 @@ global.BOOT = function(params) {
 									}
 								});
 							},
+							
+							progress : function(bytesRecieved, bytesExpected) {
+								
+								// broadcast.
+								if (params.uploadKey !== undefined) {
+									
+									box.BROADCAST({
+										roomName : 'uploadProgressRoom/' + params.uploadKey,
+										methodName : 'progress',
+										data : {
+											bytesRecieved : bytesRecieved,
+											bytesExpected : bytesExpected
+										}
+									});
+								}
+							},
+							
 							success : function(fileDataSet) {
 
 								var
-								// box name
-								boxName = params.boxName,
-
-								// box
-								box = BOX.getBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName],
-
 								// upload file database
 								uploadFileDB;
 
