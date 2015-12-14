@@ -1791,7 +1791,8 @@ global.CHECK_IS_ARRAY = METHOD({
  */
 global.CHECK_IS_DATA = METHOD({
 
-	run : function(it) {'use strict';
+	run : function(it) {
+		'use strict';
 		//OPTIONAL: it
 
 		if (it !== undefined && it !== TO_DELETE && CHECK_IS_ARGUMENTS(it) !== true && CHECK_IS_ARRAY(it) !== true && it instanceof Date !== true && it instanceof RegExp !== true && typeof it === 'object') {
@@ -1812,6 +1813,27 @@ global.CHECK_IS_EMPTY_DATA = METHOD({
 		//REQUIRED: data
 
 		return CHECK_ARE_SAME([data, {}]);
+	}
+});
+
+/**
+ * count data's properties
+ */
+global.COUNT_PROPERTIES = METHOD({
+
+	run : function(data) {
+		'use strict';
+		//OPTIONAL: data
+
+		var
+		// count
+		count = 0;
+		
+		EACH(data, function() {
+			count += 1;
+		});
+		
+		return count;
 	}
 });
 
