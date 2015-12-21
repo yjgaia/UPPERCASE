@@ -124,9 +124,9 @@ node PACK Sample
 Sample
     __PACK
         Sample
-            BROWSER.js
+            BROWSER.js	// COMMON.js 내용을 포함하고 있습니다.
             COMMON.js
-            NODE.js
+            NODE.js		// COMMON.js 내용을 포함하고 있습니다.
             R
                 a.png
                 b.jpg
