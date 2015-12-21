@@ -185,6 +185,13 @@ global.BOOT = function(params) {
 
 		FOR_BOX(function(box) {
 			
+			var
+			// box root path
+			boxRootPath = CHECK_IS_IN({
+				array : boxNamesInBOXFolder,
+				value : box.boxName
+			}) === true ? rootPath + '/BOX' : rootPath;
+			
 			FIND_FILE_NAMES({
 				path : boxRootPath + '/' + box.boxName,
 				isSync : true
