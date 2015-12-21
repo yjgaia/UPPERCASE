@@ -164,7 +164,7 @@ RUN(function() {
 
 		scanFolder(scripts, modulePath + '/' + name);
 
-		if (scripts.length > 0) {
+		if (preScripts.length > 0 || scripts.length > 0) {
 			save(modulePath, COMBINE([preScripts, scripts]), name, isToSaveMin);
 		}
 		
@@ -273,7 +273,7 @@ RUN(function() {
 		load('UPPERCASE-ROOM/BROWSER.js');
 
 		// load UPPERCASE-MODEL.
-		load('UPPERCASE-MODEL/CLIENT.js');
+		load('UPPERCASE-MODEL/BROWSER.js');
 
 		// load UPPERCASE-IO.
 		load('UPPERCASE-IO/BROWSER.js');

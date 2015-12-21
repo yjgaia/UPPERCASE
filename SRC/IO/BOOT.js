@@ -477,7 +477,7 @@ global.BOOT = function(params) {
 		// load UPPERCASE-MODEL.
 		loadForNode(UPPERCASE_PATH + '/UPPERCASE-MODEL/NODE.js');
 		loadForClient(UPPERCASE_PATH + '/UPPERCASE-MODEL/CLIENT.js');
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-MODEL/CLIENT.js');
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-MODEL/BROWSER.js');
 	};
 	
 	generate404Page = function() {
