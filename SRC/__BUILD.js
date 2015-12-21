@@ -183,7 +183,7 @@ RUN(function() {
 
 		log('BUILD [' + name + ']');
 
-		commonScripts = distFolder(name, '', 'COMMON', true);
+		commonScripts = distFolder(name, [], 'COMMON', true);
 		clientScripts = distFolder(name, commonScripts, 'CLIENT', true);
 		distFolder(name, clientScripts, 'BROWSER', true);
 		distFolder(name, commonScripts, 'NODE');
