@@ -82,13 +82,7 @@ global.BOOT = function(params) {
 
 	// load for client.
 	loadForClient = function(path, boxName) {
-		return loadForBrowser(path, boxName);
-	},
-
-	// load for common.
-	loadForCommon = function(path, boxName) {
-		loadForNode(path);
-		loadForClient(path, boxName);
+		// TODO:
 	},
 	
 	// check is allowed folder name.
@@ -177,7 +171,21 @@ global.BOOT = function(params) {
 			}) === true ? rootPath + '/BOX' : rootPath;
 
 			scanFolder(boxRootPath + '/' + box.boxName + '/' + folderName, box.boxName);
+		});
+	},
+	
+	// scan all box js.
+	scanAllBoxJS = function(folderName, funcForJS) {
 
+		FOR_BOX(function(box) {
+			
+			var
+			// box root path
+			boxRootPath = CHECK_IS_IN({
+				array : boxNamesInBOXFolder,
+				value : box.boxName
+			}) === true ? rootPath + '/BOX' : rootPath;
+			
 			FIND_FILE_NAMES({
 				path : boxRootPath + '/' + box.boxName,
 				isSync : true
@@ -220,8 +228,10 @@ global.BOOT = function(params) {
 		});
 		
 		scanAllBoxFolders('COMMON', loadForBrowser);
-		scanAllBoxFolders('BROWSER', loadForBrowser);
 		scanAllBoxFolders('CLIENT', loadForBrowser);
+		scanAllBoxFolders('BROWSER', loadForBrowser);
+		
+		scanAllBoxJS('BROWSER', loadForBrowser);
 	},
 
 	// load UJS.
@@ -467,6 +477,7 @@ global.BOOT = function(params) {
 		// load UPPERCASE-MODEL.
 		loadForNode(UPPERCASE_PATH + '/UPPERCASE-MODEL/NODE.js');
 		loadForClient(UPPERCASE_PATH + '/UPPERCASE-MODEL/CLIENT.js');
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-MODEL/CLIENT.js');
 	};
 	
 	generate404Page = function() {
@@ -1350,10 +1361,20 @@ global.BOOT = function(params) {
 		initModelSystem();
 
 		// load all scripts.
-		scanAllBoxFolders('COMMON', loadForCommon);
+		scanAllBoxFolders('COMMON', loadForNode);
+		scanAllBoxFolders('COMMON', loadForClient);
+		scanAllBoxFolders('COMMON', loadForBrowser);
+		
 		scanAllBoxFolders('NODE', loadForNode);
-		scanAllBoxFolders('BROWSER', loadForBrowser);
+		
 		scanAllBoxFolders('CLIENT', loadForClient);
+		scanAllBoxFolders('CLIENT', loadForBrowser);
+		
+		scanAllBoxFolders('BROWSER', loadForBrowser);
+		
+		scanAllBoxJS('NODE', loadForNode);
+		scanAllBoxJS('CLIENT', loadForClient);
+		scanAllBoxJS('BROWSER', loadForBrowser);
 		
 		if (CONFIG.isDevMode !== true) {
 
