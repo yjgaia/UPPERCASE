@@ -129,8 +129,8 @@ TEST('MODEL', function(ok) {
 					notAuthed : function() {
 						console.log('not authed!!');
 					},
-					success : function(savedData) {
-						console.log('REMOVE: ', savedData);
+					success : function(originData) {
+						console.log('REMOVE: ', originData);
 					}
 				});
 			});

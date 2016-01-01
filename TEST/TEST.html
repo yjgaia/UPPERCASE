@@ -128,11 +128,10 @@
 			</div>
 		</footer>
 		<!-- JS WORLD -->
-		<script>
-			CONFIG.version = 'V' + (new Date()).getTime();
-		</script>
 		<script src="UJS-BROWSER.js"></script>
 		<script>
+			CONFIG.version = 'V' + (new Date()).getTime();
+			
 			BROWSER_CONFIG.isUsingFlashCanvasPro = true;
 			BROWSER_CONFIG.fixScriptsFolderPath = 'UJS-BROWSER-FIX';
 			LOAD('UJS-BROWSER-FIX/FIX.js');

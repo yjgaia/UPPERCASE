@@ -1331,7 +1331,7 @@ global.BOOT = function(params) {
 			isCreateWebSocketFixRequestManager : true
 		}).getWebSocketFixRequest();
 
-		console.log('[UPPERCASE] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.title + '` WORKER #' + CPU_CLUSTERING.getWorkerId() + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
+		console.log('[UPPERCASE] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.title + (NODE_CONFIG.isNotUsingCPUClustering !== true ? '` WORKER #' + CPU_CLUSTERING.getWorkerId() : '`') + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
 
 	// load UJS.
