@@ -10,6 +10,9 @@ UADMIN.Form = CLASS({
 		'use strict';
 
 		var
+		// laoding panel
+		loadingPanel,
+		
 		// wrapper
 		wrapper = DIV({
 			style : {
@@ -34,6 +37,10 @@ UADMIN.Form = CLASS({
 			// form
 			form;
 			
+			if (loadingPanel === undefined) {
+				loadingPanel = UADMIN.LoadingPanel();
+			}
+			
 			wrapper.empty();
 			
 			if (id === undefined) {
@@ -52,6 +59,11 @@ UADMIN.Form = CLASS({
 				errorMsgs;
 				
 				if (validDataSetStr === '') {
+					
+					if (loadingPanel !== undefined) {
+						loadingPanel.remove();
+						loadingPanel = undefined;
+					}
 					
 					if (id === undefined) {
 						alert('CANNOT CREATE');
@@ -87,6 +99,10 @@ UADMIN.Form = CLASS({
 								// data
 								data = form.getData();
 								
+								if (loadingPanel === undefined) {
+									loadingPanel = UADMIN.LoadingPanel();
+								}
+								
 								if (id !== undefined) {
 									data.id = id;
 								}
@@ -99,6 +115,11 @@ UADMIN.Form = CLASS({
 									var
 									// result
 									result = PARSE_STR(resultStr);
+									
+									if (loadingPanel !== undefined) {
+										loadingPanel.remove();
+										loadingPanel = undefined;
+									}
 									
 									if (result.validErrors !== undefined) {
 										form.showErrors(result.validErrors);
@@ -241,7 +262,17 @@ UADMIN.Form = CLASS({
 							}));
 							
 							form.setData(result.savedData);
+							
+							if (loadingPanel !== undefined) {
+								loadingPanel.remove();
+								loadingPanel = undefined;
+							}
 						});
+					}
+					
+					else if (loadingPanel !== undefined) {
+						loadingPanel.remove();
+						loadingPanel = undefined;
 					}
 					
 					form.append(UUI.FULL_SUBMIT({
@@ -258,6 +289,9 @@ UADMIN.Form = CLASS({
 		});
 		
 		inner.on('close', function() {
+			if (loadingPanel !== undefined) {
+				loadingPanel.remove();
+			}
 			wrapper.remove();
 		});
 	}

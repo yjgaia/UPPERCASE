@@ -37,6 +37,7 @@
 				LOAD('/UPPERCASE-BROWSER-PACK/INIT.js');
 			});
 		</script>
+		<script src="/LoadingPanel.js"></script>
 		<script>
 			UADMIN.MAIN = METHOD({
 			
@@ -85,6 +86,10 @@
 								on : {
 									submit : function(e, form) {
 										
+										var
+										// loading panel
+										loadingPanel = UADMIN.LoadingPanel();
+										
 										GET({
 											uri : '__LOGIN',
 											data : {
@@ -94,6 +99,7 @@
 											if (resultStr === 'true') {
 												location.reload();
 											} else {
+												loadingPanel.remove();
 												alert('WRONG PASSWORD.');
 											}
 										});

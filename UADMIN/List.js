@@ -10,6 +10,9 @@ UADMIN.List = CLASS({
 		'use strict';
 		
 		var
+		// laoding panel
+		loadingPanel,
+		
 		// wrapper
 		wrapper = DIV().appendTo(UADMIN.Layout.getContent());
 
@@ -36,6 +39,10 @@ UADMIN.List = CLASS({
 			
 			// search form
 			searchForm;
+			
+			if (loadingPanel !== undefined) {
+				loadingPanel = UADMIN.LoadingPanel();
+			}
 			
 			if (page === undefined) {
 				page = 1;
@@ -122,6 +129,11 @@ UADMIN.List = CLASS({
 						})
 					});
 				});
+				
+				if (loadingPanel !== undefined) {
+					loadingPanel.remove();
+					loadingPanel = undefined;
+				}
 			});
 			
 			GET({
@@ -201,8 +213,17 @@ UADMIN.List = CLASS({
 										marginTop : 10,
 										border : '1px solid #ccc'
 									},
-									name : name,
-									placeholder : name
+									name : name + '$start',
+									placeholder : name + ' START'
+								}));
+								
+								searchForm.append(UUI.FULL_INPUT({
+									style : {
+										border : '1px solid #ccc',
+										borderTop : 'none'
+									},
+									name : name + '$end',
+									placeholder : name + ' END'
 								}));
 								
 							} else if (validData.one !== undefined) {
@@ -240,6 +261,47 @@ UADMIN.List = CLASS({
 							}
 						}
 					});
+					
+					searchForm.append(UUI.FULL_INPUT({
+						style : {
+							marginTop : 10,
+							border : '1px solid #ccc'
+						},
+						name : 'createTime$start',
+						placeholder : 'createTime START',
+						on : {
+							tap : function(e, input) {
+								Yogurt.Calendar().after(input);
+							}
+						}
+					}));
+					
+					searchForm.append(UUI.FULL_INPUT({
+						style : {
+							border : '1px solid #ccc',
+							borderTop : 'none'
+						},
+						name : 'createTime$end',
+						placeholder : 'createTime END'
+					}));
+					
+					searchForm.append(UUI.FULL_INPUT({
+						style : {
+							marginTop : 10,
+							border : '1px solid #ccc'
+						},
+						name : 'lastUpdateTime$start',
+						placeholder : 'lastUpdateTime START'
+					}));
+					
+					searchForm.append(UUI.FULL_INPUT({
+						style : {
+							border : '1px solid #ccc',
+							borderTop : 'none'
+						},
+						name : 'lastUpdateTime$end',
+						placeholder : 'lastUpdateTime END'
+					}));
 				}
 				
 				searchForm.append(UUI.FULL_SUBMIT({
@@ -257,6 +319,9 @@ UADMIN.List = CLASS({
 		});
 
 		inner.on('close', function() {
+			if (loadingPanel !== undefined) {
+				loadingPanel.remove();
+			}
 			wrapper.remove();
 		});
 	}

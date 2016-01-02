@@ -186,8 +186,19 @@ global.BOOT_UADMIN = METHOD({
 					
 				} else {
 					
+					// serve system info
+					if (uri === '__SYSTEM_INFO') {
+						
+						response(STRINGIFY({
+							cpus : CPU_USAGES(),
+							memory : MEMORY_USAGE()
+						}));
+						
+						return false;
+					}
+					
 					// serve model naem map.
-					if (uri === '__MODEL_NAME_MAP') {
+					else if (uri === '__MODEL_NAME_MAP') {
 						
 						response(STRINGIFY(modelNameMap));
 						
@@ -341,12 +352,36 @@ global.BOOT_UADMIN = METHOD({
 										
 										EACH(requestInfo.data.filter, function(value, name) {
 											
+											var
+											// type
+											type;
+											
 											if (value === '' || value === false) {
 												delete requestInfo.data.filter[name];
 											}
 											
 											else if (name === 'id' || value === true || VALID.real(value) === true) {
-												requestInfo.data.filter[name] = value;
+												
+												if (name.indexOf('$') !== -1) {
+													
+													delete requestInfo.data.filter[name];
+													type = name.substring(name.indexOf('$') + 1);
+													name = name.substring(0, name.indexOf('$'));
+													
+													if (requestInfo.data.filter[name] === undefined) {
+														requestInfo.data.filter[name] = {};
+													}
+													
+													if (type === 'start') {
+														requestInfo.data.filter[name].$gte = REAL(value);
+													} else if (type === 'end') {
+														requestInfo.data.filter[name].$lte = REAL(value);
+													}
+												}
+												
+												else {
+													requestInfo.data.filter[name] = value;
+												}
 											}
 											
 											else if (value !== false) {
