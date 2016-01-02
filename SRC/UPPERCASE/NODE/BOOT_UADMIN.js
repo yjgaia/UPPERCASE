@@ -354,7 +354,27 @@ global.BOOT_UADMIN = METHOD({
 											}
 											
 											else if (value !== false) {
-												requestInfo.data.filter[name] = new RegExp(value, 'g');
+												
+												if (name.indexOf('$') !== -1) {
+													
+													delete requestInfo.data.filter[name];
+													type = name.substring(name.indexOf('$') + 1);
+													name = name.substring(0, name.indexOf('$'));
+													
+													if (requestInfo.data.filter[name] === undefined) {
+														requestInfo.data.filter[name] = {};
+													}
+													
+													if (type === 'start') {
+														requestInfo.data.filter[name].$gte = new Date(value);
+													} else if (type === 'end') {
+														requestInfo.data.filter[name].$lte = new Date(value);
+													}
+												}
+												
+												else {
+													requestInfo.data.filter[name] = new RegExp(value, 'g');
+												}
 											}
 										});
 									}

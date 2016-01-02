@@ -182,7 +182,71 @@ UADMIN.List = CLASS({
 				
 				var
 				// valid data set
-				validDataSet;
+				validDataSet,
+				
+				// select time.
+				selectTime = function(e, input) {
+					
+					var
+					// selected cal
+					selectedCal = CALENDAR(input.getValue() === '' ? new Date() : new Date(input.getValue())),
+					
+					// modal
+					modal = UUI.MODAL({
+						xImg : IMG({
+							src : '/BOX/UUI/R/x.png'
+						}),
+						style : {
+							width : 280
+						},
+						c : FORM({
+							c : [Yogurt.Calendar({
+								year : selectedCal.getYear(),
+								month : selectedCal.getMonth(),
+								date : selectedCal.getDate(),
+								leftArrowImg : IMG({
+									src : '/BOX/Yogurt/R/cal/left.png'
+								}),
+								rightArrowImg : IMG({
+									src : '/BOX/Yogurt/R/cal/right.png'
+								})
+							}, function(cal) {
+								selectedCal = cal;
+							}), UUI.FULL_INPUT({
+								name : 'hour',
+								placeholder : 'HOUR',
+								value : input.getValue() === '' ? undefined : selectedCal.getHour()
+							}), UUI.FULL_INPUT({
+								name : 'minute',
+								placeholder : 'MINUTE',
+								value : input.getValue() === '' ? undefined : selectedCal.getMinute()
+							}), UUI.FULL_SUBMIT({
+								value : 'SELECT'
+							})],
+							on : {
+								submit : function(e, form) {
+									
+									var
+									// data
+									data = form.getData();
+									
+									if (selectedCal !== undefined) {
+										
+										input.setValue(CREATE_DATE({
+											year : selectedCal.getYear(),
+											month : selectedCal.getMonth(),
+											date : selectedCal.getDate(),
+											hour : data.hour,
+											minute : data.minute
+										}));
+										
+										modal.remove();
+									}
+								}
+							}
+						})
+					});
+				};
 				
 				if (validDataSetStr !== '') {
 					
@@ -224,6 +288,32 @@ UADMIN.List = CLASS({
 									},
 									name : name + '$end',
 									placeholder : name + ' END'
+								}));
+								
+							} else if (validData.date === true) {
+								
+								searchForm.append(UUI.FULL_INPUT({
+									style : {
+										marginTop : 10,
+										border : '1px solid #ccc'
+									},
+									name : name + '$start',
+									placeholder : name + ' START',
+									on : {
+										tap : selectTime
+									}
+								}));
+								
+								searchForm.append(UUI.FULL_INPUT({
+									style : {
+										border : '1px solid #ccc',
+										borderTop : 'none'
+									},
+									name : name + '$end',
+									placeholder : name + ' END',
+									on : {
+										tap : selectTime
+									}
 								}));
 								
 							} else if (validData.one !== undefined) {
@@ -270,9 +360,7 @@ UADMIN.List = CLASS({
 						name : 'createTime$start',
 						placeholder : 'createTime START',
 						on : {
-							tap : function(e, input) {
-								Yogurt.Calendar().after(input);
-							}
+							tap : selectTime
 						}
 					}));
 					
@@ -282,7 +370,10 @@ UADMIN.List = CLASS({
 							borderTop : 'none'
 						},
 						name : 'createTime$end',
-						placeholder : 'createTime END'
+						placeholder : 'createTime END',
+						on : {
+							tap : selectTime
+						}
 					}));
 					
 					searchForm.append(UUI.FULL_INPUT({
@@ -291,7 +382,10 @@ UADMIN.List = CLASS({
 							border : '1px solid #ccc'
 						},
 						name : 'lastUpdateTime$start',
-						placeholder : 'lastUpdateTime START'
+						placeholder : 'lastUpdateTime START',
+						on : {
+							tap : selectTime
+						}
 					}));
 					
 					searchForm.append(UUI.FULL_INPUT({
@@ -300,7 +394,10 @@ UADMIN.List = CLASS({
 							borderTop : 'none'
 						},
 						name : 'lastUpdateTime$end',
-						placeholder : 'lastUpdateTime END'
+						placeholder : 'lastUpdateTime END',
+						on : {
+							tap : selectTime
+						}
 					}));
 				}
 				

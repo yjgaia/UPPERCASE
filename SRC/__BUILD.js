@@ -162,7 +162,7 @@ RUN(function() {
 		// scripts
 		scripts = [];
 
-		scanFolder(scripts, modulePath + '/' + name);
+		scanFolder(scripts, (modulePath === '' ? 'UPPERCASE' : modulePath) + '/' + name);
 
 		if (preScripts.length > 0 || scripts.length > 0) {
 			save(modulePath, scripts = COMBINE([preScripts, scripts]), name, isToSaveMin);
