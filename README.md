@@ -48,7 +48,7 @@ UPPERCASE를 사용하기 위해서는 이하 기술셋을 알고있어야 합�
 * [UPPERCASE-MODEL](DOC/UPPERCASE-MODEL.md) Model-View 패턴에서 Model 부분을 다루는 모듈입니다.
 * [UPPERCASE-UTIL](DOC/UPPERCASE-UTIL.md) npm 모듈을 사용하는 유틸리티를 모은 모듈입니다.
 * [UPPERCASE-UPLOAD](DOC/UPPERCASE-UPLOAD.md) 업로드 관련 기능을 제공하는 모듈입니다.
-* [UPPERCASE-IO](DOC/UPPERCASE-IO.md) UPPERCASE 통합을 위한 모듈입니다.
+* [UPPERCASE](DOC/UPPERCASE.md) UPPERCASE 통합을 위한 모듈입니다.
 
 ## UPPERCASE 클라이언트
 UPPERCASE는 기본적으로 웹 클라이언트만을 내장하고 있기 때문에, 다른 플랫폼에서의 동작을 보장하기 위해 플랫폼 별로 클라이언트가 존재합니다.
@@ -58,6 +58,15 @@ Unicorn은 객체 지향 언어들을 지원하기 위해 개발된 UPPERCASE �
 - [Unicorn](https://github.com/Hanul/Unicorn)
 - [Unicorn-Android](https://github.com/Hanul/Unicorn-Android)
 - [Unicorn-iOS](https://github.com/Hanul/Unicorn-iOS)
+
+## UPPERCASE를 서버로 사용하기
+UPPERCASE를 서버로 사용하고, 클라이언트는 다른 솔루션들과 함께 사용할 수 있습니다.
+
+### UPPERCASE + jQuery
+
+### UPPERCASE + AngularJS
+
+### UPPERCASE + NSP
 
 ## 공식 지원 BOX
 - [UUI](https://github.com/Hanul/UUI)
