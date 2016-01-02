@@ -1,2 +1,2 @@
 // shortcut to BOOT.js
-require('./UPPERCASE-IO/BOOT.js');
+require('./UPPERCASE/BOOT.js');

@@ -30,7 +30,7 @@ Sample.OVERRIDE = METHOD({
 ```
 
 ## 3. 공유 프로젝트의 룸 서버 연결
-이제 `SP_ROOM_SERVER`로 연결하는 코드를 작성해 보겠습니다. 아래와 같은 코드를 `NODE/MAIN.js`에 추가합니다. 아래 코드는 [UPPERCASE-IO 모듈](UPPERCASE-IO.md)의 [BROWSER_INIT.js](../../UPPERCASE-IO/BROWSER_INIT.js)을 참고한 것입니다.
+이제 `SP_ROOM_SERVER`로 연결하는 코드를 작성해 보겠습니다. 아래와 같은 코드를 `NODE/MAIN.js`에 추가합니다. 아래 코드는 [UPPERCASE 모듈](UPPERCASE.md)의 [BROWSER_INIT.js](../../UPPERCASE/BROWSER_INIT.js)을 참고한 것입니다.
 
 ```javascript
 var

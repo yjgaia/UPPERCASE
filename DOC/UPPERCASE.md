@@ -1,4 +1,4 @@
-# UPPERCASE-IO
+# UPPERCASE
 이 문서는 UPPERCASE의 API 관련 내용을 담고 있습니다. UPPERCASE 기반 프로젝트를 개발하기 위해서는 다음 문서들을 참고하시기 바랍니다.
 
 * [UPPERCASE 설치하기](INSTALL.md)
