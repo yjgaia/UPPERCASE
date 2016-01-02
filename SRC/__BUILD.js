@@ -165,7 +165,7 @@ RUN(function() {
 		scanFolder(scripts, modulePath + '/' + name);
 
 		if (preScripts.length > 0 || scripts.length > 0) {
-			save(modulePath, COMBINE([preScripts, scripts]), name, isToSaveMin);
+			save(modulePath, scripts = COMBINE([preScripts, scripts]), name, isToSaveMin);
 		}
 		
 		return scripts;

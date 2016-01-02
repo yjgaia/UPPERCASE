@@ -11889,6 +11889,31 @@ Welcome to UPPERCASE! (http://uppercase.io)
 
 */
 
+FOR_BOX(function(box) {'use strict';
+
+	/**
+	 * Model(include CRUD functions) interface
+	 */
+	box.MODEL = CLASS({
+
+		init : function(inner, self, params) {
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//OPTIONAL: params.config
+			
+			var
+			// get box name.
+			getBoxName;
+			
+			self.getBoxName = getBoxName = function() {
+				return box.boxName;
+			};
+
+			// to implement.
+		}
+	});
+});
+
 FOR_BOX(function(box) {
 	'use strict';
 	
@@ -13565,6 +13590,31 @@ FOR_BOX(function(box) {
 Welcome to UPPERCASE! (http://uppercase.io)
 
 */
+
+/**
+ * Configuration
+ */
+OVERRIDE(CONFIG, function(origin) {
+	'use strict';
+
+	global.CONFIG = COMBINE([{
+		
+		defaultBoxName : 'UPPERCASE',
+		
+		title : 'UPPERCASE PROJECT',
+		
+		baseBackgroundColor : '#000',
+		baseColor : '#fff',
+		
+		// maxThumbWidth
+		// or
+		// maxThumbHeight
+		
+		isMobileFullScreen : false,
+		isUsingHTMLSnapshot : false
+		
+	}, origin]);
+});
 
 FOR_BOX(function(box) {
 	'use strict';

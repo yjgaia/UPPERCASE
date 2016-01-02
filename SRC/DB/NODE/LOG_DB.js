@@ -33,6 +33,8 @@ FOR_BOX(function(box) {
 
 					// now
 					data.time = new Date();
+					
+					box.DB.removeEmptyValues(data);
 
 					collection.insertOne(data);
 				};
