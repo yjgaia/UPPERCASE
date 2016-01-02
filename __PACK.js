@@ -287,7 +287,7 @@ RUN(function() {
 	}
 
 	// save client script.
-	if (clientScript !== '') {
+	if (commonScript !== '' || clientScript !== '') {
 
 		log('SAVING CLIENT SCRIPT...');
 
@@ -301,7 +301,7 @@ RUN(function() {
 	}
 
 	// save browser script.
-	if (browserScript !== '') {
+	if (commonScript !== '' || clientScript !== '' || browserScript !== '') {
 
 		log('SAVING BROWSER SCRIPT...');
 
@@ -315,7 +315,7 @@ RUN(function() {
 	}
 
 	// save node script.
-	if (nodeScript !== '') {
+	if (commonScript !== '' || nodeScript !== '') {
 
 		log('SAVING NODE SCRIPT...');
 
