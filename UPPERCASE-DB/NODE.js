@@ -1374,10 +1374,8 @@ FOR_BOX(function(box) {
 							
 							removeEmptyValues(data);
 	
-							if (isNotToSaveHistory !== true) {
-								data.lastUpdateTime = new Date();
-							}
-	
+							data.lastUpdateTime = new Date();
+							
 							updateData = {};
 							
 							if (CHECK_IS_EMPTY_DATA(data) !== true) {

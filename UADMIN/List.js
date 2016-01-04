@@ -240,7 +240,7 @@ UADMIN.List = CLASS({
 											minute : data.minute
 										}));
 										
-										modal.remove();
+										modal.close();
 									}
 								}
 							}
