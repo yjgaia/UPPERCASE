@@ -971,15 +971,12 @@ FOR_BOX(function(box) {
 							}, function(error, result) {
 	
 								var
-								// saved data set
-								savedDataSet = result.ops,
-								
 								// saved data
 								savedData;
 	
-								if (error === TO_DELETE && savedDataSet.length > 0) {
+								if (error === TO_DELETE && result.ops.length > 0) {
 	
-									savedData = savedDataSet[0];
+									savedData = result.ops[0];
 	
 									// clean saved data before callback.
 									cleanData(savedData);

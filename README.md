@@ -24,7 +24,7 @@ UPPERCASE를 사용하기 위해서는 이하 기술셋을 알고있어야 합�
 * [UPPERCASE가 제공하는 기능들 살펴보기](DOC/OVERVIEW.md)
 * [Configuration](DOC/CONFIG.md)
 * [패키징](DOC/PACK.md)
-* [배포하기](DOC/DEPLOY.md)
+* [배포 및 서버 이전](DOC/DEPLOY.md)
 * [UPPERCASE 업데이트](DOC/UPDATE.md)
 * [UADMIN](DOC/UADMIN.md) (작성중)
 
