@@ -1527,7 +1527,22 @@ FOR_BOX(function(box) {
 															});
 														}
 														
-														if (isNotUsingHistory !== true && isNotToSaveHistory !== true) {
+														if (isNotUsingHistory !== true && isNotToSaveHistory !== true && RUN(function() {
+															
+															var
+															// is same
+															isSame = true;
+															
+															EACH(updateData, function(value, name) {
+																if (name !== 'lastUpdateTime' && savedData[name] !== value) {
+																	isSame = false;
+																	return false;
+																}
+															});
+															
+															return isSame;
+															
+														}) === true) {
 															addHistory('update', id, updateData, savedData.lastUpdateTime);
 														}
 				
