@@ -1079,7 +1079,7 @@ FOR_BOX(function(box) {
 							if (cachedInfo !== undefined) {
 								callback(cachedInfo.data);
 							} else {
-	
+
 								collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
 		
 									var
@@ -1267,7 +1267,12 @@ FOR_BOX(function(box) {
 									};
 								}
 								
-								else if (sort.createTime === undefined) {
+								else if (sort.id !== undefined) {
+									sort._id = sort.id;
+									delete sort.id;
+								}
+								
+								if (sort.createTime === undefined) {
 									sort.createTime = -1;
 								}
 	
@@ -1778,9 +1783,14 @@ FOR_BOX(function(box) {
 								sort = {
 									createTime : -1
 								};
+							} 
+						
+							else if (sort.id !== undefined) {
+								sort._id = sort.id;
+								delete sort.id;
 							}
 							
-							else if (sort.createTime === undefined) {
+							if (sort.createTime === undefined) {
 								sort.createTime = -1;
 							}
 	
