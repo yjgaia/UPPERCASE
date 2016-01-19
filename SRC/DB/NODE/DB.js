@@ -14,8 +14,76 @@ FOR_BOX(function(box) {
 	box.DB = CLASS(function(cls) {
 		
 		var
+		// generate _id.
+		gen_id,
+		
+		// make up filter.
+		makeUpFilter,
+		
 		// remove empty values.
 		removeEmptyValues;
+		
+		cls.gen_id = gen_id = function(id) {
+			//REQUIRED: id
+			
+			if (isNotUsingObjectId === true) {
+				return id;
+			} else {
+				return VALID.id(id) === true ? new ObjectID(id) : -1;
+			}
+		};
+		
+		cls.makeUpFilter = makeUpFilter = function(filter) {
+
+			var
+			// f.
+			f = function(filter) {
+
+				if (filter.id !== undefined) {
+
+					if (CHECK_IS_DATA(filter.id) === true) {
+
+						EACH(filter.id, function(values, i) {
+							if (CHECK_IS_DATA(values) === true || CHECK_IS_ARRAY(values) === true) {
+								EACH(values, function(value, j) {
+									values[j] = gen_id(value);
+								});
+							} else {
+								filter.id[i] = gen_id(values);
+							}
+						});
+
+						filter._id = filter.id;
+
+					} else {
+						filter._id = gen_id(filter.id);
+					}
+					delete filter.id;
+				}
+
+				EACH(filter, function(value, name) {
+					if (value === undefined) {
+						delete filter[name];
+					}
+				});
+			};
+
+			if (filter.$and !== undefined) {
+
+				EACH(filter.$and, function(filter) {
+					f(filter);
+				});
+
+			} else if (filter.$or !== undefined) {
+
+				EACH(filter.$or, function(filter) {
+					f(filter);
+				});
+
+			} else {
+				f(filter);
+			}
+		};
 		
 		cls.removeEmptyValues = removeEmptyValues = function(data) {
 			//REQUIRED: data
@@ -87,17 +155,6 @@ FOR_BOX(function(box) {
 				// waiting find all indexes infos
 				waitingFindAllIndexesInfos = [],
 	
-				// generate _id.
-				gen_id = function(id) {
-					//REQUIRED: id
-					
-					if (isNotUsingObjectId === true) {
-						return id;
-					} else {
-						return VALID.id(id) === true ? new ObjectID(id) : -1;
-					}
-				},
-	
 				// clean data.
 				cleanData = function(data) {
 					//REQUIRED: data
@@ -112,59 +169,6 @@ FOR_BOX(function(box) {
 	
 					// delete __RANDOM_KEY.
 					delete data.__RANDOM_KEY;
-				},
-	
-				// make up filter.
-				makeUpFilter = function(filter) {
-	
-					var
-					// f.
-					f = function(filter) {
-	
-						if (filter.id !== undefined) {
-	
-							if (CHECK_IS_DATA(filter.id) === true) {
-	
-								EACH(filter.id, function(values, i) {
-									if (CHECK_IS_DATA(values) === true || CHECK_IS_ARRAY(values) === true) {
-										EACH(values, function(value, j) {
-											values[j] = gen_id(value);
-										});
-									} else {
-										filter.id[i] = gen_id(values);
-									}
-								});
-	
-								filter._id = filter.id;
-	
-							} else {
-								filter._id = gen_id(filter.id);
-							}
-							delete filter.id;
-						}
-	
-						EACH(filter, function(value, name) {
-							if (value === undefined) {
-								delete filter[name];
-							}
-						});
-					};
-	
-					if (filter.$and !== undefined) {
-	
-						EACH(filter.$and, function(filter) {
-							f(filter);
-						});
-	
-					} else if (filter.$or !== undefined) {
-	
-						EACH(filter.$or, function(filter) {
-							f(filter);
-						});
-	
-					} else {
-						f(filter);
-					}
 				},
 	
 				// clean filter.

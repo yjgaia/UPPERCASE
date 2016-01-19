@@ -3246,7 +3246,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 	cluster = require('cluster'),
 
 	// worker id
-	workerId,
+	workerId = 1,
 
 	// get worker id.
 	getWorkerId;
