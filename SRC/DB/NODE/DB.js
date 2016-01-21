@@ -1114,7 +1114,7 @@ FOR_BOX(function(box) {
 							
 							if (callbackOrHandlers === undefined) {
 								callbackOrHandlers = idOrParams;
-								idOrParams = undefined;
+								idOrParams = {};
 							}
 	
 							// init params.
@@ -1172,7 +1172,18 @@ FOR_BOX(function(box) {
 									success : callback
 								});
 	
-							} else {
+							}
+							
+							else if (idOrParams === undefined) {
+								
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
+								}
+							}
+							
+							else {
 								
 								if (filter === undefined) {
 									filter = {};

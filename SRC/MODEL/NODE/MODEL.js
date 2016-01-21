@@ -666,7 +666,7 @@ FOR_BOX(function(box) {
 						return function() {
 						
 							// get data in database.
-							db.get({
+							db.get(idOrParams === undefined ? undefined : {
 								id : id,
 								filter : filter,
 								sort : sort,
@@ -1403,7 +1403,7 @@ FOR_BOX(function(box) {
 					// init params.
 					if (callbackOrHandlers === undefined) {
 						callbackOrHandlers = idOrParams;
-						idOrParams = undefined;
+						idOrParams = {};
 					}
 
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
