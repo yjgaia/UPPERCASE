@@ -28,11 +28,12 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 		initRoomFuncMap[roomName].push(initRoomFunc);
 	};
 
-	cls.broadcast = broadcast = function(params) {
+	cls.broadcast = broadcast = function(params, _send) {
 		//REQUIRED: params
 		//REQUIRED: params.roomName
 		//REQUIRED: params.methodName
 		//OPTIONAL: params.data
+		//OPTIONAL: _send
 
 		var
 		// room name
@@ -44,11 +45,14 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 		if (sends !== undefined) {
 
 			EACH(sends, function(send) {
+				
+				if (send !== _send) {
 
-				send({
-					methodName : roomName + '/' + params.methodName,
-					data : params.data
-				});
+					send({
+						methodName : roomName + '/' + params.methodName,
+						data : params.data
+					});
+				}
 			});
 		}
 	};
@@ -182,6 +186,50 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 										methodName : roomName + '/' + params.methodName,
 										data : params.data
 									}, callback);
+								},
+								
+								// broadcast except me
+								function(params) {
+									//REQUIRED: params
+									//REQUIRED: params.methodName
+									//OPTIONAL: params.data
+									
+									var
+									// method name
+									methodName = params.methodName,
+									
+									// data
+									data = params.data;
+									
+									LAUNCH_ROOM_SERVER.broadcast({
+										roomName : roomName,
+										methodName : methodName,
+										data : data
+									}, send);
+						
+									if (CPU_CLUSTERING.broadcast !== undefined) {
+						
+										CPU_CLUSTERING.broadcast({
+											methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+											data : {
+												roomName : roomName,
+												methodName : methodName,
+												data : data
+											}
+										});
+									}
+						
+									if (SERVER_CLUSTERING.broadcast !== undefined) {
+						
+										SERVER_CLUSTERING.broadcast({
+											methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+											data : {
+												roomName : roomName,
+												methodName : methodName,
+												data : data
+											}
+										});
+									}
 								});
 							});
 						}

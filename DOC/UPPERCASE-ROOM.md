@@ -5,7 +5,7 @@
 * `LAUNCH_ROOM_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:})` 룸 서버를 실행하는 클래스입니다. [예제보기](../EXAMPLES/ROOM/NODE/ROOM.js)
 * `ROOM(name, connectionListener)` 룸을 생성합니다. [예제보기](../EXAMPLES/ROOM/NODE/ROOM.js)
 ```javascript
-TestBox.ROOM('testRoom', function(clientInfo, on, off) {
+TestBox.ROOM('testRoom', function(clientInfo, on, off, send, broadcastExceptMe) {
 	
 	on(methodName, function(data, ret) {
 	
@@ -54,7 +54,7 @@ TestBox.ConnectionRoom = OBJECT({
 		});
 		
 		// 룸 생성
-		TestBox.ROOM('connectionRoom', function(clientInfo, on, off) {
+		TestBox.ROOM('connectionRoom', function(clientInfo, on, off, send, broadcastExceptMe) {
 			
 			// 새로운 유저 접속 시 count를 1 올림
 			connectionDB.update({
@@ -175,7 +175,7 @@ LAUNCH_ROOM_SERVER({
 
 BOX('TestBox');
 
-TestBox.ROOM('testRoom', function(clientInfo, on, off) {
+TestBox.ROOM('testRoom', function(clientInfo, on, off, send, broadcastExceptMe) {
 
 	on('msg', function(data, ret) {
 
