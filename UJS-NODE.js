@@ -3388,6 +3388,18 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 
 					// remove cpu shared data.
 					on('__CPU_SHARED_DB_REMOVE', CPU_SHARED_DB.remove);
+					
+					// shared db check sync.
+					on('__SHARED_DB_CHECK_SYNC', SHARED_DB.checkSync);
+					
+					// shared db sync.
+					on('__SHARED_DB_SYNC', SHARED_DB.sync);
+					
+					// cpu shared db check sync.
+					on('__CPU_SHARED_DB_CHECK_SYNC', CPU_SHARED_DB.checkSync);
+					
+					// cpu shared db sync.
+					on('__CPU_SHARED_DB_SYNC', CPU_SHARED_DB.sync);
 
 					m.off = off = function(methodName) {
 						delete methodMap[methodName];
@@ -3422,6 +3434,9 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 
 	// remove delay map
 	removeDelayMap = {},
+	
+	// is inited
+	isInited = false,
 
 	// save.
 	save,
@@ -3436,7 +3451,13 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 	list,
 
 	// remove.
-	remove;
+	remove,
+	
+	// check sync.
+	checkSync,
+	
+	// sync.
+	sync;
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params
@@ -3699,6 +3720,32 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 			delete removeDelays[id];
 		}
 	};
+	
+	cls.checkSync = checkSync = function(countData) {
+		//REQUIRED: countData
+		
+		if (CPU_CLUSTERING.broadcast !== undefined) {
+			
+			EACH(storages, function(storage, storageName) {
+				
+				if (countData[storageName] !== COUNT_PROPERTIES(storage)) {
+					
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_DB_SYNC',
+						data : storages
+					});
+					
+					return false;
+				}
+			});
+		}
+	};
+	
+	cls.sync = sync = function(syncStorage) {
+		//REQUIRED: syncStorage
+		
+		storages = syncStorage;
+	};
 
 	return {
 
@@ -3830,6 +3877,29 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 					});
 				}
 			};
+			
+			if (isInited !== true) {
+				isInited = true;
+				
+				INTERVAL(1, function() {
+					
+					var
+					// count data
+					countData = {};
+					
+					EACH(storages, function(storage, storageName) {
+						countData[storageName] = COUNT_PROPERTIES(storage);
+					});
+					
+					if (CPU_CLUSTERING.broadcast !== undefined) {
+				
+						CPU_CLUSTERING.broadcast({
+							methodName : '__CPU_SHARED_DB_CHECK_SYNC',
+							data : countData
+						});
+					}
+				});
+			}
 		}
 	};
 });
@@ -4357,6 +4427,34 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				}
 			});
 
+			// shared db check sync.
+			on('__SHARED_DB_CHECK_SYNC', function(countData) {
+
+				SHARED_DB.checkSync(countData);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_CHECK_SYNC',
+						data : countData
+					});
+				}
+			});
+
+			// shared db sync.
+			on('__SHARED_DB_SYNC', function(storages) {
+
+				SHARED_DB.sync(storages);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_SYNC',
+						data : storages
+					});
+				}
+			});
+
 			m.off = off = function(methodName) {
 				delete methodMap[methodName];
 			};
@@ -4392,6 +4490,9 @@ global.SHARED_DB = CLASS(function(cls) {
 
 	// remove delay map
 	removeDelayMap = {},
+	
+	// is inited
+	isInited = false,
 
 	// save.
 	save,
@@ -4406,7 +4507,13 @@ global.SHARED_DB = CLASS(function(cls) {
 	list,
 
 	// remove.
-	remove;
+	remove,
+	
+	// check sync.
+	checkSync,
+	
+	// sync.
+	sync;
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params
@@ -4669,6 +4776,48 @@ global.SHARED_DB = CLASS(function(cls) {
 			delete removeDelays[id];
 		}
 	};
+	
+	cls.checkSync = checkSync = function(countData) {
+		//REQUIRED: countData
+		
+		if (CPU_CLUSTERING.broadcast !== undefined) {
+			
+			EACH(storages, function(storage, storageName) {
+				
+				if (countData[storageName] !== COUNT_PROPERTIES(storage)) {
+					
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_SYNC',
+						data : storages
+					});
+					
+					return false;
+				}
+			});
+		}
+		
+		if (SERVER_CLUSTERING.broadcast !== undefined) {
+			
+			EACH(storages, function(storage, storageName) {
+				
+				if (countData[storageName] !== COUNT_PROPERTIES(storage)) {
+					
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_SYNC',
+						data : storages
+					});
+					
+					return false;
+				}
+			});
+		}
+	};
+	
+	cls.sync = sync = function(syncStorage) {
+		//REQUIRED: syncStorage
+		
+		storages = syncStorage;
+	};
 
 	return {
 
@@ -4838,6 +4987,48 @@ global.SHARED_DB = CLASS(function(cls) {
 					});
 				}
 			};
+			
+			if (isInited !== true) {
+				isInited = true;
+				
+				INTERVAL(1, function() {
+					
+					var
+					// count data
+					countData = {};
+					
+					EACH(storages, function(storage, storageName) {
+						countData[storageName] = COUNT_PROPERTIES(storage);
+					});
+					
+					if (CPU_CLUSTERING.broadcast !== undefined) {
+				
+						CPU_CLUSTERING.broadcast({
+							methodName : '__SHARED_DB_CHECK_SYNC',
+							data : countData
+						});
+					}
+				});
+				
+				INTERVAL(5, function() {
+					
+					var
+					// count data
+					countData = {};
+					
+					EACH(storages, function(storage, storageName) {
+						countData[storageName] = COUNT_PROPERTIES(storage);
+					});
+					
+					if (SERVER_CLUSTERING.broadcast !== undefined) {
+			
+						SERVER_CLUSTERING.broadcast({
+							methodName : '__SHARED_DB_CHECK_SYNC',
+							data : countData
+						});
+					}
+				});
+			}
 		}
 	};
 });
