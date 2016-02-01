@@ -888,15 +888,12 @@ FOR_BOX(function(box) {
 							}, function(error, result) {
 	
 								var
-								// saved data set
-								savedDataSet = result.ops,
-								
 								// saved data
 								savedData;
 	
-								if (error === TO_DELETE && savedDataSet.length > 0) {
+								if (error === TO_DELETE && result.ops.length > 0) {
 	
-									savedData = savedDataSet[0];
+									savedData = result.ops[0];
 	
 									// clean saved data before callback.
 									cleanData(savedData);
@@ -999,7 +996,7 @@ FOR_BOX(function(box) {
 							if (cachedInfo !== undefined) {
 								callback(cachedInfo.data);
 							} else {
-	
+
 								collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
 		
 									var
@@ -1113,7 +1110,7 @@ FOR_BOX(function(box) {
 							
 							if (callbackOrHandlers === undefined) {
 								callbackOrHandlers = idOrParams;
-								idOrParams = undefined;
+								idOrParams = {};
 							}
 	
 							// init params.
@@ -1171,7 +1168,18 @@ FOR_BOX(function(box) {
 									success : callback
 								});
 	
-							} else {
+							}
+							
+							else if (idOrParams === undefined) {
+								
+								if (notExistsHandler !== undefined) {
+									notExistsHandler();
+								} else {
+									console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
+								}
+							}
+							
+							else {
 								
 								if (filter === undefined) {
 									filter = {};
@@ -1187,7 +1195,12 @@ FOR_BOX(function(box) {
 									};
 								}
 								
-								else if (sort.createTime === undefined) {
+								else if (sort.id !== undefined) {
+									sort._id = sort.id;
+									delete sort.id;
+								}
+								
+								if (sort.createTime === undefined) {
 									sort.createTime = -1;
 								}
 	
@@ -1291,10 +1304,8 @@ FOR_BOX(function(box) {
 							
 							removeEmptyValues(data);
 	
-							if (isNotToSaveHistory !== true) {
-								data.lastUpdateTime = new Date();
-							}
-	
+							data.lastUpdateTime = new Date();
+							
 							updateData = {};
 							
 							if (CHECK_IS_EMPTY_DATA(data) !== true) {
@@ -1444,7 +1455,22 @@ FOR_BOX(function(box) {
 															});
 														}
 														
-														if (isNotUsingHistory !== true && isNotToSaveHistory !== true) {
+														if (isNotUsingHistory !== true && isNotToSaveHistory !== true && RUN(function() {
+															
+															var
+															// is same
+															isSame = true;
+															
+															EACH(updateData, function(value, name) {
+																if (name !== 'lastUpdateTime' && savedData[name] !== value) {
+																	isSame = false;
+																	return false;
+																}
+															});
+															
+															return isSame;
+															
+														}) === true) {
 															addHistory('update', id, updateData, savedData.lastUpdateTime);
 														}
 				
@@ -1700,9 +1726,14 @@ FOR_BOX(function(box) {
 								sort = {
 									createTime : -1
 								};
+							} 
+						
+							else if (sort.id !== undefined) {
+								sort._id = sort.id;
+								delete sort.id;
 							}
 							
-							else if (sort.createTime === undefined) {
+							if (sort.createTime === undefined) {
 								sort.createTime = -1;
 							}
 	

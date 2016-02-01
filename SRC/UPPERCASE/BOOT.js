@@ -540,7 +540,7 @@ global.BOOT = function(params) {
 			_404PageContent += '<script type="text/javascript">global=window;</script>';
 			_404PageContent += '<script type="text/javascript" src="/__UJS?' + CONFIG.version + '"></script>';
 			_404PageContent += '<script>' + READ_FILE({
-				path : UPPERCASE_PATH + '/UPPERCASE-IO/404.js',
+				path : UPPERCASE_PATH + '/UPPERCASE/404.js',
 				isSync : true
 			}).toString() + '</script>';
 			_404PageContent += '</body>';
@@ -892,7 +892,7 @@ global.BOOT = function(params) {
 					// serve base style css.
 					else if (uri === '__CSS') {
 						replaceRootPath(UPPERCASE_PATH);
-						requestInfo.uri = 'UPPERCASE-IO/R/BASE_STYLE.css';
+						requestInfo.uri = 'UPPERCASE/R/BASE_STYLE.css';
 					}
 
 					// serve upload server host.
@@ -1154,7 +1154,7 @@ global.BOOT = function(params) {
 
 					// serve cors callback.
 					else if (uri === '__CORS_CALLBACK') {
-						replaceRootPath(UPPERCASE_PATH + '/UPPERCASE-IO/R');
+						replaceRootPath(UPPERCASE_PATH + '/UPPERCASE/R');
 						requestInfo.uri = 'CORS_CALLBACK.html';
 					}
 
@@ -1346,10 +1346,10 @@ global.BOOT = function(params) {
 	// load UPPERCASE-UTIL.
 	loadForNode(UPPERCASE_PATH + '/UPPERCASE-UTIL/NODE.js');
 
-	// load UPPERCASE-IO.
-	loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-IO/BROWSER.js');
-	loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-IO/BROWSER_INIT.js');
-	loadForNode(UPPERCASE_PATH + '/UPPERCASE-IO/NODE.js');
+	// load UPPERCASE.
+	loadForBrowser(UPPERCASE_PATH + '/UPPERCASE/BROWSER.js');
+	loadForBrowser(UPPERCASE_PATH + '/UPPERCASE/BROWSER_INIT.js');
+	loadForNode(UPPERCASE_PATH + '/UPPERCASE/NODE.js');
 
 	// clustering cpus and servers.
 	clustering(function() {

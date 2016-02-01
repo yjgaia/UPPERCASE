@@ -1,3 +1,34 @@
+/*
+
+Welcome to UPPERCASE! (http://uppercase.io)
+
+*/
+
+/**
+ * Configuration
+ */
+OVERRIDE(CONFIG, function(origin) {
+	'use strict';
+
+	global.CONFIG = COMBINE([{
+		
+		defaultBoxName : 'UPPERCASE',
+		
+		title : 'UPPERCASE PROJECT',
+		
+		baseBackgroundColor : '#000',
+		baseColor : '#fff',
+		
+		// maxThumbWidth
+		// or
+		// maxThumbHeight
+		
+		isMobileFullScreen : false,
+		isUsingHTMLSnapshot : false
+		
+	}, origin]);
+});
+
 /**
  * boot UADMIN.
  */
@@ -155,8 +186,19 @@ global.BOOT_UADMIN = METHOD({
 					
 				} else {
 					
+					// serve system info
+					if (uri === '__SYSTEM_INFO') {
+						
+						response(STRINGIFY({
+							cpus : CPU_USAGES(),
+							memory : MEMORY_USAGE()
+						}));
+						
+						return false;
+					}
+					
 					// serve model naem map.
-					if (uri === '__MODEL_NAME_MAP') {
+					else if (uri === '__MODEL_NAME_MAP') {
 						
 						response(STRINGIFY(modelNameMap));
 						
@@ -310,16 +352,60 @@ global.BOOT_UADMIN = METHOD({
 										
 										EACH(requestInfo.data.filter, function(value, name) {
 											
+											var
+											// type
+											type;
+											
 											if (value === '' || value === false) {
 												delete requestInfo.data.filter[name];
 											}
 											
 											else if (name === 'id' || value === true || VALID.real(value) === true) {
-												requestInfo.data.filter[name] = value;
+												
+												if (name.indexOf('$') !== -1) {
+													
+													delete requestInfo.data.filter[name];
+													type = name.substring(name.indexOf('$') + 1);
+													name = name.substring(0, name.indexOf('$'));
+													
+													if (requestInfo.data.filter[name] === undefined) {
+														requestInfo.data.filter[name] = {};
+													}
+													
+													if (type === 'start') {
+														requestInfo.data.filter[name].$gte = REAL(value);
+													} else if (type === 'end') {
+														requestInfo.data.filter[name].$lte = REAL(value);
+													}
+												}
+												
+												else {
+													requestInfo.data.filter[name] = value;
+												}
 											}
 											
 											else if (value !== false) {
-												requestInfo.data.filter[name] = new RegExp(value, 'g');
+												
+												if (name.indexOf('$') !== -1) {
+													
+													delete requestInfo.data.filter[name];
+													type = name.substring(name.indexOf('$') + 1);
+													name = name.substring(0, name.indexOf('$'));
+													
+													if (requestInfo.data.filter[name] === undefined) {
+														requestInfo.data.filter[name] = {};
+													}
+													
+													if (type === 'start') {
+														requestInfo.data.filter[name].$gte = new Date(value);
+													} else if (type === 'end') {
+														requestInfo.data.filter[name].$lte = new Date(value);
+													}
+												}
+												
+												else {
+													requestInfo.data.filter[name] = new RegExp(value, 'g');
+												}
 											}
 										});
 									}
@@ -400,5 +486,52 @@ global.BOOT_UADMIN = METHOD({
 		});
 		
 		console.log('[UPPERCASE] UADMIN Tool BOOTed! => http://localhost:' + UADMIN_CONFIG.port);
+	}
+});
+
+/**
+ * Check still alive object
+ */
+global.CHECK_STILL_ALIVE = OBJECT({
+
+	init : function() {
+		'use strict';
+
+		UPPERCASE.ROOM('checkStillAliveRoom', function(clientInfo, on, off, send) {
+			
+			// I'm still alive!!
+			on('check', function(notUsing, ret) {
+				ret('ALIVE!');
+			});
+		});
+	}
+});
+
+/**
+ * Node-side Configuration
+ */
+OVERRIDE(NODE_CONFIG, function(origin) {
+
+	global.NODE_CONFIG = COMBINE([{
+		isUsingHTMLSnapshot : false,
+		isNotUsingCPUClustering : false
+	}, origin]);
+});
+
+/**
+ * Sync time object (Server-side)
+ */
+global.SYNC_TIME = OBJECT({
+
+	init : function() {
+		'use strict';
+
+		UPPERCASE.ROOM('timeSyncRoom', function(clientInfo, on) {
+
+			// return diff. (diff: client time - server time)
+			on('sync', function(clientNow, ret) {
+				ret(clientNow - new Date());
+			});
+		});
 	}
 });

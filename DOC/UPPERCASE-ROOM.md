@@ -2,10 +2,10 @@
 통신 처리를 룸 방식으로 처리하는 모듈입니다. 서버에서 룸을 만들고, 특정 룸에 접속한 사람들에게만 메시지를 전달할 수 있습니다. 따라서 특징에 맞는 여러 룸을 만들어 각각에 접속한 유저들에게 필요한 메시지를 전달하는 프로젝트 구조를 설계할 수 있습니다.
 
 ## NODE API
-* `LAUNCH_ROOM_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:})` 룸 서버를 실행하는 클래스입니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
-* `ROOM(name, connectionListener)` 룸을 생성합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
+* `LAUNCH_ROOM_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:})` 룸 서버를 실행하는 클래스입니다. [예제보기](../EXAMPLES/ROOM/NODE/ROOM.js)
+* `ROOM(name, connectionListener)` 룸을 생성합니다. [예제보기](../EXAMPLES/ROOM/NODE/ROOM.js)
 ```javascript
-TestBox.ROOM('testRoom', function(clientInfo, on, off) {
+TestBox.ROOM('testRoom', function(clientInfo, on, off, send, broadcastExceptMe) {
 	
 	on(methodName, function(data, ret) {
 	
@@ -21,9 +21,9 @@ TestBox.ROOM('testRoom', function(clientInfo, on, off) {
 	off(methodName);
 });
 ```
-* `BROADCAST({roomName:, methodName:, data:})` 특정 룸에 접속한 사람들에게 메시지를 전송합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/ROOM/NODE/ROOM.js)
-* `CONNECT_TO_ROOM_SERVER({host:, port:}, function(on, off, send) {...})` `CONNECT_TO_ROOM_SERVER({name:, host:, port:}, function(on, off, send) {...})` 룸 서버에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/ROOM/NODE/CONNECT/CONNECT_TO_ROOM_SERVER.js)
-* `CLIENT_ROOM(name)` `CLIENT_ROOM({roomServerName:, name:})` 룸에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/ROOM/NODE/CLIENT_ROOM.js)
+* `BROADCAST({roomName:, methodName:, data:})` 특정 룸에 접속한 사람들에게 메시지를 전송합니다. [예제보기](../EXAMPLES/ROOM/NODE/ROOM.js)
+* `CONNECT_TO_ROOM_SERVER({host:, port:}, function(on, off, send) {...})` `CONNECT_TO_ROOM_SERVER({name:, host:, port:}, function(on, off, send) {...})` 룸 서버에 접속합니다. [예제보기](../EXAMPLES/ROOM/NODE/CONNECT/CONNECT_TO_ROOM_SERVER.js)
+* `CLIENT_ROOM(name)` `CLIENT_ROOM({roomServerName:, name:})` 룸에 접속합니다. [예제보기](../EXAMPLES/ROOM/NODE/CLIENT_ROOM.js)
 ```javascript
 room = TestBox.CLIENT_ROOM('testRoom');
 room.on(methodName, function(data) {...})
@@ -54,7 +54,7 @@ TestBox.ConnectionRoom = OBJECT({
 		});
 		
 		// 룸 생성
-		TestBox.ROOM('connectionRoom', function(clientInfo, on, off) {
+		TestBox.ROOM('connectionRoom', function(clientInfo, on, off, send, broadcastExceptMe) {
 			
 			// 새로운 유저 접속 시 count를 1 올림
 			connectionDB.update({
@@ -115,8 +115,8 @@ on(methodName, function(data, ret) {
 ```
 
 ## BROWSER API
-* `CONNECT_TO_ROOM_SERVER({port:}, function(on, off, send) {...})` `CONNECT_TO_ROOM_SERVER({host:, port:}, function(on, off, send) {...})` `CONNECT_TO_ROOM_SERVER({name:, host:, port:}, function(on, off, send) {...})` 룸 서버에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/ROOM/BROWSER/CONNECT/CONNECT_TO_ROOM_SERVER.js)
-* `ROOM(name)` `ROOM({roomServerName:, name:})` 룸에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/ROOM/CLIENT/ROOM.js)
+* `CONNECT_TO_ROOM_SERVER({port:}, function(on, off, send) {...})` `CONNECT_TO_ROOM_SERVER({host:, port:}, function(on, off, send) {...})` `CONNECT_TO_ROOM_SERVER({name:, host:, port:}, function(on, off, send) {...})` 룸 서버에 접속합니다. [예제보기](../EXAMPLES/ROOM/BROWSER/CONNECT/CONNECT_TO_ROOM_SERVER.js)
+* `ROOM(name)` `ROOM({roomServerName:, name:})` 룸에 접속합니다. [예제보기](../EXAMPLES/ROOM/CLIENT/ROOM.js)
 ```javascript
 room = TestBox.ROOM('testRoom');
 room.on(methodName, function(data) {...})
@@ -175,7 +175,7 @@ LAUNCH_ROOM_SERVER({
 
 BOX('TestBox');
 
-TestBox.ROOM('testRoom', function(clientInfo, on, off) {
+TestBox.ROOM('testRoom', function(clientInfo, on, off, send, broadcastExceptMe) {
 
 	on('msg', function(data, ret) {
 

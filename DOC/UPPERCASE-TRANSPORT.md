@@ -4,12 +4,12 @@ TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UJS 서�
 또한 TCP 소켓과 웹 소켓 프로토콜을 통합하여 제공하는 멀티 프로토콜 소켓 서버 구현체가 포함되어 있습니다.
 
 ## NODE API
-* `WEB_SOCKET_SERVER(portOrWebServer, connectionListener)` 웹소켓 서버를 만듭니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
-* `WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener)` JSONP Long-polling을 사용하여 웹소켓을 지원하지 않는 브라우저에서도 웹소켓을 사용하는 것과 같은 효과를 만들 수 있습니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
-* `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:}, connectionListener)` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/TRANSPORT/NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js)
+* `WEB_SOCKET_SERVER(portOrWebServer, connectionListener)` 웹소켓 서버를 만듭니다. [예제보기](../EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
+* `WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener)` JSONP Long-polling을 사용하여 웹소켓을 지원하지 않는 브라우저에서도 웹소켓을 사용하는 것과 같은 효과를 만들 수 있습니다. [예제보기](../EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
+* `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:}, connectionListener)` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다. [예제보기](../EXAMPLES/TRANSPORT/NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js)
 
 ## BROWSER API
-* `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:, fixRequestURI:}, {error:, success:})` 웹소켓 서버에 접속합니다. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER.js)
+* `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:, fixRequestURI:}, {error:, success:})` 웹소켓 서버에 접속합니다. [예제보기](../EXAMPLES/TRANSPORT/BROWSER/CONNECT_TO_WEB_SOCKET_SERVER.js)
 
 ## UPPERCASE-TRANSPORT 단독 사용
 `UPPERCASE-TRANSPORT`는 `UPPERCASE`에 포함되어 있으나, 단독으로 사용할 수도 있습니다.

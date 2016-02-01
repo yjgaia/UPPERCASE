@@ -42,7 +42,7 @@ TEST('ROOM', function(ok) {
 
 		BOX('TestBox');
 
-		TestBox.ROOM('testRoom', function(clientInfo, on, off) {
+		TestBox.ROOM('testRoom', function(clientInfo, on, off, send, broadcastExceptMe) {
 
 			on('msg', function(data, ret) {
 				

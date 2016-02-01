@@ -97,7 +97,7 @@ zip -r {{프로젝트 폴더 명.zip}} {{프로젝트 폴더 명}}
 
 3. 기존 서버에서 데이터베이스를 백업합니다.
 ```
-mongodump -d {{데이터베이스 이름}} -u {{데이터베이스 접속 username}} -p {{데이터베이스 접속 password}}
+mongodump --db {{데이터베이스 이름}} --username {{데이터베이스 접속 username}} --password {{데이터베이스 접속 password}}
 ```
 
 4. 이전 할 서버에 [UPPERCASE를 세팅](INSTALL.md)합니다.
@@ -112,7 +112,7 @@ unzip {{프로젝트 폴더 명.zip}}
 
 7. 이전 할 서버에서 데이터베이스를 복구합니다.
 ```
-mongorestore dump/{{프로젝트 폴더 명}} -d {{데이터베이스 이름}} -u {{데이터베이스 접속 username}} -p {{데이터베이스 접속 password}}
+mongorestore --db {{데이터베이스 이름}} --username {{데이터베이스 접속 username}} --password {{데이터베이스 접속 password}} dump/{{프로젝트 폴더 명}}
 ```
 
 8. 프로젝트를 실행합니다. 만약 `forever`를 사용한다면 다음과 같이 입력합니다.

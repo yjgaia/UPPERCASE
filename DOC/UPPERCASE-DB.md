@@ -12,8 +12,8 @@ MongoDB를 사용하기 쉽게 CRUD 기능을 구현한 모듈입니다.
 * find 명령시 filter의 모든 property가 `undefined`로만 이루어진 경우, 모든 값을 가져옵니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려는 경우에는, `CHECK_ARE_SAME([{}, filter])`로 filter가 비어있는지 검사해 주시기 바랍니다.
 
 ## API
-* `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/DB/NODE/DB.js)
-* `DB(name)` MongoDB collection wrapper [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/DB/NODE/DB.js)
+* `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](../EXAMPLES/DB/NODE/DB.js)
+* `DB(name)` MongoDB collection wrapper [예제보기](../EXAMPLES/DB/NODE/DB.js)
 ```javascript
 db = TestBox.DB('test');
 db.create(data, function(savedData) {...})
@@ -34,7 +34,7 @@ db.checkIsExists({filter:}, {error:, success:})
 db.aggregate(params, function(dataSet) {...})
 db.aggregate(params, {error:, success:})
 ```
-* `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/DB/NODE/LOG_DB.js)
+* `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](../EXAMPLES/DB/NODE/LOG_DB.js)
 ```javascript
 logDB = TestBox.LOG_DB('testLog');
 logDB.log(data)

@@ -10,8 +10,55 @@ UADMIN.Home = CLASS({
 		'use strict';
 
 		var
+		// get system info interval
+		getSystemInfoInterval,
+		
+		// laoding panel
+		loadingPanel,
+		
+		// cpu panel
+		cpuPanel,
+		
+		// memory panel
+		memoryPanel,
+		
 		// wrapper
-		wrapper = DIV().appendTo(UADMIN.Layout.getContent());
+		wrapper = DIV({
+			c : [
+			// system info panel
+			DIV({
+				style : {
+					margin : 10,
+					backgroundColor : '#fff',
+					color : '#000',
+					border : '1px solid #666'
+				},
+				c : [H3({
+					style : {
+						padding : 10,
+						backgroundColor : '#ccc',
+						fontWeight : 'bold'
+					},
+					c : 'SYSTEM INFO'
+				}), DIV({
+					style : {
+						padding : 10,
+						backgroundColor : '#fff',
+						color : '#000',
+						borderTop : '1px solid #666'
+					},
+					c : [TABLE({
+						c : TR({
+							c : [cpuPanel = TD(), memoryPanel = TD({
+								style : {
+									verticalAlign : 'top'
+								}
+							})]
+						})
+					})]
+				})]
+			})]
+		}).appendTo(UADMIN.Layout.getContent());
 		
 		UADMIN.Layout.getToolbar().setTitle('UADMIN');
 		
@@ -40,8 +87,13 @@ UADMIN.Home = CLASS({
 				// list
 				list;
 				
+				if (loadingPanel !== undefined) {
+					loadingPanel = UADMIN.LoadingPanel();
+				}
+				
 				DIV({
 					style : {
+						width : 235,
 						flt : 'left',
 						border : '1px solid #666',
 						backgroundColor : '#fff',
@@ -95,13 +147,40 @@ UADMIN.Home = CLASS({
 							})
 						});
 					});
+					
+					if (loadingPanel !== undefined) {
+						loadingPanel.remove();
+						loadingPanel = undefined;
+					}
 				});
 			});
 			
 			boxWrapper.append(CLEAR_BOTH());
 		});
+		
+		getSystemInfoInterval = INTERVAL(1, RAR(function() {
+			
+			GET('__SYSTEM_INFO', function(systemInfoStr) {
+				
+				var
+				// system info
+				systemInfo = PARSE_STR(systemInfoStr);
+				
+				cpuPanel.empty();
+				EACH(systemInfo.cpus, function(cpuUsage, i) {
+					cpuPanel.append('CPU #' + (i + 1) + ': ' + cpuUsage.toFixed(1) + '%\n');
+				});
+				
+				memoryPanel.empty();
+				memoryPanel.append('MEMORY: ' + systemInfo.memory.toFixed(1) + '%');
+			});
+		}));
 
 		inner.on('close', function() {
+			getSystemInfoInterval.remove();
+			if (loadingPanel !== undefined) {
+				loadingPanel.remove();
+			}
 			wrapper.remove();
 		});
 	}

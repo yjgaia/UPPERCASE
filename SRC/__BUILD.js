@@ -85,7 +85,7 @@ RUN(function() {
 		});
 		
 		WRITE_FILE({
-			path : '../UPPERCASE-' + modulePath + '/' + path + '.js',
+			path : '../UPPERCASE' + (modulePath === '' ? '' : '-' + modulePath) + '/' + path + '.js',
 			content : content,
 			isSync : true
 		});
@@ -102,7 +102,7 @@ RUN(function() {
 			});
 	
 			WRITE_FILE({
-				path : '../UPPERCASE-' + modulePath + '/' + path + '.MIN.js',
+				path : '../UPPERCASE' + (modulePath === '' ? '' : '-' + modulePath) + '/' + path + '.MIN.js',
 				content : content,
 				isSync : true
 			});
@@ -116,7 +116,7 @@ RUN(function() {
 
 		var
 		// real to
-		realTo = '../UPPERCASE-' + modulePath + '/' + to;
+		realTo = '../UPPERCASE' + (modulePath === '' ? '' : '-' + modulePath) + '/' + to;
 
 		FIND_FILE_NAMES({
 			path : modulePath + '/' + from,
@@ -162,7 +162,7 @@ RUN(function() {
 		// scripts
 		scripts = [];
 
-		scanFolder(scripts, modulePath + '/' + name);
+		scanFolder(scripts, (modulePath === '' ? 'UPPERCASE' : modulePath) + '/' + name);
 
 		if (preScripts.length > 0 || scripts.length > 0) {
 			save(modulePath, scripts = COMBINE([preScripts, scripts]), name, isToSaveMin);
@@ -181,7 +181,7 @@ RUN(function() {
 		// client scripts
 		clientScripts;
 
-		log('BUILD [' + name + ']');
+		log('BUILD [' + (name === '' ? 'UPPERCASE' : name) + ']');
 
 		commonScripts = distFolder(name, [], 'COMMON', true);
 		clientScripts = distFolder(name, commonScripts, 'CLIENT', true);
@@ -199,16 +199,16 @@ RUN(function() {
 	distModule('UPLOAD');
 	distModule('UTIL');
 
-	distModule('IO');
-	save('IO', ['IO/BOOT.js'], 'BOOT', false);
-	save('IO', ['IO/BROWSER_INIT.js'], 'BROWSER_INIT', true);
-	save('IO', ['IO/PRINT_HTML_SNAPSHOT.js'], 'PRINT_HTML_SNAPSHOT', false);
-	save('IO', ['IO/404.js'], '404', false);
+	distModule('');
+	save('', ['UPPERCASE/BOOT.js'], 'BOOT', false);
+	save('', ['UPPERCASE/BROWSER_INIT.js'], 'BROWSER_INIT', true);
+	save('', ['UPPERCASE/PRINT_HTML_SNAPSHOT.js'], 'PRINT_HTML_SNAPSHOT', false);
+	save('', ['UPPERCASE/404.js'], '404', false);
 	
 	WRITE_FILE({
-		path : '../UPPERCASE-IO/R/BASE_STYLE.css',
+		path : '../UPPERCASE/R/BASE_STYLE.css',
 		content : MINIFY_CSS(READ_FILE({
-			path : '../UPPERCASE-IO/R/BASE_STYLE.css',
+			path : '../UPPERCASE/R/BASE_STYLE.css',
 			isSync : true
 		})),
 		isSync : true
@@ -275,8 +275,8 @@ RUN(function() {
 		// load UPPERCASE-MODEL.
 		load('UPPERCASE-MODEL/BROWSER.js');
 
-		// load UPPERCASE-IO.
-		load('UPPERCASE-IO/BROWSER.js');
+		// load UPPERCASE.
+		load('UPPERCASE/BROWSER.js');
 
 		// write IMPORT.js
 		WRITE_FILE({
@@ -292,19 +292,19 @@ RUN(function() {
 
 		// copy BASE_STYLE
 		COPY_FILE({
-			from : '../UPPERCASE-IO/R/BASE_STYLE.css',
+			from : '../UPPERCASE/R/BASE_STYLE.css',
 			to : '../UPPERCASE-BROWSER-PACK/BASE_STYLE.css',
 			isSync : true
 		});
 
 		// copy BROWSER_INIT
 		COPY_FILE({
-			from : '../UPPERCASE-IO/BROWSER_INIT.js',
+			from : '../UPPERCASE/BROWSER_INIT.js',
 			to : '../UPPERCASE-BROWSER-PACK/INIT.js',
 			isSync : true
 		});
 		COPY_FILE({
-			from : '../UPPERCASE-IO/BROWSER_INIT.MIN.js',
+			from : '../UPPERCASE/BROWSER_INIT.MIN.js',
 			to : '../UPPERCASE-BROWSER-PACK/INIT.MIN.js',
 			isSync : true
 		});

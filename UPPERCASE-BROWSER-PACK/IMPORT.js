@@ -12242,7 +12242,7 @@ FOR_BOX(function(box) {
 							// init params.
 							if (callbackOrHandlers === undefined) {
 								callbackOrHandlers = idOrParams;
-								idOrParams = undefined;
+								idOrParams = {};
 							}
 		
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -12329,7 +12329,7 @@ FOR_BOX(function(box) {
 							// init params.
 							if (callbackOrHandlers === undefined) {
 								callbackOrHandlers = idOrParams;
-								idOrParams = undefined;
+								idOrParams = {};
 							}
 		
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {

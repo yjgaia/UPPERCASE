@@ -10,6 +10,9 @@ UADMIN.Detail = CLASS({
 		'use strict';
 		
 		var
+		// laoding panel
+		loadingPanel,
+		
 		// wrapper
 		wrapper = DIV().appendTo(UADMIN.Layout.getContent());
 
@@ -24,6 +27,10 @@ UADMIN.Detail = CLASS({
 			
 			// id
 			id = params.id;
+			
+			if (loadingPanel === undefined) {
+				loadingPanel = UADMIN.LoadingPanel();
+			}
 			
 			wrapper.empty();
 			
@@ -119,10 +126,18 @@ UADMIN.Detail = CLASS({
 						return c;
 					})
 				}));
+				
+				if (loadingPanel !== undefined) {
+					loadingPanel.remove();
+					loadingPanel = undefined;
+				}
 			});
 		});
 
 		inner.on('close', function() {
+			if (loadingPanel !== undefined) {
+				loadingPanel.remove();
+			}
 			wrapper.remove();
 		});
 	}

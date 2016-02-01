@@ -50,7 +50,7 @@ TestBox.TestModel = OBJECT({
 ```
 
 ## API
-* `MODEL` Model(include CRUD functions) interface [예제보기](https://github.com/UPPERCASE-Series/UPPERCASE/blob/master/EXAMPLES/MODEL/CLIENT/MODEL.js)
+* `MODEL` Model(include CRUD functions) interface [예제보기](../EXAMPLES/MODEL/CLIENT/MODEL.js)
 ```javascript
 TestBox.TestModel = OBJECT({
 	preset : function() {

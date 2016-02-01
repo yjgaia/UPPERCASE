@@ -3,6 +3,10 @@ UADMIN.MAIN = METHOD({
 	run : function() {
 		'use strict';
 		
+		var
+		// loading panel
+		loadingPanel = UADMIN.LoadingPanel();
+		
 		GET('__MODEL_NAME_MAP', function(json) {
 			
 			UADMIN.MODEL_NAME_MAP = PARSE_STR(json);
@@ -31,6 +35,8 @@ UADMIN.MAIN = METHOD({
 				uri : ['{boxName}/{modelName}/f/new', '{boxName}/{modelName}/{id}/f/update'],
 				target : UADMIN.Form
 			});
+			
+			loadingPanel.remove();
 		});
 	}
 });
