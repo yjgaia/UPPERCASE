@@ -501,7 +501,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 					function(params, callback) {
 						//REQUIRED: params
 						//REQUIRED: params.methodName
-						//REQUIRED: params.data
+						//OPTIONAL: params.data
 						//OPTIONAL: callback
 
 						var
