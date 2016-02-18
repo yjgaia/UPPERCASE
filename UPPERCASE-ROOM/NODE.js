@@ -715,7 +715,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 				});
 			}
 
-			multiProtocolSocketServer = MULTI_PROTOCOL_SOCKET_SERVER(params, function(clientInfo, on, off, send) {
+			multiProtocolSocketServer = MULTI_PROTOCOL_SOCKET_SERVER(params, function(clientInfo, on, off, send, disconnect) {
 
 				var
 				// room counts
@@ -851,7 +851,9 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 											}
 										});
 									}
-								});
+								},
+								
+								disconnect);
 							});
 						}
 
