@@ -8128,6 +8128,9 @@ global.SOCKET_SERVER = METHOD({
 
 			// received string
 			receivedStr = '',
+			
+			// client info
+			clientInfo,
 
 			// on.
 			on,
@@ -8230,8 +8233,11 @@ global.SOCKET_SERVER = METHOD({
 			connectionListener(
 
 			// client info
-			{
-				ip : conn.remoteAddress
+			clientInfo = {
+				
+				ip : conn.remoteAddress,
+				
+				connectTime : new Date()
 			},
 
 			// on.
@@ -8285,38 +8291,35 @@ global.SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				if (conn._handle !== TO_DELETE) {
-				
-					conn.write(STRINGIFY({
-						methodName : params.methodName,
-						data : params.data,
-						sendKey : sendKey
-					}) + '\r\n');
-	
-					if (callback !== undefined) {
-						
-						callbackName = '__CALLBACK_' + sendKey;
-	
-						// on callback.
-						on(callbackName, function(data) {
-	
-							// run callback.
-							callback(data);
-	
-							// off callback.
-							off(callbackName);
-						});
-					}
-	
-					sendKey += 1;
+				conn.write(STRINGIFY({
+					methodName : params.methodName,
+					data : params.data,
+					sendKey : sendKey
+				}) + '\r\n');
+
+				if (callback !== undefined) {
+					
+					callbackName = '__CALLBACK_' + sendKey;
+
+					// on callback.
+					on(callbackName, function(data) {
+
+						// run callback.
+						callback(data);
+
+						// off callback.
+						off(callbackName);
+					});
 				}
+
+				sendKey += 1;
+				
+				clientInfo.lastSendTime = new Date();
 			},
 
 			// disconnect.
 			function() {
-				if (conn._handle !== TO_DELETE) {
-					conn.end();
-				}
+				conn.end();
 			});
 		});
 

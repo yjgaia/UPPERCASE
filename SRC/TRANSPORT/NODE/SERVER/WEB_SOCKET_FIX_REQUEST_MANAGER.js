@@ -342,6 +342,9 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 				// method map
 				methodMap,
 				
+				// client info
+				clientInfo,
+				
 				// on.
 				on,
 
@@ -389,10 +392,13 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 					connectionListener(
 
 					// client info
-					{
+					clientInfo = {
+						
 						ip : requestInfo.ip,
 
-						headers : requestInfo.headers
+						headers : requestInfo.headers,
+						
+						connectTime : new Date()
 					},
 
 					// on.
@@ -468,6 +474,8 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 						}
 		
 						sendKey += 1;
+						
+						clientInfo.lastSendTime = new Date();
 					},
 
 					// disconnect.
