@@ -80,6 +80,8 @@ global.REDIS_STORE = CLASS(function(cls) {
 					
 					if (error !== TO_DELETE) {
 						errorHandler(error.toString());
+					} else if (value === TO_DELETE) {
+						callback();
 					} else {
 						callback(PARSE_STR(value));
 					}
@@ -111,6 +113,8 @@ global.REDIS_STORE = CLASS(function(cls) {
 					
 					if (error !== TO_DELETE) {
 						errorHandler(error.toString());
+					} else if (all === TO_DELETE) {
+						callback({});
 					} else {
 						
 						EACH(all, function(data, key) {
