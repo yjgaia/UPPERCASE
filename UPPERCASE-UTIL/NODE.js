@@ -396,6 +396,8 @@ global.REDIS_STORE = CLASS(function(cls) {
 				}
 			}
 			
+			client.del(storeName);
+			
 			self.save = save = function(params, errorHandler) {
 				//REQUIRED: params
 				//REQUIRED: params.name
@@ -409,11 +411,13 @@ global.REDIS_STORE = CLASS(function(cls) {
 				// value
 				value = params.value;
 				
-				client.hset(storeName, name, STRINGIFY(value), function(error) {
+				client.hset(storeName, name, STRINGIFY(value), function(errorInfo) {
 					
-					if (error !== TO_DELETE) {
+					if (errorInfo !== TO_DELETE) {
 						if (errorHandler !== undefined) {
-							errorHandler(error.toString());
+							errorHandler(errorInfo.toString());
+						} else {
+							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
 						}
 					}
 				});
@@ -441,11 +445,13 @@ global.REDIS_STORE = CLASS(function(cls) {
 					}
 				}
 
-				client.hget(storeName, name, function(error, value) {
+				client.hget(storeName, name, function(errorInfo, value) {
 					
-					if (error !== TO_DELETE) {
+					if (errorInfo !== TO_DELETE) {
 						if (errorHandler !== undefined) {
-							errorHandler(error.toString());
+							errorHandler(errorInfo.toString());
+						} else {
+							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
 						}
 					} else if (value === TO_DELETE) {
 						callback();
@@ -459,11 +465,13 @@ global.REDIS_STORE = CLASS(function(cls) {
 				//REQUIRED: name
 				//OPTIONAL: errorHandler
 
-				client.hdel(storeName, name, function(error) {
+				client.hdel(storeName, name, function(errorInfo) {
 					
-					if (error !== TO_DELETE) {
+					if (errorInfo !== TO_DELETE) {
 						if (errorHandler !== undefined) {
-							errorHandler(error.toString());
+							errorHandler(errorInfo.toString());
+						} else {
+							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
 						}
 					}
 				});
@@ -490,11 +498,13 @@ global.REDIS_STORE = CLASS(function(cls) {
 					}
 				}
 				
-				client.hgetall(storeName, function(error, all) {
+				client.hgetall(storeName, function(errorInfo, all) {
 					
-					if (error !== TO_DELETE) {
+					if (errorInfo !== TO_DELETE) {
 						if (errorHandler !== undefined) {
-							errorHandler(error.toString());
+							errorHandler(errorInfo.toString());
+						} else {
+							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
 						}
 					} else if (all === TO_DELETE) {
 						callback({});
@@ -530,11 +540,13 @@ global.REDIS_STORE = CLASS(function(cls) {
 					}
 				}
 
-				client.hlen(storeName, function(error, count) {
+				client.hlen(storeName, function(errorInfo, count) {
 					
-					if (error !== TO_DELETE) {
+					if (errorInfo !== TO_DELETE) {
 						if (errorHandler !== undefined) {
-							errorHandler(error.toString());
+							errorHandler(errorInfo.toString());
+						} else {
+							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
 						}
 					} else {
 						callback(count);
@@ -545,11 +557,13 @@ global.REDIS_STORE = CLASS(function(cls) {
 			self.clear = clear = function(errorHandler) {
 				//OPTIONAL: errorHandler
 
-				client.del(storeName, function(error) {
+				client.del(storeName, function(errorInfo) {
 					
-					if (error !== TO_DELETE) {
+					if (errorInfo !== TO_DELETE) {
 						if (errorHandler !== undefined) {
-							errorHandler(error.toString());
+							errorHandler(errorInfo.toString());
+						} else {
+							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
 						}
 					}
 				});
