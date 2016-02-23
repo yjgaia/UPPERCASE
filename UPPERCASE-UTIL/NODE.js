@@ -394,6 +394,8 @@ global.REDIS_STORE = CLASS(function(cls) {
 				if (NODE_CONFIG.redisPassword !== undefined) {
 					client.auth(NODE_CONFIG.redisPassword);
 				}
+				
+				client.del(storeName);
 			}
 			
 			self.save = save = function(params, errorHandler) {
