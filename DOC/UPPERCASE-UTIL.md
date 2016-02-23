@@ -9,7 +9,13 @@
 * `IMAGEMAGICK_READ_METADATA(path, function() {...})` `IMAGEMAGICK_READ_METADATA(path, {error: function() {...}, success : function() {...}})` ImageMagick® read metadata. [예제보기](../EXAMPLES/UTIL/NODE/IMAGEMAGICK/IMAGEMAGICK_READ_METADATA.js)
 * `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:})` `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, function() {...})` `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, {error: function() {...}, success : function() {...}})` ImageMagick® resize. [예제보기](../EXAMPLES/UTIL/NODE/IMAGEMAGICK.js)
 * `DISK_USAGE({function() {...}})` `DISK_USAGE({drive:, function() {...}})` `DISK_USAGE({drive:, {error: function() {...}, success : function() {...}})` get disk usage. [예제보기](../EXAMPLES/UTIL/NODE/DISK_USAGE.js)
-* `REDIS_STORE(name)` Redis를 이용해 [UJS의 SHARED_STORE](https://github.com/Hanul/UJS/blob/master/DOC/UJS-NODE.md#클러스터링-관련-기능)와 같은 기능을 하는 저장소를 생성합니다.  [예제보기](../EXAMPLES/UTIL/NODE/REDIS_STORE.js)
+* `REDIS_STORE(name)` Redis를 이용해 [UJS의 SHARED_STORE](https://github.com/Hanul/UJS/blob/master/DOC/UJS-NODE.md#클러스터링-관련-기능)와 같은 기능을 하는 저장소를 생성합니다. 차이점은, Callback을 이용해 값을 받아옵니다. [예제보기](../EXAMPLES/UTIL/NODE/REDIS_STORE.js)
+	* `save({name:, value:})` `save({name:, value:}, callbackOrHandlers)` 특정 `name`에 `value`를 저장합니다.
+	* `get(name, callbackOrHandlers)` `name`의 값을 가져옵니다.
+	* `remove(name)` `remove(name, callbackOrHandlers)` `name`의 값을 지웁니다.
+	* `list(callbackOrHandlers)` 저장소의 모든 값을 가져옵니다.
+	* `count(callbackOrHandlers)` 저장소의 값들의 개수를 가져옵니다.
+	* `clear()` `clear(callbackOrHandlers)` 저장소의 모든 값을 삭제합니다.
 
 ## UPPERCASE-UTIL 단독 사용
 `UPPERCASE-UTIL`은 `UPPERCASE`에 포함되어 있으나, 단독으로 사용할 수도 있습니다.

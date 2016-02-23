@@ -46,18 +46,35 @@ global.REDIS_STORE = CLASS(function(cls) {
 				}
 			}
 			
-			self.save = save = function(params, errorHandler) {
+			self.save = save = function(params, callbackOrHandlers) {
 				//REQUIRED: params
 				//REQUIRED: params.name
 				//REQUIRED: params.value
-				//OPTIONAL: errorHandler
-
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+				
 				var
 				// name
 				name = params.name,
 
 				// value
-				value = params.value;
+				value = params.value,
+				
+				// callback
+				callback,
+
+				// error handler
+				errorHandler;
+				
+				if (callbackOrHandlers !== undefined) {
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						errorHandler = callbackOrHandlers.error;
+					}
+				}
 				
 				client.hset(storeName, name, STRINGIFY(value), function(errorInfo) {
 					
@@ -67,6 +84,8 @@ global.REDIS_STORE = CLASS(function(cls) {
 						} else {
 							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
 						}
+					} else if (callback !== undefined) {
+						callback();
 					}
 				});
 			};
@@ -83,14 +102,12 @@ global.REDIS_STORE = CLASS(function(cls) {
 
 				// error handler
 				errorHandler;
-				
-				if (callbackOrHandlers !== undefined) {
-					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-						callback = callbackOrHandlers;
-					} else {
-						callback = callbackOrHandlers.success;
-						errorHandler = callbackOrHandlers.error;
-					}
+			
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
 				}
 
 				client.hget(storeName, name, function(errorInfo, value) {
@@ -109,25 +126,9 @@ global.REDIS_STORE = CLASS(function(cls) {
 				});
 			};
 
-			self.remove = remove = function(name, errorHandler) {
-				//REQUIRED: name
-				//OPTIONAL: errorHandler
-
-				client.hdel(storeName, name, function(errorInfo) {
-					
-					if (errorInfo !== TO_DELETE) {
-						if (errorHandler !== undefined) {
-							errorHandler(errorInfo.toString());
-						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
-						}
-					}
-				});
-			};
-			
-			self.list = list = function(callbackOrHandlers) {
-				//REQUIRED: callbackOrHandlers
-				//REQUIRED: callbackOrHandlers.success
+			self.remove = remove = function(name, callbackOrHandlers) {
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
 				//OPTIONAL: callbackOrHandlers.error
 				
 				var
@@ -144,6 +145,39 @@ global.REDIS_STORE = CLASS(function(cls) {
 						callback = callbackOrHandlers.success;
 						errorHandler = callbackOrHandlers.error;
 					}
+				}
+
+				client.hdel(storeName, name, function(errorInfo) {
+					
+					if (errorInfo !== TO_DELETE) {
+						if (errorHandler !== undefined) {
+							errorHandler(errorInfo.toString());
+						} else {
+							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
+						}
+					} else if (callback !== undefined) {
+						callback();
+					}
+				});
+			};
+			
+			self.list = list = function(callbackOrHandlers) {
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+				
+				var
+				// callback
+				callback,
+
+				// error handler
+				errorHandler;
+				
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
 				}
 				
 				client.hgetall(storeName, function(errorInfo, all) {
@@ -179,13 +213,11 @@ global.REDIS_STORE = CLASS(function(cls) {
 				// error handler
 				errorHandler;
 				
-				if (callbackOrHandlers !== undefined) {
-					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-						callback = callbackOrHandlers;
-					} else {
-						callback = callbackOrHandlers.success;
-						errorHandler = callbackOrHandlers.error;
-					}
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
 				}
 
 				client.hlen(storeName, function(errorInfo, count) {
@@ -202,8 +234,26 @@ global.REDIS_STORE = CLASS(function(cls) {
 				});
 			};
 
-			self.clear = clear = function(errorHandler) {
-				//OPTIONAL: errorHandler
+			self.clear = clear = function(callbackOrHandlers) {
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+				
+				var
+				// callback
+				callback,
+
+				// error handler
+				errorHandler;
+				
+				if (callbackOrHandlers !== undefined) {
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						errorHandler = callbackOrHandlers.error;
+					}
+				}
 
 				client.del(storeName, function(errorInfo) {
 					
@@ -213,6 +263,8 @@ global.REDIS_STORE = CLASS(function(cls) {
 						} else {
 							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
 						}
+					} else if (callback !== undefined) {
+						callback();
 					}
 				});
 			};
