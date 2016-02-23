@@ -1114,7 +1114,10 @@ FOR_BOX(function(box) {
 						errorHandler,
 	
 						// error message
-						errorMsg;
+						errorMsg,
+						
+						// cleaned filter
+						cleanedFilter;
 	
 						try {
 	
@@ -1130,10 +1133,6 @@ FOR_BOX(function(box) {
 							
 							NEXT([
 							function(next) {
-								
-								var
-								// cleaned filter
-								cleanedFilter;
 								
 								if (isToCache === true) {
 									
@@ -1874,6 +1873,9 @@ FOR_BOX(function(box) {
 						// error message
 						errorMsg,
 						
+						// cleaned filter
+						cleanedFilter,
+						
 						// proc.
 						proc;
 	
@@ -1935,10 +1937,6 @@ FOR_BOX(function(box) {
 							
 							NEXT([
 							function(next) {
-								
-								var
-								// cleaned filter
-								cleanedFilter;
 								
 								if (isToCache === true) {
 									
@@ -2079,7 +2077,10 @@ FOR_BOX(function(box) {
 						errorHandler,
 	
 						// error message
-						errorMsg;
+						errorMsg,
+						
+						// cleaned filter
+						cleanedFilter;
 	
 						try {
 	
@@ -2113,10 +2114,6 @@ FOR_BOX(function(box) {
 							
 							NEXT([
 							function(next) {
-								
-								var
-								// cleaned filter
-								cleanedFilter;
 								
 								if (isToCache === true) {
 									
@@ -2234,7 +2231,10 @@ FOR_BOX(function(box) {
 						errorHandler,
 	
 						// error message
-						errorMsg;
+						errorMsg,
+						
+						// cleaned filter
+						cleanedFilter;
 	
 						try {
 	
@@ -2277,10 +2277,6 @@ FOR_BOX(function(box) {
 							
 							NEXT([
 							function(next) {
-								
-								var
-								// cleaned filter
-								cleanedFilter;
 								
 								if (isToCache === true) {
 									
