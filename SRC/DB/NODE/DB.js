@@ -717,52 +717,86 @@ FOR_BOX(function(box) {
 						// cached count infos
 						cachedCountInfos = [];
 						
-						EACH(cachedGetStore.list(), function(info, paramsStr) {
+						NEXT([
+						function(next) {
 							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true) {
-							
-								cachedGetInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+							cachedGetStore.list(function(infos) {
+								
+								EACH(infos, function(info, paramsStr) {
+									
+									var
+									// filter
+									filter = info.filter;
+									
+									if (sift(filter)(originData) === true) {
+									
+										cachedGetInfos.push({
+											filter : filter,
+											paramsStr : paramsStr
+										});
+									}
 								});
-							}
-						});
+								
+								next();
+							});
+						},
 						
-						EACH(cachedFindStore.list(), function(info, paramsStr) {
-							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true) {
-							
-								cachedFindInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+						function(next) {
+							return function() {
+								
+								cachedFindStore.list(function(infos) {
+									
+									EACH(infos, function(info, paramsStr) {
+										
+										var
+										// filter
+										filter = info.filter;
+										
+										if (sift(filter)(originData) === true) {
+										
+											cachedFindInfos.push({
+												filter : filter,
+												paramsStr : paramsStr
+											});
+										}
+									});
+									
+									next();
 								});
-							}
-						});
+							};
+						},
 						
-						EACH(cachedCountStore.list(), function(info, paramsStr) {
-							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true) {
-							
-								cachedCountInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+						function(next) {
+							return function() {
+								
+								cachedCountStore.list(function(infos) {
+									
+									EACH(infos, function(info, paramsStr) {
+										
+										var
+										// filter
+										filter = info.filter;
+										
+										if (sift(filter)(originData) === true) {
+										
+											cachedCountInfos.push({
+												filter : filter,
+												paramsStr : paramsStr
+											});
+										}
+									});
+									
+									next();
 								});
-							}
-						});
+							};
+						},
 						
-						innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
+						function(next) {
+							return function() {
+								
+								innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
+							};
+						}]);
 					},
 					
 					// recache data for update.
@@ -781,52 +815,86 @@ FOR_BOX(function(box) {
 						// cached count infos
 						cachedCountInfos = [];
 						
-						EACH(cachedGetStore.list(), function(info, paramsStr) {
+						NEXT([
+						function(next) {
 							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
-							
-								cachedGetInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+							cachedGetStore.list(function(infos) {
+								
+								EACH(infos, function(info, paramsStr) {
+									
+									var
+									// filter
+									filter = info.filter;
+									
+									if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+									
+										cachedGetInfos.push({
+											filter : filter,
+											paramsStr : paramsStr
+										});
+									}
 								});
-							}
-						});
+								
+								next();
+							});
+						},
 						
-						EACH(cachedFindStore.list(), function(info, paramsStr) {
-							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
-							
-								cachedFindInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+						function(next) {
+							return function() {
+								
+								cachedFindStore.list(function(infos) {
+									
+									EACH(infos, function(info, paramsStr) {
+										
+										var
+										// filter
+										filter = info.filter;
+										
+										if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+										
+											cachedFindInfos.push({
+												filter : filter,
+												paramsStr : paramsStr
+											});
+										}
+									});
+									
+									next();
 								});
-							}
-						});
+							};
+						},
 						
-						EACH(cachedCountStore.list(), function(info, paramsStr) {
-							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
-							
-								cachedCountInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+						function(next) {
+							return function() {
+								
+								cachedCountStore.list(function(infos) {
+									
+									EACH(infos, function(info, paramsStr) {
+										
+										var
+										// filter
+										filter = info.filter;
+										
+										if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+										
+											cachedCountInfos.push({
+												filter : filter,
+												paramsStr : paramsStr
+											});
+										}
+									});
+									
+									next();
 								});
-							}
-						});
+							};
+						},
 						
-						innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
+						function(next) {
+							return function() {
+								
+								innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
+							};
+						}]);
 					},
 	
 					// inner get.
@@ -963,13 +1031,7 @@ FOR_BOX(function(box) {
 						errorHandler,
 	
 						// error message
-						errorMsg,
-									
-						// cleaned filter
-						cleanedFilter,
-						
-						// cached info
-						cachedInfo;
+						errorMsg;
 	
 						try {
 	
@@ -983,73 +1045,116 @@ FOR_BOX(function(box) {
 								errorHandler = callbackOrHandlers.error;
 							}
 							
-							if (isToCache === true) {
-												
-								cleanedFilter = cleanFilter(filter);
+							NEXT([
+							function(next) {
 								
-								cachedInfo = cachedGetStore.get(STRINGIFY({
-									filter : cleanedFilter,
-									sort : sort
-								}));
-							}
-							
-							if (cachedInfo !== undefined) {
-								callback(cachedInfo.data);
-							} else {
-
-								collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
-		
-									var
-									// saved data
-									savedData;
-		
-									if (error === TO_DELETE) {
-											
-										if (savedDataSet.length > 0) {
-		
-											savedData = savedDataSet[0];
-		
-											// clean saved data before callback.
-											cleanData(savedData);
-											
-											// cache data.
-											if (isToCache === true) {
-												
-												cachedGetStore.save({
-													id : STRINGIFY({
-														filter : cleanedFilter,
-														sort : sort
-													}),
-													value : {
-														filter : cleanedFilter,
-														data : savedData
-													}
-												});
-											}
-		
-											callback(savedData);
-		
-										} else {
-		
-											if (notExistsHandler !== undefined) {
-												notExistsHandler();
-											} else {
-												console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
-											}
-										}
+								var
+								// cleaned filter
+								cleanedFilter;
+								
+								if (isToCache === true) {
+									
+									try {
+										
+										cleanedFilter = cleanFilter(filter);
+										
+										cachedGetStore.get(STRINGIFY({
+											filter : cleanedFilter,
+											sort : sort
+										}), next);
 									}
-		
-									// if error is not TO_DELETE
-									else {
-		
+	
+									// if catch error
+									catch (error) {
+				
 										logError({
 											method : 'get',
 											params : params,
 											errorMsg : error.toString()
 										}, errorHandler);
 									}
-								});
-							}
+								}
+								
+								else {
+									next();
+								}
+							},
+							
+							function(next) {
+								return function(cachedInfo) {
+									
+									try {
+										
+										if (cachedInfo !== undefined) {
+											callback(cachedInfo.data);
+										} else {
+			
+											collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
+					
+												var
+												// saved data
+												savedData;
+					
+												if (error === TO_DELETE) {
+														
+													if (savedDataSet.length > 0) {
+					
+														savedData = savedDataSet[0];
+					
+														// clean saved data before callback.
+														cleanData(savedData);
+														
+														// cache data.
+														if (isToCache === true) {
+															
+															cachedGetStore.save({
+																id : STRINGIFY({
+																	filter : cleanedFilter,
+																	sort : sort
+																}),
+																value : {
+																	filter : cleanedFilter,
+																	data : savedData
+																}
+															});
+														}
+					
+														callback(savedData);
+					
+													} else {
+					
+														if (notExistsHandler !== undefined) {
+															notExistsHandler();
+														} else {
+															console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
+														}
+													}
+												}
+					
+												// if error is not TO_DELETE
+												else {
+					
+													logError({
+														method : 'get',
+														params : params,
+														errorMsg : error.toString()
+													}, errorHandler);
+												}
+											});
+										}
+									}
+				
+									// if catch error
+									catch (error) {
+				
+										logError({
+											method : 'get',
+											params : params,
+											errorMsg : error.toString()
+										}, errorHandler);
+									}
+								};
+							}]);
 						}
 	
 						// if catch error
@@ -1686,12 +1791,6 @@ FOR_BOX(function(box) {
 						// error message
 						errorMsg,
 						
-						// cleaned filter
-						cleanedFilter,
-						
-						// cached info
-						cachedInfo,
-	
 						// proc.
 						proc;
 	
@@ -1751,56 +1850,109 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 							
-							if (isToCache === true) {
+							NEXT([
+							function(next) {
 								
-								cleanedFilter = cleanFilter(filter);
+								var
+								// cleaned filter
+								cleanedFilter;
 								
-								cachedInfo = cachedFindStore.get(STRINGIFY({
-									filter : cleanedFilter,
-									sort : sort,
-									start : start,
-									count : count,
-									isFindAll : isFindAll
-								}));
-							}
-							
-							if (cachedInfo !== undefined) {
-								callback(cachedInfo.dataSet);
-							} else {
-		
-								proc = function(error, savedDataSet) {
-		
-									if (error === TO_DELETE) {
+								if (isToCache === true) {
+									
+									try {
 										
-										// clean saved data before callback.
-										EACH(savedDataSet, function(savedData, i) {
-											cleanData(savedData);
-										});
+										cleanedFilter = cleanFilter(filter);
 										
-										// cache data set.
-										if (isToCache === true) {
-											
-											cachedFindStore.save({
-												id : STRINGIFY({
-													filter : cleanedFilter,
-													sort : sort,
-													start : start,
-													count : count,
-													isFindAll : isFindAll
-												}),
-												value : {
-													filter : cleanedFilter,
-													dataSet : savedDataSet
-												}
-											});
-										}
-		
-										callback(savedDataSet);
+										cachedFindStore.get(STRINGIFY({
+											filter : cleanedFilter,
+											sort : sort,
+											start : start,
+											count : count,
+											isFindAll : isFindAll
+										}), next);
 									}
-		
-									// if error is not TO_DELETE
-									else {
-		
+				
+									// if catch error
+									catch (error) {
+				
+										logError({
+											method : 'find',
+											params : params,
+											errorMsg : error.toString()
+										}, errorHandler);
+									}
+								}
+								
+								else {
+									next();
+								}
+							},
+							
+							function(next) {
+								return function(cachedInfo) {
+									
+									try {
+										
+										if (cachedInfo !== undefined) {
+											callback(cachedInfo.dataSet);
+										} else {
+					
+											proc = function(error, savedDataSet) {
+					
+												if (error === TO_DELETE) {
+													
+													// clean saved data before callback.
+													EACH(savedDataSet, function(savedData, i) {
+														cleanData(savedData);
+													});
+													
+													// cache data set.
+													if (isToCache === true) {
+														
+														cachedFindStore.save({
+															id : STRINGIFY({
+																filter : cleanedFilter,
+																sort : sort,
+																start : start,
+																count : count,
+																isFindAll : isFindAll
+															}),
+															value : {
+																filter : cleanedFilter,
+																dataSet : savedDataSet
+															}
+														});
+													}
+					
+													callback(savedDataSet);
+												}
+					
+												// if error is not TO_DELETE
+												else {
+					
+													logError({
+														method : 'find',
+														params : params,
+														errorMsg : error.toString()
+													}, errorHandler);
+												}
+											};
+											
+											if (isFindAll === true) {
+					
+												// find all data set.
+												collection.find(filter).sort(sort).skip(start).toArray(proc);
+					
+											} else {
+					
+												collection.find(filter).sort(sort).skip(start).limit(count).toArray(proc);
+											}
+										}
+									}
+				
+									// if catch error
+									catch (error) {
+				
 										logError({
 											method : 'find',
 											params : params,
@@ -1808,17 +1960,7 @@ FOR_BOX(function(box) {
 										}, errorHandler);
 									}
 								};
-								
-								if (isFindAll === true) {
-		
-									// find all data set.
-									collection.find(filter).sort(sort).skip(start).toArray(proc);
-		
-								} else {
-		
-									collection.find(filter).sort(sort).skip(start).limit(count).toArray(proc);
-								}
-							}
+							}]);
 						}
 	
 						// if catch error
@@ -1854,13 +1996,7 @@ FOR_BOX(function(box) {
 						errorHandler,
 	
 						// error message
-						errorMsg,
-									
-						// cleaned filter
-						cleanedFilter,
-						
-						// cached info
-						cachedInfo;
+						errorMsg;
 	
 						try {
 	
@@ -1892,51 +2028,94 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 							
-							if (isToCache === true) {
+							NEXT([
+							function(next) {
 								
-								cleanedFilter = cleanFilter(filter);
+								var
+								// cleaned filter
+								cleanedFilter;
 								
-								cachedInfo = cachedCountStore.get(STRINGIFY({
-									filter : cleanedFilter
-								}));
-							}
-							
-							if (cachedInfo !== undefined) {
-								callback(cachedInfo.count);
-							} else {
-	
-								collection.find(filter).count(function(error, count) {
-		
-									if (error === TO_DELETE) {
+								if (isToCache === true) {
+									
+									try {
 										
-										// cache count.
-										if (isToCache === true) {
-											
-											cachedCountStore.save({
-												id : STRINGIFY({
-													filter : cleanedFilter
-												}),
-												value : {
-													filter : cleanedFilter,
-													count : count
-												}
-											});
-										}
+										cleanedFilter = cleanFilter(filter);
 										
-										callback(count);
+										cachedCountStore.get(STRINGIFY({
+											filter : cleanedFilter
+										}), next);
 									}
-		
-									// if error is not TO_DELETE
-									else {
-		
+				
+									// if catch error
+									catch (error) {
+				
 										logError({
 											method : 'count',
 											filter : filter,
 											errorMsg : error.toString()
 										}, errorHandler);
 									}
-								});
-							}
+								}
+								
+								else {
+									next();
+								}
+							},
+							
+							function(next) {
+								return function(cachedInfo) {
+									
+									try {
+										
+										if (cachedInfo !== undefined) {
+											callback(cachedInfo.count);
+										} else {
+				
+											collection.find(filter).count(function(error, count) {
+					
+												if (error === TO_DELETE) {
+													
+													// cache count.
+													if (isToCache === true) {
+														
+														cachedCountStore.save({
+															id : STRINGIFY({
+																filter : cleanedFilter
+															}),
+															value : {
+																filter : cleanedFilter,
+																count : count
+															}
+														});
+													}
+													
+													callback(count);
+												}
+					
+												// if error is not TO_DELETE
+												else {
+					
+													logError({
+														method : 'count',
+														filter : filter,
+														errorMsg : error.toString()
+													}, errorHandler);
+												}
+											});
+										}
+									}
+				
+									// if catch error
+									catch (error) {
+				
+										logError({
+											method : 'count',
+											filter : filter,
+											errorMsg : error.toString()
+										}, errorHandler);
+									}
+								};
+							}]);
 						}
 	
 						// if catch error
@@ -1972,16 +2151,7 @@ FOR_BOX(function(box) {
 						errorHandler,
 	
 						// error message
-						errorMsg,
-									
-						// cleaned filter
-						cleanedFilter,
-						
-						// cached incfo
-						cachedInfo,
-						
-						// cached count
-						cachedCount;
+						errorMsg;
 	
 						try {
 	
@@ -2022,55 +2192,102 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 							
-							if (isToCache === true) {
+							NEXT([
+							function(next) {
 								
-								cleanedFilter = cleanFilter(filter);
+								var
+								// cleaned filter
+								cleanedFilter;
 								
-								cachedInfo = cachedCountStore.get(STRINGIFY({
-									filter : cleanedFilter
-								}));
-							}
-							
-							if (cachedInfo !== undefined) {
-								
-								cachedCount = cachedInfo.count;
-								
-								callback(cachedCount !== undefined && cachedCount > 0);
-								
-							} else {
-	
-								collection.find(filter).count(function(error, count) {
-		
-									if (error === TO_DELETE) {
+								if (isToCache === true) {
+									
+									try {
 										
-										// cache count.
-										if (isToCache === true) {
-											
-											cachedCountStore.save({
-												id : STRINGIFY({
-													filter : cleanedFilter
-												}),
-												value : {
-													filter : cleanedFilter,
-													count : count
-												}
-											});
-										}
-		
-										callback(count !== undefined && count > 0);
+										cleanedFilter = cleanFilter(filter);
+										
+										cachedCountStore.get(STRINGIFY({
+											filter : cleanedFilter
+										}), next);
 									}
-		
-									// if error is not TO_DELETE
-									else {
-		
+									
+									// if catch error
+									catch (error) {
+				
 										logError({
 											method : 'checkIsExists',
 											filter : filter,
 											errorMsg : error.toString()
 										}, errorHandler);
 									}
-								});
-							}
+								}
+								
+								else {
+									next();
+								}
+							},
+							
+							function(next) {
+								return function(cachedInfo) {
+						
+									var
+									// cached count
+									cachedCount;
+									
+									try {
+										
+										if (cachedInfo !== undefined) {
+											
+											cachedCount = cachedInfo.count;
+											
+											callback(cachedCount !== undefined && cachedCount > 0);
+											
+										} else {
+				
+											collection.find(filter).count(function(error, count) {
+					
+												if (error === TO_DELETE) {
+													
+													// cache count.
+													if (isToCache === true) {
+														
+														cachedCountStore.save({
+															id : STRINGIFY({
+																filter : cleanedFilter
+															}),
+															value : {
+																filter : cleanedFilter,
+																count : count
+															}
+														});
+													}
+					
+													callback(count !== undefined && count > 0);
+												}
+					
+												// if error is not TO_DELETE
+												else {
+					
+													logError({
+														method : 'checkIsExists',
+														filter : filter,
+														errorMsg : error.toString()
+													}, errorHandler);
+												}
+											});
+										}
+									}
+									
+									// if catch error
+									catch (error) {
+				
+										logError({
+											method : 'checkIsExists',
+											filter : filter,
+											errorMsg : error.toString()
+										}, errorHandler);
+									}
+								};
+							}]);
 						}
 	
 						// if catch error
