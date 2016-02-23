@@ -3365,11 +3365,17 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					// remove shared value.
 					on('__SHARED_STORE_REMOVE', SHARED_STORE.remove);
 
+					// clear shared store.
+					on('__SHARED_STORE_CLEAR', SHARED_STORE.clear);
+
 					// save cpu shared value.
 					on('__CPU_SHARED_STORE_SAVE', CPU_SHARED_STORE.save);
 
 					// remove cpu shared value.
 					on('__CPU_SHARED_STORE_REMOVE', CPU_SHARED_STORE.remove);
+
+					// clear cpu shared store.
+					on('__CPU_SHARED_STORE_CLEAR', CPU_SHARED_STORE.clear);
 
 					// save shared data.
 					on('__SHARED_DB_SAVE', SHARED_DB.save);
@@ -3380,6 +3386,9 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					// remove shared data.
 					on('__SHARED_DB_REMOVE', SHARED_DB.remove);
 
+					// clear shared db.
+					on('__SHARED_DB_CLEAR', SHARED_DB.clear);
+
 					// save cpu shared data.
 					on('__CPU_SHARED_DB_SAVE', CPU_SHARED_DB.save);
 					
@@ -3388,6 +3397,9 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 
 					// remove cpu shared data.
 					on('__CPU_SHARED_DB_REMOVE', CPU_SHARED_DB.remove);
+
+					// clear cpu shared db.
+					on('__CPU_SHARED_DB_CLEAR', CPU_SHARED_DB.clear);
 
 					m.off = off = function(methodName) {
 						delete methodMap[methodName];
@@ -3431,12 +3443,18 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 
 	// get.
 	get,
+
+	// remove.
+	remove,
 	
 	// list.
 	list,
-
-	// remove.
-	remove;
+	
+	// count.
+	count,
+	
+	// clear.
+	clear;
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params
@@ -3661,16 +3679,6 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 			return storage[id];
 		}
 	};
-	
-	cls.list = list = function(dbName) {
-		//REQUIRED: dbName
-		
-		var
-		// storage
-		storage = storages[dbName];
-		
-		return storage === undefined ? {} : storage;
-	};
 
 	cls.remove = remove = function(params) {
 		//REQUIRED: params
@@ -3699,6 +3707,28 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 			delete removeDelays[id];
 		}
 	};
+	
+	cls.list = list = function(dbName) {
+		//REQUIRED: dbName
+		
+		var
+		// storage
+		storage = storages[dbName];
+		
+		return storage === undefined ? {} : storage;
+	};
+	
+	cls.count = count = function(dbName) {
+		//REQUIRED: dbName
+		
+		return COUNT_PROPERTIES(list(dbName));
+	};
+	
+	cls.clear = clear = function(dbName) {
+		//REQUIRED: dbName
+		
+		delete storages[dbName];
+	};
 
 	return {
 
@@ -3712,11 +3742,20 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 			// update.
 			update,
 			
-			// list.
-			list,
+			// get.
+			get,
 
 			// remove.
-			remove;
+			remove,
+			
+			// list.
+			list,
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 
 			self.save = save = function(params) {
 				//REQUIRED: params
@@ -3815,20 +3854,6 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 
 				return data;
 			};
-			
-			self.list = list = function(callback) {
-				//OPTIONAL: callback
-				
-				var
-				// data set
-				dataSet = cls.list(dbName);
-				
-				if (callback !== undefined) {
-					callback(dataSet);
-				}
-				
-				return dataSet;
-			};
 
 			self.remove = remove = function(id) {
 				//REQUIRED: id
@@ -3846,6 +3871,47 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 							dbName : dbName,
 							id : id
 						}
+					});
+				}
+			};
+			
+			self.list = list = function(callback) {
+				//OPTIONAL: callback
+				
+				var
+				// data set
+				dataSet = cls.list(dbName);
+				
+				if (callback !== undefined) {
+					callback(dataSet);
+				}
+				
+				return dataSet;
+			};
+			
+			self.count = count = function(callback) {
+				//OPTIONAL: callback
+				
+				var
+				// count
+				count = cls.count(dbName);
+				
+				if (callback !== undefined) {
+					callback(count);
+				}
+				
+				return count;
+			};
+			
+			self.clear = clear = function() {
+				
+				cls.clear(dbName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_DB_CLEAR',
+						data : dbName
 					});
 				}
 			};
@@ -3873,22 +3939,32 @@ FOR_BOX(function(box) {
 
 			// get.
 			get,
+
+			// remove.
+			remove,
 			
 			// list.
 			list,
-
-			// remove.
-			remove;
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 
 			self.save = save = sharedDB.save;
 
 			self.update = update = sharedDB.update;
 
 			self.get = get = sharedDB.get;
+
+			self.remove = remove = sharedDB.remove;
 			
 			self.list = list = sharedDB.list;
 
-			self.remove = remove = sharedDB.remove;
+			self.count = count = sharedDB.count;
+
+			self.clear = clear = sharedDB.clear;
 		}
 	});
 });
@@ -3911,12 +3987,18 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 
 	// get.
 	get,
+
+	// remove.
+	remove,
 	
 	// list.
 	list,
-
-	// remove.
-	remove;
+	
+	// count.
+	count,
+	
+	// clear.
+	clear;
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params
@@ -3984,16 +4066,6 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 			return storage[name];
 		}
 	};
-	
-	cls.list = list = function(storeName) {
-		//REQUIRED: storeName
-		
-		var
-		// storage
-		storage = storages[storeName];
-		
-		return storage === undefined ? {} : storage;
-	};
 
 	cls.remove = remove = function(params) {
 		//REQUIRED: params
@@ -4022,6 +4094,28 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 			delete removeDelays[name];
 		}
 	};
+	
+	cls.list = list = function(storeName) {
+		//REQUIRED: storeName
+		
+		var
+		// storage
+		storage = storages[storeName];
+		
+		return storage === undefined ? {} : storage;
+	};
+	
+	cls.count = count = function(dbName) {
+		//REQUIRED: dbName
+		
+		return COUNT_PROPERTIES(list(dbName));
+	};
+	
+	cls.clear = clear = function(storeName) {
+		//REQUIRED: storeName
+		
+		delete storages[storeName];
+	};
 
 	return {
 
@@ -4034,12 +4128,18 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 
 			// get.
 			get,
+
+			// remove.
+			remove,
 			
 			// list.
 			list,
-
-			// remove.
-			remove;
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 
 			self.save = save = function(params) {
 				//REQUIRED: params
@@ -4084,31 +4184,17 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 				//OPTIONAL: callback
 				
 				var
-				// data
-				data = cls.get({
+				// value
+				value = cls.get({
 					storeName : storeName,
 					name : name
 				});
 				
 				if (callback !== undefined) {
-					callback(data);
+					callback(value);
 				}
 
-				return data;
-			};
-			
-			self.list = list = function(callback) {
-				//OPTIONAL: callback
-				
-				var
-				// data set
-				dataSet = cls.list(storeName);
-				
-				if (callback !== undefined) {
-					callback(dataSet);
-				}
-				
-				return dataSet;
+				return value;
 			};
 
 			self.remove = remove = function(name) {
@@ -4127,6 +4213,47 @@ global.CPU_SHARED_STORE = CLASS(function(cls) {
 							storeName : storeName,
 							name : name
 						}
+					});
+				}
+			};
+			
+			self.list = list = function(callback) {
+				//OPTIONAL: callback
+				
+				var
+				// values
+				values = cls.list(storeName);
+				
+				if (callback !== undefined) {
+					callback(values);
+				}
+				
+				return values;
+			};
+			
+			self.count = count = function(callback) {
+				//OPTIONAL: callback
+				
+				var
+				// count
+				count = cls.count(storeName);
+				
+				if (callback !== undefined) {
+					callback(count);
+				}
+				
+				return count;
+			};
+
+			self.clear = clear = function() {
+
+				cls.clear(storeName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__CPU_SHARED_STORE_CLEAR',
+						data : storeName
 					});
 				}
 			};
@@ -4151,20 +4278,30 @@ FOR_BOX(function(box) {
 
 			// get.
 			get,
+
+			// remove.
+			remove,
 			
 			// list.
 			list,
-
-			// remove.
-			remove;
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 
 			self.save = save = sharedStore.save;
 
 			self.get = get = sharedStore.get;
-			
-			self.list = list = sharedStore.list;
 
 			self.remove = remove = sharedStore.remove;
+			
+			self.list = list = sharedStore.list;
+			
+			self.count = count = sharedStore.count;
+			
+			self.clear = clear = sharedStore.clear;
 		}
 	});
 });
@@ -4353,6 +4490,20 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				}
 			});
 
+			// clear shared store.
+			on('__SHARED_STORE_CLEAR', function(storeName) {
+
+				SHARED_STORE.clear(storeName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_CLEAR',
+						data : storeName
+					});
+				}
+			});
+
 			// save shared data.
 			on('__SHARED_DB_SAVE', function(params) {
 
@@ -4391,6 +4542,20 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 					CPU_CLUSTERING.broadcast({
 						methodName : '__SHARED_DB_REMOVE',
 						data : params
+					});
+				}
+			});
+
+			// clear shared db.
+			on('__SHARED_DB_CLEAR', function(dbName) {
+
+				SHARED_DB.clear(dbName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_CLEAR',
+						data : dbName
 					});
 				}
 			});
@@ -4439,12 +4604,18 @@ global.SHARED_DB = CLASS(function(cls) {
 
 	// get.
 	get,
+
+	// remove.
+	remove,
 	
 	// list.
 	list,
-
-	// remove.
-	remove;
+	
+	// count.
+	count,
+	
+	// clear.
+	clear;
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params
@@ -4669,16 +4840,6 @@ global.SHARED_DB = CLASS(function(cls) {
 			return storage[id];
 		}
 	};
-	
-	cls.list = list = function(dbName) {
-		//REQUIRED: dbName
-		
-		var
-		// storage
-		storage = storages[dbName];
-		
-		return storage === undefined ? {} : storage;
-	};
 
 	cls.remove = remove = function(params) {
 		//REQUIRED: params
@@ -4707,6 +4868,28 @@ global.SHARED_DB = CLASS(function(cls) {
 			delete removeDelays[id];
 		}
 	};
+	
+	cls.list = list = function(dbName) {
+		//REQUIRED: dbName
+		
+		var
+		// storage
+		storage = storages[dbName];
+		
+		return storage === undefined ? {} : storage;
+	};
+	
+	cls.count = count = function(dbName) {
+		//REQUIRED: dbName
+		
+		return COUNT_PROPERTIES(list(dbName));
+	};
+	
+	cls.clear = clear = function(dbName) {
+		//REQUIRED: dbName
+		
+		delete storages[dbName];
+	};
 
 	return {
 
@@ -4722,12 +4905,18 @@ global.SHARED_DB = CLASS(function(cls) {
 
 			// get.
 			get,
+
+			// remove.
+			remove,
 			
 			// list.
 			list,
-
-			// remove.
-			remove;
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 
 			self.save = save = function(params) {
 				//REQUIRED: params
@@ -4850,20 +5039,6 @@ global.SHARED_DB = CLASS(function(cls) {
 
 				return data;
 			};
-			
-			self.list = list = function(callback) {
-				//OPTIONAL: callback
-				
-				var
-				// data set
-				dataSet = cls.list(dbName);
-				
-				if (callback !== undefined) {
-					callback(dataSet);
-				}
-				
-				return dataSet;
-			};
 
 			self.remove = remove = function(id) {
 				//REQUIRED: id
@@ -4895,6 +5070,55 @@ global.SHARED_DB = CLASS(function(cls) {
 					});
 				}
 			};
+			
+			self.list = list = function(callback) {
+				//OPTIONAL: callback
+				
+				var
+				// data set
+				dataSet = cls.list(dbName);
+				
+				if (callback !== undefined) {
+					callback(dataSet);
+				}
+				
+				return dataSet;
+			};
+			
+			self.count = count = function(callback) {
+				//OPTIONAL: callback
+				
+				var
+				// count
+				count = cls.count(dbName);
+				
+				if (callback !== undefined) {
+					callback(count);
+				}
+				
+				return count;
+			};
+			
+			self.clear = clear = function() {
+				
+				cls.clear(dbName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_CLEAR',
+						data : dbName
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_DB_CLEAR',
+						data : dbName
+					});
+				}
+			};
 		}
 	};
 });
@@ -4919,22 +5143,32 @@ FOR_BOX(function(box) {
 
 			// get.
 			get,
+
+			// remove.
+			remove,
 			
 			// list.
 			list,
-
-			// remove.
-			remove;
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 
 			self.save = save = sharedDB.save;
 
 			self.update = update = sharedDB.update;
 
 			self.get = get = sharedDB.get;
+
+			self.remove = remove = sharedDB.remove;
 			
 			self.list = list = sharedDB.list;
 
-			self.remove = remove = sharedDB.remove;
+			self.count = count = sharedDB.count;
+
+			self.clear = clear = sharedDB.clear;
 		}
 	});
 });
@@ -4957,12 +5191,18 @@ global.SHARED_STORE = CLASS(function(cls) {
 
 	// get.
 	get,
+
+	// remove.
+	remove,
 	
 	// list.
 	list,
-
-	// remove.
-	remove;
+	
+	// count.
+	count,
+	
+	// clear.
+	clear;
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params
@@ -5030,16 +5270,6 @@ global.SHARED_STORE = CLASS(function(cls) {
 			return storage[name];
 		}
 	};
-	
-	cls.list = list = function(storeName) {
-		//REQUIRED: storeName
-		
-		var
-		// storage
-		storage = storages[storeName];
-		
-		return storage === undefined ? {} : storage;
-	};
 
 	cls.remove = remove = function(params) {
 		//REQUIRED: params
@@ -5068,6 +5298,28 @@ global.SHARED_STORE = CLASS(function(cls) {
 			delete removeDelays[name];
 		}
 	};
+	
+	cls.list = list = function(storeName) {
+		//REQUIRED: storeName
+		
+		var
+		// storage
+		storage = storages[storeName];
+		
+		return storage === undefined ? {} : storage;
+	};
+	
+	cls.count = count = function(dbName) {
+		//REQUIRED: dbName
+		
+		return COUNT_PROPERTIES(list(dbName));
+	};
+	
+	cls.clear = clear = function(storeName) {
+		//REQUIRED: storeName
+		
+		delete storages[storeName];
+	};
 
 	return {
 
@@ -5080,12 +5332,18 @@ global.SHARED_STORE = CLASS(function(cls) {
 
 			// get.
 			get,
+
+			// remove.
+			remove,
 			
 			// list.
 			list,
-
-			// remove.
-			remove;
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 
 			self.save = save = function(params) {
 				//REQUIRED: params
@@ -5142,31 +5400,17 @@ global.SHARED_STORE = CLASS(function(cls) {
 				//OPTIONAL: callback
 				
 				var
-				// data
-				data = cls.get({
+				// value
+				value = cls.get({
 					storeName : storeName,
 					name : name
 				});
 				
 				if (callback !== undefined) {
-					callback(data);
+					callback(value);
 				}
 
-				return data;
-			};
-			
-			self.list = list = function(callback) {
-				//OPTIONAL: callback
-				
-				var
-				// data set
-				dataSet = cls.list(storeName);
-				
-				if (callback !== undefined) {
-					callback(dataSet);
-				}
-				
-				return dataSet;
+				return value;
 			};
 
 			self.remove = remove = function(name) {
@@ -5199,6 +5443,55 @@ global.SHARED_STORE = CLASS(function(cls) {
 					});
 				}
 			};
+			
+			self.list = list = function(callback) {
+				//OPTIONAL: callback
+				
+				var
+				// values
+				values = cls.list(storeName);
+				
+				if (callback !== undefined) {
+					callback(values);
+				}
+				
+				return values;
+			};
+			
+			self.count = count = function(callback) {
+				//OPTIONAL: callback
+				
+				var
+				// count
+				count = cls.count(storeName);
+				
+				if (callback !== undefined) {
+					callback(count);
+				}
+				
+				return count;
+			};
+
+			self.clear = clear = function() {
+				
+				cls.clear(storeName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_CLEAR',
+						data : storeName
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_CLEAR',
+						data : storeName
+					});
+				}
+			};
 		}
 	};
 });
@@ -5220,20 +5513,30 @@ FOR_BOX(function(box) {
 
 			// get.
 			get,
+
+			// remove.
+			remove,
 			
 			// list.
 			list,
-
-			// remove.
-			remove;
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 
 			self.save = save = sharedStore.save;
 
 			self.get = get = sharedStore.get;
-			
-			self.list = list = sharedStore.list;
 
 			self.remove = remove = sharedStore.remove;
+			
+			self.list = list = sharedStore.list;
+			
+			self.count = count = sharedStore.count;
+			
+			self.clear = clear = sharedStore.clear;
 		}
 	});
 });

@@ -31,5 +31,10 @@ TEST('REDIS_STORE', function(ok) {
 				msg : 'Hello World!'
 			}]));
 		});
+		
+		redisStore.count(function(count) {
+			
+			ok(count === 1);
+		});
 	});
 });

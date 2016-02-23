@@ -372,12 +372,18 @@ global.REDIS_STORE = CLASS(function(cls) {
 
 			// get.
 			get,
+
+			// remove.
+			remove,
 			
 			// list.
 			list,
-
-			// remove.
-			remove;
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 			
 			if (client === undefined) {
 				client = Redis.createClient({
@@ -406,7 +412,9 @@ global.REDIS_STORE = CLASS(function(cls) {
 				client.hset(storeName, name, STRINGIFY(value), function(error) {
 					
 					if (error !== TO_DELETE) {
-						errorHandler(error.toString());
+						if (errorHandler !== undefined) {
+							errorHandler(error.toString());
+						}
 					}
 				});
 			};
@@ -436,11 +444,27 @@ global.REDIS_STORE = CLASS(function(cls) {
 				client.hget(storeName, name, function(error, value) {
 					
 					if (error !== TO_DELETE) {
-						errorHandler(error.toString());
+						if (errorHandler !== undefined) {
+							errorHandler(error.toString());
+						}
 					} else if (value === TO_DELETE) {
 						callback();
 					} else {
 						callback(PARSE_STR(value));
+					}
+				});
+			};
+
+			self.remove = remove = function(name, errorHandler) {
+				//REQUIRED: name
+				//OPTIONAL: errorHandler
+
+				client.hdel(storeName, name, function(error) {
+					
+					if (error !== TO_DELETE) {
+						if (errorHandler !== undefined) {
+							errorHandler(error.toString());
+						}
 					}
 				});
 			};
@@ -469,7 +493,9 @@ global.REDIS_STORE = CLASS(function(cls) {
 				client.hgetall(storeName, function(error, all) {
 					
 					if (error !== TO_DELETE) {
-						errorHandler(error.toString());
+						if (errorHandler !== undefined) {
+							errorHandler(error.toString());
+						}
 					} else if (all === TO_DELETE) {
 						callback({});
 					} else {
@@ -482,15 +508,49 @@ global.REDIS_STORE = CLASS(function(cls) {
 					}
 				});
 			};
+			
+			self.count = count = function(callbackOrHandlers) {
+				//REQUIRED: callbackOrHandlers
+				//REQUIRED: callbackOrHandlers.success
+				//OPTIONAL: callbackOrHandlers.error
+				
+				var
+				// callback
+				callback,
 
-			self.remove = remove = function(name, errorHandler) {
-				//REQUIRED: name
-				//OPTIONAL: errorHandler
+				// error handler
+				errorHandler;
+				
+				if (callbackOrHandlers !== undefined) {
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						callback = callbackOrHandlers.success;
+						errorHandler = callbackOrHandlers.error;
+					}
+				}
 
-				client.hdel(storeName, name, function(error) {
+				client.hlen(storeName, function(error, count) {
 					
 					if (error !== TO_DELETE) {
-						errorHandler(error.toString());
+						if (errorHandler !== undefined) {
+							errorHandler(error.toString());
+						}
+					} else {
+						callback(count);
+					}
+				});
+			};
+
+			self.clear = clear = function(errorHandler) {
+				//OPTIONAL: errorHandler
+
+				client.del(storeName, function(error) {
+					
+					if (error !== TO_DELETE) {
+						if (errorHandler !== undefined) {
+							errorHandler(error.toString());
+						}
 					}
 				});
 			};
@@ -515,20 +575,30 @@ FOR_BOX(function(box) {
 
 			// get.
 			get,
+
+			// remove.
+			remove,
 			
 			// list.
 			list,
-
-			// remove.
-			remove;
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
 
 			self.save = save = redisStore.save;
 
 			self.get = get = redisStore.get;
+
+			self.remove = remove = redisStore.remove;
 			
 			self.list = list = redisStore.list;
 
-			self.remove = remove = redisStore.remove;
+			self.count = count = redisStore.count;
+			
+			self.clear = clear = redisStore.clear;
 		}
 	});
 });
