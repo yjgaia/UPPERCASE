@@ -380,7 +380,14 @@ global.REDIS_STORE = CLASS(function(cls) {
 			remove;
 			
 			if (client === undefined) {
-				client = Redis.createClient();
+				client = Redis.createClient({
+					host : NODE_CONFIG.redisHost,
+					port : NODE_CONFIG.redisPort
+				});
+				
+				if (NODE_CONFIG.redisPassword !== undefined) {
+					client.auth(NODE_CONFIG.redisPassword);
+				}
 			}
 			
 			self.save = save = function(params, errorHandler) {

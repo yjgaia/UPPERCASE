@@ -29,6 +29,9 @@
 * `isDBLogMode` 데이터베이스 로그 모드를 켜고자 할 때 `true`로 설정합니다. 데이터가 수정 될 경우 console에 로그를 띄어줍니다. 기본값은 `false` 입니다.
 * `maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000` 입니다.
 * `isUsingRedis` 데이터베이스를 캐싱할 때 Redis 스토어를 사용할 것인지를 설정합니다. 기본겂은 `false` 입니다.
+* `redisHost` Redis 서버의 호스트를 설정합니다. 기본값은 `'127.0.0.1'` 입니다.
+* `reidsPort` Redis 서버의 포트를 설정합니다. 기본값은 `6379` 입니다.
+* `reidsPassword` Redis 서버의 접속 비밀번호를 설정합니다.
 
 ### 업로드 관련 설정
 * `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
