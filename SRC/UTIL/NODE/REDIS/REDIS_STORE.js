@@ -46,8 +46,6 @@ global.REDIS_STORE = CLASS(function(cls) {
 				}
 			}
 			
-			client.del(storeName);
-			
 			self.save = save = function(params, errorHandler) {
 				//REQUIRED: params
 				//REQUIRED: params.name
