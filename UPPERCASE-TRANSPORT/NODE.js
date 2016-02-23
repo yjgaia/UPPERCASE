@@ -537,7 +537,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 		
 						sendKey += 1;
 						
-						clientInfo.lastSendTime = new Date();
+						clientInfo.lastReceiveTime = new Date();
 					},
 
 					// disconnect.
@@ -905,7 +905,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 
 				sendKey += 1;
 				
-				clientInfo.lastSendTime = new Date();
+				clientInfo.lastReceiveTime = new Date();
 			},
 
 			// disconnect.
