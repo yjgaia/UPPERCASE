@@ -501,15 +501,15 @@ FOR_BOX(function(box) {
 	
 					// MongoDB collection for error log
 					errorLogCollection,
+				
+					// cached get db
+					cachedGetDB = box.SHARED_DB(box.boxName + '.' + name + '.cachedGetDB'),
 					
-					// cached get store
-					cachedGetStore = NODE_CONFIG.isUsingRedis === true ? box.REDIS_STORE(box.boxName + '.' + name + '.cachedGetStore') : box.SHARED_STORE(box.boxName + '.' + name + '.cachedGetStore'),
+					// cached find db
+					cachedFindDB = box.SHARED_DB(box.boxName + '.' + name + '.cachedFindDB'),
 					
-					// cached find store
-					cachedFindStore = NODE_CONFIG.isUsingRedis === true ? box.REDIS_STORE(box.boxName + '.' + name + '.cachedFindStore') : box.SHARED_STORE(box.boxName + '.' + name + '.cachedFindStore'),
-					
-					// cached count store
-					cachedCountStore = NODE_CONFIG.isUsingRedis === true ? box.REDIS_STORE(box.boxName + '.' + name + '.cachedCountStore') : box.SHARED_STORE(box.boxName + '.' + name + '.cachedCountStore'),
+					// cached count db
+					cachedCountDB = box.SHARED_DB(box.boxName + '.' + name + '.cachedCountDB'),
 					
 					// add history.
 					addHistory = function(method, id, change, time) {
@@ -597,19 +597,19 @@ FOR_BOX(function(box) {
 								get(PARSE_STR(paramsStr), {
 									
 									notExists : function() {
-										cachedGetStore.remove(paramsStr);
+										cachedGetDB.remove(paramsStr);
 										done();
 									},
 									error : function() {
-										cachedGetStore.remove(paramsStr);
+										cachedGetDB.remove(paramsStr);
 										done();
 									},
 									
 									success : function(savedData) {
 										
-										cachedGetStore.save({
+										cachedGetDB.save({
 											id : paramsStr,
-											value : {
+											data : {
 												filter : info.filter,
 												data : savedData
 											}
@@ -637,15 +637,15 @@ FOR_BOX(function(box) {
 								find(PARSE_STR(paramsStr), {
 									
 									error : function() {
-										cachedFindStore.remove(paramsStr);
+										cachedFindDB.remove(paramsStr);
 										done();
 									},
 									
 									success : function(savedDataSet) {
 										
-										cachedFindStore.save({
+										cachedFindDB.save({
 											id : paramsStr,
-											value : {
+											data : {
 												filter : info.filter,
 												dataSet : savedDataSet
 											}
@@ -673,15 +673,15 @@ FOR_BOX(function(box) {
 								count(PARSE_STR(paramsStr), {
 									
 									error : function() {
-										cachedCountStore.remove(paramsStr);
+										cachedCountDB.remove(paramsStr);
 										done();
 									},
 									
 									success : function(count) {
 										
-										cachedCountStore.save({
+										cachedCountDB.save({
 											id : paramsStr,
-											value : {
+											data : {
 												filter : info.filter,
 												count : count
 											}
@@ -717,86 +717,52 @@ FOR_BOX(function(box) {
 						// cached count infos
 						cachedCountInfos = [];
 						
-						NEXT([
-						function(next) {
+						EACH(cachedGetDB.list(), function(info, paramsStr) {
 							
-							cachedGetStore.list(function(infos) {
-								
-								EACH(infos, function(info, paramsStr) {
-									
-									var
-									// filter
-									filter = info.filter;
-									
-									if (sift(filter)(originData) === true) {
-									
-										cachedGetInfos.push({
-											filter : filter,
-											paramsStr : paramsStr
-										});
-									}
+							var
+							// filter
+							filter = info.filter;
+							
+							if (sift(filter)(originData) === true) {
+							
+								cachedGetInfos.push({
+									filter : filter,
+									paramsStr : paramsStr
 								});
-								
-								next();
-							});
-						},
+							}
+						});
 						
-						function(next) {
-							return function() {
-								
-								cachedFindStore.list(function(infos) {
-									
-									EACH(infos, function(info, paramsStr) {
-										
-										var
-										// filter
-										filter = info.filter;
-										
-										if (sift(filter)(originData) === true) {
-										
-											cachedFindInfos.push({
-												filter : filter,
-												paramsStr : paramsStr
-											});
-										}
-									});
-									
-									next();
+						EACH(cachedFindDB.list(), function(info, paramsStr) {
+							
+							var
+							// filter
+							filter = info.filter;
+							
+							if (sift(filter)(originData) === true) {
+							
+								cachedFindInfos.push({
+									filter : filter,
+									paramsStr : paramsStr
 								});
-							};
-						},
+							}
+						});
 						
-						function(next) {
-							return function() {
-								
-								cachedCountStore.list(function(infos) {
-									
-									EACH(infos, function(info, paramsStr) {
-										
-										var
-										// filter
-										filter = info.filter;
-										
-										if (sift(filter)(originData) === true) {
-										
-											cachedCountInfos.push({
-												filter : filter,
-												paramsStr : paramsStr
-											});
-										}
-									});
-									
-									next();
+						EACH(cachedCountDB.list(), function(info, paramsStr) {
+							
+							var
+							// filter
+							filter = info.filter;
+							
+							if (sift(filter)(originData) === true) {
+							
+								cachedCountInfos.push({
+									filter : filter,
+									paramsStr : paramsStr
 								});
-							};
-						},
+							}
+						});
 						
-						function(next) {
-							return function() {
-								
-								innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
-							};
-						}]);
+						innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
 					},
 					
 					// recache data for update.
@@ -815,86 +781,52 @@ FOR_BOX(function(box) {
 						// cached count infos
 						cachedCountInfos = [];
 						
-						NEXT([
-						function(next) {
+						EACH(cachedGetDB.list(), function(info, paramsStr) {
 							
-							cachedGetStore.list(function(infos) {
-								
-								EACH(infos, function(info, paramsStr) {
-									
-									var
-									// filter
-									filter = info.filter;
-									
-									if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
-									
-										cachedGetInfos.push({
-											filter : filter,
-											paramsStr : paramsStr
-										});
-									}
+							var
+							// filter
+							filter = info.filter;
+							
+							if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+							
+								cachedGetInfos.push({
+									filter : filter,
+									paramsStr : paramsStr
 								});
-								
-								next();
-							});
-						},
+							}
+						});
 						
-						function(next) {
-							return function() {
-								
-								cachedFindStore.list(function(infos) {
-									
-									EACH(infos, function(info, paramsStr) {
-										
-										var
-										// filter
-										filter = info.filter;
-										
-										if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
-										
-											cachedFindInfos.push({
-												filter : filter,
-												paramsStr : paramsStr
-											});
-										}
-									});
-									
-									next();
+						EACH(cachedFindDB.list(), function(info, paramsStr) {
+							
+							var
+							// filter
+							filter = info.filter;
+							
+							if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+							
+								cachedFindInfos.push({
+									filter : filter,
+									paramsStr : paramsStr
 								});
-							};
-						},
+							}
+						});
 						
-						function(next) {
-							return function() {
-								
-								cachedCountStore.list(function(infos) {
-									
-									EACH(infos, function(info, paramsStr) {
-										
-										var
-										// filter
-										filter = info.filter;
-										
-										if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
-										
-											cachedCountInfos.push({
-												filter : filter,
-												paramsStr : paramsStr
-											});
-										}
-									});
-									
-									next();
+						EACH(cachedCountDB.list(), function(info, paramsStr) {
+							
+							var
+							// filter
+							filter = info.filter;
+							
+							if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+							
+								cachedCountInfos.push({
+									filter : filter,
+									paramsStr : paramsStr
 								});
-							};
-						},
+							}
+						});
 						
-						function(next) {
-							return function() {
-								
-								innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
-							};
-						}]);
+						innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
 					},
 	
 					// inner get.
@@ -1032,9 +964,12 @@ FOR_BOX(function(box) {
 	
 						// error message
 						errorMsg,
-						
+									
 						// cleaned filter
-						cleanedFilter;
+						cleanedFilter,
+						
+						// cached info
+						cachedInfo;
 	
 						try {
 	
@@ -1048,112 +983,73 @@ FOR_BOX(function(box) {
 								errorHandler = callbackOrHandlers.error;
 							}
 							
-							NEXT([
-							function(next) {
+							if (isToCache === true) {
+												
+								cleanedFilter = cleanFilter(filter);
 								
-								if (isToCache === true) {
-									
-									try {
-										
-										cleanedFilter = cleanFilter(filter);
-										
-										cachedGetStore.get(STRINGIFY({
-											filter : cleanedFilter,
-											sort : sort
-										}), next);
-									}
-	
-									// if catch error
-									catch (error) {
-				
-										logError({
-											method : 'get',
-											params : params,
-											errorMsg : error.toString()
-										}, errorHandler);
-									}
-								}
-								
-								else {
-									next();
-								}
-							},
+								cachedInfo = cachedGetDB.get(STRINGIFY({
+									filter : cleanedFilter,
+									sort : sort
+								}));
+							}
 							
-							function(next) {
-								return function(cachedInfo) {
-									
-									try {
-										
-										if (cachedInfo !== undefined) {
-											callback(cachedInfo.data);
-										} else {
-			
-											collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
-					
-												var
-												// saved data
-												savedData;
-					
-												if (error === TO_DELETE) {
-														
-													if (savedDataSet.length > 0) {
-					
-														savedData = savedDataSet[0];
-					
-														// clean saved data before callback.
-														cleanData(savedData);
-														
-														// cache data.
-														if (isToCache === true) {
-															
-															cachedGetStore.save({
-																id : STRINGIFY({
-																	filter : cleanedFilter,
-																	sort : sort
-																}),
-																value : {
-																	filter : cleanedFilter,
-																	data : savedData
-																}
-															});
-														}
-					
-														callback(savedData);
-					
-													} else {
-					
-														if (notExistsHandler !== undefined) {
-															notExistsHandler();
-														} else {
-															console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
-														}
+							if (cachedInfo !== undefined) {
+								callback(cachedInfo.data);
+							} else {
+
+								collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
+		
+									var
+									// saved data
+									savedData;
+		
+									if (error === TO_DELETE) {
+											
+										if (savedDataSet.length > 0) {
+		
+											savedData = savedDataSet[0];
+		
+											// clean saved data before callback.
+											cleanData(savedData);
+											
+											// cache data.
+											if (isToCache === true) {
+												
+												cachedGetDB.save({
+													id : STRINGIFY({
+														filter : cleanedFilter,
+														sort : sort
+													}),
+													data : {
+														filter : cleanedFilter,
+														data : savedData
 													}
-												}
-					
-												// if error is not TO_DELETE
-												else {
-					
-													logError({
-														method : 'get',
-														params : params,
-														errorMsg : error.toString()
-													}, errorHandler);
-												}
-											});
+												});
+											}
+		
+											callback(savedData);
+		
+										} else {
+		
+											if (notExistsHandler !== undefined) {
+												notExistsHandler();
+											} else {
+												console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
+											}
 										}
 									}
-				
-									// if catch error
-									catch (error) {
-				
+		
+									// if error is not TO_DELETE
+									else {
+		
 										logError({
 											method : 'get',
 											params : params,
 											errorMsg : error.toString()
 										}, errorHandler);
 									}
-								};
-							}]);
+								});
+							}
 						}
 	
 						// if catch error
@@ -1793,6 +1689,9 @@ FOR_BOX(function(box) {
 						// cleaned filter
 						cleanedFilter,
 						
+						// cached info
+						cachedInfo,
+	
 						// proc.
 						proc;
 	
@@ -1852,105 +1751,56 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 							
-							NEXT([
-							function(next) {
+							if (isToCache === true) {
 								
-								if (isToCache === true) {
-									
-									try {
-										
-										cleanedFilter = cleanFilter(filter);
-										
-										cachedFindStore.get(STRINGIFY({
-											filter : cleanedFilter,
-											sort : sort,
-											start : start,
-											count : count,
-											isFindAll : isFindAll
-										}), next);
-									}
-				
-									// if catch error
-									catch (error) {
-				
-										logError({
-											method : 'find',
-											params : params,
-											errorMsg : error.toString()
-										}, errorHandler);
-									}
-								}
+								cleanedFilter = cleanFilter(filter);
 								
-								else {
-									next();
-								}
-							},
+								cachedInfo = cachedFindDB.get(STRINGIFY({
+									filter : cleanedFilter,
+									sort : sort,
+									start : start,
+									count : count,
+									isFindAll : isFindAll
+								}));
+							}
 							
-							function(next) {
-								return function(cachedInfo) {
-									
-									try {
+							if (cachedInfo !== undefined) {
+								callback(cachedInfo.dataSet);
+							} else {
+		
+								proc = function(error, savedDataSet) {
+		
+									if (error === TO_DELETE) {
 										
-										if (cachedInfo !== undefined) {
-											callback(cachedInfo.dataSet);
-										} else {
-					
-											proc = function(error, savedDataSet) {
-					
-												if (error === TO_DELETE) {
-													
-													// clean saved data before callback.
-													EACH(savedDataSet, function(savedData, i) {
-														cleanData(savedData);
-													});
-													
-													// cache data set.
-													if (isToCache === true) {
-														
-														cachedFindStore.save({
-															id : STRINGIFY({
-																filter : cleanedFilter,
-																sort : sort,
-																start : start,
-																count : count,
-																isFindAll : isFindAll
-															}),
-															value : {
-																filter : cleanedFilter,
-																dataSet : savedDataSet
-															}
-														});
-													}
-					
-													callback(savedDataSet);
-												}
-					
-												// if error is not TO_DELETE
-												else {
-					
-													logError({
-														method : 'find',
-														params : params,
-														errorMsg : error.toString()
-													}, errorHandler);
-												}
-											};
+										// clean saved data before callback.
+										EACH(savedDataSet, function(savedData, i) {
+											cleanData(savedData);
+										});
+										
+										// cache data set.
+										if (isToCache === true) {
 											
-											if (isFindAll === true) {
-					
-												// find all data set.
-												collection.find(filter).sort(sort).skip(start).toArray(proc);
-					
-											} else {
-					
-												collection.find(filter).sort(sort).skip(start).limit(count).toArray(proc);
-											}
+											cachedFindDB.save({
+												id : STRINGIFY({
+													filter : cleanedFilter,
+													sort : sort,
+													start : start,
+													count : count,
+													isFindAll : isFindAll
+												}),
+												data : {
+													filter : cleanedFilter,
+													dataSet : savedDataSet
+												}
+											});
 										}
+		
+										callback(savedDataSet);
 									}
-				
-									// if catch error
-									catch (error) {
-				
+		
+									// if error is not TO_DELETE
+									else {
+		
 										logError({
 											method : 'find',
 											params : params,
@@ -1958,7 +1808,17 @@ FOR_BOX(function(box) {
 										}, errorHandler);
 									}
 								};
-							}]);
+								
+								if (isFindAll === true) {
+		
+									// find all data set.
+									collection.find(filter).sort(sort).skip(start).toArray(proc);
+		
+								} else {
+		
+									collection.find(filter).sort(sort).skip(start).limit(count).toArray(proc);
+								}
+							}
 						}
 	
 						// if catch error
@@ -1995,9 +1855,12 @@ FOR_BOX(function(box) {
 	
 						// error message
 						errorMsg,
-						
+									
 						// cleaned filter
-						cleanedFilter;
+						cleanedFilter,
+						
+						// cached info
+						cachedInfo;
 	
 						try {
 	
@@ -2029,90 +1892,51 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 							
-							NEXT([
-							function(next) {
+							if (isToCache === true) {
 								
-								if (isToCache === true) {
-									
-									try {
-										
-										cleanedFilter = cleanFilter(filter);
-										
-										cachedCountStore.get(STRINGIFY({
-											filter : cleanedFilter
-										}), next);
-									}
-				
-									// if catch error
-									catch (error) {
-				
-										logError({
-											method : 'count',
-											filter : filter,
-											errorMsg : error.toString()
-										}, errorHandler);
-									}
-								}
+								cleanedFilter = cleanFilter(filter);
 								
-								else {
-									next();
-								}
-							},
+								cachedInfo = cachedCountDB.get(STRINGIFY({
+									filter : cleanedFilter
+								}));
+							}
 							
-							function(next) {
-								return function(cachedInfo) {
-									
-									try {
+							if (cachedInfo !== undefined) {
+								callback(cachedInfo.count);
+							} else {
+	
+								collection.find(filter).count(function(error, count) {
+		
+									if (error === TO_DELETE) {
 										
-										if (cachedInfo !== undefined) {
-											callback(cachedInfo.count);
-										} else {
-				
-											collection.find(filter).count(function(error, count) {
-					
-												if (error === TO_DELETE) {
-													
-													// cache count.
-													if (isToCache === true) {
-														
-														cachedCountStore.save({
-															id : STRINGIFY({
-																filter : cleanedFilter
-															}),
-															value : {
-																filter : cleanedFilter,
-																count : count
-															}
-														});
-													}
-													
-													callback(count);
-												}
-					
-												// if error is not TO_DELETE
-												else {
-					
-													logError({
-														method : 'count',
-														filter : filter,
-														errorMsg : error.toString()
-													}, errorHandler);
+										// cache count.
+										if (isToCache === true) {
+											
+											cachedCountDB.save({
+												id : STRINGIFY({
+													filter : cleanedFilter
+												}),
+												data : {
+													filter : cleanedFilter,
+													count : count
 												}
 											});
 										}
+										
+										callback(count);
 									}
-				
-									// if catch error
-									catch (error) {
-				
+		
+									// if error is not TO_DELETE
+									else {
+		
 										logError({
 											method : 'count',
 											filter : filter,
 											errorMsg : error.toString()
 										}, errorHandler);
 									}
-								};
-							}]);
+								});
+							}
 						}
 	
 						// if catch error
@@ -2149,9 +1973,15 @@ FOR_BOX(function(box) {
 	
 						// error message
 						errorMsg,
-						
+									
 						// cleaned filter
-						cleanedFilter;
+						cleanedFilter,
+						
+						// cached incfo
+						cachedInfo,
+						
+						// cached count
+						cachedCount;
 	
 						try {
 	
@@ -2192,98 +2022,55 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 							
-							NEXT([
-							function(next) {
+							if (isToCache === true) {
 								
-								if (isToCache === true) {
-									
-									try {
-										
-										cleanedFilter = cleanFilter(filter);
-										
-										cachedCountStore.get(STRINGIFY({
-											filter : cleanedFilter
-										}), next);
-									}
-									
-									// if catch error
-									catch (error) {
-				
-										logError({
-											method : 'checkIsExists',
-											filter : filter,
-											errorMsg : error.toString()
-										}, errorHandler);
-									}
-								}
+								cleanedFilter = cleanFilter(filter);
 								
-								else {
-									next();
-								}
-							},
+								cachedInfo = cachedCountDB.get(STRINGIFY({
+									filter : cleanedFilter
+								}));
+							}
 							
-							function(next) {
-								return function(cachedInfo) {
-						
-									var
-									// cached count
-									cachedCount;
-									
-									try {
+							if (cachedInfo !== undefined) {
+								
+								cachedCount = cachedInfo.count;
+								
+								callback(cachedCount !== undefined && cachedCount > 0);
+								
+							} else {
+	
+								collection.find(filter).count(function(error, count) {
+		
+									if (error === TO_DELETE) {
 										
-										if (cachedInfo !== undefined) {
+										// cache count.
+										if (isToCache === true) {
 											
-											cachedCount = cachedInfo.count;
-											
-											callback(cachedCount !== undefined && cachedCount > 0);
-											
-										} else {
-				
-											collection.find(filter).count(function(error, count) {
-					
-												if (error === TO_DELETE) {
-													
-													// cache count.
-													if (isToCache === true) {
-														
-														cachedCountStore.save({
-															id : STRINGIFY({
-																filter : cleanedFilter
-															}),
-															value : {
-																filter : cleanedFilter,
-																count : count
-															}
-														});
-													}
-					
-													callback(count !== undefined && count > 0);
-												}
-					
-												// if error is not TO_DELETE
-												else {
-					
-													logError({
-														method : 'checkIsExists',
-														filter : filter,
-														errorMsg : error.toString()
-													}, errorHandler);
+											cachedCountDB.save({
+												id : STRINGIFY({
+													filter : cleanedFilter
+												}),
+												data : {
+													filter : cleanedFilter,
+													count : count
 												}
 											});
 										}
+		
+										callback(count !== undefined && count > 0);
 									}
-									
-									// if catch error
-									catch (error) {
-				
+		
+									// if error is not TO_DELETE
+									else {
+		
 										logError({
 											method : 'checkIsExists',
 											filter : filter,
 											errorMsg : error.toString()
 										}, errorHandler);
 									}
-								};
-							}]);
+								});
+							}
 						}
 	
 						// if catch error

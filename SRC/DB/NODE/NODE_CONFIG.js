@@ -9,10 +9,7 @@ OVERRIDE(NODE_CONFIG, function(origin) {
 		isDBLogMode : false,
 
 		// init max data count = 1000
-		maxDataCount : 1000,
-		
-		// is using redis
-		isUsingRedis : false
+		maxDataCount : 1000
 		
 	}, origin]);
 });
