@@ -359,7 +359,10 @@ global.REDIS_STORE = CLASS(function(cls) {
 	Redis = require('redis'),
 	
 	// client
-	client;
+	client,
+	
+	// inited store names
+	initedStoreNames = [];
 	
 	return {
 
@@ -394,8 +397,16 @@ global.REDIS_STORE = CLASS(function(cls) {
 				if (NODE_CONFIG.redisPassword !== undefined) {
 					client.auth(NODE_CONFIG.redisPassword);
 				}
+			}
+			
+			if (CHECK_IS_IN({
+				array : initedStoreNames,
+				value : storeName
+			}) !== true) {
 				
 				client.del(storeName);
+				
+				initedStoreNames.push(storeName);
 			}
 			
 			self.save = save = function(params, errorHandler) {
