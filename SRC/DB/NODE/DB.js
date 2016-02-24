@@ -1318,7 +1318,9 @@ FOR_BOX(function(box) {
 	
 							if ($inc !== undefined) {
 								removeEmptyValues($inc);
-								updateData.$inc = $inc;
+								if (CHECK_IS_EMPTY_DATA($inc) !== true) {
+									updateData.$inc = $inc;
+								}
 							}
 							
 							if ($push !== undefined) {
