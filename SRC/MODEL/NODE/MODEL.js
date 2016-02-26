@@ -1059,7 +1059,7 @@ FOR_BOX(function(box) {
 						isToCache = params.isToCache;
 						
 						if (clientInfo === undefined) {
-							clientInfo = idOrParams.clientInfo;
+							clientInfo = params.clientInfo;
 						}
 					}
 					
@@ -1163,7 +1163,7 @@ FOR_BOX(function(box) {
 						isToCache = params.isToCache;
 						
 						if (clientInfo === undefined) {
-							clientInfo = idOrParams.clientInfo;
+							clientInfo = params.clientInfo;
 						}
 					}
 					
@@ -1259,7 +1259,7 @@ FOR_BOX(function(box) {
 						isToCache = params.isToCache;
 						
 						if (clientInfo === undefined) {
-							clientInfo = idOrParams.clientInfo;
+							clientInfo = params.clientInfo;
 						}
 					}
 					
