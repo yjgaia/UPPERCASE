@@ -610,6 +610,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: idOrParams.sort
 					//OPTIONAL: idOrParams.isRandom
 					//OPTIONAL: idOrParams.isToCache
+					//OPTIONAL: idOrParams.clientInfo
 
 					var
 					// id
@@ -638,6 +639,10 @@ FOR_BOX(function(box) {
 							sort = idOrParams.sort;
 							isRandom = idOrParams.isRandom;
 							isToCache = idOrParams.isToCache;
+							
+							if (clientInfo === undefined) {
+								clientInfo = idOrParams.clientInfo;
+							}
 						}
 					}
 					
@@ -1024,6 +1029,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params.count
 					//OPTIONAL: params.isFindAll
 					//OPTIONAL: params.isToCache
+					//OPTIONAL: params.clientInfo
 
 					var
 					// filter
@@ -1051,6 +1057,10 @@ FOR_BOX(function(box) {
 						count = INTEGER(params.count);
 						isFindAll = params.isFindAll;
 						isToCache = params.isToCache;
+						
+						if (clientInfo === undefined) {
+							clientInfo = idOrParams.clientInfo;
+						}
 					}
 					
 					NEXT([
@@ -1139,6 +1149,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.isToCache
+					//OPTIONAL: params.clientInfo
 
 					var
 					// filter
@@ -1150,6 +1161,10 @@ FOR_BOX(function(box) {
 					if (params !== undefined) {
 						filter = params.filter;
 						isToCache = params.isToCache;
+						
+						if (clientInfo === undefined) {
+							clientInfo = idOrParams.clientInfo;
+						}
 					}
 					
 					NEXT([
@@ -1230,6 +1245,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.isToCache
+					//OPTIONAL: params.clientInfo
 
 					var
 					// filter
@@ -1241,6 +1257,10 @@ FOR_BOX(function(box) {
 					if (params !== undefined) {
 						filter = params.filter;
 						isToCache = params.isToCache;
+						
+						if (clientInfo === undefined) {
+							clientInfo = idOrParams.clientInfo;
+						}
 					}
 					
 					NEXT([
@@ -1388,6 +1408,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: idOrParams.sort
 					//OPTIONAL: idOrParams.isRandom
 					//OPTIONAL: idOrParams.isToCache
+					//OPTIONAL: idOrParams.clientInfo
 					//REQUIRED: callbackOrHandlers
 
 					var
