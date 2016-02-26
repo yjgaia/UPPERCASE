@@ -5,7 +5,8 @@
     * [Node.js](http://nodejs.org)
     * [MongoDB](http://www.mongodb.org)
     * [ImageMagick](http://www.imagemagick.org)
-
+	* (REDIS_STORE를 사용할 경우) [Redis](http://redis.io)
+    
 2. git을 이용하여 UPPERCASE를 적당한 곳에 clone합니다.
 
 	```

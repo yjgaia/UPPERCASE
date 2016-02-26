@@ -43,6 +43,9 @@ global.WEB_SOCKET_SERVER = METHOD({
 
 			// send key
 			sendKey = 0,
+			
+			// client info
+			clientInfo,
 
 			// ip
 			ip,
@@ -137,10 +140,13 @@ global.WEB_SOCKET_SERVER = METHOD({
 			connectionListener(
 
 			// client info
-			{
+			clientInfo = {
+				
 				ip : ip,
 
-				headers : headers
+				headers : headers,
+				
+				connectTime : new Date()
 			},
 
 			// on.
@@ -222,6 +228,8 @@ global.WEB_SOCKET_SERVER = METHOD({
 				}
 
 				sendKey += 1;
+				
+				clientInfo.lastReceiveTime = new Date();
 			},
 
 			// disconnect.

@@ -24,3 +24,127 @@ MongoDB는 그 자체로 분산 서버 기능을 제공하기 때문에, 이 문
 #### 3. `대문 서버`가 있고, 또한 `API 서버들`이 있으며 업로드 파일을 분산하여 저장하는 `업로드 파일 서버들`도 있는 경우
 이 경우 또한 마찬가지로 대문 서버가 모든 유저들의 처음 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우를 제외한 기능들은 최대한 다른 서버들로 분산합니다. 하지만 API 서버들과 업로드 서버군 또한 나뉘어져 있기 때문에, 각각 기능에 맞추어 분산하는 전략을 취할 수 있습니다.
 
+## 몽고 DB 분산
+우선 인증을 위한 키 파일을 생성합니다.
+```
+mkdir /srv/mongodb
+openssl rand -base64 741 > /srv/mongodb/mongodb-shard-keyfile
+chmod 600 /srv/mongodb/mongodb-shard-keyfile
+```
+
+몽고 DB 데몬을 원하는 수(CPU 개수 등) 만큼 생성합니다. 여기서 중요한 점은 `--shardsvr` 옵션을 붙혀야 한다는 것입니다. 또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
+```
+mkdir /data/shard_db1
+mkdir /data/shard_db2
+mkdir /data/shard_db3
+mkdir /data/shard_db4
+mkdir /data/shard_db5
+mkdir /data/shard_db6
+mkdir /data/shard_db7
+mkdir /data/shard_db8
+```
+```
+mongod --shardsvr --port 30001 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db1.log --dbpath /data/shard_db1
+mongod --shardsvr --port 30002 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db2.log --dbpath /data/shard_db2
+mongod --shardsvr --port 30003 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db3.log --dbpath /data/shard_db3
+mongod --shardsvr --port 30004 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db4.log --dbpath /data/shard_db4
+mongod --shardsvr --port 30005 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db5.log --dbpath /data/shard_db5
+mongod --shardsvr --port 30006 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db6.log --dbpath /data/shard_db6
+mongod --shardsvr --port 30007 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db7.log --dbpath /data/shard_db7
+mongod --shardsvr --port 30008 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db8.log --dbpath /data/shard_db8
+```
+
+위에서 생성한 데몬들을 관리하는 설정 데몬을 `--configsvr` 옵션을 붙혀 생성합니다.또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
+```
+mkdir /data/shard_config
+```
+```
+mongod --configsvr --port 30000 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config.log --dbpath /data/shard_config
+```
+
+이제 `mongos`를 실행합니다. `--configdb` 옵션으로 위에서 생성한 설정 데몬을 가리킵니다. 
+```
+mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb localhost:30000
+```
+
+이제 `mongos`에 접속합니다.
+```
+mongo --port 27018
+```
+
+`admin` 데이터베이스에 접속합니다.
+```
+use admin
+```
+
+우선 `root` 계정을 생성하고 로그인합니다.
+```
+db.createUser({ user : 'root 유저명', pwd : 'root 비밀번호', roles : ['root'] });
+db.auth('root 유저명', 'root 비밀번호');
+```
+
+`shard` 할 데몬의 접속 경로를 지정합니다.
+```
+db.runCommand({addshard : 'localhost:30001'});
+db.runCommand({addshard : 'localhost:30002'});
+db.runCommand({addshard : 'localhost:30003'});
+db.runCommand({addshard : 'localhost:30004'});
+db.runCommand({addshard : 'localhost:30005'});
+db.runCommand({addshard : 'localhost:30006'});
+db.runCommand({addshard : 'localhost:30007'});
+db.runCommand({addshard : 'localhost:30008'});
+```
+
+샤딩 할 데이터베이스를 지정합니다.
+```
+db.runCommand({'enablesharding' : '{{데이터베이스 명}}'});
+```
+
+샤딩 할 콜렉션들을 지정합니다.
+```
+db.runCommand({shardcollection : '{{콜렉션 명}}', key : {_id : 1}});
+db.runCommand({shardcollection : '{{콜렉션 명}}', key : {_id : 1}});
+db.runCommand({shardcollection : '{{콜렉션 명}}', key : {_id : 1}});
+...
+```
+
+데이터베이스의 유저를 추가합니다.
+```
+use {{데이터베이스 명}}
+db.createUser({ user : '유저명', pwd : '비밀번호', roles : ['readWrite', 'dbAdmin'] });
+```
+
+기존 데이터베이스가 존재할 경우, 기존 데이터베이스를 백업하고 새로 생성된 데이터베이스에 복구합니다.
+```
+mongodump --port {{기존 데이터베이스의 포트}} --db {{데이터베이스 이름}} --username {{데이터베이스 접속 username}} --password {{데이터베이스 접속 password}}
+```
+```
+mongorestore --port {{새 데이터베이스의 포트}} --db {{데이터베이스 이름}} --username {{데이터베이스 접속 username}} --password {{데이터베이스 접속 password}} dump/{{프로젝트 폴더 명}}
+```
+
+이제 모든 설정이 끝났습니다.
+
+### 몽고 DB 서버를 재시작 하는 경우
+`mongos`에 접속합니다.
+```
+mongo --port 27018
+```
+
+다음과 같이 데몬 서버를 종료합니다.
+```
+use admin
+db.shutdownServer();
+```
+
+이제 나머지 데몬들도 모두 종료합니다.
+```
+mongod --dbpath /data/shard_db1 --shutdown
+mongod --dbpath /data/shard_db2 --shutdown
+mongod --dbpath /data/shard_db3 --shutdown
+mongod --dbpath /data/shard_db4 --shutdown
+mongod --dbpath /data/shard_db5 --shutdown
+mongod --dbpath /data/shard_db6 --shutdown
+mongod --dbpath /data/shard_db7 --shutdown
+mongod --dbpath /data/shard_db8 --shutdown
+mongod --dbpath /data/shard_config --shutdown
+```
