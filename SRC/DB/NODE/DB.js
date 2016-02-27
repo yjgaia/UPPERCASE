@@ -1818,7 +1818,14 @@ FOR_BOX(function(box) {
 		
 								} else {
 		
-									collection.find(filter).sort(sort).skip(start).limit(count).toArray(proc);
+									collection.find(filter).sort(sort).skip(start).limit(count).toArray(function(error, savedDataSet) {
+										
+										if (error === TO_DELETE && savedDataSet.length === NODE_CONFIG.maxDataCount) {
+											console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.find` MAX DATA COUNT.'));
+										}
+										
+										proc(error, savedDataSet);
+									});
 								}
 							}
 						}

@@ -1359,6 +1359,8 @@ global.BOOT = function(params) {
 
 	// clustering cpus and servers.
 	clustering(function() {
+		
+		console.log('[UPPERCASE]' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' WORKER #' + CPU_CLUSTERING.getWorkerId() : '') + ' BOOTing...');
 
 		// init database.
 		initDatabase();
