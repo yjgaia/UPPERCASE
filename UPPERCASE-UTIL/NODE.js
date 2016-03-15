@@ -355,9 +355,6 @@ global.REDIS_STORE = CLASS(function(cls) {
 	'use strict';
 
 	var
-	//IMPORT: redis
-	Redis = require('redis'),
-	
 	// client
 	client;
 	
@@ -386,10 +383,44 @@ global.REDIS_STORE = CLASS(function(cls) {
 			clear;
 			
 			if (client === undefined) {
-				client = Redis.createClient({
-					host : NODE_CONFIG.redisHost,
-					port : NODE_CONFIG.redisPort
-				});
+				
+				if (NODE_CONFIG.redisPorts !== undefined) {
+					
+					client = new require('redis-clustr')({
+						
+						servers : RUN(function() {
+							
+							var ret = [];
+							
+							if (CHECK_IS_ARRAY(NODE_CONFIG.redisPorts) === true) {
+								EACH(NODE_CONFIG.redisPorts, function(port) {
+									ret.push({
+										'127.0.0.1' : port
+									});
+								});
+							}
+							
+							else {
+								EACH(NODE_CONFIG.redisPorts, function(ports, host) {
+									EACH(ports, function(port) {
+										var info = {};
+										info[host] = port;
+										ret.push(info);
+									});
+								});
+							}
+							
+							return ret;
+						})
+					});
+				}
+				
+				else {
+					client = require('redis').createClient({
+						host : NODE_CONFIG.redisHost,
+						port : NODE_CONFIG.redisPort
+					});
+				}
 				
 				if (NODE_CONFIG.redisPassword !== undefined) {
 					client.auth(NODE_CONFIG.redisPassword);
