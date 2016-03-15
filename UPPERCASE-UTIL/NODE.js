@@ -355,6 +355,12 @@ global.REDIS_STORE = CLASS(function(cls) {
 	'use strict';
 
 	var
+	// RedisClustr
+	RedisClustr,
+	
+	// Redis
+	Redis,
+	
 	// client
 	client;
 	
@@ -386,7 +392,9 @@ global.REDIS_STORE = CLASS(function(cls) {
 				
 				if (NODE_CONFIG.redisPorts !== undefined) {
 					
-					client = new require('redis-clustr')({
+					RedisClustr = require('redis-clustr');
+					
+					client = new RedisClustr({
 						
 						servers : RUN(function() {
 							
@@ -418,7 +426,10 @@ global.REDIS_STORE = CLASS(function(cls) {
 				}
 				
 				else {
-					client = require('redis').createClient({
+					
+					Redis = require('redis');
+					
+					client = Redis.createClient({
 						host : NODE_CONFIG.redisHost,
 						port : NODE_CONFIG.redisPort
 					});
