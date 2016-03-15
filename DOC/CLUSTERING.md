@@ -148,3 +148,65 @@ mongod --dbpath /data/shard_db7 --shutdown
 mongod --dbpath /data/shard_db8 --shutdown
 mongod --dbpath /data/shard_config --shutdown
 ```
+
+## Redis 분산
+redis 폴더로 이동한다.
+```
+cd redis-3.0.7
+```
+
+CPU 개수만큼 폴더를 만든다.
+```
+mkdir 7000 7001 7002 7003
+```
+
+7000 폴더에 redis.conf 파일을 복사한 후 아래 내용들을 수정한다. 특히, 여러 서버로 분산 처리 하는 경우에는 bind에 다른 서버의 ip 주소를 등록해야 한다.
+```
+cp redis.conf 7000
+```
+```
+daemonize yes
+port 7000
+bind 127.0.0.1 11.22.33
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 5000
+appendonly yes
+dir ./7000/
+```
+
+이 redis.conf 파일을 각 폴더에 복사한 후 port및 dir을 각 폴더명으로 변경한다.
+```
+cp 7000/redis.conf 7001
+cp 7000/redis.conf 7002
+cp 7000/redis.conf 7003
+```
+
+이제 각 port의 Redis들을 시작한다.
+```
+src/redis-server 7000/redis.conf
+src/redis-server 7001/redis.conf
+src/redis-server 7002/redis.conf
+src/redis-server 7003/redis.conf
+```
+
+클러스터들을 설정하기 위해 redis-trib 유틸리티를 실행한다. 참고로, 이 유틸리티는 루비로 작성되어 있어 실행하기 위해서는 루비와 rubygems, 루비용 redis 클라이언트가 설치되어 있어야 한다.
+```
+sudo gem install ruby
+sudo gem install rubygems
+sudo gem install redis
+```
+```
+src/redis-trib.rb create 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003
+```
+
+중간에 아래와 같은 메시지가 뜨면 yes를 입력한다.
+```
+Can I set the above configuration? (type 'yes' to accept): yes
+```
+
+Redis에 접속한다.
+```
+src/redis-cli -c -p 7000
+```
+

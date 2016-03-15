@@ -20,7 +20,7 @@
 * 웹 브라우저에 모든 리소스를 캐싱하여 재접속시 빠르게 로딩합니다.
 
 ## NODE_CONFIG
-### 데이터베이스 관련 설정
+### 데이터베이스 설정
 * `dbName` 사용할 데이터베이스의 이름을 설정합니다.
 * `dbHost` MongoDB 서버의 호스트를 설정합니다. 기본값은 `'127.0.0.1'` 입니다.
 * `dbPort` MongoDB 서버의 포트를 설정합니다. 기본값은 `27017` 입니다.
@@ -29,37 +29,55 @@
 * `isDBLogMode` 데이터베이스 로그 모드를 켜고자 할 때 `true`로 설정합니다. 데이터가 수정 될 경우 console에 로그를 띄어줍니다. 기본값은 `false` 입니다.
 * `maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000` 입니다.
 
-### 업로드 관련 설정
+### 업로드 설정
 * `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
 * `maxThumbWidth` 자동으로 만들어지는 섬네일의 최대 가로 길이를 설정합니다.
 * `maxThumbHeight` 자동으로 만들어지는 섬네일의 최대 세로 길이를 설정합니다.
 
-### 보안 웹서버 관련 설정
+### 보안 웹서버 설정
 * `securedKeyFilePath` https 프로토콜을 사용하는 보안 웹서버를 위한 key file의 경로를 설정합니다.
 * `securedCertFilePath` https 프로토콜을 사용하는 보안 웹서버를 위한 cert file의 경로를 설정합니다.
 
-### 분산 서버 관련 설정
-* `thisServerName` 현재 서버의 이름을 설정합니다.
+### 분산 서버 설정
 * `clusteringPort` 클러스터링을 위한 서버의 포트를 설정합니다. 이 포트는 웹서버나 웹소켓 서버 등과는 관계가 없고, 분산 서버들간의 메시지 전달을 위해 사용됩니다.
 * `clusteringServerHosts` 분산 서버들의 host를 설정합니다.
+* `thisServerName` 현재 서버의 이름을 설정합니다.
 ```javascript
 NODE_CONFIG : {
-	thisServerName : 'serverA',
 	clusteringPort : 8603,
 	clusteringServerHosts : {
 		serverA : '127.0.0.1',
 		serverB : '127.0.0.1'
-	}
+	},
+	thisServerName : 'serverA'
 }
 ```
 * `socketServerHosts` 소켓 서버들의 host를 설정합니다.
 * `webSocketServerHosts` 웹소켓 서버들의 host를 설정합니다.
 * `uploadServerHosts` 업로드 서버들의 host를 설정합니다.
 
-### Redis 관련 설정
+### Redis 설정
 * `redisHost` Redis 서버의 호스트를 설정합니다. 기본값은 `'127.0.0.1'` 입니다.
 * `reidsPort` Redis 서버의 포트를 설정합니다. 기본값은 `6379` 입니다.
-* `reidsPassword` Redis 서버의 접속 비밀번호를 설정합니다.
+#### Redis 분산 서버 설정
+* `reidsPorts` Redis 서버들의 포트를 설정합니다.
+
+단일 서버 머신에서 분산하는 경우 (CPU 클러스터링)
+```javascript
+NODE_CONFIG : {
+	reidsPorts : [7000, 7001, 7002, 7003]
+}
+```
+
+여러 서버 머신으로 분산하는 경우
+```javascript
+NODE_CONFIG : {
+	reidsPorts : {
+		'127.0.0.1' : [7000, 7001, 7002, 7003],
+		'test.com' : [7000, 7001, 7002, 7003]
+	}
+}
+```
 
 ### 기타 설정
 * `isUsingHTMLSnapshot` HTML Snapshot을 생성할지 여부를 설정합니다. 기본은 `false`입니다.
