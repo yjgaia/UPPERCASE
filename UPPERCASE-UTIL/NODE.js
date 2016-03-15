@@ -395,7 +395,8 @@ global.REDIS_STORE = CLASS(function(cls) {
 							if (CHECK_IS_ARRAY(NODE_CONFIG.redisPorts) === true) {
 								EACH(NODE_CONFIG.redisPorts, function(port) {
 									ret.push({
-										'127.0.0.1' : port
+										host : '127.0.0.1',
+										port : port
 									});
 								});
 							}
@@ -403,9 +404,10 @@ global.REDIS_STORE = CLASS(function(cls) {
 							else {
 								EACH(NODE_CONFIG.redisPorts, function(ports, host) {
 									EACH(ports, function(port) {
-										var info = {};
-										info[host] = port;
-										ret.push(info);
+										ret.push({
+											host : host,
+											port : port
+										});
 									});
 								});
 							}
@@ -420,10 +422,6 @@ global.REDIS_STORE = CLASS(function(cls) {
 						host : NODE_CONFIG.redisHost,
 						port : NODE_CONFIG.redisPort
 					});
-				}
-				
-				if (NODE_CONFIG.redisPassword !== undefined) {
-					client.auth(NODE_CONFIG.redisPassword);
 				}
 			}
 			

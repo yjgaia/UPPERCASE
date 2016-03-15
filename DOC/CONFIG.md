@@ -59,10 +59,8 @@ NODE_CONFIG : {
 ### Redis 설정
 * `redisHost` Redis 서버의 호스트를 설정합니다. 기본값은 `'127.0.0.1'` 입니다.
 * `reidsPort` Redis 서버의 포트를 설정합니다. 기본값은 `6379` 입니다.
-* `reidsPassword` Redis 서버의 접속 비밀번호를 설정합니다.
 #### Redis 분산 서버 설정
 * `reidsPorts` Redis 서버들의 포트를 설정합니다.
-* `reidsPassword` Redis 서버의 접속 비밀번호를 설정합니다.
 
 단일 서버 머신에서 분산하는 경우 (CPU 클러스터링)
 ```javascript
