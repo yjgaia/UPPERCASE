@@ -273,7 +273,11 @@ global.BOOT = function(params) {
 		loadForNode(UPPERCASE_PATH + '/UJS-NODE.js');
 
 		// load for client.
-		browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js');
+		if (CONFIG.isDevMode !== true) {
+			browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.MIN.js');
+		} else {
+			browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js');
+		}
 	};
 
 	configuration = function() {
@@ -474,16 +478,32 @@ global.BOOT = function(params) {
 
 		// load UPPERCASE-TRANSPORT.
 		loadForNode(UPPERCASE_PATH + '/UPPERCASE-TRANSPORT/NODE.js');
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-TRANSPORT/BROWSER.js');
-
+		if (CONFIG.isDevMode !== true) {
+			loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-TRANSPORT/BROWSER.MIN.js');
+		} else {
+			loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-TRANSPORT/BROWSER.js');
+		}
+		
 		// load UPPERCASE-ROOM.
 		loadForNode(UPPERCASE_PATH + '/UPPERCASE-ROOM/NODE.js');
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-ROOM/BROWSER.js');
+		if (CONFIG.isDevMode !== true) {
+			loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-ROOM/BROWSER.MIN.js');
+		} else {
+			loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-ROOM/BROWSER.js');
+		}
 
 		// load UPPERCASE-MODEL.
 		loadForNode(UPPERCASE_PATH + '/UPPERCASE-MODEL/NODE.js');
-		loadForClient(UPPERCASE_PATH + '/UPPERCASE-MODEL/CLIENT.js');
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-MODEL/BROWSER.js');
+		if (CONFIG.isDevMode !== true) {
+			loadForClient(UPPERCASE_PATH + '/UPPERCASE-MODEL/CLIENT.MIN.js');
+		} else {
+			loadForClient(UPPERCASE_PATH + '/UPPERCASE-MODEL/CLIENT.js');
+		}
+		if (CONFIG.isDevMode !== true) {
+			loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-MODEL/BROWSER.MIN.js');
+		} else {
+			loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-MODEL/BROWSER.js');
+		}
 	};
 	
 	generate404Page = function() {
@@ -1353,8 +1373,13 @@ global.BOOT = function(params) {
 	loadForNode(UPPERCASE_PATH + '/UPPERCASE-UTIL/NODE.js');
 
 	// load UPPERCASE.
-	loadForBrowser(UPPERCASE_PATH + '/UPPERCASE/BROWSER.js');
-	loadForBrowser(UPPERCASE_PATH + '/UPPERCASE/BROWSER_INIT.js');
+	if (CONFIG.isDevMode !== true) {
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE/BROWSER.MIN.js');
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE/BROWSER_INIT.MIN.js');
+	} else {
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE/BROWSER.js');
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE/BROWSER_INIT.js');
+	}
 	loadForNode(UPPERCASE_PATH + '/UPPERCASE/NODE.js');
 
 	// clustering cpus and servers.
@@ -1383,16 +1408,6 @@ global.BOOT = function(params) {
 		scanAllBoxJS('NODE', loadForNode);
 		scanAllBoxJS('CLIENT', loadForClient);
 		scanAllBoxJS('BROWSER', loadForBrowser);
-		
-		if (CONFIG.isDevMode !== true) {
-
-			// minify browser script.
-			browserScript = MINIFY_JS(browserScript);
-			
-			EACH(boxBrowserScripts, function(script, boxName) {
-				boxBrowserScripts[boxName] = MINIFY_JS(script);
-			});
-		}
 		
 		// generate 404 page.
 		generate404Page();
