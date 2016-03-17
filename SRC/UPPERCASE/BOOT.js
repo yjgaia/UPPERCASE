@@ -62,7 +62,7 @@ global.BOOT = function(params) {
 		content = READ_FILE({
 			path : path,
 			isSync : true
-		}).toString() + '\n';
+		}).toString();
 		
 		if (boxName === undefined) {
 			addContentToBrowserScript(content);
