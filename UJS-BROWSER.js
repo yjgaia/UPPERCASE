@@ -3324,7 +3324,7 @@ global.COOKIE_STORE = CLASS({
 				expireTime.setDate(expireTime.getDate() + 356);
 			}
 
-			document.cookie = genFullName(name) + '=' + encodeURIComponent(JSON.stringify(value)) + '; expires=' + expireTime.toGMTString() + '; path=/;' + (domain === undefined ? '' : ' domain=' + domain + ';');
+			document.cookie = genFullName(name) + '=' + encodeURIComponent(JSON.stringify(value)) + '; expires=' + (expireTime === 0 ? expireTime : expireTime.toGMTString()) + '; path=/;' + (domain === undefined ? '' : ' domain=' + domain + ';');
 		};
 
 		self.get = get = function(name) {
@@ -3441,7 +3441,7 @@ FOR_BOX(function(box) {
 			}
 			
 			store = COOKIE_STORE({
-				storeName : storeName,
+				storeName : box.boxName + '.' + storeName,
 				domain : domain
 			});
 
