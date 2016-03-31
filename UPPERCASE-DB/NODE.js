@@ -362,6 +362,12 @@ FOR_BOX(function(box) {
 				// if not exists, callback undefined.
 				// if error, run error handler.
 				updateNoHistory,
+				
+				// update data, but not save record
+				// if success, callback saved data.
+				// if not exists, callback undefined.
+				// if error, run error handler.
+				updateNoRecord,
 	
 				// remove data.
 				// if success, callback saved data.
@@ -1191,12 +1197,12 @@ FOR_BOX(function(box) {
 	
 						try {
 							
+							// init params.
 							if (callbackOrHandlers === undefined) {
 								callbackOrHandlers = idOrParams;
 								idOrParams = {};
 							}
 	
-							// init params.
 							if (idOrParams !== undefined) {
 								
 								if (CHECK_IS_DATA(idOrParams) !== true) {
@@ -1306,7 +1312,7 @@ FOR_BOX(function(box) {
 						}
 					};
 	
-					innerUpdate = function(data, callbackOrHandlers, isNotToSaveHistory) {
+					innerUpdate = function(data, callbackOrHandlers, isNotToSaveHistory, isNotToUpdateLastUpdateTime) {
 						//REQUIRED: data
 						//REQUIRED: data.id
 						//OPTIONAL: data.$inc
@@ -1317,8 +1323,9 @@ FOR_BOX(function(box) {
 						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
-						//REQUIRED: isNotToSaveHistory
-	
+						//OPTIONAL: isNotToSaveHistory
+						//OPTIONAL: isNotToUpdateLastUpdateTime
+						
 						var
 						// id
 						id = data.id,
@@ -1387,7 +1394,9 @@ FOR_BOX(function(box) {
 							
 							removeEmptyValues(data);
 	
-							data.lastUpdateTime = new Date();
+							if (isNotToUpdateLastUpdateTime !== true) {
+								data.lastUpdateTime = new Date();
+							}
 							
 							updateData = {};
 							
@@ -1614,6 +1623,21 @@ FOR_BOX(function(box) {
 						//OPTIONAL: callbackOrHandlers.error
 	
 						innerUpdate(data, callbackOrHandlers, true);
+					};
+					
+					self.updateNoRecord = updateNoRecord = function(data, callbackOrHandlers) {
+						//REQUIRED: data
+						//REQUIRED: data.id
+						//OPTIONAL: data.$inc
+						//OPTIONAL: data.$push
+						//OPTIONAL: data.$addToSet
+						//OPTIONAL: data.$pull
+						//OPTIONAL: callbackOrHandlers
+						//OPTIONAL: callbackOrHandlers.success
+						//OPTIONAL: callbackOrHandlers.notExists
+						//OPTIONAL: callbackOrHandlers.error
+	
+						innerUpdate(data, callbackOrHandlers, true, true);
 					};
 					
 					self.remove = remove = function(id, callbackOrHandlers) {

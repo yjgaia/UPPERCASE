@@ -204,6 +204,9 @@ FOR_BOX(function(box) {
 				
 				// update no history.
 				updateNoHistory,
+				
+				// update no record.
+				updateNoRecord,
 
 				// remove.
 				remove,
@@ -724,7 +727,7 @@ FOR_BOX(function(box) {
 					}]);
 				};
 
-				innerUpdate = function(data, ret, clientInfo, isNotToSaveHistory) {
+				innerUpdate = function(data, ret, clientInfo, isNotToSaveHistory, isNotToUpdateLastUpdateTime) {
 
 					var
 					// id
@@ -868,7 +871,9 @@ FOR_BOX(function(box) {
 							return function() {
 
 								// update data in database.
-								(isNotToSaveHistory === true ? db.updateNoHistory : db.update)(data, {
+								(isNotToUpdateLastUpdateTime === true ? db.updateNoRecord :
+								(isNotToSaveHistory === true ? db.updateNoHistory :
+								db.update))(data, {
 
 									error : function(errorMsg) {
 										ret({
@@ -1616,6 +1621,82 @@ FOR_BOX(function(box) {
 						}
 						
 					}, undefined, true);
+				};
+				
+				self.updateNoRecord = updateNoRecord = function(data, callbackOrHandlers) {
+					//REQUIRED: data
+					//REQUIRED: data.id
+					//OPTIONAL: callbackOrHandlers
+
+					var
+					// callback.
+					callback,
+
+					// not exists handler.
+					notExistsHandler,
+
+					// not valid handler.
+					notValidHandler,
+
+					// error handler.
+					errorHandler;
+
+					if (callbackOrHandlers !== undefined) {
+						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+							callback = callbackOrHandlers;
+						} else {
+							callback = callbackOrHandlers.success;
+							notExistsHandler = callbackOrHandlers.notExists;
+							notValidHandler = callbackOrHandlers.notValid;
+							errorHandler = callbackOrHandlers.error;
+						}
+					}
+
+					innerUpdate(data, function(result) {
+
+						var
+						// error msg
+						errorMsg,
+
+						// valid errors
+						validErrors,
+
+						// saved data
+						savedData,
+						
+						// origin data
+						originData;
+
+						if (result !== undefined) {
+							errorMsg = result.errorMsg;
+							validErrors = result.validErrors;
+							savedData = result.savedData;
+							originData = result.originData;
+						}
+
+						if (errorMsg !== undefined) {
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` ERROR: ' + errorMsg));
+							}
+						} else if (validErrors !== undefined) {
+							if (notValidHandler !== undefined) {
+								notValidHandler(validErrors);
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID.'), validErrors);
+							}
+						} else if (savedData === undefined) {
+							if (notExistsHandler !== undefined) {
+								notExistsHandler();
+							} else {
+								console.log(CONSOLE_YELLOW('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT EXISTS.'), data);
+							}
+						} else if (callback !== undefined) {
+							callback(savedData, originData);
+						}
+						
+					}, undefined, true, true);
 				};
 				
 				self.remove = remove = function(id, callbackOrHandlers) {
