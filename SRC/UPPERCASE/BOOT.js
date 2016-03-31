@@ -1143,7 +1143,7 @@ global.BOOT = function(params) {
 										next({
 											contentType : savedData.type,
 											headers : {
-												'Content-Disposition' : 'filename="' + savedData.name + '"',
+												'Content-Disposition' : 'filename="' + encodeURIComponent(savedData.name) + '"',
 												'Access-Control-Allow-Origin' : '*'
 											},
 											isFinal : true
