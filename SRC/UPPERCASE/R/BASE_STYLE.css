@@ -51,9 +51,6 @@ html, body {
 	-ms-text-size-adjust: none;
 	text-size-adjust: none;
 }
-html {
-	overflow-y: scroll;
-}
 input[type="submit"] {
 	-webkit-appearance: none;
 	-moz-appearance: none;

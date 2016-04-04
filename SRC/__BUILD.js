@@ -208,7 +208,7 @@ RUN(function() {
 	WRITE_FILE({
 		path : '../UPPERCASE/R/BASE_STYLE.css',
 		content : MINIFY_CSS(READ_FILE({
-			path : '../UPPERCASE/R/BASE_STYLE.css',
+			path : './UPPERCASE/R/BASE_STYLE.css',
 			isSync : true
 		})),
 		isSync : true

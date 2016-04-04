@@ -192,6 +192,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		//OPTIONAL: params.roomServerName
 		//OPTIONAL: params.webServerHost
 		//OPTIONAL: params.webServerPort
+		//OPTIONAL: params.isSecure
 		//OPTIONAL: connectionListenerOrListeners
 		//OPTIONAL: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
@@ -205,6 +206,9 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		
 		// web server port
 		webServerPort,
+		
+		// is secure
+		isSecure,
 		
 		// connection listener
 		connectionListener,
@@ -222,6 +226,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 					roomServerName = params.roomServerName;
 					webServerHost = params.webServerHost;
 					webServerPort = params.webServerPort;
+					isSecure = params.isSecure;
 					connectionListener = params.success;
 					errorListener = params.error;
 				}
@@ -234,6 +239,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 				roomServerName = params.roomServerName;
 				webServerHost = params.webServerHost;
 				webServerPort = params.webServerPort;
+				isSecure = params.isSecure;
 			}
 			
 			if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
@@ -251,8 +257,13 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		if (webServerPort === undefined) {
 			webServerPort = CONFIG.webServerPort;
 		}
+		
+		if (isSecure === undefined) {
+			isSecure = BROWSER_CONFIG.isSecure;
+		}
 
 		GET({
+			isSecure : isSecure,
 			host : webServerHost,
 			port : webServerPort,
 			uri : '__WEB_SOCKET_SERVER_HOST',

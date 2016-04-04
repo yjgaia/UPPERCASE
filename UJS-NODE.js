@@ -5570,7 +5570,7 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			send = function(params, callback) {
 				//REQUIRED: params
 				//REQUIRED: params.methodName
-				//REQUIRED: params.data
+				//OPTIONAL: params.data
 				//OPTIONAL: callback
 				
 				var
@@ -8676,6 +8676,12 @@ global.WEB_SERVER = CLASS(function(cls) {
 	var
 	//IMPORT: http
 	http = require('http'),
+	
+	//IMPORT: https
+	https = require('https'),
+	
+	//IMPORT: fs
+	fs = require('fs'),
 
 	//IMPORT: querystring
 	querystring = require('querystring'),

@@ -40,8 +40,8 @@
 
 ### 분산 서버 설정
 * `clusteringPort` 클러스터링을 위한 서버의 포트를 설정합니다. 이 포트는 웹서버나 웹소켓 서버 등과는 관계가 없고, 분산 서버들간의 메시지 전달을 위해 사용됩니다.
-* `clusteringServerHosts` 분산 서버들의 host를 설정합니다.
-* `thisServerName` 현재 서버의 이름을 설정합니다.
+* `clusteringServerHosts` 분산 서버들의 host를 아래와 같이 설정합니다.
+* `thisServerName` 현재 서버의 이름을 아래와 같이 설정합니다.
 ```javascript
 NODE_CONFIG : {
 	clusteringPort : 8603,
@@ -52,9 +52,9 @@ NODE_CONFIG : {
 	thisServerName : 'serverA'
 }
 ```
-* `socketServerHosts` 소켓 서버들의 host를 설정합니다.
-* `webSocketServerHosts` 웹소켓 서버들의 host를 설정합니다.
-* `uploadServerHosts` 업로드 서버들의 host를 설정합니다.
+* `socketServerHosts` 소켓 서버들의 host를 배열로 설정합니다.
+* `webSocketServerHosts` 웹소켓 서버들의 host를 배열로 설정합니다.
+* `uploadServerHosts` 업로드 서버들의 host를 배열로 설정합니다.
 
 ### Redis 설정
 * `redisHost` Redis 서버의 호스트를 설정합니다. 기본값은 `'127.0.0.1'` 입니다.

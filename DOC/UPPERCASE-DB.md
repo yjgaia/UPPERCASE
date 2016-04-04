@@ -23,6 +23,10 @@ db.get(id, {success:, notExists:, error:})
 db.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
 db.update(data, function(savedData, originData) {...})
 db.update(data, {success:, notExists:, error:})
+db.updateNoHistory(data, function() {...}) // 변경 내역을 남기지 않습니다.
+db.updateNoHistory(data, {success:, notExists:, error:}) // 변경 내역을 남기지 않습니다.
+db.updateNoRecord(data, function() {...}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
+db.updateNoRecord(data, {success:, notExists:, error:}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
 db.remove(id, function(originData) {...})
 db.remove(id, {success:, notExists:, error:})
 db.find({filter:, sort:, start:, count:}, function(savedDataSet) {...})
