@@ -29,6 +29,14 @@ RUN(function() {
 		};
 	}
 	
+	// fix hasFocus.
+	if (document.hasFocus === undefined) {
+		// just return true.
+		document.hasFocus = function() {
+			return true;
+		};
+	}
+	
 	// fix AudioContext.
 	if (global.AudioContext === undefined && global.webkitAudioContext !== undefined) {
 		global.AudioContext = global.webkitAudioContext;

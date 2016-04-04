@@ -11296,9 +11296,13 @@ global.TITLE = METHOD({
 
 	run : function(title) {
 		'use strict';
-		//REQUIRED: title
+		//OPTIONAL: title
 
-		document.title = title;
+		if (title === undefined) {
+			return document.title;
+		} else {
+			document.title = title;
+		}
 	}
 });
 
