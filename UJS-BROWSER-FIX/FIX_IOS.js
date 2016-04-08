@@ -16,13 +16,6 @@ RUN(function() {
 	IOS.version = REAL((navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/)[1]);
 
 	/**
-	 * fix BROWSER.
-	 */
-
-	// fix INFO.
-	loadFixScript('BROWSER/INFO');
-	
-	/**
 	 * fix BROWSER/DOM.
 	 */
 
