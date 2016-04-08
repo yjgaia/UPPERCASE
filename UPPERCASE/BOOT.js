@@ -240,6 +240,9 @@ global.BOOT = function(params) {
 		scanAllBoxJS('BROWSER', loadForBrowser);
 	},
 
+	// load UJS.
+	loadUJS,
+
 	// configuration.
 	configuration,
 
@@ -263,6 +266,19 @@ global.BOOT = function(params) {
 
 	// run.
 	run;
+
+	loadUJS = function() {
+
+		// load for node.
+		loadForNode(UPPERCASE_PATH + '/UJS-NODE.js');
+
+		// load for client.
+		if (params.CONFIG === undefined || params.CONFIG.isDevMode !== true) {
+			browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.MIN.js');
+		} else {
+			browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js');
+		}
+	};
 
 	configuration = function() {
 
@@ -1344,18 +1360,11 @@ global.BOOT = function(params) {
 		console.log('[UPPERCASE] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> `' + CONFIG.title + (NODE_CONFIG.isNotUsingCPUClustering !== true ? '` WORKER #' + CPU_CLUSTERING.getWorkerId() : '`') + ' BOOTed!' + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort)));
 	};
 
-	// load UJS-NODE.
-	loadForNode(UPPERCASE_PATH + '/UJS-NODE.js');
+	// load UJS.
+	loadUJS();
 
 	// configuration.
 	configuration();
-	
-	// load UJS-BROWSER.
-	if (CONFIG.isDevMode !== true) {
-		browserUJSScript = loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.MIN.js') + browserUJSScript;
-	} else {
-		browserUJSScript = loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js') + browserUJSScript;
-	}
 
 	// init boxes.
 	initBoxes();
