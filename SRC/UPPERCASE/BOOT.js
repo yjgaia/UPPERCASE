@@ -1346,9 +1346,9 @@ global.BOOT = function(params) {
 	
 	// load UJS-BROWSER.
 	if (CONFIG.isDevMode !== true) {
-		browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.MIN.js');
+		browserUJSScript = loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.MIN.js') + browserUJSScript;
 	} else {
-		browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js');
+		browserUJSScript = loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js') + browserUJSScript;
 	}
 
 	// init boxes.
