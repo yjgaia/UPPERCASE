@@ -5,6 +5,9 @@ RUN(function() {
 	'use strict';
 
 	var
+	// version splits
+	versionSplits = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/),
+	
 	// load fix script.
 	loadFixScript = function(name) {
 		LOAD(BROWSER_CONFIG.fixScriptsFolderPath + '/IOS/' + name + '.js');
@@ -13,7 +16,7 @@ RUN(function() {
 	global.IOS = {};
 	
 	// get iOS version.
-	IOS.version = REAL((navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/)[1]);
+	IOS.version = REAL(versionSplits[1] + '.' + versionSplits[2]);
 
 	/**
 	 * fix BROWSER.
