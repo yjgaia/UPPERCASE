@@ -5349,7 +5349,10 @@ global.E = CLASS({
 		getKeyName,
 		
 		// get state.
-		getState;
+		getState,
+		
+		// get detail.
+		getDetail;
 
 		checkIsDescendant = function(parent, child) {
 
@@ -5498,6 +5501,10 @@ global.E = CLASS({
 		
 		self.getState = getState = function() {
 			return e.state;
+		};
+		
+		self.getDetail = getDetail = function() {
+			return e.detail;
 		};
 	}
 });
@@ -5906,6 +5913,10 @@ global.EVENT = CLASS(function(cls) {
 								if (nodeId !== 'body') {
 									e.stopDefault();
 								}
+								
+								// clear.
+								startLeft = -999999;
+								startTop = -999999;
 								
 								return eventHandler(e, node);
 							}

@@ -1,3 +1,4 @@
+# 분산
 
 ## UPPERCASE의 분산 처리 전략
 * 업로드 파일들을 분산 서버로 구성할 경우 CORS가 지원되지 않는 Internet Explorer 9 이하 버젼들과 같은 곳에서는 UJS의 GRAPHIC API들을 사용할 수 없습니다.
@@ -23,6 +24,14 @@ MongoDB는 그 자체로 분산 서버 기능을 제공하기 때문에, 이 문
 
 #### 3. `대문 서버`가 있고, 또한 `API 서버들`이 있으며 업로드 파일을 분산하여 저장하는 `업로드 파일 서버들`도 있는 경우
 이 경우 또한 마찬가지로 대문 서버가 모든 유저들의 처음 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우를 제외한 기능들은 최대한 다른 서버들로 분산합니다. 하지만 API 서버들과 업로드 서버군 또한 나뉘어져 있기 때문에, 각각 기능에 맞추어 분산하는 전략을 취할 수 있습니다.
+
+### 각 서버간 시간을 맞추어야 합니다.
+리눅스일 경우 아래 명령어들로 서버 시간을 맞추어야 합니다.
+```
+ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+rdate -p time.bora.net
+rdate -s time.bora.net
+```
 
 ## 몽고 DB 분산
 우선 인증을 위한 키 파일을 생성합니다.
@@ -66,6 +75,27 @@ mongod --configsvr --port 30000 --fork --keyFile /srv/mongodb/mongodb-shard-keyf
 ```
 mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb localhost:30000
 ```
+
+### configdb가 여러대일 경우
+configdb가 여러대일 경우에는 다음과 같이 설정합니다.
+데몬들을 관리하는 설정 데몬을 `--configsvr` 옵션을 붙혀 생성합니다.또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
+```
+mkdir /data/shard_config1
+mkdir /data/shard_config2
+mkdir /data/shard_config3
+```
+```
+mongod --configsvr --port 30001 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config1.log --dbpath /data/shard_config1
+mongod --configsvr --port 30002 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config2.log --dbpath /data/shard_config2
+mongod --configsvr --port 30003 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config3.log --dbpath /data/shard_config3
+```
+
+이제 `mongos`를 실행합니다. `--configdb` 옵션으로 위에서 생성한 설정 데몬을 가리킵니다. 11.22.33.44는 해당하는 ip로 변경해주시기 바랍니다.
+```
+mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb 11.22.33.44:30001,11.22.33.44:30002,11.22.33.44:30003
+```
+**MongoDB 3.2에서는 config server가 replica set으로 변경되었습니다. 자세한 정보는 https://docs.mongodb.org/manual/tutorial/upgrade-config-servers-to-replica-set/ 이곳을 참고해 주시기 바랍니다.**
+
 
 이제 `mongos`에 접속합니다.
 ```
@@ -149,55 +179,68 @@ mongod --dbpath /data/shard_db8 --shutdown
 mongod --dbpath /data/shard_config --shutdown
 ```
 
+
 ## Redis 분산
 redis 폴더로 이동한다.
 ```
-cd redis-3.0.7
+cd redis-stable
 ```
 
 CPU 개수만큼 폴더를 만든다.
 ```
-mkdir 7000 7001 7002 7003
+mkdir 7001 7002 7003 7004 7005 7006 7007 7008
 ```
 
-7000 폴더에 redis.conf 파일을 복사한 후 아래 내용들을 수정한다. 특히, 여러 서버로 분산 처리 하는 경우에는 bind에 다른 서버의 ip 주소를 등록해야 한다.
+7001 폴더에 redis.conf 파일을 복사한 후 아래 내용들을 수정한다. 특히, 여러 서버로 분산 처리 하는 경우에는 bind에 다른 서버의 ip 주소를 등록해야 한다.
 ```
-cp redis.conf 7000
+cp redis.conf 7001
+
+vi 7001/redis.conf
+...
 ```
 ```
 daemonize yes
-port 7000
-bind 127.0.0.1 11.22.33
+port 7001
 cluster-enabled yes
 cluster-config-file nodes.conf
 cluster-node-timeout 5000
 appendonly yes
-dir ./7000/
+dir ./7001/
 ```
 
 이 redis.conf 파일을 각 폴더에 복사한 후 port및 dir을 각 폴더명으로 변경한다.
 ```
-cp 7000/redis.conf 7001
-cp 7000/redis.conf 7002
-cp 7000/redis.conf 7003
+cp 7001/redis.conf 7002
+cp 7001/redis.conf 7003
+cp 7001/redis.conf 7004
+cp 7001/redis.conf 7005
+cp 7001/redis.conf 7006
+cp 7001/redis.conf 7007
+cp 7001/redis.conf 7008
+
+vi 7002/redis.conf
+...
 ```
 
 이제 각 port의 Redis들을 시작한다.
 ```
-src/redis-server 7000/redis.conf
 src/redis-server 7001/redis.conf
 src/redis-server 7002/redis.conf
 src/redis-server 7003/redis.conf
+src/redis-server 7004/redis.conf
+src/redis-server 7005/redis.conf
+src/redis-server 7006/redis.conf
+src/redis-server 7007/redis.conf
+src/redis-server 7008/redis.conf
 ```
 
 클러스터들을 설정하기 위해 redis-trib 유틸리티를 실행한다. 참고로, 이 유틸리티는 루비로 작성되어 있어 실행하기 위해서는 루비와 rubygems, 루비용 redis 클라이언트가 설치되어 있어야 한다.
 ```
-sudo gem install ruby
-sudo gem install rubygems
+sudo yum install ruby
 sudo gem install redis
 ```
 ```
-src/redis-trib.rb create 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003
+src/redis-trib.rb create 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 127.0.0.1:7006 127.0.0.1:7007 127.0.0.1:7008
 ```
 
 중간에 아래와 같은 메시지가 뜨면 yes를 입력한다.
@@ -207,6 +250,6 @@ Can I set the above configuration? (type 'yes' to accept): yes
 
 Redis에 접속한다.
 ```
-src/redis-cli -c -p 7000
+src/redis-cli -c -p 7001
 ```
 

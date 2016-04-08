@@ -3,8 +3,8 @@
 1. 기반 시스템을 설치합니다. 기반 시스템은 다음과 같습니다.
 
     * [Node.js](http://nodejs.org)
-    * [MongoDB](http://www.mongodb.org)
     * [ImageMagick](http://www.imagemagick.org)
+    * [MongoDB](http://www.mongodb.org)
 	* (REDIS_STORE를 사용할 경우) [Redis](http://redis.io)
     
 2. git을 이용하여 UPPERCASE를 적당한 곳에 clone합니다.

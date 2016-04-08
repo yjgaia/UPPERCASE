@@ -2635,9 +2635,24 @@ global.DELAY = CLASS({
 		//OPTIONAL: func
 
 		var
+		// milliseconds
+		milliseconds,
+		
+		// start time
+		startTime = Date.now(),
+		
+		// remaining
+		remaining,
+		
 		// timeout
 		timeout,
 
+		// resume.
+		resume,
+		
+		// pause.
+		pause,
+		
 		// remove.
 		remove;
 
@@ -2645,13 +2660,29 @@ global.DELAY = CLASS({
 			func = seconds;
 			seconds = 0;
 		}
-
-		timeout = setTimeout(function() {
-			func(self);
-		}, seconds * 1000);
-
-		self.remove = remove = function() {
+		
+		remaining = milliseconds = seconds * 1000;
+		
+		self.resume = resume = RAR(function() {
+			
+			if (timeout === undefined) {
+				
+				timeout = setTimeout(function() {
+					func(self);
+				}, remaining);
+			}
+		});
+		
+		self.pause = pause = function() {
+			
+			remaining = milliseconds - (Date.now() - startTime);
+			
 			clearTimeout(timeout);
+			timeout = undefined;
+		};
+		
+		self.remove = remove = function() {
+			pause();
 		};
 	}
 });
@@ -2667,8 +2698,23 @@ global.INTERVAL = CLASS({
 		//OPTIONAL: func
 
 		var
+		// milliseconds
+		milliseconds,
+		
+		// start time
+		startTime = Date.now(),
+		
+		// remaining
+		remaining,
+		
 		// interval
 		interval,
+		
+		// resume.
+		resume,
+		
+		// pause.
+		pause,
 
 		// remove.
 		remove;
@@ -2677,15 +2723,35 @@ global.INTERVAL = CLASS({
 			func = seconds;
 			seconds = 0;
 		}
-
-		interval = setInterval(function() {
-			if (func(self) === false) {
-				remove();
+		
+		remaining = milliseconds = seconds === 0 ? 1 : seconds * 1000;
+		
+		self.resume = resume = RAR(function() {
+			
+			if (interval === undefined) {
+				
+				interval = setInterval(function() {
+					
+					if (func(self) === false) {
+						remove();
+					}
+					
+					startTime = Date.now();
+					
+				}, remaining);
 			}
-		}, seconds === 0 ? 1 : seconds * 1000);
-
-		self.remove = remove = function() {
+		});
+		
+		self.pause = pause = function() {
+			
+			remaining = milliseconds - (Date.now() - startTime);
+			
 			clearInterval(interval);
+			interval = undefined;
+		};
+		
+		self.remove = remove = function() {
+			pause();
 		};
 	}
 });
@@ -2761,7 +2827,7 @@ global.LOOP = CLASS(function(cls) {
 							// run interval.
 							interval = loopInfo.interval;
 							for ( j = 0; j < count; j += 1) {
-								interval();
+								interval(loopInfo.fps);
 							}
 
 							// end.
@@ -2823,6 +2889,12 @@ global.LOOP = CLASS(function(cls) {
 
 			// info
 			info,
+			
+			// resume.
+			resume,
+			
+			// pause.
+			pause,
 
 			// change fps.
 			changeFPS,
@@ -2841,21 +2913,20 @@ global.LOOP = CLASS(function(cls) {
 					interval = intervalOrFuncs.interval;
 					end = intervalOrFuncs.end;
 				}
-
-				loopInfos.push( info = {
-					fps : fps,
-					start : start,
-					interval : interval,
-					end : end
+			
+				self.resume = resume = RAR(function() {
+					
+					loopInfos.push( info = {
+						fps : fps,
+						start : start,
+						interval : interval,
+						end : end
+					});
+					
+					fire();
 				});
 
-				self.changeFPS = changeFPS = function(fps) {
-					//REQUIRED: fps
-
-					info.fps = fps;
-				};
-
-				self.remove = remove = function() {
+				self.pause = pause = function() {
 
 					REMOVE({
 						array : loopInfos,
@@ -2864,14 +2935,29 @@ global.LOOP = CLASS(function(cls) {
 
 					stop();
 				};
+
+				self.changeFPS = changeFPS = function(fps) {
+					//REQUIRED: fps
+
+					info.fps = fps;
+				};
+
+				self.remove = remove = function() {
+					pause();
+				};
 			}
 
 			// when fps is run
 			else {
+				
+				self.resume = resume = RAR(function() {
+					
+					runs.push( run = fps);
+					
+					fire();
+				});
 
-				runs.push( run = fps);
-
-				self.remove = remove = function() {
+				self.pause = pause = function() {
 
 					REMOVE({
 						array : runs,
@@ -2880,9 +2966,11 @@ global.LOOP = CLASS(function(cls) {
 
 					stop();
 				};
-			}
 
-			fire();
+				self.remove = remove = function() {
+					pause();
+				};
+			}
 		}
 	};
 });
@@ -5256,9 +5344,15 @@ global.E = CLASS({
 
 		// get key code.
 		getKeyCode,
+
+		// get key name.
+		getKeyName,
 		
 		// get state.
-		getState;
+		getState,
+		
+		// get detail.
+		getDetail;
 
 		checkIsDescendant = function(parent, child) {
 
@@ -5400,9 +5494,17 @@ global.E = CLASS({
 		self.getKeyCode = getKeyCode = function() {
 			return e.keyCode;
 		};
+
+		self.getKeyName = getKeyName = function() {
+			return e.keyName;
+		};
 		
 		self.getState = getState = function() {
 			return e.state;
+		};
+		
+		self.getDetail = getDetail = function() {
+			return e.detail;
 		};
 	}
 });
@@ -5482,6 +5584,12 @@ global.EVENT = CLASS(function(cls) {
 	var
 	// event map
 	eventMaps = {},
+	
+	// vendors
+	vendors = ['webkit', 'moz', 'o', 'ms'],
+	
+	// visibility change event name
+	visibilityChangeEventName = 'visibilitychange',
 
 	// fire all.
 	fireAll,
@@ -5491,6 +5599,19 @@ global.EVENT = CLASS(function(cls) {
 
 	// remove.
 	remove;
+	
+	if (document['hidden'] === undefined) {
+		
+		EACH(vendors, function(vendor) {
+			
+			if (document[vendor + 'Hidden'] !== undefined) {
+				
+				visibilityChangeEventName = vendor + 'visibilitychange';
+				
+				return false;
+			}
+		});
+	}
 
 	cls.fireAll = fireAll = function(nameOrParams) {
 		//REQUIRED: nameOrParams
@@ -5792,6 +5913,10 @@ global.EVENT = CLASS(function(cls) {
 								if (nodeId !== 'body') {
 									e.stopDefault();
 								}
+								
+								// clear.
+								startLeft = -999999;
+								startTop = -999999;
 								
 								return eventHandler(e, node);
 							}
@@ -6101,8 +6226,8 @@ global.ADD_STYLE = METHOD(function(m) {
 	'use strict';
 
 	var
-	// venders
-	venders = ['Webkit', 'Moz', 'O', 'Ms'],
+	// vendors
+	vendors = ['Webkit', 'Moz', 'O', 'Ms'],
 	
 	// cross browser style names
 	crossBrowserStyleNames = ['transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition'],
@@ -6393,7 +6518,7 @@ global.ADD_STYLE = METHOD(function(m) {
 									value : name
 								}) === true) {
 								
-									EACH(venders, function(vender) {
+									EACH(vendors, function(vender) {
 										el.style[vender + name.charAt(0).toUpperCase() + name.slice(1)] = value;
 									});
 								}
@@ -11265,6 +11390,44 @@ global.VIEW = CLASS({
 	}
 });
 
+/**
+ * check is document hidden.
+ */
+global.HIDDEN = METHOD(function(m) {
+	'use strict';
+
+	var
+	// vendors
+	vendors = ['webkit', 'moz', 'o', 'ms'],
+	
+	// hidden attr name
+	hiddenAttrName = 'hidden';
+	
+	if (document['hidden'] === undefined) {
+		
+		EACH(vendors, function(vendor) {
+			
+			if (document[vendor + 'Hidden'] !== undefined) {
+				
+				hiddenAttrName = vendor + 'Hidden';
+				
+				return false;
+			}
+		});
+	}
+
+	return {
+
+		run : function() {
+			
+			var
+			// is hidden
+			isHidden = document[hiddenAttrName];
+			
+			return isHidden === undefined ? true : isHidden;
+		}
+	};
+});
 /**
  * get scroll left. (px)
  */
