@@ -5914,10 +5914,6 @@ global.EVENT = CLASS(function(cls) {
 									e.stopDefault();
 								}
 								
-								// clear.
-								startLeft = -999999;
-								startTop = -999999;
-								
 								return eventHandler(e, node);
 							}
 						}
