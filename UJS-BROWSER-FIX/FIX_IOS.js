@@ -16,6 +16,15 @@ RUN(function() {
 	IOS.version = REAL((navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/)[1]);
 
 	/**
+	 * fix BROWSER.
+	 */
+
+	// fix INFO.
+	if (IOS.version < 9.3) {
+		loadFixScript('BROWSER/INFO');
+	}
+	
+	/**
 	 * fix BROWSER/DOM.
 	 */
 
