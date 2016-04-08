@@ -3641,7 +3641,9 @@ global.INFO = OBJECT({
 		});
 		
 		EVENT_LOW('touchend', function() {
-			isTouching = false;
+			DELAY(function() {
+				isTouching = false;
+			});
 		});
 	}
 });
