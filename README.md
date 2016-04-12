@@ -55,30 +55,33 @@ UPPERCASE는 기본적으로 웹 클라이언트만을 내장하고 있기 때�
 
 ### Unicorn
 Unicorn은 객체 지향 언어들을 지원하기 위해 개발된 UPPERCASE 클라이언트들의 API 원형입니다.
-- [Unicorn](https://github.com/Hanul/Unicorn)
-- [Unicorn-Android](https://github.com/Hanul/Unicorn-Android)
-- [Unicorn-iOS](https://github.com/Hanul/Unicorn-iOS)
+* [Unicorn](https://github.com/Hanul/Unicorn)
+* [Unicorn-Android](https://github.com/Hanul/Unicorn-Android)
+* [Unicorn-iOS](https://github.com/Hanul/Unicorn-iOS)
 
 ## UPPERCASE를 서버로 사용하기
 UPPERCASE를 서버로 사용하고, 클라이언트는 다른 솔루션들과 함께 사용할 수 있습니다.
-
-### UPPERCASE + jQuery
-
-### UPPERCASE + AngularJS
-
-### UPPERCASE + NSP
+* [UPPERCASE + jQuery](DOC/jQuery.md)
+* [UPPERCASE + AngularJS](DOC/AngularJS.md)
+* [UPPERCASE + NSP(Node Server Pages)](DOC/NSP.md)
 
 ## 공식 지원 BOX
-- [UUI](https://github.com/Hanul/UUI)
-- [UANI](https://github.com/Hanul/UANI)
-- [Yogurt](https://github.com/Hanul/Yogurt)
-- [USOCIAL](https://github.com/Hanul/USOCIAL)
-- [UPUSH](https://github.com/Hanul/UPUSH)
-- [UMAIL](https://github.com/Hanul/UMAIL)
-- [UMongoBackup](https://github.com/Hanul/UMongoBackup)
+* [UUI](https://github.com/Hanul/UUI)
+* [UANI](https://github.com/Hanul/UANI)
+* [Yogurt](https://github.com/Hanul/Yogurt)
+* [USOCIAL](https://github.com/Hanul/USOCIAL)
+* [UPUSH](https://github.com/Hanul/UPUSH) iOS와 Android 애플리케이션에 푸시 메시지를 전송하는 기능을 가진 BOX입니다.
+* [UMAIL](https://github.com/Hanul/UMAIL)
+* [GooglePlayPurchaseValidator](https://github.com/Hanul/GooglePlayPurchaseValidator) 구글 플레이 In-App 결제 검증 BOX입니다.
+* [AppStorePurchaseValidator](https://github.com/Hanul/AppStorePurchaseValidator) 앱스토어 In-App 결제 검증 BOX입니다.
 
 ## 파생 프로젝트
-- [Node Server Pages](https://github.com/Hanul/NSP)
+* [Node Server Pages](https://github.com/Hanul/NSP)
+* [UMongoBackup](https://github.com/Hanul/UMongoBackup) 매일 데이터베이스를 백업하는 애플리케이션입니다.
+* [ProxyServer](https://github.com/Hanul/ProxyServer)
+
+## 샘플 프로젝트
+* [UPPERCASE-Sample-Chat](https://github.com/Hanul/UPPERCASE-Sample-Chat)
 
 ## 기타
 * [UPPERCASE 빌드](DOC/BUILD.md)

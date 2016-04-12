@@ -2633,9 +2633,24 @@ global.DELAY = CLASS({
 		//OPTIONAL: func
 
 		var
+		// milliseconds
+		milliseconds,
+		
+		// start time
+		startTime = Date.now(),
+		
+		// remaining
+		remaining,
+		
 		// timeout
 		timeout,
 
+		// resume.
+		resume,
+		
+		// pause.
+		pause,
+		
 		// remove.
 		remove;
 
@@ -2643,13 +2658,29 @@ global.DELAY = CLASS({
 			func = seconds;
 			seconds = 0;
 		}
-
-		timeout = setTimeout(function() {
-			func(self);
-		}, seconds * 1000);
-
-		self.remove = remove = function() {
+		
+		remaining = milliseconds = seconds * 1000;
+		
+		self.resume = resume = RAR(function() {
+			
+			if (timeout === undefined) {
+				
+				timeout = setTimeout(function() {
+					func(self);
+				}, remaining);
+			}
+		});
+		
+		self.pause = pause = function() {
+			
+			remaining = milliseconds - (Date.now() - startTime);
+			
 			clearTimeout(timeout);
+			timeout = undefined;
+		};
+		
+		self.remove = remove = function() {
+			pause();
 		};
 	}
 });
@@ -2665,8 +2696,23 @@ global.INTERVAL = CLASS({
 		//OPTIONAL: func
 
 		var
+		// milliseconds
+		milliseconds,
+		
+		// start time
+		startTime = Date.now(),
+		
+		// remaining
+		remaining,
+		
 		// interval
 		interval,
+		
+		// resume.
+		resume,
+		
+		// pause.
+		pause,
 
 		// remove.
 		remove;
@@ -2675,15 +2721,35 @@ global.INTERVAL = CLASS({
 			func = seconds;
 			seconds = 0;
 		}
-
-		interval = setInterval(function() {
-			if (func(self) === false) {
-				remove();
+		
+		remaining = milliseconds = seconds === 0 ? 1 : seconds * 1000;
+		
+		self.resume = resume = RAR(function() {
+			
+			if (interval === undefined) {
+				
+				interval = setInterval(function() {
+					
+					if (func(self) === false) {
+						remove();
+					}
+					
+					startTime = Date.now();
+					
+				}, remaining);
 			}
-		}, seconds === 0 ? 1 : seconds * 1000);
-
-		self.remove = remove = function() {
+		});
+		
+		self.pause = pause = function() {
+			
+			remaining = milliseconds - (Date.now() - startTime);
+			
 			clearInterval(interval);
+			interval = undefined;
+		};
+		
+		self.remove = remove = function() {
+			pause();
 		};
 	}
 });
@@ -2759,7 +2825,7 @@ global.LOOP = CLASS(function(cls) {
 							// run interval.
 							interval = loopInfo.interval;
 							for ( j = 0; j < count; j += 1) {
-								interval();
+								interval(loopInfo.fps);
 							}
 
 							// end.
@@ -2821,6 +2887,12 @@ global.LOOP = CLASS(function(cls) {
 
 			// info
 			info,
+			
+			// resume.
+			resume,
+			
+			// pause.
+			pause,
 
 			// change fps.
 			changeFPS,
@@ -2839,21 +2911,20 @@ global.LOOP = CLASS(function(cls) {
 					interval = intervalOrFuncs.interval;
 					end = intervalOrFuncs.end;
 				}
-
-				loopInfos.push( info = {
-					fps : fps,
-					start : start,
-					interval : interval,
-					end : end
+			
+				self.resume = resume = RAR(function() {
+					
+					loopInfos.push( info = {
+						fps : fps,
+						start : start,
+						interval : interval,
+						end : end
+					});
+					
+					fire();
 				});
 
-				self.changeFPS = changeFPS = function(fps) {
-					//REQUIRED: fps
-
-					info.fps = fps;
-				};
-
-				self.remove = remove = function() {
+				self.pause = pause = function() {
 
 					REMOVE({
 						array : loopInfos,
@@ -2862,14 +2933,29 @@ global.LOOP = CLASS(function(cls) {
 
 					stop();
 				};
+
+				self.changeFPS = changeFPS = function(fps) {
+					//REQUIRED: fps
+
+					info.fps = fps;
+				};
+
+				self.remove = remove = function() {
+					pause();
+				};
 			}
 
 			// when fps is run
 			else {
+				
+				self.resume = resume = RAR(function() {
+					
+					runs.push( run = fps);
+					
+					fire();
+				});
 
-				runs.push( run = fps);
-
-				self.remove = remove = function() {
+				self.pause = pause = function() {
 
 					REMOVE({
 						array : runs,
@@ -2878,9 +2964,11 @@ global.LOOP = CLASS(function(cls) {
 
 					stop();
 				};
-			}
 
-			fire();
+				self.remove = remove = function() {
+					pause();
+				};
+			}
 		}
 	};
 });

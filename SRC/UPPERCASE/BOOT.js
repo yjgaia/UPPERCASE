@@ -267,7 +267,7 @@ global.BOOT = function(params) {
 		loadForNode(UPPERCASE_PATH + '/UJS-NODE.js');
 
 		// load for client.
-		if (CONFIG.isDevMode !== true) {
+		if (params.CONFIG === undefined || params.CONFIG.isDevMode !== true) {
 			browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.MIN.js');
 		} else {
 			browserUJSScript += loadForBrowser(UPPERCASE_PATH + '/UJS-BROWSER.js');

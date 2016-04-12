@@ -46,10 +46,10 @@
 NODE_CONFIG : {
 	clusteringPort : 8603,
 	clusteringServerHosts : {
-		serverA : '127.0.0.1',
-		serverB : '127.0.0.1'
+		nodeServer1 : '11.22.33.44',
+		nodeServer2 : '44.33.22.11'
 	},
-	thisServerName : 'serverA'
+	thisServerName : 'nodeServer1'
 }
 ```
 * `socketServerHosts` 소켓 서버들의 host를 배열로 설정합니다.

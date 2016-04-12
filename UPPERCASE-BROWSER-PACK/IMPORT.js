@@ -2635,9 +2635,24 @@ global.DELAY = CLASS({
 		//OPTIONAL: func
 
 		var
+		// milliseconds
+		milliseconds,
+		
+		// start time
+		startTime = Date.now(),
+		
+		// remaining
+		remaining,
+		
 		// timeout
 		timeout,
 
+		// resume.
+		resume,
+		
+		// pause.
+		pause,
+		
 		// remove.
 		remove;
 
@@ -2645,13 +2660,29 @@ global.DELAY = CLASS({
 			func = seconds;
 			seconds = 0;
 		}
-
-		timeout = setTimeout(function() {
-			func(self);
-		}, seconds * 1000);
-
-		self.remove = remove = function() {
+		
+		remaining = milliseconds = seconds * 1000;
+		
+		self.resume = resume = RAR(function() {
+			
+			if (timeout === undefined) {
+				
+				timeout = setTimeout(function() {
+					func(self);
+				}, remaining);
+			}
+		});
+		
+		self.pause = pause = function() {
+			
+			remaining = milliseconds - (Date.now() - startTime);
+			
 			clearTimeout(timeout);
+			timeout = undefined;
+		};
+		
+		self.remove = remove = function() {
+			pause();
 		};
 	}
 });
@@ -2667,8 +2698,23 @@ global.INTERVAL = CLASS({
 		//OPTIONAL: func
 
 		var
+		// milliseconds
+		milliseconds,
+		
+		// start time
+		startTime = Date.now(),
+		
+		// remaining
+		remaining,
+		
 		// interval
 		interval,
+		
+		// resume.
+		resume,
+		
+		// pause.
+		pause,
 
 		// remove.
 		remove;
@@ -2677,15 +2723,35 @@ global.INTERVAL = CLASS({
 			func = seconds;
 			seconds = 0;
 		}
-
-		interval = setInterval(function() {
-			if (func(self) === false) {
-				remove();
+		
+		remaining = milliseconds = seconds === 0 ? 1 : seconds * 1000;
+		
+		self.resume = resume = RAR(function() {
+			
+			if (interval === undefined) {
+				
+				interval = setInterval(function() {
+					
+					if (func(self) === false) {
+						remove();
+					}
+					
+					startTime = Date.now();
+					
+				}, remaining);
 			}
-		}, seconds === 0 ? 1 : seconds * 1000);
-
-		self.remove = remove = function() {
+		});
+		
+		self.pause = pause = function() {
+			
+			remaining = milliseconds - (Date.now() - startTime);
+			
 			clearInterval(interval);
+			interval = undefined;
+		};
+		
+		self.remove = remove = function() {
+			pause();
 		};
 	}
 });
@@ -2761,7 +2827,7 @@ global.LOOP = CLASS(function(cls) {
 							// run interval.
 							interval = loopInfo.interval;
 							for ( j = 0; j < count; j += 1) {
-								interval();
+								interval(loopInfo.fps);
 							}
 
 							// end.
@@ -2823,6 +2889,12 @@ global.LOOP = CLASS(function(cls) {
 
 			// info
 			info,
+			
+			// resume.
+			resume,
+			
+			// pause.
+			pause,
 
 			// change fps.
 			changeFPS,
@@ -2841,21 +2913,20 @@ global.LOOP = CLASS(function(cls) {
 					interval = intervalOrFuncs.interval;
 					end = intervalOrFuncs.end;
 				}
-
-				loopInfos.push( info = {
-					fps : fps,
-					start : start,
-					interval : interval,
-					end : end
+			
+				self.resume = resume = RAR(function() {
+					
+					loopInfos.push( info = {
+						fps : fps,
+						start : start,
+						interval : interval,
+						end : end
+					});
+					
+					fire();
 				});
 
-				self.changeFPS = changeFPS = function(fps) {
-					//REQUIRED: fps
-
-					info.fps = fps;
-				};
-
-				self.remove = remove = function() {
+				self.pause = pause = function() {
 
 					REMOVE({
 						array : loopInfos,
@@ -2864,14 +2935,29 @@ global.LOOP = CLASS(function(cls) {
 
 					stop();
 				};
+
+				self.changeFPS = changeFPS = function(fps) {
+					//REQUIRED: fps
+
+					info.fps = fps;
+				};
+
+				self.remove = remove = function() {
+					pause();
+				};
 			}
 
 			// when fps is run
 			else {
+				
+				self.resume = resume = RAR(function() {
+					
+					runs.push( run = fps);
+					
+					fire();
+				});
 
-				runs.push( run = fps);
-
-				self.remove = remove = function() {
+				self.pause = pause = function() {
 
 					REMOVE({
 						array : runs,
@@ -2880,9 +2966,11 @@ global.LOOP = CLASS(function(cls) {
 
 					stop();
 				};
-			}
 
-			fire();
+				self.remove = remove = function() {
+					pause();
+				};
+			}
 		}
 	};
 });
@@ -3466,6 +3554,9 @@ global.INFO = OBJECT({
 		// is touch mode
 		isTouchMode = global.ontouchstart !== undefined,
 		
+		// is touching
+		isTouching,
+		
 		// browser info
 		browserInfo,
 
@@ -3539,11 +3630,20 @@ global.INFO = OBJECT({
 		};
 		
 		EVENT_LOW('mousemove', function() {
-			isTouchMode = false;
+			if (isTouching !== true) {
+				isTouchMode = false;
+			}
 		});
 		
 		EVENT_LOW('touchstart', function() {
 			isTouchMode = true;
+			isTouching = true;
+		});
+		
+		EVENT_LOW('touchend', function() {
+			DELAY(function() {
+				isTouching = false;
+			});
 		});
 	}
 });
@@ -3833,8 +3933,8 @@ global.SOUND = CLASS(function(cls) {
 
 		init : function(inner, self, params) {
 			//REQUIRED: params
-			//REQUIRED: params.mp3
-			//REQUIRED: params.ogg
+			//OPTIONAL: params.mp3
+			//OPTIONAL: params.ogg
 			//OPTIONAL: params.isLoop
 
 			var
@@ -3873,107 +3973,121 @@ global.SOUND = CLASS(function(cls) {
 				src = ogg;
 			}
 			
-			// init audioContext.
-			if (audioContext === undefined && global.AudioContext !== undefined) {
-				audioContext = new AudioContext();
+			if (src === undefined) {
+				
+				self.play = play = function() {
+					return self;
+				};
+	
+				self.stop = stop = function() {
+					// ignore.
+				};
 			}
-
-			// if exists audio context
-			if (audioContext !== undefined) {
-
-				request = new XMLHttpRequest();
-				request.open('GET', src, true);
-				request.responseType = 'arraybuffer';
-
-				request.onload = function() {
-
-					audioContext.decodeAudioData(request.response, function(_buffer) {
-
-						var
-						// gain
-						gain = audioContext.createGain ? audioContext.createGain() : audioContext.createGainNode();
-
-						buffer = _buffer;
-
-						// default volume
-						// support both webkitAudioContext or standard AudioContext
-						gain.connect(audioContext.destination);
-						gain.gain.value = 0.5;
-
-						if (delayed !== undefined) {
+			
+			else {
+				
+				// init audioContext.
+				if (audioContext === undefined && global.AudioContext !== undefined) {
+					audioContext = new AudioContext();
+				}
+	
+				// if exists audio context
+				if (audioContext !== undefined) {
+	
+					request = new XMLHttpRequest();
+					request.open('GET', src, true);
+					request.responseType = 'arraybuffer';
+	
+					request.onload = function() {
+	
+						audioContext.decodeAudioData(request.response, function(_buffer) {
+	
+							var
+							// gain
+							gain = audioContext.createGain ? audioContext.createGain() : audioContext.createGainNode();
+	
+							buffer = _buffer;
+	
+							// default volume
+							// support both webkitAudioContext or standard AudioContext
+							gain.connect(audioContext.destination);
+							gain.gain.value = 0.5;
+	
+							if (delayed !== undefined) {
+								delayed();
+							}
+						});
+					};
+					request.send();
+	
+					self.play = play = function() {
+	
+						delayed = function() {
+	
+							source = audioContext.createBufferSource();
+							// creates a sound source
+							source.buffer = buffer;
+							// tell the source which sound to play
+							source.connect(audioContext.destination);
+							// connect the source to the context's destination (the speakers)
+							// support both webkitAudioContext or standard AudioContext
+	
+							source.loop = isLoop;
+	
+							if (source.noteOn !== undefined) {
+								source.noteOn(0);
+							} else {
+								source.start(0);
+							}
+	
+							delayed = undefined;
+						};
+	
+						if (buffer !== undefined) {
 							delayed();
 						}
-					});
-				};
-				request.send();
-
-				self.play = play = function() {
-
-					delayed = function() {
-
-						source = audioContext.createBufferSource();
-						// creates a sound source
-						source.buffer = buffer;
-						// tell the source which sound to play
-						source.connect(audioContext.destination);
-						// connect the source to the context's destination (the speakers)
-						// support both webkitAudioContext or standard AudioContext
-
-						source.loop = isLoop;
-
-						if (source.noteOn !== undefined) {
-							source.noteOn(0);
-						} else {
-							source.start(0);
-						}
-
-						delayed = undefined;
+	
+						return self;
 					};
-
-					if (buffer !== undefined) {
-						delayed();
-					}
-
-					return self;
-				};
-
-				self.stop = stop = function() {
-
-					if (source !== undefined) {
-						if (source.noteOff !== undefined) {
-							source.noteOff(0);
-						} else {
-							source.stop(0);
+	
+					self.stop = stop = function() {
+	
+						if (source !== undefined) {
+							if (source.noteOff !== undefined) {
+								source.noteOff(0);
+							} else {
+								source.stop(0);
+							}
 						}
-					}
-				};
-
-			}
-
-			// if not exists audio context
-			else {
-
-				audio.src = src;
-
-				if (isLoop === true) {
-
-					// when audio ended, play again.
-					audio.addEventListener('ended', function() {
-						this.currentTime = 0;
-						this.play();
-					}, false);
+					};
+	
 				}
-
-				self.play = play = function() {
-
-					audio.play();
-
-					return self;
-				};
-
-				self.stop = stop = function() {
-					audio.pause();
-				};
+	
+				// if not exists audio context
+				else {
+	
+					audio.src = src;
+	
+					if (isLoop === true) {
+	
+						// when audio ended, play again.
+						audio.addEventListener('ended', function() {
+							this.currentTime = 0;
+							this.play();
+						}, false);
+					}
+	
+					self.play = play = function() {
+	
+						audio.play();
+	
+						return self;
+					};
+	
+					self.stop = stop = function() {
+						audio.pause();
+					};
+				}
 			}
 		}
 	};
@@ -5256,9 +5370,15 @@ global.E = CLASS({
 
 		// get key code.
 		getKeyCode,
+
+		// get key name.
+		getKeyName,
 		
 		// get state.
-		getState;
+		getState,
+		
+		// get detail.
+		getDetail;
 
 		checkIsDescendant = function(parent, child) {
 
@@ -5400,9 +5520,17 @@ global.E = CLASS({
 		self.getKeyCode = getKeyCode = function() {
 			return e.keyCode;
 		};
+
+		self.getKeyName = getKeyName = function() {
+			return e.keyName;
+		};
 		
 		self.getState = getState = function() {
 			return e.state;
+		};
+		
+		self.getDetail = getDetail = function() {
+			return e.detail;
 		};
 	}
 });
@@ -5482,6 +5610,12 @@ global.EVENT = CLASS(function(cls) {
 	var
 	// event map
 	eventMaps = {},
+	
+	// vendors
+	vendors = ['webkit', 'moz', 'o', 'ms'],
+	
+	// visibility change event name
+	visibilityChangeEventName = 'visibilitychange',
 
 	// fire all.
 	fireAll,
@@ -5491,6 +5625,19 @@ global.EVENT = CLASS(function(cls) {
 
 	// remove.
 	remove;
+	
+	if (document['hidden'] === undefined) {
+		
+		EACH(vendors, function(vendor) {
+			
+			if (document[vendor + 'Hidden'] !== undefined) {
+				
+				visibilityChangeEventName = vendor + 'visibilitychange';
+				
+				return false;
+			}
+		});
+	}
 
 	cls.fireAll = fireAll = function(nameOrParams) {
 		//REQUIRED: nameOrParams
@@ -6101,8 +6248,8 @@ global.ADD_STYLE = METHOD(function(m) {
 	'use strict';
 
 	var
-	// venders
-	venders = ['Webkit', 'Moz', 'O', 'Ms'],
+	// vendors
+	vendors = ['Webkit', 'Moz', 'O', 'Ms'],
 	
 	// cross browser style names
 	crossBrowserStyleNames = ['transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition'],
@@ -6393,7 +6540,7 @@ global.ADD_STYLE = METHOD(function(m) {
 									value : name
 								}) === true) {
 								
-									EACH(venders, function(vender) {
+									EACH(vendors, function(vender) {
 										el.style[vender + name.charAt(0).toUpperCase() + name.slice(1)] = value;
 									});
 								}
@@ -11265,6 +11412,44 @@ global.VIEW = CLASS({
 	}
 });
 
+/**
+ * check is document hidden.
+ */
+global.HIDDEN = METHOD(function(m) {
+	'use strict';
+
+	var
+	// vendors
+	vendors = ['webkit', 'moz', 'o', 'ms'],
+	
+	// hidden attr name
+	hiddenAttrName = 'hidden';
+	
+	if (document['hidden'] === undefined) {
+		
+		EACH(vendors, function(vendor) {
+			
+			if (document[vendor + 'Hidden'] !== undefined) {
+				
+				hiddenAttrName = vendor + 'Hidden';
+				
+				return false;
+			}
+		});
+	}
+
+	return {
+
+		run : function() {
+			
+			var
+			// is hidden
+			isHidden = document[hiddenAttrName];
+			
+			return isHidden === undefined ? true : isHidden;
+		}
+	};
+});
 /**
  * get scroll left. (px)
  */
