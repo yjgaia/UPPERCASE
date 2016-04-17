@@ -3,36 +3,17 @@
  */
 global.WEB_SOCKET_SERVER = METHOD({
 
-	run : function(portOrWebServer, connectionListener) {
+	run : function(webServer, connectionListener) {
 		'use strict';
-		//REQUIRED: portOrWebServer
+		//REQUIRED: webServer
 		//REQUIRED: connectionListener
 
 		var
 		//IMPORT: WebSocketServer
 		WebSocketServer = require('ws').Server,
-
-		// port
-		port,
-
-		// web server
-		webServer,
-
-		// server
-		server;
-
-		if (CHECK_IS_DATA(portOrWebServer) !== true) {
-			port = portOrWebServer;
-		} else {
-			webServer = portOrWebServer;
-		}
-
-		server = new WebSocketServer({
-			port : port,
-			server : webServer === undefined ? undefined : webServer.getNativeHTTPServer()
-		});
-
-		server.on('connection', function(conn) {
+		
+		// connection listener.
+		connectionListener = function(conn) {
 
 			var
 			// headers
@@ -236,8 +217,22 @@ global.WEB_SOCKET_SERVER = METHOD({
 			function() {
 				conn.close();
 			});
-		});
+		};
+		
+		if (webServer.getNativeHTTPServer() !== undefined) {
+		
+			new WebSocketServer({
+				server : webServer.getNativeHTTPServer()
+			}).on('connection', connectionListener);
+		}
+		
+		if (webServer.getNativeHTTPSServer() !== undefined) {
+		
+			new WebSocketServer({
+				server : webServer.getNativeHTTPSServer()
+			}).on('connection', connectionListener);
+		}
 
-		console.log('[UPPERCASE-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...' + (port === undefined ? '' : ' (PORT:' + port + ')'));
+		console.log('[UPPERCASE-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...');
 	}
 });
