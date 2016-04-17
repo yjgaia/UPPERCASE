@@ -688,8 +688,8 @@ global.WEB_SOCKET_SERVER = METHOD({
 		//IMPORT: WebSocketServer
 		WebSocketServer = require('ws').Server,
 		
-		// connection listener.
-		connectionListener = function(conn) {
+		// native connection listener.
+		nativeConnectionListener = function(conn) {
 
 			var
 			// headers
@@ -899,14 +899,14 @@ global.WEB_SOCKET_SERVER = METHOD({
 		
 			new WebSocketServer({
 				server : webServer.getNativeHTTPServer()
-			}).on('connection', connectionListener);
+			}).on('connection', nativeConnectionListener);
 		}
 		
 		if (webServer.getNativeHTTPSServer() !== undefined) {
 		
 			new WebSocketServer({
 				server : webServer.getNativeHTTPSServer()
-			}).on('connection', connectionListener);
+			}).on('connection', nativeConnectionListener);
 		}
 
 		console.log('[UPPERCASE-WEB_SOCKET_SERVER] RUNNING WEB SOCKET SERVER...');
