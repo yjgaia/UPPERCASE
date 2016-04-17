@@ -71,7 +71,9 @@ READY(function() {
 					reloadInterval = INTERVAL(1, RAR(function() {
 		
 						GET({
-							port : CONFIG.webServerPort,
+							isSecure : BROWSER_CONFIG.isSecure,
+							host : BROWSER_CONFIG.host,
+							port : BROWSER_CONFIG.port,
 							uri : '__VERSION'
 						}, function(version) {
 							
