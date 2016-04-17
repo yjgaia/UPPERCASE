@@ -8470,7 +8470,7 @@ global.RESOURCE_SERVER = CLASS(function(cls) {
 				return webServer.getNativeHTTPServer();
 			};
 			
-			self.getNativeHTTPSServer = getNativeHTTSPServer = function() {
+			self.getNativeHTTPSServer = getNativeHTTPSServer = function() {
 				return webServer.getNativeHTTPSServer();
 			};
 		}
