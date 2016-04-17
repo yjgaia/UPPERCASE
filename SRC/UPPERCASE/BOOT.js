@@ -732,7 +732,7 @@ global.BOOT = function(params) {
 
 				port : CONFIG.webServerPort,
 
-				securedPort : CONFIG.sercuredWebServerPort,
+				securedPort : CONFIG.securedWebServerPort,
 				securedKeyFilePath : rootPath + '/' + NODE_CONFIG.securedKeyFilePath,
 				securedCertFilePath : rootPath + '/' + NODE_CONFIG.securedCertFilePath,
 
