@@ -274,6 +274,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 
 				CONNECT_TO_ROOM_SERVER({
 					name : roomServerName,
+					isSecure : isSecure,
 					host : host,
 					port : webServerPort,
 					fixRequestURI : '__WEB_SOCKET_FIX'
