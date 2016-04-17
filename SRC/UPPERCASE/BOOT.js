@@ -723,7 +723,7 @@ global.BOOT = function(params) {
 			}
 		});
 
-		if (CONFIG.webServerPort !== undefined || CONFIG.sercuredWebServerPort !== undefined) {
+		if (CONFIG.webServerPort !== undefined || CONFIG.securedWebServerPort !== undefined) {
 
 			// load UPPERCASE-UPLOAD.
 			loadForNode(UPPERCASE_PATH + '/UPPERCASE-UPLOAD/NODE.js');
@@ -759,6 +759,9 @@ global.BOOT = function(params) {
 				requestListener : function(requestInfo, response, onDisconnected, replaceRootPath, next) {
 
 					var
+					// is secure
+					isSecure = requestInfo.isSecure,
+					
 					// uri
 					uri = requestInfo.uri,
 
@@ -1161,7 +1164,9 @@ global.BOOT = function(params) {
 										response({
 											statusCode : 302,
 											headers : {
-												'Location' : 'http://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.webServerPort + '/__RF/' + boxName + '/' + uri
+												'Location' : isSecure === true ?
+													'https://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.securedWebServerPort + '/__RF/' + boxName + '/' + uri :
+													'http://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.webServerPort + '/__RF/' + boxName + '/' + uri
 											}
 										});
 									}
@@ -1264,7 +1269,7 @@ global.BOOT = function(params) {
 							content = '',
 							
 							// phantom
-						    phantom = require('child_process').spawn('phantomjs', [__dirname + '/PRINT_HTML_SNAPSHOT.js', CONFIG.webServerPort, uri === '' ? params._escaped_fragment_ : decodeURIComponent(uri)]);
+						    phantom = require('child_process').spawn('phantomjs', [__dirname + '/PRINT_HTML_SNAPSHOT.js', (CONFIG.webServerPort === undefined ? CONFIG.securedWebServerPort : CONFIG.webServerPort), uri === '' ? params._escaped_fragment_ : decodeURIComponent(uri)]);
 						    
 						    phantom.stdout.setEncoding('utf8');
 						    
