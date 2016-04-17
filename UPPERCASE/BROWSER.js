@@ -255,7 +255,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		}
 		
 		if (webServerPort === undefined) {
-			webServerPort = CONFIG.webServerPort;
+			webServerPort = BROWSER_CONFIG.port;
 		}
 		
 		if (isSecure === undefined) {

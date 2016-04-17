@@ -4513,7 +4513,19 @@ global.NODE = CLASS({
 		getData,
 		
 		// scroll to.
-		scrollTo;
+		scrollTo,
+		
+		// get scroll left.
+		getScrollLeft,
+		
+		// get scroll top.
+		getScrollTop,
+		
+		// get scroll width.
+		getScrollWidth,
+		
+		// get scroll height.
+		getScrollHeight;
 
 		inner.setWrapperDom = setWrapperDom = function(dom) {
 			//REQUIRED: dom
@@ -5128,6 +5140,62 @@ global.NODE = CLASS({
 				if (top !== undefined) {
 					contentEl.scrollTop = top;
 				}
+			}
+		};
+		
+		self.scrollTo = scrollTo = function(params) {
+			//REQUIRED: params
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			
+			var
+			// left
+			left = params.left,
+			
+			// top
+			top = params.top;
+			
+			if (contentEl !== undefined) {
+			
+				if (left !== undefined) {
+					contentEl.scrollLeft = left;
+				}
+				
+				if (top !== undefined) {
+					contentEl.scrollTop = top;
+				}
+			}
+		};
+		
+		self.getScrollLeft = getScrollLeft = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollLeft;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollTop = getScrollTop = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollTop;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollWidth = getScrollWidth = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollWidth;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollHeight = getScrollHeight = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollHeight;
+			} else {
+				return 0;
 			}
 		};
 	},
@@ -14243,7 +14311,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		}
 		
 		if (webServerPort === undefined) {
-			webServerPort = CONFIG.webServerPort;
+			webServerPort = BROWSER_CONFIG.port;
 		}
 		
 		if (isSecure === undefined) {
