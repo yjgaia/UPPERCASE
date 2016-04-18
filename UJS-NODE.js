@@ -5936,7 +5936,7 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 
 	return {
 
-		run : function(pathOrParams, callback) {
+		run : function(pathOrParams, callbackOrHandlers) {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path
 			//OPTIONAL: pathOrParams.isSync
