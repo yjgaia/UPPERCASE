@@ -56,7 +56,7 @@ FOR_BOX(function(box) {
 	
 				var
 				// uri
-				uri = (BROWSER_CONFIG.isSecure === true ? 'https:' : 'http:') + '//' + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/' + box.boxName + '/R/' + path;
+				uri = box.boxName + '/R/' + path;
 	
 				if (CONFIG.version !== undefined) {
 					uri += '?version=' + CONFIG.version;

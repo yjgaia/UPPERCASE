@@ -70,12 +70,7 @@ READY(function() {
 					
 					reloadInterval = INTERVAL(1, RAR(function() {
 		
-						GET({
-							isSecure : BROWSER_CONFIG.isSecure,
-							host : BROWSER_CONFIG.host,
-							port : BROWSER_CONFIG.port,
-							uri : '__VERSION'
-						}, function(version) {
+						GET('__VERSION', function(version) {
 							
 							if (reloadInterval !== undefined) {
 								reloadInterval.remove();
