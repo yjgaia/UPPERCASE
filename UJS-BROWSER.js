@@ -4060,7 +4060,6 @@ global.SOUND = CLASS(function(cls) {
 							}
 						}
 					};
-	
 				}
 	
 				// if not exists audio context
@@ -5446,7 +5445,10 @@ global.E = CLASS({
 		getState,
 		
 		// get detail.
-		getDetail;
+		getDetail,
+		
+		// get wheel delta
+		getWheelDelta;
 
 		checkIsDescendant = function(parent, child) {
 
@@ -5599,6 +5601,18 @@ global.E = CLASS({
 		
 		self.getDetail = getDetail = function() {
 			return e.detail;
+		};
+		
+		self.getWheelDelta = getWheelDelta = function() {
+			
+			if (document.onmousewheel !== undefined) {
+				return e.wheelDelta;
+			}
+			
+			// FireFox
+			else {
+				return e.detail * -40;
+			}
 		};
 	}
 });
@@ -6163,6 +6177,24 @@ global.EVENT = CLASS(function(cls) {
 						eventHandler(e, node);
 					}
 				}));
+			}
+			
+			// mouse wheel event (FireFox, using 'DOMMouseScroll')
+			else if (name === 'mousewheel') {
+				
+				if (document.onmousewheel !== undefined) {
+					eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
+				}
+				
+				// FireFox
+				else {
+					
+					eventLows.push(EVENT_LOW({
+						node : node,
+						lowNode : lowNode,
+						name : 'DOMMouseScroll'
+					}, eventHandler));
+				}
 			}
 
 			// other events
@@ -10913,7 +10945,7 @@ global.REQUEST = METHOD({
 		port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port,
 
 		// is secure
-		isSecure = params.isSecure,
+		isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure,
 
 		// method
 		method = params.method,
