@@ -8178,6 +8178,16 @@ global.RESOURCE_SERVER = CLASS(function(cls) {
 			return 'audio/mpeg';
 		}
 
+		// ogg
+		if (extname === '.ogg') {
+			return 'audio/ogg';
+		}
+
+		// mp4
+		if (extname === '.mp4') {
+			return 'video/mp4';
+		}
+
 		return 'application/octet-stream';
 	};
 
@@ -8986,6 +8996,15 @@ global.WEB_SERVER = CLASS(function(cls) {
 						params = querystring.parse(paramStr),
 						
 						// data
+						data;
+						
+						EACH(params, function(param, name) {
+							
+							if (CHECK_IS_ARRAY(param) === true) {
+								params[name] = param[0];
+							}
+						});
+						
 						data = params.__DATA;
 						
 						if (data !== undefined) {
