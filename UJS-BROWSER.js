@@ -10992,46 +10992,70 @@ global.REQUEST = METHOD({
 		}
 
 		url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + (uri === undefined ? '' : (uri[0] === '/' ? uri.substring(1) : uri));
-
-		req = new XMLHttpRequest();
-
-		req.onreadystatechange = function() {
-
-			var
-			// error
-			error;
-
-			// when request completed
-			if (req.readyState === 4) {
-
-				if (req.status === 200) {
-					responseListener(req.responseText);
+		
+		if (global.fetch !== undefined) {
+			
+			(method === 'GET' ? fetch(url + '?' + paramStr, {
+				method : method
+			}) : fetch(url, {
+				method : method,
+				body : paramStr
+			})).then(function(response) {
+				return response.text();
+			}).then(function(responseText) {
+				responseListener(responseText);
+			}).catch(function(error) {
+				
+				if (errorListener !== undefined) {
+					errorListener(error);
 				} else {
+					console.log('[UJS-REQUEST] REQUEST FAILED:', params, error);
+				}
+			});
+		}
+		
+		else {
 
-					error = {
-						code : req.status
-					};
-
-					if (errorListener !== undefined) {
-						errorListener(error);
+			req = new XMLHttpRequest();
+	
+			req.onreadystatechange = function() {
+	
+				var
+				// error
+				error;
+	
+				// when request completed
+				if (req.readyState === 4) {
+	
+					if (req.status === 200) {
+						responseListener(req.responseText);
 					} else {
-						console.log('[UJS-REQUEST] REQUEST FAILED:', params, error);
+	
+						error = {
+							code : req.status
+						};
+	
+						if (errorListener !== undefined) {
+							errorListener(error);
+						} else {
+							console.log('[UJS-REQUEST] REQUEST FAILED:', params, error);
+						}
 					}
 				}
+			};
+	
+			// GET request.
+			if (method === 'GET') {
+				req.open(method, url + '?' + paramStr);
+				req.send();
 			}
-		};
-
-		// GET request.
-		if (method === 'GET') {
-			req.open(method, url + '?' + paramStr);
-			req.send();
-		}
-
-		// other request.
-		else {
-			req.open(method, url);
-			req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-			req.send(paramStr);
+	
+			// other request.
+			else {
+				req.open(method, url);
+				req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				req.send(paramStr);
+			}
 		}
 	}
 });
