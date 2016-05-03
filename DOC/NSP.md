@@ -21,7 +21,10 @@ NSPSample.MAIN = METHOD({
 			rootPath : './NSPSample/view'
 		});
 		
-		addRequestListener(nspCore.requestListener);
+		addRequestListener(function(requestInfo, response, onDisconnected, replaceRootPath, next) {
+			return nspCore.requestListener(requestInfo, response, onDisconnected, replaceRootPath, next);
+		});
+		// or addRequestListener(nspCore.requestListener);
 	}
 });
 ```

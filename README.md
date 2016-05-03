@@ -31,15 +31,16 @@ UPPERCASE를 사용하기 위해서는 이하 기술셋을 알고있어야 합�
 ## 한걸음 더
 * [BOX 이해하기](DOC/BOX.md)
 * [기본 스타일](DOC/BASE_STYLE.md)
-* [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](DOC/CORDOVA.md) (작성중)
+* [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](DOC/HYBRID_APP.md) (작성중)
 * [소셜 연동](DOC/SOCIAL.md) (작성중)
 * [Android, iOS 모바일 네이티브 앱 개발](DOC/MOBILE_NATIVE.md) (작성중)
-* [Node-webkit을 이용한 데스크톱 앱 개발](DOC/NODE_WEBKIT.md) (작성중)
+* [nw.js을 이용한 데스크톱 앱 개발](DOC/nw.js.md) (작성중)
 * [다중 프로젝트 구성](DOC/MULTI_PROJECT.md) (작성중)
 * [프로젝트 혼합하기](DOC/MIX_PROJECT.md) (작성중)
 * [검색 최적화](DOC/SEO.md) (작성중)
 * [프로젝트 성능 향상](DOC/SPEED_UP.md) (작성중)
 * [분산 서버 구성](DOC/CLUSTERING.md) (작성중)
+* [Less 사용하기](DOC/Less.md)
 
 ## 모듈 상세보기
 * [UPPERCASE-TRANSPORT](DOC/UPPERCASE-TRANSPORT.md) 서버와 클라이언트간의 통신을 담당하는 모듈입니다.
