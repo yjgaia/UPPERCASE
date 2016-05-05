@@ -70,10 +70,7 @@ READY(function() {
 					
 					reloadInterval = INTERVAL(1, RAR(function() {
 		
-						GET({
-							port : CONFIG.webServerPort,
-							uri : '__VERSION'
-						}, function(version) {
+						GET('__VERSION', function(version) {
 							
 							if (reloadInterval !== undefined) {
 								reloadInterval.remove();

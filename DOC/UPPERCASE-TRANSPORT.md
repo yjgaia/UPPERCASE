@@ -1,10 +1,10 @@
 # UPPERCASE-TRANSPORT
-TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UJS 서버 구현체들](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-NODE.md#각종-서버-구현체들)에 더하여, 웹 소켓 서버 및 웹 소켓을 지원하지 않는 브라우저에서도 웹 소켓과 같은 형태로 통신을 가능하게 해주는 서버 구현체를 포함하고 있습니다.
+TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UJS 서버 구현체들](https://github.com/Hanul/UJS/blob/master/DOC/UJS-NODE.md#각종-서버-구현체들)에 더하여, 웹 소켓 서버 및 웹 소켓을 지원하지 않는 브라우저에서도 웹 소켓과 같은 형태로 통신을 가능하게 해주는 서버 구현체를 포함하고 있습니다.
 
 또한 TCP 소켓과 웹 소켓 프로토콜을 통합하여 제공하는 멀티 프로토콜 소켓 서버 구현체가 포함되어 있습니다.
 
 ## NODE API
-* `WEB_SOCKET_SERVER(portOrWebServer, connectionListener)` 웹소켓 서버를 만듭니다. [예제보기](../EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
+* `WEB_SOCKET_SERVER(webServer, connectionListener)` 웹소켓 서버를 만듭니다. [예제보기](../EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
 * `WEB_SOCKET_FIX_REQUEST_MANAGER(connectionListener)` JSONP Long-polling을 사용하여 웹소켓을 지원하지 않는 브라우저에서도 웹소켓을 사용하는 것과 같은 효과를 만들 수 있습니다. [예제보기](../EXAMPLES/TRANSPORT/NODE/SERVER/WEB_SOCKET_SERVER.js)
 * `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:}, connectionListener)` 소켓 서버와 웹 소켓 서버를 결합한 다중 프로토콜 소켓 서버를 실행합니다. [예제보기](../EXAMPLES/TRANSPORT/NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js)
 
@@ -22,7 +22,7 @@ TCP/UDP 소켓 서버 및 웹 서버, 리소스 서버를 제공하는 [UJS 서�
 
 ## 사용 방법
 ### 웹소켓 서버 생성
-`on`, `off` 및 `send` 등의 기본적인 사용법은 [UJS의 SOCKET_SERVER](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-NODE.md#각종-서버-구현체들)와 같습니다.
+`on`, `off` 및 `send` 등의 기본적인 사용법은 [UJS의 SOCKET_SERVER](https://github.com/Hanul/UJS/blob/master/DOC/UJS-NODE.md#각종-서버-구현체들)와 같습니다.
 ```javascript
 // load UJS.
 require('../../../../UJS-NODE.js');
@@ -70,7 +70,7 @@ INIT_OBJECTS();
 ```
 
 ### 브라우저에서 웹소켓 서버 접속
-`on`, `off` 및 `send` 등의 기본적인 사용법은 [UJS의  CONNECT_TO_SOCKET_SERVER](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-NODE.md#각종-서버-구현체들)와 같습니다.
+`on`, `off` 및 `send` 등의 기본적인 사용법은 [UJS의  CONNECT_TO_SOCKET_SERVER](https://github.com/Hanul/UJS/blob/master/DOC/UJS-NODE.md#각종-서버-구현체들)와 같습니다.
 ```html
 <!-- import UJS -->
 <script src="UJS-BROWSER.js"></script>

@@ -72,7 +72,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		}
 		
 		if (webServerPort === undefined) {
-			webServerPort = CONFIG.webServerPort;
+			webServerPort = BROWSER_CONFIG.port;
 		}
 		
 		if (isSecure === undefined) {
@@ -91,6 +91,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 
 				CONNECT_TO_ROOM_SERVER({
 					name : roomServerName,
+					isSecure : isSecure,
 					host : host,
 					port : webServerPort,
 					fixRequestURI : '__WEB_SOCKET_FIX'

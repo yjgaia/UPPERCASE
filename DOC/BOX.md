@@ -1,6 +1,6 @@
 # BOX 이해하기
 
-UJS 기반 프로젝트에서, BOX는 모듈과 같은 개념입니다. 자세한 내용은 UJS의 [UJS-COMMON](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-COMMON.md) 문서의 `BOX` 항목을 참고해주세요.
+UJS 기반 프로젝트에서, BOX는 모듈과 같은 개념입니다. 자세한 내용은 UJS의 [UJS-COMMON](https://github.com/Hanul/UJS/blob/master/DOC/UJS-COMMON.md) 문서의 `BOX` 항목을 참고해주세요.
 
 UPPERCASE 기반 프로젝트에서는 *프로젝트 폴더*와 BOX폴더 내부의 각 폴더들의 이름으로 BOX가 생성됩니다.
 예를 들어, 아래와 같이 폴더가 구성되어 있다면 `UUI`, `UANI`, `Yogurt`, `Sample` BOX들이 생성됩니다. (`Sample`은 프로젝트 폴더)

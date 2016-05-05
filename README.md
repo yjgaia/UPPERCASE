@@ -31,15 +31,16 @@ UPPERCASE를 사용하기 위해서는 이하 기술셋을 알고있어야 합�
 ## 한걸음 더
 * [BOX 이해하기](DOC/BOX.md)
 * [기본 스타일](DOC/BASE_STYLE.md)
-* [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](DOC/CORDOVA.md) (작성중)
+* [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](DOC/HYBRID_APP.md) (작성중)
 * [소셜 연동](DOC/SOCIAL.md) (작성중)
 * [Android, iOS 모바일 네이티브 앱 개발](DOC/MOBILE_NATIVE.md) (작성중)
-* [Node-webkit을 이용한 데스크톱 앱 개발](DOC/NODE_WEBKIT.md) (작성중)
+* [nw.js을 이용한 데스크톱 앱 개발](DOC/nw.js.md) (작성중)
 * [다중 프로젝트 구성](DOC/MULTI_PROJECT.md) (작성중)
 * [프로젝트 혼합하기](DOC/MIX_PROJECT.md) (작성중)
 * [검색 최적화](DOC/SEO.md) (작성중)
 * [프로젝트 성능 향상](DOC/SPEED_UP.md) (작성중)
 * [분산 서버 구성](DOC/CLUSTERING.md) (작성중)
+* [Less 사용하기](DOC/Less.md)
 
 ## 모듈 상세보기
 * [UPPERCASE-TRANSPORT](DOC/UPPERCASE-TRANSPORT.md) 서버와 클라이언트간의 통신을 담당하는 모듈입니다.
@@ -77,8 +78,9 @@ UPPERCASE를 서버로 사용하고, 클라이언트는 다른 솔루션들과 �
 
 ## 파생 프로젝트
 * [Node Server Pages](https://github.com/Hanul/NSP)
-* [UMongoBackup](https://github.com/Hanul/UMongoBackup) 매일 데이터베이스를 백업하는 애플리케이션입니다.
-* [ProxyServer](https://github.com/Hanul/ProxyServer)
+* [SkyMongoBackup](https://github.com/Hanul/SkyMongoBackup) 매일 데이터베이스를 백업하는 애플리케이션입니다.
+* [SkyProxy](https://github.com/Hanul/SkyProxy) 한 서버에서 여러 도메인을 사용하고자 할때 필요한 프록시 서버입니다.
+* [SkyRelay](https://github.com/Hanul/SkyRelay) 실시간 멀티플레이 게임을 구현하고자 할 때 홀펀칭에 사용되는 릴레이 서버입니다.
 
 ## 샘플 프로젝트
 * [UPPERCASE-Sample-Chat](https://github.com/Hanul/UPPERCASE-Sample-Chat)
@@ -93,5 +95,5 @@ UPPERCASE를 서버로 사용하고, 클라이언트는 다른 솔루션들과 �
 [Young Jae Sim](https://github.com/Hanul)
 
 ## 문의하기
-* [UPPERCASE 페이스북 그룹](https://www.facebook.com/groups/uppercase/)
 * [GitHub Issues](https://github.com/Hanul/UPPERCASE/issues)
+* [UPPERCASE 페이스북 그룹](https://www.facebook.com/groups/uppercase/)

@@ -4060,7 +4060,6 @@ global.SOUND = CLASS(function(cls) {
 							}
 						}
 					};
-	
 				}
 	
 				// if not exists audio context
@@ -4513,7 +4512,19 @@ global.NODE = CLASS({
 		getData,
 		
 		// scroll to.
-		scrollTo;
+		scrollTo,
+		
+		// get scroll left.
+		getScrollLeft,
+		
+		// get scroll top.
+		getScrollTop,
+		
+		// get scroll width.
+		getScrollWidth,
+		
+		// get scroll height.
+		getScrollHeight;
 
 		inner.setWrapperDom = setWrapperDom = function(dom) {
 			//REQUIRED: dom
@@ -5130,6 +5141,62 @@ global.NODE = CLASS({
 				}
 			}
 		};
+		
+		self.scrollTo = scrollTo = function(params) {
+			//REQUIRED: params
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			
+			var
+			// left
+			left = params.left,
+			
+			// top
+			top = params.top;
+			
+			if (contentEl !== undefined) {
+			
+				if (left !== undefined) {
+					contentEl.scrollLeft = left;
+				}
+				
+				if (top !== undefined) {
+					contentEl.scrollTop = top;
+				}
+			}
+		};
+		
+		self.getScrollLeft = getScrollLeft = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollLeft;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollTop = getScrollTop = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollTop;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollWidth = getScrollWidth = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollWidth;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollHeight = getScrollHeight = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollHeight;
+			} else {
+				return 0;
+			}
+		};
 	},
 
 	afterInit : function(inner, self, params) {
@@ -5378,7 +5445,10 @@ global.E = CLASS({
 		getState,
 		
 		// get detail.
-		getDetail;
+		getDetail,
+		
+		// get wheel delta
+		getWheelDelta;
 
 		checkIsDescendant = function(parent, child) {
 
@@ -5531,6 +5601,18 @@ global.E = CLASS({
 		
 		self.getDetail = getDetail = function() {
 			return e.detail;
+		};
+		
+		self.getWheelDelta = getWheelDelta = function() {
+			
+			if (document.onmousewheel !== undefined) {
+				return e.wheelDelta;
+			}
+			
+			// FireFox
+			else {
+				return e.detail * -40;
+			}
 		};
 	}
 });
@@ -6095,6 +6177,24 @@ global.EVENT = CLASS(function(cls) {
 						eventHandler(e, node);
 					}
 				}));
+			}
+			
+			// mouse wheel event (FireFox, using 'DOMMouseScroll')
+			else if (name === 'mousewheel') {
+				
+				if (document.onmousewheel !== undefined) {
+					eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
+				}
+				
+				// FireFox
+				else {
+					
+					eventLows.push(EVENT_LOW({
+						node : node,
+						lowNode : lowNode,
+						name : 'DOMMouseScroll'
+					}, eventHandler));
+				}
 			}
 
 			// other events
@@ -10845,7 +10945,7 @@ global.REQUEST = METHOD({
 		port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port,
 
 		// is secure
-		isSecure = params.isSecure,
+		isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure,
 
 		// method
 		method = params.method,
@@ -10892,46 +10992,70 @@ global.REQUEST = METHOD({
 		}
 
 		url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + (uri === undefined ? '' : (uri[0] === '/' ? uri.substring(1) : uri));
-
-		req = new XMLHttpRequest();
-
-		req.onreadystatechange = function() {
-
-			var
-			// error
-			error;
-
-			// when request completed
-			if (req.readyState === 4) {
-
-				if (req.status === 200) {
-					responseListener(req.responseText);
+		
+		if (global.fetch !== undefined) {
+			
+			(method === 'GET' ? fetch(url + '?' + paramStr, {
+				method : method
+			}) : fetch(url, {
+				method : method,
+				body : paramStr
+			})).then(function(response) {
+				return response.text();
+			}).then(function(responseText) {
+				responseListener(responseText);
+			}).catch(function(error) {
+				
+				if (errorListener !== undefined) {
+					errorListener(error);
 				} else {
+					console.log('[UJS-REQUEST] REQUEST FAILED:', params, error);
+				}
+			});
+		}
+		
+		else {
 
-					error = {
-						code : req.status
-					};
-
-					if (errorListener !== undefined) {
-						errorListener(error);
+			req = new XMLHttpRequest();
+	
+			req.onreadystatechange = function() {
+	
+				var
+				// error
+				error;
+	
+				// when request completed
+				if (req.readyState === 4) {
+	
+					if (req.status === 200) {
+						responseListener(req.responseText);
 					} else {
-						console.log('[UJS-REQUEST] REQUEST FAILED:', params, error);
+	
+						error = {
+							code : req.status
+						};
+	
+						if (errorListener !== undefined) {
+							errorListener(error);
+						} else {
+							console.log('[UJS-REQUEST] REQUEST FAILED:', params, error);
+						}
 					}
 				}
+			};
+	
+			// GET request.
+			if (method === 'GET') {
+				req.open(method, url + '?' + paramStr);
+				req.send();
 			}
-		};
-
-		// GET request.
-		if (method === 'GET') {
-			req.open(method, url + '?' + paramStr);
-			req.send();
-		}
-
-		// other request.
-		else {
-			req.open(method, url);
-			req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-			req.send(paramStr);
+	
+			// other request.
+			else {
+				req.open(method, url);
+				req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				req.send(paramStr);
+			}
 		}
 	}
 });
@@ -11530,6 +11654,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 	run : function(params, connectionListenerOrListeners) {
 		'use strict';
 		//REQUIRED: params
+		//OPTIONAL: params.isSecure
 		//OPTIONAL: params.host
 		//REQUIRED: params.port
 		//OPTIONAL: params.fixRequestURI
@@ -11538,6 +11663,9 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		//OPTIONAL: connectionListenerOrListeners.error
 
 		var
+		// is secure
+		isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure,
+		
 		// host
 		host = params.host === undefined ? BROWSER_CONFIG.host : params.host,
 
@@ -11609,7 +11737,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			}
 		};
 
-		conn = new WebSocket('ws://' + host + ':' + port);
+		conn = new WebSocket((isSecure === true ? 'wss://': 'ws://') + host + ':' + port);
 
 		conn.onopen = function() {
 
@@ -12188,6 +12316,7 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		run : function(params, connectionListenerOrListeners) {
 			//REQUIRED: params
 			//OPTIONAL: params.name
+			//OPTIONAL: params.isSecure
 			//OPTIONAL: params.host
 			//REQUIRED: params.port
 			//OPTIONAL: params.fixRequestURI
@@ -12219,6 +12348,7 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 			}
 
 			CONNECT_TO_WEB_SOCKET_SERVER({
+				isSecure : params.isSecure,
 				host : params.host,
 				port : params.port,
 				fixRequestURI : params.fixRequestURI
@@ -14243,7 +14373,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		}
 		
 		if (webServerPort === undefined) {
-			webServerPort = CONFIG.webServerPort;
+			webServerPort = BROWSER_CONFIG.port;
 		}
 		
 		if (isSecure === undefined) {
@@ -14262,6 +14392,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 
 				CONNECT_TO_ROOM_SERVER({
 					name : roomServerName,
+					isSecure : isSecure,
 					host : host,
 					port : webServerPort,
 					fixRequestURI : '__WEB_SOCKET_FIX'
