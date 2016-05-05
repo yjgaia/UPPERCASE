@@ -59,6 +59,9 @@ input[type="submit"] {
 	appearance: none;
 	border-radius: 0;
 }
+table {
+	width: 100%;
+}
 th, td {
 	border: 0;
 }
@@ -68,6 +71,8 @@ textarea {
 }
 a {
 	color: inherit;
+	cursor: pointer;
+	text-decoration: none;
 }
 p {
 	line-height: 1.5em;
