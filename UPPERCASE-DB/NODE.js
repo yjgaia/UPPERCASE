@@ -2310,6 +2310,11 @@ FOR_BOX(function(box) {
 						}
 					};
 					
+					// improve performance.
+					createIndex({
+						createTime : 1
+					});
+					
 					self.removeIndex = removeIndex = function(index, callbackOrHandlers) {
 						//REQUIRED: index
 						//OPTIONAL: callbackOrHandlers
