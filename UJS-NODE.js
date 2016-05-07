@@ -9032,7 +9032,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 						EACH(params, function(param, name) {
 							
 							if (CHECK_IS_ARRAY(param) === true) {
-								params[name] = param[0];
+								params[name] = param[param.length - 1];
 							}
 						});
 						
