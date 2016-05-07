@@ -8,7 +8,7 @@ Less의 문법에 대해서는 아래 경로를 살펴보시기 바랍니다.
 npm install less
 ```
 
-이후 `MAIN.js`에 다음과 같이 Less 프리프로세서를 추가합니다.
+이후 `RESOURCE_SERVER.addPreprocessor` 함수를 사용하여 `MAIN.js`에 다음과 같이 Less 프리프로세서를 추가합니다.
 ```javascript
 Sample.MAIN = METHOD({
 
