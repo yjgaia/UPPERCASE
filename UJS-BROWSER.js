@@ -1143,16 +1143,13 @@ global.VALID = CLASS(function(cls) {
 		max = params.max,
 
 		// string
-		str = String(params.value),
-
-		// length
-		length = str.length;
-
+		str = String(params.value);
+		
 		if (min === undefined) {
 			min = 0;
 		}
 
-		return min <= length && (max === undefined || length <= max);
+		return min <= str.trim().length && (max === undefined || str.length <= max);
 	};
 
 	cls.integer = integer = function(value) {
