@@ -8102,6 +8102,9 @@ global.RESOURCE_SERVER = CLASS(function(cls) {
 	'use strict';
 
 	var
+	//IMPORT: fs
+	fs = require('fs'),
+	
 	//IMPORT: path
 	path = require('path'),
 
@@ -8349,9 +8352,60 @@ global.RESOURCE_SERVER = CLASS(function(cls) {
 
 				function() {
 					return function() {
+						
+						// stream video.
+						if (headers.range !== undefined) {
+							
+							GET_FILE_INFO(rootPath + '/' + uri, function(fileInfo) {
 
+								var
+								// positions
+								positions = headers.range.replace(/bytes=/, '').split('-'),
+								
+								// total size
+								totalSize = fileInfo.size,
+								
+								// start position
+								startPosition = INTEGER(positions[0]),
+								
+								// end position
+								endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]),
+								
+								// stream
+								stream = fs.createReadStream(rootPath + '/' + uri, {
+									start : startPosition,
+									end : endPosition
+								}).on('open', function() {
+									
+									response(EXTEND({
+										origin : {
+											contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+											totalSize : totalSize,
+											startPosition : startPosition,
+											endPosition : endPosition,
+											stream : stream
+										},
+										extend : overrideResponseInfo
+									}));
+									
+								}).on('error', function(error) {
+									
+									response(EXTEND({
+										origin : {
+											contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+											totalSize : totalSize,
+											startPosition : startPosition,
+											endPosition : endPosition,
+											content : error.toString()
+										},
+										extend : overrideResponseInfo
+									}));
+								});
+							});
+						}
+						
 						// check ETag.
-						if (CONFIG.isDevMode !== true && (overrideResponseInfo.isFinal !== true ?
+						else if (CONFIG.isDevMode !== true && (overrideResponseInfo.isFinal !== true ?
 
 						// check version.
 						(version !== undefined && headers['if-none-match'] === version) :
@@ -9074,6 +9128,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 							//OPTIONAL: contentOrParams.contentType
 							//OPTIONAL: contentOrParams.content
 							//OPTIONAL: contentOrParams.buffer
+							//OPTIONAL: contentOrParams.totalSize
+							//OPTIONAL: contentOrParams.startPosition
+							//OPTIONAL: contentOrParams.endPosition
+							//OPTIONAL: contentOrParams.stream
 							//OPTIONAL: contentOrParams.encoding
 							//OPTIONAL: contentOrParams.version
 							//OPTIONAL: contentOrParams.isFinal
@@ -9093,6 +9151,18 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 							// buffer
 							buffer,
+							
+							// total size
+							totalSize,
+							
+							// start position
+							startPosition,
+							
+							// end position
+							endPosition,
+							
+							// stream
+							stream,
 
 							// encoding
 							encoding,
@@ -9108,22 +9178,21 @@ global.WEB_SERVER = CLASS(function(cls) {
 								if (CHECK_IS_DATA(contentOrParams) !== true) {
 									content = contentOrParams;
 								} else {
+									
 									statusCode = contentOrParams.statusCode;
 									headers = contentOrParams.headers;
 									contentType = contentOrParams.contentType;
 									content = contentOrParams.content;
 									buffer = contentOrParams.buffer;
+									
+									totalSize = contentOrParams.totalSize;
+									startPosition = contentOrParams.startPosition;
+									endPosition = contentOrParams.endPosition;
+									stream = contentOrParams.stream;
+									
 									encoding = contentOrParams.encoding;
 									version = contentOrParams.version;
 									isFinal = contentOrParams.isFinal;
-								}
-								
-								if (content === undefined) {
-									content = '';
-								}
-
-								if (statusCode === undefined) {
-									statusCode = 200;
 								}
 
 								if (headers === undefined) {
@@ -9139,29 +9208,51 @@ global.WEB_SERVER = CLASS(function(cls) {
 									headers['Content-Type'] = contentType + '; charset=' + encoding;
 								}
 
-								if (CONFIG.isDevMode !== true) {
-									if (isFinal === true) {
-										headers['ETag'] = 'FINAL';
-									} else if (version !== undefined) {
-										headers['ETag'] = version;
-									}
+								if (stream !== undefined) {
+									
+									headers['Content-Range'] = 'bytes ' + startPosition + '-' + endPosition + '/' + totalSize;
+									headers['Accept-Ranges'] = 'bytes';
+									headers['Content-Length'] = endPosition - startPosition + 1;
+									
+									nativeRes.writeHead(206, headers);
+									
+									stream.pipe(nativeRes);
 								}
 								
-								// when gzip encoding
-								if (acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
-
-									headers['Content-Encoding'] = 'gzip';
-
-									zlib.gzip(buffer !== undefined ? buffer : String(content), function(error, buffer) {
-										nativeRes.writeHead(statusCode, headers);
-										nativeRes.end(buffer, encoding);
-									});
-								}
-
-								// when not encoding
 								else {
-									nativeRes.writeHead(statusCode, headers);
-									nativeRes.end(buffer !== undefined ? buffer : String(content), encoding);
+									
+									if (content === undefined) {
+										content = '';
+									}
+									
+									if (statusCode === undefined) {
+										statusCode = 200;
+									}
+									
+									if (CONFIG.isDevMode !== true) {
+										if (isFinal === true) {
+											headers['ETag'] = 'FINAL';
+										} else if (version !== undefined) {
+											headers['ETag'] = version;
+										}
+									}
+									
+									// when gzip encoding
+									if (acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
+	
+										headers['Content-Encoding'] = 'gzip';
+	
+										zlib.gzip(buffer !== undefined ? buffer : String(content), function(error, buffer) {
+											nativeRes.writeHead(statusCode, headers);
+											nativeRes.end(buffer, encoding);
+										});
+									}
+	
+									// when not encoding
+									else {
+										nativeRes.writeHead(statusCode, headers);
+										nativeRes.end(buffer !== undefined ? buffer : String(content), encoding);
+									}
 								}
 
 								requestInfo.isResponsed = true;
