@@ -1473,7 +1473,7 @@ FOR_BOX(function(box) {
 															isSame = true;
 															
 															EACH(updateData, function(value, name) {
-																if (name !== 'lastUpdateTime' && savedData[name] !== value) {
+																if (name !== 'lastUpdateTime' && originData[name] !== value) {
 																	isSame = false;
 																	return false;
 																}
@@ -1481,7 +1481,7 @@ FOR_BOX(function(box) {
 															
 															return isSame;
 															
-														}) === true) {
+														}) !== true) {
 															addHistory('update', id, updateData, savedData.lastUpdateTime);
 														}
 				
