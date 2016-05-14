@@ -774,6 +774,8 @@ global.WEB_SOCKET_SERVER = METHOD({
 
 				// free method map.
 				methodMap = undefined;
+				
+				conn = undefined;
 			});
 
 			// when error
@@ -857,41 +859,47 @@ global.WEB_SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				try {
+				if (conn !== undefined) {
 					
-					conn.send(STRINGIFY({
-						methodName : params.methodName,
-						data : params.data,
-						sendKey : sendKey
-					}));
+					try {
+						
+						conn.send(STRINGIFY({
+							methodName : params.methodName,
+							data : params.data,
+							sendKey : sendKey
+						}));
+						
+					} catch(error) {
+						console.log('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString());
+					}
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
 					
-				} catch(error) {
-					console.log('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString());
+					clientInfo.lastReceiveTime = new Date();
 				}
-
-				if (callback !== undefined) {
-					
-					callbackName = '__CALLBACK_' + sendKey;
-
-					// on callback.
-					on(callbackName, function(data) {
-
-						// run callback.
-						callback(data);
-
-						// off callback.
-						off(callbackName);
-					});
-				}
-
-				sendKey += 1;
-				
-				clientInfo.lastReceiveTime = new Date();
 			},
 
 			// disconnect.
 			function() {
+				
 				conn.close();
+				
+				conn = undefined;
 			});
 		};
 		

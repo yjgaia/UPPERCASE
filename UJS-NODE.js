@@ -8683,6 +8683,8 @@ global.SOCKET_SERVER = METHOD({
 				
 				// free method map.
 				methodMap = undefined;
+				
+				conn = undefined;
 			});
 
 			// when error
@@ -8758,35 +8760,41 @@ global.SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				conn.write(STRINGIFY({
-					methodName : params.methodName,
-					data : params.data,
-					sendKey : sendKey
-				}) + '\r\n');
-
-				if (callback !== undefined) {
+				if (conn !== undefined) {
 					
-					callbackName = '__CALLBACK_' + sendKey;
-
-					// on callback.
-					on(callbackName, function(data) {
-
-						// run callback.
-						callback(data);
-
-						// off callback.
-						off(callbackName);
-					});
+					conn.write(STRINGIFY({
+						methodName : params.methodName,
+						data : params.data,
+						sendKey : sendKey
+					}) + '\r\n');
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
+					
+					clientInfo.lastReceiveTime = new Date();
 				}
-
-				sendKey += 1;
-				
-				clientInfo.lastReceiveTime = new Date();
 			},
 
 			// disconnect.
 			function() {
+				
 				conn.end();
+				
+				conn = undefined;
 			});
 		});
 
