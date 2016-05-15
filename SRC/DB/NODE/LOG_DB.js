@@ -198,7 +198,7 @@ FOR_BOX(function(box) {
 	
 							if (sort === undefined) {
 								sort = {
-									createTime : -1
+									time : -1
 								};
 							} 
 						
@@ -207,8 +207,8 @@ FOR_BOX(function(box) {
 								delete sort.id;
 							}
 							
-							if (sort.createTime === undefined) {
-								sort.createTime = -1;
+							if (sort.time === undefined) {
+								sort.time = -1;
 							}
 	
 							if (start === undefined || start < 0) {
