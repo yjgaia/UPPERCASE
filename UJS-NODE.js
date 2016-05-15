@@ -8701,11 +8701,16 @@ global.SOCKET_SERVER = METHOD({
 
 				var
 				// error msg
-				errorMsg = error.toString();
-
-				console.log(CONSOLE_RED('[UJS-SOCEKT_SERVER] ERROR:'), errorMsg);
-
-				runMethods('__ERROR', errorMsg);
+				errorMsg;
+				
+				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE') {
+					
+					errorMsg = error.toString();
+					
+					console.log(CONSOLE_RED('[UJS-SOCEKT_SERVER] ERROR:'), errorMsg);
+					
+					runMethods('__ERROR', errorMsg);
+				}
 			});
 
 			connectionListener(
