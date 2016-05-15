@@ -5668,39 +5668,33 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				if (conn !== undefined) {
+				conn.write(STRINGIFY({
+					methodName : params.methodName,
+					data : params.data,
+					sendKey : sendKey
+				}) + '\r\n');
 
-					conn.write(STRINGIFY({
-						methodName : params.methodName,
-						data : params.data,
-						sendKey : sendKey
-					}) + '\r\n');
-	
-					if (callback !== undefined) {
-						
-						callbackName = '__CALLBACK_' + sendKey;
-	
-						// on callback.
-						on(callbackName, function(data) {
-	
-							// run callback.
-							callback(data);
-	
-							// off callback.
-							off(callbackName);
-						});
-					}
-	
-					sendKey += 1;
+				if (callback !== undefined) {
+					
+					callbackName = '__CALLBACK_' + sendKey;
+
+					// on callback.
+					on(callbackName, function(data) {
+
+						// run callback.
+						callback(data);
+
+						// off callback.
+						off(callbackName);
+					});
 				}
+
+				sendKey += 1;
 			},
 
 			// disconnect.
 			function() {
-				if (conn !== undefined) {
-					conn.end();
-					conn = undefined;
-				}
+				conn.end();
 			});
 		});
 
@@ -5735,10 +5729,7 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 
 		// when disconnected
 		conn.on('close', function() {
-			
 			runMethods('__DISCONNECTED');
-			
-			conn = undefined;
 		});
 
 		// when error
@@ -8698,8 +8689,6 @@ global.SOCKET_SERVER = METHOD({
 				
 				// free method map.
 				methodMap = undefined;
-				
-				conn = undefined;
 			});
 
 			// when error
@@ -8709,7 +8698,7 @@ global.SOCKET_SERVER = METHOD({
 				// error msg
 				errorMsg;
 				
-				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE') {
+				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE' && error.code !== 'ETIMEOUT') {
 					
 					errorMsg = error.toString();
 					
@@ -8780,7 +8769,7 @@ global.SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				if (conn !== undefined && conn.writable === true) {
+				if (conn.writable === true) {
 					
 					conn.write(STRINGIFY({
 						methodName : params.methodName,
@@ -8811,10 +8800,7 @@ global.SOCKET_SERVER = METHOD({
 
 			// disconnect.
 			function() {
-				if (conn !== undefined) {
-					conn.end();
-					conn = undefined;
-				}
+				conn.end();
 			});
 		});
 

@@ -98,8 +98,6 @@ global.WEB_SOCKET_SERVER = METHOD({
 
 				// free method map.
 				methodMap = undefined;
-				
-				conn = undefined;
 			});
 
 			// when error
@@ -183,7 +181,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				if (conn !== undefined) {
+				if (conn.getReadyState() === WebSocket.OPEN) {
 					
 					try {
 						
@@ -194,7 +192,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 						}));
 						
 					} catch(error) {
-						console.log('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString());
+						console.log(CONSOLE_RED('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:'), error.toString());
 					}
 	
 					if (callback !== undefined) {
@@ -220,10 +218,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 
 			// disconnect.
 			function() {
-				if (conn !== undefined) {
-					conn.close();
-					conn = undefined;
-				}
+				conn.close();
 			});
 		};
 		
