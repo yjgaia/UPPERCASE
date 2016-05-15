@@ -1111,7 +1111,7 @@ FOR_BOX(function(box) {
 		
 							EACH(properties, function(value, propertyName) {
 								
-								if (value !== TO_DELETE) {
+								if (value !== undefined) {
 		
 									( roomForCreate = box.ROOM({
 										roomServerName : roomServerName,
@@ -1120,12 +1120,15 @@ FOR_BOX(function(box) {
 			
 										if (EACH(properties, function(value, propertyName) {
 											
-											if (value === TO_DELETE) {
-												if (savedData[propertyName] !== undefined) {
+											if (value !== undefined) {
+												
+												if (value === TO_DELETE) {
+													if (savedData[propertyName] !== undefined) {
+														return false;
+													}
+												} else if (savedData[propertyName] !== value) {
 													return false;
 												}
-											} else if (savedData[propertyName] !== value) {
-												return false;
 											}
 											
 										}) === true) {
@@ -1277,7 +1280,7 @@ FOR_BOX(function(box) {
 		
 							EACH(properties, function(value, propertyName) {
 								
-								if (value !== TO_DELETE) {
+								if (value !== undefined) {
 		
 									( roomForCreate = box.ROOM({
 										roomServerName : roomServerName,
@@ -1286,12 +1289,15 @@ FOR_BOX(function(box) {
 			
 										if (EACH(properties, function(value, propertyName) {
 											
-											if (value === TO_DELETE) {
-												if (savedData[propertyName] !== undefined) {
+											if (value !== undefined) {
+												
+												if (value === TO_DELETE) {
+													if (savedData[propertyName] !== undefined) {
+														return false;
+													}
+												} else if (savedData[propertyName] !== value) {
 													return false;
 												}
-											} else if (savedData[propertyName] !== value) {
-												return false;
 											}
 											
 										}) === true) {
@@ -1628,23 +1634,34 @@ FOR_BOX(function(box) {
 						} else {
 		
 							EACH(properties, function(value, propertyName) {
-		
-								( roomForRemove = box.ROOM({
-									roomServerName : roomServerName,
-									name : name + '/' + propertyName + '/' + value + '/remove'
-								})).on('remove', function(originData) {
-		
-									if (EACH(properties, function(value, propertyName) {
-		
-										if (originData[propertyName] !== value) {
-											return false;
+								
+								if (value !== undefined) {
+									
+									( roomForRemove = box.ROOM({
+										roomServerName : roomServerName,
+										name : name + '/' + propertyName + '/' + value + '/remove'
+									})).on('remove', function(originData) {
+			
+										if (EACH(properties, function(value, propertyName) {
+											
+											if (value !== undefined) {
+												
+												if (value === TO_DELETE) {
+													if (originData[propertyName] !== undefined) {
+														return false;
+													}
+												} else if (originData[propertyName] !== value) {
+													return false;
+												}
+											}
+											
+										}) === true) {
+											handler(originData);
 										}
-									}) === true) {
-										handler(originData);
-									}
-								});
-		
-								return false;
+									});
+			
+									return false;
+								}
 							});
 						}
 		
