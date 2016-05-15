@@ -326,18 +326,21 @@ FOR_BOX(function(box) {
 									$or : $or
 								},
 								isFindAll : true
-							}, EACH(function(notInitedData) {
+							}, function(notInitedDataSet) {
 								
-								console.log('[UPPERCASE-MODEL] Found not inited data in `' + box.boxName + '.' + name + '`.', notInitedData);
-	
-								EACH(initData, function(value, name) {
-									if (notInitedData[name] === undefined) {
-										notInitedData[name] = value;
-									}
+								console.log('[UPPERCASE-MODEL] Found ' + notInitedDataSet.length + ' not inited data set in `' + box.boxName + '.' + name + '`.');
+								
+								EACH(notInitedDataSet, function(notInitedData) {
+									
+									EACH(initData, function(value, name) {
+										if (notInitedData[name] === undefined) {
+											notInitedData[name] = value;
+										}
+									});
+		
+									db.update(notInitedData);
 								});
-	
-								db.update(notInitedData);
-							}));
+							});
 						}
 					});
 				}
