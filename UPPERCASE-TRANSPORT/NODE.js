@@ -896,10 +896,10 @@ global.WEB_SOCKET_SERVER = METHOD({
 
 			// disconnect.
 			function() {
-				
-				conn.close();
-				
-				conn = undefined;
+				if (conn !== undefined) {
+					conn.close();
+					conn = undefined;
+				}
 			});
 		};
 		

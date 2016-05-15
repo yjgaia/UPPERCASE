@@ -154,33 +154,39 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				conn.send(STRINGIFY({
-					methodName : params.methodName,
-					data : params.data,
-					sendKey : sendKey
-				}));
-
-				if (callback !== undefined) {
+				if (conn !== undefined) {
 					
-					callbackName = '__CALLBACK_' + sendKey;
-
-					// on callback.
-					on(callbackName, function(data) {
-
-						// run callback.
-						callback(data);
-
-						// off callback.
-						off(callbackName);
-					});
+					conn.send(STRINGIFY({
+						methodName : params.methodName,
+						data : params.data,
+						sendKey : sendKey
+					}));
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
 				}
-
-				sendKey += 1;
 			},
 
 			// disconnect.
 			function() {
-				conn.close();
+				if (conn !== undefined) {
+					conn.close();
+					conn = undefined;
+				}
 			});
 		};
 
@@ -198,7 +204,10 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
 		// when disconnected
 		conn.onclose = function() {
+			
 			runMethods('__DISCONNECTED');
+			
+			conn = undefined;
 		};
 
 		// when error

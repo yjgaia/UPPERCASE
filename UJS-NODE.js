@@ -5661,34 +5661,40 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 				var
 				// callback name
 				callbackName;
+				
+				if (conn !== undefined) {
 
-				conn.write(STRINGIFY({
-					methodName : params.methodName,
-					data : params.data,
-					sendKey : sendKey
-				}) + '\r\n');
-
-				if (callback !== undefined) {
-					
-					callbackName = '__CALLBACK_' + sendKey;
-
-					// on callback.
-					on(callbackName, function(data) {
-
-						// run callback.
-						callback(data);
-
-						// off callback.
-						off(callbackName);
-					});
+					conn.write(STRINGIFY({
+						methodName : params.methodName,
+						data : params.data,
+						sendKey : sendKey
+					}) + '\r\n');
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
 				}
-
-				sendKey += 1;
 			},
 
 			// disconnect.
 			function() {
-				conn.end();
+				if (conn !== undefined) {
+					conn.end();
+					conn = undefined;
+				}
 			});
 		});
 
@@ -5723,7 +5729,10 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 
 		// when disconnected
 		conn.on('close', function() {
+			
 			runMethods('__DISCONNECTED');
+			
+			conn = undefined;
 		});
 
 		// when error
@@ -8791,10 +8800,10 @@ global.SOCKET_SERVER = METHOD({
 
 			// disconnect.
 			function() {
-				
-				conn.end();
-				
-				conn = undefined;
+				if (conn !== undefined) {
+					conn.end();
+					conn = undefined;
+				}
 			});
 		});
 
