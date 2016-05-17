@@ -5668,33 +5668,39 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				conn.write(STRINGIFY({
-					methodName : params.methodName,
-					data : params.data,
-					sendKey : sendKey
-				}) + '\r\n');
-
-				if (callback !== undefined) {
+				if (conn !== undefined) {
 					
-					callbackName = '__CALLBACK_' + sendKey;
-
-					// on callback.
-					on(callbackName, function(data) {
-
-						// run callback.
-						callback(data);
-
-						// off callback.
-						off(callbackName);
-					});
+					conn.write(STRINGIFY({
+						methodName : params.methodName,
+						data : params.data,
+						sendKey : sendKey
+					}) + '\r\n');
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
 				}
-
-				sendKey += 1;
 			},
 
 			// disconnect.
 			function() {
-				conn.end();
+				if (conn !== undefined) {
+					conn.end();
+					conn = undefined;
+				}
 			});
 		});
 
@@ -8698,7 +8704,7 @@ global.SOCKET_SERVER = METHOD({
 				// error msg
 				errorMsg;
 				
-				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE' && error.code !== 'ETIMEOUT') {
+				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE' && error.code !== 'ETIMEOUT' && error.code !== 'ENETUNREACH' && error.code !== 'EHOSTUNREACH') {
 					
 					errorMsg = error.toString();
 					
@@ -8769,7 +8775,7 @@ global.SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				if (conn.writable === true) {
+				if (conn !== undefined && conn.writable === true) {
 					
 					conn.write(STRINGIFY({
 						methodName : params.methodName,
@@ -8800,7 +8806,10 @@ global.SOCKET_SERVER = METHOD({
 
 			// disconnect.
 			function() {
-				conn.end();
+				if (conn !== undefined) {
+					conn.end();
+					conn = undefined;
+				}
 			});
 		});
 

@@ -184,7 +184,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				if (conn.readyState === WebSocket.OPEN) {
+				if (conn !== undefined && conn.readyState === WebSocket.OPEN) {
 					
 					try {
 						
@@ -221,7 +221,10 @@ global.WEB_SOCKET_SERVER = METHOD({
 
 			// disconnect.
 			function() {
-				conn.close();
+				if (conn !== undefined) {
+					conn.close();
+					conn = undefined;
+				}
 			});
 		};
 		
