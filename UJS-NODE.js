@@ -8704,7 +8704,7 @@ global.SOCKET_SERVER = METHOD({
 				// error msg
 				errorMsg;
 				
-				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE' && error.code !== 'ETIMEOUT' && error.code !== 'ENETUNREACH' && error.code !== 'EHOSTUNREACH') {
+				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE' && error.code !== 'ETIMEDOUT' && error.code !== 'ENETUNREACH' && error.code !== 'EHOSTUNREACH' && error.code !== 'ECONNREFUSED') {
 					
 					errorMsg = error.toString();
 					
