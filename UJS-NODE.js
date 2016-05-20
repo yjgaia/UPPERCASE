@@ -8655,7 +8655,7 @@ global.SOCKET_SERVER = METHOD({
 				
 				// if catch error
 				catch(error) {
-					console.log(CONSOLE_RED('[UJS-SOCEKT_SERVER] ERROR:'), error.toString());
+					console.log(CONSOLE_RED('[UJS-SOCEKT_SERVER] ERROR:'), methodName, data, error.toString());
 				}
 			};
 
