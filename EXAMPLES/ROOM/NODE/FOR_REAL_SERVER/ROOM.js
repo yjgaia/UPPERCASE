@@ -13,7 +13,11 @@ TEST('ROOM', function(ok) {
 	CPU_CLUSTERING(function(workerData) {
 
 		SERVER_CLUSTERING({
-			hosts : ['1.226.84.92', '58.229.105.35'],
+			hosts : {
+				serverA : '1.2.3.4',
+				serverB : '1.2.3.5'
+			},
+			thisServerName : 'serverA',
 			port : 9125
 		});
 

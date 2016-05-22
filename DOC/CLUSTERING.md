@@ -253,6 +253,18 @@ Can I set the above configuration? (type 'yes' to accept): yes
 src/redis-cli -c -p 7001
 ```
 
+### Redis 서버 초기화
+```
+src/redis-cli -c -p 7001 flushall
+src/redis-cli -c -p 7002 flushall
+src/redis-cli -c -p 7003 flushall
+src/redis-cli -c -p 7004 flushall
+src/redis-cli -c -p 7005 flushall
+src/redis-cli -c -p 7006 flushall
+src/redis-cli -c -p 7007 flushall
+src/redis-cli -c -p 7008 flushall
+```
+
 ### Redis 서버를 재시작 하는 경우
 모든 Redis 서버들을 종료합니다.
 ```

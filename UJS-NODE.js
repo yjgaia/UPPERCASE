@@ -8775,7 +8775,7 @@ global.SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				if (conn !== undefined && conn.writable === true) {
+				if (conn !== undefined) {
 					
 					conn.write(STRINGIFY({
 						methodName : params.methodName,

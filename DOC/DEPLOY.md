@@ -21,7 +21,7 @@ node {{프로젝트 명.js}}
 forever start -c "node --max-old-space-size=2048" {{프로젝트 명.js}}
 ```
 ```
-forever start -c "node --max-old-space-size=4096" {{프로젝트 명.js}}
+forever start -c "node --max-old-space-size=16384" {{프로젝트 명.js}}
 ```
 
 6. 프로젝트 실행에 문제가 있다면 문제를 해결한 후, 4번 과정부터 다시 수행합니다. 이 때, **V 파일**을 업데이트 하여야 변경된 사항이 반영됩니다. `forever`로 서버를 재시작 할 때는 아래 명령어를 입력합니다.
