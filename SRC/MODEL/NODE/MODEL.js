@@ -1545,7 +1545,7 @@ FOR_BOX(function(box) {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
 							} else {
-								console.log(CONSOLE_YELLOW('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS.'), data.id);
+								console.log(CONSOLE_YELLOW('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS.'), data);
 							}
 						} else if (callback !== undefined) {
 							callback(savedData, originData);
@@ -1620,7 +1620,7 @@ FOR_BOX(function(box) {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
 							} else {
-								console.log(CONSOLE_YELLOW('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS.'), data.id);
+								console.log(CONSOLE_YELLOW('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS.'), data);
 							}
 						} else if (callback !== undefined) {
 							callback(savedData, originData);
@@ -1696,7 +1696,7 @@ FOR_BOX(function(box) {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
 							} else {
-								console.log(CONSOLE_YELLOW('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS.'), data.id);
+								console.log(CONSOLE_YELLOW('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS.'), data);
 							}
 						} else if (callback !== undefined) {
 							callback(savedData, originData);

@@ -673,7 +673,7 @@ FOR_BOX(function(box) {
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
 										} else {
-											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS!', data.id);
+											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS!', data);
 										}
 									} else if (callback !== undefined) {
 										callback(savedData, originData);
