@@ -342,7 +342,7 @@ global.BOOT = function(params) {
 		}, {
 
 			notExists : function() {
-				console.log(CONSOLE_RED('[UPPERCASE] NOT EXISTS `V` VERSION FILE!'));
+				SHOW_ERROR('[UPPERCASE] NOT EXISTS `V` VERSION FILE!');
 				version = 'V__NOT_EXISTS__' + Date.now();
 			},
 

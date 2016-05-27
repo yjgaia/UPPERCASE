@@ -3382,7 +3382,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					});
 
 					cluster.on('exit', function(worker, code, signal) {
-						console.log(CONSOLE_RED('[UJS-CPU_CLUSTERING] WORKER #' + worker.id + ' died. (' + (signal !== undefined ? signal : code) + '). restarting...'));
+						SHOW_ERROR('[UJS-CPU_CLUSTERING] WORKER #' + worker.id + ' died. (' + (signal !== undefined ? signal : code) + '). restarting...');
 						fork();
 					});
 				});
@@ -5750,7 +5750,7 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 				if (errorListener !== undefined) {
 					errorListener(errorMsg);
 				} else {
-					console.log(CONSOLE_RED('[UJS-CONNECT_TO_SOCKET_SERVER] CONNECT TO SOCKET SERVER FAILED: ' + errorMsg));
+					SHOW_ERROR('[UJS-CONNECT_TO_SOCKET_SERVER] CONNECT TO SOCKET SERVER FAILED: ' + errorMsg);
 				}
 
 			} else {
@@ -5812,6 +5812,23 @@ global.CONSOLE_YELLOW = METHOD({
 	}
 });
 
+/*
+ * show error.
+ */
+global.SHOW_ERROR = function() {
+	
+	var
+	// args
+	args = Array.prototype.slice.call(arguments);
+	
+	if (args[0] !== undefined) {
+		args[0] = CONSOLE_RED(args[0]);
+	}
+	
+	args.push(new Date());
+	
+	return console.log.apply(console, args);
+};
 /**
  * HMAC SHA1 encrypt.
  */
@@ -5999,7 +6016,7 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 						if (errorHandler !== undefined) {
 							errorHandler(errorMsg);
 						} else {
-							console.log(CONSOLE_RED('[UJS-CHECK_IS_FOLDER] ERROR: ' + errorMsg));
+							SHOW_ERROR('[UJS-CHECK_IS_FOLDER] ERROR: ' + errorMsg);
 						}
 
 					} else if (callback !== undefined) {
@@ -6103,7 +6120,7 @@ global.COPY_FILE = METHOD(function() {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log(CONSOLE_RED('[UJS-COPY_FILE] ERROR:' + errorMsg));
+										SHOW_ERROR('[UJS-COPY_FILE] ERROR:' + errorMsg);
 									}
 								});
 
@@ -6163,7 +6180,7 @@ global.COPY_FILE = METHOD(function() {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log(CONSOLE_RED('[UJS-COPY_FILE] ERROR: ' + errorMsg));
+										SHOW_ERROR('[UJS-COPY_FILE] ERROR: ' + errorMsg);
 									}
 								}
 							}
@@ -6267,7 +6284,7 @@ global.CREATE_FOLDER = METHOD(function() {
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											console.log(CONSOLE_RED('[UJS-CREATE_FOLDER] ERROR: ' + errorMsg));
+											SHOW_ERROR('[UJS-CREATE_FOLDER] ERROR: ' + errorMsg);
 										}
 
 									} else {
@@ -6335,7 +6352,7 @@ global.CREATE_FOLDER = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UJS-CREATE_FOLDER] ERROR: ' + errorMsg));
+								SHOW_ERROR('[UJS-CREATE_FOLDER] ERROR: ' + errorMsg);
 							}
 						}
 					}
@@ -6430,7 +6447,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									console.log(CONSOLE_RED('[UJS-FIND_FILE_NAMES] ERROR:' + errorMsg));
+									SHOW_ERROR('[UJS-FIND_FILE_NAMES] ERROR:' + errorMsg);
 								}
 
 							} else if (callback !== undefined) {
@@ -6453,7 +6470,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 												if (errorHandler !== undefined) {
 													errorHandler(errorMsg);
 												} else {
-													console.log(CONSOLE_RED('[UJS-FIND_FILE_NAMES] ERROR:' + errorMsg));
+													SHOW_ERROR('[UJS-FIND_FILE_NAMES] ERROR:' + errorMsg);
 												}
 
 											} else {
@@ -6538,7 +6555,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UJS-FIND_FILE_NAMES] ERROR: ' + errorMsg));
+								SHOW_ERROR('[UJS-FIND_FILE_NAMES] ERROR: ' + errorMsg);
 							}
 						}
 					}
@@ -6635,7 +6652,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									console.log(CONSOLE_RED('[UJS-FIND_FOLDER_NAMES] ERROR:' + errorMsg));
+									SHOW_ERROR('[UJS-FIND_FOLDER_NAMES] ERROR:' + errorMsg);
 								}
 
 							} else if (callback !== undefined) {
@@ -6658,7 +6675,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 												if (errorHandler !== undefined) {
 													errorHandler(errorMsg);
 												} else {
-													console.log(CONSOLE_RED('[UJS-FIND_FOLDER_NAMES] ERROR:' + errorMsg));
+													SHOW_ERROR('[UJS-FIND_FOLDER_NAMES] ERROR:' + errorMsg);
 												}
 
 											} else {
@@ -6743,7 +6760,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UJS-FIND_FOLDER_NAMES] ERROR: ' + errorMsg));
+								SHOW_ERROR('[UJS-FIND_FOLDER_NAMES] ERROR: ' + errorMsg);
 							}
 						}
 					}
@@ -6834,7 +6851,7 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									console.log(CONSOLE_RED('[UJS-GET_FILE_INFO] ERROR: ' + errorMsg));
+									SHOW_ERROR('[UJS-GET_FILE_INFO] ERROR: ' + errorMsg);
 								}
 
 							} else if (stat.isDirectory() === true) {
@@ -6929,7 +6946,7 @@ global.GET_FILE_INFO = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UJS-GET_FILE_INFO] ERROR: ' + errorMsg));
+								SHOW_ERROR('[UJS-GET_FILE_INFO] ERROR: ' + errorMsg);
 							}
 						}
 					}
@@ -7075,7 +7092,7 @@ global.READ_FILE = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									console.log(CONSOLE_RED('[UJS-READ_FILE] ERROR: ' + errorMsg));
+									SHOW_ERROR('[UJS-READ_FILE] ERROR: ' + errorMsg);
 								}
 
 							} else if (stat.isDirectory() === true) {
@@ -7101,7 +7118,7 @@ global.READ_FILE = METHOD(function() {
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											console.log(CONSOLE_RED('[UJS-READ_FILE] ERROR: ' + errorMsg));
+											SHOW_ERROR('[UJS-READ_FILE] ERROR: ' + errorMsg);
 										}
 
 									} else if (callback !== undefined) {
@@ -7178,7 +7195,7 @@ global.READ_FILE = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UJS-READ_FILE] ERROR: ' + errorMsg));
+								SHOW_ERROR('[UJS-READ_FILE] ERROR: ' + errorMsg);
 							}
 						}
 					}
@@ -7264,7 +7281,7 @@ global.REMOVE_FILE = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									console.log(CONSOLE_RED('[UJS-REMOVE_FILE] ERROR: ' + errorMsg));
+									SHOW_ERROR('[UJS-REMOVE_FILE] ERROR: ' + errorMsg);
 								}
 
 							} else {
@@ -7325,7 +7342,7 @@ global.REMOVE_FILE = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UJS-REMOVE_FILE] ERROR: ' + errorMsg));
+								SHOW_ERROR('[UJS-REMOVE_FILE] ERROR: ' + errorMsg);
 							}
 						}
 					}
@@ -7448,7 +7465,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											console.log(CONSOLE_RED('[UJS-REMOVE_FOLDER] ERROR: ' + errorMsg));
+											SHOW_ERROR('[UJS-REMOVE_FOLDER] ERROR: ' + errorMsg);
 										}
 		
 									} else {
@@ -7533,7 +7550,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UJS-REMOVE_FOLDER] ERROR: ' + errorMsg));
+								SHOW_ERROR('[UJS-REMOVE_FOLDER] ERROR: ' + errorMsg);
 							}
 						}
 					}
@@ -7621,7 +7638,7 @@ global.WRITE_FILE = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UJS-WRITE_FILE] ERROR:' + errorMsg));
+								SHOW_ERROR('[UJS-WRITE_FILE] ERROR:' + errorMsg);
 							}
 
 						} else if (callback !== undefined) {
@@ -7652,7 +7669,7 @@ global.WRITE_FILE = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									console.log(CONSOLE_RED('[UJS-WRITE_FILE] ERROR: ' + errorMsg));
+									SHOW_ERROR('[UJS-WRITE_FILE] ERROR: ' + errorMsg);
 								}
 							}
 						}
@@ -7843,7 +7860,7 @@ global.DOWNLOAD = METHOD(function() {
 				if (errorHandler !== undefined) {
 					errorHandler(errorMsg);
 				} else {
-					console.log(CONSOLE_RED('[UJS-NODE] DOWNLOAD FAILED: ' + errorMsg), params);
+					SHOW_ERROR('[UJS-NODE] DOWNLOAD FAILED: ' + errorMsg, params);
 				}
 			});
 		}
@@ -8097,7 +8114,7 @@ global.REQUEST = METHOD(function() {
 				if (errorListener !== undefined) {
 					errorListener(errorMsg);
 				} else {
-					console.log(CONSOLE_RED('[UJS-NODE] REQUEST FAILED: ' + errorMsg), params);
+					SHOW_ERROR('[UJS-NODE] REQUEST FAILED: ' + errorMsg, params);
 				}
 			});
 		}
@@ -8472,7 +8489,7 @@ global.RESOURCE_SERVER = CLASS(function(cls) {
 								if (errorHandler !== undefined) {
 									isGoingOn = errorHandler(errorMsg, requestInfo, response);
 								} else {
-									console.log(CONSOLE_RED('[UJS-RESOURCE_SERVER] ERROR: ' + errorMsg));
+									SHOW_ERROR('[UJS-RESOURCE_SERVER] ERROR: ' + errorMsg);
 								}
 
 								if (isGoingOn !== false && requestInfo.isResponsed !== true) {
@@ -8655,7 +8672,7 @@ global.SOCKET_SERVER = METHOD({
 				
 				// if catch error
 				catch(error) {
-					console.log(CONSOLE_RED('[UJS-SOCEKT_SERVER] ERROR:'), methodName, data, error.toString());
+					SHOW_ERROR('[UJS-SOCEKT_SERVER] ERROR:', methodName, data, error.toString());
 				}
 			};
 
@@ -8708,7 +8725,7 @@ global.SOCKET_SERVER = METHOD({
 					
 					errorMsg = error.toString();
 					
-					console.log(CONSOLE_RED('[UJS-SOCEKT_SERVER] ERROR:'), errorMsg);
+					SHOW_ERROR('[UJS-SOCEKT_SERVER] ERROR:', errorMsg);
 					
 					runMethods('__ERROR', errorMsg);
 				}

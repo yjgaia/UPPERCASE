@@ -199,7 +199,7 @@ FOR_BOX(function(box) {
 					}, callback);
 
 				} else {
-					console.log('[UPPERCASE-ROOM] `ROOM.send` ERROR! ROOM EXITED!');
+					SHOW_ERROR('[UPPERCASE-ROOM] `ROOM.send` ERROR! ROOM EXITED!');
 				}
 			};
 

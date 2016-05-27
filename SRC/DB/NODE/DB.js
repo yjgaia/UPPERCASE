@@ -583,7 +583,7 @@ FOR_BOX(function(box) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.errorMsg);
 						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` ERROR:'), errorInfo);
+							SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` ERROR:', errorInfo);
 						}
 					},
 					

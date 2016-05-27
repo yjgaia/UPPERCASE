@@ -1394,7 +1394,7 @@ FOR_BOX(function(box) {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` ERROR: ' + errorMsg));
+									SHOW_ERROR('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` ERROR: ' + errorMsg);
 								}
 							} else if (validErrors !== undefined) {
 								if (notValidHandler !== undefined) {
@@ -1464,7 +1464,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.get` ERROR: ' + errorMsg));
+								SHOW_ERROR('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.get` ERROR: ' + errorMsg);
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {
@@ -1533,7 +1533,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` ERROR: ' + errorMsg));
+								SHOW_ERROR('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` ERROR: ' + errorMsg);
 							}
 						} else if (validErrors !== undefined) {
 							if (notValidHandler !== undefined) {
@@ -1608,7 +1608,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` ERROR: ' + errorMsg));
+								SHOW_ERROR('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` ERROR: ' + errorMsg);
 							}
 						} else if (validErrors !== undefined) {
 							if (notValidHandler !== undefined) {
@@ -1684,7 +1684,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` ERROR: ' + errorMsg));
+								SHOW_ERROR('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` ERROR: ' + errorMsg);
 							}
 						} else if (validErrors !== undefined) {
 							if (notValidHandler !== undefined) {
@@ -1747,7 +1747,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.remove` ERROR: ' + errorMsg));
+								SHOW_ERROR('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.remove` ERROR: ' + errorMsg);
 							}
 						} else if (originData === undefined) {
 							if (notExistsHandler !== undefined) {
@@ -1806,7 +1806,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.find` ERROR: ' + errorMsg));
+								SHOW_ERROR('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.find` ERROR: ' + errorMsg);
 							}
 						} else {
 							callback(savedDataSet);
@@ -1855,7 +1855,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.count` ERROR: ' + errorMsg));
+								SHOW_ERROR('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.count` ERROR: ' + errorMsg);
 							}
 						} else {
 							callback(count);
@@ -1904,7 +1904,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.checkIsExists` ERROR: ' + errorMsg));
+								SHOW_ERROR('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.checkIsExists` ERROR: ' + errorMsg);
 							}
 						} else {
 							callback(isExists);

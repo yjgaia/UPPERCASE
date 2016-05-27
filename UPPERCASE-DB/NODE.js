@@ -60,7 +60,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 				if (error !== TO_DELETE) {
 
-					console.log(CONSOLE_RED('[UPPERCASE-DB] CONNECT TO DB SERVER FAILED: ' + error.toString()));
+					SHOW_ERROR('[UPPERCASE-DB] CONNECT TO DB SERVER FAILED: ' + error.toString());
 
 				} else {
 
@@ -666,7 +666,7 @@ FOR_BOX(function(box) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.errorMsg);
 						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` ERROR:'), errorInfo);
+							SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` ERROR:', errorInfo);
 						}
 					},
 					
@@ -2766,7 +2766,7 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(error.toString());
 									} else {
-										console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:'), error.toString());
+										SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:', error.toString());
 									}
 								}
 							};
@@ -2788,7 +2788,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(error.toString());
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:'), error.toString());
+								SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:', error.toString());
 							}
 						}
 					};

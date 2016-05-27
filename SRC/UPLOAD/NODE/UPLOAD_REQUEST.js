@@ -185,7 +185,7 @@ global.UPLOAD_REQUEST = METHOD(function(m) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorMsg);
 						} else {
-							console.log('[UPPERCASE-UPLOAD_REQUEST] ERROR: ' + errorMsg);
+							SHOW_ERROR('[UPPERCASE-UPLOAD_REQUEST] ERROR: ' + errorMsg);
 						}
 					});
 

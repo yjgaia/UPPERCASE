@@ -250,7 +250,7 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(error.toString());
 									} else {
-										console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:'), error.toString());
+										SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:', error.toString());
 									}
 								}
 							};
@@ -272,7 +272,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(error.toString());
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:'), error.toString());
+								SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:', error.toString());
 							}
 						}
 					};

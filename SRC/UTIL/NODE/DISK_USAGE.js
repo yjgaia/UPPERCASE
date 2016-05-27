@@ -50,7 +50,7 @@ global.DISK_USAGE = METHOD(function() {
 				} else if (errorHandler !== undefined) {
 					errorHandler(status);
 				} else {
-					console.log(CONSOLE_RED('[UPPERCASE-DISK_USAGE] ERROR: ' + status));
+					SHOW_ERROR('[UPPERCASE-DISK_USAGE] ERROR: ' + status);
 				}
 			});
 		}
