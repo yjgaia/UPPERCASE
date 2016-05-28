@@ -36,6 +36,16 @@ UADMIN.MAIN = METHOD({
 				target : UADMIN.Form
 			});
 			
+			UADMIN.MATCH_VIEW({
+				uri : 'SHARED_STORE',
+				target : UADMIN.SHARED_STORE
+			});
+			
+			UADMIN.MATCH_VIEW({
+				uri : 'SHARED_DB',
+				target : UADMIN.SHARED_DB
+			});
+			
 			loadingPanel.remove();
 		});
 	}

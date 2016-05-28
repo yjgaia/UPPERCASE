@@ -716,24 +716,21 @@ global.OVERRIDE = METHOD({
  */
 global.PARALLEL = METHOD({
 
-	run : function(countOrArray, funcs) {
+	run : function(dataOrArrayOrCount, funcs) {
 		'use strict';
-		//OPTIONAL: countOrArray
+		//OPTIONAL: dataOrArrayOrCount
 		//REQUIRED: funcs
 
 		var
-		// count
-		count,
-
-		// array
-		array,
-
+		// property count
+		propertyCount,
+		
 		// done count
 		doneCount = 0;
 
 		// only funcs
 		if (funcs === undefined) {
-			funcs = countOrArray;
+			funcs = dataOrArrayOrCount;
 			
 			RUN(function() {
 
@@ -758,58 +755,73 @@ global.PARALLEL = METHOD({
 			});
 		}
 		
-		else {
+		// when dataOrArrayOrCount is undefined
+		else if (dataOrArrayOrCount === undefined) {
+			funcs[1]();
+		}
+		
+		// when dataOrArrayOrCount is data
+		else if (CHECK_IS_DATA(dataOrArrayOrCount) === true) {
 			
-			if (countOrArray === undefined) {
+			propertyCount = COUNT_PROPERTIES(dataOrArrayOrCount);
+
+			if (propertyCount === 0) {
 				funcs[1]();
+			} else {
+
+				EACH(dataOrArrayOrCount, function(value, name) {
+
+					funcs[0](value, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount) {
+							funcs[1]();
+						}
+					}, name);
+				});
 			}
-			
-			else {
-				
-				if (CHECK_IS_ARRAY(countOrArray) !== true) {
-					count = countOrArray;
-				} else {
-					array = countOrArray;
-				}
+		}
 		
-				if (count !== undefined) {
+		// when dataOrArrayOrCount is array
+		else if (CHECK_IS_ARRAY(dataOrArrayOrCount) !== true) {
+	
+			if (dataOrArrayOrCount.length === 0) {
+				funcs[1]();
+			} else {
+
+				EACH(dataOrArrayOrCount, function(value, i) {
+
+					funcs[0](value, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount.length) {
+							funcs[1]();
+						}
+					}, i);
+				});
+			}
+		}
 		
-					if (count === 0) {
-						funcs[1]();
-					} else {
-		
-						REPEAT(count, function(i) {
-		
-							funcs[0](i, function() {
-		
-								doneCount += 1;
-		
-								if (doneCount === count) {
-									funcs[1]();
-								}
-							});
-						});
-					}
-		
-				} else if (array !== undefined) {
-		
-					if (array.length === 0) {
-						funcs[1]();
-					} else {
-		
-						EACH(array, function(value, i) {
-		
-							funcs[0](value, function() {
-		
-								doneCount += 1;
-		
-								if (doneCount === array.length) {
-									funcs[1]();
-								}
-							}, i);
-						});
-					}
-				}
+		// when dataOrArrayOrCount is count
+		else {
+	
+			if (dataOrArrayOrCount === 0) {
+				funcs[1]();
+			} else {
+
+				REPEAT(dataOrArrayOrCount, function(i) {
+
+					funcs[0](i, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount) {
+							funcs[1]();
+						}
+					});
+				});
 			}
 		}
 	}
@@ -3116,7 +3128,7 @@ global.EACH = METHOD({
 		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
 			for (name in dataOrArrayOrString) {
-				if (dataOrArrayOrString.hasOwnProperty(name) === true) {
+				if (dataOrArrayOrString.hasOwnProperty === undefined || dataOrArrayOrString.hasOwnProperty(name) === true) {
 					if (func(dataOrArrayOrString[name], name) === false) {
 						return false;
 					}
@@ -3335,12 +3347,17 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 	var
 	//IMPORT: cluster
 	cluster = require('cluster'),
+	
+	// cpu count
+	cpuCount = require('os').cpus().length,
 
 	// worker id
 	workerId = 1,
 
 	// get worker id.
 	getWorkerId;
+	
+	cluster.schedulingPolicy = cluster.SCHED_RR;
 
 	m.getWorkerId = getWorkerId = function() {
 		return workerId;
@@ -3357,27 +3374,41 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				RUN(function() {
 
 					var
+					// pids
+					pids = {},
+					
 					// fork.
 					fork = function() {
 
 						var
 						// new worker
 						newWorker = cluster.fork();
+						
+						pids[newWorker.id] = newWorker.process.pid;
 
 						// receive data from new worker.
 						newWorker.on('message', function(data) {
-
-							// send data to all workers except new worker.
-							EACH(cluster.workers, function(worker) {
-								if (worker !== newWorker) {
-									worker.send(data);
-								}
-							});
+							
+							if (data === '__GET_PIDS') {
+								newWorker.send(STRINGIFY({
+									methodName : '__GET_PIDS',
+									data : pids
+								}));
+							}
+							
+							else {
+								// send data to all workers except new worker.
+								EACH(cluster.workers, function(worker) {
+									if (worker !== newWorker) {
+										worker.send(data);
+									}
+								});
+							}
 						});
 					};
 
 					// fork workers.
-					REPEAT(require('os').cpus().length, function() {
+					REPEAT(cpuCount, function() {
 						fork();
 					});
 
@@ -3421,7 +3452,16 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					off,
 
 					// broadcast.
-					broadcast;
+					broadcast,
+					
+					// get all shared store storages.
+					getAllSharedStoreStorages,
+					
+					// get all shared db storages.
+					getAllSharedDBStorages,
+					
+					// get pids.
+					getPids;
 
 					workerId = cluster.worker.id;
 
@@ -3502,6 +3542,103 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						//REQUIRED: params.data
 
 						process.send(STRINGIFY(params));
+					};
+					
+					on('__GET_SHARED_STORE_STORAGES', function(requestWorkerId) {
+						broadcast({
+							methodName : '__SEND_SHARED_STORE_STORAGES',
+							data : {
+								requestWorkerId : requestWorkerId,
+								storages : SHARED_STORE.getStorages(),
+								workerId : getWorkerId()
+							}
+						});
+					});
+					
+					on('__SEND_SHARED_STORE_STORAGES', function(data) {
+						if (data.requestWorkerId === getWorkerId()) {
+							if (m.__GET_SHARED_STORE_STORAGES_CALLBACK !== undefined) {
+								m.__GET_SHARED_STORE_STORAGES_CALLBACK(data);
+							}
+						}
+					});
+					
+					m.getAllSharedStoreStorages = getAllSharedStoreStorages = function(callback) {
+						
+						var
+						// all shared store storages
+						allSharedStoreStorages = {};
+						
+						allSharedStoreStorages[getWorkerId()] = SHARED_STORE.getStorages();
+						
+						broadcast({
+							methodName : '__GET_SHARED_STORE_STORAGES',
+							data : getWorkerId()
+						});
+						
+						m.__GET_SHARED_STORE_STORAGES_CALLBACK = function(data) {
+							
+							allSharedStoreStorages[data.workerId] = data.storages;
+							
+							if (COUNT_PROPERTIES(allSharedStoreStorages) === cpuCount) {
+								callback(allSharedStoreStorages);
+							}
+						};
+					};
+					
+					on('__GET_SHARED_DB_STORAGES', function(requestWorkerId) {
+						broadcast({
+							methodName : '__SEND_SHARED_DB_STORAGES',
+							data : {
+								requestWorkerId : requestWorkerId,
+								storages : SHARED_DB.getStorages(),
+								workerId : getWorkerId()
+							}
+						});
+					});
+					
+					on('__SEND_SHARED_DB_STORAGES', function(data) {
+						if (data.requestWorkerId === getWorkerId()) {
+							if (m.__GET_SHARED_DB_STORAGES_CALLBACK !== undefined) {
+								m.__GET_SHARED_DB_STORAGES_CALLBACK(data);
+							}
+						}
+					});
+					
+					m.getAllSharedDBStorages = getAllSharedDBStorages = function(callback) {
+						
+						var
+						// all shared db storages
+						allSharedDBStorages = {};
+						
+						allSharedDBStorages[getWorkerId()] = SHARED_DB.getStorages();
+						
+						broadcast({
+							methodName : '__GET_SHARED_DB_STORAGES',
+							data : getWorkerId()
+						});
+						
+						m.__GET_SHARED_DB_STORAGES_CALLBACK = function(data) {
+							
+							allSharedDBStorages[data.workerId] = data.storages;
+							
+							if (COUNT_PROPERTIES(allSharedDBStorages) === cpuCount) {
+								callback(allSharedDBStorages);
+							}
+						};
+					};
+					
+					on('__GET_PIDS', function(data) {
+						if (m.__GET_PIDS_CALLBACK !== undefined) {
+							m.__GET_PIDS_CALLBACK(data);
+						}
+					});
+					
+					m.getPids = getPids = function(callback) {
+						
+						process.send('__GET_PIDS');
+						
+						m.__GET_PIDS_CALLBACK = callback;
 					};
 
 					work();
@@ -4429,6 +4566,8 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 							on('__DISCONNECTED', function() {
 								delete serverSends[serverName];
 								delete isConnectings[serverName];
+								
+								SHOW_ERROR('[UJS-SERVER_CLUSTERING] DISCONNECTED CLUSTERING SERVER. (SERVER NAME:' + serverName + ')');
 							});
 
 							console.log('[UJS-SERVER_CLUSTERING] CONNECTED CLUSTERING SERVER. (SERVER NAME:' + serverName + ')');
@@ -4471,10 +4610,13 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				});
 
 				socketServeOn('__DISCONNECTED', function() {
+					
 					REMOVE({
 						array : socketServeOns,
 						value : socketServeOn
 					});
+					
+					SHOW_ERROR('[UJS-SERVER_CLUSTERING] DISCONNECTED CLUSTERING SERVER.');
 				});
 			});
 
@@ -4628,6 +4770,9 @@ global.SHARED_DB = CLASS(function(cls) {
 
 	// remove delay map
 	removeDelayMap = {},
+	
+	// get storages.
+	getStorages,
 
 	// save.
 	save,
@@ -4649,6 +4794,10 @@ global.SHARED_DB = CLASS(function(cls) {
 	
 	// clear.
 	clear;
+	
+	cls.getStorages = getStorages = function() {
+		return storages;
+	};
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params
@@ -5189,6 +5338,9 @@ global.SHARED_STORE = CLASS(function(cls) {
 
 	// remove delay map
 	removeDelayMap = {},
+	
+	// get storages.
+	getStorages,
 
 	// save.
 	save,
@@ -5207,6 +5359,10 @@ global.SHARED_STORE = CLASS(function(cls) {
 	
 	// clear.
 	clear;
+	
+	cls.getStorages = getStorages = function() {
+		return storages;
+	};
 
 	cls.save = save = function(params, remove) {
 		//REQUIRED: params

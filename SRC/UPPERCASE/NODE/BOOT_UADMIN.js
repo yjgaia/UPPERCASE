@@ -155,13 +155,94 @@ global.BOOT_UADMIN = METHOD({
 					
 				} else {
 					
-					// serve system info
+					// serve system info.
 					if (uri === '__SYSTEM_INFO') {
 						
-						response(STRINGIFY({
-							cpus : CPU_USAGES(),
-							memory : MEMORY_USAGE()
-						}));
+						if (CPU_CLUSTERING.getPids === undefined) {
+							
+							PROCESS_CPU_USAGE(pid, function(cpuUsage) {
+								PROCESS_MEMORY_USAGE(pid, function(memoryUsage) {
+									
+									response(STRINGIFY({
+										cpus : CPU_USAGES(),
+										memory : MEMORY_USAGE(),
+										workers : {
+											1 : {
+												cpu : cpuUsage,
+												memory : memoryUsage
+											}
+										}
+									}));
+								});
+							});
+						}
+						
+						else {
+							
+							CPU_CLUSTERING.getPids(function(pids) {
+								
+								var
+								// worker infos
+								workerInfos = {};
+								
+								PARALLEL(pids, [
+								function(pid, done, workerId) {
+									
+									var
+									// worker info
+									workerInfo = workerInfos[workerId] = {};
+									
+									PROCESS_CPU_USAGE(pid, function(cpuUsage) {
+										workerInfo.cpu = cpuUsage;
+										PROCESS_MEMORY_USAGE(pid, function(memoryUsage) {
+											workerInfo.memory = memoryUsage;
+											
+											done();
+										});
+									});
+								},
+								
+								function() {
+									response(STRINGIFY({
+										cpus : CPU_USAGES(),
+										memory : MEMORY_USAGE(),
+										workers : workerInfos
+									}));
+								}]);
+							});
+						}
+						
+						return false;
+					}
+					
+					// serve all shared store storages.
+					if (uri === '__ALL_SHARED_STORE_STORAGES') {
+						
+						if (CPU_CLUSTERING.getAllSharedStoreStorages !== undefined) {
+							CPU_CLUSTERING.getAllSharedStoreStorages(function(allSharedStoreStorages) {
+								response(STRINGIFY(allSharedStoreStorages));
+							});
+						} else {
+							response(STRINGIFY({
+								1 : SHARED_STORE.getStorages()
+							}));
+						}
+						
+						return false;
+					}
+					
+					// serve all shared db storages.
+					if (uri === '__ALL_SHARED_DB_STORAGES') {
+						
+						if (CPU_CLUSTERING.getAllSharedDBStorages !== undefined) {
+							CPU_CLUSTERING.getAllSharedDBStorages(function(allSharedDBStorages) {
+								response(STRINGIFY(allSharedDBStorages));
+							});
+						} else {
+							response(STRINGIFY({
+								1 : SHARED_DB.getStorages()
+							}));
+						}
 						
 						return false;
 					}

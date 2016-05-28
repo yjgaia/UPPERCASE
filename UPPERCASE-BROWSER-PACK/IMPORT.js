@@ -718,24 +718,21 @@ global.OVERRIDE = METHOD({
  */
 global.PARALLEL = METHOD({
 
-	run : function(countOrArray, funcs) {
+	run : function(dataOrArrayOrCount, funcs) {
 		'use strict';
-		//OPTIONAL: countOrArray
+		//OPTIONAL: dataOrArrayOrCount
 		//REQUIRED: funcs
 
 		var
-		// count
-		count,
-
-		// array
-		array,
-
+		// property count
+		propertyCount,
+		
 		// done count
 		doneCount = 0;
 
 		// only funcs
 		if (funcs === undefined) {
-			funcs = countOrArray;
+			funcs = dataOrArrayOrCount;
 			
 			RUN(function() {
 
@@ -760,58 +757,73 @@ global.PARALLEL = METHOD({
 			});
 		}
 		
-		else {
+		// when dataOrArrayOrCount is undefined
+		else if (dataOrArrayOrCount === undefined) {
+			funcs[1]();
+		}
+		
+		// when dataOrArrayOrCount is data
+		else if (CHECK_IS_DATA(dataOrArrayOrCount) === true) {
 			
-			if (countOrArray === undefined) {
+			propertyCount = COUNT_PROPERTIES(dataOrArrayOrCount);
+
+			if (propertyCount === 0) {
 				funcs[1]();
+			} else {
+
+				EACH(dataOrArrayOrCount, function(value, name) {
+
+					funcs[0](value, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount) {
+							funcs[1]();
+						}
+					}, name);
+				});
 			}
-			
-			else {
-				
-				if (CHECK_IS_ARRAY(countOrArray) !== true) {
-					count = countOrArray;
-				} else {
-					array = countOrArray;
-				}
+		}
 		
-				if (count !== undefined) {
+		// when dataOrArrayOrCount is array
+		else if (CHECK_IS_ARRAY(dataOrArrayOrCount) !== true) {
+	
+			if (dataOrArrayOrCount.length === 0) {
+				funcs[1]();
+			} else {
+
+				EACH(dataOrArrayOrCount, function(value, i) {
+
+					funcs[0](value, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount.length) {
+							funcs[1]();
+						}
+					}, i);
+				});
+			}
+		}
 		
-					if (count === 0) {
-						funcs[1]();
-					} else {
-		
-						REPEAT(count, function(i) {
-		
-							funcs[0](i, function() {
-		
-								doneCount += 1;
-		
-								if (doneCount === count) {
-									funcs[1]();
-								}
-							});
-						});
-					}
-		
-				} else if (array !== undefined) {
-		
-					if (array.length === 0) {
-						funcs[1]();
-					} else {
-		
-						EACH(array, function(value, i) {
-		
-							funcs[0](value, function() {
-		
-								doneCount += 1;
-		
-								if (doneCount === array.length) {
-									funcs[1]();
-								}
-							}, i);
-						});
-					}
-				}
+		// when dataOrArrayOrCount is count
+		else {
+	
+			if (dataOrArrayOrCount === 0) {
+				funcs[1]();
+			} else {
+
+				REPEAT(dataOrArrayOrCount, function(i) {
+
+					funcs[0](i, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount) {
+							funcs[1]();
+						}
+					});
+				});
 			}
 		}
 	}
@@ -3118,7 +3130,7 @@ global.EACH = METHOD({
 		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
 			for (name in dataOrArrayOrString) {
-				if (dataOrArrayOrString.hasOwnProperty(name) === true) {
+				if (dataOrArrayOrString.hasOwnProperty === undefined || dataOrArrayOrString.hasOwnProperty(name) === true) {
 					if (func(dataOrArrayOrString[name], name) === false) {
 						return false;
 					}
@@ -11074,10 +11086,12 @@ global.REQUEST = METHOD({
 		if (global.fetch !== undefined) {
 			
 			(method === 'GET' ? fetch(url + '?' + paramStr, {
-				method : method
+				method : method,
+				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined
 			}) : fetch(url, {
 				method : method,
-				body : paramStr
+				body : paramStr,
+				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined
 			})).then(function(response) {
 				return response.text();
 			}).then(function(responseText) {
@@ -14310,7 +14324,7 @@ FOR_BOX(function(box) {
 		run : function(path) {
 			//REQUIRED: path
 			
-			return (BROWSER_CONFIG.isSecure === true ? 'https:' : 'http:') + '//' + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/__RF/' + box.boxName + '/' + path;
+			return '/__RF/' + box.boxName + '/' + path;
 		}
 	});
 });
@@ -14403,7 +14417,7 @@ global.TIME = METHOD(function(m) {
 /*
  * connect to UPPERCASE server.
  */
-global.CONNECT_TO_IO_SERVER = METHOD({
+global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 
 	run : function(params, connectionListenerOrListeners) {
 		'use strict';
@@ -14474,7 +14488,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		}
 		
 		if (webServerPort === undefined) {
-			webServerPort = BROWSER_CONFIG.port;
+			webServerPort = CONFIG.webServerPort;
 		}
 		
 		if (isSecure === undefined) {

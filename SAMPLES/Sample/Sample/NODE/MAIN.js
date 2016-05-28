@@ -19,7 +19,8 @@ Sample.MAIN = METHOD({
 				
 				// 모델 생성2
 				Sample.SomeModel.create({
-					name : 'Pomi'
+					name : 'Pomi',
+					kind : 'dog'
 				});
 			});
 		}

@@ -74,8 +74,7 @@ UADMIN.Layout = CLASS(function(cls) {
 						c = [UUI.BUTTON_H({
 							style : {
 								padding : 15,
-								borderBottom : '1px solid #666',
-								fontSize : 15
+								borderBottom : '1px solid #666'
 							},
 							title : 'Home',
 							on : {
@@ -91,8 +90,7 @@ UADMIN.Layout = CLASS(function(cls) {
 								c.push(UUI.BUTTON_H({
 									style : {
 										padding : 15,
-										borderBottom : '1px solid #666',
-										fontSize : 15
+										borderBottom : '1px solid #666'
 									},
 									title : boxName + ' / ' + modelName + ' Model',
 									on : {
@@ -107,9 +105,34 @@ UADMIN.Layout = CLASS(function(cls) {
 						c.push(UUI.BUTTON_H({
 							style : {
 								padding : 15,
-								fontSize : 12
+								borderBottom : '1px solid #666'
 							},
-							title : 'LOGOUT',
+							title : 'SHARED_STORE',
+							on : {
+								tap : function() {
+									UADMIN.GO('SHARED_STORE');
+								}
+							}
+						}));
+						
+						c.push(UUI.BUTTON_H({
+							style : {
+								padding : 15,
+								borderBottom : '1px solid #666'
+							},
+							title : 'SHARED_DB',
+							on : {
+								tap : function() {
+									UADMIN.GO('SHARED_DB');
+								}
+							}
+						}));
+						
+						c.push(UUI.BUTTON_H({
+							style : {
+								padding : 15
+							},
+							title : 'Logout',
 							on : {
 								tap : function() {
 									GET('__LOGOUT', function() {

@@ -354,6 +354,10 @@ global.BOOT = function(params) {
 		// set version.
 		CONFIG.version = version;
 		addContentToBrowserScript('CONFIG.version = \'' + version + '\'\n');
+		
+		if (CONFIG.isUsingProxy === true) {
+			addContentToBrowserScript('CONFIG.webServerPort = BROWSER_CONFIG.port\n');
+		}
 
 		// override NODE_CONFIG.
 		if (_NODE_CONFIG !== undefined) {

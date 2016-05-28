@@ -22,6 +22,9 @@ UADMIN.Home = CLASS({
 		// memory panel
 		memoryPanel,
 		
+		// worker panel
+		workerPanel,
+		
 		// wrapper
 		wrapper = DIV({
 			c : [
@@ -49,7 +52,15 @@ UADMIN.Home = CLASS({
 					},
 					c : [TABLE({
 						c : TR({
-							c : [cpuPanel = TD(), memoryPanel = TD({
+							c : [cpuPanel = TD({
+								style : {
+									verticalAlign : 'top'
+								}
+							}), memoryPanel = TD({
+								style : {
+									verticalAlign : 'top'
+								}
+							}), workerPanel = TD({
 								style : {
 									verticalAlign : 'top'
 								}
@@ -173,6 +184,11 @@ UADMIN.Home = CLASS({
 				
 				memoryPanel.empty();
 				memoryPanel.append('MEMORY: ' + systemInfo.memory.toFixed(1) + '%');
+				
+				workerPanel.empty();
+				EACH(systemInfo.workers, function(workerInfo, workerId) {
+					workerPanel.append('WORKER ' + workerId + ': CPU: ' + workerInfo.cpu.toFixed(1) + '%, MEMORY: ' + workerInfo.memory.toFixed(1) + '%');
+				});
 			});
 		}));
 

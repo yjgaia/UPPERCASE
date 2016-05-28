@@ -40,7 +40,7 @@ READY(function() {
 		if (isConnecting !== true) {
 			isConnecting = true;
 			
-			CONNECT_TO_IO_SERVER(function(on) {
+			CONNECT_TO_UPPERCASE_SERVER(function(on) {
 				
 				FOR_BOX(function(box) {
 					if (box.CONNECTED !== undefined) {
@@ -64,7 +64,10 @@ READY(function() {
 					
 					reloadInterval = INTERVAL(1, RAR(function() {
 		
-						GET('__VERSION', function(version) {
+						GET({
+							port : CONFIG.webServerPort,
+							uri : '__VERSION'
+						}, function(version) {
 							
 							if (reloadInterval !== undefined) {
 								reloadInterval.remove();
