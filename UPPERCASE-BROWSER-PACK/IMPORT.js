@@ -786,7 +786,7 @@ global.PARALLEL = METHOD({
 		}
 		
 		// when dataOrArrayOrCount is array
-		else if (CHECK_IS_ARRAY(dataOrArrayOrCount) !== true) {
+		else if (CHECK_IS_ARRAY(dataOrArrayOrCount) === true) {
 	
 			if (dataOrArrayOrCount.length === 0) {
 				funcs[1]();

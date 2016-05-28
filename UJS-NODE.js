@@ -3787,61 +3787,74 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 		delete data.$pull;
 		
 		savedData = storage[id];
-		savedData = storage[id] = savedData === undefined ? data : COMBINE([savedData, data]);
 		
-		if ($inc !== undefined) {
-			EACH($inc, function(value, name) {
-				savedData[name] += value;
-			});
-		}
-		
-		if ($push !== undefined) {
+		if (savedData !== undefined) {
 			
-			EACH($push, function(value, name) {
+			EXTEND({
+				origin : savedData,
+				extend : data
+			});
+			
+			if ($inc !== undefined) {
+				EACH($inc, function(value, name) {
+					savedData[name] += value;
+				});
+			}
+			
+			if ($push !== undefined) {
 				
-				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+				EACH($push, function(value, name) {
 					
-					if (CHECK_IS_DATA(value) === true) {
+					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
-						if (value.$each !== undefined) {
+						if (CHECK_IS_DATA(value) === true) {
 							
-							EACH(value.$each, function(v, i) {
-								if (value.$position !== undefined) {
-									savedData[name].splice(value.$position + i, 0, v);
-								} else {
-									savedData[name].push(v);
-								}
-							});
+							if (value.$each !== undefined) {
+								
+								EACH(value.$each, function(v, i) {
+									if (value.$position !== undefined) {
+										savedData[name].splice(value.$position + i, 0, v);
+									} else {
+										savedData[name].push(v);
+									}
+								});
+								
+							} else {
+								savedData[name].push(value);
+							}
 							
 						} else {
 							savedData[name].push(value);
 						}
-						
-					} else {
-						savedData[name].push(value);
 					}
-				}
-			});
-		}
-		
-		if ($addToSet !== undefined) {
+				});
+			}
 			
-			EACH($addToSet, function(value, name) {
+			if ($addToSet !== undefined) {
 				
-				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+				EACH($addToSet, function(value, name) {
 					
-					if (CHECK_IS_DATA(value) === true) {
+					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
-						if (value.$each !== undefined) {
+						if (CHECK_IS_DATA(value) === true) {
 							
-							EACH(value.$each, function(value) {
-								if (CHECK_IS_IN({
-									array : savedData[name],
-									value : value
-								}) !== true) {
-									savedData[name].push(value);
-								}
-							});
+							if (value.$each !== undefined) {
+								
+								EACH(value.$each, function(value) {
+									if (CHECK_IS_IN({
+										array : savedData[name],
+										value : value
+									}) !== true) {
+										savedData[name].push(value);
+									}
+								});
+								
+							} else if (CHECK_IS_IN({
+								array : savedData[name],
+								value : value
+							}) !== true) {
+								savedData[name].push(value);
+							}
 							
 						} else if (CHECK_IS_IN({
 							array : savedData[name],
@@ -3849,42 +3862,36 @@ global.CPU_SHARED_DB = CLASS(function(cls) {
 						}) !== true) {
 							savedData[name].push(value);
 						}
-						
-					} else if (CHECK_IS_IN({
-						array : savedData[name],
-						value : value
-					}) !== true) {
-						savedData[name].push(value);
 					}
-				}
-			});
-		}
-		
-		if ($pull !== undefined) {
+				});
+			}
 			
-			EACH($pull, function(value, name) {
+			if ($pull !== undefined) {
 				
-				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+				EACH($pull, function(value, name) {
 					
-					REMOVE({
-						array : savedData[name],
-						value : value
-					});
-				}
-			});
-		}
-		
-		if (removeDelays === undefined) {
-			removeDelays = removeDelayMap[dbName] = {};
-		}
-
-		if (removeDelays[id] !== undefined) {
-			removeDelays[id].remove();
-			delete removeDelays[id];
-		}
-
-		if (removeAfterSeconds !== undefined) {
-			removeDelays[id] = DELAY(removeAfterSeconds, remove);
+					if (CHECK_IS_ARRAY(savedData[name]) === true) {
+						
+						REMOVE({
+							array : savedData[name],
+							value : value
+						});
+					}
+				});
+			}
+			
+			if (removeDelays === undefined) {
+				removeDelays = removeDelayMap[dbName] = {};
+			}
+	
+			if (removeDelays[id] !== undefined) {
+				removeDelays[id].remove();
+				delete removeDelays[id];
+			}
+	
+			if (removeAfterSeconds !== undefined) {
+				removeDelays[id] = DELAY(removeAfterSeconds, remove);
+			}
 		}
 	};
 
@@ -4902,61 +4909,74 @@ global.SHARED_DB = CLASS(function(cls) {
 		delete data.$pull;
 		
 		savedData = storage[id];
-		savedData = storage[id] = savedData === undefined ? data : COMBINE([savedData, data]);
 		
-		if ($inc !== undefined) {
-			EACH($inc, function(value, name) {
-				savedData[name] += value;
-			});
-		}
-		
-		if ($push !== undefined) {
+		if (savedData !== undefined) {
 			
-			EACH($push, function(value, name) {
+			EXTEND({
+				origin : savedData,
+				extend : data
+			});
+			
+			if ($inc !== undefined) {
+				EACH($inc, function(value, name) {
+					savedData[name] += value;
+				});
+			}
+			
+			if ($push !== undefined) {
 				
-				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+				EACH($push, function(value, name) {
 					
-					if (CHECK_IS_DATA(value) === true) {
+					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
-						if (value.$each !== undefined) {
+						if (CHECK_IS_DATA(value) === true) {
 							
-							EACH(value.$each, function(v, i) {
-								if (value.$position !== undefined) {
-									savedData[name].splice(value.$position + i, 0, v);
-								} else {
-									savedData[name].push(v);
-								}
-							});
+							if (value.$each !== undefined) {
+								
+								EACH(value.$each, function(v, i) {
+									if (value.$position !== undefined) {
+										savedData[name].splice(value.$position + i, 0, v);
+									} else {
+										savedData[name].push(v);
+									}
+								});
+								
+							} else {
+								savedData[name].push(value);
+							}
 							
 						} else {
 							savedData[name].push(value);
 						}
-						
-					} else {
-						savedData[name].push(value);
 					}
-				}
-			});
-		}
-		
-		if ($addToSet !== undefined) {
+				});
+			}
 			
-			EACH($addToSet, function(value, name) {
+			if ($addToSet !== undefined) {
 				
-				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+				EACH($addToSet, function(value, name) {
 					
-					if (CHECK_IS_DATA(value) === true) {
+					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
-						if (value.$each !== undefined) {
+						if (CHECK_IS_DATA(value) === true) {
 							
-							EACH(value.$each, function(value) {
-								if (CHECK_IS_IN({
-									array : savedData[name],
-									value : value
-								}) !== true) {
-									savedData[name].push(value);
-								}
-							});
+							if (value.$each !== undefined) {
+								
+								EACH(value.$each, function(value) {
+									if (CHECK_IS_IN({
+										array : savedData[name],
+										value : value
+									}) !== true) {
+										savedData[name].push(value);
+									}
+								});
+								
+							} else if (CHECK_IS_IN({
+								array : savedData[name],
+								value : value
+							}) !== true) {
+								savedData[name].push(value);
+							}
 							
 						} else if (CHECK_IS_IN({
 							array : savedData[name],
@@ -4964,42 +4984,36 @@ global.SHARED_DB = CLASS(function(cls) {
 						}) !== true) {
 							savedData[name].push(value);
 						}
-						
-					} else if (CHECK_IS_IN({
-						array : savedData[name],
-						value : value
-					}) !== true) {
-						savedData[name].push(value);
 					}
-				}
-			});
-		}
-		
-		if ($pull !== undefined) {
+				});
+			}
 			
-			EACH($pull, function(value, name) {
+			if ($pull !== undefined) {
 				
-				if (CHECK_IS_ARRAY(savedData[name]) === true) {
+				EACH($pull, function(value, name) {
 					
-					REMOVE({
-						array : savedData[name],
-						value : value
-					});
-				}
-			});
-		}
-		
-		if (removeDelays === undefined) {
-			removeDelays = removeDelayMap[dbName] = {};
-		}
-
-		if (removeDelays[id] !== undefined) {
-			removeDelays[id].remove();
-			delete removeDelays[id];
-		}
-
-		if (removeAfterSeconds !== undefined) {
-			removeDelays[id] = DELAY(removeAfterSeconds, remove);
+					if (CHECK_IS_ARRAY(savedData[name]) === true) {
+						
+						REMOVE({
+							array : savedData[name],
+							value : value
+						});
+					}
+				});
+			}
+			
+			if (removeDelays === undefined) {
+				removeDelays = removeDelayMap[dbName] = {};
+			}
+	
+			if (removeDelays[id] !== undefined) {
+				removeDelays[id].remove();
+				delete removeDelays[id];
+			}
+	
+			if (removeAfterSeconds !== undefined) {
+				removeDelays[id] = DELAY(removeAfterSeconds, remove);
+			}
 		}
 	};
 
