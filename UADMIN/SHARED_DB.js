@@ -28,20 +28,7 @@ UADMIN.SHARED_DB = CLASS({
 		
 		GET('__ALL_SHARED_DB_STORAGES', function(resultStr) {
 		
-			var
-			// result
-			result = PARSE_STR(resultStr);
-			
-			EACH(result, function(storages, workerId) {
-				wrapper.append(DIV({
-					c : [H3({
-						c : workerId
-					}), DOM({
-						tag : 'pre',
-						c : JSON.stringify(storages, undefined, '\t')
-					})]
-				}));
-			});
+			wrapper.append(resultStr);
 			
 			if (loadingPanel !== undefined) {
 				loadingPanel.remove();

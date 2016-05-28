@@ -190,7 +190,9 @@ global.BOOT_UADMIN = METHOD({
 									
 									var
 									// worker info
-									workerInfo = workerInfos[workerId] = {};
+									workerInfo = workerInfos[workerId] = {
+										pid : pid
+									};
 									
 									PROCESS_CPU_USAGE(pid, function(cpuUsage) {
 										workerInfo.cpu = cpuUsage;
