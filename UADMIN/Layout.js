@@ -104,32 +104,6 @@ UADMIN.Layout = CLASS(function(cls) {
 						
 						c.push(UUI.BUTTON_H({
 							style : {
-								padding : 15,
-								borderBottom : '1px solid #666'
-							},
-							title : 'SHARED_STORE',
-							on : {
-								tap : function() {
-									UADMIN.GO('SHARED_STORE');
-								}
-							}
-						}));
-						
-						c.push(UUI.BUTTON_H({
-							style : {
-								padding : 15,
-								borderBottom : '1px solid #666'
-							},
-							title : 'SHARED_DB',
-							on : {
-								tap : function() {
-									UADMIN.GO('SHARED_DB');
-								}
-							}
-						}));
-						
-						c.push(UUI.BUTTON_H({
-							style : {
 								padding : 15
 							},
 							title : 'Logout',
