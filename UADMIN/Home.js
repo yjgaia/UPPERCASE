@@ -51,21 +51,15 @@ UADMIN.Home = CLASS({
 						borderTop : '1px solid #666'
 					},
 					c : [TABLE({
-						c : TR({
-							c : [cpuPanel = TD({
-								style : {
-									verticalAlign : 'top'
-								}
-							}), memoryPanel = TD({
-								style : {
-									verticalAlign : 'top'
-								}
-							}), workerPanel = TD({
-								style : {
-									verticalAlign : 'top'
-								}
-							})]
-						})
+						c : [cpuPanel = DIV(), memoryPanel = DIV({
+							style : {
+								marginTop : 10
+							}
+						}), workerPanel = DIV({
+							style : {
+								marginTop : 10
+							}
+						})]
 					})]
 				})]
 			})]
@@ -187,7 +181,7 @@ UADMIN.Home = CLASS({
 				
 				workerPanel.empty();
 				EACH(systemInfo.workers, function(workerInfo, workerId) {
-					workerPanel.append('WORKER ' + workerId + ': CPU: ' + workerInfo.cpu.toFixed(1) + '%, MEMORY: ' + workerInfo.memory.toFixed(1) + '%');
+					workerPanel.append('WORKER ' + workerId + ': CPU: ' + workerInfo.cpu.toFixed(1) + '%, MEMORY: ' + workerInfo.memory.toFixed(1) + '%\n');
 				});
 			});
 		}));

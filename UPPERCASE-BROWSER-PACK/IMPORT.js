@@ -777,7 +777,7 @@ global.PARALLEL = METHOD({
 
 						doneCount += 1;
 
-						if (doneCount === dataOrArrayOrCount) {
+						if (doneCount === propertyCount) {
 							funcs[1]();
 						}
 					}, name);

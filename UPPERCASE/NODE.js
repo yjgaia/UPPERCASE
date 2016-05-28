@@ -234,6 +234,7 @@ global.BOOT_UADMIN = METHOD({
 								},
 								
 								function() {
+									
 									response(STRINGIFY({
 										cpus : CPU_USAGES(),
 										memory : MEMORY_USAGE(),
