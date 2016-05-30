@@ -22,8 +22,8 @@ UADMIN.Home = CLASS({
 		// memory panel
 		memoryPanel,
 		
-		// pids panel
-		pidsPanel,
+		// pid panel
+		pidPanel,
 		
 		// wrapper
 		wrapper = DIV({
@@ -55,7 +55,7 @@ UADMIN.Home = CLASS({
 							style : {
 								marginTop : 10
 							}
-						}), pidsPanel = DIV({
+						}), pidPanel = DIV({
 							style : {
 								marginTop : 10
 							}
@@ -179,10 +179,8 @@ UADMIN.Home = CLASS({
 				memoryPanel.empty();
 				memoryPanel.append('MEMORY: ' + systemInfo.memory.toFixed(1) + '%');
 				
-				pidsPanel.empty();
-				EACH(systemInfo.pids, function(pid, workerId) {
-					pidsPanel.append('WORKER ' + workerId + '\'s PID: ' + pid + '\n');
-				});
+				pidPanel.empty();
+				pidPanel.append('NOW WORKER ' + systemInfo.workerId + '\'s PID: ' + systemInfo.pid);
 			});
 		}));
 

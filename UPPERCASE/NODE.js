@@ -84,7 +84,7 @@ global.BOOT_UADMIN = METHOD({
 			version : CONFIG.version
 		}, {
 
-			requestListener : function(requestInfo, _response, onDisconnected, replaceRootPath, next) {
+			requestListener : function(requestInfo, nativeResponse, onDisconnected, replaceRootPath, next) {
 				
 				var
 				// uri
@@ -113,7 +113,7 @@ global.BOOT_UADMIN = METHOD({
 				
 				// response.
 				response = function(content) {
-					_response({
+					nativeResponse({
 						content : content,
 						headers : sessionKey !== undefined ? undefined : {
 							'Set-Cookie' : CREATE_COOKIE_STR_ARRAY({
@@ -189,25 +189,34 @@ global.BOOT_UADMIN = METHOD({
 					// serve system info.
 					if (uri === '__SYSTEM_INFO') {
 						
-						if (CPU_CLUSTERING.getPids === undefined) {
-							
-							response(STRINGIFY({
-								cpus : CPU_USAGES(),
-								memory : MEMORY_USAGE()
-							}));
-						}
+						response(STRINGIFY({
+							cpus : CPU_USAGES(),
+							memory : MEMORY_USAGE(),
+							workerId : CPU_CLUSTERING.getWorkerId(),
+							pid : process.pid
+						}));
 						
-						else {
-							
-							CPU_CLUSTERING.getPids(function(pids) {
-								
-								response(STRINGIFY({
-									cpus : CPU_USAGES(),
-									memory : MEMORY_USAGE(),
-									pids : pids
-								}));
-							});
-						}
+						return false;
+					}
+					
+					// serve store storages.
+					if (uri === '__SHARED_STORE_STORAGES') {
+						
+						nativeResponse({
+							contentType : 'application/json',
+							content : STRINGIFY(SHARED_STORE.getStorages())
+						});
+						
+						return false;
+					}
+					
+					// serve db storages.
+					if (uri === '__SHARED_DB_STORAGES') {
+						
+						nativeResponse({
+							contentType : 'application/json',
+							content : STRINGIFY(SHARED_DB.getStorages())
+						});
 						
 						return false;
 					}
