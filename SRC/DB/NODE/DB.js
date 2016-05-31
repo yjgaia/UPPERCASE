@@ -1083,7 +1083,7 @@ FOR_BOX(function(box) {
 						//OPTIONAL: idOrParams.isRandom
 						//OPTIONAL: idOrParams.isToCache
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
+						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
 	
