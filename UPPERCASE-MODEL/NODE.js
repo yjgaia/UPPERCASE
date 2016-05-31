@@ -1503,7 +1503,7 @@ FOR_BOX(function(box) {
 							} else {
 								console.log(CONSOLE_YELLOW('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.get` NOT EXISTS.'), idOrParams);
 							}
-						} else {
+						} else if (callback !== undefined) {
 							callback(savedData);
 						}
 					});
