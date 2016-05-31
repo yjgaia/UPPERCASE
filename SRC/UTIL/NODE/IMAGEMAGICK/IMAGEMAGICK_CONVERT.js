@@ -43,7 +43,7 @@ global.IMAGEMAGICK_CONVERT = METHOD(function() {
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
 					} else {
-						console.log(CONSOLE_RED('[UPPERCASE-IMAGEMAGICK_CONVERT] ERROR: ' + errorMsg));
+						SHOW_ERROR('[UPPERCASE-IMAGEMAGICK_CONVERT] ERROR: ' + errorMsg);
 					}
 
 				} else {

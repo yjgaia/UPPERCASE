@@ -54,7 +54,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 				if (error !== TO_DELETE) {
 
-					console.log(CONSOLE_RED('[UPPERCASE-DB] CONNECT TO DB SERVER FAILED: ' + error.toString()));
+					SHOW_ERROR('[UPPERCASE-DB] CONNECT TO DB SERVER FAILED: ' + error.toString());
 
 				} else {
 

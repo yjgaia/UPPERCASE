@@ -53,7 +53,7 @@ global.BOOT_UADMIN = METHOD({
 			version : CONFIG.version
 		}, {
 
-			requestListener : function(requestInfo, _response, onDisconnected, replaceRootPath, next) {
+			requestListener : function(requestInfo, nativeResponse, onDisconnected, replaceRootPath, next) {
 				
 				var
 				// uri
@@ -82,7 +82,7 @@ global.BOOT_UADMIN = METHOD({
 				
 				// response.
 				response = function(content) {
-					_response({
+					nativeResponse({
 						content : content,
 						headers : sessionKey !== undefined ? undefined : {
 							'Set-Cookie' : CREATE_COOKIE_STR_ARRAY({
@@ -155,13 +155,37 @@ global.BOOT_UADMIN = METHOD({
 					
 				} else {
 					
-					// serve system info
+					// serve system info.
 					if (uri === '__SYSTEM_INFO') {
 						
 						response(STRINGIFY({
 							cpus : CPU_USAGES(),
-							memory : MEMORY_USAGE()
+							memory : MEMORY_USAGE(),
+							workerId : CPU_CLUSTERING.getWorkerId(),
+							pid : process.pid
 						}));
+						
+						return false;
+					}
+					
+					// serve store storages.
+					if (uri === '__SHARED_STORE_STORAGES') {
+						
+						nativeResponse({
+							contentType : 'application/json',
+							content : STRINGIFY(SHARED_STORE.getStorages())
+						});
+						
+						return false;
+					}
+					
+					// serve db storages.
+					if (uri === '__SHARED_DB_STORAGES') {
+						
+						nativeResponse({
+							contentType : 'application/json',
+							content : STRINGIFY(SHARED_DB.getStorages())
+						});
 						
 						return false;
 					}

@@ -131,7 +131,7 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 				
 				// if catch error
 				catch(error) {
-					console.log(CONSOLE_RED('[UPPERCASE-WEB_SOCKET_FIX_REQUEST_MANAGER] ERROR:'), error.toString());
+					SHOW_ERROR('[UPPERCASE-WEB_SOCKET_FIX_REQUEST_MANAGER] ERROR:', error.toString());
 				}
 			},
 

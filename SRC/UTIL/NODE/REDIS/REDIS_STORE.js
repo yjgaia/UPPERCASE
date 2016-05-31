@@ -122,7 +122,7 @@ global.REDIS_STORE = CLASS(function(cls) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.toString());
 						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
+							SHOW_ERROR('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:', errorInfo);
 						}
 					} else if (callback !== undefined) {
 						callback();
@@ -156,7 +156,7 @@ global.REDIS_STORE = CLASS(function(cls) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.toString());
 						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
+							SHOW_ERROR('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:', errorInfo);
 						}
 					} else if (value === TO_DELETE) {
 						callback();
@@ -193,7 +193,7 @@ global.REDIS_STORE = CLASS(function(cls) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.toString());
 						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
+							SHOW_ERROR('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:', errorInfo);
 						}
 					} else if (callback !== undefined) {
 						callback();
@@ -226,7 +226,7 @@ global.REDIS_STORE = CLASS(function(cls) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.toString());
 						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
+							SHOW_ERROR('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:', errorInfo);
 						}
 					} else if (all === TO_DELETE) {
 						callback({});
@@ -266,7 +266,7 @@ global.REDIS_STORE = CLASS(function(cls) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.toString());
 						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
+							SHOW_ERROR('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:', errorInfo);
 						}
 					} else {
 						callback(count);
@@ -301,7 +301,7 @@ global.REDIS_STORE = CLASS(function(cls) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.toString());
 						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:'), errorInfo);
+							SHOW_ERROR('[UPPERCASE-UTIL] REDIS_STORE `' + storeName + '` ERROR:', errorInfo);
 						}
 					} else if (callback !== undefined) {
 						callback();

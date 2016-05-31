@@ -718,74 +718,22 @@ global.OVERRIDE = METHOD({
  */
 global.PARALLEL = METHOD({
 
-	run : function(countOrArray, funcs) {
+	run : function(dataOrArrayOrCount, funcs) {
 		'use strict';
-		//OPTIONAL: countOrArray
+		//OPTIONAL: dataOrArrayOrCount
 		//REQUIRED: funcs
 
 		var
-		// count
-		count,
-
-		// array
-		array,
-
+		// property count
+		propertyCount,
+		
 		// done count
 		doneCount = 0;
 
+		// only funcs
 		if (funcs === undefined) {
-			funcs = countOrArray;
-			countOrArray = undefined;
-		}
-
-		if (countOrArray !== undefined) {
-			if (CHECK_IS_ARRAY(countOrArray) !== true) {
-				count = countOrArray;
-			} else {
-				array = countOrArray;
-			}
-		}
-
-		if (count !== undefined) {
-
-			if (count === 0) {
-				funcs[1]();
-			} else {
-
-				REPEAT(count, function(i) {
-
-					funcs[0](i, function() {
-
-						doneCount += 1;
-
-						if (doneCount === count) {
-							funcs[1]();
-						}
-					});
-				});
-			}
-
-		} else if (array !== undefined) {
-
-			if (array.length === 0) {
-				funcs[1]();
-			} else {
-
-				EACH(array, function(value, i) {
-
-					funcs[0](value, function() {
-
-						doneCount += 1;
-
-						if (doneCount === array.length) {
-							funcs[1]();
-						}
-					}, i);
-				});
-			}
-
-		} else {
-
+			funcs = dataOrArrayOrCount;
+			
 			RUN(function() {
 
 				var
@@ -807,6 +755,76 @@ global.PARALLEL = METHOD({
 					}
 				});
 			});
+		}
+		
+		// when dataOrArrayOrCount is undefined
+		else if (dataOrArrayOrCount === undefined) {
+			funcs[1]();
+		}
+		
+		// when dataOrArrayOrCount is data
+		else if (CHECK_IS_DATA(dataOrArrayOrCount) === true) {
+			
+			propertyCount = COUNT_PROPERTIES(dataOrArrayOrCount);
+
+			if (propertyCount === 0) {
+				funcs[1]();
+			} else {
+
+				EACH(dataOrArrayOrCount, function(value, name) {
+
+					funcs[0](value, function() {
+
+						doneCount += 1;
+
+						if (doneCount === propertyCount) {
+							funcs[1]();
+						}
+					}, name);
+				});
+			}
+		}
+		
+		// when dataOrArrayOrCount is array
+		else if (CHECK_IS_ARRAY(dataOrArrayOrCount) === true) {
+	
+			if (dataOrArrayOrCount.length === 0) {
+				funcs[1]();
+			} else {
+
+				EACH(dataOrArrayOrCount, function(value, i) {
+
+					funcs[0](value, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount.length) {
+							funcs[1]();
+						}
+					}, i);
+				});
+			}
+		}
+		
+		// when dataOrArrayOrCount is count
+		else {
+	
+			if (dataOrArrayOrCount === 0) {
+				funcs[1]();
+			} else {
+
+				REPEAT(dataOrArrayOrCount, function(i) {
+
+					funcs[0](i, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount) {
+							funcs[1]();
+						}
+					});
+				});
+			}
 		}
 	}
 });
@@ -3112,7 +3130,7 @@ global.EACH = METHOD({
 		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
 			for (name in dataOrArrayOrString) {
-				if (dataOrArrayOrString.hasOwnProperty(name) === true) {
+				if (dataOrArrayOrString.hasOwnProperty === undefined || dataOrArrayOrString.hasOwnProperty(name) === true) {
 					if (func(dataOrArrayOrString[name], name) === false) {
 						return false;
 					}
@@ -3768,6 +3786,99 @@ global.LOAD = METHOD({
 			el : scriptEl
 		}).insertAfter(DOM({
 			el : currentScript
+		}));
+	}
+});
+
+/**
+ * Load css.
+ */
+global.LOAD_CSS = METHOD({
+
+	run : function(urlOrParams, handlers) {
+		'use strict';
+		//REQUIRED: urlOrParams
+		//REQUIRED: urlOrParams.url
+		//OPTIONAL: urlOrParams.host
+		//OPTIONAL: urlOrParams.port
+		//OPTIONAL: urlOrParams.isSecure
+		//OPTIONAL: urlOrParams.uri
+		//OPTIONAL: urlOrParams.paramStr
+		//OPTIONAL: urlOrParams.isNoCache
+		//OPTIONAL: handlers
+		//OPTIONAL: handlers.error
+
+		var
+		// url
+		url,
+
+		// is no Cache
+		isNoCache,
+
+		// host
+		host,
+
+		// port
+		port,
+
+		// is secure
+		isSecure,
+
+		// uri
+		uri,
+
+		// param str
+		paramStr,
+
+		// error handler.
+		errorHandler,
+
+		// link el
+		linkEl,
+
+		// is loaded
+		isLoaded;
+
+		if (CHECK_IS_DATA(urlOrParams) !== true) {
+			url = urlOrParams;
+		} else {
+
+			url = urlOrParams.url;
+
+			if (url === undefined) {
+
+				host = urlOrParams.host === undefined ? BROWSER_CONFIG.host : urlOrParams.host;
+				port = urlOrParams.port === undefined ? BROWSER_CONFIG.port : urlOrParams.port;
+				isSecure = urlOrParams.isSecure;
+				uri = urlOrParams.uri;
+				paramStr = urlOrParams.paramStr;
+
+				url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + uri + '?' + paramStr;
+			}
+
+			isNoCache = urlOrParams.isNoCache;
+		}
+
+		if (handlers !== undefined) {
+			errorHandler = handlers.error;
+		}
+
+		linkEl = document.createElement('link');
+		linkEl.rel = 'stylesheet';
+		linkEl.href = (url.indexOf('?') === -1 ? url + '?' : url + '&') + (isNoCache !== true && CONFIG.version !== undefined ? 'version=' + CONFIG.version : (new Date()).getTime());
+
+		try {
+			// this work only IE >= 9
+			linkEl.onerror = errorHandler;
+		} catch (e) {
+			// ignore.
+		}
+
+		// create link.
+		return DOM({
+			el : linkEl
+		}).appendTo(DOM({
+			el : document.getElementsByTagName('head')[0]
 		}));
 	}
 });
@@ -10975,10 +11086,12 @@ global.REQUEST = METHOD({
 		if (global.fetch !== undefined) {
 			
 			(method === 'GET' ? fetch(url + '?' + paramStr, {
-				method : method
+				method : method,
+				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined
 			}) : fetch(url, {
 				method : method,
-				body : paramStr
+				body : paramStr,
+				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined
 			})).then(function(response) {
 				return response.text();
 			}).then(function(responseText) {

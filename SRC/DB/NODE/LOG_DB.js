@@ -198,7 +198,7 @@ FOR_BOX(function(box) {
 	
 							if (sort === undefined) {
 								sort = {
-									createTime : -1
+									time : -1
 								};
 							} 
 						
@@ -207,8 +207,8 @@ FOR_BOX(function(box) {
 								delete sort.id;
 							}
 							
-							if (sort.createTime === undefined) {
-								sort.createTime = -1;
+							if (sort.time === undefined) {
+								sort.time = -1;
 							}
 	
 							if (start === undefined || start < 0) {
@@ -250,7 +250,7 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(error.toString());
 									} else {
-										console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:'), error.toString());
+										SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:', error.toString());
 									}
 								}
 							};
@@ -272,7 +272,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(error.toString());
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:'), error.toString());
+								SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:', error.toString());
 							}
 						}
 					};

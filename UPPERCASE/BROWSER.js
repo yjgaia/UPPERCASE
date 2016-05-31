@@ -91,7 +91,7 @@ FOR_BOX(function(box) {
 		run : function(path) {
 			//REQUIRED: path
 			
-			return (BROWSER_CONFIG.isSecure === true ? 'https:' : 'http:') + '//' + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/__RF/' + box.boxName + '/' + path;
+			return '/__RF/' + box.boxName + '/' + path;
 		}
 	});
 });
@@ -184,7 +184,7 @@ global.TIME = METHOD(function(m) {
 /*
  * connect to UPPERCASE server.
  */
-global.CONNECT_TO_IO_SERVER = METHOD({
+global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 
 	run : function(params, connectionListenerOrListeners) {
 		'use strict';
@@ -255,7 +255,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		}
 		
 		if (webServerPort === undefined) {
-			webServerPort = BROWSER_CONFIG.port;
+			webServerPort = CONFIG.webServerPort;
 		}
 		
 		if (isSecure === undefined) {

@@ -9,8 +9,11 @@ global.WEB_SOCKET_SERVER = METHOD({
 		//REQUIRED: connectionListener
 
 		var
+		//IMPORT: WebSocket
+		WebSocket = require('ws'),
+		
 		//IMPORT: WebSocketServer
-		WebSocketServer = require('ws').Server,
+		WebSocketServer = WebSocket.Server,
 		
 		// native connection listener.
 		nativeConnectionListener = function(conn) {
@@ -75,7 +78,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				
 				// if catch error
 				catch(error) {
-					console.log(CONSOLE_RED('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:'), error.toString());
+					SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString());
 				}
 			};
 
@@ -107,7 +110,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				// error msg
 				errorMsg = error.toString();
 
-				console.log(CONSOLE_RED('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:'), errorMsg);
+				SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', errorMsg);
 
 				runMethods('__ERROR', errorMsg);
 			});
@@ -181,41 +184,47 @@ global.WEB_SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				try {
+				if (conn !== undefined && conn.readyState === WebSocket.OPEN) {
 					
-					conn.send(STRINGIFY({
-						methodName : params.methodName,
-						data : params.data,
-						sendKey : sendKey
-					}));
+					try {
+						
+						conn.send(STRINGIFY({
+							methodName : params.methodName,
+							data : params.data,
+							sendKey : sendKey
+						}));
+						
+					} catch(error) {
+						SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString());
+					}
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
 					
-				} catch(error) {
-					console.log('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString());
+					clientInfo.lastReceiveTime = new Date();
 				}
-
-				if (callback !== undefined) {
-					
-					callbackName = '__CALLBACK_' + sendKey;
-
-					// on callback.
-					on(callbackName, function(data) {
-
-						// run callback.
-						callback(data);
-
-						// off callback.
-						off(callbackName);
-					});
-				}
-
-				sendKey += 1;
-				
-				clientInfo.lastReceiveTime = new Date();
 			},
 
 			// disconnect.
 			function() {
-				conn.close();
+				if (conn !== undefined) {
+					conn.close();
+					conn = undefined;
+				}
 			});
 		};
 		

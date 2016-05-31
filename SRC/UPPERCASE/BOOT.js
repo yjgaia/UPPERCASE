@@ -342,7 +342,7 @@ global.BOOT = function(params) {
 		}, {
 
 			notExists : function() {
-				console.log(CONSOLE_RED('[UPPERCASE] NOT EXISTS `V` VERSION FILE!'));
+				SHOW_ERROR('[UPPERCASE] NOT EXISTS `V` VERSION FILE!');
 				version = 'V__NOT_EXISTS__' + Date.now();
 			},
 
@@ -354,6 +354,10 @@ global.BOOT = function(params) {
 		// set version.
 		CONFIG.version = version;
 		addContentToBrowserScript('CONFIG.version = \'' + version + '\'\n');
+		
+		if (CONFIG.isUsingProxy === true) {
+			addContentToBrowserScript('CONFIG.webServerPort = BROWSER_CONFIG.port\n');
+		}
 
 		// override NODE_CONFIG.
 		if (_NODE_CONFIG !== undefined) {
