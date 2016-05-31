@@ -109,7 +109,7 @@ UADMIN.Layout = CLASS(function(cls) {
 							},
 							title : 'SHARED_STORE',
 							href : '/__SHARED_STORE_STORAGES',
-							target : 'blank'
+							target : '_blank'
 						}));
 						
 						c.push(UUI.BUTTON_H({
@@ -119,7 +119,7 @@ UADMIN.Layout = CLASS(function(cls) {
 							},
 							title : 'SHARED_DB',
 							href : '/__SHARED_DB_STORAGES',
-							target : 'blank'
+							target : '_blank'
 						}));
 						
 						c.push(UUI.BUTTON_H({

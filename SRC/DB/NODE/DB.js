@@ -347,7 +347,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: idOrParams.isRandom
 					//OPTIONAL: idOrParams.isToCache
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists
 					//OPTIONAL: callbackOrHandlers.error
 	
@@ -945,7 +945,7 @@ FOR_BOX(function(box) {
 						//REQUIRED: params.sort
 						//OPTIONAL: params.isToCache
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
+						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
 	
@@ -1000,8 +1000,12 @@ FOR_BOX(function(box) {
 							}
 							
 							if (cachedInfo !== undefined) {
-								callback(cachedInfo.data);
-							} else {
+								if (callback !== undefined) {
+									callback(cachedInfo.data);
+								}
+							}
+							
+							else {
 
 								collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
 		
@@ -1032,8 +1036,10 @@ FOR_BOX(function(box) {
 													}
 												});
 											}
-		
-											callback(savedData);
+											
+											if (callback !== undefined) {
+												callback(savedData);
+											}
 		
 										} else {
 		
