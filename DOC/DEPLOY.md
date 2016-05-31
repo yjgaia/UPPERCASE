@@ -128,4 +128,26 @@ cd {{프로젝트 폴더 명}}
 forever start -c "node --max-old-space-size=2048" {{프로젝트 명.js}}
 ```
 
+## 서버 설정
+서버 운영시 필요한 서버 설정에 대해 다룹니다.
+
+### 최대 동시에 열 수 있는 파일 개수 조절
+UJS의 파일 처리 기능이나 IMAGEMAGICK 관련 기능을 사용할 때 최대 동시에 열 수 있는 파일 개수가 제한되어 있습니다.
+따라서 파일을 동시에 여럿을 다루는 기능을 만들 경우에는 다음과 같은 설정을 해야합니다.
+
+`ulimit -a`로 최대 열 수 있는 파일 개수를 확인합니다. `open files` 설정을 보시기 바랍니다. 이후, 다음 명령어로 `limits.conf`를 수정합니다.
+```
+vi /etc/security/limits.conf
+```
+
+이 파일의 맨 끝에 다음과 같은 내용을 추가합니다.
+```
+root hard nofile 65535
+root soft nofile 65535
+root hard nproc 65535
+root soft nproc 65535
+```
+
+이후 다시 서버에 재접속한 뒤, 프로젝트를 재시작하면 반영됩니다.
+
 다음 문서: [UPPERCASE 업데이트](UPDATE.md)
