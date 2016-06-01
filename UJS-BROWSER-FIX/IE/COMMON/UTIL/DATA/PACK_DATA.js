@@ -31,7 +31,6 @@ OVERRIDE(PACK_DATA, function(origin) {
 						dateAttrNames.push(name);
 					}
 					
-					
 					// when value is RegExp type
 					else if ( value instanceof RegExp === true) {
 		

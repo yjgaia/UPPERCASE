@@ -49,7 +49,7 @@ OVERRIDE(COPY, function(origin) {
 								pattern = value.toString();
 								
 								for (j = pattern.length - 1; j >= 0; j -= 1) {
-									if (pattern[j] === '/') {
+									if (pattern.substring(j, j + 1) === '/') {
 										flags = pattern.substring(j + 1);
 										pattern = pattern.substring(1, j);
 										break;
@@ -85,7 +85,7 @@ OVERRIDE(COPY, function(origin) {
 							pattern = value.toString();
 							
 							for (j = pattern.length - 1; j >= 0; j -= 1) {
-								if (pattern[j] === '/') {
+								if (pattern.substring(j, j + 1) === '/') {
 									flags = pattern.substring(j + 1);
 									pattern = pattern.substring(1, j);
 									break;
