@@ -1163,7 +1163,7 @@ global.BOOT = function(params) {
 											}
 										});
 
-									} else {
+									} else if (NODE_CONFIG.uploadServerHosts !== undefined) {
 
 										response({
 											statusCode : 302,
