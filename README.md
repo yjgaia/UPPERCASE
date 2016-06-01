@@ -67,14 +67,20 @@ UPPERCASE를 서버로 사용하고, 클라이언트는 다른 솔루션들과 �
 * [UPPERCASE + NSP(Node Server Pages)](DOC/NSP.md)
 
 ## 공식 지원 BOX
+
+### UI 관련
 * [UUI](https://github.com/Hanul/UUI)
 * [UANI](https://github.com/Hanul/UANI)
 * [Yogurt](https://github.com/Hanul/Yogurt)
 * [USOCIAL](https://github.com/Hanul/USOCIAL)
+
+### 앱 개발 관련
 * [UPUSH](https://github.com/Hanul/UPUSH) iOS와 Android 애플리케이션에 푸시 메시지를 전송하는 기능을 가진 BOX입니다.
-* [UMAIL](https://github.com/Hanul/UMAIL)
 * [GooglePlayPurchaseValidator](https://github.com/Hanul/GooglePlayPurchaseValidator) 구글 플레이 In-App 결제 검증 BOX입니다.
 * [AppStorePurchaseValidator](https://github.com/Hanul/AppStorePurchaseValidator) 앱스토어 In-App 결제 검증 BOX입니다.
+
+### 기타
+* [UMAIL](https://github.com/Hanul/UMAIL)
 
 ## 파생 프로젝트
 * [Node Server Pages](https://github.com/Hanul/NSP)

@@ -60,7 +60,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 				if (error !== TO_DELETE) {
 
-					console.log(CONSOLE_RED('[UPPERCASE-DB] CONNECT TO DB SERVER FAILED: ' + error.toString()));
+					SHOW_ERROR('[UPPERCASE-DB] CONNECT TO DB SERVER FAILED: ' + error.toString());
 
 				} else {
 
@@ -430,7 +430,7 @@ FOR_BOX(function(box) {
 					//OPTIONAL: idOrParams.isRandom
 					//OPTIONAL: idOrParams.isToCache
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists
 					//OPTIONAL: callbackOrHandlers.error
 	
@@ -666,7 +666,7 @@ FOR_BOX(function(box) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.errorMsg);
 						} else {
-							console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` ERROR:'), errorInfo);
+							SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` ERROR:', errorInfo);
 						}
 					},
 					
@@ -1028,7 +1028,7 @@ FOR_BOX(function(box) {
 						//REQUIRED: params.sort
 						//OPTIONAL: params.isToCache
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
+						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
 	
@@ -1083,8 +1083,12 @@ FOR_BOX(function(box) {
 							}
 							
 							if (cachedInfo !== undefined) {
-								callback(cachedInfo.data);
-							} else {
+								if (callback !== undefined) {
+									callback(cachedInfo.data);
+								}
+							}
+							
+							else {
 
 								collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
 		
@@ -1115,15 +1119,17 @@ FOR_BOX(function(box) {
 													}
 												});
 											}
-		
-											callback(savedData);
+											
+											if (callback !== undefined) {
+												callback(savedData);
+											}
 		
 										} else {
 		
 											if (notExistsHandler !== undefined) {
 												notExistsHandler();
 											} else {
-												console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
+												console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '/get` NOT EXISTS.'), filter);
 											}
 										}
 									}
@@ -1160,7 +1166,7 @@ FOR_BOX(function(box) {
 						//OPTIONAL: idOrParams.isRandom
 						//OPTIONAL: idOrParams.isToCache
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
+						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
 	
@@ -1264,7 +1270,7 @@ FOR_BOX(function(box) {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler();
 								} else {
-									console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.get` NOT EXISTS.'), filter);
+									console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '/get` NOT EXISTS.'), filter);
 								}
 							}
 							
@@ -1448,7 +1454,7 @@ FOR_BOX(function(box) {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+										console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '/update` NOT EXISTS.'), filter);
 									}
 								},
 	
@@ -1481,7 +1487,7 @@ FOR_BOX(function(box) {
 												if (notExistsHandler !== undefined) {
 													notExistsHandler();
 												} else {
-													console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+													console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '/update` NOT EXISTS.'), filter);
 												}
 											}
 											
@@ -1505,7 +1511,7 @@ FOR_BOX(function(box) {
 														if (notExistsHandler !== undefined) {
 															notExistsHandler();
 														} else {
-															console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.update` NOT EXISTS.'), filter);
+															console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '/update` NOT EXISTS.'), filter);
 														}
 													},
 				
@@ -1697,7 +1703,7 @@ FOR_BOX(function(box) {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
+										console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '/remove` NOT EXISTS.'), filter);
 									}
 								},
 	
@@ -1721,7 +1727,7 @@ FOR_BOX(function(box) {
 											if (notExistsHandler !== undefined) {
 												notExistsHandler();
 											} else {
-												console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.remove` NOT EXISTS.'), filter);
+												console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '/remove` NOT EXISTS.'), filter);
 											}
 										}
 	
@@ -1928,7 +1934,7 @@ FOR_BOX(function(box) {
 									collection.find(filter).sort(sort).skip(start).limit(count).toArray(function(error, savedDataSet) {
 										
 										if (error === TO_DELETE && savedDataSet.length === NODE_CONFIG.maxDataCount) {
-											console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '.find` MAX DATA COUNT.'));
+											console.log(CONSOLE_YELLOW('[UPPERCASE-DB] `' + box.boxName + '.' + name + '/find` MAX DATA COUNT.'));
 										}
 										
 										proc(error, savedDataSet);
@@ -2714,7 +2720,7 @@ FOR_BOX(function(box) {
 	
 							if (sort === undefined) {
 								sort = {
-									createTime : -1
+									time : -1
 								};
 							} 
 						
@@ -2723,8 +2729,8 @@ FOR_BOX(function(box) {
 								delete sort.id;
 							}
 							
-							if (sort.createTime === undefined) {
-								sort.createTime = -1;
+							if (sort.time === undefined) {
+								sort.time = -1;
 							}
 	
 							if (start === undefined || start < 0) {
@@ -2766,7 +2772,7 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(error.toString());
 									} else {
-										console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:'), error.toString());
+										SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:', error.toString());
 									}
 								}
 							};
@@ -2788,7 +2794,7 @@ FOR_BOX(function(box) {
 							if (errorHandler !== undefined) {
 								errorHandler(error.toString());
 							} else {
-								console.log(CONSOLE_RED('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:'), error.toString());
+								SHOW_ERROR('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` LOG_DB ERROR:', error.toString());
 							}
 						}
 					};

@@ -66,7 +66,7 @@ OVERRIDE(ADD_STYLE, function(origin) {
 									if (el.style.display === 'none') {
 										node.__IS_KEEPED_PNG_FIX = true;
 									} else {
-										el.style.behavior = 'url(' + BROWSER_CONFIG.fixScriptsFolderPath + '/IE/BROWSER/LIB/iepngfix/iepngfix.htc?' + (CONFIG.version !== undefined ? CONFIG.version : Date.now()) + ');';
+										FIX_IE_PNG_BG(el);
 									}
 								});
 	
@@ -74,7 +74,8 @@ OVERRIDE(ADD_STYLE, function(origin) {
 	
 								if (node.__IS_KEEPED_PNG_FIX === true) {
 	
-									el.style.behavior = 'url(' + BROWSER_CONFIG.fixScriptsFolderPath + '/IE/BROWSER/LIB/iepngfix/iepngfix.htc?' + (CONFIG.version !== undefined ? CONFIG.version : Date.now()) + ');';
+									FIX_IE_PNG_BG(el);
+									
 									delete node.__IS_KEEPED_PNG_FIX;
 								}
 							}

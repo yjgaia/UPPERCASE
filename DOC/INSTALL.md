@@ -7,7 +7,7 @@
     * [MongoDB](http://www.mongodb.org)
 	* (REDIS_STORE를 사용할 경우) [Redis](http://redis.io)
     
-2. git을 이용하여 UPPERCASE를 적당한 곳에 clone합니다.
+2. git을 이용하여 UPPERCASE를 적당한 곳에 clone합니다. [git 간편 안내서](http://rogerdudler.github.io/git-guide/index.ko.html)
 
 	```
     git clone https://github.com/Hanul/UPPERCASE.git

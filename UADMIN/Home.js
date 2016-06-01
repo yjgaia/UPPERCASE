@@ -22,6 +22,9 @@ UADMIN.Home = CLASS({
 		// memory panel
 		memoryPanel,
 		
+		// pid panel
+		pidPanel,
+		
 		// wrapper
 		wrapper = DIV({
 			c : [
@@ -48,13 +51,15 @@ UADMIN.Home = CLASS({
 						borderTop : '1px solid #666'
 					},
 					c : [TABLE({
-						c : TR({
-							c : [cpuPanel = TD(), memoryPanel = TD({
-								style : {
-									verticalAlign : 'top'
-								}
-							})]
-						})
+						c : [cpuPanel = DIV(), memoryPanel = DIV({
+							style : {
+								marginTop : 10
+							}
+						}), pidPanel = DIV({
+							style : {
+								marginTop : 10
+							}
+						})]
 					})]
 				})]
 			})]
@@ -173,6 +178,9 @@ UADMIN.Home = CLASS({
 				
 				memoryPanel.empty();
 				memoryPanel.append('MEMORY: ' + systemInfo.memory.toFixed(1) + '%');
+				
+				pidPanel.empty();
+				pidPanel.append('NOW WORKER ' + systemInfo.workerId + '\'s PID: ' + systemInfo.pid);
 			});
 		}));
 

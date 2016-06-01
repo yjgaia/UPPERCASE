@@ -718,74 +718,22 @@ global.OVERRIDE = METHOD({
  */
 global.PARALLEL = METHOD({
 
-	run : function(countOrArray, funcs) {
+	run : function(dataOrArrayOrCount, funcs) {
 		'use strict';
-		//OPTIONAL: countOrArray
+		//OPTIONAL: dataOrArrayOrCount
 		//REQUIRED: funcs
 
 		var
-		// count
-		count,
-
-		// array
-		array,
-
+		// property count
+		propertyCount,
+		
 		// done count
 		doneCount = 0;
 
+		// only funcs
 		if (funcs === undefined) {
-			funcs = countOrArray;
-			countOrArray = undefined;
-		}
-
-		if (countOrArray !== undefined) {
-			if (CHECK_IS_ARRAY(countOrArray) !== true) {
-				count = countOrArray;
-			} else {
-				array = countOrArray;
-			}
-		}
-
-		if (count !== undefined) {
-
-			if (count === 0) {
-				funcs[1]();
-			} else {
-
-				REPEAT(count, function(i) {
-
-					funcs[0](i, function() {
-
-						doneCount += 1;
-
-						if (doneCount === count) {
-							funcs[1]();
-						}
-					});
-				});
-			}
-
-		} else if (array !== undefined) {
-
-			if (array.length === 0) {
-				funcs[1]();
-			} else {
-
-				EACH(array, function(value, i) {
-
-					funcs[0](value, function() {
-
-						doneCount += 1;
-
-						if (doneCount === array.length) {
-							funcs[1]();
-						}
-					}, i);
-				});
-			}
-
-		} else {
-
+			funcs = dataOrArrayOrCount;
+			
 			RUN(function() {
 
 				var
@@ -807,6 +755,76 @@ global.PARALLEL = METHOD({
 					}
 				});
 			});
+		}
+		
+		// when dataOrArrayOrCount is undefined
+		else if (dataOrArrayOrCount === undefined) {
+			funcs[1]();
+		}
+		
+		// when dataOrArrayOrCount is data
+		else if (CHECK_IS_DATA(dataOrArrayOrCount) === true) {
+			
+			propertyCount = COUNT_PROPERTIES(dataOrArrayOrCount);
+
+			if (propertyCount === 0) {
+				funcs[1]();
+			} else {
+
+				EACH(dataOrArrayOrCount, function(value, name) {
+
+					funcs[0](value, function() {
+
+						doneCount += 1;
+
+						if (doneCount === propertyCount) {
+							funcs[1]();
+						}
+					}, name);
+				});
+			}
+		}
+		
+		// when dataOrArrayOrCount is array
+		else if (CHECK_IS_ARRAY(dataOrArrayOrCount) === true) {
+	
+			if (dataOrArrayOrCount.length === 0) {
+				funcs[1]();
+			} else {
+
+				EACH(dataOrArrayOrCount, function(value, i) {
+
+					funcs[0](value, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount.length) {
+							funcs[1]();
+						}
+					}, i);
+				});
+			}
+		}
+		
+		// when dataOrArrayOrCount is count
+		else {
+	
+			if (dataOrArrayOrCount === 0) {
+				funcs[1]();
+			} else {
+
+				REPEAT(dataOrArrayOrCount, function(i) {
+
+					funcs[0](i, function() {
+
+						doneCount += 1;
+
+						if (doneCount === dataOrArrayOrCount) {
+							funcs[1]();
+						}
+					});
+				});
+			}
 		}
 	}
 });
@@ -3112,7 +3130,7 @@ global.EACH = METHOD({
 		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
 			for (name in dataOrArrayOrString) {
-				if (dataOrArrayOrString.hasOwnProperty(name) === true) {
+				if (dataOrArrayOrString.hasOwnProperty === undefined || dataOrArrayOrString.hasOwnProperty(name) === true) {
 					if (func(dataOrArrayOrString[name], name) === false) {
 						return false;
 					}
@@ -3768,6 +3786,99 @@ global.LOAD = METHOD({
 			el : scriptEl
 		}).insertAfter(DOM({
 			el : currentScript
+		}));
+	}
+});
+
+/**
+ * Load css.
+ */
+global.LOAD_CSS = METHOD({
+
+	run : function(urlOrParams, handlers) {
+		'use strict';
+		//REQUIRED: urlOrParams
+		//REQUIRED: urlOrParams.url
+		//OPTIONAL: urlOrParams.host
+		//OPTIONAL: urlOrParams.port
+		//OPTIONAL: urlOrParams.isSecure
+		//OPTIONAL: urlOrParams.uri
+		//OPTIONAL: urlOrParams.paramStr
+		//OPTIONAL: urlOrParams.isNoCache
+		//OPTIONAL: handlers
+		//OPTIONAL: handlers.error
+
+		var
+		// url
+		url,
+
+		// is no Cache
+		isNoCache,
+
+		// host
+		host,
+
+		// port
+		port,
+
+		// is secure
+		isSecure,
+
+		// uri
+		uri,
+
+		// param str
+		paramStr,
+
+		// error handler.
+		errorHandler,
+
+		// link el
+		linkEl,
+
+		// is loaded
+		isLoaded;
+
+		if (CHECK_IS_DATA(urlOrParams) !== true) {
+			url = urlOrParams;
+		} else {
+
+			url = urlOrParams.url;
+
+			if (url === undefined) {
+
+				host = urlOrParams.host === undefined ? BROWSER_CONFIG.host : urlOrParams.host;
+				port = urlOrParams.port === undefined ? BROWSER_CONFIG.port : urlOrParams.port;
+				isSecure = urlOrParams.isSecure;
+				uri = urlOrParams.uri;
+				paramStr = urlOrParams.paramStr;
+
+				url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + uri + '?' + paramStr;
+			}
+
+			isNoCache = urlOrParams.isNoCache;
+		}
+
+		if (handlers !== undefined) {
+			errorHandler = handlers.error;
+		}
+
+		linkEl = document.createElement('link');
+		linkEl.rel = 'stylesheet';
+		linkEl.href = (url.indexOf('?') === -1 ? url + '?' : url + '&') + (isNoCache !== true && CONFIG.version !== undefined ? 'version=' + CONFIG.version : (new Date()).getTime());
+
+		try {
+			// this work only IE >= 9
+			linkEl.onerror = errorHandler;
+		} catch (e) {
+			// ignore.
+		}
+
+		// create link.
+		return DOM({
+			el : linkEl
+		}).appendTo(DOM({
+			el : document.getElementsByTagName('head')[0]
 		}));
 	}
 });
@@ -10975,10 +11086,12 @@ global.REQUEST = METHOD({
 		if (global.fetch !== undefined) {
 			
 			(method === 'GET' ? fetch(url + '?' + paramStr, {
-				method : method
+				method : method,
+				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined
 			}) : fetch(url, {
 				method : method,
-				body : paramStr
+				body : paramStr,
+				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined
 			})).then(function(response) {
 				return response.text();
 			}).then(function(responseText) {
@@ -11775,33 +11888,39 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 				// callback name
 				callbackName;
 				
-				conn.send(STRINGIFY({
-					methodName : params.methodName,
-					data : params.data,
-					sendKey : sendKey
-				}));
-
-				if (callback !== undefined) {
+				if (conn !== undefined) {
 					
-					callbackName = '__CALLBACK_' + sendKey;
-
-					// on callback.
-					on(callbackName, function(data) {
-
-						// run callback.
-						callback(data);
-
-						// off callback.
-						off(callbackName);
-					});
+					conn.send(STRINGIFY({
+						methodName : params.methodName,
+						data : params.data,
+						sendKey : sendKey
+					}));
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
 				}
-
-				sendKey += 1;
 			},
 
 			// disconnect.
 			function() {
-				conn.close();
+				if (conn !== undefined) {
+					conn.close();
+					conn = undefined;
+				}
 			});
 		};
 
@@ -12665,7 +12784,7 @@ FOR_BOX(function(box) {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validResult.getErrors());
 								} else {
-									console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/create` NOT VALID!: ', validResult.getErrors());
+									console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` NOT VALID!: ', validResult.getErrors());
 								}
 		
 							} else {
@@ -12699,19 +12818,19 @@ FOR_BOX(function(box) {
 											if (errorHandler !== undefined) {
 												errorHandler(errorMsg);
 											} else {
-												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/create` ERROR: ' + errorMsg);
+												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` ERROR: ' + errorMsg);
 											}
 										} else if (validErrors !== undefined) {
 											if (notValidHandler !== undefined) {
 												notValidHandler(validErrors);
 											} else {
-												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/create` NOT VALID!: ', validErrors);
+												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` NOT VALID!: ', validErrors);
 											}
 										} else if (isNotAuthed === true) {
 											if (notAuthedHandler !== undefined) {
 												notAuthedHandler();
 											} else {
-												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/create` NOT AUTHED!');
+												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` NOT AUTHED!');
 											}
 										} else if (callback !== undefined) {
 											callback(savedData);
@@ -12789,19 +12908,19 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/get` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.get` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/get` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.get` NOT AUTHED!');
 									}
 								} else if (savedData === undefined) {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/get` NOT EXISTS!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.get` NOT EXISTS!', idOrParams);
 									}
 								} else if (callback !== undefined) {
 									callback(savedData);
@@ -13043,7 +13162,7 @@ FOR_BOX(function(box) {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validErrors);
 								} else {
-									console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validErrors);
+									console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT VALID!: ', validErrors);
 								}
 		
 							} else {
@@ -13081,25 +13200,25 @@ FOR_BOX(function(box) {
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` ERROR: ' + errorMsg);
+											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` ERROR: ' + errorMsg);
 										}
 									} else if (validErrors !== undefined) {
 										if (notValidHandler !== undefined) {
 											notValidHandler(validErrors);
 										} else {
-											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT VALID!: ', validErrors);
+											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT VALID!: ', validErrors);
 										}
 									} else if (isNotAuthed === true) {
 										if (notAuthedHandler !== undefined) {
 											notAuthedHandler();
 										} else {
-											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT AUTHED!');
+											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT AUTHED!');
 										}
 									} else if (savedData === undefined) {
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
 										} else {
-											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/update` NOT EXISTS!');
+											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS!', data);
 										}
 									} else if (callback !== undefined) {
 										callback(savedData, originData);
@@ -13165,19 +13284,19 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/remove` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.remove` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/remove` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.remove` NOT AUTHED!');
 									}
 								} else if (originData === undefined) {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/remove` NOT EXISTS!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.remove` NOT EXISTS!', id);
 									}
 								} else if (callback !== undefined) {
 									callback(originData);
@@ -13240,13 +13359,13 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/find` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.find` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/find` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.find` NOT AUTHED!');
 									}
 								} else if (callback !== undefined) {
 									callback(savedDataSet);
@@ -13414,13 +13533,13 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/count` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.count` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/count` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.count` NOT AUTHED!');
 									}
 								} else if (callback !== undefined) {
 									callback(count);
@@ -13479,13 +13598,13 @@ FOR_BOX(function(box) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/checkIsExists` ERROR: ' + errorMsg);
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.checkIsExists` ERROR: ' + errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + '/checkIsExists` NOT AUTHED!');
+										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.checkIsExists` NOT AUTHED!');
 									}
 								} else if (callback !== undefined) {
 									callback(isExists);
@@ -13537,7 +13656,7 @@ FOR_BOX(function(box) {
 		
 							EACH(properties, function(value, propertyName) {
 								
-								if (value !== TO_DELETE) {
+								if (value !== undefined) {
 		
 									( roomForCreate = box.ROOM({
 										roomServerName : roomServerName,
@@ -13546,12 +13665,15 @@ FOR_BOX(function(box) {
 			
 										if (EACH(properties, function(value, propertyName) {
 											
-											if (value === TO_DELETE) {
-												if (savedData[propertyName] !== undefined) {
+											if (value !== undefined) {
+												
+												if (value === TO_DELETE) {
+													if (savedData[propertyName] !== undefined) {
+														return false;
+													}
+												} else if (savedData[propertyName] !== value) {
 													return false;
 												}
-											} else if (savedData[propertyName] !== value) {
-												return false;
 											}
 											
 										}) === true) {
@@ -13703,7 +13825,7 @@ FOR_BOX(function(box) {
 		
 							EACH(properties, function(value, propertyName) {
 								
-								if (value !== TO_DELETE) {
+								if (value !== undefined) {
 		
 									( roomForCreate = box.ROOM({
 										roomServerName : roomServerName,
@@ -13712,12 +13834,15 @@ FOR_BOX(function(box) {
 			
 										if (EACH(properties, function(value, propertyName) {
 											
-											if (value === TO_DELETE) {
-												if (savedData[propertyName] !== undefined) {
+											if (value !== undefined) {
+												
+												if (value === TO_DELETE) {
+													if (savedData[propertyName] !== undefined) {
+														return false;
+													}
+												} else if (savedData[propertyName] !== value) {
 													return false;
 												}
-											} else if (savedData[propertyName] !== value) {
-												return false;
 											}
 											
 										}) === true) {
@@ -14054,23 +14179,34 @@ FOR_BOX(function(box) {
 						} else {
 		
 							EACH(properties, function(value, propertyName) {
-		
-								( roomForRemove = box.ROOM({
-									roomServerName : roomServerName,
-									name : name + '/' + propertyName + '/' + value + '/remove'
-								})).on('remove', function(originData) {
-		
-									if (EACH(properties, function(value, propertyName) {
-		
-										if (originData[propertyName] !== value) {
-											return false;
+								
+								if (value !== undefined) {
+									
+									( roomForRemove = box.ROOM({
+										roomServerName : roomServerName,
+										name : name + '/' + propertyName + '/' + value + '/remove'
+									})).on('remove', function(originData) {
+			
+										if (EACH(properties, function(value, propertyName) {
+											
+											if (value !== undefined) {
+												
+												if (value === TO_DELETE) {
+													if (originData[propertyName] !== undefined) {
+														return false;
+													}
+												} else if (originData[propertyName] !== value) {
+													return false;
+												}
+											}
+											
+										}) === true) {
+											handler(originData);
 										}
-									}) === true) {
-										handler(originData);
-									}
-								});
-		
-								return false;
+									});
+			
+									return false;
+								}
 							});
 						}
 		
@@ -14188,7 +14324,7 @@ FOR_BOX(function(box) {
 		run : function(path) {
 			//REQUIRED: path
 			
-			return (BROWSER_CONFIG.isSecure === true ? 'https:' : 'http:') + '//' + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/__RF/' + box.boxName + '/' + path;
+			return '/__RF/' + box.boxName + '/' + path;
 		}
 	});
 });
@@ -14281,7 +14417,7 @@ global.TIME = METHOD(function(m) {
 /*
  * connect to UPPERCASE server.
  */
-global.CONNECT_TO_IO_SERVER = METHOD({
+global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 
 	run : function(params, connectionListenerOrListeners) {
 		'use strict';
@@ -14352,7 +14488,7 @@ global.CONNECT_TO_IO_SERVER = METHOD({
 		}
 		
 		if (webServerPort === undefined) {
-			webServerPort = BROWSER_CONFIG.port;
+			webServerPort = CONFIG.webServerPort;
 		}
 		
 		if (isSecure === undefined) {

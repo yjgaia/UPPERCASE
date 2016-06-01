@@ -142,7 +142,22 @@ OVERRIDE(NODE, function(origin) {
 			setData,
 			
 			// get data.
-			getData;
+			getData,
+			
+			// scroll to.
+			scrollTo,
+			
+			// get scroll left.
+			getScrollLeft,
+			
+			// get scroll top.
+			getScrollTop,
+			
+			// get scroll width.
+			getScrollWidth,
+			
+			// get scroll height.
+			getScrollHeight;
 	
 			inner.setWrapperDom = setWrapperDom = function(dom) {
 				//REQUIRED: dom
@@ -768,6 +783,62 @@ OVERRIDE(NODE, function(origin) {
 			
 			self.getData = getData = function() {
 				return data;
+			};
+			
+			self.scrollTo = scrollTo = function(params) {
+				//REQUIRED: params
+				//OPTIONAL: params.left
+				//OPTIONAL: params.top
+				
+				var
+				// left
+				left = params.left,
+				
+				// top
+				top = params.top;
+				
+				if (contentEl !== undefined) {
+				
+					if (left !== undefined) {
+						contentEl.scrollLeft = left;
+					}
+					
+					if (top !== undefined) {
+						contentEl.scrollTop = top;
+					}
+				}
+			};
+			
+			self.getScrollLeft = getScrollLeft = function() {
+				if (contentEl !== undefined) {
+					return contentEl.scrollLeft;
+				} else {
+					return 0;
+				}
+			};
+			
+			self.getScrollTop = getScrollTop = function() {
+				if (contentEl !== undefined) {
+					return contentEl.scrollTop;
+				} else {
+					return 0;
+				}
+			};
+			
+			self.getScrollWidth = getScrollWidth = function() {
+				if (contentEl !== undefined && contentEl.scrollWidth !== undefined) {
+					return contentEl.scrollWidth;
+				} else {
+					return 0;
+				}
+			};
+			
+			self.getScrollHeight = getScrollHeight = function() {
+				if (contentEl !== undefined && contentEl.scrollHeight !== undefined) {
+					return contentEl.scrollHeight;
+				} else {
+					return 0;
+				}
 			};
 		},
 	
