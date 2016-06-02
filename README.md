@@ -3,7 +3,7 @@ UPPERCASE는 실시간성에 특화된 풀스택 프레임워크입니다.
 * [Node.js](http://nodejs.org) 기반
 * JavaScript 유틸리티 셋 [UJS](DOC/UJS.md) 기반
 * Model-View 패턴
-* 모듈 시스템 [BOX](https://github.com/Hanul/UJS/blob/master/DOC/KR/UJS-COMMON.md#box) 기반
+* 모듈 시스템 [BOX](https://github.com/Hanul/UJS/blob/master/DOC/UJS-COMMON.md#box) 기반
 * 멀티 코어 CPU 지원
 * 구형 브라우저 호환
 
@@ -50,6 +50,10 @@ UPPERCASE를 사용하기 위해서는 이하 기술셋을 알고있어야 합�
 * [UPPERCASE-UTIL](DOC/UPPERCASE-UTIL.md) npm 모듈을 사용하는 유틸리티를 모은 모듈입니다.
 * [UPPERCASE-UPLOAD](DOC/UPPERCASE-UPLOAD.md) 업로드 관련 기능을 제공하는 모듈입니다.
 * [UPPERCASE](DOC/UPPERCASE.md) UPPERCASE 통합을 위한 모듈입니다.
+
+## API
+* [UJS API](https://github.com/Hanul/UJS/blob/master/API/README.md)
+* [UPPERCASE API](API/README.md)
 
 ## UPPERCASE 클라이언트
 UPPERCASE는 기본적으로 웹 클라이언트만을 내장하고 있기 때문에, 다른 플랫폼에서의 동작을 보장하기 위해 플랫폼 별로 클라이언트가 존재합니다.
