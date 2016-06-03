@@ -178,6 +178,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				//REQUIRED: params
 				//REQUIRED: params.methodName
 				//OPTIONAL: params.data
+				//OPTIONAL: params.str
 				//OPTIONAL: callback
 				
 				var
@@ -188,14 +189,26 @@ global.WEB_SOCKET_SERVER = METHOD({
 					
 					try {
 						
-						conn.send(STRINGIFY({
-							methodName : params.methodName,
-							data : params.data,
-							sendKey : sendKey
-						}));
+						if (params.str !== undefined) {
+							
+							conn.send(STRINGIFY({
+								methodName : params.methodName,
+								str : params.str,
+								sendKey : sendKey
+							}));
+						}
+						
+						else {
+							
+							conn.send(STRINGIFY({
+								methodName : params.methodName,
+								data : params.data,
+								sendKey : sendKey
+							}));
+						}
 						
 					} catch(error) {
-						SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString());
+						SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString(), params);
 					}
 	
 					if (callback !== undefined) {

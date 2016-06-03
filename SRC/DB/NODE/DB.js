@@ -40,6 +40,7 @@ FOR_BOX(function(box) {
 
 			init : function(inner, self, nameOrParams) {
 				//REQUIRED: nameOrParams
+				//OPTIONAL: nameOrParams.dbServerName
 				//REQUIRED: nameOrParams.name
 				//OPTIONAL: nameOrParams.isNotUsingObjectId
 				//OPTIONAL: nameOrParams.isNotUsingHistory
@@ -47,6 +48,9 @@ FOR_BOX(function(box) {
 				var
 				// name
 				name,
+				
+				// db server name
+				dbServerName,
 				
 				// is not using object id
 				isNotUsingObjectId,
@@ -323,6 +327,7 @@ FOR_BOX(function(box) {
 					name = nameOrParams;
 				} else {
 					name = nameOrParams.name;
+					dbServerName = nameOrParams.dbServerName;
 					isNotUsingObjectId = nameOrParams.isNotUsingObjectId;
 					isNotUsingHistory = nameOrParams.isNotUsingHistory;
 				}
@@ -496,8 +501,8 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(function(nativeDB) {
-	
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, function(nativeDB) {
+					
 					var
 					// MongoDB collection
 					collection = nativeDB.collection(box.boxName + '.' + name),

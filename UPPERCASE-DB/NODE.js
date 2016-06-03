@@ -11,21 +11,41 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 	'use strict';
 
 	var
-	// native db
-	nativeDB,
+	// DEFAULT_DB_SERVER_NAME
+	DEFAULT_DB_SERVER_NAME = '__',
+	
+	// native dbs
+	nativeDBs = {},
 
-	// init db funcs
-	initDBFuncs = [],
+	// init db func map
+	initDBFuncMap = {},
 
 	// add init db func.
 	addInitDBFunc;
 
-	m.addInitDBFunc = addInitDBFunc = function(initDBFunc) {
+	m.addInitDBFunc = addInitDBFunc = function(dbServerName, initDBFunc) {
+		//OPTIONAL: dbServerName
+		//REQUIRED: initDBFunc
+		
+		if (initDBFunc === undefined) {
+			initDBFunc = dbServerName;
+			dbServerName = undefined;
+		}
+		
+		if (dbServerName === undefined) {
+			dbServerName = DEFAULT_DB_SERVER_NAME;
+		}
 
-		if (nativeDB === undefined) {
-			initDBFuncs.push(initDBFunc);
+		if (nativeDBs[dbServerName] === undefined) {
+			
+			if (initDBFuncMap[dbServerName] === undefined) {
+				initDBFuncMap[dbServerName] = [];
+			}
+			
+			initDBFuncMap[dbServerName].push(initDBFunc);
+			
 		} else {
-			initDBFunc(nativeDB);
+			initDBFunc(nativeDBs[dbServerName]);
 		}
 	};
 
@@ -33,6 +53,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 		run : function(params, callback) {
 			//REQUIRED: params
+			//OPTIONAL: params.dbServerName
 			//OPTIONAL: params.username
 			//OPTIONAL: params.password
 			//OPTIONAL: params.host
@@ -41,6 +62,9 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 			//OPTIONAL: callback
 
 			var
+			// db server name
+			dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName,
+			
 			// username
 			username = params.username,
 
@@ -56,7 +80,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 			// name
 			name = params.name;
 
-			require('mongodb').MongoClient.connect('mongodb://' + (username !== undefined && password !== undefined ? username + ':' + password + '@' : '') + host + ':' + port + '/' + name, function(error, _nativeDB) {
+			require('mongodb').MongoClient.connect('mongodb://' + (username !== undefined && password !== undefined ? username + ':' + password + '@' : '') + host + ':' + port + '/' + name, function(error, nativeDB) {
 
 				if (error !== TO_DELETE) {
 
@@ -64,13 +88,16 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 				} else {
 
-					nativeDB = _nativeDB;
+					nativeDBs[dbServerName] = nativeDB;
 
-					EACH(initDBFuncs, function(initDBFunc) {
-						initDBFunc(nativeDB);
-					});
-
-					initDBFuncs = undefined;
+					if (initDBFuncMap[dbServerName] !== undefined) {
+						
+						EACH(initDBFuncMap[dbServerName], function(initDBFunc) {
+							initDBFunc(nativeDB);
+						});
+						
+						delete initDBFuncMap[dbServerName];
+					}
 
 					if (callback !== undefined) {
 						callback();
@@ -124,12 +151,16 @@ FOR_BOX(function(box) {
 			init : function(inner, self, nameOrParams) {
 				//REQUIRED: nameOrParams
 				//REQUIRED: nameOrParams.name
+				//OPTIONAL: nameOrParams.dbServerName
 				//OPTIONAL: nameOrParams.isNotUsingObjectId
 				//OPTIONAL: nameOrParams.isNotUsingHistory
 	
 				var
 				// name
 				name,
+				
+				// db server name
+				dbServerName,
 				
 				// is not using object id
 				isNotUsingObjectId,
@@ -406,6 +437,7 @@ FOR_BOX(function(box) {
 					name = nameOrParams;
 				} else {
 					name = nameOrParams.name;
+					dbServerName = nameOrParams.dbServerName;
 					isNotUsingObjectId = nameOrParams.isNotUsingObjectId;
 					isNotUsingHistory = nameOrParams.isNotUsingHistory;
 				}
@@ -579,8 +611,8 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(function(nativeDB) {
-	
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, function(nativeDB) {
+					
 					var
 					// MongoDB collection
 					collection = nativeDB.collection(box.boxName + '.' + name),
@@ -2816,11 +2848,11 @@ FOR_BOX(function(box) {
 	});
 });
 
-/**
- * Node-side Configuration
- */
 OVERRIDE(NODE_CONFIG, function(origin) {
-
+	
+	/**
+	 * Node-side Configuration
+	 */
 	global.NODE_CONFIG = COMBINE([{
 
 		// db log mode

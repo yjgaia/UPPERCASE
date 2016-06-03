@@ -12,8 +12,8 @@ MongoDB를 사용하기 쉽게 CRUD 기능을 구현한 모듈입니다.
 * find 명령시 filter의 모든 property가 `undefined`로만 이루어진 경우, 모든 값을 가져옵니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려는 경우에는, `CHECK_ARE_SAME([{}, filter])`로 filter가 비어있는지 검사해 주시기 바랍니다.
 
 ## API
-* `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](../EXAMPLES/DB/NODE/DB.js)
-* `DB(name)` MongoDB collection wrapper [예제보기](../EXAMPLES/DB/NODE/DB.js)
+* `CONNECT_TO_DB_SERVER({username:, password:, host:, port:, name:}, function() {...})` `CONNECT_TO_DB_SERVER({dbServerName:, username:, password:, host:, port:, name:}, function() {...})` connect to MongoDB server. [예제보기](../EXAMPLES/DB/NODE/DB.js)
+* `DB(name)` `DB({dbServerName:, name:})` MongoDB collection wrapper [예제보기](../EXAMPLES/DB/NODE/DB.js)
 ```javascript
 db = TestBox.DB('test');
 db.create(data, function(savedData) {...})
@@ -43,6 +43,8 @@ db.aggregate(params, {error:, success:})
 logDB = TestBox.LOG_DB('testLog');
 logDB.log(data)
 ```
+
+`CONNECT_TO_DB_SERVER`의 `dbServerName`을 지정하면, 여러 데이터베이스 서버에 접속할 수 있습니다. `DB`의 `dbServerName` 설정으로 연결할 데이터베이스 서버를 선택할 수 있습니다.
 
 ### 사용 가능한 특수 기호
 `get`, `find` 명령의 `filter`에는 다음과 같은 특수기호를 사용할 수 있습니다.

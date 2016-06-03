@@ -33,6 +33,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 		//REQUIRED: params.roomName
 		//REQUIRED: params.methodName
 		//OPTIONAL: params.data
+		//OPTIONAL: params.str
 		//OPTIONAL: _send
 
 		var
@@ -47,11 +48,22 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 			EACH(sends, function(send) {
 				
 				if (send !== _send) {
+					
+					if (params.str !== undefined) {
+						
+						send({
+							methodName : roomName + '/' + params.methodName,
+							str : params.str
+						});
+					}
 
-					send({
-						methodName : roomName + '/' + params.methodName,
-						data : params.data
-					});
+					else {
+						
+						send({
+							methodName : roomName + '/' + params.methodName,
+							data : params.data
+						});
+					}
 				}
 			});
 		}

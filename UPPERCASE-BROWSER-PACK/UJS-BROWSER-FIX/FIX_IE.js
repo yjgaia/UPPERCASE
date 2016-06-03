@@ -71,7 +71,8 @@ RUN(function() {
 
 	// fix png.
 	if (IE.version <= 6) {
-		loadFixScript('BROWSER/LIB/iepngfix/iepngfix_tilebg');
+		loadFixScript('BROWSER/LIB/FIX_IE_PNG');
+		loadFixScript('BROWSER/LIB/FIX_IE_PNG_BG');
 	}
 
 	// fix ADD_STYLE.

@@ -51,12 +51,7 @@ OVERRIDE(IMG, function(origin) {
 			if (IE.version <= 6 && self.getSrc() !== undefined && self.getSrc().indexOf('.gif') === -1) {
 
 				// fix IE PNG transparent background bug.
-				ADD_STYLE({
-					node : self,
-					style : {
-						behavior : 'url(' + BROWSER_CONFIG.fixScriptsFolderPath + '/IE/BROWSER/LIB/iepngfix/iepngfix.htc?' + (CONFIG.version !== undefined ? CONFIG.version : Date.now()) + ');'
-					}
-				});
+				FIX_IE_PNG(self.getEl());
 			}
 		}
 	});

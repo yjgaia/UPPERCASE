@@ -8836,6 +8836,7 @@ global.SOCKET_SERVER = METHOD({
 				//REQUIRED: params
 				//REQUIRED: params.methodName
 				//OPTIONAL: params.data
+				//OPTIONAL: params.str
 				//OPTIONAL: callback
 
 				var
@@ -8844,11 +8845,23 @@ global.SOCKET_SERVER = METHOD({
 				
 				if (conn !== undefined && conn.writable === true) {
 					
-					conn.write(STRINGIFY({
-						methodName : params.methodName,
-						data : params.data,
-						sendKey : sendKey
-					}) + '\r\n');
+					if (params.str !== undefined) {
+						
+						conn.write(STRINGIFY({
+							methodName : params.methodName,
+							str : params.str,
+							sendKey : sendKey
+						}) + '\r\n');
+					}
+					
+					else {
+						
+						conn.write(STRINGIFY({
+							methodName : params.methodName,
+							data : params.data,
+							sendKey : sendKey
+						}) + '\r\n');
+					}
 	
 					if (callback !== undefined) {
 						
@@ -9400,7 +9413,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 /**
  * parse cookie str.
  */
-global.PARSE_COOKIE_STR = PARSE_COOKIE_STR = METHOD({
+global.PARSE_COOKIE_STR = METHOD({
 
 	run : function(str) {
 		'use strict';
@@ -9434,7 +9447,7 @@ global.PARSE_COOKIE_STR = PARSE_COOKIE_STR = METHOD({
 /**
  * create cookie str array.
  */
-global.CREATE_COOKIE_STR_ARRAY = CREATE_COOKIE_STR_ARRAY = METHOD({
+global.CREATE_COOKIE_STR_ARRAY = METHOD({
 
 	run : function(data) {
 		'use strict';

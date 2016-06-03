@@ -3593,7 +3593,7 @@ global.INFO = OBJECT({
 		// get browser info.
 		getBrowserInfo;
 
-		self.getLang = function() {
+		self.getLang = getLang = function() {
 
 			var
 			// language

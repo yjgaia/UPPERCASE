@@ -31,6 +31,7 @@ UPPERCASE를 사용하기 위해서는 이하 기술셋을 알고있어야 합�
 ## 한걸음 더
 * [BOX 이해하기](DOC/BOX.md)
 * [기본 스타일](DOC/BASE_STYLE.md)
+* [index.html을 따로 만들고 싶다면](DOC/index.html.md)
 * [Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발](DOC/HYBRID_APP.md) (작성중)
 * [소셜 연동](DOC/SOCIAL.md) (작성중)
 * [Android, iOS 모바일 네이티브 앱 개발](DOC/MOBILE_NATIVE.md) (작성중)
