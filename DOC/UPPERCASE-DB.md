@@ -72,8 +72,8 @@ filter : {
 ```javascript
 // a가 3보다 큰 데이터를 찾습니다.
 filter : {
-    $gt : {
-        a : 3
+    a : {
+        $gt : 3
     }
 }
 ```
@@ -81,8 +81,8 @@ filter : {
 ```javascript
 // a가 3보다 크거나 같은 데이터를 찾습니다.
 filter : {
-    $gte : {
-        a : 3
+    a : {
+        $gte : 3
     }
 }
 ```
@@ -90,8 +90,8 @@ filter : {
 ```javascript
 // a가 3보다 작은 데이터를 찾습니다.
 filter : {
-    $lt : {
-        a : 3
+    a : {
+        $lt : 3
     }
 }
 ```
@@ -99,8 +99,8 @@ filter : {
 ```javascript
 // a가 3보다 작거나 같은 데이터를 찾습니다.
 filter : {
-    $lte : {
-        a : 3
+    a : {
+        $lte : 3
     }
 }
 ```
@@ -108,8 +108,8 @@ filter : {
 ```javascript
 // a가 3이 아닌 데이터를 찾습니다.
 filter : {
-    $ne : {
-        a : 3
+    a : {
+        $ne : 3
     }
 }
 ```
