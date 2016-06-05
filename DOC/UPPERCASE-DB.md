@@ -16,25 +16,41 @@ MongoDB를 사용하기 쉽게 CRUD 기능을 구현한 모듈입니다.
 * `DB(name)` `DB({dbServerName:, name:})` MongoDB collection wrapper [예제보기](../EXAMPLES/DB/NODE/DB.js)
 ```javascript
 db = TestBox.DB('test');
+
+// 데이터를 저장합니다.
 db.create(data, function(savedData) {...})
 db.create(data, {error:, success:})
+
+// 데이터를 가져옵니다.
 db.get(id, function(savedData) {...})
 db.get(id, {success:, notExists:, error:})
 db.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
+
+// 데이터를 수정합니다.
 db.update(data, function(savedData, originData) {...})
 db.update(data, {success:, notExists:, error:})
 db.updateNoHistory(data, function() {...}) // 변경 내역을 남기지 않습니다.
 db.updateNoHistory(data, {success:, notExists:, error:}) // 변경 내역을 남기지 않습니다.
 db.updateNoRecord(data, function() {...}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
 db.updateNoRecord(data, {success:, notExists:, error:}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
+
+// 데이터를 삭제합니다.
 db.remove(id, function(originData) {...})
 db.remove(id, {success:, notExists:, error:})
+
+// 데이터를 찾아 목록으로 가져옵니다.
 db.find({filter:, sort:, start:, count:}, function(savedDataSet) {...})
 db.find({filter:, sort:, start:, count:}, {error:, success:})
+
+// 데이터의 개수를 가져옵니다.
 db.count({filter:}, function(count) {...})
 db.count({filter:}, {error:, success:})
+
+// 데이터가 존재하는지 확인합니다.
 db.checkIsExists({filter:}, function(isExists) {...})
 db.checkIsExists({filter:}, {error:, success:})
+
+// MongoDB의 Aggregation 기능을 이용해, 데이터를 가공해서 가져옵니다. 자세한 내용은 MongoDB의 Aggregation 기능을 참고하시기 바랍니다.
 db.aggregate(params, function(dataSet) {...})
 db.aggregate(params, {error:, success:})
 ```
