@@ -5,7 +5,11 @@
 * `LAUNCH_ROOM_SERVER({socketServerPort:, webSocketServerPort:, webServer:, isCreateWebSocketFixRequestManager:})` 룸 서버를 실행하는 클래스입니다. [예제보기](../EXAMPLES/ROOM/NODE/ROOM.js)
 * `ROOM(name, connectionListener)` 룸을 생성합니다. [예제보기](../EXAMPLES/ROOM/NODE/ROOM.js)
 ```javascript
+// 서버에 룸을 생성합니다.
 TestBox.ROOM('testRoom', function(clientInfo, on, off, send, broadcastExceptMe) {
+	// clientInfo는 클라이언트의 정보를 가지고 있습니다.
+	// send는 접속한 유저에게 데이터를 전송합니다.
+	// broadcastExceptMe는 현재 유저를 제외하고 해당 룸에 접속한 모든 유저에게 데이터를 전송합니다.
 	
 	// 특정 method name으로 클라이언트에서 데이터를 보내게 되면, 여기서 받게 됩니다.
 	on(methodName, function(data, ret) {
