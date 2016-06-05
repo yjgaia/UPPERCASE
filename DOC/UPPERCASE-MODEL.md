@@ -101,6 +101,7 @@ TestBox.TestModel.onRemove(properties, handler)
 API에서 기본으로 제공되지 않는 기능들은 직접 구현하여 모델을 확장시킬 수 있습니다. 모델 확장은 node.js 환경과 웹 브라우저 환경에서 각각 진행합니다.
 
 ### node.js 환경에서 모델 확장 예시
+`NODE` 폴더 내에 `TestModel.js`라는 파일을 만들고, 다음 내용을 추가합니다. 이로서 `COMMON` 폴더에 저장되어 있는 모델을 확장합니다.
 ```javascript
 OVERRIDE(TestBox.TestModel, function(origin) {
 	'use strict';
@@ -160,6 +161,7 @@ OVERRIDE(TestBox.TestModel, function(origin) {
 ```
 
 ### 웹 브라우저 환경에서 모델 확장 예시
+`BROWSER` 폴더 내에 `TestModel.js`라는 파일을 만들고, 다음 내용을 추가합니다. 이로서 `COMMON` 폴더에 저장되어 있는 모델을 확장합니다.
 ```javascript
 OVERRIDE(TestBox.TestModel, function(origin) {
 	'use strict';
