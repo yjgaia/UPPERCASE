@@ -9241,11 +9241,11 @@ global.EXPORT_IMG_TYPE = METHOD(function(m) {
 
 				loadingCallbacks = loadingCallbackMap[uri] = [callback];
 
-				ImageInfo.loadInfo(uri, function() {
+				new ImageInfo(uri, function(imageInfo) {
 
 					var
 					// img type
-					imgType = ImageInfo.getAllFields(uri).format.toLowerCase();
+					imgType = imageInfo.getAllFields(uri).format.toLowerCase();
 
 					// cache.
 					loadedImgTypes[uri] = imgType;
@@ -9257,7 +9257,8 @@ global.EXPORT_IMG_TYPE = METHOD(function(m) {
 
 					// clear loading callbacks.
 					delete loadingCallbackMap[uri];
-				});
+					
+				}).readFileData();
 			}
 		}
 	};
@@ -9802,96 +9803,115 @@ global.MSG = METHOD({
 
 
 /*
- * Binary Ajax 0.1.5
- * Copyright (c) 2008 Jacob Seidelin, cupboy@gmail.com, http://blog.nihilogic.dk/
- * MIT License [http://www.opensource.org/licenses/mit-license.php]
- */
+    binaryajax-lib.js - a librarized version of binaryajax.js
+    by WATANABE Hiroaki, <https://github.com/hiroaki/>.
 
+    The original is "Binary Ajax 0.2"
+    by Jacob Seidelin, http://blog.nihilogic.dk/
 
-var BinaryFile = function(strData, iDataOffset, iDataLength) {
-	var data = strData;
-	var dataOffset = iDataOffset || 0;
+    Each are under the MPL License <http://www.nihilogic.dk/licenses/mpl-license.txt>
+*/
+
+(function (){
+
+	try{
+		execScript(''
+	+ "Function IEBinary_getByteAt(strBinary, offset)\r\n"
+	+ "	IEBinary_getByteAt = AscB(MidB(strBinary,offset+1,1))\r\n"
+	+ "End Function\r\n"
+	+ "Function IEBinary_getLength(strBinary)\r\n"
+	+ "	IEBinary_getLength = LenB(strBinary)\r\n"
+	+ "End Function\r\n",
+	'VBScript');
+	}catch(e){
+		void(0);
+	}
+
+var BinaryFile = function(data, dataOffset, dataLength) {
+	var dataOffset = dataOffset || 0;
 	var dataLength = 0;
 
 	this.getRawData = function() {
 		return data;
 	}
 
-	if (typeof strData == "string") {
-		dataLength = iDataLength || data.length;
+	if (typeof data == "string") {
+		dataLength = dataLength || data.length;
 
-		this.getByteAt = function(iOffset) {
-			return data.charCodeAt(iOffset + dataOffset) & 0xFF;
+		this.getByteAt = function(offset) {
+			return data.charCodeAt(offset + dataOffset) & 0xFF;
 		}
-	} else if (typeof strData == "unknown") {
-		dataLength = iDataLength || IEBinary_getLength(data);
+	} else if (typeof data == "unknown") {
+		dataLength = dataLength || IEBinary_getLength(data);
 
-		this.getByteAt = function(iOffset) {
-			return IEBinary_getByteAt(data, iOffset + dataOffset);
+		this.getByteAt = function(offset) {
+			return IEBinary_getByteAt(data, offset + dataOffset);
 		}
+	} else {
+
 	}
 
 	this.getLength = function() {
 		return dataLength;
 	}
 
-	this.getSByteAt = function(iOffset) {
-		var iByte = this.getByteAt(iOffset);
-		if (iByte > 127)
-			return iByte - 256;
+	this.getSByteAt = function(offset) {
+		var byte = this.getByteAt(offset);
+		if (byte > 127)
+			return byte - 256;
 		else
-			return iByte;
+			return byte;
 	}
 
-	this.getShortAt = function(iOffset, bBigEndian) {
-		var iShort = bBigEndian ? 
-			(this.getByteAt(iOffset) << 8) + this.getByteAt(iOffset + 1)
-			: (this.getByteAt(iOffset + 1) << 8) + this.getByteAt(iOffset)
-		if (iShort < 0) iShort += 65536;
-		return iShort;
+	this.getShortAt = function(offset, bigEndian) {
+		var short = bigEndian ? 
+			(this.getByteAt(offset) << 8) + this.getByteAt(offset + 1)
+			: (this.getByteAt(offset + 1) << 8) + this.getByteAt(offset)
+		if (short < 0) short += 65536;
+		return short;
 	}
-	this.getSShortAt = function(iOffset, bBigEndian) {
-		var iUShort = this.getShortAt(iOffset, bBigEndian);
-		if (iUShort > 32767)
-			return iUShort - 65536;
+	this.getSShortAt = function(offset, bigEndian) {
+		var ushort = this.getShortAt(offset, bigEndian);
+		if (ushort > 32767)
+			return ushort - 65536;
 		else
-			return iUShort;
+			return ushort;
 	}
-	this.getLongAt = function(iOffset, bBigEndian) {
-		var iByte1 = this.getByteAt(iOffset),
-			iByte2 = this.getByteAt(iOffset + 1),
-			iByte3 = this.getByteAt(iOffset + 2),
-			iByte4 = this.getByteAt(iOffset + 3);
+	this.getLongAt = function(offset, bigEndian) {
+		var byte1 = this.getByteAt(offset),
+			byte2 = this.getByteAt(offset + 1),
+			byte3 = this.getByteAt(offset + 2),
+			byte4 = this.getByteAt(offset + 3);
 
-		var iLong = bBigEndian ? 
-			(((((iByte1 << 8) + iByte2) << 8) + iByte3) << 8) + iByte4
-			: (((((iByte4 << 8) + iByte3) << 8) + iByte2) << 8) + iByte1;
-		if (iLong < 0) iLong += 4294967296;
-		return iLong;
+		var long = bigEndian ? 
+			(((((byte1 << 8) + byte2) << 8) + byte3) << 8) + byte4
+			: (((((byte4 << 8) + byte3) << 8) + byte2) << 8) + byte1;
+		if (long < 0) long += 4294967296;
+		return long;
 	}
-	this.getSLongAt = function(iOffset, bBigEndian) {
-		var iULong = this.getLongAt(iOffset, bBigEndian);
-		if (iULong > 2147483647)
-			return iULong - 4294967296;
+	this.getSLongAt = function(offset, bigEndian) {
+		var ulong = this.getLongAt(offset, bigEndian);
+		if (ulong > 2147483647)
+			return ulong - 4294967296;
 		else
-			return iULong;
+			return ulong;
 	}
-	this.getStringAt = function(iOffset, iLength) {
-		var aStr = [];
-		for (var i=iOffset,j=0;i<iOffset+iLength;i++,j++) {
-			aStr[j] = String.fromCharCode(this.getByteAt(i));
+	this.getStringAt = function(offset, length) {
+		var chars = [];
+		for (var i=offset,j=0;i<offset+length;i++,j++) {
+			chars[j] = String.fromCharCode(this.getByteAt(i));
 		}
-		return aStr.join("");
+		return chars.join("");
 	}
 
-	this.getCharAt = function(iOffset) {
-		return String.fromCharCode(this.getByteAt(iOffset));
+	this.getCharAt = function(offset) {
+		return String.fromCharCode(this.getByteAt(offset));
 	}
 	this.toBase64 = function() {
 		return window.btoa(data);
 	}
-	this.fromBase64 = function(strBase64) {
-		data = window.atob(strBase64);
+	this.fromBase64 = function(str) {
+		data = window.atob(str);
 	}
 }
 
@@ -9899,243 +9919,225 @@ var BinaryFile = function(strData, iDataOffset, iDataLength) {
 var BinaryAjax = (function() {
 
 	function createRequest() {
-		var oHTTP = null;
-		if (window.XMLHttpRequest) {
-			oHTTP = new XMLHttpRequest();
-		} else if (window.ActiveXObject) {
-			oHTTP = new ActiveXObject("Microsoft.XMLHTTP");
+		var http = null;
+		if (window.ActiveXObject) {
+			http = new ActiveXObject("Microsoft.XMLHTTP");
+		} else if (window.XMLHttpRequest) {
+			http = new XMLHttpRequest();
 		}
-		return oHTTP;
+		return http;
 	}
 
-	function getHead(strURL, fncCallback, fncError) {
-		var oHTTP = createRequest();
-		if (oHTTP) {
-			if (fncCallback) {
-				if (typeof(oHTTP.onload) != "undefined") {
-					oHTTP.onload = function() {
-						if (oHTTP.status == "200") {
-							fncCallback(this);
+	function getHead(url, callback, error) {
+		var http = createRequest();
+		if (http) {
+			if (callback) {
+				if (typeof(http.onload) != "undefined") {
+					http.onload = function() {
+						if (http.status == "200") {
+							callback(this);
 						} else {
-							if (fncError) fncError();
+							if (error) error();
 						}
-						oHTTP = null;
+						http = null;
 					};
 				} else {
-					oHTTP.onreadystatechange = function() {
-						if (oHTTP.readyState == 4) {
-							if (oHTTP.status == "200") {
-								fncCallback(this);
+					http.onreadystatechange = function() {
+						if (http.readyState == 4) {
+							if (http.status == "200") {
+								callback(this);
 							} else {
-								if (fncError) fncError();
+								if (error) error();
 							}
-							oHTTP = null;
+							http = null;
 						}
 					};
 				}
 			}
-			oHTTP.open("HEAD", strURL, true);
-			oHTTP.send(null);
+			http.open("HEAD", url, true);
+			http.send(null);
 		} else {
-			if (fncError) fncError();
+			if (error) error();
 		}
 	}
 
-	function sendRequest(strURL, fncCallback, fncError, aRange, bAcceptRanges, iFileSize) {
-		var oHTTP = createRequest();
-		if (oHTTP) {
+	function sendRequest(url, callback, error, range, acceptRanges, fileSize) {
+		var http = createRequest();
+		if (http) {
 
-			var iDataOffset = 0;
-			if (aRange && !bAcceptRanges) {
-				iDataOffset = aRange[0];
+			var dataOffset = 0;
+			if (range && !acceptRanges) {
+				dataOffset = range[0];
 			}
-			var iDataLen = 0;
-			if (aRange) {
-				iDataLen = aRange[1]-aRange[0]+1;
+			var dataLen = 0;
+			if (range) {
+				dataLen = range[1]-range[0]+1;
 			}
 
-			if (fncCallback) {
-				if (typeof(oHTTP.onload) != "undefined") {
-					oHTTP.onload = function() {
-
-						if (oHTTP.status == "200" || oHTTP.status == "206") {
-							this.binaryResponse = new BinaryFile(this.responseText, iDataOffset, iDataLen);
-							//this.fileSize = iFileSize || this.getResponseHeader("Content-Length");
-							fncCallback(this);
+			if (callback) {
+				if (typeof(http.onload) != "undefined") {
+					http.onload = function() {
+						if (http.status == "200" || http.status == "206" || http.status == "0") {
+							http.binaryResponse = new BinaryFile(http.responseText, dataOffset, dataLen);
+							http.fileSize = fileSize || http.getResponseHeader("Content-Length");
+							callback(http);
 						} else {
-							if (fncError) fncError();
+							if (error) error();
 						}
-						oHTTP = null;
+						http = null;
 					};
 				} else {
-					oHTTP.onreadystatechange = function() {
-						if (oHTTP.readyState == 4) {
-							if (oHTTP.status == "200" || oHTTP.status == "206") {
-								this.binaryResponse = new BinaryFile(oHTTP.responseBody, iDataOffset, iDataLen);
-								//this.fileSize = iFileSize || this.getResponseHeader("Content-Length");
-								fncCallback(this);
+					http.onreadystatechange = function() {
+						if (http.readyState == 4) {
+							if (http.status == "200" || http.status == "206" || http.status == "0") {
+								// IE6 craps if we try to extend the XHR object
+								var res = {
+									status : http.status,
+									// IE needs responseBody, Chrome/Safari needs responseText
+									binaryResponse : new BinaryFile(http.responseBody || http.responseText, dataOffset, dataLen),
+									fileSize : fileSize || http.getResponseHeader("Content-Length")
+								};
+								callback(res);
 							} else {
-								if (fncError) fncError();
+								if (error) error();
 							}
-							oHTTP = null;
+							http = null;
 						}
 					};
 				}
 			}
-			oHTTP.open("GET", strURL, true);
+			http.open("GET", url, true);
 
-			if (oHTTP.overrideMimeType) oHTTP.overrideMimeType('text/plain; charset=x-user-defined');
+			if (http.overrideMimeType) http.overrideMimeType('text/plain; charset=x-user-defined');
 
-			if (aRange && bAcceptRanges) {
-				oHTTP.setRequestHeader("Range", "bytes=" + aRange[0] + "-" + aRange[1]);
+			if (range && acceptRanges) {
+				http.setRequestHeader("Range", "bytes=" + range[0] + "-" + range[1]);
 			}
 
-			//oHTTP.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
+			http.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
 
-			oHTTP.send(null);
+			http.send(null);
 		} else {
-			if (fncError) fncError();
+			if (error) error();
 		}
 	}
 
-	return function(strURL, fncCallback, fncError, aRange) {
-
-		if (aRange) {
+	return function(url, callback, error, range) {
+		if (range) {
 			getHead(
-				strURL, 
-				function(oHTTP) {
-					/*
-					var iLength = parseInt(oHTTP.getResponseHeader("Content-Length"),10);
-					var strAcceptRanges = oHTTP.getResponseHeader("Accept-Ranges");
+				url, 
+				function(http) {
+					var length = parseInt(http.getResponseHeader("Content-Length"),10);
+					var acceptRanges = http.getResponseHeader("Accept-Ranges");
 
-					var iStart, iEnd;
-					iStart = aRange[0];
-					if (aRange[0] < 0) 
-						iStart += iLength;
-					iEnd = iStart + aRange[1] - 1;
+					var start, end;
+					start = range[0];
+					if (range[0] < 0) 
+						start += length;
+					end = start + range[1] - 1;
 
-					sendRequest(strURL, fncCallback, fncError, [iStart, iEnd], (strAcceptRanges == "bytes"), iLength);
-					*/
+					sendRequest(url, callback, error, [start, end], (acceptRanges == "bytes"), length);
 				}
 			);
-
 		} else {
-			sendRequest(strURL, fncCallback, fncError);
+			sendRequest(url, callback, error);
 		}
 	}
 
 }());
 
+    window.BinaryFile = BinaryFile;
+    window.BinaryAjax = BinaryAjax;
+})();
 
-document.write(
-	"<script type='text/vbscript'>\r\n"
-	+ "Function IEBinary_getByteAt(strBinary, iOffset)\r\n"
-	+ "	IEBinary_getByteAt = AscB(MidB(strBinary,iOffset+1,1))\r\n"
-	+ "End Function\r\n"
-	+ "Function IEBinary_getLength(strBinary)\r\n"
-	+ "	IEBinary_getLength = LenB(strBinary)\r\n"
-	+ "End Function\r\n"
-	+ "</script>\r\n"
-);
+/*
+ * Javascript EXIF Reader 0.1.6
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * Licensed under the MPL License [http://www.nihilogic.dk/licenses/mpl-license.txt]
+ */
 
-(function() {
+
+var EXIF = (function() {
 
     var debug = false;
 
-    var root = this;
-
-    var EXIF = function(obj) {
-        if (obj instanceof EXIF) return obj;
-        if (!(this instanceof EXIF)) return new EXIF(obj);
-        this.EXIFwrapped = obj;
-    };
-
-    if (typeof exports !== 'undefined') {
-        if (typeof module !== 'undefined' && module.exports) {
-            exports = module.exports = EXIF;
-        }
-        exports.EXIF = EXIF;
-    } else {
-        root.EXIF = EXIF;
-    }
-
-    var ExifTags = EXIF.Tags = {
+    var ExifTags = {
 
         // version tags
-        0x9000 : "ExifVersion",             // EXIF version
-        0xA000 : "FlashpixVersion",         // Flashpix format version
+        0x9000 : "ExifVersion",			// EXIF version
+        0xA000 : "FlashpixVersion",		// Flashpix format version
 
         // colorspace tags
-        0xA001 : "ColorSpace",              // Color space information tag
+        0xA001 : "ColorSpace",			// Color space information tag
 
         // image configuration
-        0xA002 : "PixelXDimension",         // Valid width of meaningful image
-        0xA003 : "PixelYDimension",         // Valid height of meaningful image
-        0x9101 : "ComponentsConfiguration", // Information about channels
-        0x9102 : "CompressedBitsPerPixel",  // Compressed bits per pixel
+        0xA002 : "PixelXDimension",		// Valid width of meaningful image
+        0xA003 : "PixelYDimension",		// Valid height of meaningful image
+        0x9101 : "ComponentsConfiguration",	// Information about channels
+        0x9102 : "CompressedBitsPerPixel",	// Compressed bits per pixel
 
         // user information
-        0x927C : "MakerNote",               // Any desired information written by the manufacturer
-        0x9286 : "UserComment",             // Comments by user
+        0x927C : "MakerNote",			// Any desired information written by the manufacturer
+        0x9286 : "UserComment",			// Comments by user
 
         // related file
-        0xA004 : "RelatedSoundFile",        // Name of related sound file
+        0xA004 : "RelatedSoundFile",		// Name of related sound file
 
         // date and time
-        0x9003 : "DateTimeOriginal",        // Date and time when the original image was generated
-        0x9004 : "DateTimeDigitized",       // Date and time when the image was stored digitally
-        0x9290 : "SubsecTime",              // Fractions of seconds for DateTime
-        0x9291 : "SubsecTimeOriginal",      // Fractions of seconds for DateTimeOriginal
-        0x9292 : "SubsecTimeDigitized",     // Fractions of seconds for DateTimeDigitized
+        0x9003 : "DateTimeOriginal",		// Date and time when the original image was generated
+        0x9004 : "DateTimeDigitized",		// Date and time when the image was stored digitally
+        0x9290 : "SubsecTime",			// Fractions of seconds for DateTime
+        0x9291 : "SubsecTimeOriginal",		// Fractions of seconds for DateTimeOriginal
+        0x9292 : "SubsecTimeDigitized",		// Fractions of seconds for DateTimeDigitized
 
         // picture-taking conditions
-        0x829A : "ExposureTime",            // Exposure time (in seconds)
-        0x829D : "FNumber",                 // F number
-        0x8822 : "ExposureProgram",         // Exposure program
-        0x8824 : "SpectralSensitivity",     // Spectral sensitivity
-        0x8827 : "ISOSpeedRatings",         // ISO speed rating
-        0x8828 : "OECF",                    // Optoelectric conversion factor
-        0x9201 : "ShutterSpeedValue",       // Shutter speed
-        0x9202 : "ApertureValue",           // Lens aperture
-        0x9203 : "BrightnessValue",         // Value of brightness
-        0x9204 : "ExposureBias",            // Exposure bias
-        0x9205 : "MaxApertureValue",        // Smallest F number of lens
-        0x9206 : "SubjectDistance",         // Distance to subject in meters
-        0x9207 : "MeteringMode",            // Metering mode
-        0x9208 : "LightSource",             // Kind of light source
-        0x9209 : "Flash",                   // Flash status
-        0x9214 : "SubjectArea",             // Location and area of main subject
-        0x920A : "FocalLength",             // Focal length of the lens in mm
-        0xA20B : "FlashEnergy",             // Strobe energy in BCPS
-        0xA20C : "SpatialFrequencyResponse",    //
-        0xA20E : "FocalPlaneXResolution",   // Number of pixels in width direction per FocalPlaneResolutionUnit
-        0xA20F : "FocalPlaneYResolution",   // Number of pixels in height direction per FocalPlaneResolutionUnit
-        0xA210 : "FocalPlaneResolutionUnit",    // Unit for measuring FocalPlaneXResolution and FocalPlaneYResolution
-        0xA214 : "SubjectLocation",         // Location of subject in image
-        0xA215 : "ExposureIndex",           // Exposure index selected on camera
-        0xA217 : "SensingMethod",           // Image sensor type
-        0xA300 : "FileSource",              // Image source (3 == DSC)
-        0xA301 : "SceneType",               // Scene type (1 == directly photographed)
-        0xA302 : "CFAPattern",              // Color filter array geometric pattern
-        0xA401 : "CustomRendered",          // Special processing
-        0xA402 : "ExposureMode",            // Exposure mode
-        0xA403 : "WhiteBalance",            // 1 = auto white balance, 2 = manual
-        0xA404 : "DigitalZoomRation",       // Digital zoom ratio
-        0xA405 : "FocalLengthIn35mmFilm",   // Equivalent foacl length assuming 35mm film camera (in mm)
-        0xA406 : "SceneCaptureType",        // Type of scene
-        0xA407 : "GainControl",             // Degree of overall image gain adjustment
-        0xA408 : "Contrast",                // Direction of contrast processing applied by camera
-        0xA409 : "Saturation",              // Direction of saturation processing applied by camera
-        0xA40A : "Sharpness",               // Direction of sharpness processing applied by camera
-        0xA40B : "DeviceSettingDescription",    //
-        0xA40C : "SubjectDistanceRange",    // Distance to subject
+        0x829A : "ExposureTime",		// Exposure time (in seconds)
+        0x829D : "FNumber",			// F number
+        0x8822 : "ExposureProgram",		// Exposure program
+        0x8824 : "SpectralSensitivity",		// Spectral sensitivity
+        0x8827 : "ISOSpeedRatings",		// ISO speed rating
+        0x8828 : "OECF",			// Optoelectric conversion factor
+        0x9201 : "ShutterSpeedValue",		// Shutter speed
+        0x9202 : "ApertureValue",		// Lens aperture
+        0x9203 : "BrightnessValue",		// Value of brightness
+        0x9204 : "ExposureBias",		// Exposure bias
+        0x9205 : "MaxApertureValue",		// Smallest F number of lens
+        0x9206 : "SubjectDistance",		// Distance to subject in meters
+        0x9207 : "MeteringMode", 		// Metering mode
+        0x9208 : "LightSource",			// Kind of light source
+        0x9209 : "Flash",			// Flash status
+        0x9214 : "SubjectArea",			// Location and area of main subject
+        0x920A : "FocalLength",			// Focal length of the lens in mm
+        0xA20B : "FlashEnergy",			// Strobe energy in BCPS
+        0xA20C : "SpatialFrequencyResponse",	// 
+        0xA20E : "FocalPlaneXResolution", 	// Number of pixels in width direction per FocalPlaneResolutionUnit
+        0xA20F : "FocalPlaneYResolution", 	// Number of pixels in height direction per FocalPlaneResolutionUnit
+        0xA210 : "FocalPlaneResolutionUnit", 	// Unit for measuring FocalPlaneXResolution and FocalPlaneYResolution
+        0xA214 : "SubjectLocation",		// Location of subject in image
+        0xA215 : "ExposureIndex",		// Exposure index selected on camera
+        0xA217 : "SensingMethod", 		// Image sensor type
+        0xA300 : "FileSource", 			// Image source (3 == DSC)
+        0xA301 : "SceneType", 			// Scene type (1 == directly photographed)
+        0xA302 : "CFAPattern",			// Color filter array geometric pattern
+        0xA401 : "CustomRendered",		// Special processing
+        0xA402 : "ExposureMode",		// Exposure mode
+        0xA403 : "WhiteBalance",		// 1 = auto white balance, 2 = manual
+        0xA404 : "DigitalZoomRation",		// Digital zoom ratio
+        0xA405 : "FocalLengthIn35mmFilm",	// Equivalent foacl length assuming 35mm film camera (in mm)
+        0xA406 : "SceneCaptureType",		// Type of scene
+        0xA407 : "GainControl",			// Degree of overall image gain adjustment
+        0xA408 : "Contrast",			// Direction of contrast processing applied by camera
+        0xA409 : "Saturation", 			// Direction of saturation processing applied by camera
+        0xA40A : "Sharpness",			// Direction of sharpness processing applied by camera
+        0xA40B : "DeviceSettingDescription",	// 
+        0xA40C : "SubjectDistanceRange",	// Distance to subject
 
         // other tags
         0xA005 : "InteroperabilityIFDPointer",
-        0xA420 : "ImageUniqueID"            // Identifier assigned uniquely to each image
+        0xA420 : "ImageUniqueID"		// Identifier assigned uniquely to each image
     };
 
-    var TiffTags = EXIF.TiffTags = {
+    var TiffTags = {
         0x0100 : "ImageWidth",
         0x0101 : "ImageHeight",
         0x8769 : "ExifIFDPointer",
@@ -10171,7 +10173,7 @@ document.write(
         0x8298 : "Copyright"
     };
 
-    var GPSTags = EXIF.GPSTags = {
+    var GPSTags = {
         0x0000 : "GPSVersionID",
         0x0001 : "GPSLatitudeRef",
         0x0002 : "GPSLatitude",
@@ -10205,7 +10207,7 @@ document.write(
         0x001E : "GPSDifferential"
     };
 
-    var StringValues = EXIF.StringValues = {
+    var StringValues = {
         ExposureProgram : {
             0 : "Not defined",
             1 : "Manual",
@@ -10344,10 +10346,10 @@ document.write(
     };
 
     function addEvent(element, event, handler) {
-        if (element.addEventListener) {
-            element.addEventListener(event, handler, false);
-        } else if (element.attachEvent) {
-            element.attachEvent("on" + event, handler);
+        if (element.addEventListener) { 
+            element.addEventListener(event, handler, false); 
+        } else if (element.attachEvent) { 
+            element.attachEvent("on" + event, handler); 
         }
     }
 
@@ -10355,232 +10357,68 @@ document.write(
         return !!(img.exifdata);
     }
 
-
-    function base64ToArrayBuffer(base64, contentType) {
-        contentType = contentType || base64.match(/^data\:([^\;]+)\;base64,/mi)[1] || ''; // e.g. 'data:image/jpeg;base64,...' => 'image/jpeg'
-        base64 = base64.replace(/^data\:([^\;]+)\;base64,/gmi, '');
-        var binary = atob(base64);
-        var len = binary.length;
-        var buffer = new ArrayBuffer(len);
-        var view = new Uint8Array(buffer);
-        for (var i = 0; i < len; i++) {
-            view[i] = binary.charCodeAt(i);
-        }
-        return buffer;
-    }
-
-    function objectURLToBlob(url, callback) {
-        var http = new XMLHttpRequest();
-        http.open("GET", url, true);
-        http.responseType = "blob";
-        http.onload = function(e) {
-            if (this.status == 200 || this.status === 0) {
-                callback(this.response);
-            }
-        };
-        http.send();
-    }
-
     function getImageData(img, callback) {
-        function handleBinaryFile(binFile) {
-            var data = findEXIFinJPEG(binFile);
-            var iptcdata = findIPTCinJPEG(binFile);
+        BinaryAjax(img.src, function(http) {
+            var data = findEXIFinJPEG(http.binaryResponse);
             img.exifdata = data || {};
-            img.iptcdata = iptcdata || {};
             if (callback) {
-                callback.call(img);
+                callback.call(img)
             }
-        }
-
-        if (img.src) {
-            if (/^data\:/i.test(img.src)) { // Data URI
-                var arrayBuffer = base64ToArrayBuffer(img.src);
-                handleBinaryFile(arrayBuffer);
-
-            } else if (/^blob\:/i.test(img.src)) { // Object URL
-                var fileReader = new FileReader();
-                fileReader.onload = function(e) {
-                    handleBinaryFile(e.target.result);
-                };
-                objectURLToBlob(img.src, function (blob) {
-                    fileReader.readAsArrayBuffer(blob);
-                });
-            } else {
-                var http = new XMLHttpRequest();
-                http.onload = function() {
-                    if (this.status == 200 || this.status === 0) {
-                        handleBinaryFile(http.response);
-                    } else {
-                        throw "Could not load image";
-                    }
-                    http = null;
-                };
-                http.open("GET", img.src, true);
-                http.responseType = "arraybuffer";
-                http.send(null);
-            }
-        } else if (window.FileReader && (img instanceof window.Blob || img instanceof window.File)) {
-            var fileReader = new FileReader();
-            fileReader.onload = function(e) {
-                if (debug) console.log("Got file of length " + e.target.result.byteLength);
-                handleBinaryFile(e.target.result);
-            };
-
-            fileReader.readAsArrayBuffer(img);
-        }
+        });
     }
 
     function findEXIFinJPEG(file) {
-        var dataView = new DataView(file);
-
-        if (debug) console.log("Got file of length " + file.byteLength);
-        if ((dataView.getUint8(0) != 0xFF) || (dataView.getUint8(1) != 0xD8)) {
-            if (debug) console.log("Not a valid JPEG");
+        if (file.getByteAt(0) != 0xFF || file.getByteAt(1) != 0xD8) {
             return false; // not a valid jpeg
         }
 
         var offset = 2,
-            length = file.byteLength,
+            length = file.getLength(),
             marker;
 
         while (offset < length) {
-            if (dataView.getUint8(offset) != 0xFF) {
-                if (debug) console.log("Not a valid marker at offset " + offset + ", found: " + dataView.getUint8(offset));
+            if (file.getByteAt(offset) != 0xFF) {
+                if (debug) console.log("Not a valid marker at offset " + offset + ", found: " + file.getByteAt(offset));
                 return false; // not a valid marker, something is wrong
             }
 
-            marker = dataView.getUint8(offset + 1);
-            if (debug) console.log(marker);
+            marker = file.getByteAt(offset+1);
 
-            // we could implement handling for other markers here,
+            // we could implement handling for other markers here, 
             // but we're only looking for 0xFFE1 for EXIF data
 
-            if (marker == 225) {
+            if (marker == 22400) {
                 if (debug) console.log("Found 0xFFE1 marker");
-
-                return readEXIFData(dataView, offset + 4, dataView.getUint16(offset + 2) - 2);
-
+                
+                return readEXIFData(file, offset + 4, file.getShortAt(offset+2, true)-2);
+                
                 // offset += 2 + file.getShortAt(offset+2, true);
 
+            } else if (marker == 225) {
+                // 0xE1 = Application-specific 1 (for EXIF)
+                if (debug) console.log("Found 0xFFE1 marker");
+                
+                return readEXIFData(file, offset + 4, file.getShortAt(offset+2, true)-2);
+
             } else {
-                offset += 2 + dataView.getUint16(offset+2);
+                offset += 2 + file.getShortAt(offset+2, true);
             }
 
         }
 
     }
-
-    function findIPTCinJPEG(file) {
-        var dataView = new DataView(file);
-
-        if (debug) console.log("Got file of length " + file.byteLength);
-        if ((dataView.getUint8(0) != 0xFF) || (dataView.getUint8(1) != 0xD8)) {
-            if (debug) console.log("Not a valid JPEG");
-            return false; // not a valid jpeg
-        }
-
-        var offset = 2,
-            length = file.byteLength;
-
-
-        var isFieldSegmentStart = function(dataView, offset){
-            return (
-                dataView.getUint8(offset) === 0x38 &&
-                dataView.getUint8(offset+1) === 0x42 &&
-                dataView.getUint8(offset+2) === 0x49 &&
-                dataView.getUint8(offset+3) === 0x4D &&
-                dataView.getUint8(offset+4) === 0x04 &&
-                dataView.getUint8(offset+5) === 0x04
-            );
-        };
-
-        while (offset < length) {
-
-            if ( isFieldSegmentStart(dataView, offset )){
-
-                // Get the length of the name header (which is padded to an even number of bytes)
-                var nameHeaderLength = dataView.getUint8(offset+7);
-                if(nameHeaderLength % 2 !== 0) nameHeaderLength += 1;
-                // Check for pre photoshop 6 format
-                if(nameHeaderLength === 0) {
-                    // Always 4
-                    nameHeaderLength = 4;
-                }
-
-                var startOffset = offset + 8 + nameHeaderLength;
-                var sectionLength = dataView.getUint16(offset + 6 + nameHeaderLength);
-
-                return readIPTCData(file, startOffset, sectionLength);
-
-                break;
-
-            }
-
-
-            // Not the marker, continue searching
-            offset++;
-
-        }
-
-    }
-    var IptcFieldMap = {
-        0x78 : 'caption',
-        0x6E : 'credit',
-        0x19 : 'keywords',
-        0x37 : 'dateCreated',
-        0x50 : 'byline',
-        0x55 : 'bylineTitle',
-        0x7A : 'captionWriter',
-        0x69 : 'headline',
-        0x74 : 'copyright',
-        0x0F : 'category'
-    };
-    function readIPTCData(file, startOffset, sectionLength){
-        var dataView = new DataView(file);
-        var data = {};
-        var fieldValue, fieldName, dataSize, segmentType, segmentSize;
-        var segmentStartPos = startOffset;
-        while(segmentStartPos < startOffset+sectionLength) {
-            if(dataView.getUint8(segmentStartPos) === 0x1C && dataView.getUint8(segmentStartPos+1) === 0x02){
-                segmentType = dataView.getUint8(segmentStartPos+2);
-                if(segmentType in IptcFieldMap) {
-                    dataSize = dataView.getInt16(segmentStartPos+3);
-                    segmentSize = dataSize + 5;
-                    fieldName = IptcFieldMap[segmentType];
-                    fieldValue = getStringFromDB(dataView, segmentStartPos+5, dataSize);
-                    // Check if we already stored a value with this name
-                    if(data.hasOwnProperty(fieldName)) {
-                        // Value already stored with this name, create multivalue field
-                        if(data[fieldName] instanceof Array) {
-                            data[fieldName].push(fieldValue);
-                        }
-                        else {
-                            data[fieldName] = [data[fieldName], fieldValue];
-                        }
-                    }
-                    else {
-                        data[fieldName] = fieldValue;
-                    }
-                }
-
-            }
-            segmentStartPos++;
-        }
-        return data;
-    }
-
 
 
     function readTags(file, tiffStart, dirStart, strings, bigEnd) {
-        var entries = file.getUint16(dirStart, !bigEnd),
-            tags = {},
+        var entries = file.getShortAt(dirStart, bigEnd),
+            tags = {}, 
             entryOffset, tag,
             i;
-
+            
         for (i=0;i<entries;i++) {
             entryOffset = dirStart + i*12 + 2;
-            tag = strings[file.getUint16(entryOffset, !bigEnd)];
-            if (!tag && debug) console.log("Unknown tag: " + file.getUint16(entryOffset, !bigEnd));
+            tag = strings[file.getShortAt(entryOffset, bigEnd)];
+            if (!tag && debug) console.log("Unknown tag: " + file.getShortAt(entryOffset, bigEnd));
             tags[tag] = readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd);
         }
         return tags;
@@ -10588,9 +10426,9 @@ document.write(
 
 
     function readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd) {
-        var type = file.getUint16(entryOffset+2, !bigEnd),
-            numValues = file.getUint32(entryOffset+4, !bigEnd),
-            valueOffset = file.getUint32(entryOffset+8, !bigEnd) + tiffStart,
+        var type = file.getShortAt(entryOffset+2, bigEnd),
+            numValues = file.getLongAt(entryOffset+4, bigEnd),
+            valueOffset = file.getLongAt(entryOffset+8, bigEnd) + tiffStart,
             offset,
             vals, val, n,
             numerator, denominator;
@@ -10599,47 +10437,47 @@ document.write(
             case 1: // byte, 8-bit unsigned int
             case 7: // undefined, 8-bit byte, value depending on field
                 if (numValues == 1) {
-                    return file.getUint8(entryOffset + 8, !bigEnd);
+                    return file.getByteAt(entryOffset + 8, bigEnd);
                 } else {
                     offset = numValues > 4 ? valueOffset : (entryOffset + 8);
                     vals = [];
                     for (n=0;n<numValues;n++) {
-                        vals[n] = file.getUint8(offset + n);
+                        vals[n] = file.getByteAt(offset + n);
                     }
                     return vals;
                 }
 
             case 2: // ascii, 8-bit byte
                 offset = numValues > 4 ? valueOffset : (entryOffset + 8);
-                return getStringFromDB(file, offset, numValues-1);
+                return file.getStringAt(offset, numValues-1);
 
             case 3: // short, 16 bit int
                 if (numValues == 1) {
-                    return file.getUint16(entryOffset + 8, !bigEnd);
+                    return file.getShortAt(entryOffset + 8, bigEnd);
                 } else {
                     offset = numValues > 2 ? valueOffset : (entryOffset + 8);
                     vals = [];
                     for (n=0;n<numValues;n++) {
-                        vals[n] = file.getUint16(offset + 2*n, !bigEnd);
+                        vals[n] = file.getShortAt(offset + 2*n, bigEnd);
                     }
                     return vals;
                 }
 
             case 4: // long, 32 bit int
                 if (numValues == 1) {
-                    return file.getUint32(entryOffset + 8, !bigEnd);
+                    return file.getLongAt(entryOffset + 8, bigEnd);
                 } else {
                     vals = [];
-                    for (n=0;n<numValues;n++) {
-                        vals[n] = file.getUint32(valueOffset + 4*n, !bigEnd);
+                    for (var n=0;n<numValues;n++) {
+                        vals[n] = file.getLongAt(valueOffset + 4*n, bigEnd);
                     }
                     return vals;
                 }
 
-            case 5:    // rational = two long values, first is numerator, second is denominator
+            case 5:	// rational = two long values, first is numerator, second is denominator
                 if (numValues == 1) {
-                    numerator = file.getUint32(valueOffset, !bigEnd);
-                    denominator = file.getUint32(valueOffset+4, !bigEnd);
+                    numerator = file.getLongAt(valueOffset, bigEnd);
+                    denominator = file.getLongAt(valueOffset+4, bigEnd);
                     val = new Number(numerator / denominator);
                     val.numerator = numerator;
                     val.denominator = denominator;
@@ -10647,8 +10485,8 @@ document.write(
                 } else {
                     vals = [];
                     for (n=0;n<numValues;n++) {
-                        numerator = file.getUint32(valueOffset + 8*n, !bigEnd);
-                        denominator = file.getUint32(valueOffset+4 + 8*n, !bigEnd);
+                        numerator = file.getLongAt(valueOffset + 8*n, bigEnd);
+                        denominator = file.getLongAt(valueOffset+4 + 8*n, bigEnd);
                         vals[n] = new Number(numerator / denominator);
                         vals[n].numerator = numerator;
                         vals[n].denominator = denominator;
@@ -10658,39 +10496,32 @@ document.write(
 
             case 9: // slong, 32 bit signed int
                 if (numValues == 1) {
-                    return file.getInt32(entryOffset + 8, !bigEnd);
+                    return file.getSLongAt(entryOffset + 8, bigEnd);
                 } else {
                     vals = [];
                     for (n=0;n<numValues;n++) {
-                        vals[n] = file.getInt32(valueOffset + 4*n, !bigEnd);
+                        vals[n] = file.getSLongAt(valueOffset + 4*n, bigEnd);
                     }
                     return vals;
                 }
 
             case 10: // signed rational, two slongs, first is numerator, second is denominator
                 if (numValues == 1) {
-                    return file.getInt32(valueOffset, !bigEnd) / file.getInt32(valueOffset+4, !bigEnd);
+                    return file.getSLongAt(valueOffset, bigEnd) / file.getSLongAt(valueOffset+4, bigEnd);
                 } else {
                     vals = [];
                     for (n=0;n<numValues;n++) {
-                        vals[n] = file.getInt32(valueOffset + 8*n, !bigEnd) / file.getInt32(valueOffset+4 + 8*n, !bigEnd);
+                        vals[n] = file.getSLongAt(valueOffset + 8*n, bigEnd) / file.getSLongAt(valueOffset+4 + 8*n, bigEnd);
                     }
                     return vals;
                 }
         }
     }
 
-    function getStringFromDB(buffer, start, length) {
-        var outstr = "";
-        for (n = start; n < start+length; n++) {
-            outstr += String.fromCharCode(buffer.getUint8(n));
-        }
-        return outstr;
-    }
 
     function readEXIFData(file, start) {
-        if (getStringFromDB(file, start, 4) != "Exif") {
-            if (debug) console.log("Not valid EXIF data! " + getStringFromDB(file, start, 4));
+        if (file.getStringAt(start, 4) != "Exif") {
+            if (debug) console.log("Not valid EXIF data! " + file.getStringAt(start, 4));
             return false;
         }
 
@@ -10700,28 +10531,26 @@ document.write(
             tiffOffset = start + 6;
 
         // test for TIFF validity and endianness
-        if (file.getUint16(tiffOffset) == 0x4949) {
+        if (file.getShortAt(tiffOffset) == 0x4949) {
             bigEnd = false;
-        } else if (file.getUint16(tiffOffset) == 0x4D4D) {
+        } else if (file.getShortAt(tiffOffset) == 0x4D4D) {
             bigEnd = true;
         } else {
             if (debug) console.log("Not valid TIFF data! (no 0x4949 or 0x4D4D)");
             return false;
         }
 
-        if (file.getUint16(tiffOffset+2, !bigEnd) != 0x002A) {
+        if (file.getShortAt(tiffOffset+2, bigEnd) != 0x002A) {
             if (debug) console.log("Not valid TIFF data! (no 0x002A)");
             return false;
         }
 
-        var firstIFDOffset = file.getUint32(tiffOffset+4, !bigEnd);
-
-        if (firstIFDOffset < 0x00000008) {
-            if (debug) console.log("Not valid TIFF data! (First offset less than 8)", file.getUint32(tiffOffset+4, !bigEnd));
+        if (file.getLongAt(tiffOffset+4, bigEnd) != 0x00000008) {
+            if (debug) console.log("Not valid TIFF data! (First offset not 8)", file.getShortAt(tiffOffset+4, bigEnd));
             return false;
         }
 
-        tags = readTags(file, tiffOffset, tiffOffset + firstIFDOffset, TiffTags, bigEnd);
+        tags = readTags(file, tiffOffset, tiffOffset+8, TiffTags, bigEnd);
 
         if (tags.ExifIFDPointer) {
             exifData = readTags(file, tiffOffset, tiffOffset + tags.ExifIFDPointer, ExifTags, bigEnd);
@@ -10735,27 +10564,27 @@ document.write(
                     case "SceneCaptureType" :
                     case "SceneType" :
                     case "CustomRendered" :
-                    case "WhiteBalance" :
-                    case "GainControl" :
+                    case "WhiteBalance" : 
+                    case "GainControl" : 
                     case "Contrast" :
                     case "Saturation" :
-                    case "Sharpness" :
+                    case "Sharpness" : 
                     case "SubjectDistanceRange" :
                     case "FileSource" :
                         exifData[tag] = StringValues[tag][exifData[tag]];
                         break;
-
+        
                     case "ExifVersion" :
                     case "FlashpixVersion" :
                         exifData[tag] = String.fromCharCode(exifData[tag][0], exifData[tag][1], exifData[tag][2], exifData[tag][3]);
                         break;
-
-                    case "ComponentsConfiguration" :
-                        exifData[tag] =
-                            StringValues.Components[exifData[tag][0]] +
-                            StringValues.Components[exifData[tag][1]] +
-                            StringValues.Components[exifData[tag][2]] +
-                            StringValues.Components[exifData[tag][3]];
+        
+                    case "ComponentsConfiguration" : 
+                        exifData[tag] = 
+                            StringValues.Components[exifData[tag][0]]
+                            + StringValues.Components[exifData[tag][1]]
+                            + StringValues.Components[exifData[tag][2]]
+                            + StringValues.Components[exifData[tag][3]];
                         break;
                 }
                 tags[tag] = exifData[tag];
@@ -10766,11 +10595,11 @@ document.write(
             gpsData = readTags(file, tiffOffset, tiffOffset + tags.GPSInfoIFDPointer, GPSTags, bigEnd);
             for (tag in gpsData) {
                 switch (tag) {
-                    case "GPSVersionID" :
-                        gpsData[tag] = gpsData[tag][0] +
-                            "." + gpsData[tag][1] +
-                            "." + gpsData[tag][2] +
-                            "." + gpsData[tag][3];
+                    case "GPSVersionID" : 
+                        gpsData[tag] = gpsData[tag][0] 
+                            + "." + gpsData[tag][1] 
+                            + "." + gpsData[tag][2] 
+                            + "." + gpsData[tag][3];
                         break;
                 }
                 tags[tag] = gpsData[tag];
@@ -10780,9 +10609,9 @@ document.write(
         return tags;
     }
 
-    EXIF.getData = function(img, callback) {
-        if ((img instanceof Image || img instanceof HTMLImageElement) && !img.complete) return false;
 
+    function getData(img, callback) {
+        if (!img.complete) return false;
         if (!imageHasData(img)) {
             getImageData(img, callback);
         } else {
@@ -10793,14 +10622,14 @@ document.write(
         return true;
     }
 
-    EXIF.getTag = function(img, tag) {
+    function getTag(img, tag) {
         if (!imageHasData(img)) return;
         return img.exifdata[tag];
     }
 
-    EXIF.getAllTags = function(img) {
+    function getAllTags(img) {
         if (!imageHasData(img)) return {};
-        var a,
+        var a, 
             data = img.exifdata,
             tags = {};
         for (a in data) {
@@ -10811,7 +10640,7 @@ document.write(
         return tags;
     }
 
-    EXIF.pretty = function(img) {
+    function pretty(img) {
         if (!imageHasData(img)) return "";
         var a,
             data = img.exifdata,
@@ -10832,200 +10661,222 @@ document.write(
         return strPretty;
     }
 
-    EXIF.readFromBinaryFile = function(file) {
+    function readFromBinaryFile(file) {
         return findEXIFinJPEG(file);
     }
 
-    if (typeof define === 'function' && define.amd) {
-        define('exif-js', [], function() {
-            return EXIF;
-        });
-    }
-}.call(this));
-
-/*
- * ImageInfo 0.1.2 - A JavaScript library for reading image metadata.
- * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
- * MIT License [http://www.nihilogic.dk/licenses/mit-license.txt]
- */
-
-
-var ImageInfo = {};
-
-ImageInfo.useRange = false;
-ImageInfo.range = 10240;
-
-(function() {
-
-	var files = [];
-
-	function readFileData(url, callback) {
-		BinaryAjax(
-			url,
-			function(http) {
-				var tags = readInfoFromData(http.binaryResponse);
-				var mime = http.getResponseHeader("Content-Type");
-
-				tags["mimeType"] = mime;
-				tags["byteSize"] = http.fileSize;
-
-				files[url] = tags;
-				if (callback) callback();
-			},
-			null,
-			ImageInfo.useRange ? [0, ImageInfo.range] : null
-		)
-	}
-
-	function readInfoFromData(data) {
-	
-		var offset = 0;
-
-		if (data.getByteAt(0) == 0xFF && data.getByteAt(1) == 0xD8) {
-			return readJPEGInfo(data);
-		}
-		// IE11 -> 0x30
-		if ((data.getByteAt(0) == 0x89 || data.getByteAt(0) == 0x30) && data.getStringAt(1, 3) == "PNG") {
-			return readPNGInfo(data);
-		}
-		if (data.getStringAt(0,3) == "GIF") {
-			return readGIFInfo(data);
-		}
-		if (data.getByteAt(0) == 0x42 && data.getByteAt(1) == 0x4D) {
-			return readBMPInfo(data);
-		}
-		if (data.getByteAt(0) == 0x00 && data.getByteAt(1) == 0x00) {
-			return readICOInfo(data);
-		}
-
-		return {
-			format : "UNKNOWN"
-		};
-	}
-
-
-	function readPNGInfo(data) {
-		var w = data.getLongAt(16,true);
-		var h = data.getLongAt(20,true);
-
-		var bpc = data.getByteAt(24);
-		var ct = data.getByteAt(25);
-
-		var bpp = bpc;
-		if (ct == 4) bpp *= 2;
-		if (ct == 2) bpp *= 3;
-		if (ct == 6) bpp *= 4;
-
-		var alpha = data.getByteAt(25) >= 4;
-
-		return {
-			format : "PNG",
-			version : "",
-			width : w,
-			height : h,
-			bpp : bpp,
-			alpha : alpha,
-			exif : {}
-		}
-	}
-
-	function readGIFInfo(data) {
-		var version = data.getStringAt(3,3);
-		var w = data.getShortAt(6);
-		var h = data.getShortAt(8);
-
-		var bpp = ((data.getByteAt(10) >> 4) & 7) + 1;
-
-		return {
-			format : "GIF",
-			version : version,
-			width : w,
-			height : h,
-			bpp : bpp,
-			alpha : false,
-			exif : {}
-		}
-	}
-
-	function readJPEGInfo(data) {
-
-		var w = 0;
-		var h = 0;
-		var comps = 0;
-		var len = data.getLength();
-		var offset = 2;
-		while (offset < len) {
-			var marker = data.getShortAt(offset, true);
-			offset += 2;
-			if (marker == 0xFFC0) {
-				h = data.getShortAt(offset + 3, true);
-				w = data.getShortAt(offset + 5, true);
-				comps = data.getByteAt(offset + 7, true)
-				break;
-			} else {
-				offset += data.getShortAt(offset, true)
-			}
-		}
-
-		var exif = {};
-
-		if (typeof EXIF != "undefined" && EXIF.readFromBinaryFile) {
-			exif = EXIF.readFromBinaryFile(data);
-		}
-
-		return {
-			format : "JPEG",
-			version : "",
-			width : w,
-			height : h,
-			bpp : comps * 8,
-			alpha : false,
-			exif : exif
-		}
-	}
-
-	function readBMPInfo(data) {
-		var w = data.getLongAt(18);
-		var h = data.getLongAt(22);
-		var bpp = data.getShortAt(28);
-		return {
-			format : "BMP",
-			version : "",
-			width : w,
-			height : h,
-			bpp : bpp,
-			alpha : false,
-			exif : {}
-		}
-	}
-
-	ImageInfo.loadInfo = function(url, cb) {
-		if (!files[url]) {
-			readFileData(url, cb);
-		} else {
-			if (cb) cb();
-		}
-	}
-
-	ImageInfo.getAllFields = function(url) {
-		if (!files[url]) return null;
-
-		var tags = {};
-		for (var a in files[url]) {
-			if (files[url].hasOwnProperty(a))
-				tags[a] = files[url][a];
-		}
-		return tags;
-	}
-
-	ImageInfo.getField = function(url, field) {
-		if (!files[url]) return null;
-		return files[url][field];
-	}
-
+   
+    return {
+        readFromBinaryFile : readFromBinaryFile,
+        pretty : pretty,
+        getTag : getTag,
+        getAllTags : getAllTags,
+        getData : getData,
+        
+        Tags : ExifTags,
+        TiffTags : TiffTags,
+        GPSTags : GPSTags,
+        StringValues : StringValues
+    };
 
 })();
 
+
+
+/*
+    imageinfo-lib.js - a librarized version of imageinfo.js
+    by WATANABE Hiroaki, <https://github.com/hiroaki/>.
+
+    The original is "ImageInfo 0.1.2" - A JavaScript library for reading image metadata
+    by Jacob Seidelin, http://blog.nihilogic.dk/
+
+    Each are under the MIT License <http://www.nihilogic.dk/licenses/mit-license.txt>
+*/
+
+(function (){
+
+    var ImageInfo = function (){
+        this.initialize.apply(this,arguments);
+    }
+    ImageInfo.useRange = false;
+    ImageInfo.range = 10240;
+    ImageInfo.prototype = {
+        initialize: function (url,cb){
+            this.url = url;
+            this.callback = cb;
+            this.tags;
+            this.response;
+        },
+        readFileData: function (){
+            BinaryAjax(this.url,(function (that){
+                return function (response){
+                    that.response = response;
+                    that.tags = that.readInfoFromData(that.response.binaryResponse);
+                    that.callback(that);
+                };
+            })(this),null);
+        },
+        readInfoFromData: function (stream){
+            var offset = 0;
+            if(stream.getByteAt(0) == 0xFF && stream.getByteAt(1) == 0xD8){
+                return this.readJPEGInfo(stream);
+            }
+            if(stream.getByteAt(0) == 0x89 && stream.getStringAt(1, 3) == 'PNG'){
+                return this.readPNGInfo(stream);
+            }
+            if(stream.getStringAt(0,3) == 'GIF'){
+                return this.readGIFInfo(stream);
+            }
+            if(stream.getByteAt(0) == 0x42 && stream.getByteAt(1) == 0x4D){
+                return this.readBMPInfo(stream);
+            }
+            if(stream.getByteAt(0) == 0x00 && stream.getByteAt(1) == 0x00){
+                return this.readICOInfo(stream);
+            }
+            return {};
+        },
+        readPNGInfo: function (stream){
+            var w = stream.getLongAt(16,true);
+            var h = stream.getLongAt(20,true);
+            var bpc = stream.getByteAt(24);
+            var ct = stream.getByteAt(25);
+            var bpp = bpc;
+            if (ct == 4) bpp *= 2;
+            if (ct == 2) bpp *= 3;
+            if (ct == 6) bpp *= 4;
+            var alpha = stream.getByteAt(25) >= 4;
+            return {
+                format: 'PNG',
+                version: '',
+                width: w,
+                height: h,
+                bpp: bpp,
+                alpha: alpha,
+                exif: {}
+            };
+        },
+        readGIFInfo: function (stream){
+            var version = stream.getStringAt(3,3);
+            var w = stream.getShortAt(6);
+            var h = stream.getShortAt(8);
+            var bpp = ((stream.getByteAt(10) >> 4) & 7) + 1;
+            return {
+                format: 'GIF',
+                version: version,
+                width: w,
+                height: h,
+                bpp: bpp,
+                alpha: false,
+                exif: {}
+            };
+        },
+        readJPEGInfo_original: function (stream){
+            var w = 0;
+            var h = 0;
+            var comps = 0;
+            var len = stream.getLength();
+            var offset = 2;
+            while (offset < len) {
+                var marker = stream.getShortAt(offset, true);
+                offset += 2;
+                if (marker == 0xFFC0) {
+                    h = stream.getShortAt(offset + 3, true);
+                    w = stream.getShortAt(offset + 5, true);
+                    comps = stream.getByteAt(offset + 7, true)
+                    break;
+                } else {
+                    offset += stream.getShortAt(offset, true)
+                }
+            }
+    
+            var exif = {};
+            if (typeof EXIF != 'undefined' && EXIF.readFromBinaryFile) {
+                exif = EXIF.readFromBinaryFile(stream);
+            }
+    
+            return {
+                format: 'JPEG',
+                version: '',
+                width: w,
+                height: h,
+                bpp: comps * 8,
+                alpha: false,
+                exif: exif
+            };
+        },
+        readJPEGInfo: function (stream){
+            // this algorithm reading jpeg was borrowed from
+            // http://cpansearch.perl.org/src/RJRAY/Image-Size-2.992/Size.pm
+
+            var SIZE_FIRST = 0xc0;
+            var SIZE_LAST  = 0xc3;
+            var x,y,comps;
+            var id = 'could not determine JPEG size';
+            var size = stream.getLength();
+    
+            var ptr = 1;
+            stream.getByteAt(ptr);
+            while( ptr < size ){
+                var marker = stream.getByteAt(ptr+1);
+                var code   = stream.getByteAt(ptr+2);
+                var len    = stream.getShortAt(ptr+3,true);
+                ptr += 4;
+                if( marker != 0xff ){
+                    throw 'JPEG marker not found';
+                    break;
+                }else if( code >= SIZE_FIRST && code <= SIZE_LAST ){
+                    len = 5;
+                    stream.getByteAt(ptr+1);
+                    y = stream.getShortAt(ptr+2,true);
+                    x = stream.getShortAt(ptr+4,true);
+                    comps = stream.getByteAt(ptr+6);
+                    id = 'JPEG';
+                    break;
+                }else{
+                    ptr += len -2;
+                }
+            }
+    
+            var exif = {};
+            if (typeof EXIF != 'undefined' && EXIF.readFromBinaryFile) {
+                exif = EXIF.readFromBinaryFile(stream);
+            }
+
+            return {
+                "format": id,
+                "version": '',
+                "width": x,
+                "height": y,
+                "bpp": comps * 8,
+                "alpha": false,
+                "exif": exif
+            };
+        },
+        readBMPInfo: function (stream){
+            var w = stream.getLongAt(18);
+            var h = stream.getLongAt(22);
+            var bpp = stream.getShortAt(28);
+            return {
+                format: 'BMP',
+                version: '',
+                width: w,
+                height: h,
+                bpp: bpp,
+                alpha: false,
+                exif: {}
+            };
+        },
+        getAllFields: function (){
+            return this.tags;
+        },
+        getField: function (name){
+            return this.tags[name];
+        }
+    }
+    
+    window.ImageInfo = ImageInfo;
+    
+})();
 
 /**
  * AJAX DELETE request.
@@ -12079,21 +11930,34 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// send to server.
-			send = function(params, callback) {
-				//REQUIRED: params
-				//REQUIRED: params.methodName
-				//OPTIONAL: params.data
+			send = function(methodNameOrParams, callback) {
+				//REQUIRED: methodNameOrParams
+				//REQUIRED: methodNameOrParams.methodName
+				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: callback
 				
 				var
+				// method name
+				methodName,
+				
+				// data
+				data,
+				
 				// callback name
 				callbackName;
+				
+				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+					methodName = methodNameOrParams;
+				} else {
+					methodName = methodNameOrParams.methodName;
+					data = methodNameOrParams.data;
+				}
 				
 				if (conn !== undefined) {
 					
 					conn.send(STRINGIFY({
-						methodName : params.methodName,
-						data : params.data,
+						methodName : methodName,
+						data : data,
 						sendKey : sendKey
 					}));
 	
@@ -12292,18 +12156,32 @@ FOR_BOX(function(box) {
 				}
 			};
 
-			self.send = send = function(params, callback) {
-				//REQUIRED: params
-				//REQUIRED: params.methodName
-				//REQUIRED: params.data
+			self.send = send = function(methodNameOrParams, callback) {
+				//REQUIRED: methodNameOrParams
+				//REQUIRED: methodNameOrParams.methodName
+				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: callback
+				
+				var
+				// method name
+				methodName,
+				
+				// data
+				data;
+				
+				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+					methodName = methodNameOrParams;
+				} else {
+					methodName = methodNameOrParams.methodName;
+					data = methodNameOrParams.data;
+				}
 
 				if (isExited !== true) {
 
 					CONNECT_TO_ROOM_SERVER.send({
 						roomServerName : roomServerName,
-						methodName : roomName + '/' + params.methodName,
-						data : params.data
+						methodName : roomName + '/' + methodName,
+						data : data
 					}, callback);
 
 				} else {

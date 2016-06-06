@@ -144,21 +144,34 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// send to server.
-			send = function(params, callback) {
-				//REQUIRED: params
-				//REQUIRED: params.methodName
-				//OPTIONAL: params.data
+			send = function(methodNameOrParams, callback) {
+				//REQUIRED: methodNameOrParams
+				//REQUIRED: methodNameOrParams.methodName
+				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: callback
 				
 				var
+				// method name
+				methodName,
+				
+				// data
+				data,
+				
 				// callback name
 				callbackName;
+				
+				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+					methodName = methodNameOrParams;
+				} else {
+					methodName = methodNameOrParams.methodName;
+					data = methodNameOrParams.data;
+				}
 				
 				if (conn !== undefined) {
 					
 					conn.send(STRINGIFY({
-						methodName : params.methodName,
-						data : params.data,
+						methodName : methodName,
+						data : data,
 						sendKey : sendKey
 					}));
 	

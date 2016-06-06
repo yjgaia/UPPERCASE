@@ -442,21 +442,51 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 					},
 
 					// send to client.
-					function(params, callback) {
-						//REQUIRED: params
-						//REQUIRED: params.methodName
-						//OPTIONAL: params.data
+					function(methodNameOrParams, callback) {
+						//REQUIRED: methodNameOrParams
+						//REQUIRED: methodNameOrParams.methodName
+						//OPTIONAL: methodNameOrParams.data
+						//OPTIONAL: methodNameOrParams.str
 						//OPTIONAL: callback
 
 						var
+						// method name
+						methodName,
+						
+						// data
+						data,
+						
+						// str
+						str,
+						
 						// callback name
 						callbackName;
 						
-						send(clientId, {
-							methodName : params.methodName,
-							data : params.data,
-							sendKey : sendKey
-						});
+						if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+							methodName = methodNameOrParams;
+						} else {
+							methodName = methodNameOrParams.methodName;
+							data = methodNameOrParams.data;
+							str = methodNameOrParams.str;
+						}
+						
+						if (str !== undefined) {
+							
+							send(clientId, {
+								methodName : methodName,
+								str : str,
+								sendKey : sendKey
+							});
+						}
+						
+						else {
+							
+							send(clientId, {
+								methodName : methodName,
+								data : data,
+								sendKey : sendKey
+							});
+						}
 		
 						if (callback !== undefined) {
 							

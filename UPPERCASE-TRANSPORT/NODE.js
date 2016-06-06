@@ -504,21 +504,51 @@ global.WEB_SOCKET_FIX_REQUEST_MANAGER = CLASS(function(cls) {
 					},
 
 					// send to client.
-					function(params, callback) {
-						//REQUIRED: params
-						//REQUIRED: params.methodName
-						//OPTIONAL: params.data
+					function(methodNameOrParams, callback) {
+						//REQUIRED: methodNameOrParams
+						//REQUIRED: methodNameOrParams.methodName
+						//OPTIONAL: methodNameOrParams.data
+						//OPTIONAL: methodNameOrParams.str
 						//OPTIONAL: callback
 
 						var
+						// method name
+						methodName,
+						
+						// data
+						data,
+						
+						// str
+						str,
+						
 						// callback name
 						callbackName;
 						
-						send(clientId, {
-							methodName : params.methodName,
-							data : params.data,
-							sendKey : sendKey
-						});
+						if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+							methodName = methodNameOrParams;
+						} else {
+							methodName = methodNameOrParams.methodName;
+							data = methodNameOrParams.data;
+							str = methodNameOrParams.str;
+						}
+						
+						if (str !== undefined) {
+							
+							send(clientId, {
+								methodName : methodName,
+								str : str,
+								sendKey : sendKey
+							});
+						}
+						
+						else {
+							
+							send(clientId, {
+								methodName : methodName,
+								data : data,
+								sendKey : sendKey
+							});
+						}
 		
 						if (callback !== undefined) {
 							
@@ -850,26 +880,43 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// send to client.
-			send = function(params, callback) {
-				//REQUIRED: params
-				//REQUIRED: params.methodName
-				//OPTIONAL: params.data
-				//OPTIONAL: params.str
+			send = function(methodNameOrParams, callback) {
+				//REQUIRED: methodNameOrParams
+				//REQUIRED: methodNameOrParams.methodName
+				//OPTIONAL: methodNameOrParams.data
+				//OPTIONAL: methodNameOrParams.str
 				//OPTIONAL: callback
 				
 				var
+				// method name
+				methodName,
+				
+				// data
+				data,
+				
+				// str
+				str,
+				
 				// callback name
 				callbackName;
+				
+				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+					methodName = methodNameOrParams;
+				} else {
+					methodName = methodNameOrParams.methodName;
+					data = methodNameOrParams.data;
+					str = methodNameOrParams.str;
+				}
 				
 				if (conn !== undefined && conn.readyState === WebSocket.OPEN) {
 					
 					try {
 						
-						if (params.str !== undefined) {
+						if (str !== undefined) {
 							
 							conn.send(STRINGIFY({
-								methodName : params.methodName,
-								str : params.str,
+								methodName : methodName,
+								str : str,
 								sendKey : sendKey
 							}));
 						}
@@ -877,14 +924,14 @@ global.WEB_SOCKET_SERVER = METHOD({
 						else {
 							
 							conn.send(STRINGIFY({
-								methodName : params.methodName,
-								data : params.data,
+								methodName : methodName,
+								data : data,
 								sendKey : sendKey
 							}));
 						}
 						
 					} catch(error) {
-						SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString(), params);
+						SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString(), methodNameOrParams);
 					}
 	
 					if (callback !== undefined) {

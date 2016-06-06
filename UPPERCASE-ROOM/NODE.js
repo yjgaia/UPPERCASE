@@ -241,18 +241,32 @@ FOR_BOX(function(box) {
 				}
 			};
 
-			self.send = send = function(params, callback) {
-				//REQUIRED: params
-				//REQUIRED: params.methodName
-				//REQUIRED: params.data
+			self.send = send = function(methodNameOrParams, callback) {
+				//REQUIRED: methodNameOrParams
+				//REQUIRED: methodNameOrParams.methodName
+				//REQUIRED: methodNameOrParams.data
 				//OPTIONAL: callback
+				
+				var
+				// method name
+				methodName,
+				
+				// data
+				data;
+				
+				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+					methodName = methodNameOrParams;
+				} else {
+					methodName = methodNameOrParams.methodName;
+					data = methodNameOrParams.data;
+				}
 
 				if (isExited !== true) {
 
 					CONNECT_TO_ROOM_SERVER.send({
 						roomServerName : roomServerName,
-						methodName : roomName + '/' + params.methodName,
-						data : params.data
+						methodName : roomName + '/' + methodName,
+						data : data
 					}, callback);
 
 				} else {
