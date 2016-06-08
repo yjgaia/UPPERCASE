@@ -148,6 +148,12 @@ root hard nproc 65535
 root soft nproc 65535
 ```
 
+### 모든 node.js 프로세스 종료
+종종 죽지 않는 node.js 프로세스가 있을 경우가 있습니다. 그럴때는 다음 명령어를 입력해주면 모든 node.js 프로젝트가 강제 종료 됩니다.
+```
+pkill node
+```
+
 이후 다시 서버에 재접속한 뒤, 프로젝트를 재시작하면 반영됩니다.
 
 다음 문서: [UPPERCASE 업데이트](UPDATE.md)
