@@ -207,7 +207,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 					try {
 						
 						if (str !== undefined) {
-							conn.send(params.str);
+							conn.send(str);
 						}
 						
 						else {
