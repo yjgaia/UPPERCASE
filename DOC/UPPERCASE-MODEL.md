@@ -71,29 +71,58 @@ TestBox.TestModel = OBJECT({
 		};
 	}
 });
-TestBox.TestModel.create(data, function() {...})
+
+// 데이터를 저장합니다.
+TestBox.TestModel.create(data, function(savedData) {...})
 TestBox.TestModel.create(data, {error:, success:})
-TestBox.TestModel.get(id, function() {...}) // id가 undefined 일 수도 있습니다. 이 때는 가장 최근 데이터를 가져옵니다.
+
+// 데이터를 가져옵니다.
+TestBox.TestModel.get(id, function(savedData) {...}) // id가 undefined 일 수도 있습니다. 이 때는 가장 최근 데이터를 가져옵니다.
 TestBox.TestModel.get(id, {success:, notExists:, error:})
 TestBox.TestModel.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
-TestBox.TestModel.update(data, function() {...})
+
+// 데이터를 가져오고, 해당 데이터가 수정되거나 삭제될 때를 감지합니다.
+TestBox.TestModel.getWatching(id, function(savedData, addUpdateHandler, addRemoveHandler, exit) {...}) // 데이터가 수정 될 때 addUpdateHandler를, 데이터가 삭제 될 때 addRemoveHandler를 실행합니다. 더 이상 변화를 감지하지 않고자 하는 경우에는 exit을 실행합니다.
+TestBox.TestModel.getWatching(id, {success:, notExists:, error:})
+TestBox.TestModel.getWatching({filter:, sort:, isRandom:}, {success:, notExists:, error:})
+
+// 데이터를 수정합니다.
+TestBox.TestModel.update(data, function(savedData, originData) {...})
 TestBox.TestModel.update(data, {success:, notExists:, error:})
-TestBox.TestModel.updateNoHistory(data, function() {...}) // 변경 내역을 남기지 않습니다. (node.js 환경에서만 제공)
+TestBox.TestModel.updateNoHistory(data, function(savedData, originData) {...}) // 변경 내역을 남기지 않습니다. (node.js 환경에서만 제공)
 TestBox.TestModel.updateNoHistory(data, {success:, notExists:, error:}) // 변경 내역을 남기지 않습니다. (node.js 환경에서만 제공)
-TestBox.TestModel.updateNoRecord(data, function() {...}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다. (node.js 환경에서만 제공)
+TestBox.TestModel.updateNoRecord(data, function(savedData, originData) {...}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다. (node.js 환경에서만 제공)
 TestBox.TestModel.updateNoRecord(data, {success:, notExists:, error:}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다. (node.js 환경에서만 제공)
-TestBox.TestModel.remove(id, function() {...})
+
+// 데이터를 삭제합니다.
+TestBox.TestModel.remove(id, function(originData) {...})
 TestBox.TestModel.remove(id, {success:, notExists:, error:})
-TestBox.TestModel.find({filter:, sort:, start:, count:}, function() {...})
+
+// 데이터를 찾아 목록으로 가져옵니다.
+TestBox.TestModel.find({filter:, sort:, start:, count:}, function(savedDataSet) {...})
 TestBox.TestModel.find({filter:, sort:, start:, count:}, {error:, success:})
-TestBox.TestModel.count({filter:}, function() {...})
+
+// 데이터를 찾아 목록으로 가져오고, 각 데이터가 수정되거나 삭제될 때를 감지합니다.
+TestBox.TestModel.findWatching({filter:, sort:, start:, count:}, function(savedDataSet, addUpdateHandler, addRemoveHandler, exit) {...}) // 데이터가 수정 될 때 addUpdateHandler를, 데이터가 삭제 될 때 addRemoveHandler를 실행합니다. 더 이상 변화를 감지하지 않고자 하는 경우에는 exit을 실행합니다.
+TestBox.TestModel.findWatching({filter:, sort:, start:, count:}, {error:, success:})
+
+// 데이터의 개수를 가져옵니다.
+TestBox.TestModel.count({filter:}, function(count) {...})
 TestBox.TestModel.count({filter:}, {error:, success:})
-TestBox.TestModel.checkIsExists({filter:}, function() {...})
+
+// 데이터가 존재하는지 확인합니다.
+TestBox.TestModel.checkIsExists({filter:}, function(isExists) {...})
 TestBox.TestModel.checkIsExists({filter:}, {error:, success:})
+
+// 신규 데이터가 생길 때 받아옵니다.
 TestBox.TestModel.onNew(properties, handler)
 TestBox.TestModel.onNewWatching(properties, handler)
+
+// 신규 데이터가 생길 때 받아오며, 최초 한번 데이터들을 찾아 가져옵니다.
 TestBox.TestModel.onNewAndFind({properties:, filter:, sort:, start:, count:}, {error:, success:})
 TestBox.TestModel.onNewAndFindWatching({properties:, filter:, sort:, start:, count:}, {error:, success:})
+
+// 모델에서 데이터가 삭제 될 때 받아옵니다.
 TestBox.TestModel.onRemove(properties, handler)
 ```
 
@@ -101,6 +130,7 @@ TestBox.TestModel.onRemove(properties, handler)
 API에서 기본으로 제공되지 않는 기능들은 직접 구현하여 모델을 확장시킬 수 있습니다. 모델 확장은 node.js 환경과 웹 브라우저 환경에서 각각 진행합니다.
 
 ### node.js 환경에서 모델 확장 예시
+`NODE` 폴더 내에 `TestModel.js`라는 파일을 만들고, 다음 내용을 추가합니다. 이로서 `COMMON` 폴더에 저장되어 있는 모델을 확장합니다.
 ```javascript
 OVERRIDE(TestBox.TestModel, function(origin) {
 	'use strict';
@@ -160,6 +190,7 @@ OVERRIDE(TestBox.TestModel, function(origin) {
 ```
 
 ### 웹 브라우저 환경에서 모델 확장 예시
+`BROWSER` 폴더 내에 `TestModel.js`라는 파일을 만들고, 다음 내용을 추가합니다. 이로서 `COMMON` 폴더에 저장되어 있는 모델을 확장합니다.
 ```javascript
 OVERRIDE(TestBox.TestModel, function(origin) {
 	'use strict';
