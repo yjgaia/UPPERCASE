@@ -15,8 +15,9 @@ FOR_BOX(function(box) {
 		run : function(params) {
 			//REQUIRED: params
 			//REQUIRED: params.roomName
-			//REQUIRED: params.methodName
+			//OPTIONAL: params.methodName
 			//OPTIONAL: params.data
+			//OPTIONAL: params.str
 
 			var
 			// room name
@@ -26,86 +27,72 @@ FOR_BOX(function(box) {
 			methodName = params.methodName,
 
 			// data
-			data = params.data;
+			data = params.data,
 
-			LAUNCH_ROOM_SERVER.broadcast({
-				roomName : roomName,
-				methodName : methodName,
-				data : data
-			});
-
-			if (CPU_CLUSTERING.broadcast !== undefined) {
-
-				CPU_CLUSTERING.broadcast({
-					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
-					data : {
-						roomName : roomName,
-						methodName : methodName,
-						data : data
-					}
-				});
-			}
-
-			if (SERVER_CLUSTERING.broadcast !== undefined) {
-
-				SERVER_CLUSTERING.broadcast({
-					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
-					data : {
-						roomName : roomName,
-						methodName : methodName,
-						data : data
-					}
-				});
-			}
-		}
-	});
-});
-
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
-	 * broadcast string to rooms.
-	 */
-	box.BROADCAST_STR = METHOD({
-
-		run : function(params) {
-			//REQUIRED: params
-			//REQUIRED: params.roomName
-			//OPTIONAL: params.str
-
-			var
-			// room name
-			roomName = box.boxName + '/' + params.roomName,
-			
 			// str
 			str = params.str;
-
-			LAUNCH_ROOM_SERVER.broadcast({
-				roomName : roomName,
-				str : str
-			});
-
-			if (CPU_CLUSTERING.broadcast !== undefined) {
-
-				CPU_CLUSTERING.broadcast({
-					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
-					data : {
-						roomName : roomName,
-						str : str
-					}
+			
+			if (str !== undefined) {
+				
+				LAUNCH_ROOM_SERVER.broadcast({
+					roomName : roomName,
+					str : str
 				});
+	
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+	
+					CPU_CLUSTERING.broadcast({
+						methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+						data : {
+							roomName : roomName,
+							str : str
+						}
+					});
+				}
+	
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+	
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+						data : {
+							roomName : roomName,
+							str : str
+						}
+					});
+				}
 			}
-
-			if (SERVER_CLUSTERING.broadcast !== undefined) {
-
-				SERVER_CLUSTERING.broadcast({
-					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
-					data : {
-						roomName : roomName,
-						str : str
-					}
+			
+			else {
+				
+				LAUNCH_ROOM_SERVER.broadcast({
+					roomName : roomName,
+					methodName : methodName,
+					data : data
 				});
+	
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+	
+					CPU_CLUSTERING.broadcast({
+						methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+						data : {
+							roomName : roomName,
+							methodName : methodName,
+							data : data
+						}
+					});
+				}
+	
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+	
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+						data : {
+							roomName : roomName,
+							methodName : methodName,
+							data : data
+						}
+					});
+				}
 			}
 		}
 	});
