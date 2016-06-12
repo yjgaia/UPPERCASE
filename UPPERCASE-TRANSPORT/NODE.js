@@ -880,19 +880,11 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// send to client.
-<<<<<<< HEAD
-			send = function(params, callback) {
-				//REQUIRED: params
-				//OPTIONAL: params.methodName
-				//OPTIONAL: params.data
-				//OPTIONAL: params.str
-=======
 			send = function(methodNameOrParams, callback) {
 				//REQUIRED: methodNameOrParams
-				//REQUIRED: methodNameOrParams.methodName
+				//OPTIONAL: methodNameOrParams.methodName
 				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: methodNameOrParams.str
->>>>>>> e19edda27f843a17c4aa31c0cd2573a9040e7830
 				//OPTIONAL: callback
 				
 				var
@@ -921,16 +913,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 					try {
 						
 						if (str !== undefined) {
-							
-<<<<<<< HEAD
 							conn.send(params.str);
-=======
-							conn.send(STRINGIFY({
-								methodName : methodName,
-								str : str,
-								sendKey : sendKey
-							}));
->>>>>>> e19edda27f843a17c4aa31c0cd2573a9040e7830
 						}
 						
 						else {
