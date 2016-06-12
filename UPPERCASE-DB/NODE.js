@@ -150,8 +150,8 @@ FOR_BOX(function(box) {
 
 			init : function(inner, self, nameOrParams) {
 				//REQUIRED: nameOrParams
-				//REQUIRED: nameOrParams.name
 				//OPTIONAL: nameOrParams.dbServerName
+				//REQUIRED: nameOrParams.name
 				//OPTIONAL: nameOrParams.isNotUsingObjectId
 				//OPTIONAL: nameOrParams.isNotUsingHistory
 	

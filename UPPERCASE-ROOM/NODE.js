@@ -72,22 +72,17 @@ FOR_BOX(function(box) {
 		run : function(params) {
 			//REQUIRED: params
 			//REQUIRED: params.roomName
-			//REQUIRED: params.methodName
 			//OPTIONAL: params.str
 
 			var
 			// room name
 			roomName = box.boxName + '/' + params.roomName,
-
-			// method name
-			methodName = params.methodName,
-
+			
 			// str
 			str = params.str;
 
 			LAUNCH_ROOM_SERVER.broadcast({
 				roomName : roomName,
-				methodName : methodName,
 				str : str
 			});
 
@@ -97,7 +92,6 @@ FOR_BOX(function(box) {
 					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
 					data : {
 						roomName : roomName,
-						methodName : methodName,
 						str : str
 					}
 				});
@@ -109,7 +103,6 @@ FOR_BOX(function(box) {
 					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
 					data : {
 						roomName : roomName,
-						methodName : methodName,
 						str : str
 					}
 				});
@@ -709,7 +702,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 	cls.broadcast = broadcast = function(params, _send) {
 		//REQUIRED: params
 		//REQUIRED: params.roomName
-		//REQUIRED: params.methodName
+		//OPTIONAL: params.methodName
 		//OPTIONAL: params.data
 		//OPTIONAL: params.str
 		//OPTIONAL: _send
@@ -730,7 +723,6 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 					if (params.str !== undefined) {
 						
 						send({
-							methodName : roomName + '/' + params.methodName,
 							str : params.str
 						});
 					}

@@ -31,7 +31,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 	cls.broadcast = broadcast = function(params, _send) {
 		//REQUIRED: params
 		//REQUIRED: params.roomName
-		//REQUIRED: params.methodName
+		//OPTIONAL: params.methodName
 		//OPTIONAL: params.data
 		//OPTIONAL: params.str
 		//OPTIONAL: _send
@@ -52,7 +52,6 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 					if (params.str !== undefined) {
 						
 						send({
-							methodName : roomName + '/' + params.methodName,
 							str : params.str
 						});
 					}

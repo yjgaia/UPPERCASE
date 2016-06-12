@@ -8834,7 +8834,7 @@ global.SOCKET_SERVER = METHOD({
 			// send to client.
 			send = function(params, callback) {
 				//REQUIRED: params
-				//REQUIRED: params.methodName
+				//OPTIONAL: params.methodName
 				//OPTIONAL: params.data
 				//OPTIONAL: params.str
 				//OPTIONAL: callback
@@ -8847,11 +8847,7 @@ global.SOCKET_SERVER = METHOD({
 					
 					if (params.str !== undefined) {
 						
-						conn.write(STRINGIFY({
-							methodName : params.methodName,
-							str : params.str,
-							sendKey : sendKey
-						}) + '\r\n');
+						conn.write(params.str + '\r\n');
 					}
 					
 					else {
