@@ -28,6 +28,7 @@ MongoDB는 그 자체로 분산 서버 기능을 제공하기 때문에, 이 문
 ### 각 서버간 시간을 맞추어야 합니다.
 리눅스일 경우 아래 명령어들로 서버 시간을 맞추어야 합니다.
 ```
+mv /etc/localtime /etc/localtime_old
 ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 rdate -p time.bora.net
 rdate -s time.bora.net

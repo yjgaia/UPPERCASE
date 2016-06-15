@@ -29,6 +29,12 @@ forever start -c "node --max-old-space-size=16384" {{프로젝트 명.js}}
 forever restart {{프로젝트 명.js}}
 ```
 
+## `gc` 함수를 쓰는 경우
+가비지 컬렉터를 임의로 실행하기 위해 `gc` 함수를 쓰는 경우에는 아래와 같이 `--expose-gc` 설정을 포함하여 실행합니다.
+```
+forever start -c "node --expose-gc --max-old-space-size=16384" {{프로젝트 명.js}}
+```
+
 ## 주의사항
 * DB의 update명령어가 동시에 여러번 호출 될 경우 모든 update는 같은 데이터(수정된)를 반환합니다.
 * find 명령을 수행할 때, filter의 모든 property가 `undefined`로만 이루어진 경우에는 모든 값을 대상으로 검색합니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려면, `if (CHECK_ARE_SAME([{}, filter]) === true) {...}`로 filter가 비어있는지 확인하시기 바랍니다.
