@@ -10892,6 +10892,7 @@ global.DELETE = METHOD({
 		//REQUIRED: uriOrParams.uri
 		//OPTIONAL: uriOrParams.paramStr
 		//OPTIONAL: uriOrParams.data
+		//OPTIONAL: uriOrParams.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
@@ -10915,6 +10916,7 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
+			//OPTIONAL: uriOrParams.headers
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -10938,6 +10940,7 @@ global.GET = METHOD({
 		//REQUIRED: uriOrParams.uri
 		//OPTIONAL: uriOrParams.paramStr
 		//OPTIONAL: uriOrParams.data
+		//OPTIONAL: uriOrParams.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
@@ -10961,6 +10964,7 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
+			//OPTIONAL: uriOrParams.headers
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -10984,6 +10988,7 @@ global.POST = METHOD({
 		//REQUIRED: uriOrParams.uri
 		//OPTIONAL: uriOrParams.paramStr
 		//OPTIONAL: uriOrParams.data
+		//OPTIONAL: uriOrParams.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
@@ -11007,6 +11012,7 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
+			//OPTIONAL: uriOrParams.headers
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -11030,6 +11036,7 @@ global.PUT = METHOD({
 		//REQUIRED: uriOrParams.uri
 		//OPTIONAL: uriOrParams.paramStr
 		//OPTIONAL: uriOrParams.data
+		//OPTIONAL: uriOrParams.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([CHECK_IS_DATA(uriOrParams) === true ? uriOrParams : {
@@ -11053,6 +11060,7 @@ FOR_BOX(function(box) {
 			//REQUIRED: uriOrParams.uri
 			//OPTIONAL: uriOrParams.paramStr
 			//OPTIONAL: uriOrParams.data
+			//OPTIONAL: uriOrParams.headers
 			//REQUIRED: responseListenerOrListeners
 
 			box.REQUEST(COMBINE([params, {
@@ -11077,6 +11085,7 @@ global.REQUEST = METHOD({
 		//OPTIONAL: params.uri
 		//OPTIONAL: params.paramStr
 		//OPTIONAL: params.data
+		//OPTIONAL: params.headers
 		//REQUIRED: responseListenerOrListeners
 
 		var
@@ -11100,6 +11109,9 @@ global.REQUEST = METHOD({
 
 		// data
 		data = params.data,
+		
+		// headers
+		headers = params.headers,
 
 		// response listener
 		responseListener,
@@ -11139,11 +11151,15 @@ global.REQUEST = METHOD({
 			
 			(method === 'GET' ? fetch(url + '?' + paramStr, {
 				method : method,
-				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined
+				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
+				headers : headers === undefined ? undefined : new Headers(headers)
 			}) : fetch(url, {
 				method : method,
 				body : paramStr,
-				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined
+				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
+				headers : new Headers(COMBINE([headers === undefined ? {} : headers, {
+					'Content-Type' : 'application/x-www-form-urlencoded'
+				}]))
 			})).then(function(response) {
 				return response.text();
 			}).then(function(responseText) {
@@ -11190,14 +11206,30 @@ global.REQUEST = METHOD({
 	
 			// GET request.
 			if (method === 'GET') {
+				
 				req.open(method, url + '?' + paramStr);
+				
+				if (headers !== undefined) {
+					EACH(headers, function(value, name) {
+						req.setRequestHeader(name, value);
+					});
+				}
+				
 				req.send();
 			}
 	
 			// other request.
 			else {
+				
 				req.open(method, url);
 				req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				
+				if (headers !== undefined) {
+					EACH(headers, function(value, name) {
+						req.setRequestHeader(name, value);
+					});
+				}
+				
 				req.send(paramStr);
 			}
 		}
@@ -11218,6 +11250,7 @@ FOR_BOX(function(box) {
 			//REQUIRED: params.uri
 			//OPTIONAL: params.paramStr
 			//OPTIONAL: params.data
+			//OPTIONAL: params.headers
 			//REQUIRED: responseListenerOrListeners
 
 			REQUEST(COMBINE([params, {

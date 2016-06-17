@@ -7761,6 +7761,7 @@ global.DELETE = METHOD({
 		//OPTIONAL: params.uri
 		//OPTIONAL: params.paramStr
 		//OPTIONAL: params.data
+		//OPTIONAL: params.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([params, {
@@ -7797,6 +7798,7 @@ global.DOWNLOAD = METHOD(function() {
 			//OPTIONAL: params.data
 			//OPTIONAL: params.url
 			//REQUIRED: params.path
+			//OPTIONAL: params.headers
 			//OPTIONAL: callbackOrHandlers
 			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.error
@@ -7825,6 +7827,9 @@ global.DOWNLOAD = METHOD(function() {
 			
 			// path
 			path = params.path,
+			
+			// headers
+			headers = params.headers,
 			
 			// url data
 			urlData,
@@ -7874,7 +7879,8 @@ global.DOWNLOAD = METHOD(function() {
 			req = (isSecure !== true ? http : https).get({
 				hostname : host,
 				port : port,
-				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr
+				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
+				headers : headers
 			}, function(httpResponse) {
 				
 				var
@@ -7937,8 +7943,8 @@ global.GET = METHOD(function(m) {
 	'use strict';
 	
 	var
-	//IMPORT: url
-	url = require('url');
+	//IMPORT: URL
+	URL = require('url');
 	
 	return {
 
@@ -7950,6 +7956,7 @@ global.GET = METHOD(function(m) {
 			//REQUIRED: urlOrParams.uri
 			//OPTIONAL: urlOrParams.paramStr
 			//OPTIONAL: urlOrParams.data
+			//OPTIONAL: urlOrParams.headers
 			//REQUIRED: responseListenerOrListeners
 			
 			var
@@ -7961,7 +7968,7 @@ global.GET = METHOD(function(m) {
 			
 			if (CHECK_IS_DATA(urlOrParams) !== true) {
 				
-				urlData = url.parse(urlOrParams);
+				urlData = URL.parse(urlOrParams);
 				
 				params = {
 					host : urlData.hostname === TO_DELETE ? undefined : urlData.hostname,
@@ -7996,6 +8003,7 @@ global.POST = METHOD({
 		//OPTIONAL: params.uri
 		//OPTIONAL: params.paramStr
 		//OPTIONAL: params.data
+		//OPTIONAL: params.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([params, {
@@ -8018,6 +8026,7 @@ global.PUT = METHOD({
 		//OPTIONAL: params.uri
 		//OPTIONAL: params.paramStr
 		//OPTIONAL: params.data
+		//OPTIONAL: params.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([params, {
@@ -8050,6 +8059,7 @@ global.REQUEST = METHOD(function() {
 			//OPTIONAL: params.uri
 			//OPTIONAL: params.paramStr
 			//OPTIONAL: params.data
+			//OPTIONAL: params.headers
 			//REQUIRED: responseListenerOrListeners
 
 			var
@@ -8073,6 +8083,9 @@ global.REQUEST = METHOD(function() {
 
 			// data
 			data = params.data,
+			
+			// headers
+			headers = params.headers,
 
 			// response listener
 			responseListener,
@@ -8109,7 +8122,8 @@ global.REQUEST = METHOD(function() {
 				req = (isSecure !== true ? http : https).get({
 					hostname : host,
 					port : port,
-					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr
+					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
+					headers : headers
 				}, function(httpResponse) {
 
 					var
@@ -8148,7 +8162,10 @@ global.REQUEST = METHOD(function() {
 					hostname : host,
 					port : port,
 					path : '/' + (uri === undefined ? '' : uri),
-					method : method
+					method : method,
+					headers : COMBINE([headers === undefined ? {} : headers, {
+						'Content-Type' : 'application/x-www-form-urlencoded'
+					}])
 				}, function(httpResponse) {
 
 					var
