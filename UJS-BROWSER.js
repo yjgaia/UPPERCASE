@@ -11157,9 +11157,7 @@ global.REQUEST = METHOD({
 				method : method,
 				body : paramStr,
 				credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
-				headers : new Headers(COMBINE([headers === undefined ? {} : headers, {
-					'Content-Type' : 'application/x-www-form-urlencoded'
-				}]))
+				headers : headers === undefined ? undefined : new Headers(headers)
 			})).then(function(response) {
 				return response.text();
 			}).then(function(responseText) {

@@ -15,6 +15,7 @@ OVERRIDE(REQUEST, function(origin) {
 			//REQUIRED: params.uri
 			//OPTIONAL: params.paramStr
 			//OPTIONAL: params.data
+			//OPTIONAL: params.headers
 			//REQUIRED: responseListenerOrListeners
 	
 			var
@@ -38,10 +39,13 @@ OVERRIDE(REQUEST, function(origin) {
 	
 			// data
 			data = params.data,
+			
+			// headers
+			headers = params.headers,
 
 			// response listener
 			responseListener,
-	
+			
 			// error listener
 			errorListener,
 	
@@ -108,8 +112,17 @@ OVERRIDE(REQUEST, function(origin) {
 			// GET request.
 			if (method === 'GET') {
 				try {
+					
 					req.open(method, url + '?' + paramStr);
+					
+					if (headers !== undefined) {
+						EACH(headers, function(value, name) {
+							req.setRequestHeader(name, value);
+						});
+					}
+					
 					req.send();
+					
 				} catch (e) {
 					// ignore.
 				}
@@ -118,9 +131,18 @@ OVERRIDE(REQUEST, function(origin) {
 			// other request.
 			else {
 				try {
+					
 					req.open(method, url);
 					req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+					
+					if (headers !== undefined) {
+						EACH(headers, function(value, name) {
+							req.setRequestHeader(name, value);
+						});
+					}
+					
 					req.send(paramStr);
+					
 				} catch (e) {
 					// ignore.
 				}

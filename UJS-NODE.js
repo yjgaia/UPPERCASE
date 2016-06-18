@@ -8042,11 +8042,11 @@ global.REQUEST = METHOD(function() {
 	'use strict';
 
 	var
-	//IMPORT: http
-	http = require('http'),
+	//IMPORT: HTTP
+	HTTP = require('http'),
 
-	//IMPORT: https
-	https = require('https');
+	//IMPORT: HTTPS
+	HTTPS = require('https');
 
 	return {
 
@@ -8119,7 +8119,7 @@ global.REQUEST = METHOD(function() {
 			// GET request.
 			if (method === 'GET') {
 
-				req = (isSecure !== true ? http : https).get({
+				req = (isSecure !== true ? HTTP : HTTPS).get({
 					hostname : host,
 					port : port,
 					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
@@ -8158,14 +8158,12 @@ global.REQUEST = METHOD(function() {
 			// other request.
 			else {
 
-				req = (isSecure !== true ? http : https).request({
+				req = (isSecure !== true ? HTTP : HTTPS).request({
 					hostname : host,
 					port : port,
 					path : '/' + (uri === undefined ? '' : uri),
 					method : method,
-					headers : COMBINE([headers === undefined ? {} : headers, {
-						'Content-Type' : 'application/x-www-form-urlencoded'
-					}])
+					headers : headers
 				}, function(httpResponse) {
 
 					var
