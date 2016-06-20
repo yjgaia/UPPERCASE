@@ -173,4 +173,31 @@ systemctl stop firewalld
 systemctl disable firewalld
 ```
 
+### 커널 설정
+#### TCP 대역폭 증가
+```
+sysctl -w net.ipv4.tcp_window_scaling="1"
+sysctl -w net.core.rmem_default="253952"
+sysctl -w net.core.wmem_default="253952"
+sysctl -w net.core.rmem_max="16777216"
+sysctl -w net.core.wmem_max="16777216"
+sysctl -w net.ipv4.tcp_rmem="253952 253952 16777216"
+sysctl -w net.ipv4.tcp_wmem="253952 253952 16777216"
+```
+
+#### In-Bound Queue 크기 증가
+```
+sysctl -w net.core.netdev_max_backlog="30000"
+sysctl -w net.core.somaxconn="1024"
+sysctl -w net.ipv4.tcp_max_syn_backlog="1024"
+ulimit -SHn 65535
+```
+
+#### TIME_WAIT 상태의 소켓 설정
+```
+sysctl -w net.ipv4.tcp_max_tw_buckets="1800000"
+sysctl -w net.ipv4.tcp_timestamps="1"
+sysctl -w net.ipv4.tcp_tw_reuse="1"
+```
+
 다음 문서: [UPPERCASE 업데이트](UPDATE.md)
