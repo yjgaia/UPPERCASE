@@ -9516,6 +9516,7 @@ global.CREATE_COOKIE_STR_ARRAY = METHOD({
  * get cpu usages.
  */
 global.CPU_USAGES = METHOD(function(m) {
+	'use strict';
 	
 	var
 	//IMPORT: os
@@ -9524,7 +9525,6 @@ global.CPU_USAGES = METHOD(function(m) {
 	return {
 		
 		run : function() {
-			'use strict';
 			
 			var
 			// cpu infos
@@ -9561,6 +9561,7 @@ global.CPU_USAGES = METHOD(function(m) {
  * get memory usage.
  */
 global.MEMORY_USAGE = METHOD(function(m) {
+	'use strict';
 	
 	var
 	//IMPORT: os
@@ -9572,7 +9573,6 @@ global.MEMORY_USAGE = METHOD(function(m) {
 	return {
 		
 		run : function() {
-			'use strict';
 			
 			var
 			// free memory
@@ -9581,4 +9581,38 @@ global.MEMORY_USAGE = METHOD(function(m) {
 			return (1 - freeMemory / totalMemory) * 100;
 		}
 	};
+});
+
+/**
+ * run schedule deamon.
+ */
+global.RUN_SCHEDULE_DEAMON = METHOD({
+	
+	run : function(schedules) {
+		'use strict';
+		
+		INTERVAL(60, RAR(function() {
+			
+			var
+			// now cal
+			nowCal = CALENDAR();
+			
+			EACH(schedules, function(schedule) {
+				
+				if (nowCal.getHour() === schedule.hour && nowCal.getMinute() === (schedule.minute === undefined ? 0 : schedule.minute)) {
+					
+					EACH(schedule.commands, function(commandInfo) {
+						
+						exec(commandInfo.command, {
+							cdw : commandInfo.cwd
+						}, function(error) {
+							if (error !== TO_DELETE) {
+								SHOW_ERROR('[UJS-NODE] RUN_SCHEDULE_DEAMON ERROR: ' + error.toString());
+							}
+						});
+					});
+				}
+			});
+		}));
+	}
 });

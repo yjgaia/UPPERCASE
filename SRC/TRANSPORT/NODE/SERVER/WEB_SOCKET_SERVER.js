@@ -202,7 +202,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 					str = methodNameOrParams.str;
 				}
 				
-				if (conn !== undefined) {
+				if (conn !== undefined && conn.readyState === WebSocket.OPEN) {
 					
 					try {
 						

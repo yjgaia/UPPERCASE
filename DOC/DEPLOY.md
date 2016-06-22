@@ -29,12 +29,6 @@ forever start -c "node --max-old-space-size=16384" {{프로젝트 명.js}}
 forever restart {{프로젝트 명.js}}
 ```
 
-## `gc` 함수를 쓰는 경우
-가비지 컬렉터를 임의로 실행하기 위해 `gc` 함수를 쓰는 경우에는 아래와 같이 `--expose-gc` 설정을 포함하여 실행합니다.
-```
-forever start -c "node --expose-gc --max-old-space-size=16384" {{프로젝트 명.js}}
-```
-
 ## 주의사항
 * DB의 update명령어가 동시에 여러번 호출 될 경우 모든 update는 같은 데이터(수정된)를 반환합니다.
 * find 명령을 수행할 때, filter의 모든 property가 `undefined`로만 이루어진 경우에는 모든 값을 대상으로 검색합니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려면, `if (CHECK_ARE_SAME([{}, filter]) === true) {...}`로 filter가 비어있는지 확인하시기 바랍니다.
@@ -162,42 +156,9 @@ root soft nproc 65535
 pkill node
 ```
 
-### 방화벽 끄기
-서버 운영시 방화벽을 끌 필요가 있을때 아래 명령어로 방화벽을 해제합니다.
+혹은 다음과 같이 커맨드 라인을 지정해 줄 수도 있습니다.
 ```
-systemctl stop firewalld
-```
-
-서버 머신 리부팅 시에도 방화벽이 실행되지 않도록 하려면 다음 명령어를 입력해 줍니다.
-```
-systemctl disable firewalld
-```
-
-### 커널 설정
-#### TCP 대역폭 증가
-```
-sysctl -w net.ipv4.tcp_window_scaling="1"
-sysctl -w net.core.rmem_default="253952"
-sysctl -w net.core.wmem_default="253952"
-sysctl -w net.core.rmem_max="16777216"
-sysctl -w net.core.wmem_max="16777216"
-sysctl -w net.ipv4.tcp_rmem="253952 253952 16777216"
-sysctl -w net.ipv4.tcp_wmem="253952 253952 16777216"
-```
-
-#### In-Bound Queue 크기 증가
-```
-sysctl -w net.core.netdev_max_backlog="30000"
-sysctl -w net.core.somaxconn="1024"
-sysctl -w net.ipv4.tcp_max_syn_backlog="1024"
-ulimit -SHn 65535
-```
-
-#### TIME_WAIT 상태의 소켓 설정
-```
-sysctl -w net.ipv4.tcp_max_tw_buckets="1800000"
-sysctl -w net.ipv4.tcp_timestamps="1"
-sysctl -w net.ipv4.tcp_tw_reuse="1"
+pkill -f "node --max-old-space-size=16384 /root/SampleService/Project/Project.js"
 ```
 
 다음 문서: [UPPERCASE 업데이트](UPDATE.md)
