@@ -34,10 +34,43 @@ forever restart {{프로젝트 명.js}}
 * find 명령을 수행할 때, filter의 모든 property가 `undefined`로만 이루어진 경우에는 모든 값을 대상으로 검색합니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려면, `if (CHECK_ARE_SAME([{}, filter]) === true) {...}`로 filter가 비어있는지 확인하시기 바랍니다.
 * 배포시에는 보안을 위해 MongoDB를 인증 모드로 실행해주시기 바랍니다.
 
+## MongoDB 최초 실행하기
+MongoDB를 최초로 실행하기 전, 데이터베이스를 저장할 폴더를 생성합니다.
+```
+mkdir /data
+mkdir /data/db
+```
+
+MongoDB를 아래 명령어로 실행합니다.
+```
+mongod --fork --logpath /var/log/mongodb.log --logappend
+```
+
+`mongo`로 접속합니다.
+```
+mongo
+```
+
+관리자 계정을 생성합니다.
+```javascript
+use admin
+db.createUser({ user : 'root 유저명', pwd : 'root 비밀번호', roles : ['root'] })
+```
+
+MongoDB 서버를 종료합니다.
+```javascript
+db.shutdownServer();
+```
+
+이제, 인증 모드로 MongoDB를 실행합니다.
+```
+mongod --fork --logpath /var/log/mongodb.log --logappend --auth
+```
+
 ## MongoDB 유저 추가
 인증 모드로 MongoDB를 실행한 후 데이터베이스에 접근하기 위해서는 해당 데이터베이스에 유저가 존재해야 합니다. 유저를 추가하기 위한 방법은 다음과 같습니다.
 
-1. 우선 관리자로 접근합니다.
+1. 우선 관리자로 로그인합니다.
 	```javascript
 	use admin
 	db.auth('root 유저명', 'root 비밀번호')
