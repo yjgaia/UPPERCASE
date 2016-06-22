@@ -9586,31 +9586,38 @@ global.MEMORY_USAGE = METHOD(function(m) {
 /**
  * run schedule deamon.
  */
-global.RUN_SCHEDULE_DEAMON = METHOD({
+global.RUN_SCHEDULE_DEAMON = METHOD(function(m) {
+	'use strict';
 	
-	run : function(schedules) {
-		'use strict';
+	var
+	//IMPORT: exec
+	exec = require('child_process').exec;
+	
+	return {
 		
-		INTERVAL(60, RAR(function() {
+		run : function(schedules) {
 			
-			var
-			// now cal
-			nowCal = CALENDAR();
-			
-			EACH(schedules, function(schedule) {
+			INTERVAL(60, RAR(function() {
 				
-				if (nowCal.getHour() === schedule.hour && nowCal.getMinute() === (schedule.minute === undefined ? 0 : schedule.minute)) {
+				var
+				// now cal
+				nowCal = CALENDAR();
+				
+				EACH(schedules, function(schedule) {
 					
-					EACH(schedule.commands, function(command) {
+					if (nowCal.getHour() === schedule.hour && nowCal.getMinute() === (schedule.minute === undefined ? 0 : schedule.minute)) {
 						
-						exec(command, function(error) {
-							if (error !== TO_DELETE) {
-								SHOW_ERROR('[UJS-NODE] RUN_SCHEDULE_DEAMON ERROR: ' + error.toString());
-							}
+						EACH(schedule.commands, function(command) {
+							
+							exec(command, function(error) {
+								if (error !== TO_DELETE) {
+									SHOW_ERROR('[UJS-NODE] RUN_SCHEDULE_DEAMON ERROR: ' + error.toString());
+								}
+							});
 						});
-					});
-				}
-			});
-		}));
-	}
+					}
+				});
+			}));
+		}
+	};
 });
