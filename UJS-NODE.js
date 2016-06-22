@@ -9601,11 +9601,9 @@ global.RUN_SCHEDULE_DEAMON = METHOD({
 				
 				if (nowCal.getHour() === schedule.hour && nowCal.getMinute() === (schedule.minute === undefined ? 0 : schedule.minute)) {
 					
-					EACH(schedule.commands, function(commandInfo) {
+					EACH(schedule.commands, function(command) {
 						
-						exec(commandInfo.command, {
-							cdw : commandInfo.cwd
-						}, function(error) {
+						exec(command, function(error) {
 							if (error !== TO_DELETE) {
 								SHOW_ERROR('[UJS-NODE] RUN_SCHEDULE_DEAMON ERROR: ' + error.toString());
 							}
