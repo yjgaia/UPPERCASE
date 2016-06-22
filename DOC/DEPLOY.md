@@ -41,6 +41,11 @@ mkdir /data
 mkdir /data/db
 ```
 
+MongoDB를 외부에서 접속 가능하게 설정합니다. `mongodb.conf`에서 `bindIp: 127.0.0.1`를 `bindIp: 0.0.0.0`로 변경합니다. 또한, 리눅스 환경의 경우 외부에서 접속이 가능하게 하려면 방화벽을 꺼야 합니다. (맨 하단 방화벽 설정 항목 참고)
+```
+vi /etc/mongod.conf
+```
+
 MongoDB를 아래 명령어로 실행합니다.
 ```
 mongod --fork --logpath /var/log/mongodb.log --logappend
@@ -192,6 +197,17 @@ pkill node
 혹은 다음과 같이 커맨드 라인을 지정해 줄 수도 있습니다.
 ```
 pkill -f "node --max-old-space-size=16384 /root/SampleService/Project/Project.js"
+```
+
+### 방화벽 끄기
+서버 운영시 방화벽을 끌 필요가 있을때 아래 명령어로 방화벽을 해제합니다.
+```
+systemctl stop firewalld
+```
+
+서버 머신 리부팅 시에도 방화벽이 실행되지 않도록 하려면 다음 명령어를 입력해 줍니다.
+```
+systemctl disable firewalld
 ```
 
 다음 문서: [UPPERCASE 업데이트](UPDATE.md)
