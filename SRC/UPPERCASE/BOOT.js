@@ -534,13 +534,13 @@ global.BOOT = function(params) {
 			_404PageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
 			
 			// icons
-			_404PageContent += '<link rel="shortcut icon" href="/R/favicon.ico?' + CONFIG.version + '" />';
-			_404PageContent += '<link rel="apple-touch-icon-precomposed" href="/R/apple-touch-icon.png?' + CONFIG.version + '" />';
+			_404PageContent += '<link rel="shortcut icon" href="/R/favicon.ico?version=' + CONFIG.version + '" />';
+			_404PageContent += '<link rel="apple-touch-icon-precomposed" href="/R/apple-touch-icon.png?version=' + CONFIG.version + '" />';
 			
 			_404PageContent += '<title>Page not found</title>';
 	
 			// load css.
-			_404PageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?' + CONFIG.version + '" />';
+			_404PageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?version=' + CONFIG.version + '" />';
 			
 			// set base color.
 			_404PageContent += '<style>';
@@ -562,7 +562,7 @@ global.BOOT = function(params) {
 			
 			// load script.
 			_404PageContent += '<script type="text/javascript">global=window;</script>';
-			_404PageContent += '<script type="text/javascript" src="/__UJS?' + CONFIG.version + '"></script>';
+			_404PageContent += '<script type="text/javascript" src="/__UJS?version=' + CONFIG.version + '"></script>';
 			_404PageContent += '<script>' + READ_FILE({
 				path : UPPERCASE_PATH + '/UPPERCASE/404.js',
 				isSync : true
@@ -610,13 +610,13 @@ global.BOOT = function(params) {
 			indexPageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
 			
 			// icons
-			indexPageContent += '<link rel="shortcut icon" href="/R/favicon.ico?' + CONFIG.version + '" />';
-			indexPageContent += '<link rel="apple-touch-icon-precomposed" href="/R/apple-touch-icon.png?' + CONFIG.version + '" />';
+			indexPageContent += '<link rel="shortcut icon" href="/R/favicon.ico?version=' + CONFIG.version + '" />';
+			indexPageContent += '<link rel="apple-touch-icon-precomposed" href="/R/apple-touch-icon.png?version=' + CONFIG.version + '" />';
 			
 			indexPageContent += '<title>' + CONFIG.title + '</title>';
 	
 			// load css.
-			indexPageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?' + CONFIG.version + '" />';
+			indexPageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?version=' + CONFIG.version + '" />';
 			
 			// set base color.
 			indexPageContent += '<style>';
@@ -637,7 +637,7 @@ global.BOOT = function(params) {
 			indexPageContent += '</noscript>';
 	
 			// load script.
-			indexPageContent += '<script type="text/javascript" src="/__SCRIPT?' + CONFIG.version + '"></script>';
+			indexPageContent += '<script type="text/javascript" src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
 			indexPageContent += '</body>';
 			indexPageContent += '</html>';
 		}

@@ -29,21 +29,53 @@ forever start -c "node --max-old-space-size=16384" {{프로젝트 명.js}}
 forever restart {{프로젝트 명.js}}
 ```
 
-## `gc` 함수를 쓰는 경우
-가비지 컬렉터를 임의로 실행하기 위해 `gc` 함수를 쓰는 경우에는 아래와 같이 `--expose-gc` 설정을 포함하여 실행합니다.
-```
-forever start -c "node --expose-gc --max-old-space-size=16384" {{프로젝트 명.js}}
-```
-
 ## 주의사항
 * DB의 update명령어가 동시에 여러번 호출 될 경우 모든 update는 같은 데이터(수정된)를 반환합니다.
 * find 명령을 수행할 때, filter의 모든 property가 `undefined`로만 이루어진 경우에는 모든 값을 대상으로 검색합니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려면, `if (CHECK_ARE_SAME([{}, filter]) === true) {...}`로 filter가 비어있는지 확인하시기 바랍니다.
 * 배포시에는 보안을 위해 MongoDB를 인증 모드로 실행해주시기 바랍니다.
 
+## MongoDB 최초 실행하기
+MongoDB를 최초로 실행하기 전, 데이터베이스를 저장할 폴더를 생성합니다.
+```
+mkdir /data
+mkdir /data/db
+```
+
+MongoDB를 외부에서 접속 가능하게 설정합니다. `mongodb.conf`에서 `bindIp: 127.0.0.1`를 `bindIp: 0.0.0.0`로 변경합니다. 또한, 리눅스 환경의 경우 외부에서 접속이 가능하게 하려면 방화벽을 꺼야 합니다. (맨 하단 방화벽 설정 항목 참고)
+```
+vi /etc/mongod.conf
+```
+
+MongoDB를 아래 명령어로 실행합니다.
+```
+mongod --fork --logpath /var/log/mongodb.log --logappend
+```
+
+`mongo`로 접속합니다.
+```
+mongo
+```
+
+관리자 계정을 생성합니다.
+```javascript
+use admin
+db.createUser({ user : 'root 유저명', pwd : 'root 비밀번호', roles : ['root'] })
+```
+
+MongoDB 서버를 종료합니다.
+```javascript
+db.shutdownServer();
+```
+
+이제, 인증 모드로 MongoDB를 실행합니다.
+```
+mongod --fork --logpath /var/log/mongodb.log --logappend --auth
+```
+
 ## MongoDB 유저 추가
 인증 모드로 MongoDB를 실행한 후 데이터베이스에 접근하기 위해서는 해당 데이터베이스에 유저가 존재해야 합니다. 유저를 추가하기 위한 방법은 다음과 같습니다.
 
-1. 우선 관리자로 접근합니다.
+1. 우선 관리자로 로그인합니다.
 	```javascript
 	use admin
 	db.auth('root 유저명', 'root 비밀번호')
@@ -154,12 +186,28 @@ root hard nproc 65535
 root soft nproc 65535
 ```
 
+이후 다시 서버에 재접속한 뒤, 프로젝트를 재시작하면 반영됩니다.
+
 ### 모든 node.js 프로세스 종료
 종종 죽지 않는 node.js 프로세스가 있을 경우가 있습니다. 그럴때는 다음 명령어를 입력해주면 모든 node.js 프로젝트가 강제 종료 됩니다.
 ```
 pkill node
 ```
 
-이후 다시 서버에 재접속한 뒤, 프로젝트를 재시작하면 반영됩니다.
+혹은 다음과 같이 커맨드 라인을 지정해 줄 수도 있습니다.
+```
+pkill -f "node --max-old-space-size=16384 /root/SampleService/Project/Project.js"
+```
+
+### 방화벽 끄기
+서버 운영시 방화벽을 끌 필요가 있을때 아래 명령어로 방화벽을 해제합니다.
+```
+systemctl stop firewalld
+```
+
+서버 머신 리부팅 시에도 방화벽이 실행되지 않도록 하려면 다음 명령어를 입력해 줍니다.
+```
+systemctl disable firewalld
+```
 
 다음 문서: [UPPERCASE 업데이트](UPDATE.md)

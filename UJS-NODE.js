@@ -7761,6 +7761,7 @@ global.DELETE = METHOD({
 		//OPTIONAL: params.uri
 		//OPTIONAL: params.paramStr
 		//OPTIONAL: params.data
+		//OPTIONAL: params.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([params, {
@@ -7797,6 +7798,7 @@ global.DOWNLOAD = METHOD(function() {
 			//OPTIONAL: params.data
 			//OPTIONAL: params.url
 			//REQUIRED: params.path
+			//OPTIONAL: params.headers
 			//OPTIONAL: callbackOrHandlers
 			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.error
@@ -7825,6 +7827,9 @@ global.DOWNLOAD = METHOD(function() {
 			
 			// path
 			path = params.path,
+			
+			// headers
+			headers = params.headers,
 			
 			// url data
 			urlData,
@@ -7874,7 +7879,8 @@ global.DOWNLOAD = METHOD(function() {
 			req = (isSecure !== true ? http : https).get({
 				hostname : host,
 				port : port,
-				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr
+				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
+				headers : headers
 			}, function(httpResponse) {
 				
 				var
@@ -7937,8 +7943,8 @@ global.GET = METHOD(function(m) {
 	'use strict';
 	
 	var
-	//IMPORT: url
-	url = require('url');
+	//IMPORT: URL
+	URL = require('url');
 	
 	return {
 
@@ -7950,6 +7956,7 @@ global.GET = METHOD(function(m) {
 			//REQUIRED: urlOrParams.uri
 			//OPTIONAL: urlOrParams.paramStr
 			//OPTIONAL: urlOrParams.data
+			//OPTIONAL: urlOrParams.headers
 			//REQUIRED: responseListenerOrListeners
 			
 			var
@@ -7961,7 +7968,7 @@ global.GET = METHOD(function(m) {
 			
 			if (CHECK_IS_DATA(urlOrParams) !== true) {
 				
-				urlData = url.parse(urlOrParams);
+				urlData = URL.parse(urlOrParams);
 				
 				params = {
 					host : urlData.hostname === TO_DELETE ? undefined : urlData.hostname,
@@ -7996,6 +8003,7 @@ global.POST = METHOD({
 		//OPTIONAL: params.uri
 		//OPTIONAL: params.paramStr
 		//OPTIONAL: params.data
+		//OPTIONAL: params.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([params, {
@@ -8018,6 +8026,7 @@ global.PUT = METHOD({
 		//OPTIONAL: params.uri
 		//OPTIONAL: params.paramStr
 		//OPTIONAL: params.data
+		//OPTIONAL: params.headers
 		//REQUIRED: responseListenerOrListeners
 
 		REQUEST(COMBINE([params, {
@@ -8033,11 +8042,11 @@ global.REQUEST = METHOD(function() {
 	'use strict';
 
 	var
-	//IMPORT: http
-	http = require('http'),
+	//IMPORT: HTTP
+	HTTP = require('http'),
 
-	//IMPORT: https
-	https = require('https');
+	//IMPORT: HTTPS
+	HTTPS = require('https');
 
 	return {
 
@@ -8050,6 +8059,7 @@ global.REQUEST = METHOD(function() {
 			//OPTIONAL: params.uri
 			//OPTIONAL: params.paramStr
 			//OPTIONAL: params.data
+			//OPTIONAL: params.headers
 			//REQUIRED: responseListenerOrListeners
 
 			var
@@ -8073,6 +8083,9 @@ global.REQUEST = METHOD(function() {
 
 			// data
 			data = params.data,
+			
+			// headers
+			headers = params.headers,
 
 			// response listener
 			responseListener,
@@ -8106,10 +8119,11 @@ global.REQUEST = METHOD(function() {
 			// GET request.
 			if (method === 'GET') {
 
-				req = (isSecure !== true ? http : https).get({
+				req = (isSecure !== true ? HTTP : HTTPS).get({
 					hostname : host,
 					port : port,
-					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr
+					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
+					headers : headers
 				}, function(httpResponse) {
 
 					var
@@ -8144,11 +8158,12 @@ global.REQUEST = METHOD(function() {
 			// other request.
 			else {
 
-				req = (isSecure !== true ? http : https).request({
+				req = (isSecure !== true ? HTTP : HTTPS).request({
 					hostname : host,
 					port : port,
 					path : '/' + (uri === undefined ? '' : uri),
-					method : method
+					method : method,
+					headers : headers
 				}, function(httpResponse) {
 
 					var
@@ -9501,6 +9516,7 @@ global.CREATE_COOKIE_STR_ARRAY = METHOD({
  * get cpu usages.
  */
 global.CPU_USAGES = METHOD(function(m) {
+	'use strict';
 	
 	var
 	//IMPORT: os
@@ -9509,7 +9525,6 @@ global.CPU_USAGES = METHOD(function(m) {
 	return {
 		
 		run : function() {
-			'use strict';
 			
 			var
 			// cpu infos
@@ -9546,6 +9561,7 @@ global.CPU_USAGES = METHOD(function(m) {
  * get memory usage.
  */
 global.MEMORY_USAGE = METHOD(function(m) {
+	'use strict';
 	
 	var
 	//IMPORT: os
@@ -9557,13 +9573,51 @@ global.MEMORY_USAGE = METHOD(function(m) {
 	return {
 		
 		run : function() {
-			'use strict';
 			
 			var
 			// free memory
 			freeMemory = os.freemem();
 			
 			return (1 - freeMemory / totalMemory) * 100;
+		}
+	};
+});
+
+/**
+ * run schedule daemon.
+ */
+global.RUN_SCHEDULE_DAEMON = METHOD(function(m) {
+	'use strict';
+	
+	var
+	//IMPORT: exec
+	exec = require('child_process').exec;
+	
+	return {
+		
+		run : function(schedules) {
+			
+			INTERVAL(60, RAR(function() {
+				
+				var
+				// now cal
+				nowCal = CALENDAR();
+				
+				EACH(schedules, function(schedule) {
+					
+					if (nowCal.getHour() === schedule.hour && nowCal.getMinute() === (schedule.minute === undefined ? 0 : schedule.minute)) {
+						
+						EACH(schedule.commands, function(command) {
+							
+							exec(command, function(error) {
+								if (error !== TO_DELETE) {
+									SHOW_ERROR('[UJS-NODE] RUN_SCHEDULE_DAEMON ERROR: ' + error.toString());
+								}
+							});
+						});
+					}
+				});
+			}));
 		}
 	};
 });
