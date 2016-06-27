@@ -80,7 +80,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 			// name
 			name = params.name;
 
-			require('mongodb').MongoClient.connect('mongodb://' + (username !== undefined && password !== undefined ? username + ':' + password + '@' : '') + host + ':' + port + '/' + name, function(error, nativeDB) {
+			require('mongodb').MongoClient.connect('mongodb://' + (username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') + host + ':' + port + '/' + name, function(error, nativeDB) {
 
 				if (error !== TO_DELETE) {
 
