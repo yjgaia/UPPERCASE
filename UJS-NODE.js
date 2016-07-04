@@ -7777,14 +7777,14 @@ global.DOWNLOAD = METHOD(function() {
 	'use strict';
 
 	var
-	//IMPORT: http
-	http = require('http'),
+	//IMPORT: HTTP
+	HTTP = require('http'),
 
-	//IMPORT: https
-	https = require('https'),
+	//IMPORT: HTTPS
+	HTTPS = require('https'),
 	
-	//IMPORT: url
-	url = require('url');
+	//IMPORT: URL
+	URL = require('url');
 
 	return {
 
@@ -7845,7 +7845,7 @@ global.DOWNLOAD = METHOD(function() {
 			
 			if (_url !== undefined) {
 				
-				urlData = url.parse(_url);
+				urlData = URL.parse(_url);
 				
 				host = urlData.hostname === TO_DELETE ? undefined : urlData.hostname;
 				port = urlData.port === TO_DELETE ? undefined : INTEGER(urlData.port);
@@ -7876,7 +7876,7 @@ global.DOWNLOAD = METHOD(function() {
 				}
 			}
 
-			req = (isSecure !== true ? http : https).get({
+			req = (isSecure !== true ? HTTP : HTTPS).get({
 				hostname : host,
 				port : port,
 				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
@@ -8106,9 +8106,7 @@ global.REQUEST = METHOD(function() {
 			if (data !== undefined) {
 				paramStr = (paramStr === undefined ? '' : paramStr + '&') + '__DATA=' + encodeURIComponent(STRINGIFY(data));
 			}
-
-			paramStr = (paramStr === undefined ? '' : paramStr + '&') + Date.now();
-
+			
 			if (CHECK_IS_DATA(responseListenerOrListeners) !== true) {
 				responseListener = responseListenerOrListeners;
 			} else {
