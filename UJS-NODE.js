@@ -8107,6 +8107,10 @@ global.REQUEST = METHOD(function() {
 				paramStr = (paramStr === undefined ? '' : paramStr + '&') + '__DATA=' + encodeURIComponent(STRINGIFY(data));
 			}
 			
+			if (paramStr === undefined) {
+				paramStr = '';
+			}
+			
 			if (CHECK_IS_DATA(responseListenerOrListeners) !== true) {
 				responseListener = responseListenerOrListeners;
 			} else {
