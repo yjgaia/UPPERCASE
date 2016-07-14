@@ -60,7 +60,7 @@ global.METHOD = function(define) {
 	// init funcs.
 	if (funcs !== undefined) {
 		run = funcs.run;
-	};
+	}
 
 	return m;
 };
