@@ -525,7 +525,14 @@ global.CHECK_STILL_ALIVE = OBJECT({
 			
 			// I'm still alive!!
 			on('check', function(notUsing, ret) {
-				ret('ALIVE!');
+				ret('__ALIVE');
+			});
+			
+			// I'm still alive!! (string mode)
+			on('checkStr', function(notUsing, ret) {
+				send({
+					str : '__ALIVE'
+				});
 			});
 		});
 	}
