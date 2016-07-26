@@ -189,7 +189,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 								// send.
 								function(params, callback) {
 									//REQUIRED: params
-									//REQUIRED: params.methodName
+									//OPTIONAL: params.methodName
 									//OPTIONAL: params.data
 									//OPTIONAL: params.str
 									//OPTIONAL: callback
@@ -207,7 +207,6 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 									if (str !== undefined) {
 										
 										send({
-											methodName : roomName + '/' + methodName,
 											str : str
 										}, callback);
 									}
@@ -224,7 +223,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 								// broadcast except me
 								function(params) {
 									//REQUIRED: params
-									//REQUIRED: params.methodName
+									//OPTIONAL: params.methodName
 									//OPTIONAL: params.data
 									//OPTIONAL: params.str
 									
@@ -242,7 +241,6 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 										
 										LAUNCH_ROOM_SERVER.broadcast({
 											roomName : roomName,
-											methodName : methodName,
 											str : str
 										}, send);
 							
@@ -252,7 +250,6 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 												methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
 												data : {
 													roomName : roomName,
-													methodName : methodName,
 													str : str
 												}
 											});
@@ -264,7 +261,6 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 												methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
 												data : {
 													roomName : roomName,
-													methodName : methodName,
 													str : str
 												}
 											});
