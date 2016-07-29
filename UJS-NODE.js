@@ -8752,7 +8752,7 @@ global.SOCKET_SERVER = METHOD({
 				
 				// if catch error
 				catch(error) {
-					SHOW_ERROR('[UJS-SOCEKT_SERVER] ERROR:', methodName, data, error.toString());
+					SHOW_ERROR('[UJS-SOCKET_SERVER] ERROR:', methodName, data, error.toString());
 				}
 			};
 
@@ -8805,7 +8805,7 @@ global.SOCKET_SERVER = METHOD({
 					
 					errorMsg = error.toString();
 					
-					SHOW_ERROR('[UJS-SOCEKT_SERVER] ERROR:', errorMsg);
+					SHOW_ERROR('[UJS-SOCKET_SERVER] ERROR:', errorMsg);
 					
 					runMethods('__ERROR', errorMsg);
 				}

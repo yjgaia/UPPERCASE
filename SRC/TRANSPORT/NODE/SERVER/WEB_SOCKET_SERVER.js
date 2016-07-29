@@ -78,7 +78,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				
 				// if catch error
 				catch(error) {
-					SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString());
+					SHOW_ERROR('[UPPERCASE-WEB_SOCKET_SERVER] ERROR:', error.toString());
 				}
 			};
 
@@ -110,7 +110,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 				// error msg
 				errorMsg = error.toString();
 
-				SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', errorMsg);
+				SHOW_ERROR('[UPPERCASE-WEB_SOCKET_SERVER] ERROR:', errorMsg);
 
 				runMethods('__ERROR', errorMsg);
 			});
@@ -220,7 +220,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 						}
 						
 					} catch(error) {
-						SHOW_ERROR('[UPPERCASE-WEB_SOCEKT_SERVER] ERROR:', error.toString(), methodNameOrParams);
+						SHOW_ERROR('[UPPERCASE-WEB_SOCKET_SERVER] ERROR:', error.toString(), methodNameOrParams);
 					}
 	
 					if (callback !== undefined) {
