@@ -36,7 +36,7 @@ _.each([52, 97], function(value, index) {
     * [Node.js](http://nodejs.org) - 웹 브라우저 관련 기능들만 사용하는 등 Node.js 관련 기능을 전혀 사용하지 않는 경우에는 설치하지 않아도 됩니다.
     * [ImageMagick](http://www.imagemagick.org) - 업로드 관련 기능을 사용하지 않는 경우에는 설치하지 않아도 됩니다.
     * [MongoDB](http://www.mongodb.org) - 데이터를 저장할 필요가 없는 경우에는 설치하지 않아도 됩니다.
-	* [Redis](http://redis.io) - `REDIS_STORE` 등 Redis 관련 기능을 사용하지 않는 경우에는 설치하지 않아도 됩니다.
+	* [Redis](http://redis.io) - `REDIS_STORE` 등 Redis 관련 기능을 사용하지 않는 경우에는 설치하지 않아도 됩니다. (설치하는 경우 3.0.7 버전을 설치해 주시기 바랍니다.)
 
 2. `Git`을 이용하여 UPPERCASE를 적당한 곳에 `clone`합니다. [git 간편 안내서](http://rogerdudler.github.io/git-guide/index.ko.html)
 

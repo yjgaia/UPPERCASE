@@ -204,8 +204,7 @@ daemonize yes
 port 7001
 cluster-enabled yes
 cluster-config-file nodes.conf
-cluster-node-timeout 5000
-appendonly yes
+cluster-node-timeout 15000
 dir ./7001/
 ```
 
