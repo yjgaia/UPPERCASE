@@ -212,4 +212,13 @@ systemctl stop firewalld
 systemctl disable firewalld
 ```
 
+### 서버 시간 설정
+서버가 위치한 지역의 시간대로 서버 시간을 맞추어 줍니다.
+```
+mv /etc/localtime /etc/localtime_old
+ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+rdate -p time.bora.net
+rdate -s time.bora.net
+```
+
 다음 문서: [UPPERCASE 업데이트](UPDATE.md)

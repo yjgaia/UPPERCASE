@@ -9,3 +9,6 @@ UPPERCASE를 기반으로 프로젝트를 구성할 때는 하나의 파일에 �
 * [OBJECT](CORE/OOP/OBJECT.md) - UPPERCASE 기반 실글톤 객체입니다.
 
 ## `TO_DELETE` - UPPERCASE에서는 `null`을 사용하지 않습니다.
+[UPPERCASE 코드 컨벤션 규칙](CONVENTION.md)에서 밝힌 바와 같이 UPPERCASE에서는 `null`을 사용하지 않습니다. 그러나 유일하게 `null` 값을 갖고 있는 변수가 있는데, 바로 `TO_DELETE`입니다.
+[MongoDB](http://www.mongodb.org)와 같은 시스템에서는 `update` 명령을 수행할 때, `null`을 대입하면 해당 값을 삭제하는 기능을 제공합니다. 이런 경우에 **삭제될 값**을 표현하는데 있어 `null` 보다는 `TO_DELETE`와 같은 변수를 사용하는것이 더욱 명시적인 코드가 될것이라 판단하어 만들어진 변수입니다.
+따라서 이런 경우에도 [UPPERCASE 코드 컨벤션 규칙](CONVENTION.md)과 동일하게 `null`을 사용하지 말고, `TO_DELETE`를 사용하시기 바랍니다.

@@ -48,7 +48,9 @@ global.REDIS_STORE = CLASS(function(cls) {
 						
 						servers : RUN(function() {
 							
-							var ret = [];
+							var
+							// ret
+							ret = [];
 							
 							if (CHECK_IS_ARRAY(NODE_CONFIG.redisPorts) === true) {
 								EACH(NODE_CONFIG.redisPorts, function(port) {

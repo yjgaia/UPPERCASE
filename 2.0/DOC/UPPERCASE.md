@@ -21,7 +21,7 @@ _.each([52, 97], function(value, index) {
 });
 ```
 
-## UPPERCASE를 사용하기 위해 필요한 지식
+## UPPERCASE를 사용하기 위해 필요한 사전 지식
 * `JavaScript` UPPERCASE는 JavaScript 기반 프레임워크이므로, JavaScript를 필수로 알고 있어야 합니다.
 * [Node.js](http://nodejs.org)가 왜 탄생했는지, 기본적인 구조가 어떻게 되는지 알고 있으면 더욱 쉽게 접근할 수 있습니다.
 * [MongoDB](http://www.mongodb.org)가 무엇인지와, 사용하는 명령어들을 알고 있으면 더욱 쉽게 접근할 수 있습니다.
@@ -63,6 +63,9 @@ _.each([52, 97], function(value, index) {
         vi .profile
         export UPPERCASE_PATH="{{clone 한 폴더 위치}}"
         ```
-	
+
+## [UPPERCASE 코드 컨벤션 규칙](CONVENTION.md)
+UPPERCASE를 구현할 때와 UPPERCASE 기반 프로젝트를 개발할 때는 이 규칙에 따라 개발합니다.
+
 ## [UPPERCASE-CORE](CORE.md)
 UPPERCASE-CORE는 UPPERCASE의 가장 근간을 되는 기능들을 담고 있습니다. UPPERCASE의 모든 기능들은 이를 기반으로 합니다.
