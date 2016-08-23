@@ -863,55 +863,113 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 									//REQUIRED: params
 									//REQUIRED: params.methodName
 									//OPTIONAL: params.data
+									//OPTIONAL: params.str
 									//OPTIONAL: callback
-
-									send({
-										methodName : roomName + '/' + params.methodName,
-										data : params.data
-									}, callback);
-								},
-								
-								// broadcast except me
-								function(params) {
-									//REQUIRED: params
-									//REQUIRED: params.methodName
-									//OPTIONAL: params.data
 									
 									var
 									// method name
 									methodName = params.methodName,
 									
 									// data
-									data = params.data;
+									data = params.data,
 									
-									LAUNCH_ROOM_SERVER.broadcast({
-										roomName : roomName,
-										methodName : methodName,
-										data : data
-									}, send);
-						
-									if (CPU_CLUSTERING.broadcast !== undefined) {
-						
-										CPU_CLUSTERING.broadcast({
-											methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
-											data : {
-												roomName : roomName,
-												methodName : methodName,
-												data : data
-											}
-										});
+									// str
+									str = params.str;
+									
+									if (str !== undefined) {
+										
+										send({
+											str : str
+										}, callback);
 									}
-						
-									if (SERVER_CLUSTERING.broadcast !== undefined) {
-						
-										SERVER_CLUSTERING.broadcast({
-											methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
-											data : {
-												roomName : roomName,
-												methodName : methodName,
-												data : data
-											}
-										});
+									
+									else {
+										
+										send({
+											methodName : roomName + '/' + methodName,
+											data : data
+										}, callback);
+									}
+								},
+								
+								// broadcast except me
+								function(params) {
+									//REQUIRED: params
+									//OPTIONAL: params.methodName
+									//OPTIONAL: params.data
+									//OPTIONAL: params.str
+									
+									var
+									// method name
+									methodName = params.methodName,
+									
+									// data
+									data = params.data,
+									
+									// str
+									str = params.str;
+									
+									if (str !== undefined) {
+										
+										LAUNCH_ROOM_SERVER.broadcast({
+											roomName : roomName,
+											str : str
+										}, send);
+							
+										if (CPU_CLUSTERING.broadcast !== undefined) {
+							
+											CPU_CLUSTERING.broadcast({
+												methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+												data : {
+													roomName : roomName,
+													str : str
+												}
+											});
+										}
+							
+										if (SERVER_CLUSTERING.broadcast !== undefined) {
+							
+											SERVER_CLUSTERING.broadcast({
+												methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+												data : {
+													roomName : roomName,
+													str : str
+												}
+											});
+										}
+									}
+									
+									else {
+										
+										LAUNCH_ROOM_SERVER.broadcast({
+											roomName : roomName,
+											methodName : methodName,
+											data : data
+										}, send);
+							
+										if (CPU_CLUSTERING.broadcast !== undefined) {
+							
+											CPU_CLUSTERING.broadcast({
+												methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+												data : {
+													roomName : roomName,
+													methodName : methodName,
+													data : data
+												}
+											});
+										}
+							
+										if (SERVER_CLUSTERING.broadcast !== undefined) {
+							
+											SERVER_CLUSTERING.broadcast({
+												methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+												data : {
+													roomName : roomName,
+													methodName : methodName,
+													data : data
+												}
+											});
+										}
 									}
 								},
 								

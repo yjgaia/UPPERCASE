@@ -205,7 +205,6 @@ port 7001
 cluster-enabled yes
 cluster-config-file nodes.conf
 cluster-node-timeout 15000
-appendonly yes
 dir ./7001/
 ```
 

@@ -5,7 +5,7 @@
     * [Node.js](http://nodejs.org)
     * [ImageMagick](http://www.imagemagick.org)
     * [MongoDB](http://www.mongodb.org)
-	* (REDIS_STORE를 사용할 경우) [Redis](http://redis.io)
+	* (REDIS_STORE를 사용할 경우) [Redis](http://redis.io) - 3.0.7 버전을 설치해 주시기 바랍니다.
     
 2. git을 이용하여 UPPERCASE를 적당한 곳에 clone합니다. [git 간편 안내서](http://rogerdudler.github.io/git-guide/index.ko.html)
 
