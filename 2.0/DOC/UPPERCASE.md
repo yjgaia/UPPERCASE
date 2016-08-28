@@ -67,5 +67,20 @@ _.each([52, 97], function(value, index) {
 ## [UPPERCASE 코드 컨벤션 규칙](CONVENTION.md)
 UPPERCASE를 구현할 때와 UPPERCASE 기반 프로젝트를 개발할 때는 이 규칙에 따라 개발합니다.
 
-## [UPPERCASE-CORE](CORE.md)
-UPPERCASE-CORE는 UPPERCASE의 가장 근간을 되는 기능들을 담고 있습니다. UPPERCASE의 모든 기능들은 이를 기반으로 합니다.
+## UPPERCASE 모듈
+UPPERCASE는 아래의 7가지 모듈로 이루어져 있습니다.
+* [UPPERCASE-CORE](UPPERCASE-CORE.md) UPPERCASE의 가장 근간을 되는 기능들을 담고 있는 모듈입니다. UPPERCASE의 모든 기능들은 이를 기반으로 합니다.
+* [UPPERCASE-TRANSPORT](UPPERCASE-TRANSPORT.md) UPPERCASE 기반 서버와 클라이언트 사이의 통신에 필요한 기능들을 담고 있는 모듈입니다.
+* [UPPERCASE-ROOM](UPPERCASE-ROOM.md) 룸 방식으로 통신을 처리하기 위해 필요한 기능들을 담고 있는 모듈입니다.
+* [UPPERCASE-DB](UPPERCASE-DB.md) MongoDB 기반 데이터베이스를 다루기 위해 필요한 기능들을 담고 있는 모듈입니다.
+* [UPPERCASE-MODEL](UPPERCASE-MODEL.md) MVC 패턴에서 Model에 해당하는 부분을 다루기 위해 필요한 기능들을 담고 있는 모듈입니다.
+* [UPPERCASE-UPLOAD](UPPERCASE-UPLOAD.md) 파일 업로드와 관련된 기능들을 담고 있는 모듈입니다.
+* [UPPERCASE-BOOT](UPPERCASE-BOOT.md) UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를 실행하기 위해 필요한 모듈입니다.
+
+모듈 내 각 파일들은 다음과 같은 역할을 합니다.
+* COMMON.js는 어떤 JavaScript 환경에서도 구동됩니다.
+* CLIENT.js는 클라이언트 JavaScript 환경에서 구동되는 기능들이 작성되며, COMMON.js를 포함합니다.
+* BROWSER.js는 웹 브라우저 환경에서 구동되는 기능들이 작성되며, CLIENT.js를 포함합니다.
+* NODE.js는 Node.js 환경에서 구동되는 기능들이 작성되며, COMMON.js를 포함합니다.
+
+## UPPERCASE-BROWSER-PACK
