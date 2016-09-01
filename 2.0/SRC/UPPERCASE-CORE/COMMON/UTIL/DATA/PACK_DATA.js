@@ -48,8 +48,8 @@ global.PACK_DATA = METHOD({
 			}
 		});
 
-		result.__DATE_NAMES = dateNames;
-		result.__REGEX_NAMES = regexNames;
+		result.__D = dateNames;
+		result.__R = regexNames;
 
 		return result;
 	}

@@ -12,21 +12,21 @@ global.UNPACK_DATA = METHOD({
 		result = COPY(data);
 
 		// when date property names exists
-		if (result.__DATE_NAMES !== undefined) {
+		if (result.__D !== undefined) {
 
 			// change timestamp integer to Date type.
-			EACH(result.__DATE_NAMES, function(dateName, i) {
+			EACH(result.__D, function(dateName, i) {
 				result[dateName] = new Date(result[dateName]);
 			});
 			
-			delete result.__DATE_NAMES;
+			delete result.__D;
 		}
 		
 		// when regex property names exists
-		if (result.__REGEX_NAMES !== undefined) {
+		if (result.__R !== undefined) {
 
 			// change string to RegExp type.
-			EACH(result.__REGEX_NAMES, function(regexName, i) {
+			EACH(result.__R, function(regexName, i) {
 				
 				var
 				// pattern
@@ -49,7 +49,7 @@ global.UNPACK_DATA = METHOD({
 				result[regexName] = new RegExp(pattern, flags);
 			});
 			
-			delete result.__REGEX_NAMES;
+			delete result.__R;
 		}
 
 		EACH(result, function(value, name) {
