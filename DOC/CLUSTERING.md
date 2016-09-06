@@ -206,6 +206,7 @@ cluster-enabled yes
 cluster-config-file nodes.conf
 cluster-node-timeout 15000
 dir ./7001/
+logfile "redis.log"
 ```
 
 이 redis.conf 파일을 각 폴더에 복사한 후 port및 dir을 각 폴더명으로 변경합니다.
