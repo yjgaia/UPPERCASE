@@ -212,7 +212,7 @@ var SomeMethod = METHOD(...
 var someFunc = function() {...
 ```
 
-## `METHOD`, `CLASS`, `OBJECT`는 한 파일에 하나씩 생성합니다. 이 때, 파일명을 동일하게 작성합니다.
+## UPPERCASE를 기반으로 프로젝트를 구성할 때는 하나의 파일에 하나의 기능을 저장하는 것을 원칙으로 합니다. 기능이란 메소드, 클래스, 실글톤 객체로 구현될 수 있습니다. 이 때, 파일명을 동일하게 작성합니다.
 
 ```javascript
 // file name is SomeClass.js.

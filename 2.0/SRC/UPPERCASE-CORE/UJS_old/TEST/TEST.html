@@ -1,0 +1,287 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+		<title>UJS TEST</title>
+		<style>
+			#container div {
+				margin-left: 20px;
+			}
+			button {
+				display: block;
+			}
+			footer {
+				margin-top: 20px;
+				padding: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>UJS TEST</h1>
+		<p>
+			Check JavaScript Console.
+		</p>
+		<div id="container">
+			<div>
+				<h3>COMMON</h3>
+				<button onclick="test('COMMON/TO_DELETE');">
+					TO_DELETE TEST
+				</button>
+				<button onclick="test('COMMON/UTIL/DATE/CALENDAR');">
+					CALENDAR TEST
+				</button>
+				<button onclick="test('COMMON/UTIL/DELAY/DELAY');">
+					DELAY TEST
+				</button>
+				<button onclick="test('COMMON/UTIL/DELAY/INTERVAL');">
+					INTERVAL TEST
+				</button>
+				<button onclick="test('COMMON/UTIL/DELAY/LOOP');">
+					LOOP TEST
+				</button>
+				<button onclick="test('COMMON/UTIL/OVERRIDE');">
+					OVERRIDE TEST
+				</button>
+				<button onclick="test('COMMON/UTIL/NUMBER/RANDOM');">
+					RANDOM TEST
+				</button>
+				<button onclick="test('COMMON/UTIL/RANDOM_STR');">
+					RANDOM_STR TEST
+				</button>
+				<button onclick="test('COMMON/UTIL/FUNCTION/RAR');">
+					RAR TEST
+				</button>
+			</div>
+			<div>
+				<h3>BROWSER</h3>
+				<button onclick="test('BROWSER/INFO');">
+					INFO TEST
+				</button>
+				<button onclick="test('BROWSER/WINDOW/TITLE');">
+					TITLE TEST
+				</button>
+				<button onclick="test('BROWSER/WINDOW/WIN_WIDTH');">
+					WIN_WIDTH TEST
+				</button>
+				<button onclick="test('BROWSER/WINDOW/WIN_HEIGHT');">
+					WIN_HEIGHT TEST
+				</button>
+				<button onclick="test('BROWSER/WINDOW/SCROLL_LEFT');">
+					SCROLL_LEFT TEST
+				</button>
+				<button onclick="test('BROWSER/WINDOW/SCROLL_TOP');">
+					SCROLL_TOP TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/DOM');">
+					DOM TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/NODE');">
+					NODE TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/STYLE/ADD_STYLE');">
+					ADD_STYLE TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/STYLE/RGBA');">
+					RGBA TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/ANIMATION/ANIMATE');">
+					ANIMATE TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/ANIMATION/KEYFRAMES');">
+					KEYFRAMES TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/EVENT/EVENT');">
+					EVENT TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/EVENT/EVENT_ONCE');">
+					EVENT_ONCE TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/EVENT/E');">
+					E TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/EVENT/EVENT.fireAll');">
+					EVENT.fireAll TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/DIV');">
+					BODY, DIV TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/SPAN');">
+					SPAN TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/H1');">
+					H1, H2, H3, H4, H5, H6 TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/P');">
+					P TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/BR');">
+					BR TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/UL');">
+					UL, LI TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/A');">
+					A TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/IMG');">
+					IMG TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/TABLE');">
+					TABLE, TR, TH, TD TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/FORM');">
+					FORM TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/FORM2');">
+					FORM2 TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/FORM3');">
+					FORM3 TEST (from CoffeeScript)
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/INPUT');">
+					INPUT, TEXTAREA, SELECT, OPTION TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/IFRAME');">
+					IFRAME TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/TAG/CANVAS');">
+					CANVAS TEST
+				</button>
+				<button onclick="test('BROWSER/DOM/CLEAR_BOTH');">
+					CLEAR_BOTH TEST
+				</button>
+				<button onclick="test('BROWSER/GRAPHIC/CONTEXT');">
+					CONTEXT TEST
+				</button>
+				<button onclick="test('BROWSER/GRAPHIC/EXPORT_IMG_DATA');">
+					EXPORT_IMG_DATA TEST
+				</button>
+				<button onclick="test('BROWSER/GRAPHIC/X2');">
+					X2 TEST
+				</button>
+				<p>
+					This is not X2 image. (blured)
+					<br>
+					<img src="/EXAMPLES/BROWSER/GRAPHIC/text.png">
+				</p>
+				<button onclick="test('BROWSER/SOUND');">
+					SOUND TEST
+				</button>
+				<button onclick="test('BROWSER/VIEW/VIEW');">
+					VIEW, MATCH_VIEW TEST
+				</button>
+				<button onclick="test('BROWSER/VIEW/GO_NEW_WIN');">
+					GO_NEW_WIN TEST
+				</button>
+				<button onclick="test('BROWSER/VIEW/REFRESH');">
+					REFRESH TEST
+				</button>
+			</div>
+			<div>
+				<h3>BROWSER-FIX</h3>
+				<button onclick="test('BROWSER-FIX/Date.now');">
+					Date.now TEST
+				</button>
+			</div>
+		</div>
+		<footer>
+			<div>
+				UJS TEST CASE by <a href="http://hanul.me" target="_blank">YOUNG JAE SIM
+			</div>
+			<div>
+				<a href="https://github.com/Hanul/UJS" target="_blank">UJS @ GitHub</a>
+			</div>
+		</footer>
+		<!-- JS WORLD -->
+		<script src="/UJS-BROWSER.js"></script>
+		<script>
+			BROWSER_CONFIG.isUsingFlashCanvasPro = true;
+			BROWSER_CONFIG.fixScriptsFolderPath = '/UJS-BROWSER-FIX';
+			LOAD('/UJS-BROWSER-FIX/FIX.js');
+		</script>
+		<script>
+			READY(function() {
+
+				// init all singleton classes.
+				INIT_OBJECTS();
+				
+				LOAD_CSS('https://fonts.googleapis.com/earlyaccess/notosanskr.css');
+
+				BODY.addStyle({
+					fontFamily : 'Noto Sans KR'
+				});
+				
+				var
+				// test.
+				test;
+
+				global.test = test = function(path) {
+					LOAD('/EXAMPLES/' + path + '.js');
+				};
+				
+				console.log('[UJS TEST START] BROWSER: ' + INFO.getBrowserInfo().name + ' ' + INFO.getBrowserInfo().version);
+
+				console.log('[COMMON TEST]');
+				test('COMMON/TO_DELETE');
+				test('COMMON/METHOD');
+				test('COMMON/OOP/CLASS');
+				test('COMMON/OOP/OBJECT');
+				test('COMMON/UTIL/NEXT');
+				test('COMMON/UTIL/PARALLEL');
+				test('COMMON/UTIL/NUMBER/INTEGER');
+				test('COMMON/UTIL/NUMBER/REAL');
+				test('COMMON/UTIL/DATA/CHECK_IS_DATA');
+				test('COMMON/UTIL/DATA/CHECK_IS_EMPTY_DATA');
+				test('COMMON/UTIL/DATA/PACK_DATA');
+				test('COMMON/UTIL/DATA/COUNT_PROPERTIES');
+				test('COMMON/UTIL/DATA/UNPACK_DATA');
+				test('COMMON/UTIL/ARRAY/CHECK_IS_ARRAY');
+				test('COMMON/UTIL/ARRAY/CHECK_ARE_SAME');
+				test('COMMON/UTIL/DATA_AND_ARRAY/CHECK_IS_IN');
+				test('COMMON/UTIL/DATA_AND_ARRAY/COPY');
+				test('COMMON/UTIL/DATA_AND_ARRAY/EXTEND');
+				test('COMMON/UTIL/DATA_AND_ARRAY/COMBINE');
+				test('COMMON/UTIL/DATA_AND_ARRAY/FIND');
+				test('COMMON/UTIL/DATA_AND_ARRAY/REMOVE');
+				test('COMMON/UTIL/ARGUMENTS/CHECK_IS_ARGUMENTS');
+				test('COMMON/UTIL/FUNCTION/RUN');
+				test('COMMON/UTIL/REPEAT/REPEAT');
+				test('COMMON/UTIL/REPEAT/EACH');
+				test('COMMON/UTIL/REPEAT/REVERSE_EACH');
+				test('COMMON/UTIL/STRINGIFY');
+				test('COMMON/UTIL/PARSE_STR');
+				test('COMMON/UTIL/VALID');
+				test('COMMON/UTIL/URI_MATCHER');
+
+				console.log('[BROWSER TEST]');
+				test('BROWSER/STORE');
+				test('BROWSER/COOKIE_STORE');
+				test('BROWSER/META_DESCRIPTION');
+				test('BROWSER/I18N/MSG');
+				test('BROWSER/GRAPHIC/EXPORT_IMG_TYPE');
+				test('BROWSER/GRAPHIC/CHECK_IS_BLANK_PIXEL');
+				test('BROWSER/REQUEST/REQUEST');
+				test('BROWSER/REQUEST/GET');
+				test('BROWSER/REQUEST/POST');
+				test('BROWSER/REQUEST/PUT');
+				test('BROWSER/REQUEST/DELETE');
+				test('BROWSER/VIEW/HREF');
+				test('BROWSER/VIEW/GO');
+				test('BROWSER/VIEW/URI');
+
+				console.log('[BROWSER-FIX TEST]');
+				test('BROWSER-FIX/String.trim');
+				test('BROWSER-FIX/JSON');
+				
+				EVENT('beforeunload', function() {
+					return 'beforeunload event!';
+				});
+				
+				EVENT('mousewheel', function(e) {
+					console.log(e.getWheelDelta());
+				});
+			});
+		</script>
+	</body>
+</html>

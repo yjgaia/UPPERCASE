@@ -48,19 +48,6 @@ global.CLASS = METHOD(function(m) {
 			// inner after init.
 			innerAfterInit;
 			
-			if ( typeof define === 'function') {
-				funcs = define(cls);
-			} else {
-				funcs = define;
-			}
-
-			if (funcs !== undefined) {
-				preset = funcs.preset;
-				init = funcs.init;
-				_params = funcs.params;
-				afterInit = funcs.afterInit;
-			}
-			
 			cls = function(params, funcs) {
 				//OPTIONAL: params
 				//OPTIONAL: funcs
@@ -102,6 +89,19 @@ global.CLASS = METHOD(function(m) {
 
 				return self;
 			};
+			
+			if ( typeof define === 'function') {
+				funcs = define(cls);
+			} else {
+				funcs = define;
+			}
+
+			if (funcs !== undefined) {
+				preset = funcs.preset;
+				init = funcs.init;
+				_params = funcs.params;
+				afterInit = funcs.afterInit;
+			}
 
 			// set type.
 			cls.type = CLASS;
