@@ -1,2 +1,0 @@
-# `data` global.CONFIG
-Configuration

@@ -1,0 +1,90 @@
+# UPPERCASE-CORE
+- 일단 UPPERCASE-CORE-COMMON을 완벽히 만들기
+
+# UPPERCASE-ROOM
+
+# UPPERCASE-DB
+
+# UPPERCASE-MODEL
+
+# UPPERCASE-BOOT
+
+
+- EXAMPLES에 NODE쪽 파일들도 require 쓰지 않고 실행되도록 __PACK과 같은 녀석을 만듦
+- box.uppercase.io에 쉽게 올리기 위한 기능을 만들고, 예시 스크립트인 __UPLOAD_BOX를 만듦
+- UPPERCASE-UTIL은 UPPERCASE-CORE/NODE에 포함
+- username/box 이름 의 형태를 띰
+- DEPENDENCY 파일
+- box.uppercase.io 개발
+- uppercase.io 개발
+- 3rd party 의존도 최소화하기
+- 예제는 채팅, 게시판, SNS 개발
+- 새 버전 확인하는 기능 (uppercase.io/version을 이용)
+- UAPI에서 문서 만들 때, README.md 파일이 이미 있으면 ## API 밑에 API 목록 넣고, 없으면 맨 하단에 넣기
+
+- 기존 코딩 방법 그대로 살리고 설명과 콘솔 내용만 한글로 잘 쓰기
+- imagemagick 없이 이미지 처리 할 수 있도록
+- 업로드 기능 구현
+- SHARED_STORE를 완벽하게 구현
+- 코드 설명에 예제경로 기록 (md 형식)
+
+- 영상 AVI / OGG가 지원 안됨
+
+- 모든 BOX들 설치하는 방법 및 업데이트 방법(git pull) 수록하기
+- 안드로이드 기본 브라우저에서 파일 업로드가 안됨
+
+- 어퍼케이스 AUDIO, VIDEO 태그 제공
+- UPUSH 문서 만들기
+- BOX 매니저 만들기 - box.uppercase.io
+- 각 모듈 npm 제공
+
+- dev.hanul.me NSP로 만들기
+- dev.hanul.me 만들고 Pure 소개하기
+- Cordova용 어떻게 할지
+- 웹 앱과 코르도바 앱을 동시에 개발하는 경우에 대한 처리
+
+- 어퍼케이스 Angular사용하는 내용 추가
+- 어퍼케이스 jQuery사용하는 내용 추가
+- U.IO 및 BOX들 문서화
+- ondrop, file reader 등 처리
+
+[UPPERCASE] - 2016년
+- USCREEN 빼고 ULAYER 만들기. 레이어 개념으로 드로잉 하도록, UJS, UPPERCASE 공식 문서에 포함
+- UJS 오디오 처리 유심히 살펴보기
+- UJS 비디오 처리
+- UJS 최적화 및 IE8 이하 stack overflow때문에 처리한것 풀기
+- CHECK_IS_BLANK_PIXEL를 EXPORT_IMG_DATA말고 CONTEXT.getImgData로 처리해서 IE8에서 잘 되도록
+- UJS 기반 코드로 문서를 만들어주는 기능
+- 확실하게 메모리가 정리되는지 확인
+- 구버젼 브라우저 테스트
+- touch-action : manafacture 확인하기 IE10(-ms-), IE11
+- Unicorn waitingSendInfos 처리
+- Java-Client connectedHandler 넣기, 첫 접속 안될때 disconnected 처리
+- Game maker studio Client Extension 만들기
+- U.IO 맨 처음에 서버에 접속할 수 없을 때 처리
+- 모니터링 툴, 트래픽 모니터링 에러 모니터링
+- @2x 처리 기능 (서버와 연동 필요)
+- UPPERCASE-Java-Client watching 등 만들기 and Method handle 타입별로 다 만들기
+- 자동으로 썸네일 만들어주는 기능
+- R도 분산 서버 구성하기 (IE는 10 이상부터 하기)
+- 접속자 analyze 툴
+- 서버 clustering 보안 설정 (설정된 호스트만 연결 가능하도록)
+- 모델 생성기
+- 국가별 접속시 접속 서버 분산하는 구성
+- flappybug 현재 어퍼케이스 버젼에 맞춤
+- canvas가 webgl 지원하게 - https://github.com/corbanbrook/webgl-2d 사용
+- SlideShare로 슬라이드 소개 만들기
+
+[이하 문서에 포함될 내용]
+* [CANVAS에 그림 그리기](DOC/CANVAS.md)
+* [도트 아트를 사용하는 프로젝트 만들기](DOC/DOT_ART.md)
+* [간단한 게임 만들기](DOC/TUTORIAL/GAME.md)
+
+[고양이의 세계 적용하면서 할 것들]
+- UPPERCASE MODEL find 원하는 필드만 가져오기
+- UPPERCASE MODEL hidden property names - 저장만 되고, 가져오는건 안됨
+- onNew나 onRemove authKey 및 role
+- getAuthKey findAuthKey
+- get, find, count, checkIsExists 등은 restful 하게 제공할 수 있도록 (만약 role이 없다면.)
+- UADMIN 값이 배열이거나 데이터일 경우 표현할 방법 -> 그냥 json 형태로 표현 및 저장 해야할듯
+- UPPERCASE 접속한 사용자 분석 툴
