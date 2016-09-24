@@ -1,1 +1,5 @@
 - uppercase-core-common npm에 등록
+
+
+1.x -> 2.x로 업데이트 시 유의할 점
+- VALID의 check는 checkAndRemoveEmptyValue로 변경되었고, checkForUpdate가 check로 변경됨

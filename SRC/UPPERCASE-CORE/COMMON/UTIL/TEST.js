@@ -1,5 +1,7 @@
 /**
  * 테스트용 메소드입니다.
+ * 
+ * 테스트에 성공하거나 실패하면 콘솔에 메시지를 출력합니다.
  */
 global.TEST = METHOD(function(m) {
 	'use strict';
@@ -28,7 +30,7 @@ global.TEST = METHOD(function(m) {
 				throwError;
 
 				if (bool === true) {
-					console.log('[' + name + ' TEST] SUCCESS! ' + errorCount + ' error(s) founded.');
+					console.log('[' + name + ' 테스트] 테스트를 통과하였습니다.');
 				} else {
 
 					temp.__THROW_ERROR_$$$ = function() {
@@ -49,7 +51,7 @@ global.TEST = METHOD(function(m) {
 
 					errorCount += 1;
 
-					console.log('[' + name + ' TEST] ERROR! ' + line + ' ' + errorCount + ' error(s) founded.');
+					console.log('[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
 				}
 			});
 		}

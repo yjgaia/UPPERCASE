@@ -80,33 +80,34 @@ global.VALID = CLASS(function(cls) {
 
 	cls.regex = regex = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.pattern
 		//REQUIRED: params.value
+		//REQUIRED: params.pattern
 
 		var
-		// pattern
-		pattern = params.pattern,
-
 		// string
-		str = String(params.value);
+		str = String(params.value),
+		
+		// pattern
+		pattern = params.pattern;
 
 		return str === str.match(pattern)[0];
 	};
 
 	cls.size = size = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.value
 		//OPTIONAL: params.min
 		//REQUIRED: params.max
-		//REQUIRED: params.value
 
 		var
+		// string
+		str = String(params.value),
+		
 		// min
 		min = params.min,
 
 		// max
-		max = params.max,
-
-		// string
-		str = String(params.value);
+		max = params.max;
 		
 		if (min === undefined) {
 			min = 0;
@@ -160,30 +161,30 @@ global.VALID = CLASS(function(cls) {
 
 	cls.min = min = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.min
 		//REQUIRED: params.value
+		//REQUIRED: params.min
 
 		var
-		// min
-		min = params.min,
-
 		// value
-		value = params.value;
+		value = params.value,
+		
+		// min
+		min = params.min;
 
 		return real(value) === true && min <= value;
 	};
 
 	cls.max = max = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.max
 		//REQUIRED: params.value
+		//REQUIRED: params.max
 
 		var
-		// max
-		max = params.max,
-
 		// value
-		value = params.value;
+		value = params.value,
+		
+		// max
+		max = params.max;
 
 		return real(value) === true && max >= value;
 	};
@@ -221,15 +222,15 @@ global.VALID = CLASS(function(cls) {
 
 	cls.one = one = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.array
 		//REQUIRED: params.value
+		//REQUIRED: params.array
 
 		var
-		// array
-		array = params.array,
-		
 		// value
-		value = params.value;
+		value = params.value,
+		
+		// array
+		array = params.array;
 
 		return EACH(array, function(_value) {
 			if (value === _value) {
@@ -254,6 +255,7 @@ global.VALID = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.array
 		//REQUIRED: params.validData
+		//OPTIONAL: params.isToRemoveEmptyValue
 
 		var
 		// array
@@ -262,10 +264,13 @@ global.VALID = CLASS(function(cls) {
 		// valid
 		valid = VALID({
 			_ : params.validData
-		});
-
+		}),
+		
+		// is to remove empty value
+		isToRemoveEmptyValue = params.isToRemoveEmptyValue;
+		
 		return EACH(array, function(value) {
-			if (valid.check({
+			if ((isToRemoveEmptyValue === true ? valid.checkAndRemoveEmptyValue : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
 				return false;
@@ -277,6 +282,7 @@ global.VALID = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validData
+		//OPTIONAL: params.isToRemoveEmptyValue
 
 		var
 		// array
@@ -285,10 +291,13 @@ global.VALID = CLASS(function(cls) {
 		// valid
 		valid = VALID({
 			_ : params.validData
-		});
-
+		}),
+		
+		// is to remove empty value
+		isToRemoveEmptyValue = params.isToRemoveEmptyValue;
+		
 		return EACH(data, function(value) {
-			if (valid.check({
+			if ((isToRemoveEmptyValue === true ? valid.checkAndRemoveEmptyValue : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
 				return false;
@@ -300,15 +309,19 @@ global.VALID = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validDataSet
+		//OPTIONAL: params.isToRemoveEmptyValue
 
 		var
 		// data
 		data = params.data,
 
 		// valid
-		valid = VALID(params.validDataSet);
-
-		return valid.check(data).checkHasError() !== true;
+		valid = VALID(params.validDataSet),
+		
+		// is to remove empty value
+		isToRemoveEmptyValue = params.isToRemoveEmptyValue;
+		
+		return (isToRemoveEmptyValue === true ? valid.checkAndRemoveEmptyValue : valid.check)(data).checkHasError() !== true;
 	};
 
 	cls.equal = equal = function(params) {
@@ -344,14 +357,14 @@ global.VALID = CLASS(function(cls) {
 				init : function(inner, self, params) {
 					//REQUIRED: params
 					//REQUIRED: params.data
-					//OPTIONAL: params.isForUpdate
+					//OPTIONAL: params.isToRemoveEmptyValue
 
 					var
 					// data
 					data = params.data,
 
-					// is for update
-					isForUpdate = params.isForUpdate,
+					// is to remove empty value
+					isToRemoveEmptyValue = params.isToRemoveEmptyValue,
 
 					// has error
 					hasError = false,
@@ -376,7 +389,7 @@ global.VALID = CLASS(function(cls) {
 								// value
 								value = data[attr];
 
-								if (isForUpdate === true && value === undefined) {
+								if (isToRemoveEmptyValue !== true && value === undefined) {
 
 									// break.
 									return false;
@@ -384,7 +397,7 @@ global.VALID = CLASS(function(cls) {
 
 								if (name !== 'notEmpty' && notEmpty(value) !== true) {
 									
-									data[attr] = isForUpdate === true ? TO_DELETE : undefined;
+									data[attr] = isToRemoveEmptyValue !== true ? TO_DELETE : undefined;
 									
 									// continue.
 									return true;
@@ -415,7 +428,8 @@ global.VALID = CLASS(function(cls) {
 
 									if (element({
 										validData : validParams,
-										array : value
+										array : value,
+										isToRemoveEmptyValue : isToRemoveEmptyValue
 									}) === false) {
 
 										hasError = true;
@@ -435,7 +449,8 @@ global.VALID = CLASS(function(cls) {
 
 									if (property({
 										validData : validParams,
-										data : value
+										data : value,
+										isToRemoveEmptyValue : isToRemoveEmptyValue
 									}) === false) {
 
 										hasError = true;
@@ -455,7 +470,8 @@ global.VALID = CLASS(function(cls) {
 
 									if (detail({
 										validDataSet : validParams,
-										data : value
+										data : value,
+										isToRemoveEmptyValue : isToRemoveEmptyValue
 									}) === false) {
 
 										hasError = true;
@@ -626,8 +642,8 @@ global.VALID = CLASS(function(cls) {
 			// check.
 			check,
 
-			// check for update.
-			checkForUpdate,
+			// check and remove empty value.
+			checkAndRemoveEmptyValue,
 			
 			// get valid data set.
 			getValidDataSet;
@@ -638,10 +654,10 @@ global.VALID = CLASS(function(cls) {
 				});
 			};
 
-			self.checkForUpdate = checkForUpdate = function(data) {
+			self.checkAndRemoveEmptyValue = checkAndRemoveEmptyValue = function(data) {
 				return Check({
 					data : data,
-					isForUpdate : true
+					isToRemoveEmptyValue : true
 				});
 			};
 			

@@ -1,5 +1,5 @@
 # UPPERCASE-CORE-COMMON
-UPPERCASE-CORE-COMMON은 어떠한 JavaScript 환경에서도 사용할 수 있는 모듈입니다.
+UPPERCASE-CORE-COMMON은 모든 JavaScript 환경에서 사용할 수 있는 모듈입니다.
 
 ## 목차
 * [사용방법](#사용방법)
@@ -12,8 +12,9 @@ UPPERCASE-CORE-COMMON은 어떠한 JavaScript 환경에서도 사용할 수 있�
 * [데이터(`{...}`) 및 배열(`[...]`) 관련 기능](#데이터-및-배열-관련-기능)
 * [반복 관련 기능](#반복-관련-기능)
 * [시간 지연 관련 기능](#시간-지연-관련-기능)
+* [즉시 실행 함수 기능](#즉시-실행-함수-기능)
 * [`Callback Hell` 보완 기능](#callback-hell-보완-기능)
-* [암호화 관련 기능](#암호화-관련-기능)
+* [기타 기능](#기타-기능)
 
 ## 사용방법
 `UPPERCASE-CORE` 폴더 내의 `COMMON.js` 파일을 복사하여 사용하거나, `npm`을 사용합니다.
@@ -397,7 +398,7 @@ RANDOM({
 
 ## 날짜 관련 기능
 ### `CALENDAR()` `CALENDAR(date)`
-날짜를 처리할 때 Date형을 좀 더 쓰기 편하도록 개선한 CALENDAR 클래스입니다. `date` 파라미터를 입력하지 않으면, 현재 시각을 기준으로 생성합니다.
+날짜를 처리할 때 Date형을 좀 더 쓰기 편하도록 개선한 `CALENDAR` 클래스입니다. `date` 파라미터를 입력하지 않으면, 현재 시각을 기준으로 생성합니다.
 
 만약 오늘 날짜가 2016년 9월 2일이라고 한다면, JavaScript의 Date형에서 `getMonth()`를 하게되면 예상과는 다르게 `8`이라는 숫자가 출력됩니다.
 ```javascript
@@ -687,7 +688,7 @@ JSON 양식의 데이터를 전송할때, 일반적으로 사용하는 `JSON.str
 
 `PACK_DATA`를 거친 데이터를 `JSON.stringify`로 변환 후 전송하고, 전송 받는 쪽에서 `JSON.parse`를 수행 한 후 `UNPACK_DATA`를 거치면 원래 데이터를 얻을 수 있게 됩니다.
 
-예를들어 다음과 같은 데이터가 있다고 한다면,
+예를 들어 다음과 같은 데이터가 있다고 한다면,
 ```javascript
 var
 // data
@@ -754,17 +755,847 @@ data = UNPACK_DATA(packedData);
 PARSE_STR(dataStr);
 ```
 
-### VALID
-TODO:
+### `VALID(validDataSet)`
+데이터를 검증하고, 어떤 부분이 잘못되었는지 오류를 확인할 수 있는 `VALID` 클래스입니다.
+
+다음과 같이 검증 표현식을 선언합니다.
+```javascript
+var
+// valid
+valid = VALID({
+
+    // 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
+	name : {
+		notEmpty : true,
+		size : {
+			min : 3,
+			max : 20
+		}
+	},
+	
+	// 나이는 정수여야 합니다.
+	age : {
+		integer : true
+	}
+}),
+
+// valid result
+validResult;
+```
+
+이후 데이터를 검증합니다.
+```javascript
+validResult = valid.check({
+	name : 'YJ Sim',
+	age : 28
+});
+```
+
+`checkHasError` 함수를 통해 데이터에 오류가 있는지 확인합니다.
+```javascript
+validResult.checkHasError(); // false
+```
+
+문제가 있는 데이터를 검증합니다.
+```javascript
+validResult = valid.check({
+	name : 'YJ',
+	age : 28.5
+});
+```
+
+`checkHasError` 함수를 통해 데이터에 오류가 있는지 확인합니다.
+```javascript
+validResult.checkHasError(); // true
+```
+
+`getErrors` 함수를 통해 어떤 오류가 있는지 확인합니다.
+```javascript
+/*
+    {
+        name : {
+            type : 'size',
+            validParams : {
+                min : 3,
+                max : 20
+            },
+            value : 'YJ'
+        },
+        age : {
+            type : 'integer',
+            value : 28.5
+        }
+    }
+*/
+validResult.getErrors();
+```
+
+추가로, 데이터를 검증함과 동시에 빈 값(`undefined`, `null`, `''`)은 삭제하는 `checkAndRemoveEmptyValue` 함수가 존재합니다.
+```javascript
+var
+// valid
+valid = VALID({
+
+    // 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
+	name : {
+		notEmpty : true,
+		size : {
+			min : 3,
+			max : 20
+		}
+	},
+	
+	// 나이는 정수여야 합니다.
+	age : {
+		integer : true
+	}
+}),
+
+// data
+data = {
+    name : 'YJ Sim',
+	age : 28,
+	city : 'Seoul'
+};
+
+valid.checkAndRemoveEmptyValue(data);
+
+console.log(data); // { name : 'YJ Sim', age : 28 }
+```
+
+사용 가능한 검증식들은 다음과 같습니다.
+* `notEmpty` 값이 빈 값(`undefined`, `null`, `''`)인지 확인합니다.
+* `regex` 값이 정규표현식을 통과하는지 확인합니다. 검증값으로 정규표현식이 필요합니다.
+* `size` 값의 길이를 확인합니다. 검증값으로 최소값인 `min`이나 최대값인 `max`가 필요합니다.
+* `integer` 값이 정수인지 확인합니다.
+* `real` 값이 실수인지 확인합니다.
+* `bool` 값이 `boolean`인지 확인합니다.
+* `date` 값이 `Date` 형인지 확인합니다.
+* `min` 값이 최소값 보다 크거나 같은지 확인합니다. 검증값으로 최소값이 필요합니다.
+* `max` 값이 최대값 보다 작거나 같은지 확인합니다. 검증값으로 최대값이 필요합니다.
+* `email` 값이 이메일 형식인지 확인합니다.
+* `png` 값이 PNG [Data URI 형식](https://en.wikipedia.org/wiki/Data_URI_scheme)인지 확인합니다.
+* `url` 값이 URL 형식인지 확인합니다.
+* `username` 값이 일반적인 아이디 형식(영어 대소문자, 숫자, 하이픈, 언더바로 이루어진)인지 확인합니다. 이 검증은 영어 대문자를 포함하기 때문에, 소문자로만 이루어진 아이디를 입력받고 싶다면 `toLowerCase()`를 사용하여 대문자를 소문자로 바꾸어 처리하시기 바랍니다.
+* `id` 값이 [`MongoDB`의 `ObjectId` 클래스](https://docs.mongodb.com/manual/reference/method/ObjectId/)의 문자열 형태인지 확인합니다.
+* `one` 값이 검증값으로 제공된 배열에 포함되어 있는지 확인합니다. 검증값으로 배열이 필요합니다.
+* `array` 값이 배열인지 확인합니다.
+* `data` 값이 데이터인지 확인합니다.
+* `element` 배열의 모든 값을 검증하여 모두 통과하는지 확인합니다. 검증값으로 검증 표현식이 필요합니다.
+* `property` 데이터의 모든 값을 검증하여 모두 통과하는지 확인합니다. 검증값으로 검증 표현식이 필요합니다.
+* `detail` 데이터의 내부 데이터를 검증하여 통과하는지 확인합니다. 검증값으로 검증 표현식이 필요합니다.
+* `equal` 값이 검증값과 같은지 확인합니다.
+
+데이터를 검증하는 것이 아닌, 단일 값에 대해서는 다음과 같이 `VALID` 클래스의 `static` 메소드들을 사용할 수 있습니다.
+* `VALID.notEmpty(value)` 값이 빈 값(`undefined`, `null`, `''`)인지 확인합니다.
+* `VALID.regex({value:, pattern:})` 값이 정규표현식을 통과하는지 확인합니다.
+* `VALID.size({value:, min:})` `VALID.size({value:, max:})` `VALID.size({value:, min:, max:})` 값의 길이를 확인합니다.
+* `VALID.integer(value)` 값이 정수인지 확인합니다.
+* `VALID.real(value)` 값이 실수인지 확인합니다.
+* `VALID.bool(value)` 값이 `boolean`인지 확인합니다.
+* `VALID.date(value)` 값이 `Date` 형인지 확인합니다.
+* `VALID.min({value:, min:})` 값이 최소값 보다 크거나 같은지 확인합니다.
+* `VALID.max({value:, max:})` 값이 최대값 보다 작거나 같은지 확인합니다.
+* `VALID.email(value)` 값이 이메일 형식인지 확인합니다.
+* `VALID.png(value)` 값이 PNG [Data URI 형식](https://en.wikipedia.org/wiki/Data_URI_scheme)인지 확인합니다.
+* `VALID.url(value)` 값이 URL 형식인지 확인합니다.
+* `VALID.username(value)` 값이 일반적인 아이디 형식(영어 대소문자, 숫자, 하이픈, 언더바로 이루어진)인지 확인합니다. 이 검증은 영어 대문자를 포함하기 때문에, 소문자로만 이루어진 아이디를 입력받고 싶다면 `toLowerCase()`를 사용하여 대문자를 소문자로 바꾸어 처리하시기 바랍니다.
+* `VALID.id(value)` 값이 [`MongoDB`의 `ObjectId` 클래스](https://docs.mongodb.com/manual/reference/method/ObjectId/)의 문자열 형태인지 확인합니다.
+* `VALID.one({value:, array:})` 값이 검증값으로 제공된 배열에 포함되어 있는지 확인합니다.
+* `VALID.array(value)` 값이 배열인지 확인합니다.
+* `VALID.data(value)` 값이 데이터인지 확인합니다.
+* `VALID.element({array:, validData:})` `VALID.element({array:, validData:, isToRemoveEmptyValue:})` 배열의 모든 값을 검증하여 모두 통과하는지 확인합니다. `isToRemoveEmptyValue`가 `true`면, 값이 데이터인 경우 해당 데이터의 빈 값(`undefined`, `null`, `''`)을 삭제합니다.
+* `VALID.property({data:, validData:})` `VALID.property({data:, validData:, isToRemoveEmptyValue:})` 데이터의 모든 값을 검증하여 모두 통과하는지 확인합니다. `isToRemoveEmptyValue`가 `true`면 빈 값(`undefined`, `null`, `''`)을 삭제합니다.
+* `VALID.detail({data:, validDataSet:})` `VALID.detail({data:, validDataSet:, isToRemoveEmptyValue:})` 데이터를 검증합니다. `isToRemoveEmptyValue`가 `true`면 빈 값(`undefined`, `null`, `''`)을 삭제합니다.
+* `VALID.equal({value:, validValue:})` 값이 검증값과 같은지 확인합니다.
 
 ## 반복 관련 기능
-TODO:
+### `REPEAT`
+주어진 함수를 주어진 횟수만큼 반복해서 실행합니다. 주어진 함수에서 `false`를 반환하게 되면 도중에 멈춥니다. 주어진 횟수만큼 실행하였다면 `true`를, 도중에 멈추게 되면 `false`를 반환합니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `REPEAT(count, function(i) {})`
+* `REPEAT({start:, end:}, function(i) {})`
+* `REPEAT({start:, end:, step:}, function(i) {})`
+* `REPEAT({start:, limit:}, function(i) {})`
+* `REPEAT({start:, limit:, step:}, function(i) {})`
+
+```javascript
+// 5번 실행합니다. 이 때 i는 0에서 4의 값을 가집니다.
+REPEAT(5, function(i) {...});
+```
+```javascript
+// 5번 실행합니다. 이 때 i는 1에서 5의 값을 가집니다.
+REPEAT({
+    start : 1,
+    end : 5
+}, function(i) {...});
+```
+```javascript
+// 3번 실행합니다. 이 때 i는 1, 3, 5의 값을 가집니다.
+REPEAT({
+    start : 1,
+    end : 5,
+    step : 2
+}, function(i) {...});
+```
+```javascript
+// 4번 실행합니다. 이 때 i는 1에서 4의 값을 가집니다.
+REPEAT({
+    start : 1,
+    limit : 5
+}, function(i) {...});
+```
+
+### `EACH`
+데이터나 배열, 문자열의 각 요소를 순서대로 대입하여 주어진 함수를 실행합니다. 주어진 함수에서 `false`를 반환하게 되면 도중에 멈춥니다. 모든 요소들을 처리하였다면 `true`를, 도중에 멈추게 되면 `false`를 반환합니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `EACH(data, function(value, name) {})`
+* `EACH(array, function(value, key) {})`
+* `EACH(function(value) {})(array)`
+
+```javascript
+// 1
+// 2
+EACH({
+    a : 1,
+    b : 2
+}, function(value) {
+    console.log(value);
+});
+```
+```javascript
+// a is 1.
+// b is 2.
+EACH({
+    a : 1,
+    b : 2,
+    c : 3
+}, function(value, name) {
+    
+    console.log(name + ' is ' + value + '.');
+    
+    if (value === 2) {
+        // 도중에 멈춥니다.
+        return false;
+    }
+});
+```
+```javascript
+// 1
+// 2
+EACH([1, 2], function(value) {
+    console.log(value);
+});
+```
+```javascript
+// array[0] is 1.
+// array[1] is 2.
+EACH([1, 2, 3], function(value, key) {
+    
+    console.log('array[' + key + '] is ' + value + '.');
+    
+    if (value === 2) {
+        // 도중에 멈춥니다.
+        return false;
+    }
+});
+```
+```javascript
+// array[0] is 1.
+// array[1] is 2.
+EACH(function(value, key) {
+    
+    console.log('array[' + key + '] is ' + value + '.');
+    
+    if (value === 2) {
+        // 도중에 멈춥니다.
+        return false;
+    }
+})([1, 2, 3]);
+```
+
+### `REVERSE_EACH`
+데이터나 배열, 문자열의 각 요소를 역순으로 대입하여 주어진 함수를 실행합니다. 주어진 함수에서 `false`를 반환하게 되면 도중에 멈춥니다. 모든 요소들을 처리하였다면 `true`를, 도중에 멈추게 되면 `false`를 반환합니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `REVERSE_EACH(array, function(value, key) {})`
+* `REVERSE_EACH(function(value) {})(array)`
+
+```javascript
+// 2
+// 1
+REVERSE_EACH([1, 2], function(value) {
+    console.log(value);
+});
+```
+```javascript
+// array[2] is 3.
+// array[1] is 2.
+REVERSE_EACH([1, 2, 3], function(value, key) {
+    
+    console.log('array[' + key + '] is ' + value + '.');
+    
+    if (value === 2) {
+        // 도중에 멈춥니다.
+        return false;
+    }
+});
+```
+```javascript
+// array[2] is 3.
+// array[1] is 2.
+REVERSE_EACH(function(value, key) {
+    
+    console.log('array[' + key + '] is ' + value + '.');
+    
+    if (value === 2) {
+        // 도중에 멈춥니다.
+        return false;
+    }
+})([1, 2, 3]);
+```
 
 ## 시간 지연 관련 기능
-TODO:
+### `DELAY(seconds, function() {})`
+주어진 초가 흐른 뒤에 함수를 실행하는 `DELAY` 클래스
+
+아래와 같이 코드를 작성하게 되면, 함수가 3초 뒤에 실행됩니다.
+```javascript
+var
+// delay
+delay = DELAY(3, function() {
+    // 3초 뒤에 실행됩니다.
+});
+```
+
+함수의 실행을 취소하고 싶으면, 3초가 지나기 전에 `remove` 함수를 실행하면 됩니다.
+```javascript
+// 실행을 취소합니다.
+delay.remove();
+```
+
+또한 `pause`와 `resume` 함수를 통해 일시정지 및 재개할 수 있습니다. 예를 들어 1초가 지난 뒤 `pause`를 실행하고, 이후에 `resume`을 실행하게 되면 `resume`을 실행한 후 2초 뒤 함수가 실행됩니다.
+```javascript
+// 일시정지합니다.
+delay.pause();
+
+// 재개합니다.
+delay.resume();
+```
+
+### `INTERVAL(seconds, function(interval) {})`
+주어진 초 마다 함수를 반복해서 실행하는 `INTERVAL` 클래스
+
+아래와 같이 코드를 작성하게 되면, 함수가 3초마다 실행됩니다.
+```javascript
+var
+// interval
+interval = DELAY(3, function(interval) {
+    // 3초마다 실행됩니다.
+});
+```
+
+함수의 실행을 취소하고 싶으면, `remove` 함수를 실행하면 됩니다.
+```javascript
+// 실행을 취소합니다.
+interval.remove();
+```
+
+또한 `pause`와 `resume` 함수를 통해 일시정지 및 재개할 수 있습니다. 예를 들어 1초가 지난 뒤 `pause`를 실행하고, 이후에 `resume`을 실행하게 되면 `resume`을 실행한 후 2초 뒤 함수가 실행되고, 다시 3초마다 함수가 실행됩니다.
+```javascript
+// 일시정지합니다.
+interval.pause();
+
+// 재개합니다.
+interval.resume();
+```
+
+### `LOOP`
+아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 `LOOP` 클래스로, 게임 개발 등에 사용됩니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+
+#### 로직만 존재하는 경우
+```javascript
+LOOP(function(milliseconds) {
+    ...
+});
+```
+함수가 가능한 빠르게 반복해서 수행됩니다. 파라미터로 제공되는 `milliseconds`는, 이전에 수행된 시간과 방금 수행된 시간의 차이를 밀리세컨드(ms) 단위로 제공합니다.
+
+#### FPS(Frames Per Second)가 제공되는 경우
+```javascript
+LOOP(fps, function(fps) {
+    ...
+});
+```
+`fps` 파라미터를 지정하게 되면, 1초에 몇번 함수를 수행할지 설정이 가능합니다.
+
+#### 
+```javascript
+LOOP(fps, {
+
+    start : function() {
+        // 동시에 어려번 실행되기 전
+        ...
+    },
+    
+    interval : function(fps) {
+        ...
+    },
+    
+    end : function(times) {
+        // 동시에 여러번 실행된 후
+        ...
+    }
+});
+```
+CPU의 한계로 인해, 지정된 `fps`마다 함수가 실행되지 않을 수 있습니다. `LOOP`는 이런 경우에도 초당 함수 실행수를 보장합니다. 다만 이런 경우에는 함수가 시간 간격을 두지 않고 동시에 여러번 실행될 수 있는데, 이 경우 여러번 실행되기 전에 `start` 함수를, 여러번 실행된 후 `end` 함수를 실행합니다.
+
+`end` 함수에서 시간 간격을 알 수 있으므로, `fps`가 설정된 경우에 이전에 수행된 시간과 방금 수행된 시간의 차이를 알기 위해서 사용되기도 합니다.
+
+## 즉시 실행 함수 기능
+### `RUN(function() {})`
+주어진 함수를 즉시 실행합니다. 새로운 코드 블록이 필요할 때 사용합니다.
+
+예를 들면 다음과 같이, 배열의 모든 내용을 출력하는 코드를
+```javascript
+var
+// array
+array = [1, 2, 3, 4, 5],
+
+// str
+str = '배열의 값은 ';
+
+EACH(array, function(value, i) {
+    if (i > 0) {
+        str += ', ';
+    }
+    str += value;
+});
+
+str += '입니다.';
+
+print(str);
+```
+
+다음과 같이 작성할 수 있습니다.
+```javascript
+var
+// array
+array = [1, 2, 3, 4, 5];
+
+print('배열의 값은 ' + RUN(function() {
+
+    var
+    // str
+    str = '';
+
+    EACH(array, function(value, i) {
+        if (i > 0) {
+            str += ', ';
+        }
+        str += value;
+    });
+    
+    return str;
+
+}) + '입니다.');
+```
+
+### `RAR(function() {})` `RAR(params, function(params) {})`
+주어진 함수를 즉시 실행하고, 함수를 반환합니다. 선언과 동시에 실행되어야 하는 함수를 선언할 때 유용합니다.
+
+아래 선언된 함수는 선언과 동시에 실행됩니다.
+```javascript
+var
+// func.
+func = RAR(function() {
+    console.log('함수 실행!');
+});
+```
+
+아래와 같이 파라미터를 설정할 수도 있습니다.
+```javascript
+var
+// show age.
+showAge = RAR({
+    name : '철수',
+    age : 20
+}, function(params) {
+
+    var
+    // name
+    name = params.name,
+    
+    // age
+    age = params.age;
+    
+    console.log(name + '은(는)' + age + '살 입니다.');
+});
+
+showAge({
+    name : '영희',
+    age : 24
+});
+```
 
 ## Callback Hell 보완 기능
-TODO:
+JavaScript로 개발을 하다보면 수많은 Callback 함수들이 중첩되어 코드의 복잡성이 증가하고 가독성이 떨어지는 경우가 자주 생깁니다. 이를 Callback Hell이라고 부릅니다. 이런 현상을 보완하기 위해서 UPPERCASE에서는 다음과 같은 기능들을 제공합니다.
 
-## 암호화 관련 기능
-TODO:
+### `NEXT`
+주어진 비동기 함수들을 순서대로 실행합니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+#### 중첩된 비동기 함수들을 차례대로 실행
+```javascript
+NEXT([
+function(next) {
+    ...
+},
+
+function(next) {
+    return function() {
+        ...
+    };
+},
+
+function(next) {
+    return function() {
+        ...
+    };
+},
+
+...]);
+```
+
+#### 주어진 `count`만큼 함수를 실행하고, 맨 마지막에 `next` 함수를 실행
+```javascript
+NEXT(count, [
+function(i, next) {
+    ...
+},
+
+function() {
+    return function() {
+        ...
+    };
+}]);
+```
+
+#### 주어진 배열의 요소 개수만큼 함수를 실행하고, 맨 마지막에 `next` 함수를 실행
+```javascript
+NEXT(array, [
+function(element, next) {
+    ...
+},
+
+function() {
+    return function() {
+        ...
+    };
+}]);
+```
+
+예를 들어 다음과 같은 Callback 함수가 중첩되어 있는 복잡한 코드가 있을 경우, (출처: http://callbackhell.com)
+```javascript
+fs.readdir(source, function(err, files) {
+	if (err) {
+		console.log('Error finding files: ' + err);
+	} else {
+		files.forEach(function(filename, fileIndex) {
+		    console.log(filename);
+			gm(source + filename).size(function(err, values) {
+				if (err) {
+					console.log('Error identifying file size: ' + err);
+				} else {
+					console.log(filename + ' : ' + values);
+					aspect = (values.width / values.height);
+					widths.forEach(function(width, widthIndex) {
+						height = Math.round(width / aspect);
+						console.log('resizing ' + filename + 'to ' + height + 'x' + height);
+						this.resize(width, height).write(dest + 'w' + width + '_' + filename, function(err) {
+							if (err) {
+						        console.log('Error writing file: ' + err);
+						    }
+						});
+					}.bind(this));
+				}
+			});
+		});
+	}
+});
+```
+
+다음과 같이 역할별로 깔끔하게 정리할 수 있습니다.
+```javascript
+NEXT([
+function(next) {
+    fs.readdir(source, next);
+},
+
+function(next) {
+    return function(err, files) {
+        if (err) {
+    		console.log('Error finding files: ' + err);
+    	} else {
+    		files.forEach(next);
+    	}
+    };
+},
+
+function(next) {
+    return function(filename, fileIndex) {
+        console.log(filename);
+        gm(source + filename).size(next);
+    };
+},
+
+function(next) {
+    return function(err, values) {
+        if (err) {
+			console.log('Error identifying file size: ' + err);
+		} else {
+			console.log(filename + ' : ' + values);
+			aspect = (values.width / values.height);
+			widths.forEach(next);
+		}
+    };
+},
+
+function(next) {
+    return function(width, widthIndex) {
+		height = Math.round(width / aspect);
+		console.log('resizing ' + filename + 'to ' + height + 'x' + height);
+		this.resize(width, height).write(dest + 'w' + width + '_' + filename, function(err) {
+			if (err) {
+		        console.log('Error writing file: ' + err);
+		    }
+		});
+	}.bind(this);
+}])
+```
+
+### `PARALLEL`
+주어진 비동기 함수들을 병렬로 실행합니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+#### 중첩된 비동기 함수들을 병렬로 실행하고, 맨 마지막에 최종적으로 실행될 함수를 실행
+```javascript
+PARALLEL([
+function(done) {
+    ...
+},
+
+function(done) {
+    ...
+},
+
+...,
+
+// 최종적으로 실행될 함수
+function() {
+    ...
+}]);
+```
+
+#### 주어진 `count`만큼 함수를 실행하고, 맨 마지막에 최종적으로 실행될 함수를 실행
+```javascript
+PARALLEL(count, [
+function(done) {
+    ...
+},
+
+// 최종적으로 실행될 함수
+function() {
+    ...
+}]);
+```
+
+#### 주어진 배열의 요소 개수만큼 함수를 실행하고, 맨 마지막에 최종적으로 실행될 함수를 실행
+```javascript
+PARALLEL(array, [
+function(value, done) {
+    ...
+},
+
+// 최종적으로 실행될 함수
+function() {
+    ...
+}]);
+```
+
+예를 들어 5개의 HTTP 요청을 보낸 뒤, 모든 요청에 답변이 온 이후에 추가적인 로직을 구성한다고 한다면, 일반적으로 다음과 같이 작성하게 됩니다.
+```javascript
+
+var
+// success count
+successCount = 0,
+
+// success all.
+successAll = function() {
+    if (successCount < 5) {
+        successCount += 1;
+    } else {
+        console.log('모든 요청이 성공적으로 완료되었습니다.');
+    }
+};
+
+request('http://abc.com/1', function(result) {
+    ...
+    successAll();
+});
+
+request('http://abc.com/2', function(result) {
+    ...
+    successAll();
+});
+
+request('http://abc.com/3', function(result) {
+    ...
+    successAll();
+});
+
+request('http://abc.com/4', function(result) {
+    ...
+    successAll();
+});
+
+request('http://abc.com/5', function(result) {
+    ...
+    successAll();
+});
+```
+
+위와 같은 코드를 다음과 같이 깔끔하게 정리할 수 있습니다.
+```javascript
+PARALLEL([
+function(done) {
+    request('http://abc.com/1', function(result) {
+        ...
+        done();
+    });
+},
+
+function(done) {
+    request('http://abc.com/2', function(result) {
+        ...
+        done();
+    });
+},
+
+function(done) {
+    request('http://abc.com/3', function(result) {
+        ...
+        done();
+    });
+},
+
+function(done) {
+    request('http://abc.com/4', function(result) {
+        ...
+        done();
+    });
+},
+
+function(done) {
+    request('http://abc.com/5', function(result) {
+        ...
+        done();
+    });
+},
+
+...,
+
+// 최종적으로 실행될 함수
+function() {
+    console.log('모든 요청이 성공적으로 완료되었습니다.');
+}]);
+```
+
+## 기타 기능
+### `OVERRIDE(origin, function(origin) {})`
+[오버라이딩](https://ko.wikipedia.org/wiki/%EB%A9%94%EC%86%8C%EB%93%9C_%EC%98%A4%EB%B2%84%EB%9D%BC%EC%9D%B4%EB%94%A9)을 수행합니다. 클래스나 함수 등을 재지정 할 때 유용합니다.
+
+예를 들어 주어진 두 수를 더하는 `calculate`라는 함수가 있습니다.
+```javascript
+var
+// calculate.
+calculate = function(a, b) {
+    return a + b;
+};
+
+calculate(2, 3); // 5
+```
+
+이를 주어진 두 수를 더해서, 그 결과를 다시 한번 더하는 함수로 만드려면 다음과 같이 재지정합니다.
+```javascript
+OVERRIDE(calculate, function(origin) {
+    calculate = function(a, b) {
+        return origin(a, b) + origin(a, b);
+    };
+});
+
+calculate(2, 3); // 10
+```
+
+### `RANDOM_STR(length)`
+알파벳 대, 소문자와 숫자로 이루어진 임의의 문자열을 생성합니다.
+```javascript
+RANDOM_STR(10); // 예) b9hSosKhvl
+```
+
+### `URI_MATCHER(format)`
+URI가 주어진 포맷에 맞는지 확인하는 `URI_MATCHER` 클래스로, 포맷에 파라미터 구간을 지정할 수 있어 URI로부터 파라미터 값을 가져올 수 있습니다.
+
+예를 들어 다음과 같이 객체를 생성합니다.
+```javascript
+var
+// matcher
+matcher = URI_MATCHER('book/{name}'),
+
+// match result
+matchResult;
+```
+
+이후 원하는 URI를 체크합니다.
+```javascript
+matchResult = matcher.check('book/TheLittlePrince');
+```
+
+`checkIsMatched` 함수로 URI가 포맷에 맞는지 확인합니다.
+```javascript
+matchResult.checkIsMatched(); // true
+```
+
+`getURIParams` 함수로 URI로부터 파라미터 값을 가져옵니다.
+```javascript
+matchResult.getURIParams(); // { name : 'TheLittlePrince' }
+```
+
+### `TEST`
+테스트용 메소드입니다. 테스트에 성공하거나 실패하면 콘솔에 메시지를 출력합니다.
+
+아래 코드는 테스트에 성공합니다.
+```javascript
+TEST('덧셈', function(check) {
+    check(1 + 2 === 3);
+});
+```
+```
+[덧셈 테스트] 테스트를 통과하였습니다.
+```
+
+아래 코드는 테스트에 실패합니다.
+```javascript
+TEST('덧셈', function(check) {
+    check(1 + 2 === 4);
+});
+```
+```
+at 파일 경로:2:5에서 오류가 발견되었습니다. 총 1개의 오류가 있습니다.
+```
+
+`at 파일 경로:2:5`에서 2는 오류가 발견된 코드의 `line`을, 5는 `column`을 나타냅니다.

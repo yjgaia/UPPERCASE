@@ -1,5 +1,5 @@
 /**
- * 아주 짧은 시간동안 반복해서 수행하는 로직을 작성할때 사용하는 LOOP 클래스 (게임 개발 등에 사용됩니다.)
+ * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스 (게임 개발 등에 사용됩니다.)
  */
 global.LOOP = CLASS(function(cls) {
 	'use strict';
@@ -47,7 +47,7 @@ global.LOOP = CLASS(function(cls) {
 
 				if (times > 0) {
 
-					for ( i = 0; i < loopInfos.length; i += 1) {
+					for (i = 0; i < loopInfos.length; i += 1) {
 
 						loopInfo = loopInfos[i];
 
@@ -68,7 +68,7 @@ global.LOOP = CLASS(function(cls) {
 
 							// run interval.
 							interval = loopInfo.interval;
-							for ( j = 0; j < count; j += 1) {
+							for (j = 0; j < count; j += 1) {
 								interval(loopInfo.fps);
 							}
 
@@ -87,7 +87,7 @@ global.LOOP = CLASS(function(cls) {
 					}
 
 					// run runs.
-					for ( i = 0; i < runs.length; i += 1) {
+					for (i = 0; i < runs.length; i += 1) {
 						runs[i](times);
 					}
 

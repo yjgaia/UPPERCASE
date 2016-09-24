@@ -42,7 +42,7 @@ global.DELAY = CLASS({
 			if (timeout === undefined) {
 				
 				timeout = setTimeout(function() {
-					func(self);
+					func();
 				}, remaining);
 			}
 		});

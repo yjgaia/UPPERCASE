@@ -1,5 +1,5 @@
 /**
- * 주어진 초 마다 함수를 반복해서 수행하는 INTERVAL 클래스
+ * 주어진 초 마다 함수를 반복해서 실행하는 INTERVAL 클래스
  */
 global.INTERVAL = CLASS({
 

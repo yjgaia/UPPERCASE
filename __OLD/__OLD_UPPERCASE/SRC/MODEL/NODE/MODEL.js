@@ -513,7 +513,7 @@ FOR_BOX(function(box) {
 
 					// valid data.
 					if (createValid !== undefined) {
-						validResult = createValid.check(data);
+						validResult = createValid.checkAndRemoveEmptyValue(data);
 					}
 
 					// when has error
@@ -769,15 +769,15 @@ FOR_BOX(function(box) {
 					// valid data.
 					if (updateValid !== undefined) {
 						
-						validResult = updateValid.checkForUpdate(data);
+						validResult = updateValid.check(data);
 						
 						if ($inc !== undefined) {
-							$incValidResult = updateValid.checkForUpdate($inc);
+							$incValidResult = updateValid.check($inc);
 						}
 						
 						if ($push !== undefined) {
 							
-							$pushValidResult = updateValid.checkForUpdate(RUN(function() {
+							$pushValidResult = updateValid.check(RUN(function() {
 								
 								var
 								// data for valid
@@ -793,7 +793,7 @@ FOR_BOX(function(box) {
 						
 						if ($addToSet !== undefined) {
 							
-							$addToSetValidResult = updateValid.checkForUpdate(RUN(function() {
+							$addToSetValidResult = updateValid.check(RUN(function() {
 								
 								var
 								// data for valid
@@ -809,7 +809,7 @@ FOR_BOX(function(box) {
 						
 						if ($pull !== undefined) {
 							
-							$pullValidResult = updateValid.checkForUpdate(RUN(function() {
+							$pullValidResult = updateValid.check(RUN(function() {
 								
 								var
 								// data for valid
