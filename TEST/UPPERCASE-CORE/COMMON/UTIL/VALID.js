@@ -69,7 +69,7 @@ TEST('VALID', function(check) {
 	},
 
 	// valid result
-	validResult = VALID(validData).check(data);
+	validResult = VALID(validData).checkAndWash(data);
 
 	check(CHECK_ARE_SAME([data, {
 		parentId : 'test',

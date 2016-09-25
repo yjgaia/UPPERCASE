@@ -17,5 +17,5 @@ TEST('STRINGIFY', function(check) {
 	// data str
 	dataStr = STRINGIFY(data);
 
-	check(dataStr === '{"name":"Yong Jae Sim","age":27,"country":"Korea","now":' + now.getTime() + ',"regex":"/test/g","__DATE_ATTR_NAMES":["now"],"__REGEX_ATTR_NAMES":["regex"]}');
+	check(dataStr === '{"name":"Yong Jae Sim","age":27,"country":"Korea","now":' + now.getTime() + ',"regex":"/test/g","__D":["now"],"__R":["regex"]}');
 });

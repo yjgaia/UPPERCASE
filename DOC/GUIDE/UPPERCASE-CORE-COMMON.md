@@ -1,11 +1,13 @@
 # UPPERCASE-CORE-COMMON
 UPPERCASE-CORE-COMMON은 모든 JavaScript 환경에서 사용할 수 있는 모듈입니다.
+* [API 문서](../../API/UPPERCASE-CORE/COMMON/README.md)
 
 ## 목차
 * [사용방법](#사용방법)
 * [`TO_DELETE`](#to_delete)
 * [`METHOD`](#method)
 * [객체지향 관련 기능](#객체지향-관련-기능)
+* [`CONFIG`](#config)
 * [UPPERCASE의 모듈화, BOX](#uppercase의-모듈화-box)
 * [숫자 관련 기능](#숫자-관련-기능)
 * [날짜 관련 기능]()
@@ -20,9 +22,12 @@ UPPERCASE-CORE-COMMON은 모든 JavaScript 환경에서 사용할 수 있는 모
 `UPPERCASE-CORE` 폴더 내의 `COMMON.js` 파일을 복사하여 사용하거나, `npm`을 사용합니다.
 
 ### `COMMON.js` 파일을 복사하는 경우
+Node.js 환경
 ```javascript
 require('./UPPERCASE-CORE/COMMON.js');
 ```
+
+웹 브라우저 환경
 ```html
 <script src="/UPPERCASE-CORE/COMMON.js"></script>
 ```
@@ -337,6 +342,11 @@ INIT_OBJECT();
 ```javascript
 SomeObject.hello(); // 안녕하세요?
 ```
+
+## `CONFIG`
+UPPERCASE 기반 프로젝트의 설정값들을 저장하는 데이터입니다. UPPERCASE의 다른 모듈들도 이를 확장하여 사용합니다. UPPERCASE-CORE-COMMON에서는 단 하나의 설정값을 가지고 있습니다.
+
+* `isDevMode` 현재 애플리케이션이 개발 모드로 실행되었는지 설정합니다. 기본값은 `false`입니다.
 
 ## UPPERCASE의 모듈화, BOX
 UPPERCASE 기반 프로젝트에서는 모듈을 BOX라고 부릅니다. BOX에 대한 자세한 내용은 [BOX 문서](BOX.md)를 참고해주시기 바랍니다. 여기서는 코드 내에 BOX 패키지를 만들수 있는 BOX 메소드를 소개합니다.
@@ -830,7 +840,7 @@ validResult.checkHasError(); // true
 validResult.getErrors();
 ```
 
-추가로, 데이터를 검증함과 동시에 빈 값(`undefined`, `null`, `''`)은 삭제하는 `checkAndRemoveEmptyValue` 함수가 존재합니다.
+또한 데이터를 검증함과 동시에 빈 값(`undefined`, `null`, `''`)과 표현식에 정의되지 않은 값을 삭제하는 `checkAndWash` 함수가 존재합니다.
 ```javascript
 var
 // valid
@@ -853,14 +863,47 @@ valid = VALID({
 
 // data
 data = {
-    name : 'YJ Sim',
+    name : '', // 빈 값이므로 삭제 예정
 	age : 28,
-	city : 'Seoul'
+	city : 'Seoul' // 표현식에 정의되지 않은 값이므로 삭제 예정
 };
 
-valid.checkAndRemoveEmptyValue(data);
+valid.checkAndWash(data);
 
-console.log(data); // { name : 'YJ Sim', age : 28 }
+console.log(data); // { age : 28 }
+```
+
+추가로, 데이터를 검증함과 동시에 빈 문자열(`''`)을 `TO_DELETE`로 변경하고, 표현식에 정의되지 않은 값은 삭제하는 `checkForUpdate` 함수가 존재합니다. 이를 이용해 [MongoDB](http://www.mongodb.org)와 같은 시스템에서 `update` 명령을 수행할 때, 빈 문자열에 해당되는 값은 삭제하도록 설정할 수 있습니다.
+```javascript
+var
+// valid
+valid = VALID({
+
+    // 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
+	name : {
+		notEmpty : true,
+		size : {
+			min : 3,
+			max : 20
+		}
+	},
+	
+	// 나이는 정수여야 합니다.
+	age : {
+		integer : true
+	}
+}),
+
+// data
+data = {
+    name : '', // 빈 값이므로 TO_DELETE로 변경될 예정
+	age : 28,
+	city : 'Seoul' // 표현식에 정의되지 않은 값이므로 삭제 예정
+};
+
+valid.checkForUpdate(data);
+
+console.log(data); // { name : TO_DELETE, age : 28 }
 ```
 
 사용 가능한 검증식들은 다음과 같습니다.
@@ -1116,7 +1159,6 @@ interval.resume();
 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 `LOOP` 클래스로, 게임 개발 등에 사용됩니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-
 #### 로직만 존재하는 경우
 ```javascript
 LOOP(function(milliseconds) {
@@ -1585,7 +1627,7 @@ TEST('덧셈', function(check) {
 });
 ```
 ```
-[덧셈 테스트] 테스트를 통과하였습니다.
+[덧셈 테스트] 테스트를 통과하였습니다. 총 0개의 오류가 있습니다.
 ```
 
 아래 코드는 테스트에 실패합니다.

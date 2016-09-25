@@ -255,7 +255,7 @@ global.VALID = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.array
 		//REQUIRED: params.validData
-		//OPTIONAL: params.isToRemoveEmptyValue
+		//OPTIONAL: params.isToWash
 
 		var
 		// array
@@ -266,11 +266,11 @@ global.VALID = CLASS(function(cls) {
 			_ : params.validData
 		}),
 		
-		// is to remove empty value
-		isToRemoveEmptyValue = params.isToRemoveEmptyValue;
+		// is to wash
+		isToWash = params.isToWash;
 		
 		return EACH(array, function(value) {
-			if ((isToRemoveEmptyValue === true ? valid.checkAndRemoveEmptyValue : valid.check)({
+			if ((isToWash === true ? valid.checkAndWash : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
 				return false;
@@ -282,7 +282,7 @@ global.VALID = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validData
-		//OPTIONAL: params.isToRemoveEmptyValue
+		//OPTIONAL: params.isToWash
 
 		var
 		// array
@@ -293,11 +293,11 @@ global.VALID = CLASS(function(cls) {
 			_ : params.validData
 		}),
 		
-		// is to remove empty value
-		isToRemoveEmptyValue = params.isToRemoveEmptyValue;
+		// is to wash
+		isToWash = params.isToWash;
 		
 		return EACH(data, function(value) {
-			if ((isToRemoveEmptyValue === true ? valid.checkAndRemoveEmptyValue : valid.check)({
+			if ((isToWash === true ? valid.checkAndWash : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
 				return false;
@@ -309,7 +309,7 @@ global.VALID = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validDataSet
-		//OPTIONAL: params.isToRemoveEmptyValue
+		//OPTIONAL: params.isToWash
 
 		var
 		// data
@@ -318,10 +318,10 @@ global.VALID = CLASS(function(cls) {
 		// valid
 		valid = VALID(params.validDataSet),
 		
-		// is to remove empty value
-		isToRemoveEmptyValue = params.isToRemoveEmptyValue;
+		// is to wash
+		isToWash = params.isToWash;
 		
-		return (isToRemoveEmptyValue === true ? valid.checkAndRemoveEmptyValue : valid.check)(data).checkHasError() !== true;
+		return (isToWash === true ? valid.checkAndWash : valid.check)(data).checkHasError() !== true;
 	};
 
 	cls.equal = equal = function(params) {
@@ -357,14 +357,18 @@ global.VALID = CLASS(function(cls) {
 				init : function(inner, self, params) {
 					//REQUIRED: params
 					//REQUIRED: params.data
-					//OPTIONAL: params.isToRemoveEmptyValue
+					//OPTIONAL: params.isToWash
+					//OPTIONAL: params.isForUpdate
 
 					var
 					// data
 					data = params.data,
 
-					// is to remove empty value
-					isToRemoveEmptyValue = params.isToRemoveEmptyValue,
+					// is to wash
+					isToWash = params.isToWash,
+					
+					// is for update
+					isForUpdate = params.isForUpdate,
 
 					// has error
 					hasError = false,
@@ -388,16 +392,16 @@ global.VALID = CLASS(function(cls) {
 								var
 								// value
 								value = data[attr];
-
-								if (isToRemoveEmptyValue !== true && value === undefined) {
+								
+								if (isForUpdate === true && value === undefined) {
 
 									// break.
 									return false;
 								}
 
-								if (name !== 'notEmpty' && notEmpty(value) !== true) {
+								if (isToWash === true && name !== 'notEmpty' && notEmpty(value) !== true) {
 									
-									data[attr] = isToRemoveEmptyValue !== true ? TO_DELETE : undefined;
+									data[attr] = isForUpdate === true ? TO_DELETE : undefined;
 									
 									// continue.
 									return true;
@@ -429,7 +433,7 @@ global.VALID = CLASS(function(cls) {
 									if (element({
 										validData : validParams,
 										array : value,
-										isToRemoveEmptyValue : isToRemoveEmptyValue
+										isToWash : isToWash
 									}) === false) {
 
 										hasError = true;
@@ -450,7 +454,7 @@ global.VALID = CLASS(function(cls) {
 									if (property({
 										validData : validParams,
 										data : value,
-										isToRemoveEmptyValue : isToRemoveEmptyValue
+										isToWash : isToWash
 									}) === false) {
 
 										hasError = true;
@@ -471,7 +475,7 @@ global.VALID = CLASS(function(cls) {
 									if (detail({
 										validDataSet : validParams,
 										data : value,
-										isToRemoveEmptyValue : isToRemoveEmptyValue
+										isToWash : isToWash
 									}) === false) {
 
 										hasError = true;
@@ -623,11 +627,14 @@ global.VALID = CLASS(function(cls) {
 						}
 					});
 
-					EACH(data, function(value, attr) {
-						if (validDataSet[attr] === undefined) {
-							delete data[attr];
-						}
-					});
+					if (isToWash === true) {
+						
+						EACH(data, function(value, attr) {
+							if (validDataSet[attr] === undefined) {
+								delete data[attr];
+							}
+						});
+					}
 
 					self.checkHasError = checkHasError = function() {
 						return hasError;
@@ -642,8 +649,11 @@ global.VALID = CLASS(function(cls) {
 			// check.
 			check,
 
-			// check and remove empty value.
-			checkAndRemoveEmptyValue,
+			// check and wash.
+			checkAndWash,
+			
+			// check for update.
+			checkForUpdate,
 			
 			// get valid data set.
 			getValidDataSet;
@@ -654,10 +664,18 @@ global.VALID = CLASS(function(cls) {
 				});
 			};
 
-			self.checkAndRemoveEmptyValue = checkAndRemoveEmptyValue = function(data) {
+			self.checkAndWash = checkAndWash = function(data) {
 				return Check({
 					data : data,
-					isToRemoveEmptyValue : true
+					isToWash : true
+				});
+			};
+
+			self.checkForUpdate = checkForUpdate = function(data) {
+				return Check({
+					data : data,
+					isToWash : true,
+					isForUpdate : true
 				});
 			};
 			

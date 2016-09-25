@@ -231,7 +231,7 @@ FOR_BOX(function(box) {
 							}
 		
 							if (createValid !== undefined) {
-								validResult = createValid.checkAndRemoveEmptyValue(data);
+								validResult = createValid.checkAndWash(data);
 							}
 		
 							if (validResult !== undefined && validResult.checkHasError() === true) {
@@ -556,15 +556,15 @@ FOR_BOX(function(box) {
 		
 							if (updateValid !== undefined) {
 								
-								validResult = updateValid.check(data);
+								validResult = updateValid.checkForUpdate(data);
 								
 								if ($inc !== undefined) {
-									$incValidResult = updateValid.check($inc);
+									$incValidResult = updateValid.checkForUpdate($inc);
 								}
 								
 								if ($push !== undefined) {
 									
-									$pushValidResult = updateValid.check(RUN(function() {
+									$pushValidResult = updateValid.checkForUpdate(RUN(function() {
 										
 										var
 										// data for valid
@@ -580,7 +580,7 @@ FOR_BOX(function(box) {
 								
 								if ($pull !== undefined) {
 									
-									$pullValidResult = updateValid.check(RUN(function() {
+									$pullValidResult = updateValid.checkForUpdate(RUN(function() {
 										
 										var
 										// data for valid

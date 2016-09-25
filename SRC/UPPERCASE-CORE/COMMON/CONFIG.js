@@ -3,6 +3,6 @@
  */
 global.CONFIG = {
 	
-	// 개발 모드
+	// 개발 모드 설정
 	isDevMode : false
 };

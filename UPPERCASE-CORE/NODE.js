@@ -9,7 +9,7 @@ Welcome to UPPERCASE-CORE! (http://uppercase.io)
  */
 global.CONFIG = {
 	
-	// 개발 모드
+	// 개발 모드 설정
 	isDevMode : false
 };
 
@@ -914,7 +914,7 @@ global.TEST = METHOD(function(m) {
 				throwError;
 
 				if (bool === true) {
-					console.log('[' + name + ' 테스트] 테스트를 통과하였습니다.');
+					console.log('[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
 				} else {
 
 					temp.__THROW_ERROR_$$$ = function() {
@@ -935,7 +935,7 @@ global.TEST = METHOD(function(m) {
 
 					errorCount += 1;
 
-					console.log('[' + name + ' 테스트] ' + line + '번째 줄에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
+					console.log('[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
 				}
 			});
 		}
@@ -1121,33 +1121,34 @@ global.VALID = CLASS(function(cls) {
 
 	cls.regex = regex = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.pattern
 		//REQUIRED: params.value
+		//REQUIRED: params.pattern
 
 		var
-		// pattern
-		pattern = params.pattern,
-
 		// string
-		str = String(params.value);
+		str = String(params.value),
+		
+		// pattern
+		pattern = params.pattern;
 
 		return str === str.match(pattern)[0];
 	};
 
 	cls.size = size = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.value
 		//OPTIONAL: params.min
 		//REQUIRED: params.max
-		//REQUIRED: params.value
 
 		var
+		// string
+		str = String(params.value),
+		
 		// min
 		min = params.min,
 
 		// max
-		max = params.max,
-
-		// string
-		str = String(params.value);
+		max = params.max;
 		
 		if (min === undefined) {
 			min = 0;
@@ -1201,30 +1202,30 @@ global.VALID = CLASS(function(cls) {
 
 	cls.min = min = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.min
 		//REQUIRED: params.value
+		//REQUIRED: params.min
 
 		var
-		// min
-		min = params.min,
-
 		// value
-		value = params.value;
+		value = params.value,
+		
+		// min
+		min = params.min;
 
 		return real(value) === true && min <= value;
 	};
 
 	cls.max = max = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.max
 		//REQUIRED: params.value
+		//REQUIRED: params.max
 
 		var
-		// max
-		max = params.max,
-
 		// value
-		value = params.value;
+		value = params.value,
+		
+		// max
+		max = params.max;
 
 		return real(value) === true && max >= value;
 	};
@@ -1262,15 +1263,15 @@ global.VALID = CLASS(function(cls) {
 
 	cls.one = one = function(params) {
 		//REQUIRED: params
-		//REQUIRED: params.array
 		//REQUIRED: params.value
+		//REQUIRED: params.array
 
 		var
-		// array
-		array = params.array,
-		
 		// value
-		value = params.value;
+		value = params.value,
+		
+		// array
+		array = params.array;
 
 		return EACH(array, function(_value) {
 			if (value === _value) {
@@ -1295,6 +1296,7 @@ global.VALID = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.array
 		//REQUIRED: params.validData
+		//OPTIONAL: params.isToWash
 
 		var
 		// array
@@ -1303,10 +1305,13 @@ global.VALID = CLASS(function(cls) {
 		// valid
 		valid = VALID({
 			_ : params.validData
-		});
-
+		}),
+		
+		// is to wash
+		isToWash = params.isToWash;
+		
 		return EACH(array, function(value) {
-			if (valid.check({
+			if ((isToWash === true ? valid.checkAndWash : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
 				return false;
@@ -1318,6 +1323,7 @@ global.VALID = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validData
+		//OPTIONAL: params.isToWash
 
 		var
 		// array
@@ -1326,10 +1332,13 @@ global.VALID = CLASS(function(cls) {
 		// valid
 		valid = VALID({
 			_ : params.validData
-		});
-
+		}),
+		
+		// is to wash
+		isToWash = params.isToWash;
+		
 		return EACH(data, function(value) {
-			if (valid.check({
+			if ((isToWash === true ? valid.checkAndWash : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
 				return false;
@@ -1341,15 +1350,19 @@ global.VALID = CLASS(function(cls) {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validDataSet
+		//OPTIONAL: params.isToWash
 
 		var
 		// data
 		data = params.data,
 
 		// valid
-		valid = VALID(params.validDataSet);
-
-		return valid.check(data).checkHasError() !== true;
+		valid = VALID(params.validDataSet),
+		
+		// is to wash
+		isToWash = params.isToWash;
+		
+		return (isToWash === true ? valid.checkAndWash : valid.check)(data).checkHasError() !== true;
 	};
 
 	cls.equal = equal = function(params) {
@@ -1385,12 +1398,16 @@ global.VALID = CLASS(function(cls) {
 				init : function(inner, self, params) {
 					//REQUIRED: params
 					//REQUIRED: params.data
+					//OPTIONAL: params.isToWash
 					//OPTIONAL: params.isForUpdate
 
 					var
 					// data
 					data = params.data,
 
+					// is to wash
+					isToWash = params.isToWash,
+					
 					// is for update
 					isForUpdate = params.isForUpdate,
 
@@ -1416,14 +1433,14 @@ global.VALID = CLASS(function(cls) {
 								var
 								// value
 								value = data[attr];
-
+								
 								if (isForUpdate === true && value === undefined) {
 
 									// break.
 									return false;
 								}
 
-								if (name !== 'notEmpty' && notEmpty(value) !== true) {
+								if (isToWash === true && name !== 'notEmpty' && notEmpty(value) !== true) {
 									
 									data[attr] = isForUpdate === true ? TO_DELETE : undefined;
 									
@@ -1456,7 +1473,8 @@ global.VALID = CLASS(function(cls) {
 
 									if (element({
 										validData : validParams,
-										array : value
+										array : value,
+										isToWash : isToWash
 									}) === false) {
 
 										hasError = true;
@@ -1476,7 +1494,8 @@ global.VALID = CLASS(function(cls) {
 
 									if (property({
 										validData : validParams,
-										data : value
+										data : value,
+										isToWash : isToWash
 									}) === false) {
 
 										hasError = true;
@@ -1496,7 +1515,8 @@ global.VALID = CLASS(function(cls) {
 
 									if (detail({
 										validDataSet : validParams,
-										data : value
+										data : value,
+										isToWash : isToWash
 									}) === false) {
 
 										hasError = true;
@@ -1648,11 +1668,14 @@ global.VALID = CLASS(function(cls) {
 						}
 					});
 
-					EACH(data, function(value, attr) {
-						if (validDataSet[attr] === undefined) {
-							delete data[attr];
-						}
-					});
+					if (isToWash === true) {
+						
+						EACH(data, function(value, attr) {
+							if (validDataSet[attr] === undefined) {
+								delete data[attr];
+							}
+						});
+					}
 
 					self.checkHasError = checkHasError = function() {
 						return hasError;
@@ -1667,6 +1690,9 @@ global.VALID = CLASS(function(cls) {
 			// check.
 			check,
 
+			// check and wash.
+			checkAndWash,
+			
 			// check for update.
 			checkForUpdate,
 			
@@ -1679,9 +1705,17 @@ global.VALID = CLASS(function(cls) {
 				});
 			};
 
+			self.checkAndWash = checkAndWash = function(data) {
+				return Check({
+					data : data,
+					isToWash : true
+				});
+			};
+
 			self.checkForUpdate = checkForUpdate = function(data) {
 				return Check({
 					data : data,
+					isToWash : true,
 					isForUpdate : true
 				});
 			};
@@ -3317,4 +3351,1838 @@ global.REVERSE_EACH = METHOD({
 
 		return true;
 	}
+});
+
+/**
+ * 지정된 경로에 파일이 존재하는지 확인합니다.
+ */
+global.CHECK_IS_EXISTS_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs');
+
+	return {
+
+		run : function(pathOrParams, callback) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path	확인할 경로
+			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callback
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+				fs.exists(path, callback);
+			}
+
+			// when sync mode
+			else {
+				return fs.existsSync(path);
+			}
+		}
+	};
+});
+
+/**
+ * 지정된 경로가 (파일이 아닌) 폴더인지 확인합니다.
+ */
+global.CHECK_IS_FOLDER = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path	확인할 경로
+			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+			
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+			
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+				
+				fs.stat(path, function(error, stat) {
+					
+					var
+					// error msg
+					errorMsg;
+
+					if (error !== TO_DELETE) {
+
+						errorMsg = error.toString();
+
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						} else {
+							SHOW_ERROR('[CHECK_IS_FOLDER] ERROR: ' + errorMsg);
+						}
+
+					} else if (callback !== undefined) {
+						callback(stat.isDirectory());
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+				return fs.statSync(path).isDirectory();
+			}
+		}
+	};
+});
+
+/**
+ * 파일을 복사합니다.
+ */
+global.COPY_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params
+			//REQUIRED: params.from		복사할 파일의 위치
+			//REQUIRED: params.to		파일을 복사할 위치
+			//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExistsHandler
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// from
+			from = params.from,
+
+			// to
+			to = params.to,
+
+			// is sync
+			isSync = params.isSync,
+
+			// callback.
+			callback,
+
+			// not exists handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler;
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			CREATE_FOLDER({
+				path : _path.dirname(to),
+				isSync : isSync
+			}, {
+
+				error : errorHandler,
+
+				success : function() {
+
+					// when normal mode
+					if (isSync !== true) {
+
+						CHECK_IS_EXISTS_FILE(from, function(isExists) {
+
+							var
+							// reader
+							reader;
+
+							if (isExists === true) {
+
+								reader = fs.createReadStream(from);
+
+								reader.pipe(fs.createWriteStream(to));
+
+								reader.on('error', function(error) {
+
+									var
+									// error msg
+									errorMsg = error.toString();
+
+									if (errorHandler !== undefined) {
+										errorHandler(errorMsg);
+									} else {
+										SHOW_ERROR('[COPY_FILE] ERROR:' + errorMsg);
+									}
+								});
+
+								reader.on('end', function() {
+									if (callback !== undefined) {
+										callback();
+									}
+								});
+
+							} else {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(from);
+								} else {
+									console.log(CONSOLE_YELLOW('[COPY_FILE] NOT EXISTS! <' + from + '>'));
+								}
+							}
+						});
+					}
+
+					// when sync mode
+					else {
+
+						RUN(function() {
+
+							var
+							// error msg
+							errorMsg;
+
+							try {
+
+								if (CHECK_IS_EXISTS_FILE({
+									path : from,
+									isSync : true
+								}) === true) {
+
+									fs.writeFileSync(to, fs.readFileSync(from));
+
+								} else {
+
+									if (notExistsHandler !== undefined) {
+										notExistsHandler(from);
+									} else {
+										console.log(CONSOLE_YELLOW('[COPY_FILE] NOT EXISTS! <' + from + '>'));
+									}
+
+									// do not run callback.
+									return;
+								}
+
+							} catch(error) {
+
+								if (error !== TO_DELETE) {
+
+									errorMsg = error.toString();
+
+									if (errorHandler !== undefined) {
+										errorHandler(errorMsg);
+									} else {
+										SHOW_ERROR('[COPY_FILE] ERROR: ' + errorMsg);
+									}
+								}
+							}
+
+							if (callback !== undefined) {
+								callback();
+							}
+						});
+					}
+				}
+			});
+		}
+	};
+});
+
+/**
+ * 폴더를 생성합니다.
+ */
+global.CREATE_FOLDER = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path	폴더를 생성할 경로
+			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// folder path
+			folderPath,
+
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						if (callback !== undefined) {
+							callback();
+						}
+
+					} else {
+
+						folderPath = _path.dirname(path);
+
+						CHECK_IS_EXISTS_FILE(folderPath, function(isExists) {
+
+							if (isExists === true) {
+
+								fs.mkdir(path, function(error) {
+
+									var
+									// error msg
+									errorMsg;
+
+									if (error !== TO_DELETE) {
+
+										errorMsg = error.toString();
+
+										if (errorHandler !== undefined) {
+											errorHandler(errorMsg);
+										} else {
+											SHOW_ERROR('[CREATE_FOLDER] ERROR: ' + errorMsg);
+										}
+
+									} else {
+										callback();
+									}
+								});
+
+							} else {
+
+								CREATE_FOLDER(folderPath, function() {
+
+									// retry.
+									CREATE_FOLDER(path, callback);
+								});
+							}
+						});
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				RUN(function() {
+
+					var
+					// error msg
+					errorMsg;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) !== true) {
+
+							folderPath = _path.dirname(path);
+
+							if (CHECK_IS_EXISTS_FILE({
+								path : folderPath,
+								isSync : true
+							}) === true) {
+								fs.mkdirSync(path);
+							} else {
+
+								CREATE_FOLDER({
+									path : folderPath,
+									isSync : true
+								});
+
+								// retry.
+								CREATE_FOLDER({
+									path : path,
+									isSync : true
+								});
+							}
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('[CREATE_FOLDER] ERROR: ' + errorMsg);
+							}
+						}
+					}
+
+					if (callback !== undefined) {
+						callback();
+					}
+				});
+			}
+		}
+	};
+});
+
+/**
+ * 지정된 경로에 위치한 파일들의 이름 목록을 불러옵니다.
+ */
+global.FIND_FILE_NAMES = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path	파일들이 위치한 경로
+			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExistsHandler
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not exists handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler,
+
+			// file names
+			fileNames = [];
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						fs.readdir(path, function(error, names) {
+
+							var
+							// error msg
+							errorMsg;
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									SHOW_ERROR('[FIND_FILE_NAMES] ERROR:' + errorMsg);
+								}
+
+							} else if (callback !== undefined) {
+
+								PARALLEL(names, [
+								function(name, done) {
+
+									if (name[0] !== '.') {
+
+										fs.stat(path + '/' + name, function(error, stats) {
+
+											var
+											// error msg
+											errorMsg;
+
+											if (error !== TO_DELETE) {
+
+												errorMsg = error.toString();
+
+												if (errorHandler !== undefined) {
+													errorHandler(errorMsg);
+												} else {
+													SHOW_ERROR('[FIND_FILE_NAMES] ERROR:' + errorMsg);
+												}
+
+											} else {
+
+												if (stats.isDirectory() !== true) {
+													fileNames.push(name);
+												}
+
+												done();
+											}
+										});
+
+									} else {
+										done();
+									}
+								},
+
+								function() {
+									if (callback !== undefined) {
+										callback(fileNames);
+									}
+								}]);
+							}
+						});
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				return RUN(function() {
+
+					var
+					// names
+					names,
+
+					// error msg
+					errorMsg;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+
+							names = fs.readdirSync(path);
+
+							EACH(names, function(name) {
+								if (name[0] !== '.' && fs.statSync(path + '/' + name).isDirectory() !== true) {
+									fileNames.push(name);
+								}
+							});
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[FIND_FILE_NAMES] NOT EXISTS! <' + path + '>'));
+							}
+
+							// do not run callback.
+							return;
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('[FIND_FILE_NAMES] ERROR: ' + errorMsg);
+							}
+						}
+					}
+
+					if (callback !== undefined) {
+						callback(fileNames);
+					}
+
+					return fileNames;
+				});
+			}
+		}
+	};
+});
+
+/**
+ * 지정된 경로에 위치한 폴더들의 이름 목록을 불러옵니다.
+ */
+global.FIND_FOLDER_NAMES = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path	폴더들이 위치한 경로
+			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExistsHandler
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not exists handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler,
+
+			// file names
+			folderNames = [];
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						fs.readdir(path, function(error, names) {
+
+							var
+							// error msg
+							errorMsg;
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									SHOW_ERROR('[FIND_FOLDER_NAMES] ERROR:' + errorMsg);
+								}
+
+							} else if (callback !== undefined) {
+
+								PARALLEL(names, [
+								function(name, done) {
+
+									if (name[0] !== '.') {
+
+										fs.stat(path + '/' + name, function(error, stats) {
+
+											var
+											// error msg
+											errorMsg;
+
+											if (error !== TO_DELETE) {
+
+												errorMsg = error.toString();
+
+												if (errorHandler !== undefined) {
+													errorHandler(errorMsg);
+												} else {
+													SHOW_ERROR('[FIND_FOLDER_NAMES] ERROR:' + errorMsg);
+												}
+
+											} else {
+
+												if (stats.isDirectory() === true) {
+													folderNames.push(name);
+												}
+
+												done();
+											}
+										});
+
+									} else {
+										done();
+									}
+								},
+
+								function() {
+									if (callback !== undefined) {
+										callback(folderNames);
+									}
+								}]);
+							}
+						});
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				return RUN(function() {
+
+					var
+					// names
+					names,
+
+					// error msg
+					errorMsg;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+
+							names = fs.readdirSync(path);
+
+							EACH(names, function(name) {
+								if (name[0] !== '.' && fs.statSync(path + '/' + name).isDirectory() === true) {
+									folderNames.push(name);
+								}
+							});
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] NOT EXISTS! <' + path + '>'));
+							}
+
+							// do not run callback.
+							return;
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('[FIND_FOLDER_NAMES] ERROR: ' + errorMsg);
+							}
+						}
+					}
+
+					if (callback !== undefined) {
+						callback(folderNames);
+					}
+
+					return folderNames;
+				});
+			}
+		}
+	};
+});
+
+/**
+ * 파일의 정보를 불러옵니다.
+ * 
+ * 파일의 크기(size), 생성 시간(createTime), 최종 수정 시간(lastUpdateTime)을 불러옵니다.
+ */
+global.GET_FILE_INFO = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path	불러올 파일의 경로
+			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExists
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not eixsts handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						fs.stat(path, function(error, stat) {
+
+							var
+							// error msg
+							errorMsg;
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									SHOW_ERROR('[GET_FILE_INFO] ERROR: ' + errorMsg);
+								}
+
+							} else if (stat.isDirectory() === true) {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(path);
+								} else {
+									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+								}
+
+							} else if (callback !== undefined) {
+								callback({
+									size : stat.size,
+									createTime : stat.birthtime,
+									lastUpdateTime : stat.mtime
+								});
+							}
+						});
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				return RUN(function() {
+
+					var
+					// error msg
+					errorMsg,
+
+					// stat
+					stat;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+							
+							stat = fs.statSync(path);
+
+							if (stat.isDirectory() === true) {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(path);
+								} else {
+									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+								}
+								
+							} else {
+								
+								if (callback !== undefined) {
+									callback({
+										size : stat.size,
+										createTime : stat.birthtime,
+										lastUpdateTime : stat.mtime
+									});
+								}
+								
+								return {
+									size : stat.size,
+									createTime : stat.birthtime,
+									lastUpdateTime : stat.mtime
+								};
+							}
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+							}
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('[GET_FILE_INFO] ERROR: ' + errorMsg);
+							}
+						}
+					}
+
+					// do not run callback.
+					return;
+				});
+			}
+		}
+	};
+});
+
+/**
+ * 파일의 위치를 이동시킵니다.
+ */
+global.MOVE_FILE = METHOD({
+
+	run : function(params, callbackOrHandlers) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.from		파일의 원래 위치
+		//REQUIRED: params.to		파일을 옮길 위치
+		//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+		//REQUIRED: callbackOrHandlers
+		//REQUIRED: callbackOrHandlers.success
+		//OPTIONAL: callbackOrHandlers.notExistsHandler
+		//OPTIONAL: callbackOrHandlers.error
+
+		var
+		// from
+		from = params.from,
+
+		// is sync
+		isSync = params.isSync,
+
+		// callback.
+		callback,
+
+		// not exists handler.
+		notExistsHandler,
+
+		// error handler.
+		errorHandler;
+
+		if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+			callback = callbackOrHandlers;
+		} else {
+			callback = callbackOrHandlers.success;
+			notExistsHandler = callbackOrHandlers.notExists;
+			errorHandler = callbackOrHandlers.error;
+		}
+
+		COPY_FILE(params, {
+			error : errorHandler,
+			notExists : notExistsHandler,
+			success : function() {
+
+				REMOVE_FILE({
+					path : from,
+					isSync : isSync
+				}, {
+					error : errorHandler,
+					notExists : notExistsHandler,
+					success : callback
+				});
+			}
+		});
+	}
+});
+
+/**
+ * 파일의 내용을 불러옵니다.
+ * 
+ * 내용을 Buffer형으로 불러오기 때문에, 내용을 문자열로 불러오려면 toString 함수를 이용하시기 바랍니다.
+ */
+global.READ_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path	불러올 파일의 경로
+			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExists
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not eixsts handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						fs.stat(path, function(error, stat) {
+
+							var
+							// error msg
+							errorMsg;
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									SHOW_ERROR('[READ_FILE] ERROR: ' + errorMsg);
+								}
+
+							} else if (stat.isDirectory() === true) {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(path);
+								} else {
+									console.log(CONSOLE_YELLOW('[READ_FILE] NOT EXISTS! <' + path + '>'));
+								}
+
+							} else {
+
+								fs.readFile(path, function(error, buffer) {
+
+									var
+									// error msg
+									errorMsg;
+
+									if (error !== TO_DELETE) {
+
+										errorMsg = error.toString();
+
+										if (errorHandler !== undefined) {
+											errorHandler(errorMsg);
+										} else {
+											SHOW_ERROR('[READ_FILE] ERROR: ' + errorMsg);
+										}
+
+									} else if (callback !== undefined) {
+										callback(buffer);
+									}
+								});
+							}
+						});
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[READ_FILE] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				return RUN(function() {
+
+					var
+					// error msg
+					errorMsg,
+
+					// buffer
+					buffer;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+
+							if (fs.statSync(path).isDirectory() === true) {
+
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(path);
+								} else {
+									console.log(CONSOLE_YELLOW('[READ_FILE] NOT EXISTS! <' + path + '>'));
+								}
+								
+							} else {
+								
+								buffer = fs.readFileSync(path);
+			
+								if (callback !== undefined) {
+									callback(buffer);
+								}
+			
+								return buffer;
+							}
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[READ_FILE] NOT EXISTS! <' + path + '>'));
+							}
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('[READ_FILE] ERROR: ' + errorMsg);
+							}
+						}
+					}
+
+					// do not run callback.
+					return;
+				});
+			}
+		}
+	};
+});
+
+/**
+ * 파일을 삭제합니다.
+ */
+global.REMOVE_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path	삭제할 파일의 경로
+			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//REQUIRED: callbackOrHandlers
+			//REQUIRED: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExists
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not eixsts handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				callback = callbackOrHandlers.success;
+				notExistsHandler = callbackOrHandlers.notExists;
+				errorHandler = callbackOrHandlers.error;
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+
+						fs.unlink(path, function(error) {
+
+							var
+							// error msg
+							errorMsg;
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									SHOW_ERROR('[REMOVE_FILE] ERROR: ' + errorMsg);
+								}
+
+							} else {
+
+								if (callback !== undefined) {
+									callback();
+								}
+							}
+						});
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[REMOVE_FILE] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				RUN(function() {
+
+					var
+					// error msg
+					errorMsg;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+
+							fs.unlinkSync(path);
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[REMOVE_FILE] NOT EXISTS! <' + path + '>'));
+							}
+
+							// do not run callback.
+							return;
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('[REMOVE_FILE] ERROR: ' + errorMsg);
+							}
+						}
+					}
+
+					if (callback !== undefined) {
+						callback();
+					}
+				});
+			}
+		}
+	};
+});
+
+/**
+ * 폴더를 삭제합니다.
+ * 
+ * 폴더 내의 모든 파일 및 폴더를 삭제하므로, 주의해서 사용해야 합니다.
+ */
+global.REMOVE_FOLDER = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs');
+
+	return {
+
+		run : function(pathOrParams, callbackOrHandlers) {
+			//REQUIRED: pathOrParams
+			//REQUIRED: pathOrParams.path	삭제할 폴더의 경로
+			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//REQUIRED: callbackOrHandlers
+			//REQUIRED: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.notExists
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path,
+
+			// is sync
+			isSync,
+
+			// callback.
+			callback,
+
+			// not eixsts handler.
+			notExistsHandler,
+
+			// error handler.
+			errorHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(pathOrParams) !== true) {
+				path = pathOrParams;
+			} else {
+				path = pathOrParams.path;
+				isSync = pathOrParams.isSync;
+			}
+
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				callback = callbackOrHandlers.success;
+				notExistsHandler = callbackOrHandlers.notExists;
+				errorHandler = callbackOrHandlers.error;
+			}
+
+			// when normal mode
+			if (isSync !== true) {
+
+				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+
+					if (isExists === true) {
+						
+						NEXT([
+						function(next) {
+							
+							FIND_FILE_NAMES(path, function(fileNames) {
+								
+								PARALLEL(fileNames, [
+								function(fileName, done) {
+									REMOVE_FILE(path + '/' + fileName, done);
+								},
+								
+								function() {
+									next();
+								}]);
+							});
+						},
+						
+						function(next) {
+							return function() {
+								
+								FIND_FOLDER_NAMES(path, function(folderNames) {
+									
+									PARALLEL(folderNames, [
+									function(folderName, done) {
+										REMOVE_FOLDER(path + '/' + folderName, done);
+									},
+									
+									function() {
+										next();
+									}]);
+								});
+							};
+						},
+						
+						function(next) {
+							return function() {
+								
+								fs.rmdir(path, function(error) {
+		
+									var
+									// error msg
+									errorMsg;
+		
+									if (error !== TO_DELETE) {
+		
+										errorMsg = error.toString();
+		
+										if (errorHandler !== undefined) {
+											errorHandler(errorMsg);
+										} else {
+											SHOW_ERROR('[REMOVE_FOLDER] ERROR: ' + errorMsg);
+										}
+		
+									} else {
+		
+										if (callback !== undefined) {
+											callback();
+										}
+									}
+								});
+							};
+						}]);
+
+					} else {
+
+						if (notExistsHandler !== undefined) {
+							notExistsHandler(path);
+						} else {
+							console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] NOT EXISTS! <' + path + '>'));
+						}
+					}
+				});
+			}
+
+			// when sync mode
+			else {
+
+				RUN(function() {
+
+					var
+					// error msg
+					errorMsg;
+
+					try {
+
+						if (CHECK_IS_EXISTS_FILE({
+							path : path,
+							isSync : true
+						}) === true) {
+							
+							FIND_FILE_NAMES({
+								path : path,
+								isSync : true
+							}, EACH(function(fileName) {
+								
+								REMOVE_FILE({
+									path : path + '/' + fileName,
+									isSync : true
+								});
+							}));
+							
+							FIND_FOLDER_NAMES({
+								path : path,
+								isSync : true
+							}, EACH(function(folderName) {
+								
+								REMOVE_FOLDER({
+									path : path + '/' + folderName,
+									isSync : true
+								});
+							}));
+							
+							fs.rmdirSync(path);
+
+						} else {
+
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(path);
+							} else {
+								console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] NOT EXISTS! <' + path + '>'));
+							}
+
+							// do not run callback.
+							return;
+						}
+
+					} catch(error) {
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('[REMOVE_FOLDER] ERROR: ' + errorMsg);
+							}
+						}
+					}
+
+					if (callback !== undefined) {
+						callback();
+					}
+				});
+			}
+		}
+	};
+});
+
+/**
+ * 파일을 작성합니다.
+ * 
+ * 파일이 없으면 파일을 생성하고, 파일이 이미 있으면 내용을 덮어씁니다.
+ */
+global.WRITE_FILE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: fs
+	fs = require('fs'),
+
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params
+			//REQUIRED: params.path		작성할 파일의 경로
+			//OPTIONAL: params.content	파일에 작성할 내용 (문자열)
+			//OPTIONAL: params.buffer	파일에 작성할 내용 (Buffer)
+			//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// path
+			path = params.path,
+
+			// content
+			content = params.content,
+
+			// buffer
+			buffer = params.buffer,
+
+			// is sync
+			isSync = params.isSync,
+
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			CREATE_FOLDER({
+				path : _path.dirname(path),
+				isSync : isSync
+			}, function() {
+
+				// when normal mode
+				if (isSync !== true) {
+
+					fs.writeFile(path, buffer !== undefined ? buffer : content, function(error) {
+
+						var
+						// error msg
+						errorMsg;
+
+						if (error !== TO_DELETE) {
+
+							errorMsg = error.toString();
+
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('[WRITE_FILE] ERROR:' + errorMsg);
+							}
+
+						} else if (callback !== undefined) {
+							callback();
+						}
+					});
+				}
+
+				// when sync mode
+				else {
+
+					RUN(function() {
+
+						var
+						// error msg
+						errorMsg;
+
+						try {
+
+							fs.writeFileSync(path, buffer !== undefined ? buffer : content);
+
+						} catch(error) {
+
+							if (error !== TO_DELETE) {
+
+								errorMsg = error.toString();
+
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									SHOW_ERROR('[WRITE_FILE] ERROR: ' + errorMsg);
+								}
+							}
+						}
+
+						if (callback !== undefined) {
+							callback();
+						}
+					});
+				}
+			});
+		}
+	};
+});
+
+/**
+ * CSS 코드를 압축합니다.
+ */
+global.MINIFY_CSS = METHOD(function() {
+	'use strict';
+
+	var
+	// sqwish
+	sqwish = require('sqwish');
+
+	return {
+
+		run : function(code) {
+			//REQUIRED: code
+
+			return sqwish.minify(code.toString());
+		}
+	};
+});
+
+/**
+ * JavaScript 코드를 압축합니다.
+ */
+global.MINIFY_JS = METHOD(function() {
+	'use strict';
+
+	var
+	// uglify-js
+	uglifyJS = require('uglify-js');
+
+	return {
+
+		run : function(code) {
+			//REQUIRED: code
+
+			return uglifyJS.minify(code.toString(), {
+				fromString : true,
+				mangle : true,
+				output : {
+					comments : /@license|@preserve|^!/
+				}
+			}).code;
+		}
+	};
 });

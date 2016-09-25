@@ -1,8 +1,5 @@
-# UJS-NODE
-Node.js 환경에서 사용할 수 있는 유틸리티 라이브러리입니다.
 
 ## 파일 처리
-파일을 처리하는 다양한 기능들을 소개합니다. 아래 기능들은 `isSync` 파라미터로 callback 없이 바로 처리할 수 있지만, 처리하는 동안 프로세스가 멈추게 되어 성능이 떨어집니다. 특수한 경우가 아니라면 `isSync` 파라미터를 사용하지 마세요.
 
 * `WRITE_FILE` 파일에 내용을 작성합니다. 파일이 없으면 파일을 생성합니다. [예제보기](../EXAMPLES/NODE/FILE/WRITE_FILE.js)
     * `WRITE_FILE({path:, content:}, callbackOrHandlers)`
@@ -137,7 +134,7 @@ Node.js 환경에서 사용할 수 있는 유틸리티 라이브러리입니다.
 	})
     ```
 	
-* `REMOVE_FOLDER` 폴더를 삭제합니다. 폴더 내의 모든 파일 및 폴더를 삭제하므로, 주의하여 사용해야 합니다. [예제보기](../EXAMPLES/NODE/FILE/REMOVE_FOLDER.js)
+* `REMOVE_FOLDER` 폴더를 삭제합니다. 폴더 내의 모든 파일 및 폴더를 삭제하므로, 주의해서 사용해야 합니다. [예제보기](../EXAMPLES/NODE/FILE/REMOVE_FOLDER.js)
     * `REMOVE_FOLDER(path, callbackOrHandlers)`
     * `REMOVE_FOLDER({path:, isSync:})`
 
