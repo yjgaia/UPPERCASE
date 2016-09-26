@@ -17,9 +17,9 @@ global.GET_FILE_INFO = METHOD(function() {
 			//REQUIRED: pathOrParams.path	불러올 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -28,14 +28,14 @@ global.GET_FILE_INFO = METHOD(function() {
 			// is sync
 			isSync,
 
-			// callback.
-			callback,
-
 			// not eixsts handler.
 			notExistsHandler,
 
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -49,9 +49,9 @@ global.GET_FILE_INFO = METHOD(function() {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					notExistsHandler = callbackOrHandlers.notExists;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -75,7 +75,7 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR('[GET_FILE_INFO] ERROR: ' + errorMsg);
+									SHOW_ERROR('GET_FILE_INFO', errorMsg);
 								}
 
 							} else if (stat.isDirectory() === true) {
@@ -83,7 +83,7 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
 								}
 
 							} else if (callback !== undefined) {
@@ -100,7 +100,7 @@ global.GET_FILE_INFO = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+							console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
 						}
 					}
 				});
@@ -132,7 +132,7 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
 								}
 								
 							} else {
@@ -157,7 +157,7 @@ global.GET_FILE_INFO = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+								console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
 							}
 						}
 
@@ -170,7 +170,7 @@ global.GET_FILE_INFO = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[GET_FILE_INFO] ERROR: ' + errorMsg);
+								SHOW_ERROR('GET_FILE_INFO', errorMsg);
 							}
 						}
 					}

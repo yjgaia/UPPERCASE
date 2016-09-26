@@ -15,9 +15,9 @@ global.REMOVE_FILE = METHOD(function() {
 			//REQUIRED: pathOrParams.path	삭제할 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//REQUIRED: callbackOrHandlers
-			//REQUIRED: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
 
 			var
 			// path
@@ -26,14 +26,14 @@ global.REMOVE_FILE = METHOD(function() {
 			// is sync
 			isSync,
 
-			// callback.
-			callback,
-
 			// not eixsts handler.
 			notExistsHandler,
 
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -46,9 +46,9 @@ global.REMOVE_FILE = METHOD(function() {
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
 			} else {
-				callback = callbackOrHandlers.success;
 				notExistsHandler = callbackOrHandlers.notExists;
 				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
 			}
 
 			// when normal mode
@@ -71,7 +71,7 @@ global.REMOVE_FILE = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR('[REMOVE_FILE] ERROR: ' + errorMsg);
+									SHOW_ERROR('REMOVE_FILE', errorMsg);
 								}
 
 							} else {
@@ -87,7 +87,7 @@ global.REMOVE_FILE = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[REMOVE_FILE] NOT EXISTS! <' + path + '>'));
+							console.log(CONSOLE_YELLOW('[REMOVE_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
 						}
 					}
 				});
@@ -116,7 +116,7 @@ global.REMOVE_FILE = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[REMOVE_FILE] NOT EXISTS! <' + path + '>'));
+								console.log(CONSOLE_YELLOW('[REMOVE_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
 							}
 
 							// do not run callback.
@@ -132,7 +132,7 @@ global.REMOVE_FILE = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[REMOVE_FILE] ERROR: ' + errorMsg);
+								SHOW_ERROR('REMOVE_FILE', errorMsg);
 							}
 						}
 					}

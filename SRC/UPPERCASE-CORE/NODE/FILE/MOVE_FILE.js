@@ -10,9 +10,9 @@ global.MOVE_FILE = METHOD({
 		//REQUIRED: params.to		파일을 옮길 위치
 		//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 		//REQUIRED: callbackOrHandlers
-		//REQUIRED: callbackOrHandlers.success
 		//OPTIONAL: callbackOrHandlers.notExistsHandler
 		//OPTIONAL: callbackOrHandlers.error
+		//REQUIRED: callbackOrHandlers.success
 
 		var
 		// from
@@ -21,21 +21,21 @@ global.MOVE_FILE = METHOD({
 		// is sync
 		isSync = params.isSync,
 
-		// callback.
-		callback,
-
 		// not exists handler.
 		notExistsHandler,
 
 		// error handler.
-		errorHandler;
+		errorHandler,
+
+		// callback.
+		callback;
 
 		if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 			callback = callbackOrHandlers;
 		} else {
-			callback = callbackOrHandlers.success;
 			notExistsHandler = callbackOrHandlers.notExists;
 			errorHandler = callbackOrHandlers.error;
+			callback = callbackOrHandlers.success;
 		}
 
 		COPY_FILE(params, {

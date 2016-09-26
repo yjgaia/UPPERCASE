@@ -17,9 +17,9 @@ global.REMOVE_FOLDER = METHOD(function() {
 			//REQUIRED: pathOrParams.path	삭제할 폴더의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//REQUIRED: callbackOrHandlers
-			//REQUIRED: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
 
 			var
 			// path
@@ -28,14 +28,14 @@ global.REMOVE_FOLDER = METHOD(function() {
 			// is sync
 			isSync,
 
-			// callback.
-			callback,
-
 			// not eixsts handler.
 			notExistsHandler,
 
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -48,9 +48,9 @@ global.REMOVE_FOLDER = METHOD(function() {
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
 			} else {
-				callback = callbackOrHandlers.success;
 				notExistsHandler = callbackOrHandlers.notExists;
 				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
 			}
 
 			// when normal mode
@@ -97,19 +97,19 @@ global.REMOVE_FOLDER = METHOD(function() {
 							return function() {
 								
 								fs.rmdir(path, function(error) {
-		
+									
 									var
 									// error msg
 									errorMsg;
-		
+									
 									if (error !== TO_DELETE) {
-		
+										
 										errorMsg = error.toString();
-		
+										
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											SHOW_ERROR('[REMOVE_FOLDER] ERROR: ' + errorMsg);
+											SHOW_ERROR('REMOVE_FOLDER', errorMsg);
 										}
 		
 									} else {
@@ -127,7 +127,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] NOT EXISTS! <' + path + '>'));
+							console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] 폴더가 존재하지 않습니다. 경로: ' + path));
 						}
 					}
 				});
@@ -178,7 +178,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] NOT EXISTS! <' + path + '>'));
+								console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] 폴더가 존재하지 않습니다. 경로: ' + path));
 							}
 
 							// do not run callback.
@@ -186,15 +186,15 @@ global.REMOVE_FOLDER = METHOD(function() {
 						}
 
 					} catch(error) {
-
+						
 						if (error !== TO_DELETE) {
-
+							
 							errorMsg = error.toString();
-
+	
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[REMOVE_FOLDER] ERROR: ' + errorMsg);
+								SHOW_ERROR('REMOVE_FOLDER', errorMsg);
 							}
 						}
 					}

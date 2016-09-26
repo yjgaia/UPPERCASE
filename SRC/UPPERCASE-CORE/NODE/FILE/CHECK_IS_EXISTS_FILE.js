@@ -1,5 +1,5 @@
 /**
- * 지정된 경로에 파일이 존재하는지 확인합니다.
+ * 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
  */
 global.CHECK_IS_EXISTS_FILE = METHOD(function() {
 	'use strict';

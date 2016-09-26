@@ -18,8 +18,8 @@ global.CREATE_FOLDER = METHOD(function() {
 			//REQUIRED: pathOrParams.path	폴더를 생성할 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -31,11 +31,11 @@ global.CREATE_FOLDER = METHOD(function() {
 			// folder path
 			folderPath,
 
-			// callback.
-			callback,
-
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -49,8 +49,8 @@ global.CREATE_FOLDER = METHOD(function() {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -86,7 +86,7 @@ global.CREATE_FOLDER = METHOD(function() {
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											SHOW_ERROR('[CREATE_FOLDER] ERROR: ' + errorMsg);
+											SHOW_ERROR('CREATE_FOLDER', errorMsg);
 										}
 
 									} else {
@@ -154,7 +154,7 @@ global.CREATE_FOLDER = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[CREATE_FOLDER] ERROR: ' + errorMsg);
+								SHOW_ERROR('CREATE_FOLDER', errorMsg);
 							}
 						}
 					}

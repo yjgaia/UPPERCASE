@@ -22,8 +22,8 @@ global.WRITE_FILE = METHOD(function() {
 			//OPTIONAL: params.buffer	파일에 작성할 내용 (Buffer)
 			//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -38,18 +38,18 @@ global.WRITE_FILE = METHOD(function() {
 			// is sync
 			isSync = params.isSync,
 
-			// callback.
-			callback,
-
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -62,19 +62,19 @@ global.WRITE_FILE = METHOD(function() {
 				if (isSync !== true) {
 
 					fs.writeFile(path, buffer !== undefined ? buffer : content, function(error) {
-
+						
 						var
 						// error msg
 						errorMsg;
-
+						
 						if (error !== TO_DELETE) {
-
+							
 							errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[WRITE_FILE] ERROR:' + errorMsg);
+								SHOW_ERROR('WRITE_FILE', errorMsg);
 							}
 
 						} else if (callback !== undefined) {
@@ -97,15 +97,15 @@ global.WRITE_FILE = METHOD(function() {
 							fs.writeFileSync(path, buffer !== undefined ? buffer : content);
 
 						} catch(error) {
-
+							
 							if (error !== TO_DELETE) {
-
+								
 								errorMsg = error.toString();
-
+									
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR('[WRITE_FILE] ERROR: ' + errorMsg);
+									SHOW_ERROR('WRITE_FILE', errorMsg);
 								}
 							}
 						}

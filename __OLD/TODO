@@ -1,5 +1,4 @@
 # UPPERCASE-CORE
-- 일단 UPPERCASE-CORE-COMMON을 완벽히 만들기
 
 # UPPERCASE-ROOM
 
@@ -22,10 +21,9 @@
 - 새 버전 확인하는 기능 (uppercase.io/version을 이용)
 - UAPI에서 문서 만들 때, README.md 파일이 이미 있으면 ## API 밑에 API 목록 넣고, 없으면 맨 하단에 넣기
 
-- 기존 코딩 방법 그대로 살리고 설명과 콘솔 내용만 한글로 잘 쓰기
 - imagemagick 없이 이미지 처리 할 수 있도록
 - 업로드 기능 구현
-- SHARED_STORE를 완벽하게 구현
+- SHARED_STORE를 완벽하게 구현 (REDIS 참고)
 - 코드 설명에 예제경로 기록 (md 형식)
 
 - 영상 AVI / OGG가 지원 안됨
