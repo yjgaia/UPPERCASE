@@ -3,15 +3,32 @@ UPPERCASE-CORE-NODE는 Node.js 환경에서 사용할 수 있는 모듈입니다
 * [API 문서](../../API/UPPERCASE-CORE/NODE/README.md)
 
 ## 목차
+* [사용방법](#사용방법)
 * [손쉬운 서버 생성](#손쉬운-서버-생성)
 * 손쉬운 클러스터링
 * 이미지 처리 기능
 * [파일 처리 기능](#파일-처리-기능)
 * [HTTP 요청 기능](#http-요청-기능)
 * 시스템 관련 기능
-* 콘솔 로그 관련 기능
+* [콘솔 로그 관련 기능](#콘솔-로그-관련-기능)
 * 암호화 관련 기능
 * [코드 압축 기능](#코드-압축-기능)
+
+## 사용방법
+`UPPERCASE-CORE` 폴더 내의 `NODE.js` 파일을 복사하여 사용하거나, `npm`을 사용합니다.
+
+### `NODE.js` 파일을 복사하는 경우
+```javascript
+require('./UPPERCASE-CORE/NODE.js');
+```
+
+### `npm`을 사용하는 경우
+```
+npm install uppercase-core-node
+```
+```javascript
+require('uppercase-core-node');
+```
 
 ## 손쉬운 서버 생성
 TODO:
@@ -509,7 +526,60 @@ DOWNLOAD({
 TODO:
 
 ## 콘솔 로그 관련 기능
-TODO:
+### `CONSOLE_RED(text)`
+콘솔에 표시할 텍스트를 빨간색으로 설정합니다.
+```javascript
+console.log('이것은 ' + CONSOLE_RED('빨간색') + '입니다.');
+```
+
+### `CONSOLE_GREEN(text)`
+콘솔에 표시할 텍스트를 초록색으로 설정합니다.
+```javascript
+console.log('이것은 ' + CONSOLE_GREEN('초록색') + '입니다.');
+```
+
+### `CONSOLE_BLUE(text)`
+콘솔에 표시할 텍스트를 파란색으로 설정합니다.
+```javascript
+console.log('이것은 ' + CONSOLE_BLUE('파란색') + '입니다.');
+```
+
+### `CONSOLE_YELLOW(text)`
+콘솔에 표시할 텍스트를 노란색으로 설정합니다.
+```javascript
+console.log('이것은 ' + CONSOLE_YELLOW('노란색') + '입니다.');
+```
+
+### `SHOW_ERROR(tag, errorMsg)` `SHOW_ERROR(tag, errorMsg, params)`
+콘솔에 오류 메시지를 출력합니다.
+
+다음 코드를 실행하면,
+```javascript
+SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!');
+```
+콘솔에 다음과 같은 오류 메시지를 빨간색으로 출력합니다.
+```
+[샘플 오류] 오류가 발생했습니다. 오류 메시지: 엄청난 오류가 발생했습니다!
+```
+
+다음 코드를 실행하면,
+```javascript
+SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
+    a : 1,
+    b : 2,
+    c : 3
+});
+```
+콘솔에 다음과 같은 오류 메시지를 빨간색으로 출력합니다.
+```
+[샘플 오류] 오류가 발생했습니다. 오류 메시지: 엄청난 오류가 발생했습니다!
+다음은 오류를 발생시킨 파라미터입니다.
+{
+    "a": 1,
+    "b": 2,
+    "c": 3
+}
+```
 
 ## 암호화 관련 기능
 TODO:

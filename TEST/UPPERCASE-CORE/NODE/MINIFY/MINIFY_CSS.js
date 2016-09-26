@@ -1,7 +1,7 @@
 TEST('MINIFY_CSS', function(ok) {
 	'use strict';
 
-	READ_FILE('sample.css', function(content) {
+	READ_FILE('NODE/MINIFY/sample.css', function(content) {
 
 		var
 		// css code

@@ -3353,8 +3353,75 @@ global.REVERSE_EACH = METHOD({
 	}
 });
 
+/*
+ * 콘솔에 표시할 텍스트를 파란색으로 설정합니다.
+ */
+global.CONSOLE_BLUE = METHOD({
+
+	run : function(text) {
+		'use strict';
+		//REQUIRED: text
+
+		return '[36m' + text + '[0m';
+	}
+});
+
+/*
+ * 콘솔에 표시할 텍스트를 초록색으로 설정합니다.
+ */
+global.CONSOLE_GREEN = METHOD({
+
+	run : function(text) {
+		'use strict';
+		//REQUIRED: text
+
+		return '[32m' + text + '[0m';
+	}
+});
+
+/*
+ * 콘솔에 표시할 텍스트를 빨간색으로 설정합니다.
+ */
+global.CONSOLE_RED = METHOD({
+
+	run : function(text) {
+		'use strict';
+		//REQUIRED: text
+
+		return '[31m' + text + '[0m';
+	}
+});
+
+/*
+ * 콘솔에 표시할 텍스트를 노란색으로 설정합니다.
+ */
+global.CONSOLE_YELLOW = METHOD({
+
+	run : function(text) {
+		'use strict';
+		//REQUIRED: text
+
+		return '[33m' + text + '[0m';
+	}
+});
+
+/*
+ * 콘솔에 에러 메시지를 붉은색으로 출력합니다.
+ */
+global.SHOW_ERROR = function(tag, errorMsg, params) {
+	//REQUIRED: tag
+	//REQUIRED: errorMsg
+	//OPTIONAL: params
+	
+	console.log(CONSOLE_RED('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg));
+	
+	if (params !== undefined) {
+		console.log(CONSOLE_RED('다음은 오류를 발생시킨 파라미터입니다.'));
+		console.log(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
+	}
+};
 /**
- * 지정된 경로에 파일이 존재하는지 확인합니다.
+ * 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
  */
 global.CHECK_IS_EXISTS_FILE = METHOD(function() {
 	'use strict';
@@ -3416,8 +3483,8 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 			//REQUIRED: pathOrParams.path	확인할 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -3425,12 +3492,12 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 
 			// is sync
 			isSync,
-			
-			// callback.
-			callback,
 
 			// error handler.
-			errorHandler;
+			errorHandler,
+			
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -3444,8 +3511,8 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -3465,7 +3532,7 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 						if (errorHandler !== undefined) {
 							errorHandler(errorMsg);
 						} else {
-							SHOW_ERROR('[CHECK_IS_FOLDER] ERROR: ' + errorMsg);
+							SHOW_ERROR('CHECK_IS_FOLDER', errorMsg);
 						}
 
 					} else if (callback !== undefined) {
@@ -3503,9 +3570,9 @@ global.COPY_FILE = METHOD(function() {
 			//REQUIRED: params.to		파일을 복사할 위치
 			//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExistsHandler
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// from
@@ -3517,22 +3584,22 @@ global.COPY_FILE = METHOD(function() {
 			// is sync
 			isSync = params.isSync,
 
-			// callback.
-			callback,
-
 			// not exists handler.
 			notExistsHandler,
 
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					notExistsHandler = callbackOrHandlers.notExists;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -3569,7 +3636,7 @@ global.COPY_FILE = METHOD(function() {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										SHOW_ERROR('[COPY_FILE] ERROR:' + errorMsg);
+										SHOW_ERROR('COPY_FILE', errorMsg);
 									}
 								});
 
@@ -3584,7 +3651,7 @@ global.COPY_FILE = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(from);
 								} else {
-									console.log(CONSOLE_YELLOW('[COPY_FILE] NOT EXISTS! <' + from + '>'));
+									console.log(CONSOLE_YELLOW('[COPY_FILE] 파일이 존재하지 않습니다. 경로: ' + from));
 								}
 							}
 						});
@@ -3613,7 +3680,7 @@ global.COPY_FILE = METHOD(function() {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler(from);
 									} else {
-										console.log(CONSOLE_YELLOW('[COPY_FILE] NOT EXISTS! <' + from + '>'));
+										console.log(CONSOLE_YELLOW('[COPY_FILE] 파일이 존재하지 않습니다. 경로: ' + from));
 									}
 
 									// do not run callback.
@@ -3629,7 +3696,7 @@ global.COPY_FILE = METHOD(function() {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										SHOW_ERROR('[COPY_FILE] ERROR: ' + errorMsg);
+										SHOW_ERROR('COPY_FILE', errorMsg);
 									}
 								}
 							}
@@ -3665,8 +3732,8 @@ global.CREATE_FOLDER = METHOD(function() {
 			//REQUIRED: pathOrParams.path	폴더를 생성할 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -3678,11 +3745,11 @@ global.CREATE_FOLDER = METHOD(function() {
 			// folder path
 			folderPath,
 
-			// callback.
-			callback,
-
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -3696,8 +3763,8 @@ global.CREATE_FOLDER = METHOD(function() {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -3733,7 +3800,7 @@ global.CREATE_FOLDER = METHOD(function() {
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											SHOW_ERROR('[CREATE_FOLDER] ERROR: ' + errorMsg);
+											SHOW_ERROR('CREATE_FOLDER', errorMsg);
 										}
 
 									} else {
@@ -3801,7 +3868,7 @@ global.CREATE_FOLDER = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[CREATE_FOLDER] ERROR: ' + errorMsg);
+								SHOW_ERROR('CREATE_FOLDER', errorMsg);
 							}
 						}
 					}
@@ -3835,9 +3902,9 @@ global.FIND_FILE_NAMES = METHOD(function() {
 			//REQUIRED: pathOrParams.path	파일들이 위치한 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExistsHandler
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -3846,14 +3913,14 @@ global.FIND_FILE_NAMES = METHOD(function() {
 			// is sync
 			isSync,
 
-			// callback.
-			callback,
-
 			// not exists handler.
 			notExistsHandler,
 
 			// error handler.
 			errorHandler,
+
+			// callback.
+			callback,
 
 			// file names
 			fileNames = [];
@@ -3870,9 +3937,9 @@ global.FIND_FILE_NAMES = METHOD(function() {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					notExistsHandler = callbackOrHandlers.notExists;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -3896,7 +3963,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR('[FIND_FILE_NAMES] ERROR:' + errorMsg);
+									SHOW_ERROR('FIND_FILE_NAMES', errorMsg);
 								}
 
 							} else if (callback !== undefined) {
@@ -3919,7 +3986,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 												if (errorHandler !== undefined) {
 													errorHandler(errorMsg);
 												} else {
-													SHOW_ERROR('[FIND_FILE_NAMES] ERROR:' + errorMsg);
+													SHOW_ERROR('FIND_FILE_NAMES', errorMsg);
 												}
 
 											} else {
@@ -3950,7 +4017,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] NOT EXISTS! <' + path + '>'));
+							console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
 						}
 					}
 				});
@@ -3988,7 +4055,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[FIND_FILE_NAMES] NOT EXISTS! <' + path + '>'));
+								console.log(CONSOLE_YELLOW('[FIND_FILE_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
 							}
 
 							// do not run callback.
@@ -4004,7 +4071,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[FIND_FILE_NAMES] ERROR: ' + errorMsg);
+								SHOW_ERROR('FIND_FILE_NAMES', errorMsg);
 							}
 						}
 					}
@@ -4040,9 +4107,9 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 			//REQUIRED: pathOrParams.path	폴더들이 위치한 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExistsHandler
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -4051,14 +4118,14 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 			// is sync
 			isSync,
 
-			// callback.
-			callback,
-
 			// not exists handler.
 			notExistsHandler,
 
 			// error handler.
 			errorHandler,
+
+			// callback.
+			callback,
 
 			// file names
 			folderNames = [];
@@ -4075,9 +4142,9 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					notExistsHandler = callbackOrHandlers.notExists;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -4101,7 +4168,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR('[FIND_FOLDER_NAMES] ERROR:' + errorMsg);
+									SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg);
 								}
 
 							} else if (callback !== undefined) {
@@ -4124,7 +4191,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 												if (errorHandler !== undefined) {
 													errorHandler(errorMsg);
 												} else {
-													SHOW_ERROR('[FIND_FOLDER_NAMES] ERROR:' + errorMsg);
+													SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg);
 												}
 
 											} else {
@@ -4155,7 +4222,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] NOT EXISTS! <' + path + '>'));
+							console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
 						}
 					}
 				});
@@ -4193,7 +4260,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] NOT EXISTS! <' + path + '>'));
+								console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
 							}
 
 							// do not run callback.
@@ -4209,7 +4276,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[FIND_FOLDER_NAMES] ERROR: ' + errorMsg);
+								SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg);
 							}
 						}
 					}
@@ -4244,9 +4311,9 @@ global.GET_FILE_INFO = METHOD(function() {
 			//REQUIRED: pathOrParams.path	불러올 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -4255,14 +4322,14 @@ global.GET_FILE_INFO = METHOD(function() {
 			// is sync
 			isSync,
 
-			// callback.
-			callback,
-
 			// not eixsts handler.
 			notExistsHandler,
 
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -4276,9 +4343,9 @@ global.GET_FILE_INFO = METHOD(function() {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					notExistsHandler = callbackOrHandlers.notExists;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -4302,7 +4369,7 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR('[GET_FILE_INFO] ERROR: ' + errorMsg);
+									SHOW_ERROR('GET_FILE_INFO', errorMsg);
 								}
 
 							} else if (stat.isDirectory() === true) {
@@ -4310,7 +4377,7 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
 								}
 
 							} else if (callback !== undefined) {
@@ -4327,7 +4394,7 @@ global.GET_FILE_INFO = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+							console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
 						}
 					}
 				});
@@ -4359,7 +4426,7 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
 								}
 								
 							} else {
@@ -4384,7 +4451,7 @@ global.GET_FILE_INFO = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[GET_FILE_INFO] NOT EXISTS! <' + path + '>'));
+								console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
 							}
 						}
 
@@ -4397,7 +4464,7 @@ global.GET_FILE_INFO = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[GET_FILE_INFO] ERROR: ' + errorMsg);
+								SHOW_ERROR('GET_FILE_INFO', errorMsg);
 							}
 						}
 					}
@@ -4422,9 +4489,9 @@ global.MOVE_FILE = METHOD({
 		//REQUIRED: params.to		파일을 옮길 위치
 		//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 		//REQUIRED: callbackOrHandlers
-		//REQUIRED: callbackOrHandlers.success
 		//OPTIONAL: callbackOrHandlers.notExistsHandler
 		//OPTIONAL: callbackOrHandlers.error
+		//REQUIRED: callbackOrHandlers.success
 
 		var
 		// from
@@ -4433,21 +4500,21 @@ global.MOVE_FILE = METHOD({
 		// is sync
 		isSync = params.isSync,
 
-		// callback.
-		callback,
-
 		// not exists handler.
 		notExistsHandler,
 
 		// error handler.
-		errorHandler;
+		errorHandler,
+
+		// callback.
+		callback;
 
 		if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 			callback = callbackOrHandlers;
 		} else {
-			callback = callbackOrHandlers.success;
 			notExistsHandler = callbackOrHandlers.notExists;
 			errorHandler = callbackOrHandlers.error;
+			callback = callbackOrHandlers.success;
 		}
 
 		COPY_FILE(params, {
@@ -4487,9 +4554,9 @@ global.READ_FILE = METHOD(function() {
 			//REQUIRED: pathOrParams.path	불러올 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -4498,14 +4565,14 @@ global.READ_FILE = METHOD(function() {
 			// is sync
 			isSync,
 
-			// callback.
-			callback,
-
 			// not eixsts handler.
 			notExistsHandler,
 
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -4519,9 +4586,9 @@ global.READ_FILE = METHOD(function() {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					notExistsHandler = callbackOrHandlers.notExists;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -4545,7 +4612,7 @@ global.READ_FILE = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR('[READ_FILE] ERROR: ' + errorMsg);
+									SHOW_ERROR('READ_FILE', errorMsg);
 								}
 
 							} else if (stat.isDirectory() === true) {
@@ -4553,7 +4620,7 @@ global.READ_FILE = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[READ_FILE] NOT EXISTS! <' + path + '>'));
+									console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
 								}
 
 							} else {
@@ -4571,7 +4638,7 @@ global.READ_FILE = METHOD(function() {
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											SHOW_ERROR('[READ_FILE] ERROR: ' + errorMsg);
+											SHOW_ERROR('READ_FILE', errorMsg);
 										}
 
 									} else if (callback !== undefined) {
@@ -4586,7 +4653,7 @@ global.READ_FILE = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[READ_FILE] NOT EXISTS! <' + path + '>'));
+							console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
 						}
 					}
 				});
@@ -4616,7 +4683,7 @@ global.READ_FILE = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[READ_FILE] NOT EXISTS! <' + path + '>'));
+									console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
 								}
 								
 							} else {
@@ -4635,7 +4702,7 @@ global.READ_FILE = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[READ_FILE] NOT EXISTS! <' + path + '>'));
+								console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
 							}
 						}
 
@@ -4648,7 +4715,7 @@ global.READ_FILE = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[READ_FILE] ERROR: ' + errorMsg);
+								SHOW_ERROR('READ_FILE', errorMsg);
 							}
 						}
 					}
@@ -4678,9 +4745,9 @@ global.REMOVE_FILE = METHOD(function() {
 			//REQUIRED: pathOrParams.path	삭제할 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//REQUIRED: callbackOrHandlers
-			//REQUIRED: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
 
 			var
 			// path
@@ -4689,14 +4756,14 @@ global.REMOVE_FILE = METHOD(function() {
 			// is sync
 			isSync,
 
-			// callback.
-			callback,
-
 			// not eixsts handler.
 			notExistsHandler,
 
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -4709,9 +4776,9 @@ global.REMOVE_FILE = METHOD(function() {
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
 			} else {
-				callback = callbackOrHandlers.success;
 				notExistsHandler = callbackOrHandlers.notExists;
 				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
 			}
 
 			// when normal mode
@@ -4734,7 +4801,7 @@ global.REMOVE_FILE = METHOD(function() {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR('[REMOVE_FILE] ERROR: ' + errorMsg);
+									SHOW_ERROR('REMOVE_FILE', errorMsg);
 								}
 
 							} else {
@@ -4750,7 +4817,7 @@ global.REMOVE_FILE = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[REMOVE_FILE] NOT EXISTS! <' + path + '>'));
+							console.log(CONSOLE_YELLOW('[REMOVE_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
 						}
 					}
 				});
@@ -4779,7 +4846,7 @@ global.REMOVE_FILE = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[REMOVE_FILE] NOT EXISTS! <' + path + '>'));
+								console.log(CONSOLE_YELLOW('[REMOVE_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
 							}
 
 							// do not run callback.
@@ -4795,7 +4862,7 @@ global.REMOVE_FILE = METHOD(function() {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[REMOVE_FILE] ERROR: ' + errorMsg);
+								SHOW_ERROR('REMOVE_FILE', errorMsg);
 							}
 						}
 					}
@@ -4828,9 +4895,9 @@ global.REMOVE_FOLDER = METHOD(function() {
 			//REQUIRED: pathOrParams.path	삭제할 폴더의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//REQUIRED: callbackOrHandlers
-			//REQUIRED: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
 
 			var
 			// path
@@ -4839,14 +4906,14 @@ global.REMOVE_FOLDER = METHOD(function() {
 			// is sync
 			isSync,
 
-			// callback.
-			callback,
-
 			// not eixsts handler.
 			notExistsHandler,
 
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -4859,9 +4926,9 @@ global.REMOVE_FOLDER = METHOD(function() {
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
 			} else {
-				callback = callbackOrHandlers.success;
 				notExistsHandler = callbackOrHandlers.notExists;
 				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
 			}
 
 			// when normal mode
@@ -4908,19 +4975,19 @@ global.REMOVE_FOLDER = METHOD(function() {
 							return function() {
 								
 								fs.rmdir(path, function(error) {
-		
+									
 									var
 									// error msg
 									errorMsg;
-		
+									
 									if (error !== TO_DELETE) {
-		
+										
 										errorMsg = error.toString();
-		
+										
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											SHOW_ERROR('[REMOVE_FOLDER] ERROR: ' + errorMsg);
+											SHOW_ERROR('REMOVE_FOLDER', errorMsg);
 										}
 		
 									} else {
@@ -4938,7 +5005,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] NOT EXISTS! <' + path + '>'));
+							console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] 폴더가 존재하지 않습니다. 경로: ' + path));
 						}
 					}
 				});
@@ -4989,7 +5056,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] NOT EXISTS! <' + path + '>'));
+								console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] 폴더가 존재하지 않습니다. 경로: ' + path));
 							}
 
 							// do not run callback.
@@ -4997,15 +5064,15 @@ global.REMOVE_FOLDER = METHOD(function() {
 						}
 
 					} catch(error) {
-
+						
 						if (error !== TO_DELETE) {
-
+							
 							errorMsg = error.toString();
-
+	
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[REMOVE_FOLDER] ERROR: ' + errorMsg);
+								SHOW_ERROR('REMOVE_FOLDER', errorMsg);
 							}
 						}
 					}
@@ -5043,8 +5110,8 @@ global.WRITE_FILE = METHOD(function() {
 			//OPTIONAL: params.buffer	파일에 작성할 내용 (Buffer)
 			//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
 
 			var
 			// path
@@ -5059,18 +5126,18 @@ global.WRITE_FILE = METHOD(function() {
 			// is sync
 			isSync = params.isSync,
 
-			// callback.
-			callback,
-
 			// error handler.
-			errorHandler;
+			errorHandler,
+
+			// callback.
+			callback;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
 				} else {
-					callback = callbackOrHandlers.success;
 					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
 			}
 
@@ -5083,19 +5150,19 @@ global.WRITE_FILE = METHOD(function() {
 				if (isSync !== true) {
 
 					fs.writeFile(path, buffer !== undefined ? buffer : content, function(error) {
-
+						
 						var
 						// error msg
 						errorMsg;
-
+						
 						if (error !== TO_DELETE) {
-
+							
 							errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR('[WRITE_FILE] ERROR:' + errorMsg);
+								SHOW_ERROR('WRITE_FILE', errorMsg);
 							}
 
 						} else if (callback !== undefined) {
@@ -5118,15 +5185,15 @@ global.WRITE_FILE = METHOD(function() {
 							fs.writeFileSync(path, buffer !== undefined ? buffer : content);
 
 						} catch(error) {
-
+							
 							if (error !== TO_DELETE) {
-
+								
 								errorMsg = error.toString();
-
+									
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR('[WRITE_FILE] ERROR: ' + errorMsg);
+									SHOW_ERROR('WRITE_FILE', errorMsg);
 								}
 							}
 						}
@@ -5183,6 +5250,529 @@ global.MINIFY_JS = METHOD(function() {
 					comments : /@license|@preserve|^!/
 				}
 			}).code;
+		}
+	};
+});
+
+/**
+ * HTTP DELETE 요청을 보냅니다.
+ */
+global.DELETE = METHOD({
+
+	run : function(params, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: urlOrParams
+		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
+		//OPTIONAL: urlOrParams.host
+		//OPTIONAL: urlOrParams.port
+		//OPTIONAL: urlOrParams.uri
+		//OPTIONAL: urlOrParams.url			요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+		//OPTIONAL: urlOrParams.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
+		//OPTIONAL: urlOrParams.params		데이터 형태({...})로 표현한 파라미터 목록
+		//OPTIONAL: urlOrParams.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+		//OPTIONAL: urlOrParams.headers		요청 헤더
+		//OPTIONAL: responseListenerOrListeners
+		//OPTIONAL: responseListenerOrListeners.error
+		//OPTIONAL: responseListenerOrListeners.success
+		
+		if (CHECK_IS_DATA(urlOrParams) !== true) {
+			urlOrParams = {
+				url : urlOrParams
+			}
+		}
+		
+		REQUEST(COMBINE([{
+			method : 'DELETE'
+		}, urlOrParams]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * HTTP 리소스를 다운로드합니다.
+ */
+global.DOWNLOAD = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: HTTP
+	HTTP = require('http'),
+
+	//IMPORT: HTTPS
+	HTTPS = require('https'),
+	
+	//IMPORT: URL
+	URL = require('url'),
+	
+	//IMPORT: Querystring
+	Querystring = require('querystring');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params
+			//REQUIRED: params.method
+			//OPTIONAL: params.isSecure	HTTPS 프로토콜인지 여부
+			//OPTIONAL: params.host
+			//OPTIONAL: params.port
+			//OPTIONAL: params.uri
+			//OPTIONAL: params.url		요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+			//OPTIONAL: params.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
+			//OPTIONAL: params.params	데이터 형태({...})로 표현한 파라미터 목록
+			//OPTIONAL: params.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+			//OPTIONAL: params.headers	요청 헤더
+			//REQUIRED: params.path		리소스를 다운로드하여 저장할 경로
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.error
+
+			var
+			// method
+			method = params.method,
+			
+			// is secure
+			isSecure = params.isSecure,
+			
+			// host
+			host = params.host,
+
+			// port
+			port = params.port,
+
+			// uri
+			uri = params.uri,
+			
+			// url
+			url = params.url,
+
+			// param str
+			paramStr = params.paramStr,
+
+			// params
+			params = params.params,
+
+			// data
+			data = params.data,
+			
+			// headers
+			headers = params.headers,
+			
+			// path
+			path = params.path,
+
+			// error handler.
+			errorHandler,
+
+			// callback.
+			callback,
+			
+			// url data
+			urlData,
+
+			// http request
+			req;
+			
+			if (url !== undefined) {
+				urlData = URL.parse(url);
+				
+				host = urlData.hostname === TO_DELETE ? undefined : urlData.hostname,
+				port = urlData.port === TO_DELETE ? undefined : INTEGER(urlData.port),
+				isSecure = urlData.protocol === 'https:',
+				uri = urlData.pathname === TO_DELETE ? undefined : urlData.pathname.substring(1),
+				paramStr = urlData.query === TO_DELETE ? undefined : urlData.query
+			}
+			
+			if (port === undefined) {
+				port = isSecure !== true ? 80 : 443;
+			}
+
+			if (uri !== undefined && uri.indexOf('?') !== -1) {
+				paramStr = uri.substring(uri.indexOf('?') + 1) + (paramStr === undefined ? '' : '&' + paramStr);
+				uri = uri.substring(0, uri.indexOf('?'));
+			}
+			
+			if (params !== undefined) {
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(params);
+			}
+
+			if (data !== undefined) {
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + '__DATA=' + encodeURIComponent(STRINGIFY(data));
+			}
+			
+			paramStr = (paramStr === undefined ? '' : paramStr + '&') + Date.now();
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
+				}
+			}
+
+			req = (isSecure !== true ? HTTP : HTTPS).get({
+				hostname : host,
+				port : port,
+				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
+				headers : headers
+			}, function(httpResponse) {
+				
+				var
+				// data
+				data;
+				
+				// redirect.
+				if (httpResponse.statusCode === 301 || httpResponse.statusCode === 302) {
+					
+					DOWNLOAD({
+						url : httpResponse.headers.location,
+						path : path
+					}, {
+						error : errorHandler,
+						success : callback
+					});
+					
+					httpResponse.destroy();
+					
+				} else {
+				
+					data = [];
+	
+					httpResponse.on('data', function(chunk) {
+						data.push(chunk);
+					});
+					httpResponse.on('end', function() {
+						
+						WRITE_FILE({
+							path : path,
+							buffer : Buffer.concat(data)
+						}, {
+							error : errorHandler,
+							success : callback
+						});
+					});
+				}
+			});
+
+			req.on('error', function(error) {
+
+				var
+				// error msg
+				errorMsg = error.toString();
+
+				if (errorHandler !== undefined) {
+					errorHandler(errorMsg);
+				} else {
+					SHOW_ERROR('DOWNLOAD', errorMsg, params);
+				}
+			});
+		}
+	};
+});
+
+/**
+ * HTTP GET 요청을 보냅니다.
+ */
+global.GET = METHOD({
+	
+	run : function(urlOrParams, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: urlOrParams
+		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
+		//OPTIONAL: urlOrParams.host
+		//OPTIONAL: urlOrParams.port
+		//OPTIONAL: urlOrParams.uri
+		//OPTIONAL: urlOrParams.url			요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+		//OPTIONAL: urlOrParams.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
+		//OPTIONAL: urlOrParams.params		데이터 형태({...})로 표현한 파라미터 목록
+		//OPTIONAL: urlOrParams.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+		//OPTIONAL: urlOrParams.headers		요청 헤더
+		//OPTIONAL: responseListenerOrListeners
+		//OPTIONAL: responseListenerOrListeners.error
+		//OPTIONAL: responseListenerOrListeners.success
+		
+		if (CHECK_IS_DATA(urlOrParams) !== true) {
+			urlOrParams = {
+				url : urlOrParams
+			}
+		}
+		
+		REQUEST(COMBINE([{
+			method : 'GET'
+		}, urlOrParams]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * HTTP POST 요청을 보냅니다.
+ */
+global.POST = METHOD({
+
+	run : function(params, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: urlOrParams
+		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
+		//OPTIONAL: urlOrParams.host
+		//OPTIONAL: urlOrParams.port
+		//OPTIONAL: urlOrParams.uri
+		//OPTIONAL: urlOrParams.url			요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+		//OPTIONAL: urlOrParams.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
+		//OPTIONAL: urlOrParams.params		데이터 형태({...})로 표현한 파라미터 목록
+		//OPTIONAL: urlOrParams.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+		//OPTIONAL: urlOrParams.headers		요청 헤더
+		//OPTIONAL: responseListenerOrListeners
+		//OPTIONAL: responseListenerOrListeners.error
+		//OPTIONAL: responseListenerOrListeners.success
+		
+		if (CHECK_IS_DATA(urlOrParams) !== true) {
+			urlOrParams = {
+				url : urlOrParams
+			}
+		}
+		
+		REQUEST(COMBINE([{
+			method : 'POST'
+		}, urlOrParams]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * HTTP PUT 요청을 보냅니다.
+ */
+global.PUT = METHOD({
+
+	run : function(params, responseListenerOrListeners) {
+		'use strict';
+		//REQUIRED: urlOrParams
+		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
+		//OPTIONAL: urlOrParams.host
+		//OPTIONAL: urlOrParams.port
+		//OPTIONAL: urlOrParams.uri
+		//OPTIONAL: urlOrParams.url			요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+		//OPTIONAL: urlOrParams.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
+		//OPTIONAL: urlOrParams.params		데이터 형태({...})로 표현한 파라미터 목록
+		//OPTIONAL: urlOrParams.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+		//OPTIONAL: urlOrParams.headers		요청 헤더
+		//OPTIONAL: responseListenerOrListeners
+		//OPTIONAL: responseListenerOrListeners.error
+		//OPTIONAL: responseListenerOrListeners.success
+		
+		if (CHECK_IS_DATA(urlOrParams) !== true) {
+			urlOrParams = {
+				url : urlOrParams
+			}
+		}
+		
+		REQUEST(COMBINE([{
+			method : 'PUT'
+		}, urlOrParams]), responseListenerOrListeners);
+	}
+});
+
+/**
+ * HTTP 요청을 보냅니다.
+ */
+global.REQUEST = METHOD(function(m) {
+	'use strict';
+
+	var
+	//IMPORT: HTTP
+	HTTP = require('http'),
+
+	//IMPORT: HTTPS
+	HTTPS = require('https'),
+	
+	//IMPORT: URL
+	URL = require('url'),
+	
+	//IMPORT: Querystring
+	Querystring = require('querystring');
+
+	return {
+
+		run : function(params, responseListenerOrListeners) {
+			//REQUIRED: params
+			//REQUIRED: params.method	요청 메소드 입니다. GET, POST, PUT, DELETE를 설정할 수 있습니다.
+			//OPTIONAL: params.isSecure	HTTPS 프로토콜인지 여부
+			//OPTIONAL: params.host
+			//OPTIONAL: params.port
+			//OPTIONAL: params.uri
+			//OPTIONAL: params.url		요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+			//OPTIONAL: params.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
+			//OPTIONAL: params.params	데이터 형태({...})로 표현한 파라미터 목록
+			//OPTIONAL: params.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+			//OPTIONAL: params.headers	요청 헤더
+			//OPTIONAL: responseListenerOrListeners
+			//OPTIONAL: responseListenerOrListeners.error
+			//OPTIONAL: responseListenerOrListeners.success
+
+			var
+			// method
+			method = params.method,
+			
+			// is secure
+			isSecure = params.isSecure,
+			
+			// host
+			host = params.host,
+
+			// port
+			port = params.port,
+
+			// uri
+			uri = params.uri,
+			
+			// url
+			url = params.url,
+
+			// param str
+			paramStr = params.paramStr,
+
+			// params
+			params = params.params,
+
+			// data
+			data = params.data,
+			
+			// headers
+			headers = params.headers,
+
+			// error listener.
+			errorListener,
+
+			// response listener.
+			responseListener,
+			
+			// url data
+			urlData,
+
+			// http request
+			req;
+
+			method = method.toUpperCase();
+			
+			if (url !== undefined) {
+				urlData = URL.parse(url);
+				
+				host = urlData.hostname === TO_DELETE ? undefined : urlData.hostname,
+				port = urlData.port === TO_DELETE ? undefined : INTEGER(urlData.port),
+				isSecure = urlData.protocol === 'https:',
+				uri = urlData.pathname === TO_DELETE ? undefined : urlData.pathname.substring(1),
+				paramStr = urlData.query === TO_DELETE ? undefined : urlData.query
+			}
+			
+			if (port === undefined) {
+				port = isSecure !== true ? 80 : 443;
+			}
+
+			if (uri !== undefined && uri.indexOf('?') !== -1) {
+				paramStr = uri.substring(uri.indexOf('?') + 1) + (paramStr === undefined ? '' : '&' + paramStr);
+				uri = uri.substring(0, uri.indexOf('?'));
+			}
+			
+			if (params !== undefined) {
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(params);
+			}
+
+			if (data !== undefined) {
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + '__DATA=' + encodeURIComponent(STRINGIFY(data));
+			}
+			
+			if (paramStr === undefined) {
+				paramStr = '';
+			}
+			
+			if (responseListenerOrListeners !== undefined) {
+				if (CHECK_IS_DATA(responseListenerOrListeners) !== true) {
+					responseListener = responseListenerOrListeners;
+				} else {
+					errorListener = responseListenerOrListeners.error;
+					responseListener = responseListenerOrListeners.success;
+				}
+			}
+
+			// GET request.
+			if (method === 'GET') {
+
+				req = (isSecure !== true ? HTTP : HTTPS).get({
+					hostname : host,
+					port : port,
+					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
+					headers : headers
+				}, function(httpResponse) {
+
+					var
+					// content
+					content;
+					
+					// redirect.
+					if (httpResponse.statusCode === 301 || httpResponse.statusCode === 302) {
+						
+						GET(httpResponse.headers.location, {
+							error : errorListener,
+							success : responseListener
+						});
+						
+						httpResponse.destroy();
+						
+					} else {
+						
+						content = '';
+
+						httpResponse.setEncoding('utf-8');
+						httpResponse.on('data', function(str) {
+							content += str;
+						});
+						httpResponse.on('end', function() {
+							if (responseListener !== undefined) {
+								responseListener(content, httpResponse.headers);
+							}
+						});
+					}
+				});
+			}
+
+			// other request.
+			else {
+
+				req = (isSecure !== true ? HTTP : HTTPS).request({
+					hostname : host,
+					port : port,
+					path : '/' + (uri === undefined ? '' : uri),
+					method : method,
+					headers : headers
+				}, function(httpResponse) {
+
+					var
+					// content
+					content = '';
+
+					httpResponse.setEncoding('utf-8');
+					httpResponse.on('data', function(str) {
+						content += str;
+					});
+					httpResponse.on('end', function() {
+						if (responseListener !== undefined) {
+							responseListener(content, httpResponse.headers);
+						}
+					});
+				});
+
+				req.write(paramStr);
+				req.end();
+			}
+
+			req.on('error', function(error) {
+
+				var
+				// error msg
+				errorMsg = error.toString();
+
+				if (errorListener !== undefined) {
+					errorListener(errorMsg);
+				} else {
+					SHOW_ERROR('REQUEST', errorMsg, params);
+				}
+			});
 		}
 	};
 });

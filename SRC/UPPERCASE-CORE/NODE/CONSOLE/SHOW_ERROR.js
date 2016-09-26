@@ -10,6 +10,6 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 	
 	if (params !== undefined) {
 		console.log(CONSOLE_RED('다음은 오류를 발생시킨 파라미터입니다.'));
-		console.log(CONSOLE_RED(JSON.stringify(params, TO_DELETE, '\t')));
+		console.log(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
 	}
 };

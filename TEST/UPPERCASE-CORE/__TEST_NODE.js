@@ -54,4 +54,6 @@ RUN(function() {
 	
 	// UPPERCASE-CORE-NODE
 	test('NODE/MINIFY/MINIFY_JS');
+	
+	test('NODE/CONSOLE/SHOW_ERROR');
 }); 

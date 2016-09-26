@@ -1,6 +1,3 @@
-// load UJS.
-require('../../../UJS-NODE.js');
-
 TEST('CONSOLE_COLOR', function(ok) {
 	'use strict';
 

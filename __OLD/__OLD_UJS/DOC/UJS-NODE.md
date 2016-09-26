@@ -392,14 +392,6 @@
 ### 주의사항
 클러스터링 된 CPU와 서버들 간에 데이터를 동기화 하는데 시간이 걸릴 수 있습니다. 예를들어, A 서버와 B 서버에서 각각 `sample`이라는 값을 동시에 변경하였을때 A 서버에서 제공하는 값이 될지 B 서버에서 제공하는 값이 될지 확실하지 않습니다. 주의하시기 바랍니다.
 
-## 콘솔 로그 색상
-[예제보기](../EXAMPLES/NODE/CONSOLE_COLOR/CONSOLE_COLOR.js)
-
-* `CONSOLE_RED(text)` 콘솔에 `text`를 빨간색으로 출력합니다.
-* `CONSOLE_GREEN(text)` 콘솔에 `text`를 초록색으로 출력합니다.
-* `CONSOLE_BLUE(text)` 콘솔에 `text`를 파란색으로 출력합니다.
-* `CONSOLE_YELLOW(text)` 콘솔에 `text`를 노란색으로 출력합니다.
-
 ## 시스템 관련 기능
 * `CPU_USAGES()` 현재 CPU 사용률을 CPU 코어 개수만큼 배열로 반환합니다. [예제보기](../EXAMPLES/NODE/SYSTEM/CPU_USAGES.js)
 * `MEMORY_USAGE()` 현재 메모리 사용률을 반환합니다. [예제보기](../EXAMPLES/NODE/SYSTEM/MEMORY_USAGE.js)
