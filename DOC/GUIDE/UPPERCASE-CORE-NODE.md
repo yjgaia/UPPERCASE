@@ -11,7 +11,7 @@ UPPERCASE-CORE-NODE는 Node.js 환경에서 사용할 수 있는 모듈입니다
 * [HTTP 요청 기능](#http-요청-기능)
 * 시스템 관련 기능
 * [콘솔 로그 관련 기능](#콘솔-로그-관련-기능)
-* 암호화 관련 기능
+* [문자열 암호화 기능](#문자열-암호화-기능)
 * [코드 압축 기능](#코드-압축-기능)
 
 ## 사용방법
@@ -31,7 +31,7 @@ require('uppercase-core-node');
 ```
 
 ## 손쉬운 서버 생성
-TODO:
+UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽게 생성할 수 있습니다.
 
 ### 웹 서버 생성
 TODO:
@@ -581,8 +581,38 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
 }
 ```
 
-## 암호화 관련 기능
-TODO:
+## 문자열 암호화 기능
+문자열 암호화 기능으로 `HMAC-SHA` 알고리즘들 중 `HMAC-SHA1`, `HMAC-SHA256`, `HMAC-SHA512` 세가지를 지원합니다. [`SHA1` 알고리즘의 취약점](https://en.wikipedia.org/wiki/SHA-1#The_SHAppening)이 발견되었기 때문에, `HMAC-SHA1` 보다는 `HMAC-SHA256`나 `HMAC-SHA512`를 사용하시기 바랍니다.
+
+### `SHA1({password:, key})`
+비밀번호를 주어진 키를 이용하여 HMAC SHA1 알고리즘으로 암호화 합니다. **그러나 SHA1 알고리즘의 취약점이 발견**되었기 때문에, 암호화가 필요한 경우에는 SHA256을 사용하시기 바랍니다.
+
+```javascript
+SHA1({
+	password : '1234',
+	key : 'test'
+}); // 16dd1fdd7c595eab4586cebba6b34eaff41acc53
+```
+
+### `SHA256({password:, key})`
+비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
+
+```javascript
+SHA256({
+	password : '1234',
+	key : 'test'
+}); // 5471d39e681ffc00128c11b573f4a3356ceba766956bb928d562d2c7c0c2db6a
+```
+
+### `SHA512({password:, key})`
+비밀번호를 주어진 키를 이용하여 HMAC SHA512 알고리즘으로 암호화 합니다.
+
+```javascript
+SHA512({
+	password : '1234',
+	key : 'test'
+}); // ae451e84ce797ab519f454e9e3c9220550a5119c1063f75837281e4157c91cf27ec3d7a38df3254cdbc4c108189ed4b8d904baf2320a23d5268b1e81c110343b
+```
 
 ## 코드 압축 기능
 ### `MINIFY_JS(code)`

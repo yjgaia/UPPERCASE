@@ -165,38 +165,6 @@
 	})
     ```
 
-## 암호화
-암호화는 `HMAC-SHA` 알고리즘 중 `HMAC-SHA1`, `HMAC-SHA256`, `HMAC-SHA512` 세가지를 지원합니다. 현재까지 취약점이 발견되지 않은 `HMAC-SHA256` 사용을 추천합니다.
-
-* `SHA1({password:, key:})` HMAC-SHA1 암호화 알고리즘을 거친 문자열을 생성합니다. 암호화에는 암호화 될 대상이 되는 `password`와, 암호화에 필요한 `key`가 필요합니다. [예제보기](../EXAMPLES/NODE/ENCRYPTION/SHA1.js)
-
-    ```javascript
-    // '16dd1fdd7c595eab4586cebba6b34eaff41acc53'
-    SHA1({
-		password : '1234',
-		key : 'test'
-	})
-	```
-
-* `SHA256({password:, key:})` HMAC-SHA256 암호화 알고리즘을 거친 문자열을 생성합니다. 암호화에는 암호화 될 대상이 되는 `password`와, 암호화에 필요한 `key`가 필요합니다. [예제보기](../EXAMPLES/NODE/ENCRYPTION/SHA256.js)
-
-    ```javascript
-    // '5471d39e681ffc00128c11b573f4a3356ceba766956bb928d562d2c7c0c2db6a'
-    SHA256({
-		password : '1234',
-		key : 'test'
-	})
-	```
-
-* `SHA512({password:, key:})` HMAC-SHA512 암호화 알고리즘을 거친 문자열을 생성합니다. 암호화에는 암호화 될 대상이 되는 `password`와, 암호화에 필요한 `key`가 필요합니다. [예제보기](../EXAMPLES/NODE/ENCRYPTION/SHA512.js)
-
-    ```javascript
-    // 'ae451e84ce797ab519f454e9e3c9220550a5119c1063f75837281e4157c91cf27ec3d7a38df3254cdbc4c108189ed4b8d904baf2320a23d5268b1e81c110343b'
-    SHA512({
-		password : '1234',
-		key : 'test'
-	})
-	```
 
 ## 클러스터링 관련 기능
 * `CPU_CLUSTERING(work)` CPU 클러스터링을 수행합니다. 이를 통해 멀티코어 CPU에 대응할 수 있습니다. [예제보기](../EXAMPLES/NODE/CLUSTERING/CPU_CLUSTERING.js)
