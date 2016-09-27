@@ -1,4 +1,4 @@
-TEST('CONSOLE_COLOR', function(ok) {
+TEST('CONSOLE_COLOR', function(check) {
 	'use strict';
 
 	SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!');

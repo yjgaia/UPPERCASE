@@ -1,10 +1,5 @@
-// load UJS.
-require('../../../UJS-NODE.js');
-
-TEST('DOWNLOAD', function(ok) {
+TEST('DOWNLOAD', function(check) {
 	'use strict';
-
-	INIT_OBJECTS();
 
 	DOWNLOAD({
 		url : 'https://github.com/Hanul/UJS/archive/master.zip',

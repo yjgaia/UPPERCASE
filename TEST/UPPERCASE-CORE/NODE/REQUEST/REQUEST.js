@@ -1,8 +1,5 @@
-//!! run TEST-SERVER.js before this test.
-TEST('REQUEST', function(ok) {
+TEST('REQUEST', function(check) {
 	'use strict';
-
-	INIT_OBJECTS();
 
 	// test request.
 	REQUEST({
@@ -11,7 +8,7 @@ TEST('REQUEST', function(ok) {
 		method : 'GET',
 		uri : 'AJAX_TEST'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test request(GET) with parameters.
@@ -22,7 +19,7 @@ TEST('REQUEST', function(ok) {
 		uri : 'AJAX_TEST',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test request(POST) with parameters.
@@ -33,7 +30,7 @@ TEST('REQUEST', function(ok) {
 		uri : 'AJAX_TEST',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test request with data.
@@ -46,7 +43,7 @@ TEST('REQUEST', function(ok) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test request.
@@ -56,7 +53,7 @@ TEST('REQUEST', function(ok) {
 		method : 'GET',
 		uri : 'AJAX_JSON_TEST'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});
@@ -69,7 +66,7 @@ TEST('REQUEST', function(ok) {
 		uri : 'AJAX_JSON_TEST',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});
@@ -82,7 +79,7 @@ TEST('REQUEST', function(ok) {
 		uri : 'AJAX_JSON_TEST',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});
@@ -97,7 +94,7 @@ TEST('REQUEST', function(ok) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});

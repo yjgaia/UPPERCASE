@@ -3353,6 +3353,11 @@ global.REVERSE_EACH = METHOD({
 	}
 });
 
+/**
+ * Node.js 환경에서의 기본 설정
+ */
+global.NODE_CONFIG = {};
+
 /*
  * 콘솔에 표시할 텍스트를 파란색으로 설정합니다.
  */
@@ -3420,6 +3425,83 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 		console.log(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
 	}
 };
+/**
+ * 비밀번호를 주어진 키를 이용하여 HMAC SHA1 알고리즘으로 암호화 합니다.
+ * 
+ * 그러나 SHA1 알고리즘의 취약점이 발견되었기 때문에, 암호화가 필요한 경우에는 SHA256을 사용하시기 바랍니다.
+ */
+global.SHA1 = METHOD({
+
+	run : function(params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.password
+		//REQUIRED: params.key
+
+		var
+		// password
+		password = params.password,
+
+		// key
+		key = params.key,
+
+		// crypto
+		crypto = require('crypto');
+
+		return crypto.createHmac('sha1', key).update(password).digest('hex');
+	}
+});
+
+/**
+ * 비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
+ */
+global.SHA256 = METHOD({
+
+	run : function(params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.password
+		//REQUIRED: params.key
+
+		var
+		// password
+		password = params.password,
+
+		// key
+		key = params.key,
+
+		// crypto
+		crypto = require('crypto');
+
+		return crypto.createHmac('sha256', key).update(password).digest('hex');
+	}
+});
+
+/**
+ * 비밀번호를 주어진 키를 이용하여 HMAC SHA512 알고리즘으로 암호화 합니다.
+ */
+global.SHA512 = METHOD({
+
+	run : function(params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.password
+		//REQUIRED: params.key
+
+		var
+		// password
+		password = params.password,
+
+		// key
+		key = params.key,
+
+		// crypto
+		crypto = require('crypto');
+
+		return crypto.createHmac('sha512', key).update(password).digest('hex');
+	}
+});
+
 /**
  * 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
  */
@@ -5773,6 +5855,175 @@ global.REQUEST = METHOD(function(m) {
 					SHOW_ERROR('REQUEST', errorMsg, params);
 				}
 			});
+		}
+	};
+});
+
+/**
+ * CPU 각 코어 당 사용률을 반환합니다.
+ */
+global.CPU_USAGES = METHOD(function(m) {
+	'use strict';
+	
+	var
+	//IMPORT: os
+	os = require('os');
+	
+	return {
+		
+		run : function() {
+			
+			var
+			// cpu infos
+			cpuInfos = os.cpus(),
+			
+			// usages
+			usages = [];
+			
+			EACH(cpuInfos, function(cpuInfo) {
+				
+				var
+				// total
+				total = 0,
+				
+				// idle time
+				idleTime;
+				
+				EACH(cpuInfo.times, function(time, type) {
+					total += time;
+					if (type === 'idle') {
+						idleTime = time;
+					}
+				});
+				
+				usages.push((1 - idleTime / total) * 100);
+			});
+			
+			return usages;
+		}
+	};
+});
+
+/**
+ * 디스크 사용률을 반환합니다.
+ */
+global.DISK_USAGE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: diskspace
+	diskspace = require('diskspace');
+
+	return {
+
+		run : function(drive, callbackOrHandlers) {
+			//OPTIONAL: drive	확인할 디스크 드라이브
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
+
+			var
+			// error handler.
+			errorHandler,
+			
+			// callback.
+			callback;
+
+			if (callbackOrHandlers === undefined) {
+				callbackOrHandlers = drive;
+				drive = undefined;
+			}
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
+			}
+			
+			if (drive === undefined) {
+				if (process.platform === 'win32') {
+					drive = 'c:';
+				} else {
+					drive = '/';
+				}
+			}
+			
+			diskspace.check(drive, function(err, total, free, status) {
+				if (status === 'READY') {
+					callback((1 - free / total) * 100);
+				} else if (errorHandler !== undefined) {
+					errorHandler(status);
+				} else {
+					SHOW_ERROR('DISK_USAGE', status);
+				}
+			});
+		}
+	};
+});
+
+/**
+ * 메모리 사용률을 반환합니다.
+ */
+global.MEMORY_USAGE = METHOD(function(m) {
+	'use strict';
+	
+	var
+	//IMPORT: os
+	os = require('os'),
+	
+	// total memory
+	totalMemory = os.totalmem();
+	
+	return {
+		
+		run : function() {
+			
+			var
+			// free memory
+			freeMemory = os.freemem();
+			
+			return (1 - freeMemory / totalMemory) * 100;
+		}
+	};
+});
+
+/**
+ * 매일 정해진 시간마다 주어진 터미널 명령어들을 실행하는 데몬을 구동합니다.
+ */
+global.RUN_SCHEDULE_DAEMON = METHOD(function(m) {
+	'use strict';
+	
+	var
+	//IMPORT: exec
+	exec = require('child_process').exec;
+	
+	return {
+		
+		run : function(schedules) {
+			//REQUIRED: schedules
+			
+			INTERVAL(60, RAR(function() {
+				
+				var
+				// now cal
+				nowCal = CALENDAR();
+				
+				EACH(schedules, function(schedule) {
+					
+					if (nowCal.getHour() === schedule.hour && nowCal.getMinute() === (schedule.minute === undefined ? 0 : schedule.minute)) {
+						
+						EACH(schedule.commands, function(command) {
+							
+							exec(command, function(error) {
+								if (error !== TO_DELETE) {
+									SHOW_ERROR('RUN_SCHEDULE_DAEMON', error.toString());
+								}
+							});
+						});
+					}
+				});
+			}));
 		}
 	};
 });

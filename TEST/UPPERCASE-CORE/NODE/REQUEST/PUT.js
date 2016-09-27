@@ -1,12 +1,5 @@
-// load UJS.
-require('../../../UJS-NODE.js');
-
-//!! run TEST-SERVER.js before this test.
-
-TEST('PUT', function(ok) {
+TEST('PUT', function(check) {
 	'use strict';
-
-	INIT_OBJECTS();
 
 	// test PUT request.
 	PUT({
@@ -14,7 +7,7 @@ TEST('PUT', function(ok) {
 		port : 8810,
 		uri : 'AJAX_TEST'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test PUT request with parameters.
@@ -24,7 +17,7 @@ TEST('PUT', function(ok) {
 		uri : 'AJAX_TEST',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test PUT request with data.
@@ -36,7 +29,7 @@ TEST('PUT', function(ok) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test PUT request.
@@ -45,7 +38,7 @@ TEST('PUT', function(ok) {
 		port : 8810,
 		uri : 'AJAX_JSON_TEST'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});
@@ -57,7 +50,7 @@ TEST('PUT', function(ok) {
 		uri : 'AJAX_JSON_TEST',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});
@@ -71,7 +64,7 @@ TEST('PUT', function(ok) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});

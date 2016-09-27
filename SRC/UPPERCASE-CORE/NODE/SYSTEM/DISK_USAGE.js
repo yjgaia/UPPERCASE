@@ -6,23 +6,22 @@ global.DISK_USAGE = METHOD(function() {
 
 	var
 	//IMPORT: diskspace
-	diskspace = require('diskspace'),
-	
-	// os type
-	osType = require('os').type();
+	diskspace = require('diskspace');
 
 	return {
 
 		run : function(drive, callbackOrHandlers) {
 			//OPTIONAL: drive	확인할 디스크 드라이브
 			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
 
 			var
-			// callback.
-			callback,
-
 			// error handler.
-			errorHandler;
+			errorHandler,
+			
+			// callback.
+			callback;
 
 			if (callbackOrHandlers === undefined) {
 				callbackOrHandlers = drive;
@@ -32,14 +31,14 @@ global.DISK_USAGE = METHOD(function() {
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
 			} else {
-				callback = callbackOrHandlers.success;
 				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
 			}
 			
 			if (drive === undefined) {
-				if (osType === 'Windows_NT') {
-					drive = 'C';
-				} else if (osType === 'Darwin' || osType === 'Linux') {
+				if (process.platform === 'win32') {
+					drive = 'c:';
+				} else {
 					drive = '/';
 				}
 			}
@@ -50,7 +49,7 @@ global.DISK_USAGE = METHOD(function() {
 				} else if (errorHandler !== undefined) {
 					errorHandler(status);
 				} else {
-					SHOW_ERROR('[DISK_USAGE] ERROR: ' + status);
+					SHOW_ERROR('DISK_USAGE', status);
 				}
 			});
 		}

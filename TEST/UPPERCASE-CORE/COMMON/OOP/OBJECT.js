@@ -24,7 +24,4 @@ TEST('OBJECT', function(check) {
 			console.log('this is child object.');
 		}
 	});
-
-	// init all singleton objects.
-	INIT_OBJECTS();
 });

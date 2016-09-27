@@ -1,4 +1,4 @@
-TEST('MINIFY_JS', function(ok) {
+TEST('MINIFY_JS', function(check) {
 	'use strict';
 
 	READ_FILE('NODE/MINIFY/MINIFY_JS.js', function(content) {

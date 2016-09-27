@@ -1,5 +1,5 @@
 /**
- * 매일 정해진 시간마다 정해진 터미널 명령어들을 실행합니다.
+ * 매일 정해진 시간마다 주어진 터미널 명령어들을 실행하는 데몬을 구동합니다.
  */
 global.RUN_SCHEDULE_DAEMON = METHOD(function(m) {
 	'use strict';
@@ -27,7 +27,7 @@ global.RUN_SCHEDULE_DAEMON = METHOD(function(m) {
 							
 							exec(command, function(error) {
 								if (error !== TO_DELETE) {
-									SHOW_ERROR('[NODE] RUN_SCHEDULE_DAEMON ERROR: ' + error.toString());
+									SHOW_ERROR('RUN_SCHEDULE_DAEMON', error.toString());
 								}
 							});
 						});

@@ -4,12 +4,13 @@ UPPERCASE-CORE-NODE는 Node.js 환경에서 사용할 수 있는 모듈입니다
 
 ## 목차
 * [사용방법](#사용방법)
+* [`NODE_CONFIG`](#node_config)
 * [손쉬운 서버 생성](#손쉬운-서버-생성)
 * 손쉬운 클러스터링
 * 이미지 처리 기능
 * [파일 처리 기능](#파일-처리-기능)
 * [HTTP 요청 기능](#http-요청-기능)
-* 시스템 관련 기능
+* [시스템 관련 기능](#시스템-관련-기능)
 * [콘솔 로그 관련 기능](#콘솔-로그-관련-기능)
 * [문자열 암호화 기능](#문자열-암호화-기능)
 * [코드 압축 기능](#코드-압축-기능)
@@ -29,6 +30,9 @@ npm install uppercase-core-node
 ```javascript
 require('uppercase-core-node');
 ```
+
+## `NODE_CONFIG`
+UPPERCASE 기반 프로젝트에서 Node.js 환경 전용 설정값들을 저장하는 데이터입니다. UPPERCASE의 다른 모듈들도 이를 확장하여 사용합니다. UPPERCASE-CORE-NODE에서는 별다른 설정값을 가지고 있지 않습니다.
 
 ## 손쉬운 서버 생성
 UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽게 생성할 수 있습니다.
@@ -523,7 +527,50 @@ DOWNLOAD({
 ```
 
 ## 시스템 관련 기능
-TODO:
+### `CPU_USAGES()`
+CPU 각 코어 당 사용률을 반환합니다.
+
+### `MEMORY_USAGE()`
+메모리 사용률을 반환합니다.
+
+### `DISK_USAGE()`
+디스크 사용률을 반환합니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `DISK_USAGE({function(usage) {}})`
+* `DISK_USAGE({error:, success:})`
+* `DISK_USAGE(drive, {function(usage) {}})`
+* `DISK_USAGE(drive, {error:, success:})`
+
+```javascript
+DISK_USAGE('c:', function(usage) {
+    console.log(usage);
+});
+```
+
+### `RUN_SCHEDULE_DAEMON(schedules)`
+매일 정해진 시간마다 주어진 터미널 명령어들을 실행하는 데몬을 구동합니다.
+
+아래는 프로세스에 쌓여있는 메모리를 초기화하기 위해, 유저 수가 적은 새벽 6시에 `forever` 모듈로 실행시킨 데몬을 재시작하는 코드입니다.
+```javascript
+RUN_SCHEDULE_DAEMON([
+// 새벽 6시에 서비스 중지
+{
+	hour : 6,
+	commands : [
+		'forever stop MessengerServer.js',
+		'pkill -f "node --max-old-space-size=16384 /root/Service/Messenger/MessengerServer.js"'
+	]
+},
+// 새벽 6시 1분에 서비스 재개
+{
+	hour : 6,
+	minute : 1,
+	commands : [
+		'forever start -c "node --max-old-space-size=16384" MessengerServer.js'
+	]
+}]);
+```
 
 ## 콘솔 로그 관련 기능
 ### `CONSOLE_RED(text)`

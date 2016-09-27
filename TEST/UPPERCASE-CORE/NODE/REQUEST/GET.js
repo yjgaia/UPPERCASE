@@ -1,13 +1,6 @@
-// load UJS.
-require('../../../UJS-NODE.js');
-
-//!! run TEST-SERVER.js before this test.
-
-TEST('GET', function(ok) {
+TEST('GET', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-	
 	// test GET request with url.
 	GET('http://google.com', function(content) {
 		console.log(content);
@@ -15,7 +8,7 @@ TEST('GET', function(ok) {
 	
 	// test GET request with url.
 	GET('http://localhost:8810/AJAX_TEST', function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test GET request.
@@ -24,7 +17,7 @@ TEST('GET', function(ok) {
 		port : 8810,
 		uri : 'AJAX_TEST'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test GET request with parameters.
@@ -34,7 +27,7 @@ TEST('GET', function(ok) {
 		uri : 'AJAX_TEST',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test GET request with data.
@@ -46,7 +39,7 @@ TEST('GET', function(ok) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test GET request.
@@ -55,7 +48,7 @@ TEST('GET', function(ok) {
 		port : 8810,
 		uri : 'AJAX_JSON_TEST'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});
@@ -67,7 +60,7 @@ TEST('GET', function(ok) {
 		uri : 'AJAX_JSON_TEST',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});
@@ -81,7 +74,7 @@ TEST('GET', function(ok) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
 	});

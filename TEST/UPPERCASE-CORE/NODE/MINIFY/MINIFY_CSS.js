@@ -1,4 +1,4 @@
-TEST('MINIFY_CSS', function(ok) {
+TEST('MINIFY_CSS', function(check) {
 	'use strict';
 
 	READ_FILE('NODE/MINIFY/sample.css', function(content) {
