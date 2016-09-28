@@ -64,19 +64,6 @@ mongod --shardsvr --port 30007 --fork --keyFile /srv/mongodb/mongodb-shard-keyfi
 mongod --shardsvr --port 30008 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db8.log --dbpath /data/shard_db8
 ```
 
-위에서 생성한 데몬들을 관리하는 설정 데몬을 `--configsvr` 옵션을 붙혀 생성합니다.또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
-```
-mkdir /data/shard_config
-```
-```
-mongod --configsvr --port 30000 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config.log --dbpath /data/shard_config
-```
-
-이제 `mongos`를 실행합니다. `--configdb` 옵션으로 위에서 생성한 설정 데몬을 가리킵니다. 
-```
-mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb localhost:30000
-```
-
 ### configdb가 여러대일 경우
 configdb가 여러대일 경우에는 다음과 같이 설정합니다.
 데몬들을 관리하는 설정 데몬을 `--configsvr` 옵션을 붙혀 생성합니다.또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
@@ -86,17 +73,36 @@ mkdir /data/shard_config2
 mkdir /data/shard_config3
 ```
 ```
-mongod --configsvr --port 30001 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config1.log --dbpath /data/shard_config1
-mongod --configsvr --port 30002 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config2.log --dbpath /data/shard_config2
-mongod --configsvr --port 30003 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config3.log --dbpath /data/shard_config3
+mongod --configsvr --replSet csReplSet --port 40001 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config1.log --dbpath /data/shard_config1
+mongod --configsvr --replSet csReplSet --port 40002 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config2.log --dbpath /data/shard_config2
+mongod --configsvr --replSet csReplSet --port 40003 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_config3.log --dbpath /data/shard_config3
+```
+
+```
+mongo --port 40001
+```
+
+```
+rs.initiate(
+  {
+    _id: "csReplSet",
+    configsvr: true,
+    members: [
+      { _id : 0, host : "localhost:40001" },
+      { _id : 1, host : "localhost:40002" },
+      { _id : 2, host : "localhost:40003" }
+    ]
+  }
+);
 ```
 
 이제 `mongos`를 실행합니다. `--configdb` 옵션으로 위에서 생성한 설정 데몬을 가리킵니다. 11.22.33.44는 해당하는 ip로 변경해주시기 바랍니다.
 ```
-mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb 11.22.33.44:30001,11.22.33.44:30002,11.22.33.44:30003
+mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/11.22.33.44:40001,11.22.33.44:40002,11.22.33.44:40003
 ```
-**MongoDB 3.2에서는 config server가 replica set으로 변경되었습니다. 자세한 정보는 https://docs.mongodb.org/manual/tutorial/upgrade-config-servers-to-replica-set/ 이곳을 참고해 주시기 바랍니다.**
-
+```
+mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/localhost:40001,localhost:40002,localhost:40003
+```
 
 이제 `mongos`에 접속합니다.
 ```
@@ -114,28 +120,28 @@ db.createUser({ user : 'root 유저명', pwd : 'root 비밀번호', roles : ['ro
 db.auth('root 유저명', 'root 비밀번호');
 ```
 
-`shard` 할 데몬의 접속 경로를 지정합니다.
+`shard` 할 데몬의 접속 경로를 지정합니다. replica set을 사용하였으므로 localhost 사용 불가
 ```
-db.runCommand({addshard : 'localhost:30001'});
-db.runCommand({addshard : 'localhost:30002'});
-db.runCommand({addshard : 'localhost:30003'});
-db.runCommand({addshard : 'localhost:30004'});
-db.runCommand({addshard : 'localhost:30005'});
-db.runCommand({addshard : 'localhost:30006'});
-db.runCommand({addshard : 'localhost:30007'});
-db.runCommand({addshard : 'localhost:30008'});
+sh.addShard('11.22.33.44:30001');
+sh.addShard('11.22.33.44:30002');
+sh.addShard('11.22.33.44:30003');
+sh.addShard('11.22.33.44:30004');
+sh.addShard('11.22.33.44:30005');
+sh.addShard('11.22.33.44:30006');
+sh.addShard('11.22.33.44:30007');
+sh.addShard('11.22.33.44:30008');
 ```
 
 샤딩 할 데이터베이스를 지정합니다.
 ```
-db.runCommand({'enablesharding' : '{{데이터베이스 명}}'});
+sh.enableSharding('{{데이터베이스 명}}');
 ```
 
 샤딩 할 콜렉션들을 지정합니다.
 ```
-db.runCommand({shardcollection : '{{콜렉션 명}}', key : {_id : 1}});
-db.runCommand({shardcollection : '{{콜렉션 명}}', key : {_id : 1}});
-db.runCommand({shardcollection : '{{콜렉션 명}}', key : {_id : 1}});
+sh.shardCollection('{{데이터베이스 명}}.{{콜렉션 명}}', {_id : 1});
+sh.shardCollection('{{데이터베이스 명}}.{{콜렉션 명}}', {_id : 1});
+sh.shardCollection('{{데이터베이스 명}}.{{콜렉션 명}}', {_id : 1});
 ...
 ```
 
@@ -167,6 +173,19 @@ use admin
 db.shutdownServer();
 ```
 
+`mongos`에 접속합니다.
+```
+mongo --port 40001
+mongo --port 40002
+mongo --port 40003
+```
+
+다음과 같이 데몬 서버를 종료합니다.
+```
+use admin
+db.shutdownServer();
+```
+
 이제 나머지 데몬들도 모두 종료합니다.
 ```
 mongod --dbpath /data/shard_db1 --shutdown
@@ -177,7 +196,6 @@ mongod --dbpath /data/shard_db5 --shutdown
 mongod --dbpath /data/shard_db6 --shutdown
 mongod --dbpath /data/shard_db7 --shutdown
 mongod --dbpath /data/shard_db8 --shutdown
-mongod --dbpath /data/shard_config --shutdown
 ```
 
 
