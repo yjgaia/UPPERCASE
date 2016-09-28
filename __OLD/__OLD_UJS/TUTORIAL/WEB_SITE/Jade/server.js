@@ -18,7 +18,7 @@ WEB_SERVER(8123, function(requestInfo, response, onDisconnected) {
 	
 	uri = uri + '.jade';
 	
-	CHECK_IS_EXISTS_FILE(uri, function(isExists) {
+	CHECK_IS_FILE_EXISTS(uri, function(isExists) {
 		
 		if (isExists === true) {
 			response(Jade.renderFile(uri,

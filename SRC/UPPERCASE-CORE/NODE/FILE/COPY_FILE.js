@@ -64,7 +64,7 @@ global.COPY_FILE = METHOD(function() {
 					// when normal mode
 					if (isSync !== true) {
 
-						CHECK_IS_EXISTS_FILE(from, function(isExists) {
+						CHECK_IS_FILE_EXISTS(from, function(isExists) {
 
 							var
 							// reader
@@ -117,7 +117,7 @@ global.COPY_FILE = METHOD(function() {
 
 							try {
 
-								if (CHECK_IS_EXISTS_FILE({
+								if (CHECK_IS_FILE_EXISTS({
 									path : from,
 									isSync : true
 								}) === true) {

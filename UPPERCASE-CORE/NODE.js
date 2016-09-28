@@ -3505,7 +3505,7 @@ global.SHA512 = METHOD({
 /**
  * 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
  */
-global.CHECK_IS_EXISTS_FILE = METHOD(function() {
+global.CHECK_IS_FILE_EXISTS = METHOD(function() {
 	'use strict';
 
 	var
@@ -3697,7 +3697,7 @@ global.COPY_FILE = METHOD(function() {
 					// when normal mode
 					if (isSync !== true) {
 
-						CHECK_IS_EXISTS_FILE(from, function(isExists) {
+						CHECK_IS_FILE_EXISTS(from, function(isExists) {
 
 							var
 							// reader
@@ -3750,7 +3750,7 @@ global.COPY_FILE = METHOD(function() {
 
 							try {
 
-								if (CHECK_IS_EXISTS_FILE({
+								if (CHECK_IS_FILE_EXISTS({
 									path : from,
 									isSync : true
 								}) === true) {
@@ -3853,7 +3853,7 @@ global.CREATE_FOLDER = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+				CHECK_IS_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 
@@ -3865,7 +3865,7 @@ global.CREATE_FOLDER = METHOD(function() {
 
 						folderPath = _path.dirname(path);
 
-						CHECK_IS_EXISTS_FILE(folderPath, function(isExists) {
+						CHECK_IS_FILE_EXISTS(folderPath, function(isExists) {
 
 							if (isExists === true) {
 
@@ -3914,14 +3914,14 @@ global.CREATE_FOLDER = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_EXISTS_FILE({
+						if (CHECK_IS_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) !== true) {
 
 							folderPath = _path.dirname(path);
 
-							if (CHECK_IS_EXISTS_FILE({
+							if (CHECK_IS_FILE_EXISTS({
 								path : folderPath,
 								isSync : true
 							}) === true) {
@@ -4028,7 +4028,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+				CHECK_IS_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 
@@ -4119,7 +4119,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_EXISTS_FILE({
+						if (CHECK_IS_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) === true) {
@@ -4233,7 +4233,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+				CHECK_IS_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 
@@ -4324,7 +4324,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_EXISTS_FILE({
+						if (CHECK_IS_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) === true) {
@@ -4434,7 +4434,7 @@ global.GET_FILE_INFO = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+				CHECK_IS_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 
@@ -4496,7 +4496,7 @@ global.GET_FILE_INFO = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_EXISTS_FILE({
+						if (CHECK_IS_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) === true) {
@@ -4677,7 +4677,7 @@ global.READ_FILE = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+				CHECK_IS_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 
@@ -4755,7 +4755,7 @@ global.READ_FILE = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_EXISTS_FILE({
+						if (CHECK_IS_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) === true) {
@@ -4866,7 +4866,7 @@ global.REMOVE_FILE = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+				CHECK_IS_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 
@@ -4916,7 +4916,7 @@ global.REMOVE_FILE = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_EXISTS_FILE({
+						if (CHECK_IS_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) === true) {
@@ -5016,7 +5016,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+				CHECK_IS_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 						
@@ -5104,7 +5104,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_EXISTS_FILE({
+						if (CHECK_IS_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) === true) {

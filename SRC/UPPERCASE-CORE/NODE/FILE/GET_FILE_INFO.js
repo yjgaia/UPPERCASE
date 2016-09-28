@@ -58,7 +58,7 @@ global.GET_FILE_INFO = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+				CHECK_IS_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 
@@ -120,7 +120,7 @@ global.GET_FILE_INFO = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_EXISTS_FILE({
+						if (CHECK_IS_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) === true) {

@@ -191,7 +191,7 @@ WEB_SERVER(8123, function(requestInfo, response, onDisconnected) {
 	uri = uri + '.jade';
 	
     // 파일이 존재하면,
-	CHECK_IS_EXISTS_FILE(uri, function(isExists) {
+	CHECK_IS_FILE_EXISTS(uri, function(isExists) {
 		
         // Jade로 렌더링하여 출력
 		if (isExists === true) {

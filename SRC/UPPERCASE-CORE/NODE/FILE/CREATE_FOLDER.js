@@ -57,7 +57,7 @@ global.CREATE_FOLDER = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_EXISTS_FILE(path, function(isExists) {
+				CHECK_IS_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 
@@ -69,7 +69,7 @@ global.CREATE_FOLDER = METHOD(function() {
 
 						folderPath = _path.dirname(path);
 
-						CHECK_IS_EXISTS_FILE(folderPath, function(isExists) {
+						CHECK_IS_FILE_EXISTS(folderPath, function(isExists) {
 
 							if (isExists === true) {
 
@@ -118,14 +118,14 @@ global.CREATE_FOLDER = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_EXISTS_FILE({
+						if (CHECK_IS_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) !== true) {
 
 							folderPath = _path.dirname(path);
 
-							if (CHECK_IS_EXISTS_FILE({
+							if (CHECK_IS_FILE_EXISTS({
 								path : folderPath,
 								isSync : true
 							}) === true) {

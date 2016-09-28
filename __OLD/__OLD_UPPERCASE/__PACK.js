@@ -93,7 +93,7 @@ RUN(function() {
 		//REQUIRED: path
 		//REQUIRED: func
 
-		if (CHECK_IS_EXISTS_FILE({
+		if (CHECK_IS_FILE_EXISTS({
 			path : path,
 			isSync : true
 		}) === true) {

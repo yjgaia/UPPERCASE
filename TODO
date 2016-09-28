@@ -5,3 +5,4 @@
 
 1.x -> 2.x로 업데이트 시 유의할 점
 * VALID의 check는 checkAndWash로 변경
+* CHECK_IS_EXISTS_FILE -> CHECK_IS_FILE_EXISTS
