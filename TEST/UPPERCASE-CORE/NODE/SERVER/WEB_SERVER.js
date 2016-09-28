@@ -1,10 +1,15 @@
-// load UJS.
-require('../../../UJS-NODE.js');
-
 TEST('WEB_SERVER', function(ok) {
 	'use strict';
+	
+	// 리소스를 캐싱하지 않으려면 dev mode가 true여야함
+	CONFIG.isDevMode = true;
 
-	INIT_OBJECTS();
+	WEB_SERVER({
+		port : 8123,
+		rootPath : __dirname + '/R'
+	});
+	
+	/*
 
 	CPU_CLUSTERING(function(workerData, on, off, broadcast) {
 		
@@ -55,4 +60,5 @@ TEST('WEB_SERVER', function(ok) {
 			});
 		});
 	});
+	*/
 });

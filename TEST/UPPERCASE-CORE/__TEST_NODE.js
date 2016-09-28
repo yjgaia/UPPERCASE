@@ -60,9 +60,12 @@ RUN(function() {
 		
 		//test('NODE/CONSOLE/SHOW_ERROR');
 		
-		test('NODE/SYSTEM/CPU_USAGES');
-		test('NODE/SYSTEM/MEMORY_USAGE');
-		test('NODE/SYSTEM/DISK_USAGE');
+		//test('NODE/SYSTEM/CPU_USAGES');
+		//test('NODE/SYSTEM/MEMORY_USAGE');
+		//test('NODE/SYSTEM/DISK_USAGE');
+		//test('NODE/SERVER/WEB_SERVER');
+		test('NODE/SERVER/WEB_SERVER/CREATE_COOKIE_STR_ARRAY');
+		test('NODE/SERVER/WEB_SERVER/PARSE_COOKIE_STR');
 	}
 	
 	// init all singleton objects.

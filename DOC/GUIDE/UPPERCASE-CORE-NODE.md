@@ -37,8 +37,58 @@ UPPERCASE 기반 프로젝트에서 Node.js 환경 전용 설정값들을 저장
 ## 손쉬운 서버 생성
 UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽게 생성할 수 있습니다.
 
-### 웹 서버 생성
-TODO:
+### `WEB_SERVER`
+웹 서버를 생성하는 클래스
+
+사용 가능한 형태들은 다음과 같습니다.
+
+#### 요청에 응답하는 단순한 웹 서버 생성
+
+#### 웹 페이지 등 리소스를 제공하는 웹 서버 생성
+
+* `CONFIG.isDevMode`가 `true`인 경우, 캐싱 기능이 작동하지 않습니다.
+
+#### 업로드 기능을 제공하는 웹 서버 생성
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `port` HTTP 서버 포트
+* `securedPort` HTTPS 서버 포트
+* `securedKeyFilePath` SSL인증 .key 파일 경로
+* `securedCertFilePath` SSL인증 .cert 파일 경로
+* `rootPath` 리소스 루트 폴더
+* `version` 캐싱을 위한 버전, 같은 버전의 요청이 들어오면 캐싱된 내용을 응답합니다.
+* `preprocessors` 프리프로세서들, 뷰 템플릿 등과 같이, 특정 확장자의 리소스를 응답하기 전에 내용을 변경하는 경우 사용합니다.
+
+사용 가능한 `static` 함수들은 다음과 같습니다.
+#### `WEB_SERVER.getContentTypeFromExtension(extension)`
+주어진 확장자에 해당하는 Content Type을 반환합니다.
+```javascript
+WEB_SERVER.getContentTypeFromExtension('js'); // 'application/javascript'
+WEB_SERVER.getContentTypeFromExtension('png'); // 'image/png'
+```
+
+#### `WEB_SERVER.getEncodingFromContentType(contentType)`
+주어진 Content Type에 적합한 문자열 인코딩을 반환합니다.
+```javascript
+WEB_SERVER.getEncodingFromContentType('application/javascript'); // 'utf-8'
+WEB_SERVER.getEncodingFromContentType('image/png'); // 'binary'
+```
+
+웹 개발을 할 때, [HTTP 쿠키](https://ko.wikipedia.org/wiki/HTTP_%EC%BF%A0%ED%82%A4)를 다루는 일이 종종 필요합니다. UPPERCASE-CORE-NODE에는 쿠키를 쉽게 다룰 수 있는 기능들이 구현되어 있습니다.
+#### `CREATE_COOKIE_STR_ARRAY(data)`
+데이터를 쿠키 문자열로 이루어진 배열로 변환합니다.
+```javascript
+CREATE_COOKIE_STR_ARRAY({
+    name : 'YJ Sim',
+    age : 28
+}); // ['name=YJ%20Sim', 'age=28']
+```
+
+#### `PARSE_COOKIE_STR(cookieStr)`
+쿠키 문자열을 데이터로 변환합니다.
+```javascript
+PARSE_COOKIE_STR('name=YJ%20Sim; age=28'); // {name : 'YJ Sim', age : '28'}
+```
 
 ### 웹소켓 서버 생성
 TODO:
@@ -233,15 +283,15 @@ REMOVE_FILE('some.txt', {
 });
 ```
 
-### `CHECK_IS_FILE_EXISTS`
+### `CHECK_IS_EXISTS_FILE`
 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `CHECK_IS_FILE_EXISTS(path, function(isExists) {})`
-* `CHECK_IS_FILE_EXISTS({path:, isSync: true})`
+* `CHECK_IS_EXISTS_FILE(path, function(isExists) {})`
+* `CHECK_IS_EXISTS_FILE({path:, isSync: true})`
 
 ```javascript
-CHECK_IS_FILE_EXISTS('some.txt', function(isExists) {
+CHECK_IS_EXISTS_FILE('some.txt', function(isExists) {
     if (isExists === true) {
 	    console.log('파일이 존재합니다.');
 	} else {
@@ -638,7 +688,7 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
 SHA1({
 	password : '1234',
 	key : 'test'
-}); // 16dd1fdd7c595eab4586cebba6b34eaff41acc53
+}); // '16dd1fdd7c595eab4586cebba6b34eaff41acc53'
 ```
 
 ### `SHA256({password:, key})`
@@ -648,7 +698,7 @@ SHA1({
 SHA256({
 	password : '1234',
 	key : 'test'
-}); // 5471d39e681ffc00128c11b573f4a3356ceba766956bb928d562d2c7c0c2db6a
+}); // '5471d39e681ffc00128c11b573f4a3356ceba766956bb928d562d2c7c0c2db6a'
 ```
 
 ### `SHA512({password:, key})`
@@ -658,7 +708,7 @@ SHA256({
 SHA512({
 	password : '1234',
 	key : 'test'
-}); // ae451e84ce797ab519f454e9e3c9220550a5119c1063f75837281e4157c91cf27ec3d7a38df3254cdbc4c108189ed4b8d904baf2320a23d5268b1e81c110343b
+}); // 'ae451e84ce797ab519f454e9e3c9220550a5119c1063f75837281e4157c91cf27ec3d7a38df3254cdbc4c108189ed4b8d904baf2320a23d5268b1e81c110343b'
 ```
 
 ## 코드 압축 기능
