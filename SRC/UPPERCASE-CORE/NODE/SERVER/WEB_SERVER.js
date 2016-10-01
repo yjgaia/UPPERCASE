@@ -1,7 +1,5 @@
 /**
  * 웹 서버를 생성하는 클래스
- * 
- * TODO: 이미지 처리 다 되면 적용
  */
 global.WEB_SERVER = CLASS(function(cls) {
 	'use strict';
