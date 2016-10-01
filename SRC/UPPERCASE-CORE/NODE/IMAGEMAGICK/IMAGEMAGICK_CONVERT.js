@@ -1,12 +1,12 @@
 /**
- * ImageMagick® convert.
+ * ImageMagick의 convert 기능을 사용합니다.
  */
 global.IMAGEMAGICK_CONVERT = METHOD(function() {
 	'use strict';
 
 	var
 	//IMPORT: imagemagick
-	imagemagick = require('imagemagick');
+	imagemagick = require('hanul-imagemagick');
 
 	return {
 
@@ -29,7 +29,7 @@ global.IMAGEMAGICK_CONVERT = METHOD(function() {
 					errorHandler = callbackOrHandlers.error;
 				}
 			}
-
+			
 			imagemagick.convert(params, function(error) {
 
 				var
@@ -43,7 +43,7 @@ global.IMAGEMAGICK_CONVERT = METHOD(function() {
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
 					} else {
-						SHOW_ERROR('[UPPERCASE-IMAGEMAGICK_CONVERT] ERROR: ' + errorMsg);
+						SHOW_ERROR('IMAGEMAGICK_CONVERT', errorMsg);
 					}
 
 				} else {

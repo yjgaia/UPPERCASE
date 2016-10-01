@@ -5291,6 +5291,245 @@ global.WRITE_FILE = METHOD(function() {
 });
 
 /**
+ * ImageMagick® convert.
+ */
+global.IMAGEMAGICK_CONVERT = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: imagemagick
+	imagemagick = require('hanul-imagemagick');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params
+			//OPTIONAL: callbackOrHandlers
+
+			var
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+			
+			imagemagick.convert(params, function(error) {
+
+				var
+				// error msg
+				errorMsg;
+
+				if (error !== TO_DELETE) {
+
+					errorMsg = error.toString();
+
+					if (errorHandler !== undefined) {
+						errorHandler(errorMsg);
+					} else {
+						SHOW_ERROR('IMAGEMAGICK_CONVERT', errorMsg);
+					}
+
+				} else {
+
+					if (callback !== undefined) {
+						callback();
+					}
+				}
+			});
+		}
+	};
+});
+
+/**
+ * ImageMagick® identify.
+ */
+global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: imagemagick
+	imagemagick = require('hanul-imagemagick');
+
+	return {
+
+		run : function(path, callbackOrHandlers) {
+			//REQUIRED: path
+			//REQUIRED: callbackOrHandlers
+
+			var
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				callback = callbackOrHandlers.success;
+				errorHandler = callbackOrHandlers.error;
+			}
+			
+			imagemagick.identify(path, function(error, features) {
+
+				var
+				// error msg
+				errorMsg;
+
+				if (error !== TO_DELETE) {
+
+					errorMsg = error.toString();
+
+					if (errorHandler !== undefined) {
+						errorHandler(errorMsg);
+					} else {
+						SHOW_ERROR('IMAGEMAGICK_IDENTIFY', errorMsg);
+					}
+
+				} else {
+					callback(features);
+				}
+			});
+		}
+	};
+});
+
+/**
+ * ImageMagick® read metadata.
+ */
+global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: imagemagick
+	imagemagick = require('hanul-imagemagick');
+
+	return {
+
+		run : function(path, callbackOrHandlers) {
+			//REQUIRED: path
+			//REQUIRED: callbackOrHandlers
+
+			var
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				callback = callbackOrHandlers.success;
+				errorHandler = callbackOrHandlers.error;
+			}
+			
+			imagemagick.readMetadata(path, function(error, metadata) {
+
+				var
+				// error msg
+				errorMsg;
+
+				if (error !== TO_DELETE) {
+
+					errorMsg = error.toString();
+
+					if (errorHandler !== undefined) {
+						errorHandler(errorMsg);
+					} else {
+						SHOW_ERROR('IMAGEMAGICK_READ_METADATA', errorMsg);
+					}
+
+				} else {
+					callback(metadata);
+				}
+			});
+		}
+	};
+});
+
+/**
+ * ImageMagick® resize.
+ */
+global.IMAGEMAGICK_RESIZE = METHOD(function() {
+	'use strict';
+
+	var
+	//IMPORT: path
+	_path = require('path');
+
+	return {
+
+		run : function(params, callbackOrHandlers) {
+			//REQUIRED: params.srcPath
+			//REQUIRED: params.distPath
+			//OPTIONAL: params.width
+			//OPTIONAL: params.height
+			//OPTIONAL: callbackOrHandlers
+
+			var
+			// src path
+			srcPath = params.srcPath,
+
+			// dist path
+			distPath = params.distPath,
+
+			// width
+			width = params.width,
+
+			// height
+			height = params.height,
+
+			// callback.
+			callback,
+
+			// error handler.
+			errorHandler;
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					callback = callbackOrHandlers.success;
+					errorHandler = callbackOrHandlers.error;
+				}
+			}
+
+			CREATE_FOLDER(_path.dirname(distPath), {
+				error : errorHandler,
+				success : function() {
+
+					IMAGEMAGICK_IDENTIFY(srcPath, {
+						error : errorHandler,
+						success : function(features) {
+
+							if (width === undefined) {
+								width = height / features.height * features.width;
+							}
+
+							if (height === undefined) {
+								height = width / features.width * features.height;
+							}
+
+							IMAGEMAGICK_CONVERT([srcPath, '-resize', width + 'x' + height + '\!', distPath], callbackOrHandlers);
+						}
+					});
+				}
+			});
+		}
+	};
+});
+
+/**
  * CSS 코드를 압축합니다.
  */
 global.MINIFY_CSS = METHOD(function() {
@@ -5348,10 +5587,10 @@ global.DELETE = METHOD({
 		//OPTIONAL: urlOrParams.host
 		//OPTIONAL: urlOrParams.port
 		//OPTIONAL: urlOrParams.uri
-		//OPTIONAL: urlOrParams.url			요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+		//OPTIONAL: urlOrParams.url			요청을 보낼 URL. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
 		//OPTIONAL: urlOrParams.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
 		//OPTIONAL: urlOrParams.params		데이터 형태({...})로 표현한 파라미터 목록
-		//OPTIONAL: urlOrParams.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+		//OPTIONAL: urlOrParams.data		UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
 		//OPTIONAL: urlOrParams.headers		요청 헤더
 		//OPTIONAL: responseListenerOrListeners
 		//OPTIONAL: responseListenerOrListeners.error
@@ -5397,10 +5636,10 @@ global.DOWNLOAD = METHOD(function() {
 			//OPTIONAL: params.host
 			//OPTIONAL: params.port
 			//OPTIONAL: params.uri
-			//OPTIONAL: params.url		요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+			//OPTIONAL: params.url		요청을 보낼 URL. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
 			//OPTIONAL: params.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
 			//OPTIONAL: params.params	데이터 형태({...})로 표현한 파라미터 목록
-			//OPTIONAL: params.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+			//OPTIONAL: params.data		UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
 			//OPTIONAL: params.headers	요청 헤더
 			//REQUIRED: params.path		리소스를 다운로드하여 저장할 경로
 			//OPTIONAL: callbackOrHandlers
@@ -5563,10 +5802,10 @@ global.GET = METHOD({
 		//OPTIONAL: urlOrParams.host
 		//OPTIONAL: urlOrParams.port
 		//OPTIONAL: urlOrParams.uri
-		//OPTIONAL: urlOrParams.url			요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+		//OPTIONAL: urlOrParams.url			요청을 보낼 URL. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
 		//OPTIONAL: urlOrParams.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
 		//OPTIONAL: urlOrParams.params		데이터 형태({...})로 표현한 파라미터 목록
-		//OPTIONAL: urlOrParams.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+		//OPTIONAL: urlOrParams.data		UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
 		//OPTIONAL: urlOrParams.headers		요청 헤더
 		//OPTIONAL: responseListenerOrListeners
 		//OPTIONAL: responseListenerOrListeners.error
@@ -5596,10 +5835,10 @@ global.POST = METHOD({
 		//OPTIONAL: urlOrParams.host
 		//OPTIONAL: urlOrParams.port
 		//OPTIONAL: urlOrParams.uri
-		//OPTIONAL: urlOrParams.url			요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+		//OPTIONAL: urlOrParams.url			요청을 보낼 URL. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
 		//OPTIONAL: urlOrParams.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
 		//OPTIONAL: urlOrParams.params		데이터 형태({...})로 표현한 파라미터 목록
-		//OPTIONAL: urlOrParams.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+		//OPTIONAL: urlOrParams.data		UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
 		//OPTIONAL: urlOrParams.headers		요청 헤더
 		//OPTIONAL: responseListenerOrListeners
 		//OPTIONAL: responseListenerOrListeners.error
@@ -5629,10 +5868,10 @@ global.PUT = METHOD({
 		//OPTIONAL: urlOrParams.host
 		//OPTIONAL: urlOrParams.port
 		//OPTIONAL: urlOrParams.uri
-		//OPTIONAL: urlOrParams.url			요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+		//OPTIONAL: urlOrParams.url			요청을 보낼 URL. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
 		//OPTIONAL: urlOrParams.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
 		//OPTIONAL: urlOrParams.params		데이터 형태({...})로 표현한 파라미터 목록
-		//OPTIONAL: urlOrParams.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+		//OPTIONAL: urlOrParams.data		UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
 		//OPTIONAL: urlOrParams.headers		요청 헤더
 		//OPTIONAL: responseListenerOrListeners
 		//OPTIONAL: responseListenerOrListeners.error
@@ -5673,15 +5912,15 @@ global.REQUEST = METHOD(function(m) {
 
 		run : function(params, responseListenerOrListeners) {
 			//REQUIRED: params
-			//REQUIRED: params.method	요청 메소드 입니다. GET, POST, PUT, DELETE를 설정할 수 있습니다.
+			//REQUIRED: params.method	요청 메소드. GET, POST, PUT, DELETE를 설정할 수 있습니다.
 			//OPTIONAL: params.isSecure	HTTPS 프로토콜인지 여부
 			//OPTIONAL: params.host
 			//OPTIONAL: params.port
 			//OPTIONAL: params.uri
-			//OPTIONAL: params.url		요청을 보낼 URL입니다. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
+			//OPTIONAL: params.url		요청을 보낼 URL. url을 입력하면 isSecure, host, port, uri를 입력할 필요가 없습니다.
 			//OPTIONAL: params.paramStr	a=1&b=2&c=3과 같은 형태의 파라미터 문자열
 			//OPTIONAL: params.params	데이터 형태({...})로 표현한 파라미터 목록
-			//OPTIONAL: params.data		요청을 UPPERCASE기반 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+			//OPTIONAL: params.data		UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
 			//OPTIONAL: params.headers	요청 헤더
 			//OPTIONAL: responseListenerOrListeners
 			//OPTIONAL: responseListenerOrListeners.error
@@ -5859,10 +6098,10 @@ global.REQUEST = METHOD(function(m) {
 	};
 });
 
-/*
+/**
  * 웹 서버를 생성하는 클래스
  * 
- * TODO: 업로드 기능 구현
+ * TODO: 이미지 처리 다 되면 적용
  */
 global.WEB_SERVER = CLASS(function(cls) {
 	'use strict';
@@ -5885,15 +6124,12 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 	//IMPORT: zlib
 	zlib = require('zlib'),
+	
+	//IMPORT: IncomingForm
+	IncomingForm = require('formidable').IncomingForm,
 
 	// get content type from extension.
-	getContentTypeFromExtension,
-	
-	// get encoding from content type.
-	getEncodingFromContentType;
-
-	cls.getContentTypeFromExtension = getContentTypeFromExtension = function(extension) {
-		//REQUIRED: extension
+	getContentTypeFromExtension = function(extension) {
 		
 		// png image
 		if (extension === 'png') {
@@ -5966,10 +6202,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 		}
 
 		return 'application/octet-stream';
-	};
+	},
 
-	cls.getEncodingFromContentType = getEncodingFromContentType = function(contentType) {
-		//REQUIRED: contentType
+	// get encoding from content type.
+	getEncodingFromContentType = function(contentType) {
 
 		if (contentType === 'application/javascript') {
 			return 'utf-8';
@@ -6020,6 +6256,54 @@ global.WEB_SERVER = CLASS(function(cls) {
 		}
 
 		return 'binary';
+	},
+	
+	// create cookie str array.
+	createCookieStrArray = function(data) {
+		
+		var
+		// strs
+		strs = [];
+
+		EACH(data, function(value, name) {
+			if (CHECK_IS_DATA(value) === true) {
+				strs.push(name + '=' + encodeURIComponent(value.value)
+					+ (value.expireSeconds === undefined ? '' : '; expires=' + new Date(Date.now() + value.expireSeconds * 1000).toGMTString())
+					+ (value.path === undefined ? '' : '; path=' + value.path)
+					+ (value.domain === undefined ? '' : '; domain=' + value.domain));
+			} else {
+				strs.push(name + '=' + encodeURIComponent(value));
+			}
+		});
+
+		return strs;
+	},
+	
+	// parse cookie str.
+	parseCookieStr = function(cookieStr) {
+		
+		var
+		// splits
+		splits,
+
+		// data
+		data = {};
+
+		if (cookieStr !== undefined) {
+
+			splits = cookieStr.split(';');
+
+			EACH(splits, function(cookie) {
+
+				var
+				// parts
+				parts = cookie.split('=');
+
+				data[parts[0].trim()] = decodeURIComponent(parts[1]);
+			});
+		}
+
+		return data;
 	};
 	
 	return {
@@ -6031,13 +6315,18 @@ global.WEB_SERVER = CLASS(function(cls) {
 			//OPTIONAL: portOrParams.securedKeyFilePath		SSL인증 .key 파일 경로
 			//OPTIONAL: portOrParams.securedCertFilePath	SSL인증 .cert 파일 경로
 			//OPTIONAL: portOrParams.rootPath				리소스 루트 폴더
-			//OPTIONAL: portOrParams.version				캐싱을 위한 버전
-			//OPTIONAL: portOrParams.preprocessors			프리프로세서들
+			//OPTIONAL: portOrParams.version				캐싱을 위한 버전. 입력하지 않으면 캐싱 기능이 작동하지 않습니다.
+			//OPTIONAL: portOrParams.preprocessors			프리프로세서들. 뷰 템플릿 등과 같이, 특정 확장자의 리소스를 응답하기 전에 내용을 변경하는 경우 사용합니다.
+			//OPTIONAL: portOrParams.uploadURI				업로드를 처리할 URI. URI 문자열 혹은 URI 문자열 배열로 입력합니다.
+			//OPTIONAL: portOrParams.maxUploadFileMB		최대 업로드 파일 크기 (MB). 입력하지 않으면 10MB로 지정됩니다.
+			//OPTIONAL: portOrParams.uploadPath				업로드한 파일을 저장할 경로
 			//OPTIONAL: requestListenerOrHandlers
-			//OPTIONAL: requestListenerOrHandlers.notExistsResource
+			//OPTIONAL: requestListenerOrHandlers.notExistsResource		리소스가 존재하지 않는 경우
 			//OPTIONAL: requestListenerOrHandlers.error
-			//OPTIONAL: requestListenerOrHandlers.preprocessor
 			//OPTIONAL: requestListenerOrHandlers.requestListener
+			//OPTIONAL: requestListenerOrHandlers.uploadProgress
+			//OPTIONAL: requestListenerOrHandlers.uploadOverFileSize	업로드 하는 파일의 크기가 maxUploadFileMB보다 클 경우
+			//OPTIONAL: requestListenerOrHandlers.uploadSuccess
 
 			var
 			// port
@@ -6060,18 +6349,33 @@ global.WEB_SERVER = CLASS(function(cls) {
 			
 			// preprocessors
 			preprocessors,
+			
+			// upload uri
+			uploadURI,
+			
+			// max upload file mb
+			maxUploadFileMB,
+			
+			// upload path
+			uploadPath,
 
 			// not exists resource handler.
 			notExistsResourceHandler,
 			
 			// error handler.
 			errorHandler,
-
-			// preprocessor.
-			preprocessor,
 			
 			// request listener.
 			requestListener,
+			
+			// upload progress.
+			uploadProgress,
+			
+			// upload over file size.
+			uploadOverFileSize,
+			
+			// upload success.
+			uploadSuccess,
 
 			// resource caches
 			resourceCaches = {},
@@ -6090,9 +6394,19 @@ global.WEB_SERVER = CLASS(function(cls) {
 				securedPort = portOrParams.securedPort;
 				securedKeyFilePath = portOrParams.securedKeyFilePath;
 				securedCertFilePath = portOrParams.securedCertFilePath;
+				
 				originRootPath = portOrParams.rootPath;
 				version = String(portOrParams.version);
+				
 				preprocessors = portOrParams.preprocessors;
+				
+				uploadURI = portOrParams.uploadURI;
+				maxUploadFileMB = portOrParams.maxUploadFileMB;
+				uploadPath = portOrParams.uploadPath;
+			}
+			
+			if (maxUploadFileMB === undefined) {
+				maxUploadFileMB = 10;
 			}
 
 			if (requestListenerOrHandlers !== undefined) {
@@ -6101,8 +6415,11 @@ global.WEB_SERVER = CLASS(function(cls) {
 				} else {
 					notExistsResourceHandler = requestListenerOrHandlers.notExistsResource;
 					errorHandler = requestListenerOrHandlers.error;
-					preprocessor = requestListenerOrHandlers.preprocessor;
 					requestListener = requestListenerOrHandlers.requestListener;
+					
+					uploadProgress = requestListenerOrHandlers.uploadProgress;
+					uploadOverFileSize = requestListenerOrHandlers.uploadOverFileSize;
+					uploadSuccess = requestListenerOrHandlers.uploadSuccess;
 				}
 			}
 
@@ -6114,6 +6431,12 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 				// uri
 				uri = nativeReq.url,
+				
+				// is upload uri
+				isUploadURI = CHECK_IS_ARRAY(uploadURI) === true ? CHECK_IS_IN({
+					array : uploadURI,
+					value : uri
+				}) === true : uploadURI === uri,
 
 				// method
 				method = nativeReq.method.toUpperCase(),
@@ -6124,14 +6447,11 @@ global.WEB_SERVER = CLASS(function(cls) {
 				// accept encoding
 				acceptEncoding = headers['accept-encoding'],
 
-				// disconnected methods
-				disconnectedMethods = [],
-
 				// param str
 				paramStr,
-
-				// request info
-				requestInfo;
+				
+				// disconnected methods
+				disconnectedMethods = [];
 
 				if (ip === undefined) {
 					ip = nativeReq.connection.remoteAddress;
@@ -6154,14 +6474,14 @@ global.WEB_SERVER = CLASS(function(cls) {
 					var
 					// is appended param string
 					isAppendedParamStr;
-
-					if (method === 'GET') {
+					
+					if (method === 'GET' || isUploadURI === true) {
 						next();
 					} else {
-
+						
 						nativeReq.on('data', function(data) {
 							
-							if (isAppendedParamStr != true) {
+							if (isAppendedParamStr !== true) {
 								if (paramStr === undefined) {
 									paramStr = '';
 								} else {
@@ -6237,12 +6557,13 @@ global.WEB_SERVER = CLASS(function(cls) {
 							params : params,
 							data : data,
 							ip : ip,
-							cookies : PARSE_COOKIE_STR(headers.cookie)
+							cookies : parseCookieStr(headers.cookie)
 						};
 						
 						response = function(contentOrParams) {
 							//REQUIRED: contentOrParams
 							//OPTIONAL: contentOrParams.statusCode
+							//OPTIONAL: contentOrParams.cookies
 							//OPTIONAL: contentOrParams.headers
 							//OPTIONAL: contentOrParams.contentType
 							//OPTIONAL: contentOrParams.content
@@ -6258,6 +6579,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 							var
 							// status code
 							statusCode,
+
+							// cookies
+							cookies,
 
 							// headers
 							headers,
@@ -6299,6 +6623,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 								} else {
 									
 									statusCode = contentOrParams.statusCode;
+									cookies = contentOrParams.cookies;
 									headers = contentOrParams.headers;
 									contentType = contentOrParams.contentType;
 									content = contentOrParams.content;
@@ -6316,6 +6641,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 								if (headers === undefined) {
 									headers = {};
+								}
+								
+								if (cookies !== undefined) {
+									headers['Set-Cookie'] = createCookieStrArray(cookies);
 								}
 
 								if (contentType !== undefined) {
@@ -6381,250 +6710,395 @@ global.WEB_SERVER = CLASS(function(cls) {
 						onDisconnected = function(method) {
 							disconnectedMethods.push(method);
 						};
-
-						NEXT([
-						function(next) {
-		
-							if (requestListener !== undefined) {
-		
-								isGoingOn = requestListener(requestInfo, response, onDisconnected, function(newRootPath) {
-									rootPath = newRootPath;
-								}, function(_overrideResponseInfo) {
-		
-									if (_overrideResponseInfo !== undefined) {
-										overrideResponseInfo = _overrideResponseInfo;
-									}
-		
-									DELAY(next);
-								});
-		
-								// init properties again.
-								uri = requestInfo.uri;
-								method = requestInfo.method;
-								params = requestInfo.params;
-								headers = requestInfo.headers;
-							}
-		
-							if (isGoingOn !== false && requestInfo.isResponsed !== true) {
-								next();
-							}
-						},
-		
-						function() {
-							return function() {
-								
-								// stream video.
-								if (headers.range !== undefined) {
+						
+						if (isUploadURI === true) {
+							
+							CREATE_FOLDER(uploadPath, function() {
+				
+								var
+								// form
+								form,
+				
+								// file data set
+								fileDataSet,
+				
+								// field data
+								fieldData;
+				
+								// serve upload.
+								if (method === 'POST') {
+				
+									form = new IncomingForm();
+									fileDataSet = [];
+									fieldData = {};
 									
-									GET_FILE_INFO(rootPath + '/' + uri, function(fileInfo) {
-		
-										var
-										// positions
-										positions = headers.range.replace(/bytes=/, '').split('-'),
+									form.uploadDir = uploadPath;
+									
+									form.on('progress', function(bytesRecieved, bytesExpected) {
 										
-										// total size
-										totalSize = fileInfo.size,
+										if (progressHandler !== undefined) {
+											progressHandler(params, bytesRecieved, bytesExpected);
+										}
 										
-										// start position
-										startPosition = INTEGER(positions[0]),
-										
-										// end position
-										endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]),
-										
-										// stream
-										stream = fs.createReadStream(rootPath + '/' + uri, {
-											start : startPosition,
-											end : endPosition
-										}).on('open', function() {
-											
-											response(EXTEND({
-												origin : {
-													contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
-													totalSize : totalSize,
-													startPosition : startPosition,
-													endPosition : endPosition,
-													stream : stream
-												},
-												extend : overrideResponseInfo
-											}));
-											
-										}).on('error', function(error) {
-											
-											response(EXTEND({
-												origin : {
-													contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
-													totalSize : totalSize,
-													startPosition : startPosition,
-													endPosition : endPosition,
-													content : error.toString()
-												},
-												extend : overrideResponseInfo
-											}));
+									}).on('field', function(fieldName, value) {
+				
+										fieldData[fieldName] = value;
+				
+									}).on('file', function(fieldName, file) {
+				
+										fileDataSet.push({
+											path : file.path,
+											size : file.size,
+											name : file.name,
+											type : file.type,
+											lastModifiedTime : file.lastModifiedDate
 										});
-									});
-								}
-								
-								// check ETag.
-								else if (CONFIG.isDevMode !== true && (overrideResponseInfo.isFinal !== true ?
-		
-								// check version.
-								(version !== undefined && headers['if-none-match'] === version) :
-		
-								// check exists.
-								headers['if-none-match'] !== undefined)) {
-		
-									// response cached.
-									response(EXTEND({
-										origin : {
-											statusCode : 304
-										},
-										extend : overrideResponseInfo
-									}));
-								}
-		
-								// redirect correct version uri.
-								else if (CONFIG.isDevMode !== true && overrideResponseInfo.isFinal !== true && version !== undefined && originalURI !== '' && params.version !== version) {
-		
-									response(EXTEND({
-										origin : {
-											statusCode : 302,
-											headers : {
-												'Location' : '/' + originalURI + '?' + querystring.stringify(COMBINE([params, {
-													version : version
-												}]))
-											}
-										},
-										extend : overrideResponseInfo
-									}));
-								}
-		
-								// response resource file.
-								else if (rootPath !== undefined && method === 'GET') {
-		
-									responseNotFound = function(resourcePath) {
-		
-										if (notExistsResourceHandler !== undefined) {
-											isGoingOn = notExistsResourceHandler(resourcePath, requestInfo, response);
-										}
-		
-										if (isGoingOn !== false && requestInfo.isResponsed !== true) {
-		
-											response(EXTEND({
-												origin : {
-													statusCode : 404
-												},
-												extend : overrideResponseInfo
-											}));
-										}
-									};
-		
-									responseError = function(errorMsg) {
-		
-										if (errorHandler !== undefined) {
-											isGoingOn = errorHandler(errorMsg, requestInfo, response);
-										} else {
-											SHOW_ERROR('[RESOURCE_SERVER] ERROR: ' + errorMsg);
-										}
-		
-										if (isGoingOn !== false && requestInfo.isResponsed !== true) {
-		
-											response(EXTEND({
-												origin : {
-													statusCode : 500
-												},
-												extend : overrideResponseInfo
-											}));
-										}
-									};
-		
-									NEXT([
-									function(next) {
-		
-										var
-										// resource cache
-										resourceCache = resourceCaches[originalURI];
-		
-										if (resourceCache !== undefined) {
-											next(resourceCache.buffer, resourceCache.contentType);
-										} else {
-		
-											// serve file.
-											READ_FILE(rootPath + '/' + uri, {
-		
-												notExists : function() {
-		
-													// not found file, so serve index.
-													READ_FILE(rootPath + (uri === '' ? '' : ('/' + uri)) + '/index.html', {
-		
-														notExists : function() {
-															responseNotFound(rootPath + '/' + uri);
-														},
-														error : responseError,
-		
-														success : function(buffer) {
-															next(buffer, 'text/html');
-														}
-													});
-												},
-		
-												error : responseError,
-												success : next
-											});
-										}
-									},
-		
-									function() {
-										return function(buffer, contentType) {
+				
+									}).on('end', function() {
+										
+										NEXT(fileDataSet, [
+										function(fileData, next) {
 											
 											var
-											// extension
-											extension = path.extname(uri).substring(1);
+											// path
+											path = fileData.path,
 											
-											if (preprocessors !== undefined && preprocessors[extension] !== undefined) {
-												preprocessors[extension](buffer.toString(), response);
-											} else {
-												
-												if (contentType === undefined) {
-													contentType = getContentTypeFromExtension(extension);
-												}
-			
-												if (CONFIG.isDevMode !== true && overrideResponseInfo.isFinal !== true && resourceCaches[originalURI] === undefined) {
-													resourceCaches[originalURI] = {
-														buffer : buffer,
-														contentType : contentType
+											// file size
+											fileSize = fileData.size,
+											
+											// file type
+											fileType = fileData.type;
+											
+											fileData.ip = ip;
+											
+											if (fileSize > maxUploadFileMB * 1024 * 1024) {
+				
+												NEXT(fileDataSet, [
+												function(fileData, next) {
+													REMOVE_FILE(fileData.path, next);
+												},
+				
+												function() {
+													return function() {
+														if (overFileSizeHandler !== undefined) {
+															overFileSizeHandler(params, maxUploadFileMB, response);
+														}
 													};
+												}]);
+				
+												return false;
+											}
+				
+											EACH(fieldData, function(value, name) {
+												if (value.trim() !== '') {
+													fileData[name] = value;
 												}
+											});
+											
+											if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
+				
+												IMAGEMAGICK_READ_METADATA(path, {
+													error : function() {
+														next(fileData);
+													},
+													success : function(metadata) {
+				
+														if (metadata.exif !== undefined) {
+				
+															fileData.exif = metadata.exif;
+				
+															IMAGEMAGICK_CONVERT([path, '-auto-orient', path], {
+																error : errorHandler,
+																success : next
+															});
+				
+														} else {
+															next();
+														}
+													}
+												});
+				
+											} else {
+												next();
+											}
+										},
+				
+										function() {
+											return function() {
+												callback(params, fileDataSet, response);
+											};
+										}]);
+				
+									}).on('error', function(error) {
+				
+										var
+										// error msg
+										errorMsg = error.toString();
+				
+										if (errorHandler !== undefined) {
+											errorHandler(errorMsg);
+										} else {
+											SHOW_ERROR('WEB_SERVER', errorMsg);
+										}
+									});
+				
+									form.parse(nativeReq);
+								}
+							});
+						}
+						
+						else {
+							
+							NEXT([
+							function(next) {
+			
+								if (requestListener !== undefined) {
+			
+									isGoingOn = requestListener(requestInfo, response, onDisconnected, function(newRootPath) {
+										rootPath = newRootPath;
+									}, function(_overrideResponseInfo) {
+			
+										if (_overrideResponseInfo !== undefined) {
+											overrideResponseInfo = _overrideResponseInfo;
+										}
+			
+										DELAY(next);
+									});
+			
+									// init properties again.
+									uri = requestInfo.uri;
+									method = requestInfo.method;
+									params = requestInfo.params;
+									headers = requestInfo.headers;
+								}
+			
+								if (isGoingOn !== false && requestInfo.isResponsed !== true) {
+									next();
+								}
+							},
+			
+							function() {
+								return function() {
+									
+									// stream video.
+									if (headers.range !== undefined) {
+										
+										GET_FILE_INFO(rootPath + '/' + uri, function(fileInfo) {
+			
+											var
+											// positions
+											positions = headers.range.replace(/bytes=/, '').split('-'),
+											
+											// total size
+											totalSize = fileInfo.size,
+											
+											// start position
+											startPosition = INTEGER(positions[0]),
+											
+											// end position
+											endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]),
+											
+											// stream
+											stream = fs.createReadStream(rootPath + '/' + uri, {
+												start : startPosition,
+												end : endPosition
+											}).on('open', function() {
+												
+												response(EXTEND({
+													origin : {
+														contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+														totalSize : totalSize,
+														startPosition : startPosition,
+														endPosition : endPosition,
+														stream : stream
+													},
+													extend : overrideResponseInfo
+												}));
+												
+											}).on('error', function(error) {
+												
+												response(EXTEND({
+													origin : {
+														contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+														totalSize : totalSize,
+														startPosition : startPosition,
+														endPosition : endPosition,
+														content : error.toString()
+													},
+													extend : overrideResponseInfo
+												}));
+											});
+										});
+									}
+									
+									// check ETag.
+									else if (CONFIG.isDevMode !== true && (overrideResponseInfo.isFinal !== true ?
+			
+									// check version.
+									(version !== undefined && headers['if-none-match'] === version) :
+			
+									// check exists.
+									headers['if-none-match'] !== undefined)) {
+			
+										// response cached.
+										response(EXTEND({
+											origin : {
+												statusCode : 304
+											},
+											extend : overrideResponseInfo
+										}));
+									}
+			
+									// redirect correct version uri.
+									else if (CONFIG.isDevMode !== true && overrideResponseInfo.isFinal !== true && version !== undefined && originalURI !== '' && params.version !== version) {
+			
+										response(EXTEND({
+											origin : {
+												statusCode : 302,
+												headers : {
+													'Location' : '/' + originalURI + '?' + querystring.stringify(COMBINE([params, {
+														version : version
+													}]))
+												}
+											},
+											extend : overrideResponseInfo
+										}));
+									}
+			
+									// response resource file.
+									else if (rootPath !== undefined && method === 'GET') {
+			
+										responseNotFound = function(resourcePath) {
+			
+											if (notExistsResourceHandler !== undefined) {
+												isGoingOn = notExistsResourceHandler(resourcePath, requestInfo, response);
+											}
+			
+											if (isGoingOn !== false && requestInfo.isResponsed !== true) {
 			
 												response(EXTEND({
 													origin : {
-														buffer : buffer,
-														contentType : contentType,
-														version : version
+														statusCode : 404
 													},
 													extend : overrideResponseInfo
 												}));
 											}
 										};
-									}]);
-		
-								} else {
-									response(EXTEND({
-										origin : {
-											statusCode : 404
+			
+										responseError = function(errorMsg) {
+			
+											if (errorHandler !== undefined) {
+												isGoingOn = errorHandler(errorMsg, requestInfo, response);
+											} else {
+												SHOW_ERROR('WEB_SERVER', errorMsg);
+											}
+			
+											if (isGoingOn !== false && requestInfo.isResponsed !== true) {
+			
+												response(EXTEND({
+													origin : {
+														statusCode : 500
+													},
+													extend : overrideResponseInfo
+												}));
+											}
+										};
+			
+										NEXT([
+										function(next) {
+			
+											var
+											// resource cache
+											resourceCache = resourceCaches[originalURI];
+			
+											if (resourceCache !== undefined) {
+												next(resourceCache.buffer, resourceCache.contentType);
+											} else {
+			
+												// serve file.
+												READ_FILE(rootPath + '/' + uri, {
+			
+													notExists : function() {
+			
+														// not found file, so serve index.
+														READ_FILE(rootPath + (uri === '' ? '' : ('/' + uri)) + '/index.html', {
+			
+															notExists : function() {
+																responseNotFound(rootPath + '/' + uri);
+															},
+															error : responseError,
+			
+															success : function(buffer) {
+																next(buffer, 'text/html');
+															}
+														});
+													},
+			
+													error : responseError,
+													success : next
+												});
+											}
 										},
-										extend : overrideResponseInfo
-									}));
-								}
-							};
-						}]);
+			
+										function() {
+											return function(buffer, contentType) {
+												
+												var
+												// extension
+												extension = path.extname(uri).substring(1);
+												
+												if (preprocessors !== undefined && preprocessors[extension] !== undefined) {
+													preprocessors[extension](buffer.toString(), response);
+												} else {
+													
+													if (contentType === undefined) {
+														contentType = getContentTypeFromExtension(extension);
+													}
+				
+													if (CONFIG.isDevMode !== true && overrideResponseInfo.isFinal !== true && resourceCaches[originalURI] === undefined) {
+														resourceCaches[originalURI] = {
+															buffer : buffer,
+															contentType : contentType
+														};
+													}
+				
+													response(EXTEND({
+														origin : {
+															buffer : buffer,
+															contentType : contentType,
+															version : version
+														},
+														extend : overrideResponseInfo
+													}));
+												}
+											};
+										}]);
+			
+									} else {
+										response(EXTEND({
+											origin : {
+												statusCode : 404
+											},
+											extend : overrideResponseInfo
+										}));
+									}
+								};
+							}]);
+						}
 					};
 				}]);
 
-				nativeReq.on('close', function() {
-					EACH(disconnectedMethods, function(method) {
-						method();
+				if (CHECK_IS_ARRAY(uploadURI) === true ? CHECK_IS_IN({
+					array : uploadURI,
+					value : uri
+				}) === true : uploadURI === uri) {
+					
+					nativeReq.on('close', function() {
+						EACH(disconnectedMethods, function(method) {
+							method();
+						});
 					});
-				});
+				}
 			};
 
 			// init sever.
@@ -6666,68 +7140,6 @@ global.WEB_SERVER = CLASS(function(cls) {
 			};
 		}
 	};
-});
-
-/**
- * 데이터를 쿠키 문자열로 이루어진 배열로 변환합니다.
- */
-global.CREATE_COOKIE_STR_ARRAY = METHOD({
-
-	run : function(data) {
-		'use strict';
-		//REQUIRED: data
-
-		var
-		// strs
-		strs = [];
-
-		EACH(data, function(value, name) {
-			if (CHECK_IS_DATA(value) === true) {
-				strs.push(name + '=' + encodeURIComponent(value.value)
-					+ (value.expireSeconds === undefined ? '' : '; expires=' + new Date(Date.now() + value.expireSeconds * 1000).toGMTString())
-					+ (value.path === undefined ? '' : '; path=' + value.path)
-					+ (value.domain === undefined ? '' : '; domain=' + value.domain));
-			} else {
-				strs.push(name + '=' + encodeURIComponent(value));
-			}
-		});
-
-		return strs;
-	}
-});
-
-/**
- * 쿠키 문자열을 데이터로 변환합니다.
- */
-global.PARSE_COOKIE_STR = METHOD({
-
-	run : function(cookieStr) {
-		'use strict';
-		//OPTIONAL: cookieStr
-
-		var
-		// splits
-		splits,
-
-		// data
-		data = {};
-
-		if (cookieStr !== undefined) {
-
-			splits = cookieStr.split(';');
-
-			EACH(splits, function(cookie) {
-
-				var
-				// parts
-				parts = cookie.split('=');
-
-				data[parts[0].trim()] = decodeURIComponent(parts[1]);
-			});
-		}
-
-		return data;
-	}
 });
 
 /**

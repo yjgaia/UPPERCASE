@@ -1,12 +1,12 @@
 /**
- * ImageMagick® read metadata.
+ * ImageMagick을 이용해 이미지의 메타데이터를 반한홥니다.
  */
 global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 	'use strict';
 
 	var
 	//IMPORT: imagemagick
-	imagemagick = require('imagemagick');
+	imagemagick = require('hanul-imagemagick');
 
 	return {
 
@@ -27,7 +27,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 				callback = callbackOrHandlers.success;
 				errorHandler = callbackOrHandlers.error;
 			}
-
+			
 			imagemagick.readMetadata(path, function(error, metadata) {
 
 				var
@@ -41,7 +41,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
 					} else {
-						SHOW_ERROR('[UPPERCASE-IMAGEMAGICK_READ_METADATA] ERROR: ' + errorMsg);
+						SHOW_ERROR('IMAGEMAGICK_READ_METADATA', errorMsg);
 					}
 
 				} else {

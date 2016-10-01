@@ -47,14 +47,6 @@
 - ondrop, file reader 등 처리
 
 [UPPERCASE] - 2016년
-- USCREEN 빼고 ULAYER 만들기. 레이어 개념으로 드로잉 하도록, UJS, UPPERCASE 공식 문서에 포함
-- UJS 오디오 처리 유심히 살펴보기
-- UJS 비디오 처리
-- UJS 최적화 및 IE8 이하 stack overflow때문에 처리한것 풀기
-- CHECK_IS_BLANK_PIXEL를 EXPORT_IMG_DATA말고 CONTEXT.getImgData로 처리해서 IE8에서 잘 되도록
-- UJS 기반 코드로 문서를 만들어주는 기능
-- 확실하게 메모리가 정리되는지 확인
-- 구버젼 브라우저 테스트
 - touch-action : manafacture 확인하기 IE10(-ms-), IE11
 - Unicorn waitingSendInfos 처리
 - Java-Client connectedHandler 넣기, 첫 접속 안될때 disconnected 처리
@@ -70,13 +62,7 @@
 - 모델 생성기
 - 국가별 접속시 접속 서버 분산하는 구성
 - flappybug 현재 어퍼케이스 버젼에 맞춤
-- canvas가 webgl 지원하게 - https://github.com/corbanbrook/webgl-2d 사용
 - SlideShare로 슬라이드 소개 만들기
-
-[이하 문서에 포함될 내용]
-* [CANVAS에 그림 그리기](DOC/CANVAS.md)
-* [도트 아트를 사용하는 프로젝트 만들기](DOC/DOT_ART.md)
-* [간단한 게임 만들기](DOC/TUTORIAL/GAME.md)
 
 [고양이의 세계 적용하면서 할 것들]
 - UPPERCASE MODEL find 원하는 필드만 가져오기

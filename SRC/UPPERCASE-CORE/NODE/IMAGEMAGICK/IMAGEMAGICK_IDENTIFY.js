@@ -1,12 +1,12 @@
 /**
- * ImageMagick® identify.
+ * ImageMagick의 identify 기능을 사용합니다.
  */
 global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 	'use strict';
 
 	var
 	//IMPORT: imagemagick
-	imagemagick = require('imagemagick');
+	imagemagick = require('hanul-imagemagick');
 
 	return {
 
@@ -27,7 +27,7 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 				callback = callbackOrHandlers.success;
 				errorHandler = callbackOrHandlers.error;
 			}
-
+			
 			imagemagick.identify(path, function(error, features) {
 
 				var
@@ -41,7 +41,7 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
 					} else {
-						SHOW_ERROR('[UPPERCASE-IMAGEMAGICK_IDENTIFY] ERROR: ' + errorMsg);
+						SHOW_ERROR('IMAGEMAGICK_IDENTIFY', errorMsg);
 					}
 
 				} else {
