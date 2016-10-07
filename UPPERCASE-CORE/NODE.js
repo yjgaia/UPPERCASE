@@ -5291,7 +5291,7 @@ global.WRITE_FILE = METHOD(function() {
 });
 
 /**
- * ImageMagick® convert.
+ * ImageMagick의 convert 기능을 사용합니다.
  */
 global.IMAGEMAGICK_CONVERT = METHOD(function() {
 	'use strict';
@@ -5350,7 +5350,7 @@ global.IMAGEMAGICK_CONVERT = METHOD(function() {
 });
 
 /**
- * ImageMagick® identify.
+ * ImageMagick의 identify 기능을 사용합니다.
  */
 global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 	'use strict';
@@ -5404,7 +5404,7 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 });
 
 /**
- * ImageMagick® read metadata.
+ * ImageMagick을 이용해 이미지의 메타데이터를 반한홥니다.
  */
 global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 	'use strict';
@@ -5458,7 +5458,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 });
 
 /**
- * ImageMagick® resize.
+ * ImageMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
  */
 global.IMAGEMAGICK_RESIZE = METHOD(function() {
 	'use strict';
@@ -6100,8 +6100,6 @@ global.REQUEST = METHOD(function(m) {
 
 /**
  * 웹 서버를 생성하는 클래스
- * 
- * TODO: 이미지 처리 다 되면 적용
  */
 global.WEB_SERVER = CLASS(function(cls) {
 	'use strict';
@@ -6196,9 +6194,24 @@ global.WEB_SERVER = CLASS(function(cls) {
 			return 'audio/ogg';
 		}
 
+		// ogv
+		if (extension === 'ogv') {
+			return 'video/ogg';
+		}
+
 		// mp4
 		if (extension === 'mp4') {
 			return 'video/mp4';
+		}
+
+		// webm
+		if (extension === 'webm') {
+			return 'video/webm';
+		}
+
+		// avi
+		if (extension === 'avi') {
+			return 'video/avi';
 		}
 
 		return 'application/octet-stream';
@@ -6247,11 +6260,27 @@ global.WEB_SERVER = CLASS(function(cls) {
 			return 'utf-8';
 		}
 
-		if (contentType === 'application/x-shockwave-flash') {
+		if (contentType === 'audio/mpeg') {
 			return 'binary';
 		}
 
-		if (contentType === 'audio/mpeg') {
+		if (contentType === 'audio/ogg') {
+			return 'binary';
+		}
+
+		if (contentType === 'video/ogv') {
+			return 'binary';
+		}
+
+		if (contentType === 'video/mp4') {
+			return 'binary';
+		}
+
+		if (contentType === 'video/webm') {
+			return 'binary';
+		}
+
+		if (contentType === 'video/avi') {
 			return 'binary';
 		}
 
@@ -6322,11 +6351,11 @@ global.WEB_SERVER = CLASS(function(cls) {
 			//OPTIONAL: portOrParams.uploadPath				업로드한 파일을 저장할 경로
 			//OPTIONAL: requestListenerOrHandlers
 			//OPTIONAL: requestListenerOrHandlers.notExistsResource		리소스가 존재하지 않는 경우
-			//OPTIONAL: requestListenerOrHandlers.error
-			//OPTIONAL: requestListenerOrHandlers.requestListener
-			//OPTIONAL: requestListenerOrHandlers.uploadProgress
+			//OPTIONAL: requestListenerOrHandlers.error					오류가 발생한 경우
+			//OPTIONAL: requestListenerOrHandlers.requestListener		요청 리스너
+			//OPTIONAL: requestListenerOrHandlers.uploadProgress		업로드 진행중
 			//OPTIONAL: requestListenerOrHandlers.uploadOverFileSize	업로드 하는 파일의 크기가 maxUploadFileMB보다 클 경우
-			//OPTIONAL: requestListenerOrHandlers.uploadSuccess
+			//OPTIONAL: requestListenerOrHandlers.uploadSuccess			업로드가 정상적으로 완료된 경우
 
 			var
 			// port
@@ -6368,14 +6397,14 @@ global.WEB_SERVER = CLASS(function(cls) {
 			// request listener.
 			requestListener,
 			
-			// upload progress.
-			uploadProgress,
+			// upload progress handler.
+			uploadProgressHandler,
 			
-			// upload over file size.
-			uploadOverFileSize,
+			// upload over file size handler.
+			uploadOverFileSizeHandler,
 			
-			// upload success.
-			uploadSuccess,
+			// upload success handler.
+			uploadSuccessHandler,
 
 			// resource caches
 			resourceCaches = {},
@@ -6417,9 +6446,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 					errorHandler = requestListenerOrHandlers.error;
 					requestListener = requestListenerOrHandlers.requestListener;
 					
-					uploadProgress = requestListenerOrHandlers.uploadProgress;
-					uploadOverFileSize = requestListenerOrHandlers.uploadOverFileSize;
-					uploadSuccess = requestListenerOrHandlers.uploadSuccess;
+					uploadProgressHandler = requestListenerOrHandlers.uploadProgress;
+					uploadOverFileSizeHandler = requestListenerOrHandlers.uploadOverFileSize;
+					uploadSuccessHandler = requestListenerOrHandlers.uploadSuccess;
 				}
 			}
 
@@ -6433,10 +6462,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 				uri = nativeReq.url,
 				
 				// is upload uri
-				isUploadURI = CHECK_IS_ARRAY(uploadURI) === true ? CHECK_IS_IN({
-					array : uploadURI,
-					value : uri
-				}) === true : uploadURI === uri,
+				isUploadURI,
 
 				// method
 				method = nativeReq.method.toUpperCase(),
@@ -6448,11 +6474,8 @@ global.WEB_SERVER = CLASS(function(cls) {
 				acceptEncoding = headers['accept-encoding'],
 
 				// param str
-				paramStr,
+				paramStr;
 				
-				// disconnected methods
-				disconnectedMethods = [];
-
 				if (ip === undefined) {
 					ip = nativeReq.connection.remoteAddress;
 				}
@@ -6467,6 +6490,11 @@ global.WEB_SERVER = CLASS(function(cls) {
 				}
 
 				uri = uri.substring(1);
+				
+				isUploadURI = CHECK_IS_ARRAY(uploadURI) === true ? CHECK_IS_IN({
+					array : uploadURI,
+					value : uri
+				}) === true : uploadURI === uri;
 
 				NEXT([
 				function(next) {
@@ -6527,9 +6555,6 @@ global.WEB_SERVER = CLASS(function(cls) {
 						// response.
 						response,
 						
-						// on disconnected.
-						onDisconnected,
-		
 						// response not found.
 						responseNotFound,
 		
@@ -6550,31 +6575,31 @@ global.WEB_SERVER = CLASS(function(cls) {
 						}
 						
 						requestInfo = {
-							headers : headers,							
+							headers : headers,
+							cookies : parseCookieStr(headers.cookie),							
 							isSecure : isSecure,
 							uri : uri,
 							method : method,
 							params : params,
 							data : data,
-							ip : ip,
-							cookies : parseCookieStr(headers.cookie)
+							ip : ip
 						};
 						
 						response = function(contentOrParams) {
 							//REQUIRED: contentOrParams
-							//OPTIONAL: contentOrParams.statusCode
-							//OPTIONAL: contentOrParams.cookies
-							//OPTIONAL: contentOrParams.headers
-							//OPTIONAL: contentOrParams.contentType
-							//OPTIONAL: contentOrParams.content
-							//OPTIONAL: contentOrParams.buffer
-							//OPTIONAL: contentOrParams.totalSize
-							//OPTIONAL: contentOrParams.startPosition
-							//OPTIONAL: contentOrParams.endPosition
-							//OPTIONAL: contentOrParams.stream
-							//OPTIONAL: contentOrParams.encoding
-							//OPTIONAL: contentOrParams.version
-							//OPTIONAL: contentOrParams.isFinal
+							//OPTIONAL: contentOrParams.statusCode		HTTP 응답 상태
+							//OPTIONAL: contentOrParams.headers			응답 헤더
+							//OPTIONAL: contentOrParams.cookies			클라이언트에 전달할 HTTP 쿠키
+							//OPTIONAL: contentOrParams.contentType		응답하는 컨텐츠의 종류
+							//OPTIONAL: contentOrParams.buffer			응답 내용을 Buffer형으로 전달
+							//OPTIONAL: contentOrParams.content			응답 내용을 문자열로 전달
+							//OPTIONAL: contentOrParams.stream			fs.createReadStream와 같은 함수로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
+							//OPTIONAL: contentOrParams.totalSize		stream으로 응답을 전달하는 경우 스트림의 전체 길이
+							//OPTIONAL: contentOrParams.startPosition	stream으로 응답을 전달하는 경우 전달할 시작 위치
+							//OPTIONAL: contentOrParams.endPosition		stream으로 응답을 전달하는 경우 전달할 끝 위치
+							//OPTIONAL: contentOrParams.encoding		응답 인코딩
+							//OPTIONAL: contentOrParams.version			지정된 버전으로 웹 브라우저에 리소스를 캐싱합니다.
+							//OPTIONAL: contentOrParams.isFinal			리소스가 결코 변경되지 않는 경우 true로 지정합니다. 그러면 version과 상관 없이 캐싱을 수행합니다.
 
 							var
 							// status code
@@ -6595,6 +6620,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 							// buffer
 							buffer,
 							
+							// stream
+							stream,
+							
 							// total size
 							totalSize,
 							
@@ -6603,9 +6631,6 @@ global.WEB_SERVER = CLASS(function(cls) {
 							
 							// end position
 							endPosition,
-							
-							// stream
-							stream,
 
 							// encoding
 							encoding,
@@ -6629,10 +6654,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 									content = contentOrParams.content;
 									buffer = contentOrParams.buffer;
 									
+									stream = contentOrParams.stream;
 									totalSize = contentOrParams.totalSize;
 									startPosition = contentOrParams.startPosition;
 									endPosition = contentOrParams.endPosition;
-									stream = contentOrParams.stream;
 									
 									encoding = contentOrParams.encoding;
 									version = contentOrParams.version;
@@ -6707,10 +6732,6 @@ global.WEB_SERVER = CLASS(function(cls) {
 							}
 						};
 						
-						onDisconnected = function(method) {
-							disconnectedMethods.push(method);
-						};
-						
 						if (isUploadURI === true) {
 							
 							CREATE_FOLDER(uploadPath, function() {
@@ -6720,38 +6741,34 @@ global.WEB_SERVER = CLASS(function(cls) {
 								form,
 				
 								// file data set
-								fileDataSet,
-				
-								// field data
-								fieldData;
+								fileDataSet;
 				
 								// serve upload.
 								if (method === 'POST') {
 				
 									form = new IncomingForm();
 									fileDataSet = [];
-									fieldData = {};
 									
 									form.uploadDir = uploadPath;
 									
 									form.on('progress', function(bytesRecieved, bytesExpected) {
 										
-										if (progressHandler !== undefined) {
-											progressHandler(params, bytesRecieved, bytesExpected);
+										if (uploadProgressHandler !== undefined) {
+											uploadProgressHandler(params, bytesRecieved, bytesExpected);
 										}
 										
-									}).on('field', function(fieldName, value) {
+									}).on('field', function(name, value) {
 				
-										fieldData[fieldName] = value;
+										params[name] = value;
 				
-									}).on('file', function(fieldName, file) {
+									}).on('file', function(name, fileInfo) {
 				
 										fileDataSet.push({
-											path : file.path,
-											size : file.size,
-											name : file.name,
-											type : file.type,
-											lastModifiedTime : file.lastModifiedDate
+											path : fileInfo.path,
+											size : fileInfo.size,
+											name : fileInfo.name,
+											type : fileInfo.type,
+											lastModifiedTime : fileInfo.lastModifiedDate
 										});
 				
 									}).on('end', function() {
@@ -6780,20 +6797,14 @@ global.WEB_SERVER = CLASS(function(cls) {
 				
 												function() {
 													return function() {
-														if (overFileSizeHandler !== undefined) {
-															overFileSizeHandler(params, maxUploadFileMB, response);
+														if (uploadOverFileSizeHandler !== undefined) {
+															uploadOverFileSizeHandler(params, maxUploadFileMB, response);
 														}
 													};
 												}]);
 				
 												return false;
 											}
-				
-											EACH(fieldData, function(value, name) {
-												if (value.trim() !== '') {
-													fileData[name] = value;
-												}
-											});
 											
 											if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
 				
@@ -6825,7 +6836,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 				
 										function() {
 											return function() {
-												callback(params, fileDataSet, response);
+												uploadSuccessHandler(params, fileDataSet, response);
 											};
 										}]);
 				
@@ -6854,7 +6865,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 			
 								if (requestListener !== undefined) {
 			
-									isGoingOn = requestListener(requestInfo, response, onDisconnected, function(newRootPath) {
+									isGoingOn = requestListener(requestInfo, response, function(newRootPath) {
 										rootPath = newRootPath;
 									}, function(_overrideResponseInfo) {
 			
@@ -7087,18 +7098,6 @@ global.WEB_SERVER = CLASS(function(cls) {
 						}
 					};
 				}]);
-
-				if (CHECK_IS_ARRAY(uploadURI) === true ? CHECK_IS_IN({
-					array : uploadURI,
-					value : uri
-				}) === true : uploadURI === uri) {
-					
-					nativeReq.on('close', function() {
-						EACH(disconnectedMethods, function(method) {
-							method();
-						});
-					});
-				}
 			};
 
 			// init sever.

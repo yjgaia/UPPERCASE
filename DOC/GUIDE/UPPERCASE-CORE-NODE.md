@@ -460,14 +460,40 @@ UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽�
 #### 요청에 응답하는 간단한 웹 서버
 아래 코드를 실행하면 http://localhost:8123/main 로 접속하면 `Welcome!` 이라는 메시지를 보여주는 간단한 웹 서버를 생성합니다.
 ```javascript
-WEB_SERVER(8123, function(requestInfo, response, onDisconnected) {
+WEB_SERVER(8123, function(requestInfo, response) {
+    // requestInfo          요청 정보
+    // requestInfo.headers  요청 헤더
+    // requestInfo.cookies  클라이언트에서 넘어온 HTTP 쿠키
+    // requestInfo.isSecure 요청 URL이 https 프로토콜인지 여부
+    // requestInfo.uri      요청 URI
+    // requestInfo.method   요청 메소드
+    // requestInfo.params   파라미터
+    // requestInfo.data     UPPERCASE 기반 요청을 하는 경우 data 파라미터
+    // requestInfo.ip       클라이언트의 IP
+    // response             응답 함수
     
-	// http://localhost:8123/main
+	// http://localhost:8123/main 로 접속하면 Welcome!을 응답
 	if (requestInfo.uri === 'main') {
 		response('Welcome!');
 	}
 });
 ```
+
+`response` 응답 함수로 전달할 수 있는 파라미터 목록은 다음과 같습니다.
+
+* `statusCode` [HTTP 응답 상태 코드](https://ko.wikipedia.org/wiki/HTTP_%EC%83%81%ED%83%9C_%EC%BD%94%EB%93%9C)
+* `headers` 응답 헤더
+* `cookies` 클라이언트에 전달할 [HTTP 쿠키](https://ko.wikipedia.org/wiki/HTTP_%EC%BF%A0%ED%82%A4)
+* `contentType` 응답하는 컨텐츠의 종류
+* `buffer` 응답 내용을 `Buffer`형으로 전달
+* `content` 응답 내용을 문자열로 전달
+* `stream` [`fs.createReadStream`](https://nodejs.org/api/fs.html#fs_fs_createreadstream_path_options)와 같은 함수로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
+* `totalSize` `stream`으로 응답을 전달하는 경우 스트림의 전체 길이
+* `startPosition` `stream`으로 응답을 전달하는 경우 전달할 시작 위치
+* `endPosition` `stream`으로 응답을 전달하는 경우 전달할 끝 위치
+* `encoding` 응답 인코딩
+* `version` 지정된 버전으로 웹 브라우저에 리소스를 캐싱합니다.
+* `isFinal` 리소스가 결코 변경되지 않는 경우 `true`로 지정합니다. 그러면 `version`과 상관 없이 캐싱을 수행합니다.
 
 #### 리소스를 제공하는 웹 서버
 아래 코드를 실행하면 `R` 폴더의 리소스들을 제공하는 웹 서버가 생성됩니다. 만약 `R` 폴더에 `photo.png` 파일이 존재한다면, http://localhost:8123/photo.png 로 접속하면 해당 이미지를 보여줍니다.
@@ -478,7 +504,43 @@ WEB_SERVER({
 });
 ```
 
-`version` 파라미터를 지정하게 되면, 해당 리소스들을 다시 요청할 때 서버가 아닌 웹 브라우저에 캐싱된 것을 불러오게 되됩니다. 따라서 여는 속도가 매우 빠릅니다.
+```javascript
+WEB_SERVER({
+    port : 8123,
+	rootPath : __dirname + '/R'
+}, function(requestInfo, response, replaceRootPath, next) {
+    // requestInfo      요청 정보
+    // response         응답 함수
+    // replaceRootPath  이 요청에 한해 rootPath를 임시로 변경합니다.
+    // next             응답을 중단한 경우, 응답을 계속해서 수행합니다. 응답 파라미터를 추가할 수 있습니다.
+	
+	// 다른 rootPath에 존재하는 리소스를 전송합니다.
+	if (requestInfo.uri === 'private') {
+		replaceRootPath(__dirname + '/secure');
+		requestInfo.uri = 'private.txt';
+	}
+	
+	// pause.txt 리소스를 요청
+    if (requestInfo.uri === 'pause.txt') {
+        
+        // 1초 뒤 응답을 재개합니다.
+        DELAY(1, function() {
+        
+            // 응답을 재개합니다. 또한 응답 파라미터를 추가합니다.
+            next({
+                cookies : {
+                    msg : 'Hello!'
+                }
+            });
+        });
+        
+        // 응답을 중단합니다.
+        return false;
+    }
+});
+```
+
+`version` 파라미터를 지정하면, 해당 리소스를 다시 요청할 때 서버가 아닌 웹 브라우저에 캐싱된 것을 불러오게 되됩니다. 따라서 여는 속도가 매우 빠릅니다. `version`이 변경되면 다시 서버에서 불러온 뒤 재 캐싱하게 됩니다.
 ```javascript
 WEB_SERVER({
     port : 8123,
@@ -497,13 +559,25 @@ WEB_SERVER({
 	uploadURI : '__UPLOAD',
 	uploadPath : __dirname + '/UPLOAD_FILES'
 }, {
-	uploadProgress : function(params, bytesRecieved, bytesExpected) {
+	uploadProgress : function(uriParams, bytesRecieved, bytesExpected) {
+	    // uriParams        아직 폼 데이터의 전송이 끊나지 않은 상태이므로, URI 주소에 지정된 파라미터(예를들어 uri?name=yj&age=23 등)만 가져올 수 있습니다.
+	    // bytesRecieved    이미 업로드 된 용량 (바이트 단위)
+	    // bytesExpected    전체 업로드 될 용량 (바이트 단위)
+	    
 		console.log('업로드 중... (' + bytesRecieved + '/' + bytesExpected + ')');
 	},
     uploadOverFileSize : function(params, maxUploadFileMB, response) {
+        // params           파라미터
+        // maxUploadFileMB  최대 업로드 가능 용량 (메가바이트 단위)
+        // response         응답 함수
+        
 		response('업로드 가능한 용량은 최대 ' + maxUploadFileMB + 'MB 입니다.');
 	},
 	uploadSuccess : function(params, fileDataSet, response) {
+        // params       파라미터
+        // fileDataSet  업로드 파일 데이터 목록
+        // response     응답 함수
+	    
 		response('업로드가 완료되었습니다. 파일 정보: ' + STRINGIFY(fileDataSet));
 	}
 });
@@ -525,11 +599,11 @@ WEB_SERVER({
 
 `WEB_SERVER`에 사용 가능한 핸들러 목록은 다음과 같습니다.
 * `notExistsResource` 리소스가 존재하지 않는 경우
-* `error`
-* `requestListener`
-* `uploadProgress`
-* `uploadOverFileSize` 업로드 하는 파일의 크기가 maxUploadFileMB보다 클 경우
-* `uploadSuccess`
+* `error` 오류가 발생한 경우
+* `requestListener` 요청 리스너
+* `uploadProgress` 업로드 진행중
+* `uploadOverFileSize` 업로드 하는 파일의 크기가 `maxUploadFileMB`보다 클 경우
+* `uploadSuccess` 업로드가 정상적으로 완료된 경우
 
 ### 웹소켓 서버 생성
 TODO:
