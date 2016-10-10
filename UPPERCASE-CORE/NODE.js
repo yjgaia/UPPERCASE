@@ -3359,6 +3359,990 @@ global.REVERSE_EACH = METHOD({
 global.NODE_CONFIG = {};
 
 /*
+ * CPU 코어 간 클러스터링을 수행합니다.
+ */
+global.CPU_CLUSTERING = METHOD(function(m) {
+	'use strict';
+
+	var
+	//IMPORT: cluster
+	cluster = require('cluster'),
+	
+	// cpu count
+	cpuCount = require('os').cpus().length,
+
+	// worker id
+	workerId = 1,
+
+	// get worker id.
+	getWorkerId;
+	
+	cluster.schedulingPolicy = cluster.SCHED_RR;
+
+	m.getWorkerId = getWorkerId = function() {
+		return workerId;
+	};
+
+	return {
+
+		run : function(work) {
+			//REQUIRED: work
+
+			// when master
+			if (cluster.isMaster) {
+
+				RUN(function() {
+
+					var
+					// fork.
+					fork = function() {
+
+						var
+						// new worker
+						newWorker = cluster.fork();
+						
+						// receive data from new worker.
+						newWorker.on('message', function(data) {
+							
+							// send data to all workers except new worker.
+							EACH(cluster.workers, function(worker) {
+								if (worker !== newWorker) {
+									worker.send(data);
+								}
+							});
+						});
+					};
+
+					// fork workers.
+					REPEAT(cpuCount, function() {
+						fork();
+					});
+
+					cluster.on('exit', function(worker, code, signal) {
+						SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다...');
+						fork();
+					});
+				});
+			}
+
+			// when worker
+			else {
+
+				RUN(function() {
+
+					var
+					// method map
+					methodMap = {},
+
+					// run methods.
+					runMethods = function(methodName, data) {
+
+						var
+						// methods
+						methods = methodMap[methodName];
+
+						if (methods !== undefined) {
+
+							EACH(methods, function(method) {
+
+								// run method.
+								method(data);
+							});
+						}
+					},
+
+					// on.
+					on,
+
+					// off.
+					off,
+
+					// broadcast.
+					broadcast;
+
+					workerId = cluster.worker.id;
+
+					// receive data.
+					process.on('message', function(paramsStr) {
+
+						var
+						// params
+						params = PARSE_STR(paramsStr);
+
+						if (params !== undefined) {
+							runMethods(params.methodName, params.data);
+						}
+					});
+
+					m.on = on = function(methodName, method) {
+
+						var
+						// methods
+						methods = methodMap[methodName];
+
+						if (methods === undefined) {
+							methods = methodMap[methodName] = [];
+						}
+
+						methods.push(method);
+					};
+
+					// save shared data.
+					on('__SHARED_STORE_SAVE', SHARED_STORE.save);
+					
+					// update shared data.
+					on('__SHARED_STORE_UPDATE', SHARED_STORE.update);
+
+					// remove shared data.
+					on('__SHARED_STORE_REMOVE', SHARED_STORE.remove);
+
+					// clear shared store.
+					on('__SHARED_STORE_CLEAR', SHARED_STORE.clear);
+
+					m.off = off = function(methodName) {
+						delete methodMap[methodName];
+					};
+
+					m.broadcast = broadcast = function(params) {
+						//REQUIRED: params
+						//REQUIRED: params.methodName
+						//REQUIRED: params.data
+
+						process.send(STRINGIFY(params));
+					};
+					
+					work();
+
+					console.log(CONSOLE_GREEN('[CPU_CLUSTERING] 클러스터링 워커가 실행중입니다... (워커 ID:' + workerId + ')'));
+				});
+			}
+		}
+	};
+});
+
+/*
+ * 서버 간 클러스터링을 수행합니다.
+ */
+global.SERVER_CLUSTERING = METHOD(function(m) {
+	'use strict';
+
+	return {
+
+		run : function(params, work) {
+			//REQUIRED: params
+			//REQUIRED: params.hosts
+			//REQUIRED: params.thisServerName
+			//REQUIRED: params.port
+			//OPTIONAL: work
+
+			var
+			// hosts
+			hosts = params.hosts,
+
+			// this server name
+			thisServerName = params.thisServerName,
+
+			// port
+			port = params.port,
+
+			// method map
+			methodMap = {},
+
+			// is connectings
+			isConnectings = {},
+
+			// server sends
+			serverSends = {},
+
+			// connect to clustering server.
+			connectToClusteringServer,
+
+			// socket server ons
+			socketServeOns = [],
+
+			// on.
+			on,
+
+			// off.
+			off,
+
+			// broadcast.
+			broadcast;
+
+			connectToClusteringServer = function(serverName) {
+
+				if (isConnectings[serverName] !== true) {
+					isConnectings[serverName] = true;
+
+					CONNECT_TO_SOCKET_SERVER({
+						host : hosts[serverName],
+						port : port
+					}, {
+						error : function() {
+							delete isConnectings[serverName];
+						},
+
+						success : function(on, off, send) {
+
+							send({
+								methodName : '__BOOTED',
+								data : thisServerName
+							});
+
+							serverSends[serverName] = function(params) {
+								//REQUIRED: params
+								//REQUIRED: params.methodName
+								//REQUIRED: params.data
+
+								var
+								// method name
+								methodName = params.methodName,
+
+								// data
+								data = params.data;
+
+								send({
+									methodName : 'SERVER_CLUSTERING.' + methodName,
+									data : data
+								});
+							};
+
+							on('__DISCONNECTED', function() {
+								delete serverSends[serverName];
+								delete isConnectings[serverName];
+								
+								SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
+							});
+
+							console.log('[SERVER_CLUSTERING] 클러스터링 서버와 연결되었습니다. (연결된 서버 이름:' + serverName + ')');
+
+							if (CPU_CLUSTERING.broadcast !== undefined) {
+
+								CPU_CLUSTERING.broadcast({
+									methodName : '__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER',
+									data : serverName
+								});
+							}
+						}
+					});
+				}
+			};
+
+			if (CPU_CLUSTERING.on !== undefined) {
+				CPU_CLUSTERING.on('__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER', connectToClusteringServer);
+			}
+
+			// try connect to all clustering hosts.
+			EACH(hosts, function(host, serverName) {
+				if (serverName !== thisServerName) {
+					connectToClusteringServer(serverName);
+				}
+			});
+
+			SOCKET_SERVER(port, function(clientInfo, socketServeOn) {
+				
+				var
+				// server name
+				serverName;
+
+				socketServeOns.push(socketServeOn);
+
+				socketServeOn('__BOOTED', function(_serverName) {
+					
+					serverName = _serverName;
+					
+					connectToClusteringServer(serverName);
+				});
+
+				EACH(methodMap, function(methods, methodName) {
+					EACH(methods, function(method) {
+						socketServeOn('SERVER_CLUSTERING.' + methodName, method);
+					});
+				});
+
+				socketServeOn('__DISCONNECTED', function() {
+					
+					REMOVE({
+						array : socketServeOns,
+						value : socketServeOn
+					});
+					
+					SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
+				});
+			});
+
+			m.on = on = function(methodName, method) {
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+
+				EACH(socketServeOns, function(socketServeOn) {
+					socketServeOn('SERVER_CLUSTERING.' + methodName, method);
+				});
+			};
+
+			// save shared data.
+			on('__SHARED_STORE_SAVE', function(params) {
+
+				SHARED_STORE.save(params);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_SAVE',
+						data : params
+					});
+				}
+			});
+			
+			// update shared data.
+			on('__SHARED_STORE_UPDATE', function(params) {
+
+				SHARED_STORE.update(params);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_UPDATE',
+						data : params
+					});
+				}
+			});
+
+			// remove shared data.
+			on('__SHARED_STORE_REMOVE', function(params) {
+
+				SHARED_STORE.remove(params);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_REMOVE',
+						data : params
+					});
+				}
+			});
+
+			// clear shared store.
+			on('__SHARED_STORE_CLEAR', function(storeName) {
+
+				SHARED_STORE.clear(storeName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_CLEAR',
+						data : storeName
+					});
+				}
+			});
+
+			m.off = off = function(methodName) {
+				delete methodMap[methodName];
+			};
+
+			m.broadcast = broadcast = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.methodName
+				//REQUIRED: params.data
+
+				EACH(serverSends, function(serverSend) {
+					serverSend(params);
+				});
+			};
+
+			if (work !== undefined) {
+				work();
+			}
+
+			console.log(CONSOLE_BLUE('[SERVER_CLUSTERING] 클러스터링 서버가 실행중입니다.... (현재 서버 이름:' + thisServerName + ', 포트:' + port + ')'));
+		}
+	};
+});
+
+/**
+ * 클러스터링 공유 저장소를 생성하는 클래스
+ */
+global.SHARED_STORE = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// storages
+	storages = {},
+
+	// remove delay map
+	removeDelayMap = {},
+	
+	// get storages.
+	getStorages,
+
+	// save.
+	save,
+	
+	// update.
+	update,
+
+	// get.
+	get,
+
+	// remove.
+	remove,
+	
+	// list.
+	list,
+	
+	// count.
+	count,
+	
+	// clear.
+	clear;
+	
+	cls.getStorages = getStorages = function() {
+		return storages;
+	};
+
+	cls.save = save = function(params, remove) {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//REQUIRED: params.id
+		//REQUIRED: params.data
+		//OPTIONAL: params.removeAfterSeconds
+		//OPTIONAL: remove
+
+		var
+		// store name
+		storeName = params.storeName,
+		
+		// id
+		id = params.id,
+
+		// data
+		data = params.data,
+
+		// remove after seconds
+		removeAfterSeconds = params.removeAfterSeconds,
+		
+		// storage
+		storage = storages[storeName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[storeName];
+		
+		if (storage === undefined) {
+			storage = storages[storeName] = {};
+		}
+
+		storage[id] = data;
+		
+		if (removeDelays === undefined) {
+			removeDelays = removeDelayMap[storeName] = {};
+		}
+
+		if (removeDelays[id] !== undefined) {
+			removeDelays[id].remove();
+			delete removeDelays[id];
+		}
+
+		if (removeAfterSeconds !== undefined) {
+			removeDelays[id] = DELAY(removeAfterSeconds, remove);
+		}
+	};
+	
+	cls.update = update = function(params, remove) {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//REQUIRED: params.id
+		//REQUIRED: params.data
+		//OPTIONAL: params.data.$inc
+		//OPTIONAL: params.data.$push
+		//OPTIONAL: params.data.$addToSet
+		//OPTIONAL: params.data.$pull
+		//OPTIONAL: params.removeAfterSeconds
+		//OPTIONAL: remove
+
+		var
+		// store name
+		storeName = params.storeName,
+		
+		// id
+		id = params.id,
+
+		// data
+		data = COPY(params.data),
+		
+		// $inc
+		$inc = data.$inc,
+		
+		// $push
+		$push = data.$push,
+		
+		// $addToSet
+		$addToSet = data.$addToSet,
+		
+		// $pull
+		$pull = data.$pull,
+
+		// remove after seconds
+		removeAfterSeconds = params.removeAfterSeconds,
+		
+		// storage
+		storage = storages[storeName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[storeName],
+		
+		// saved data
+		savedData;
+		
+		if (storage === undefined) {
+			storage = storages[storeName] = {};
+		}
+		
+		delete data.$inc;
+		delete data.$push;
+		delete data.$addToSet;
+		delete data.$pull;
+		
+		savedData = storage[id];
+		
+		if (savedData !== undefined) {
+			
+			EXTEND({
+				origin : savedData,
+				extend : data
+			});
+			
+			if ($inc !== undefined) {
+				EACH($inc, function(value, name) {
+					savedData[name] += value;
+				});
+			}
+			
+			if ($push !== undefined) {
+				
+				EACH($push, function(value, name) {
+					
+					if (CHECK_IS_ARRAY(savedData[name]) === true) {
+						
+						if (CHECK_IS_DATA(value) === true) {
+							
+							if (value.$each !== undefined) {
+								
+								EACH(value.$each, function(v, i) {
+									if (value.$position !== undefined) {
+										savedData[name].splice(value.$position + i, 0, v);
+									} else {
+										savedData[name].push(v);
+									}
+								});
+								
+							} else {
+								savedData[name].push(value);
+							}
+							
+						} else {
+							savedData[name].push(value);
+						}
+					}
+				});
+			}
+			
+			if ($addToSet !== undefined) {
+				
+				EACH($addToSet, function(value, name) {
+					
+					if (CHECK_IS_ARRAY(savedData[name]) === true) {
+						
+						if (CHECK_IS_DATA(value) === true) {
+							
+							if (value.$each !== undefined) {
+								
+								EACH(value.$each, function(value) {
+									if (CHECK_IS_IN({
+										array : savedData[name],
+										value : value
+									}) !== true) {
+										savedData[name].push(value);
+									}
+								});
+								
+							} else if (CHECK_IS_IN({
+								array : savedData[name],
+								value : value
+							}) !== true) {
+								savedData[name].push(value);
+							}
+							
+						} else if (CHECK_IS_IN({
+							array : savedData[name],
+							value : value
+						}) !== true) {
+							savedData[name].push(value);
+						}
+					}
+				});
+			}
+			
+			if ($pull !== undefined) {
+				
+				EACH($pull, function(value, name) {
+					
+					if (CHECK_IS_ARRAY(savedData[name]) === true) {
+						
+						REMOVE({
+							array : savedData[name],
+							value : value
+						});
+					}
+				});
+			}
+			
+			if (removeDelays === undefined) {
+				removeDelays = removeDelayMap[storeName] = {};
+			}
+	
+			if (removeDelays[id] !== undefined) {
+				removeDelays[id].remove();
+				delete removeDelays[id];
+			}
+	
+			if (removeAfterSeconds !== undefined) {
+				removeDelays[id] = DELAY(removeAfterSeconds, remove);
+			}
+		}
+	};
+
+	cls.get = get = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//REQUIRED: params.id
+		
+		var
+		// store name
+		storeName = params.storeName,
+		
+		// id
+		id = params.id,
+		
+		// storage
+		storage = storages[storeName];
+		
+		if (storage !== undefined) {
+			return storage[id];
+		}
+	};
+
+	cls.remove = remove = function(params) {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//REQUIRED: params.id
+		
+		var
+		// store name
+		storeName = params.storeName,
+		
+		// id
+		id = params.id,
+		
+		// storage
+		storage = storages[storeName],
+		
+		// remove delays
+		removeDelays = removeDelayMap[storeName];
+		
+		if (storage !== undefined) {
+			delete storage[id];
+		}
+
+		if (removeDelays !== undefined && removeDelays[id] !== undefined) {
+			removeDelays[id].remove();
+			delete removeDelays[id];
+		}
+	};
+	
+	cls.list = list = function(storeName) {
+		//REQUIRED: storeName
+		
+		var
+		// storage
+		storage = storages[storeName];
+		
+		return storage === undefined ? {} : storage;
+	};
+	
+	cls.count = count = function(storeName) {
+		//REQUIRED: storeName
+		
+		return COUNT_PROPERTIES(list(storeName));
+	};
+	
+	cls.clear = clear = function(storeName) {
+		//REQUIRED: storeName
+		
+		delete storages[storeName];
+	};
+
+	return {
+
+		init : function(inner, self, storeName) {
+			//REQUIRED: storeName
+
+			var
+			// save.
+			save,
+			
+			// update.
+			update,
+
+			// get.
+			get,
+
+			// remove.
+			remove,
+			
+			// list.
+			list,
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
+
+			self.save = save = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.id
+				//REQUIRED: params.data
+				//OPTIONAL: params.removeAfterSeconds
+
+				var
+				// id
+				id = params.id,
+
+				// data
+				data = params.data,
+
+				// remove after seconds
+				removeAfterSeconds = params.removeAfterSeconds;
+
+				cls.save({
+					storeName : storeName,
+					id : id,
+					data : data,
+					removeAfterSeconds : removeAfterSeconds
+				}, function() {
+					remove(id);
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_SAVE',
+						data : {
+							storeName : storeName,
+							id : id,
+							data : data
+						}
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_SAVE',
+						data : {
+							storeName : storeName,
+							id : id,
+							data : data
+						}
+					});
+				}
+			};
+			
+			self.update = update = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.id
+				//REQUIRED: params.data
+				//OPTIONAL: params.data.$inc
+				//OPTIONAL: params.data.$push
+				//OPTIONAL: params.data.$addToSet
+				//OPTIONAL: params.data.$pull
+				//OPTIONAL: params.removeAfterSeconds
+
+				var
+				// id
+				id = params.id,
+
+				// data
+				data = params.data,
+
+				// remove after seconds
+				removeAfterSeconds = params.removeAfterSeconds;
+
+				cls.update({
+					storeName : storeName,
+					id : id,
+					data : data,
+					removeAfterSeconds : removeAfterSeconds
+				}, function() {
+					remove(id);
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_UPDATE',
+						data : {
+							storeName : storeName,
+							id : id,
+							data : data
+						}
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_UPDATE',
+						data : {
+							storeName : storeName,
+							id : id,
+							data : data
+						}
+					});
+				}
+			};
+
+			self.get = get = function(id) {
+				//REQUIRED: id
+				
+				return cls.get({
+					storeName : storeName,
+					id : id
+				});
+			};
+
+			self.remove = remove = function(id) {
+				//REQUIRED: id
+
+				cls.remove({
+					storeName : storeName,
+					id : id
+				});
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_REMOVE',
+						data : {
+							storeName : storeName,
+							id : id
+						}
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_REMOVE',
+						data : {
+							storeName : storeName,
+							id : id
+						}
+					});
+				}
+			};
+			
+			self.list = list = function() {
+				return cls.list(storeName);
+			};
+			
+			self.count = count = function() {
+				return cls.count(storeName);
+			};
+			
+			self.clear = clear = function() {
+				
+				cls.clear(storeName);
+
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+
+					CPU_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_CLEAR',
+						data : storeName
+					});
+				}
+
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__SHARED_STORE_CLEAR',
+						data : storeName
+					});
+				}
+			};
+		}
+	};
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.SHARED_STORE = CLASS({
+
+		init : function(inner, self, name) {
+			//REQUIRED: name
+
+			var
+			// shared store
+			sharedStore = SHARED_STORE(box.boxName + '.' + name),
+
+			// save.
+			save,
+			
+			// update.
+			update,
+
+			// get.
+			get,
+
+			// remove.
+			remove,
+			
+			// list.
+			list,
+			
+			// count.
+			count,
+			
+			// clear.
+			clear;
+
+			self.save = save = sharedStore.save;
+
+			self.update = update = sharedStore.update;
+
+			self.get = get = sharedStore.get;
+
+			self.remove = remove = sharedStore.remove;
+			
+			self.list = list = sharedStore.list;
+
+			self.count = count = sharedStore.count;
+
+			self.clear = clear = sharedStore.clear;
+		}
+	});
+});
+
+/*
  * 콘솔에 표시할 텍스트를 파란색으로 설정합니다.
  */
 global.CONSOLE_BLUE = METHOD({
@@ -6098,6 +7082,531 @@ global.REQUEST = METHOD(function(m) {
 	};
 });
 
+/*
+ * SOCKET_SERVER로 생성한 TCP 소켓 서버에 연결합니다.
+ */
+global.CONNECT_TO_SOCKET_SERVER = METHOD({
+
+	run : function(params, connectionListenerOrListeners) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.host
+		//REQUIRED: params.port
+		//REQUIRED: connectionListenerOrListeners
+		//REQUIRED: connectionListenerOrListeners.success
+		//OPTIONAL: connectionListenerOrListeners.error
+
+		var
+		// host
+		host = params.host,
+
+		// port
+		port = params.port,
+
+		// connection listener
+		connectionListener,
+
+		// error listener
+		errorListener,
+
+		// net
+		net = require('net'),
+
+		// connection
+		conn,
+
+		// is connected
+		isConnected,
+
+		// method map
+		methodMap = {},
+
+		// send key
+		sendKey = 0,
+
+		// received string
+		receivedStr = '',
+
+		// on.
+		on,
+
+		// off.
+		off,
+
+		// send.
+		send,
+
+		// run methods.
+		runMethods;
+
+		if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
+			connectionListener = connectionListenerOrListeners;
+		} else {
+			connectionListener = connectionListenerOrListeners.success;
+			errorListener = connectionListenerOrListeners.error;
+		}
+
+		runMethods = function(methodName, data, sendKey) {
+
+			var
+			// methods
+			methods = methodMap[methodName];
+
+			if (methods !== undefined) {
+
+				EACH(methods, function(method) {
+
+					// run method.
+					method(data,
+
+					// ret.
+					function(retData) {
+
+						if (send !== undefined && sendKey !== undefined) {
+
+							send({
+								methodName : '__CALLBACK_' + sendKey,
+								data : retData
+							});
+						}
+					});
+				});
+			}
+		};
+
+		conn = net.connect({
+			host : host,
+			port : port
+		}, function() {
+
+			isConnected = true;
+
+			connectionListener(
+
+			// on.
+			on = function(methodName, method) {
+				//REQUIRED: methodName
+				//REQUIRED: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+			},
+
+			// off.
+			off = function(methodName, method) {
+				//REQUIRED: methodName
+				//OPTIONAL: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					if (method !== undefined) {
+
+						REMOVE({
+							array : methods,
+							value : method
+						});
+
+					} else {
+						delete methodMap[methodName];
+					}
+				}
+			},
+
+			// send to server.
+			send = function(methodNameOrParams, callback) {
+				//REQUIRED: methodNameOrParams
+				//REQUIRED: methodNameOrParams.methodName
+				//OPTIONAL: methodNameOrParams.data
+				//OPTIONAL: callback
+				
+				var
+				// method name
+				methodName,
+				
+				// data
+				data,
+				
+				// callback name
+				callbackName;
+				
+				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+					methodName = methodNameOrParams;
+				} else {
+					methodName = methodNameOrParams.methodName;
+					data = methodNameOrParams.data;
+				}
+				
+				if (conn !== undefined) {
+					
+					conn.write(STRINGIFY({
+						methodName : methodName,
+						data : data,
+						sendKey : sendKey
+					}) + '\r\n');
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
+				}
+			},
+
+			// disconnect.
+			function() {
+				if (conn !== undefined) {
+					conn.end();
+					conn = undefined;
+				}
+			});
+		});
+
+		// when receive data
+		conn.on('data', function(content) {
+
+			var
+			// str
+			str,
+
+			// index
+			index,
+
+			// params
+			params;
+
+			receivedStr += content.toString();
+
+			while (( index = receivedStr.indexOf('\r\n')) !== -1) {
+
+				str = receivedStr.substring(0, index);
+
+				params = PARSE_STR(str);
+
+				if (params !== undefined) {
+					runMethods(params.methodName, params.data, params.sendKey);
+				}
+
+				receivedStr = receivedStr.substring(index + 1);
+			}
+		});
+
+		// when disconnected
+		conn.on('close', function() {
+			runMethods('__DISCONNECTED');
+		});
+
+		// when error
+		conn.on('error', function(error) {
+
+			var
+			// error msg
+			errorMsg = error.toString();
+
+			if (isConnected !== true) {
+
+				if (errorListener !== undefined) {
+					errorListener(errorMsg);
+				} else {
+					SHOW_ERROR('CONNECT_TO_SOCKET_SERVER', errorMsg);
+				}
+
+			} else {
+				runMethods('__ERROR', errorMsg);
+			}
+		});
+	}
+});
+
+/*
+ * TCP 소켓 서버를 생성합니다.
+ */
+global.SOCKET_SERVER = METHOD({
+
+	run : function(port, connectionListener) {
+		'use strict';
+		//REQUIRED: port
+		//REQUIRED: connectionListener
+
+		var
+		// net
+		net = require('net'),
+
+		// server
+		server = net.createServer(function(conn) {
+
+			var
+			// method map
+			methodMap = {},
+
+			// send key
+			sendKey = 0,
+
+			// received string
+			receivedStr = '',
+			
+			// client info
+			clientInfo,
+
+			// on.
+			on,
+
+			// off.
+			off,
+
+			// send.
+			send,
+
+			// run methods.
+			runMethods = function(methodName, data, sendKey) {
+
+				var
+				// methods
+				methods;
+				
+				try {
+					
+					methods = methodMap[methodName];
+
+					if (methods !== undefined) {
+	
+						EACH(methods, function(method) {
+	
+							// run method.
+							method(data,
+	
+							// ret.
+							function(retData) {
+	
+								if (sendKey !== undefined) {
+	
+									send({
+										methodName : '__CALLBACK_' + sendKey,
+										data : retData
+									});
+								}
+							});
+						});
+					}
+				}
+				
+				// if catch error
+				catch(error) {
+					
+					SHOW_ERROR('SOCKET_SERVER', error.toString(), {
+						methodName : methodName,
+						data : data
+					});
+				}
+			};
+
+			// when receive data
+			conn.on('data', function(content) {
+
+				var
+				// str
+				str,
+
+				// index
+				index,
+
+				// params
+				params;
+
+				receivedStr += content.toString();
+
+				while (( index = receivedStr.indexOf('\r\n')) !== -1) {
+
+					str = receivedStr.substring(0, index);
+
+					params = PARSE_STR(str);
+
+					if (params !== undefined) {
+						runMethods(params.methodName, params.data, params.sendKey);
+					}
+
+					receivedStr = receivedStr.substring(index + 1);
+				}
+			});
+
+			// when disconnected
+			conn.on('close', function() {
+				
+				runMethods('__DISCONNECTED');
+				
+				// free method map.
+				methodMap = undefined;
+			});
+
+			// when error
+			conn.on('error', function(error) {
+
+				var
+				// error msg
+				errorMsg;
+				
+				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE' && error.code !== 'ETIMEDOUT' && error.code !== 'ENETUNREACH' && error.code !== 'EHOSTUNREACH' && error.code !== 'ECONNREFUSED' && error.code !== 'EINVAL') {
+					
+					errorMsg = error.toString();
+					
+					SHOW_ERROR('SOCKET_SERVER', errorMsg);
+					
+					runMethods('__ERROR', errorMsg);
+				}
+			});
+
+			connectionListener(
+
+			// client info
+			clientInfo = {
+				
+				ip : conn.remoteAddress,
+				
+				connectTime : new Date()
+			},
+
+			// on.
+			on = function(methodName, method) {
+				//REQUIRED: methodName
+				//REQUIRED: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+			},
+
+			// off.
+			off = function(methodName, method) {
+				//REQUIRED: methodName
+				//OPTIONAL: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					if (method !== undefined) {
+
+						REMOVE({
+							array : methods,
+							value : method
+						});
+
+					} else {
+						delete methodMap[methodName];
+					}
+				}
+			},
+
+			// send to client.
+			send = function(methodNameOrParams, callback) {
+				//REQUIRED: methodNameOrParams
+				//OPTIONAL: methodNameOrParams.methodName	클라이언트에 on 함수로 설정된 메소드 이름
+				//OPTIONAL: methodNameOrParams.data			전송할 데이터. 이 경우 str를 사용하지 않습니다.
+				//OPTIONAL: methodNameOrParams.str			전송할 문자열. 이 경우 data를 사용하지 않습니다.
+				//OPTIONAL: callback
+
+				var
+				// method name
+				methodName,
+				
+				// data
+				data,
+				
+				// str
+				str,
+				
+				// callback name
+				callbackName;
+				
+				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+					methodName = methodNameOrParams;
+				} else {
+					methodName = methodNameOrParams.methodName;
+					data = methodNameOrParams.data;
+					str = methodNameOrParams.str;
+				}
+				
+				if (conn !== undefined && conn.writable === true) {
+					
+					if (str !== undefined) {
+						conn.write(str + '\r\n');
+					}
+					
+					else {
+						
+						conn.write(STRINGIFY({
+							methodName : methodName,
+							data : data,
+							sendKey : sendKey
+						}) + '\r\n');
+					}
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
+					
+					clientInfo.lastReceiveTime = new Date();
+				}
+			},
+
+			// disconnect.
+			function() {
+				if (conn !== undefined) {
+					conn.end();
+					conn = undefined;
+				}
+			});
+		});
+
+		// listen.
+		server.listen(port);
+
+		console.log('[SOCKET_SERVER] TCP 소켓 서버가 실행중입니다... (포트:' + port + ')');
+	}
+});
+
 /**
  * 웹 서버를 생성하는 클래스
  */
@@ -6105,6 +7614,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 	'use strict';
 
 	var
+	// DEFAULT_MAX_UPLOAD_FILE_MB
+	DEFAULT_MAX_UPLOAD_FILE_MB = 10,
+	
 	//IMPORT: http
 	http = require('http'),
 	
@@ -6209,11 +7721,6 @@ global.WEB_SERVER = CLASS(function(cls) {
 			return 'video/webm';
 		}
 
-		// avi
-		if (extension === 'avi') {
-			return 'video/avi';
-		}
-
 		return 'application/octet-stream';
 	},
 
@@ -6280,10 +7787,6 @@ global.WEB_SERVER = CLASS(function(cls) {
 			return 'binary';
 		}
 
-		if (contentType === 'video/avi') {
-			return 'binary';
-		}
-
 		return 'binary';
 	},
 	
@@ -6347,8 +7850,8 @@ global.WEB_SERVER = CLASS(function(cls) {
 			//OPTIONAL: portOrParams.version				캐싱을 위한 버전. 입력하지 않으면 캐싱 기능이 작동하지 않습니다.
 			//OPTIONAL: portOrParams.preprocessors			프리프로세서들. 뷰 템플릿 등과 같이, 특정 확장자의 리소스를 응답하기 전에 내용을 변경하는 경우 사용합니다.
 			//OPTIONAL: portOrParams.uploadURI				업로드를 처리할 URI. URI 문자열 혹은 URI 문자열 배열로 입력합니다.
-			//OPTIONAL: portOrParams.maxUploadFileMB		최대 업로드 파일 크기 (MB). 입력하지 않으면 10MB로 지정됩니다.
 			//OPTIONAL: portOrParams.uploadPath				업로드한 파일을 저장할 경로
+			//OPTIONAL: portOrParams.maxUploadFileMB		최대 업로드 파일 크기 (MB). 입력하지 않으면 10MB로 지정됩니다.
 			//OPTIONAL: requestListenerOrHandlers
 			//OPTIONAL: requestListenerOrHandlers.notExistsResource		리소스가 존재하지 않는 경우
 			//OPTIONAL: requestListenerOrHandlers.error					오류가 발생한 경우
@@ -6382,11 +7885,11 @@ global.WEB_SERVER = CLASS(function(cls) {
 			// upload uri
 			uploadURI,
 			
-			// max upload file mb
-			maxUploadFileMB,
-			
 			// upload path
 			uploadPath,
+			
+			// max upload file mb
+			maxUploadFileMB,
 
 			// not exists resource handler.
 			notExistsResourceHandler,
@@ -6408,9 +7911,15 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 			// resource caches
 			resourceCaches = {},
+			
+			// native server
+			nativeServer,
 
 			// serve.
 			serve,
+			
+			// get native server.
+			getNativeServer,
 			
 			// add preprocessor.
 			addPreprocessor;
@@ -6430,12 +7939,12 @@ global.WEB_SERVER = CLASS(function(cls) {
 				preprocessors = portOrParams.preprocessors;
 				
 				uploadURI = portOrParams.uploadURI;
-				maxUploadFileMB = portOrParams.maxUploadFileMB;
 				uploadPath = portOrParams.uploadPath;
+				maxUploadFileMB = portOrParams.maxUploadFileMB;
 			}
 			
 			if (maxUploadFileMB === undefined) {
-				maxUploadFileMB = 10;
+				maxUploadFileMB = DEFAULT_MAX_UPLOAD_FILE_MB;
 			}
 
 			if (requestListenerOrHandlers !== undefined) {
@@ -6555,9 +8064,6 @@ global.WEB_SERVER = CLASS(function(cls) {
 						// response.
 						response,
 						
-						// response not found.
-						responseNotFound,
-		
 						// response error.
 						responseError;
 						
@@ -6732,6 +8238,26 @@ global.WEB_SERVER = CLASS(function(cls) {
 							}
 						};
 						
+						responseError = function(errorMsg) {
+							
+							if (errorHandler !== undefined) {
+								isGoingOn = errorHandler(errorMsg, requestInfo, response);
+							} else {
+								SHOW_ERROR('WEB_SERVER', errorMsg);
+							}
+
+							if (isGoingOn !== false && requestInfo.isResponsed !== true) {
+
+								response(EXTEND({
+									origin : {
+										statusCode : 500
+									},
+									extend : overrideResponseInfo
+								}));
+							}
+						};
+						
+						// when upload request
 						if (isUploadURI === true) {
 							
 							CREATE_FOLDER(uploadPath, function() {
@@ -6839,18 +8365,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 												uploadSuccessHandler(params, fileDataSet, response);
 											};
 										}]);
-				
+										
 									}).on('error', function(error) {
-				
-										var
-										// error msg
-										errorMsg = error.toString();
-				
-										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
-										} else {
-											SHOW_ERROR('WEB_SERVER', errorMsg);
-										}
+										responseError(error.toString());
 									});
 				
 									form.parse(nativeReq);
@@ -6858,13 +8375,14 @@ global.WEB_SERVER = CLASS(function(cls) {
 							});
 						}
 						
+						// when non-upload request
 						else {
 							
 							NEXT([
 							function(next) {
 			
 								if (requestListener !== undefined) {
-			
+									
 									isGoingOn = requestListener(requestInfo, response, function(newRootPath) {
 										rootPath = newRootPath;
 									}, function(_overrideResponseInfo) {
@@ -6891,7 +8409,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 							function() {
 								return function() {
 									
-									// stream video.
+									// stream audio or video.
 									if (headers.range !== undefined) {
 										
 										GET_FILE_INFO(rootPath + '/' + uri, function(fileInfo) {
@@ -6978,43 +8496,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 			
 									// response resource file.
 									else if (rootPath !== undefined && method === 'GET') {
-			
-										responseNotFound = function(resourcePath) {
-			
-											if (notExistsResourceHandler !== undefined) {
-												isGoingOn = notExistsResourceHandler(resourcePath, requestInfo, response);
-											}
-			
-											if (isGoingOn !== false && requestInfo.isResponsed !== true) {
-			
-												response(EXTEND({
-													origin : {
-														statusCode : 404
-													},
-													extend : overrideResponseInfo
-												}));
-											}
-										};
-			
-										responseError = function(errorMsg) {
-			
-											if (errorHandler !== undefined) {
-												isGoingOn = errorHandler(errorMsg, requestInfo, response);
-											} else {
-												SHOW_ERROR('WEB_SERVER', errorMsg);
-											}
-			
-											if (isGoingOn !== false && requestInfo.isResponsed !== true) {
-			
-												response(EXTEND({
-													origin : {
-														statusCode : 500
-													},
-													extend : overrideResponseInfo
-												}));
-											}
-										};
-			
+										
 										NEXT([
 										function(next) {
 			
@@ -7025,7 +8507,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 											if (resourceCache !== undefined) {
 												next(resourceCache.buffer, resourceCache.contentType);
 											} else {
-			
+												
 												// serve file.
 												READ_FILE(rootPath + '/' + uri, {
 			
@@ -7035,10 +8517,23 @@ global.WEB_SERVER = CLASS(function(cls) {
 														READ_FILE(rootPath + (uri === '' ? '' : ('/' + uri)) + '/index.html', {
 			
 															notExists : function() {
-																responseNotFound(rootPath + '/' + uri);
+																
+																if (notExistsResourceHandler !== undefined) {
+																	isGoingOn = notExistsResourceHandler(rootPath + '/' + uri, requestInfo, response);
+																}
+																
+																if (isGoingOn !== false && requestInfo.isResponsed !== true) {
+								
+																	response(EXTEND({
+																		origin : {
+																			statusCode : 404
+																		},
+																		extend : overrideResponseInfo
+																	}));
+																}
 															},
+															
 															error : responseError,
-			
 															success : function(buffer) {
 																next(buffer, 'text/html');
 															}
@@ -7102,22 +8597,24 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 			// init sever.
 			if (port !== undefined) {
-				http.createServer(function(nativeReq, nativeRes) {
+				nativeServer = http.createServer(function(nativeReq, nativeRes) {
 					serve(nativeReq, nativeRes, false);
 				}).listen(port);
 			}
 
 			// init secured sever.
 			if (securedPort !== undefined) {
-				https.createServer({
+				nativeServer = https.createServer({
 					key : fs.readFileSync(securedKeyFilePath),
 					cert : fs.readFileSync(securedCertFilePath)
 				}, function(nativeReq, nativeRes) {
 					serve(nativeReq, nativeRes, true);
 				}).listen(securedPort);
 			}
-
-			console.log('[WEB_SERVER] 웹 서버가 실행중입니다...' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')')));
+			
+			self.getNativeServer = getNativeServer = function() {
+				return nativeServer;
+			};
 			
 			self.addPreprocessor = addPreprocessor = function(params) {
 				//REQUIRED: params
@@ -7137,8 +8634,273 @@ global.WEB_SERVER = CLASS(function(cls) {
 				
 				preprocessors[extension] = preprocessor;
 			};
+			
+			console.log('[WEB_SERVER] 웹 서버가 실행중입니다...' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')')));
 		}
 	};
+});
+
+/*
+ * 웹 소켓 서버를 생성합니다.
+ */
+global.WEB_SOCKET_SERVER = METHOD({
+
+	run : function(webServer, connectionListener) {
+		'use strict';
+		//REQUIRED: webServer
+		//REQUIRED: connectionListener
+
+		var
+		//IMPORT: WebSocket
+		WebSocket = require('ws'),
+		
+		//IMPORT: WebSocketServer
+		WebSocketServer = WebSocket.Server,
+		
+		// native connection listener.
+		nativeConnectionListener = function(conn) {
+
+			var
+			// headers
+			headers = conn.upgradeReq.headers,
+
+			// method map
+			methodMap = {},
+
+			// send key
+			sendKey = 0,
+			
+			// client info
+			clientInfo,
+
+			// ip
+			ip,
+			
+			// on.
+			on,
+
+			// off.
+			off,
+
+			// send.
+			send,
+
+			// run methods.
+			runMethods = function(methodName, data, sendKey) {
+
+				var
+				// methods
+				methods;
+				
+				try {
+					
+					methods = methodMap[methodName];
+	
+					if (methods !== undefined) {
+	
+						EACH(methods, function(method) {
+	
+							// run method.
+							method(data,
+	
+							// ret.
+							function(retData) {
+	
+								if (sendKey !== undefined) {
+	
+									send({
+										methodName : '__CALLBACK_' + sendKey,
+										data : retData
+									});
+								}
+							});
+						});
+					}
+				}
+				
+				// if catch error
+				catch(error) {
+					SHOW_ERROR('WEB_SOCKET_SERVER', error.toString());
+				}
+			};
+
+			// when receive data
+			conn.on('message', function(str) {
+
+				var
+				// params
+				params = PARSE_STR(str);
+
+				if (params !== undefined) {
+					runMethods(params.methodName, params.data, params.sendKey);
+				}
+			});
+
+			// when disconnected
+			conn.on('close', function() {
+
+				runMethods('__DISCONNECTED');
+
+				// free method map.
+				methodMap = undefined;
+			});
+
+			// when error
+			conn.on('error', function(error) {
+
+				var
+				// error msg
+				errorMsg = error.toString();
+
+				SHOW_ERROR('WEB_SOCKET_SERVER', errorMsg);
+
+				runMethods('__ERROR', errorMsg);
+			});
+
+			ip = headers['x-forwarded-for'];
+
+			if (ip === undefined) {
+				ip = conn.upgradeReq.connection.remoteAddress;
+			}
+
+			connectionListener(
+
+			// client info
+			clientInfo = {
+				
+				ip : ip,
+
+				headers : headers,
+				
+				connectTime : new Date()
+			},
+
+			// on.
+			on = function(methodName, method) {
+				//REQUIRED: methodName
+				//REQUIRED: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+			},
+
+			// off.
+			off = function(methodName, method) {
+				//REQUIRED: methodName
+				//OPTIONAL: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					if (method !== undefined) {
+
+						REMOVE({
+							array : methods,
+							value : method
+						});
+
+					} else {
+						delete methodMap[methodName];
+					}
+				}
+			},
+
+			// send to client.
+			send = function(methodNameOrParams, callback) {
+				//REQUIRED: methodNameOrParams
+				//OPTIONAL: methodNameOrParams.methodName
+				//OPTIONAL: methodNameOrParams.data
+				//OPTIONAL: methodNameOrParams.str
+				//OPTIONAL: callback
+				
+				var
+				// method name
+				methodName,
+				
+				// data
+				data,
+				
+				// str
+				str,
+				
+				// callback name
+				callbackName;
+				
+				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+					methodName = methodNameOrParams;
+				} else {
+					methodName = methodNameOrParams.methodName;
+					data = methodNameOrParams.data;
+					str = methodNameOrParams.str;
+				}
+				
+				if (conn !== undefined && conn.readyState === WebSocket.OPEN) {
+					
+					try {
+						
+						if (str !== undefined) {
+							conn.send(str);
+						}
+						
+						else {
+							
+							conn.send(STRINGIFY({
+								methodName : methodName,
+								data : data,
+								sendKey : sendKey
+							}));
+						}
+						
+					} catch(error) {
+						SHOW_ERROR('WEB_SOCKET_SERVER', error.toString(), methodNameOrParams);
+					}
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
+					
+					clientInfo.lastReceiveTime = new Date();
+				}
+			},
+
+			// disconnect.
+			function() {
+				if (conn !== undefined) {
+					conn.close();
+					conn = undefined;
+				}
+			});
+		};
+		
+		new WebSocketServer({
+			server : webServer.getNativeServer()
+		}).on('connection', nativeConnectionListener);
+		
+		console.log('[WEB_SOCKET_SERVER] 웹 소켓 서버가 실행중입니다...');
+	}
 });
 
 /**

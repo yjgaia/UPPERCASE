@@ -1,33 +1,39 @@
 /*
- * 소켓 서버를 생성합니다.
+ * 웹 소켓 서버를 생성합니다.
  */
-global.SOCKET_SERVER = METHOD({
+global.WEB_SOCKET_SERVER = METHOD({
 
-	run : function(port, connectionListener) {
+	run : function(webServer, connectionListener) {
 		'use strict';
-		//REQUIRED: port
+		//REQUIRED: webServer
 		//REQUIRED: connectionListener
 
 		var
-		// net
-		net = require('net'),
-
-		// server
-		server = net.createServer(function(conn) {
+		//IMPORT: WebSocket
+		WebSocket = require('ws'),
+		
+		//IMPORT: WebSocketServer
+		WebSocketServer = WebSocket.Server,
+		
+		// native connection listener.
+		nativeConnectionListener = function(conn) {
 
 			var
+			// headers
+			headers = conn.upgradeReq.headers,
+
 			// method map
 			methodMap = {},
 
 			// send key
 			sendKey = 0,
-
-			// received string
-			receivedStr = '',
 			
 			// client info
 			clientInfo,
 
+			// ip
+			ip,
+			
 			// on.
 			on,
 
@@ -47,7 +53,7 @@ global.SOCKET_SERVER = METHOD({
 				try {
 					
 					methods = methodMap[methodName];
-
+	
 					if (methods !== undefined) {
 	
 						EACH(methods, function(method) {
@@ -72,44 +78,27 @@ global.SOCKET_SERVER = METHOD({
 				
 				// if catch error
 				catch(error) {
-					SHOW_ERROR('[SOCKET_SERVER] ERROR:', methodName, data, error.toString());
+					SHOW_ERROR('WEB_SOCKET_SERVER', error.toString());
 				}
 			};
 
 			// when receive data
-			conn.on('data', function(content) {
+			conn.on('message', function(str) {
 
 				var
-				// str
-				str,
-
-				// index
-				index,
-
 				// params
-				params;
+				params = PARSE_STR(str);
 
-				receivedStr += content.toString();
-
-				while (( index = receivedStr.indexOf('\r\n')) !== -1) {
-
-					str = receivedStr.substring(0, index);
-
-					params = PARSE_STR(str);
-
-					if (params !== undefined) {
-						runMethods(params.methodName, params.data, params.sendKey);
-					}
-
-					receivedStr = receivedStr.substring(index + 1);
+				if (params !== undefined) {
+					runMethods(params.methodName, params.data, params.sendKey);
 				}
 			});
 
 			// when disconnected
 			conn.on('close', function() {
-				
+
 				runMethods('__DISCONNECTED');
-				
+
 				// free method map.
 				methodMap = undefined;
 			});
@@ -119,24 +108,27 @@ global.SOCKET_SERVER = METHOD({
 
 				var
 				// error msg
-				errorMsg;
-				
-				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE' && error.code !== 'ETIMEDOUT' && error.code !== 'ENETUNREACH' && error.code !== 'EHOSTUNREACH' && error.code !== 'ECONNREFUSED' && error.code !== 'EINVAL') {
-					
-					errorMsg = error.toString();
-					
-					SHOW_ERROR('[SOCKET_SERVER] ERROR:', errorMsg);
-					
-					runMethods('__ERROR', errorMsg);
-				}
+				errorMsg = error.toString();
+
+				SHOW_ERROR('WEB_SOCKET_SERVER', errorMsg);
+
+				runMethods('__ERROR', errorMsg);
 			});
+
+			ip = headers['x-forwarded-for'];
+
+			if (ip === undefined) {
+				ip = conn.upgradeReq.connection.remoteAddress;
+			}
 
 			connectionListener(
 
 			// client info
 			clientInfo = {
 				
-				ip : conn.remoteAddress,
+				ip : ip,
+
+				headers : headers,
 				
 				connectTime : new Date()
 			},
@@ -186,18 +178,14 @@ global.SOCKET_SERVER = METHOD({
 				//REQUIRED: methodNameOrParams
 				//OPTIONAL: methodNameOrParams.methodName
 				//OPTIONAL: methodNameOrParams.data
-				//OPTIONAL: methodNameOrParams.str
 				//OPTIONAL: callback
-
+				
 				var
 				// method name
 				methodName,
 				
 				// data
 				data,
-				
-				// str
-				str,
 				
 				// callback name
 				callbackName;
@@ -207,57 +195,64 @@ global.SOCKET_SERVER = METHOD({
 				} else {
 					methodName = methodNameOrParams.methodName;
 					data = methodNameOrParams.data;
-					str = methodNameOrParams.str;
 				}
 				
-				if (conn !== undefined && conn.writable === true) {
+				if (conn !== undefined && conn.readyState === WebSocket.OPEN) {
 					
-					if (str !== undefined) {
-						conn.write(str + '\r\n');
-					}
-					
-					else {
+					try {
 						
-						conn.write(STRINGIFY({
-							methodName : methodName,
-							data : data,
-							sendKey : sendKey
-						}) + '\r\n');
-					}
+						if (callback === undefined) {
+							
+							conn.send(STRINGIFY({
+								methodName : methodName,
+								data : data
+							}));
+						}
 	
-					if (callback !== undefined) {
+						else {
+							
+							callbackName = '__CALLBACK_' + sendKey;
+		
+							// on callback.
+							on(callbackName, function(data) {
+		
+								// run callback.
+								callback(data);
+		
+								// off callback.
+								off(callbackName);
+							});
+							
+							conn.send(STRINGIFY({
+								methodName : methodName,
+								data : data,
+								sendKey : sendKey
+							}));
+
+							sendKey += 1;
+						}
 						
-						callbackName = '__CALLBACK_' + sendKey;
-	
-						// on callback.
-						on(callbackName, function(data) {
-	
-							// run callback.
-							callback(data);
-	
-							// off callback.
-							off(callbackName);
-						});
+					} catch(error) {
+						SHOW_ERROR('WEB_SOCKET_SERVER', error.toString(), methodNameOrParams);
 					}
-	
-					sendKey += 1;
 					
-					clientInfo.lastReceiveTime = new Date();
+					clientInfo.lastSendTime = new Date();
 				}
 			},
 
 			// disconnect.
 			function() {
 				if (conn !== undefined) {
-					conn.end();
+					conn.close();
 					conn = undefined;
 				}
 			});
-		});
-
-		// listen.
-		server.listen(port);
-
-		console.log('[SOCKET_SERVER] RUNNING SOCKET SERVER... (PORT:' + port + ')');
+		};
+		
+		new WebSocketServer({
+			server : webServer.getNativeServer()
+		}).on('connection', nativeConnectionListener);
+		
+		console.log('[WEB_SOCKET_SERVER] 웹 소켓 서버가 실행중입니다...');
 	}
 });

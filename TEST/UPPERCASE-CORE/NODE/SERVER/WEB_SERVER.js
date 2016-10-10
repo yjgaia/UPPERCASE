@@ -17,7 +17,7 @@ TEST('WEB_SERVER', function(ok) {
 		// session store
 		sessionStore = SHARED_STORE('sessionStore');
 
-		WEB_SERVER(8123, function(requestInfo, response, onDisconnected) {
+		WEB_SERVER(8123, function(requestInfo, response) {
 
 			var
 			// session key

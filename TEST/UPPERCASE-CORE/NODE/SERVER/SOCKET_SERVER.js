@@ -1,20 +1,11 @@
-// load UJS.
-require('../../../UJS-NODE.js');
-
 TEST('SOCKET_SERVER', function(ok) {
 	'use strict';
-
-	INIT_OBJECTS();
 
 	SOCKET_SERVER(8124, function(clientInfo, on, off, send, disconnect) {
 
 		var
 		// roles
 		roles = [];
-
-		ok(CHECK_ARE_SAME([clientInfo, {
-			ip : '127.0.0.1'
-		}]));
 
 		on('message', function(data, ret) {
 
@@ -42,14 +33,14 @@ TEST('SOCKET_SERVER', function(ok) {
 		});
 
 		on('login', function(data) {
-			if (data.username === 'test' && data.password === '1234') {
+			if (data !== undefined && data.username === 'test' && data.password === '1234') {
 				roles.push('USER');
 			}
 		});
 
 		on('checkRole', function(role) {
 
-			if (CHECK_IS_IN({
+			if (role !== undefined && CHECK_IS_IN({
 				data : roles,
 				value : role
 			}) === true) {

@@ -1,5 +1,5 @@
 /*
- * connect to socket server.
+ * SOCKET_SERVER로 생성한 TCP 소켓 서버에 연결합니다.
  */
 global.CONNECT_TO_SOCKET_SERVER = METHOD({
 
@@ -245,7 +245,7 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 				if (errorListener !== undefined) {
 					errorListener(errorMsg);
 				} else {
-					SHOW_ERROR('[CONNECT_TO_SOCKET_SERVER] CONNECT TO SOCKET SERVER FAILED: ' + errorMsg);
+					SHOW_ERROR('CONNECT_TO_SOCKET_SERVER', errorMsg);
 				}
 
 			} else {

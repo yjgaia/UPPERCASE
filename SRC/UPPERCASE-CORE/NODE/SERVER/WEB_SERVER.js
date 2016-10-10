@@ -241,8 +241,8 @@ global.WEB_SERVER = CLASS(function(cls) {
 			//OPTIONAL: portOrParams.version				캐싱을 위한 버전. 입력하지 않으면 캐싱 기능이 작동하지 않습니다.
 			//OPTIONAL: portOrParams.preprocessors			프리프로세서들. 뷰 템플릿 등과 같이, 특정 확장자의 리소스를 응답하기 전에 내용을 변경하는 경우 사용합니다.
 			//OPTIONAL: portOrParams.uploadURI				업로드를 처리할 URI. URI 문자열 혹은 URI 문자열 배열로 입력합니다.
-			//OPTIONAL: portOrParams.maxUploadFileMB		최대 업로드 파일 크기 (MB). 입력하지 않으면 10MB로 지정됩니다.
 			//OPTIONAL: portOrParams.uploadPath				업로드한 파일을 저장할 경로
+			//OPTIONAL: portOrParams.maxUploadFileMB		최대 업로드 파일 크기 (MB). 입력하지 않으면 10MB로 지정됩니다.
 			//OPTIONAL: requestListenerOrHandlers
 			//OPTIONAL: requestListenerOrHandlers.notExistsResource		리소스가 존재하지 않는 경우
 			//OPTIONAL: requestListenerOrHandlers.error					오류가 발생한 경우
@@ -276,11 +276,11 @@ global.WEB_SERVER = CLASS(function(cls) {
 			// upload uri
 			uploadURI,
 			
-			// max upload file mb
-			maxUploadFileMB,
-			
 			// upload path
 			uploadPath,
+			
+			// max upload file mb
+			maxUploadFileMB,
 
 			// not exists resource handler.
 			notExistsResourceHandler,
@@ -330,8 +330,8 @@ global.WEB_SERVER = CLASS(function(cls) {
 				preprocessors = portOrParams.preprocessors;
 				
 				uploadURI = portOrParams.uploadURI;
-				maxUploadFileMB = portOrParams.maxUploadFileMB;
 				uploadPath = portOrParams.uploadPath;
+				maxUploadFileMB = portOrParams.maxUploadFileMB;
 			}
 			
 			if (maxUploadFileMB === undefined) {
@@ -453,7 +453,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 						overrideResponseInfo = {},
 						
 						// response.
-						response;
+						response,
+						
+						// response error.
+						responseError;
 						
 						EACH(params, function(param, name) {
 							if (CHECK_IS_ARRAY(param) === true) {
@@ -626,6 +629,25 @@ global.WEB_SERVER = CLASS(function(cls) {
 							}
 						};
 						
+						responseError = function(errorMsg) {
+							
+							if (errorHandler !== undefined) {
+								isGoingOn = errorHandler(errorMsg, requestInfo, response);
+							} else {
+								SHOW_ERROR('WEB_SERVER', errorMsg);
+							}
+
+							if (isGoingOn !== false && requestInfo.isResponsed !== true) {
+
+								response(EXTEND({
+									origin : {
+										statusCode : 500
+									},
+									extend : overrideResponseInfo
+								}));
+							}
+						};
+						
 						// when upload request
 						if (isUploadURI === true) {
 							
@@ -734,18 +756,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 												uploadSuccessHandler(params, fileDataSet, response);
 											};
 										}]);
-				
+										
 									}).on('error', function(error) {
-				
-										var
-										// error msg
-										errorMsg = error.toString();
-				
-										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
-										} else {
-											SHOW_ERROR('WEB_SERVER', errorMsg);
-										}
+										responseError(error.toString());
 									});
 				
 									form.parse(nativeReq);
@@ -880,33 +893,11 @@ global.WEB_SERVER = CLASS(function(cls) {
 			
 											var
 											// resource cache
-											resourceCache = resourceCaches[originalURI],
-											
-											// response error.
-											responseError;
+											resourceCache = resourceCaches[originalURI];
 			
 											if (resourceCache !== undefined) {
 												next(resourceCache.buffer, resourceCache.contentType);
 											} else {
-												
-												responseError = function(errorMsg) {
-													
-													if (errorHandler !== undefined) {
-														isGoingOn = errorHandler(errorMsg, requestInfo, response);
-													} else {
-														SHOW_ERROR('WEB_SERVER', errorMsg);
-													}
-					
-													if (isGoingOn !== false && requestInfo.isResponsed !== true) {
-					
-														response(EXTEND({
-															origin : {
-																statusCode : 500
-															},
-															extend : overrideResponseInfo
-														}));
-													}
-												};
 												
 												// serve file.
 												READ_FILE(rootPath + '/' + uri, {
@@ -1011,8 +1002,6 @@ global.WEB_SERVER = CLASS(function(cls) {
 					serve(nativeReq, nativeRes, true);
 				}).listen(securedPort);
 			}
-
-			console.log('[WEB_SERVER] 웹 서버가 실행중입니다...' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')')));
 			
 			self.getNativeServer = getNativeServer = function() {
 				return nativeServer;
@@ -1036,6 +1025,8 @@ global.WEB_SERVER = CLASS(function(cls) {
 				
 				preprocessors[extension] = preprocessor;
 			};
+			
+			console.log('[WEB_SERVER] 웹 서버가 실행중입니다...' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')')));
 		}
 	};
 });

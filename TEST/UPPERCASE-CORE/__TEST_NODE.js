@@ -14,6 +14,8 @@ RUN(function() {
 		require('./' + path + '.js');
 	};
 	
+	BOX('TestBox');
+	
 	// UPPERCASE-CORE-COMMON
 	if (false) {
 		test('COMMON/TO_DELETE');
@@ -64,12 +66,18 @@ RUN(function() {
 		//test('NODE/SYSTEM/MEMORY_USAGE');
 		//test('NODE/SYSTEM/DISK_USAGE');
 		
-		test('NODE/SERVER/WEB_SERVER');
+		//test('NODE/SERVER/WEB_SERVER');
 		
 		//test('NODE/IMAGEMAGICK/IMAGEMAGICK_CONVERT');
 		//test('NODE/IMAGEMAGICK/IMAGEMAGICK_IDENTIFY');
 		//test('NODE/IMAGEMAGICK/IMAGEMAGICK_READ_METADATA');
 		//test('NODE/IMAGEMAGICK/IMAGEMAGICK_RESIZE');
+		
+		//test('NODE/SERVER/SOCKET_SERVER');
+		//test('NODE/SERVER/CONNECT_TO_SOCKET_SERVER');
+		
+		//test('NODE/CLUSTERING/CPU_CLUSTERING');
+		test('NODE/CLUSTERING/SHARED_STORE');
 	}
 	
 	// init all singleton objects.

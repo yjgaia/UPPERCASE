@@ -8,3 +8,5 @@
 * VALID의 check는 checkAndWash로 변경
 * CHECK_IS_EXISTS_FILE -> CHECK_IS_FILE_EXISTS
 * WEB_SERVER에 RESOURCE_SERVER, UPLOAD_REQUEST 통합, onDisconnected 제거
+* CPU_SHARED_DB, CPU_SHARED_STORE, SHARED_DB가 SHARED_STORE로 통합
+* clientInfo.lastReceiveTime가 clientInfo.lastSendTime으로 변경

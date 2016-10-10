@@ -458,7 +458,10 @@ UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽�
 사용 가능한 형태들은 다음과 같습니다.
 
 #### 요청에 응답하는 간단한 웹 서버
-아래 코드를 실행하면 http://localhost:8123/main 로 접속하면 `Welcome!` 이라는 메시지를 보여주는 간단한 웹 서버를 생성합니다.
+* `WEB_SERVER(port, requestListener)` 일반적인 웹 서버를 생성합니다.
+* `WEB_SERVER({securedPort:, securedKeyFilePath:, securedCertFilePath:}, requestListener)` HTTPS 보안 웹 서버를 생성합니다.
+
+아래 코드를 실행하면 [http://localhost:8123/main](http://localhost:8123/main)로 접속하면 `Welcome!` 이라는 메시지를 보여주는 간단한 웹 서버를 생성합니다.
 ```javascript
 WEB_SERVER(8123, function(requestInfo, response) {
     // requestInfo          요청 정보
@@ -475,6 +478,13 @@ WEB_SERVER(8123, function(requestInfo, response) {
 	// http://localhost:8123/main 로 접속하면 Welcome!을 응답
 	if (requestInfo.uri === 'main') {
 		response('Welcome!');
+	}
+	
+	if (requestInfo.uri === 'html') {
+		response({
+		    contentType : 'text/html',
+		    content : '<b>Welcome!</b>'
+		});
 	}
 });
 ```
@@ -496,7 +506,14 @@ WEB_SERVER(8123, function(requestInfo, response) {
 * `isFinal` 리소스가 결코 변경되지 않는 경우 `true`로 지정합니다. 그러면 `version`과 상관 없이 캐싱을 수행합니다.
 
 #### 리소스를 제공하는 웹 서버
-아래 코드를 실행하면 `R` 폴더의 리소스들을 제공하는 웹 서버가 생성됩니다. 만약 `R` 폴더에 `photo.png` 파일이 존재한다면, http://localhost:8123/photo.png 로 접속하면 해당 이미지를 보여줍니다.
+* `WEB_SERVER({port:, rootPath:})` `rootPath` 폴더의 리소스들을 제공합니다.
+* `WEB_SERVER({port:, rootPath:, version:})` `rootPath` 폴더의 리소스들을 제공하며, 리소스를 다시 요청할 때 서버가 아닌 웹 브라우저에 캐싱된 것을 불러오게 되됩니다.
+* `WEB_SERVER({securedPort:, securedKeyFilePath:, securedCertFilePath:, rootPath:})` `rootPath` 폴더의 리소스들을 제공하는 HTTPS 보안 웹 서버를 생성합니다.
+* `WEB_SERVER({port:, rootPath:}, requestListenerOrHandlers)`
+* `WEB_SERVER({port:, rootPath:, version:}, requestListenerOrHandlers)`
+* `WEB_SERVER({securedPort:, securedKeyFilePath:, securedCertFilePath:, rootPath:}, requestListenerOrHandlers)`
+
+아래 코드를 실행하면 `R` 폴더의 리소스들을 제공하는 웹 서버가 생성됩니다. 만약 `R` 폴더에 `photo.png` 파일이 존재한다면, [http://localhost:8123/photo.png](http://localhost:8123/photo.png)로 접속하면 해당 이미지를 보여줍니다.
 ```javascript
 WEB_SERVER({
     port : 8123,
@@ -540,7 +557,7 @@ WEB_SERVER({
 });
 ```
 
-`version` 파라미터를 지정하면, 해당 리소스를 다시 요청할 때 서버가 아닌 웹 브라우저에 캐싱된 것을 불러오게 되됩니다. 따라서 여는 속도가 매우 빠릅니다. `version`이 변경되면 다시 서버에서 불러온 뒤 재 캐싱하게 됩니다.
+`version` 파라미터를 지정하면, 리소스를 다시 요청할 때 서버가 아닌 웹 브라우저에 캐싱된 것을 불러오게 되됩니다. 따라서 여는 속도가 매우 빠릅니다. `version`이 변경되면 다시 서버에서 불러온 뒤 재 캐싱하게 됩니다.
 ```javascript
 WEB_SERVER({
     port : 8123,
@@ -552,6 +569,13 @@ WEB_SERVER({
 * `CONFIG.isDevMode`가 `true`인 경우에는 `version` 파라미터를 지정하더라도 캐싱 기능이 작동하지 않습니다.
 
 #### 업로드 기능을 제공하는 웹 서버
+* `WEB_SERVER({port:, uploadURI:, uploadPath:})` 업로드 기능을 제공하는 웹 서버를 생성합니다. (최대 업로드 용량은 10MB 입니다.)
+* `WEB_SERVER({port:, uploadURI:, uploadPath:, maxUploadFileMB:})` 최대 업로드 용량 `maxUploadFileMB`인 업로드 기능을 제공하는 웹 서버를 생성합니다.
+* `WEB_SERVER({securedPort:, securedKeyFilePath:, securedCertFilePath:, uploadURI:, uploadPath:})` 업로드 기능을 제공하는 HTTPS 보안 웹 서버를 생성합니다.
+* `WEB_SERVER({port:, uploadURI:, uploadPath:}, requestListenerOrHandlers)`
+* `WEB_SERVER({port:, uploadURI:, uploadPath:, maxUploadFileMB:}, requestListenerOrHandlers)`
+* `WEB_SERVER({securedPort:, securedKeyFilePath:, securedCertFilePath:, uploadURI:, uploadPath:}, requestListenerOrHandlers)`
+
 웹 서버에 업로드 기능을 추가할 수 있습니다. 상세한 예제는  [UPPERCASE-UPLOAD-SAMPLE 프로젝트](https://github.com/Hanul/UPPERCASE-UPLOAD-SAMPLE)를 살펴보시기 바랍니다.
 ```javascript
 WEB_SERVER({
@@ -559,6 +583,9 @@ WEB_SERVER({
 	uploadURI : '__UPLOAD',
 	uploadPath : __dirname + '/UPLOAD_FILES'
 }, {
+    error : function(errorMsg) {
+		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	},
 	uploadProgress : function(uriParams, bytesRecieved, bytesExpected) {
 	    // uriParams        아직 폼 데이터의 전송이 끊나지 않은 상태이므로, URI 주소에 지정된 파라미터(예를들어 uri?name=yj&age=23 등)만 가져올 수 있습니다.
 	    // bytesRecieved    이미 업로드 된 용량 (바이트 단위)
@@ -605,16 +632,108 @@ WEB_SERVER({
 * `uploadOverFileSize` 업로드 하는 파일의 크기가 `maxUploadFileMB`보다 클 경우
 * `uploadSuccess` 업로드가 정상적으로 완료된 경우
 
-### 웹소켓 서버 생성
+### `SOCKET_SERVER(port, connectionListener)`
+TCP 소켓 서버를 생성합니다.
+
+```javascript
+SOCKET_SERVER(8123, function(clientInfo, on, off, send, disconnect) {
+    // clientInfo               클라이언트 정보
+    // clientInfo.ip            클라이언트의 IP
+    // clientInfo.connectTime   접속 시작 시간
+    // on                       메소드를 생성합니다.
+    // off                      메소드를 제거합니다.
+    // send                     클라이언트의 메소드에 데이터를 전송합니다.
+    // disconnect               클라이언트와의 연결을 끊습니다.
+    
+    on('message', function(data, ret) {
+        if (data !== undefined) {
+		    ret('Thanks, ' + data.name + '!');
+		}
+	});
+	
+	on('__DISCONNECTED', function() {
+		console.log('연결이 끊어졌습니다.');
+	});
+});
+```
+
+소켓 서버 내에서 사용하는 함수들은 다음과 같습니다.
+
+#### `on(methodName, method)`
+`on` 함수는 소켓 서버 내 메소드를 생성하는 함수로써, 클라이언트에서 `send` 함수로 전송한 데이터를 받습니다.
+
+#### `off(methodName)` `off(methodName, method)`
+`off` 함수는 소켓 서버 내 생성된 메소드를 제거합니다.
+
+#### `send(params)` `send(params, callback)`
+`send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
+
+사용 가능한 파라미터는 다음과 같습니다.
+* `methodName` 클라이언트에 `on` 함수로 설정된 메소드 이름
+* `data` 전송할 데이터
+
+#### `disconnect()`
+클라이언트와의 연결을 끊습니다.
+
+### `CONNECT_TO_SOCKET_SERVER({host:, port:}, connectionListenerOrListeners)`
+`SOCKET_SERVER`로 생성한 TCP 소켓 서버에 연결합니다.
+
+```javascript
+CONNECT_TO_SOCKET_SERVER({
+	host : 'localhost',
+	port : 8124
+}, {
+	error : function(errorMsg) {
+		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	},
+	success : function(on, off, send, disconnect) {
+        // on           메소드를 생성합니다.
+        // off          메소드를 제거합니다.
+        // send         서버의 메소드에 데이터를 전송합니다.
+        // disconnect   서버와의 연결을 끊습니다.
+
+		send({
+			methodName : 'message',
+			data : {
+				name : 'YJ Sim'
+			}
+		}, function(retMsg) {
+		    console.log('서버로부터의 메시지:' + retMsg);
+		});
+		
+		on('__DISCONNECTED', function() {
+			console.log('연결이 끊어졌습니다.');
+		});
+	}
+});
+```
+
+클라이언트에서 사용하는 함수들은 다음과 같습니다.
+
+#### `on(methodName, method)`
+`on` 함수는 클라이언트에 메소드를 생성하는 함수로써, 서버에서 `send` 함수로 전송한 데이터를 받습니다.
+
+#### `off(methodName)` `off(methodName, method)`
+`off` 함수는 클라이언트에 생성된 메소드를 제거합니다.
+
+#### `send(params)` `send(params, callback)`
+`send`는 서버로 데이터를 전송하며, 서버에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
+
+사용 가능한 파라미터는 다음과 같습니다.
+* `methodName` 서버에 `on` 함수로 설정된 메소드 이름
+* `data` 전송할 데이터
+
+#### `disconnect()`
+서버와의 연결을 끊습니다.
+
+### `WEB_SOCKET_SERVER`
+웹 소켓 서버를 생성합니다.
 TODO:
 
-### 소켓(TCP) 서버 생성
+### `MULTI_PROTOCOL_SOCKET_SERVER`
 TODO:
 
-### 웹소켓 + 소켓 통합 서버 생성
-TODO:
-
-### UDP 서버 생성
+### `UDP_SERVER`
 TODO:
 
 ## HTTP 요청 기능
