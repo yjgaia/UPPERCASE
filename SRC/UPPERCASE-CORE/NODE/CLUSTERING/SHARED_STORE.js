@@ -35,8 +35,8 @@ global.SHARED_STORE = CLASS(function(cls) {
 	// remove.
 	remove,
 	
-	// list.
-	list,
+	// all.
+	all,
 	
 	// count.
 	count,
@@ -54,13 +54,13 @@ global.SHARED_STORE = CLASS(function(cls) {
 		return storages;
 	};
 
-	cls.save = save = function(params, remove) {
+	cls.save = save = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
 		//REQUIRED: params.data
 		//OPTIONAL: params.removeAfterSeconds
-		//OPTIONAL: remove
+		//REQUIRED: callback
 
 		var
 		// store name
@@ -99,9 +99,11 @@ global.SHARED_STORE = CLASS(function(cls) {
 		if (removeAfterSeconds !== undefined) {
 			removeDelays[id] = DELAY(removeAfterSeconds, remove);
 		}
+		
+		callback(data);
 	};
 	
-	cls.update = update = function(params, remove) {
+	cls.update = update = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
@@ -111,7 +113,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 		//OPTIONAL: params.data.$addToSet
 		//OPTIONAL: params.data.$pull
 		//OPTIONAL: params.removeAfterSeconds
-		//OPTIONAL: remove
+		//REQUIRED: callback
 
 		var
 		// store name
@@ -263,12 +265,15 @@ global.SHARED_STORE = CLASS(function(cls) {
 				removeDelays[id] = DELAY(removeAfterSeconds, remove);
 			}
 		}
+		
+		callback(savedData);
 	};
 
-	cls.get = get = function(params) {
+	cls.get = get = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
+		//REQUIRED: callback
 		
 		var
 		// store name
@@ -278,17 +283,23 @@ global.SHARED_STORE = CLASS(function(cls) {
 		id = params.id,
 		
 		// storage
-		storage = storages[storeName];
+		storage = storages[storeName],
+		
+		// saved data
+		savedData;
 		
 		if (storage !== undefined) {
-			return storage[id];
+			savedData = storage[id];
 		}
+		
+		callback(savedData);
 	};
 
-	cls.remove = remove = function(params) {
+	cls.remove = remove = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
+		//REQUIRED: callback
 		
 		var
 		// store name
@@ -301,9 +312,14 @@ global.SHARED_STORE = CLASS(function(cls) {
 		storage = storages[storeName],
 		
 		// remove delays
-		removeDelays = removeDelayMap[storeName];
+		removeDelays = removeDelayMap[storeName],
+		
+		// orign data
+		originData;
 		
 		if (storage !== undefined) {
+			originData = storage[id];
+			
 			delete storage[id];
 		}
 
@@ -311,28 +327,35 @@ global.SHARED_STORE = CLASS(function(cls) {
 			removeDelays[id].remove();
 			delete removeDelays[id];
 		}
+		
+		callback(originData);
 	};
 	
-	cls.list = list = function(storeName) {
+	cls.all = all = function(storeName, callback) {
 		//REQUIRED: storeName
+		//REQUIRED: callback
 		
 		var
 		// storage
 		storage = storages[storeName];
 		
-		return storage === undefined ? {} : storage;
+		callback(storage === undefined ? {} : storage);
 	};
 	
-	cls.count = count = function(storeName) {
+	cls.count = count = function(storeName, callback) {
 		//REQUIRED: storeName
+		//REQUIRED: callback
 		
-		return COUNT_PROPERTIES(list(storeName));
+		callback(COUNT_PROPERTIES(all(storeName)));
 	};
 	
-	cls.clear = clear = function(storeName) {
+	cls.clear = clear = function(storeName, callback) {
 		//REQUIRED: storeName
+		//REQUIRED: callback
 		
 		delete storages[storeName];
+		
+		callback();
 	};
 
 	return {
@@ -365,8 +388,8 @@ global.SHARED_STORE = CLASS(function(cls) {
 			// remove.
 			remove,
 			
-			// list.
-			list,
+			// all.
+			all,
 			
 			// count.
 			count,
@@ -393,7 +416,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				serverName = serverNames[a % serverNames.length];
 			}
 			
-			workerIds[storeName] = workerId = (b % cpuCount.length) + 1;
+			workerIds[storeName] = workerId = (b % cpuCount) + 1;
 
 			self.save = save = function(params, callback) {
 				//REQUIRED: params
@@ -416,28 +439,28 @@ global.SHARED_STORE = CLASS(function(cls) {
 
 					SERVER_CLUSTERING.send({
 						serverName : serverName,
-						methodName : '__SHARED_STORE_UPDATE',
+						methodName : '__SHARED_STORE_SAVE',
 						data : {
 							storeName : storeName,
 							id : id,
 							data : data,
 							removeAfterSeconds : removeAfterSeconds
 						}
-					});
+					}, callback);
 				}
 
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
 						workerId : workerId,
-						methodName : '__SHARED_STORE_UPDATE',
+						methodName : '__SHARED_STORE_SAVE',
 						data : {
 							storeName : storeName,
 							id : id,
 							data : data,
 							removeAfterSeconds : removeAfterSeconds
 						}
-					});
+					}, callback);
 				}
 				
 				else {
@@ -447,11 +470,11 @@ global.SHARED_STORE = CLASS(function(cls) {
 						id : id,
 						data : data,
 						removeAfterSeconds : removeAfterSeconds
-					});
+					}, callback);
 				}
 			};
 			
-			self.update = update = function(params, callback) {
+			self.update = update = function(params, callbackOrHandlers) {
 				//REQUIRED: params
 				//REQUIRED: params.id
 				//REQUIRED: params.data
@@ -460,7 +483,9 @@ global.SHARED_STORE = CLASS(function(cls) {
 				//OPTIONAL: params.data.$addToSet
 				//OPTIONAL: params.data.$pull
 				//OPTIONAL: params.removeAfterSeconds
-				//OPTIONAL: callback
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.success
 
 				var
 				// id
@@ -470,34 +495,64 @@ global.SHARED_STORE = CLASS(function(cls) {
 				data = params.data,
 
 				// remove after seconds
-				removeAfterSeconds = params.removeAfterSeconds;
+				removeAfterSeconds = params.removeAfterSeconds,
+				
+				// not exists handler.
+				notExistsHandler,
+				
+				// callback.
+				callback,
+				
+				// inner callback.
+				innerCallback;
+				
+				if (callbackOrHandlers !== undefined) {
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						notExistsHandler = callbackOrHandlers.notExists;
+						callback = callbackOrHandlers.success;
+					}
+				}
+				
+				innerCallback = function(savedData) {
+					if (savedData === undefined) {
+						if (notExistsHandler !== undefined) {
+							notExistsHandler();
+						} else {
+							SHOW_ERROR('SHARED_STORE', '수정할 데이터가 존재하지 않습니다.', params);
+						}
+					} else if (callback !== undefined) {
+						callback(savedData);
+					}
+				};
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
 
 					SERVER_CLUSTERING.send({
 						serverName : serverName,
-						methodName : '__SHARED_STORE_SAVE',
+						methodName : '__SHARED_STORE_UPDATE',
 						data : {
 							storeName : storeName,
 							id : id,
 							data : data,
 							removeAfterSeconds : removeAfterSeconds
 						}
-					});
+					}, innerCallback);
 				}
 
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
 						workerId : workerId,
-						methodName : '__SHARED_STORE_SAVE',
+						methodName : '__SHARED_STORE_UPDATE',
 						data : {
 							storeName : storeName,
 							id : id,
 							data : data,
 							removeAfterSeconds : removeAfterSeconds
 						}
-					});
+					}, innerCallback);
 				}
 				
 				else {
@@ -507,83 +562,225 @@ global.SHARED_STORE = CLASS(function(cls) {
 						id : id,
 						data : data,
 						removeAfterSeconds : removeAfterSeconds
-					});
+					}, innerCallback);
 				}
 			};
 
-			self.get = get = function(id, callback) {
+			self.get = get = function(id, callbackOrHandlers) {
 				//REQUIRED: id
-				//OPTIONAL: callback
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.success
 				
-				return cls.get({
-					storeName : storeName,
-					id : id
-				});
-			};
+				var
+				// not exists handler.
+				notExistsHandler,
+				
+				// callback.
+				callback,
+				
+				// inner callback.
+				innerCallback;
+				
+				if (callbackOrHandlers !== undefined) {
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						notExistsHandler = callbackOrHandlers.notExists;
+						callback = callbackOrHandlers.success;
+					}
+				}
+				
+				innerCallback = function(savedData) {
+					if (savedData === undefined) {
+						if (notExistsHandler !== undefined) {
+							notExistsHandler();
+						} else {
+							SHOW_ERROR('SHARED_STORE', '가져올 데이터가 존재하지 않습니다.', id);
+						}
+					} else if (callback !== undefined) {
+						callback(savedData);
+					}
+				};
+				
+				if (SERVER_CLUSTERING.send !== undefined) {
 
-			self.remove = remove = function(id, callback) {
-				//REQUIRED: id
-				//OPTIONAL: callback
-
-				cls.remove({
-					storeName : storeName,
-					id : id
-				});
-
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
-						methodName : '__SHARED_STORE_REMOVE',
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
+						methodName : '__SHARED_STORE_GET',
 						data : {
 							storeName : storeName,
 							id : id
 						}
-					});
+					}, innerCallback);
 				}
 
-				if (SERVER_CLUSTERING.broadcast !== undefined) {
+				else if (CPU_CLUSTERING.send !== undefined) {
 
-					SERVER_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : workerId,
+						methodName : '__SHARED_STORE_GET',
+						data : {
+							storeName : storeName,
+							id : id
+						}
+					}, innerCallback);
+				}
+				
+				else {
+					
+					cls.get({
+						storeName : storeName,
+						id : id
+					}, innerCallback);
+				}
+			};
+
+			self.remove = remove = function(id, callbackOrHandlers) {
+				//REQUIRED: id
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.success
+				
+				var
+				// not exists handler.
+				notExistsHandler,
+				
+				// callback.
+				callback,
+				
+				// inner callback.
+				innerCallback;
+				
+				if (callbackOrHandlers !== undefined) {
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						notExistsHandler = callbackOrHandlers.notExists;
+						callback = callbackOrHandlers.success;
+					}
+				}
+				
+				innerCallback = function(savedData) {
+					if (savedData === undefined) {
+						if (notExistsHandler !== undefined) {
+							notExistsHandler();
+						} else {
+							SHOW_ERROR('SHARED_STORE', '삭제할 데이터가 존재하지 않습니다.', id);
+						}
+					} else if (callback !== undefined) {
+						callback(savedData);
+					}
+				};
+
+				if (SERVER_CLUSTERING.send !== undefined) {
+
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
 						methodName : '__SHARED_STORE_REMOVE',
 						data : {
 							storeName : storeName,
 							id : id
 						}
-					});
+					}, innerCallback);
+				}
+
+				else if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : workerId,
+						methodName : '__SHARED_STORE_REMOVE',
+						data : {
+							storeName : storeName,
+							id : id
+						}
+					}, innerCallback);
+				}
+				
+				else {
+					
+					cls.remove({
+						storeName : storeName,
+						id : id
+					}, innerCallback);
 				}
 			};
 			
-			self.list = list = function(callback) {
+			self.all = all = function(callback) {
 				//OPTIONAL: callback
 				
-				return cls.list(storeName);
+				if (SERVER_CLUSTERING.send !== undefined) {
+
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
+						methodName : '__SHARED_STORE_ALL',
+						data : storeName
+					}, callback);
+				}
+
+				else if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : workerId,
+						methodName : '__SHARED_STORE_ALL',
+						data : storeName
+					}, callback);
+				}
+				
+				else {
+					cls.all(storeName, callback);
+				}
 			};
 			
 			self.count = count = function(callback) {
 				//OPTIONAL: callback
 				
-				return cls.count(storeName);
+				if (SERVER_CLUSTERING.send !== undefined) {
+
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
+						methodName : '__SHARED_STORE_COUNT',
+						data : storeName
+					}, callback);
+				}
+
+				else if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : workerId,
+						methodName : '__SHARED_STORE_COUNT',
+						data : storeName
+					}, callback);
+				}
+				
+				else {
+					cls.count(storeName, callback);
+				}
 			};
 			
 			self.clear = clear = function(callback) {
 				//OPTIONAL: callback
 				
-				cls.clear(storeName);
+				if (SERVER_CLUSTERING.send !== undefined) {
 
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
 						methodName : '__SHARED_STORE_CLEAR',
 						data : storeName
-					});
+					}, callback);
 				}
 
-				if (SERVER_CLUSTERING.broadcast !== undefined) {
+				else if (CPU_CLUSTERING.send !== undefined) {
 
-					SERVER_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : workerId,
 						methodName : '__SHARED_STORE_CLEAR',
 						data : storeName
-					});
+					}, callback);
+				}
+				
+				else {
+					cls.clear(storeName, callback);
 				}
 			};
 		}
@@ -614,8 +811,8 @@ FOR_BOX(function(box) {
 			// remove.
 			remove,
 			
-			// list.
-			list,
+			// all.
+			all,
 			
 			// count.
 			count,
@@ -631,7 +828,7 @@ FOR_BOX(function(box) {
 
 			self.remove = remove = sharedStore.remove;
 			
-			self.list = list = sharedStore.list;
+			self.all = all = sharedStore.all;
 
 			self.count = count = sharedStore.count;
 

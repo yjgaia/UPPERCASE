@@ -3371,8 +3371,8 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 	// cpu count
 	cpuCount = require('os').cpus().length,
 
-	// worker id
-	workerId = 1,
+	// this worker id
+	thisWorkerId = 1,
 
 	// get worker id.
 	getWorkerId;
@@ -3380,7 +3380,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 	cluster.schedulingPolicy = cluster.SCHED_RR;
 
 	m.getWorkerId = getWorkerId = function() {
-		return workerId;
+		return thisWorkerId;
 	};
 
 	return {
@@ -3433,20 +3433,50 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					var
 					// method map
 					methodMap = {},
+					
+					// send key
+					sendKey = 0,
 
 					// run methods.
-					runMethods = function(methodName, data) {
-
+					runMethods = function(methodName, data, sendKey, fromWorkerId) {
+		
 						var
 						// methods
-						methods = methodMap[methodName];
-
-						if (methods !== undefined) {
-
-							EACH(methods, function(method) {
-
-								// run method.
-								method(data);
+						methods;
+						
+						try {
+							
+							methods = methodMap[methodName];
+		
+							if (methods !== undefined) {
+			
+								EACH(methods, function(method) {
+			
+									// run method.
+									method(data,
+			
+									// ret.
+									function(retData) {
+			
+										if (sendKey !== undefined) {
+			
+											send({
+												workerId : fromWorkerId,
+												methodName : '__CALLBACK_' + sendKey,
+												data : retData
+											});
+										}
+									});
+								});
+							}
+						}
+						
+						// if catch error
+						catch(error) {
+							
+							SHOW_ERROR('CPU_CLUSTERING', error.toString(), {
+								methodName : methodName,
+								data : data
 							});
 						}
 					},
@@ -3456,11 +3486,14 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 
 					// off.
 					off,
+					
+					// send.
+					send,
 
 					// broadcast.
 					broadcast;
 
-					workerId = cluster.worker.id;
+					thisWorkerId = cluster.worker.id;
 
 					// receive data.
 					process.on('message', function(paramsStr) {
@@ -3468,9 +3501,9 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						var
 						// params
 						params = PARSE_STR(paramsStr);
-
-						if (params !== undefined) {
-							runMethods(params.methodName, params.data);
+						
+						if (params !== undefined && (params.workerId === undefined || params.workerId === thisWorkerId)) {
+							runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
 						}
 					});
 
@@ -3493,14 +3526,86 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					// update shared data.
 					on('__SHARED_STORE_UPDATE', SHARED_STORE.update);
 
+					// get shared data.
+					on('__SHARED_STORE_GET', SHARED_STORE.get);
+
 					// remove shared data.
 					on('__SHARED_STORE_REMOVE', SHARED_STORE.remove);
+					
+					// get all shared data.
+					on('__SHARED_STORE_ALL', SHARED_STORE.all);
+					
+					// count shared data.
+					on('__SHARED_STORE_COUNT', SHARED_STORE.count);
 
 					// clear shared store.
 					on('__SHARED_STORE_CLEAR', SHARED_STORE.clear);
 
 					m.off = off = function(methodName) {
 						delete methodMap[methodName];
+					};
+
+					m.send = send = function(params, callback) {
+						//REQUIRED: params
+						//REQUIRED: params.workerId
+						//REQUIRED: params.methodName
+						//REQUIRED: params.data
+						//OPTIONAL: callback
+						
+						var
+						// worker id
+						workerId = params.workerId,
+						
+						// method name
+						methodName = params.methodName,
+						
+						// data
+						data = params.data,
+						
+						// callback name
+						callbackName;
+						
+						if (callback === undefined) {
+							
+							if (workerId === thisWorkerId) {
+								runMethods(methodName, data);
+							} else {
+								process.send(STRINGIFY({
+									workerId : workerId,
+									methodName : methodName,
+									data : data
+								}));
+							}
+						}
+						
+						else {
+							
+							callbackName = '__CALLBACK_' + sendKey;
+							
+							// on callback.
+							on(callbackName, function(data) {
+		
+								// run callback.
+								callback(data);
+		
+								// off callback.
+								off(callbackName);
+							});
+							
+							sendKey += 1;
+							
+							if (workerId === thisWorkerId) {
+								runMethods(methodName, data, sendKey - 1, thisWorkerId);
+							} else {
+								process.send(STRINGIFY({
+									workerId : workerId,
+									methodName : methodName,
+									data : data,
+									sendKey : sendKey - 1,
+									fromWorkerId : thisWorkerId
+								}));
+							}
+						}
 					};
 
 					m.broadcast = broadcast = function(params) {
@@ -3513,7 +3618,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					
 					work();
 
-					console.log(CONSOLE_GREEN('[CPU_CLUSTERING] 클러스터링 워커가 실행중입니다... (워커 ID:' + workerId + ')'));
+					console.log(CONSOLE_GREEN('[CPU_CLUSTERING] 클러스터링 워커가 실행중입니다... (워커 ID:' + thisWorkerId + ')'));
 				});
 			}
 		}
@@ -3554,17 +3659,60 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			// server sends
 			serverSends = {},
 
-			// connect to clustering server.
-			connectToClusteringServer,
-
 			// socket server ons
 			socketServeOns = [],
+
+			// connect to clustering server.
+			connectToClusteringServer,
+			
+			// get hosts.
+			getHosts,
+			
+			// get this server name.
+			getThisServerName,
+
+			// run methods.
+			runMethods = function(methodName, data, callback) {
+
+				var
+				// methods
+				methods;
+				
+				try {
+					
+					methods = methodMap[methodName];
+
+					if (methods !== undefined) {
+	
+						EACH(methods, function(method) {
+	
+							// run method.
+							method(data,
+	
+							// ret.
+							callback);
+						});
+					}
+				}
+				
+				// if catch error
+				catch(error) {
+					
+					SHOW_ERROR('SERVER_CLUSTERING', error.toString(), {
+						methodName : methodName,
+						data : data
+					});
+				}
+			},
 
 			// on.
 			on,
 
 			// off.
 			off,
+			
+			// send.
+			send,
 
 			// broadcast.
 			broadcast;
@@ -3589,7 +3737,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 								data : thisServerName
 							});
 
-							serverSends[serverName] = function(params) {
+							serverSends[serverName] = function(params, callback) {
 								//REQUIRED: params
 								//REQUIRED: params.methodName
 								//REQUIRED: params.data
@@ -3600,11 +3748,11 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 
 								// data
 								data = params.data;
-
+								
 								send({
 									methodName : 'SERVER_CLUSTERING.' + methodName,
 									data : data
-								});
+								}, callback);
 							};
 
 							on('__DISCONNECTED', function() {
@@ -3671,6 +3819,14 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				});
 			});
 
+			m.getHosts = getHosts = function() {
+				return hosts;
+			};
+			
+			m.getThisServerName = getThisServerName = function() {
+				return thisServerName;
+			};
+			
 			m.on = on = function(methodName, method) {
 
 				var
@@ -3691,61 +3847,178 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			// save shared data.
 			on('__SHARED_STORE_SAVE', function(params) {
 
-				SHARED_STORE.save(params);
+				if (CPU_CLUSTERING.send !== undefined) {
 
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
 						methodName : '__SHARED_STORE_SAVE',
 						data : params
 					});
+				}
+				
+				else {
+					SHARED_STORE.save(params);
 				}
 			});
 			
 			// update shared data.
 			on('__SHARED_STORE_UPDATE', function(params) {
 
-				SHARED_STORE.update(params);
+				if (CPU_CLUSTERING.send !== undefined) {
 
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
 						methodName : '__SHARED_STORE_UPDATE',
 						data : params
 					});
+				}
+				
+				else {
+					SHARED_STORE.update(params);
+				}
+			});
+			
+			// get shared data.
+			on('__SHARED_STORE_GET', function(params) {
+
+				if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
+						methodName : '__SHARED_STORE_GET',
+						data : params
+					});
+				}
+				
+				else {
+					SHARED_STORE.get(params);
 				}
 			});
 
 			// remove shared data.
 			on('__SHARED_STORE_REMOVE', function(params) {
 
-				SHARED_STORE.remove(params);
+				if (CPU_CLUSTERING.send !== undefined) {
 
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
 						methodName : '__SHARED_STORE_REMOVE',
 						data : params
 					});
+				}
+				
+				else {
+					SHARED_STORE.remove(params);
+				}
+			});
+
+			// get all shared data.
+			on('__SHARED_STORE_ALL', function(storeName) {
+
+				if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : SHARED_STORE.getWorkerIdByStoreName(storeName),
+						methodName : '__SHARED_STORE_ALL',
+						data : storeName
+					});
+				}
+				
+				else {
+					SHARED_STORE.all(storeName);
+				}
+			});
+
+			// count shared data.
+			on('__SHARED_STORE_COUNT', function(storeName) {
+
+				if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : SHARED_STORE.getWorkerIdByStoreName(storeName),
+						methodName : '__SHARED_STORE_COUNT',
+						data : storeName
+					});
+				}
+				
+				else {
+					SHARED_STORE.count(storeName);
 				}
 			});
 
 			// clear shared store.
 			on('__SHARED_STORE_CLEAR', function(storeName) {
 
-				SHARED_STORE.clear(storeName);
+				if (CPU_CLUSTERING.send !== undefined) {
 
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : SHARED_STORE.getWorkerIdByStoreName(storeName),
 						methodName : '__SHARED_STORE_CLEAR',
 						data : storeName
 					});
+				}
+				
+				else {
+					SHARED_STORE.clear(storeName);
 				}
 			});
 
 			m.off = off = function(methodName) {
 				delete methodMap[methodName];
+			};
+
+			m.send = send = function(params) {
+				//REQUIRED: params
+				//REQUIRED: params.serverName
+				//REQUIRED: params.methodName
+				//REQUIRED: params.data
+				//OPTIONAL: callback
+				
+				var
+				// server name
+				serverName = params.serverName,
+				
+				// method name
+				methodName = params.methodName,
+				
+				// data
+				data = params.data;
+				
+				if (callback === undefined) {
+					
+					if (serverName === thisServerName) {
+						runMethods(methodName, data);
+					}
+					
+					else if (serverSends[serverName] === undefined) {
+						SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+					}
+					
+					else {
+						serverSends[serverName]({
+							methodName : methodName,
+							data : data
+						});
+					}
+				}
+				
+				else {
+					
+					if (serverName === thisServerName) {
+						runMethods(methodName, data, callback);
+					}
+					
+					else if (serverSends[serverName] === undefined) {
+						SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+					}
+					
+					else {
+						serverSends[serverName]({
+							methodName : methodName,
+							data : data
+						}, callback);
+					}
+				}
 			};
 
 			m.broadcast = broadcast = function(params) {
@@ -3774,11 +4047,20 @@ global.SHARED_STORE = CLASS(function(cls) {
 	'use strict';
 
 	var
+	// cpu count
+	cpuCount = require('os').cpus().length,
+	
+	// worker ids
+	workerIds = {},
+	
 	// storages
 	storages = {},
 
 	// remove delay map
 	removeDelayMap = {},
+	
+	// get worker id by store name.
+	getWorkerIdByStoreName,
 	
 	// get storages.
 	getStorages,
@@ -3795,8 +4077,8 @@ global.SHARED_STORE = CLASS(function(cls) {
 	// remove.
 	remove,
 	
-	// list.
-	list,
+	// all.
+	all,
 	
 	// count.
 	count,
@@ -3804,17 +4086,23 @@ global.SHARED_STORE = CLASS(function(cls) {
 	// clear.
 	clear;
 	
+	cls.getWorkerIdByStoreName = getWorkerIdByStoreName = function(storeName) {
+		//REQUIRED: storeName
+		
+		return workerIds[storeName];
+	};
+	
 	cls.getStorages = getStorages = function() {
 		return storages;
 	};
 
-	cls.save = save = function(params, remove) {
+	cls.save = save = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
 		//REQUIRED: params.data
 		//OPTIONAL: params.removeAfterSeconds
-		//OPTIONAL: remove
+		//REQUIRED: callback
 
 		var
 		// store name
@@ -3853,9 +4141,11 @@ global.SHARED_STORE = CLASS(function(cls) {
 		if (removeAfterSeconds !== undefined) {
 			removeDelays[id] = DELAY(removeAfterSeconds, remove);
 		}
+		
+		callback(data);
 	};
 	
-	cls.update = update = function(params, remove) {
+	cls.update = update = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
@@ -3865,7 +4155,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 		//OPTIONAL: params.data.$addToSet
 		//OPTIONAL: params.data.$pull
 		//OPTIONAL: params.removeAfterSeconds
-		//OPTIONAL: remove
+		//REQUIRED: callback
 
 		var
 		// store name
@@ -4017,12 +4307,15 @@ global.SHARED_STORE = CLASS(function(cls) {
 				removeDelays[id] = DELAY(removeAfterSeconds, remove);
 			}
 		}
+		
+		callback(savedData);
 	};
 
-	cls.get = get = function(params) {
+	cls.get = get = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
+		//REQUIRED: callback
 		
 		var
 		// store name
@@ -4032,17 +4325,23 @@ global.SHARED_STORE = CLASS(function(cls) {
 		id = params.id,
 		
 		// storage
-		storage = storages[storeName];
+		storage = storages[storeName],
+		
+		// saved data
+		savedData;
 		
 		if (storage !== undefined) {
-			return storage[id];
+			savedData = storage[id];
 		}
+		
+		callback(savedData);
 	};
 
-	cls.remove = remove = function(params) {
+	cls.remove = remove = function(params, callback) {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
+		//REQUIRED: callback
 		
 		var
 		// store name
@@ -4055,9 +4354,14 @@ global.SHARED_STORE = CLASS(function(cls) {
 		storage = storages[storeName],
 		
 		// remove delays
-		removeDelays = removeDelayMap[storeName];
+		removeDelays = removeDelayMap[storeName],
+		
+		// orign data
+		originData;
 		
 		if (storage !== undefined) {
+			originData = storage[id];
+			
 			delete storage[id];
 		}
 
@@ -4065,28 +4369,35 @@ global.SHARED_STORE = CLASS(function(cls) {
 			removeDelays[id].remove();
 			delete removeDelays[id];
 		}
+		
+		callback(originData);
 	};
 	
-	cls.list = list = function(storeName) {
+	cls.all = all = function(storeName, callback) {
 		//REQUIRED: storeName
+		//REQUIRED: callback
 		
 		var
 		// storage
 		storage = storages[storeName];
 		
-		return storage === undefined ? {} : storage;
+		callback(storage === undefined ? {} : storage);
 	};
 	
-	cls.count = count = function(storeName) {
+	cls.count = count = function(storeName, callback) {
 		//REQUIRED: storeName
+		//REQUIRED: callback
 		
-		return COUNT_PROPERTIES(list(storeName));
+		callback(COUNT_PROPERTIES(all(storeName)));
 	};
 	
-	cls.clear = clear = function(storeName) {
+	cls.clear = clear = function(storeName, callback) {
 		//REQUIRED: storeName
+		//REQUIRED: callback
 		
 		delete storages[storeName];
+		
+		callback();
 	};
 
 	return {
@@ -4095,6 +4406,18 @@ global.SHARED_STORE = CLASS(function(cls) {
 			//REQUIRED: storeName
 
 			var
+			// a, b
+			a = 0, b = 0,
+			
+			// server names
+			serverNames,
+			
+			// server name
+			serverName,
+			
+			// worker id
+			workerId,
+			
 			// save.
 			save,
 			
@@ -4107,20 +4430,42 @@ global.SHARED_STORE = CLASS(function(cls) {
 			// remove.
 			remove,
 			
-			// list.
-			list,
+			// all.
+			all,
 			
 			// count.
 			count,
 			
 			// clear.
 			clear;
+			
+			REPEAT(storeName.length, function(i) {
+				if (i % 2 === 0) {
+					a += storeName.charCodeAt(i);
+				} else {
+					b += storeName.charCodeAt(i);
+				}
+			});
+			
+			if (SERVER_CLUSTERING.getHosts !== undefined) {
+				
+				serverNames = [];
+				
+				EACH(SERVER_CLUSTERING.getHosts(), function(host, serverName) {
+					serverNames.push(serverName);
+				});
+				
+				serverName = serverNames[a % serverNames.length];
+			}
+			
+			workerIds[storeName] = workerId = (b % cpuCount) + 1;
 
-			self.save = save = function(params) {
+			self.save = save = function(params, callback) {
 				//REQUIRED: params
 				//REQUIRED: params.id
 				//REQUIRED: params.data
 				//OPTIONAL: params.removeAfterSeconds
+				//OPTIONAL: callback
 
 				var
 				// id
@@ -4131,42 +4476,47 @@ global.SHARED_STORE = CLASS(function(cls) {
 
 				// remove after seconds
 				removeAfterSeconds = params.removeAfterSeconds;
+				
+				if (SERVER_CLUSTERING.send !== undefined) {
 
-				cls.save({
-					storeName : storeName,
-					id : id,
-					data : data,
-					removeAfterSeconds : removeAfterSeconds
-				}, function() {
-					remove(id);
-				});
-
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
 						methodName : '__SHARED_STORE_SAVE',
 						data : {
 							storeName : storeName,
 							id : id,
-							data : data
+							data : data,
+							removeAfterSeconds : removeAfterSeconds
 						}
-					});
+					}, callback);
 				}
 
-				if (SERVER_CLUSTERING.broadcast !== undefined) {
+				else if (CPU_CLUSTERING.send !== undefined) {
 
-					SERVER_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : workerId,
 						methodName : '__SHARED_STORE_SAVE',
 						data : {
 							storeName : storeName,
 							id : id,
-							data : data
+							data : data,
+							removeAfterSeconds : removeAfterSeconds
 						}
-					});
+					}, callback);
+				}
+				
+				else {
+					
+					cls.save({
+						storeName : storeName,
+						id : id,
+						data : data,
+						removeAfterSeconds : removeAfterSeconds
+					}, callback);
 				}
 			};
 			
-			self.update = update = function(params) {
+			self.update = update = function(params, callbackOrHandlers) {
 				//REQUIRED: params
 				//REQUIRED: params.id
 				//REQUIRED: params.data
@@ -4175,6 +4525,9 @@ global.SHARED_STORE = CLASS(function(cls) {
 				//OPTIONAL: params.data.$addToSet
 				//OPTIONAL: params.data.$pull
 				//OPTIONAL: params.removeAfterSeconds
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.success
 
 				var
 				// id
@@ -4184,108 +4537,292 @@ global.SHARED_STORE = CLASS(function(cls) {
 				data = params.data,
 
 				// remove after seconds
-				removeAfterSeconds = params.removeAfterSeconds;
-
-				cls.update({
-					storeName : storeName,
-					id : id,
-					data : data,
-					removeAfterSeconds : removeAfterSeconds
-				}, function() {
-					remove(id);
-				});
-
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
-						methodName : '__SHARED_STORE_UPDATE',
-						data : {
-							storeName : storeName,
-							id : id,
-							data : data
-						}
-					});
-				}
-
-				if (SERVER_CLUSTERING.broadcast !== undefined) {
-
-					SERVER_CLUSTERING.broadcast({
-						methodName : '__SHARED_STORE_UPDATE',
-						data : {
-							storeName : storeName,
-							id : id,
-							data : data
-						}
-					});
-				}
-			};
-
-			self.get = get = function(id) {
-				//REQUIRED: id
+				removeAfterSeconds = params.removeAfterSeconds,
 				
-				return cls.get({
-					storeName : storeName,
-					id : id
-				});
+				// not exists handler.
+				notExistsHandler,
+				
+				// callback.
+				callback,
+				
+				// inner callback.
+				innerCallback;
+				
+				if (callbackOrHandlers !== undefined) {
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						notExistsHandler = callbackOrHandlers.notExists;
+						callback = callbackOrHandlers.success;
+					}
+				}
+				
+				innerCallback = function(savedData) {
+					if (savedData === undefined) {
+						if (notExistsHandler !== undefined) {
+							notExistsHandler();
+						} else {
+							SHOW_ERROR('SHARED_STORE', '수정할 데이터가 존재하지 않습니다.', params);
+						}
+					} else if (callback !== undefined) {
+						callback(savedData);
+					}
+				};
+				
+				if (SERVER_CLUSTERING.send !== undefined) {
+
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
+						methodName : '__SHARED_STORE_UPDATE',
+						data : {
+							storeName : storeName,
+							id : id,
+							data : data,
+							removeAfterSeconds : removeAfterSeconds
+						}
+					}, innerCallback);
+				}
+
+				else if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : workerId,
+						methodName : '__SHARED_STORE_UPDATE',
+						data : {
+							storeName : storeName,
+							id : id,
+							data : data,
+							removeAfterSeconds : removeAfterSeconds
+						}
+					}, innerCallback);
+				}
+				
+				else {
+					
+					cls.update({
+						storeName : storeName,
+						id : id,
+						data : data,
+						removeAfterSeconds : removeAfterSeconds
+					}, innerCallback);
+				}
 			};
 
-			self.remove = remove = function(id) {
+			self.get = get = function(id, callbackOrHandlers) {
 				//REQUIRED: id
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.success
+				
+				var
+				// not exists handler.
+				notExistsHandler,
+				
+				// callback.
+				callback,
+				
+				// inner callback.
+				innerCallback;
+				
+				if (callbackOrHandlers !== undefined) {
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						notExistsHandler = callbackOrHandlers.notExists;
+						callback = callbackOrHandlers.success;
+					}
+				}
+				
+				innerCallback = function(savedData) {
+					if (savedData === undefined) {
+						if (notExistsHandler !== undefined) {
+							notExistsHandler();
+						} else {
+							SHOW_ERROR('SHARED_STORE', '가져올 데이터가 존재하지 않습니다.', id);
+						}
+					} else if (callback !== undefined) {
+						callback(savedData);
+					}
+				};
+				
+				if (SERVER_CLUSTERING.send !== undefined) {
 
-				cls.remove({
-					storeName : storeName,
-					id : id
-				});
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
+						methodName : '__SHARED_STORE_GET',
+						data : {
+							storeName : storeName,
+							id : id
+						}
+					}, innerCallback);
+				}
 
-				if (CPU_CLUSTERING.broadcast !== undefined) {
+				else if (CPU_CLUSTERING.send !== undefined) {
 
-					CPU_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : workerId,
+						methodName : '__SHARED_STORE_GET',
+						data : {
+							storeName : storeName,
+							id : id
+						}
+					}, innerCallback);
+				}
+				
+				else {
+					
+					cls.get({
+						storeName : storeName,
+						id : id
+					}, innerCallback);
+				}
+			};
+
+			self.remove = remove = function(id, callbackOrHandlers) {
+				//REQUIRED: id
+				//OPTIONAL: callbackOrHandlers
+				//OPTIONAL: callbackOrHandlers.notExists
+				//OPTIONAL: callbackOrHandlers.success
+				
+				var
+				// not exists handler.
+				notExistsHandler,
+				
+				// callback.
+				callback,
+				
+				// inner callback.
+				innerCallback;
+				
+				if (callbackOrHandlers !== undefined) {
+					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+						callback = callbackOrHandlers;
+					} else {
+						notExistsHandler = callbackOrHandlers.notExists;
+						callback = callbackOrHandlers.success;
+					}
+				}
+				
+				innerCallback = function(savedData) {
+					if (savedData === undefined) {
+						if (notExistsHandler !== undefined) {
+							notExistsHandler();
+						} else {
+							SHOW_ERROR('SHARED_STORE', '삭제할 데이터가 존재하지 않습니다.', id);
+						}
+					} else if (callback !== undefined) {
+						callback(savedData);
+					}
+				};
+
+				if (SERVER_CLUSTERING.send !== undefined) {
+
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
 						methodName : '__SHARED_STORE_REMOVE',
 						data : {
 							storeName : storeName,
 							id : id
 						}
-					});
+					}, innerCallback);
 				}
 
-				if (SERVER_CLUSTERING.broadcast !== undefined) {
+				else if (CPU_CLUSTERING.send !== undefined) {
 
-					SERVER_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : workerId,
 						methodName : '__SHARED_STORE_REMOVE',
 						data : {
 							storeName : storeName,
 							id : id
 						}
-					});
+					}, innerCallback);
 				}
-			};
-			
-			self.list = list = function() {
-				return cls.list(storeName);
-			};
-			
-			self.count = count = function() {
-				return cls.count(storeName);
-			};
-			
-			self.clear = clear = function() {
 				
-				cls.clear(storeName);
+				else {
+					
+					cls.remove({
+						storeName : storeName,
+						id : id
+					}, innerCallback);
+				}
+			};
+			
+			self.all = all = function(callback) {
+				//OPTIONAL: callback
+				
+				if (SERVER_CLUSTERING.send !== undefined) {
 
-				if (CPU_CLUSTERING.broadcast !== undefined) {
-
-					CPU_CLUSTERING.broadcast({
-						methodName : '__SHARED_STORE_CLEAR',
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
+						methodName : '__SHARED_STORE_ALL',
 						data : storeName
-					});
+					}, callback);
 				}
 
-				if (SERVER_CLUSTERING.broadcast !== undefined) {
+				else if (CPU_CLUSTERING.send !== undefined) {
 
-					SERVER_CLUSTERING.broadcast({
+					CPU_CLUSTERING.send({
+						workerId : workerId,
+						methodName : '__SHARED_STORE_ALL',
+						data : storeName
+					}, callback);
+				}
+				
+				else {
+					cls.all(storeName, callback);
+				}
+			};
+			
+			self.count = count = function(callback) {
+				//OPTIONAL: callback
+				
+				if (SERVER_CLUSTERING.send !== undefined) {
+
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
+						methodName : '__SHARED_STORE_COUNT',
+						data : storeName
+					}, callback);
+				}
+
+				else if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : workerId,
+						methodName : '__SHARED_STORE_COUNT',
+						data : storeName
+					}, callback);
+				}
+				
+				else {
+					cls.count(storeName, callback);
+				}
+			};
+			
+			self.clear = clear = function(callback) {
+				//OPTIONAL: callback
+				
+				if (SERVER_CLUSTERING.send !== undefined) {
+
+					SERVER_CLUSTERING.send({
+						serverName : serverName,
 						methodName : '__SHARED_STORE_CLEAR',
 						data : storeName
-					});
+					}, callback);
+				}
+
+				else if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : workerId,
+						methodName : '__SHARED_STORE_CLEAR',
+						data : storeName
+					}, callback);
+				}
+				
+				else {
+					cls.clear(storeName, callback);
 				}
 			};
 		}
@@ -4316,8 +4853,8 @@ FOR_BOX(function(box) {
 			// remove.
 			remove,
 			
-			// list.
-			list,
+			// all.
+			all,
 			
 			// count.
 			count,
@@ -4333,7 +4870,7 @@ FOR_BOX(function(box) {
 
 			self.remove = remove = sharedStore.remove;
 			
-			self.list = list = sharedStore.list;
+			self.all = all = sharedStore.all;
 
 			self.count = count = sharedStore.count;
 
@@ -7529,9 +8066,8 @@ global.SOCKET_SERVER = METHOD({
 			// send to client.
 			send = function(methodNameOrParams, callback) {
 				//REQUIRED: methodNameOrParams
-				//OPTIONAL: methodNameOrParams.methodName	클라이언트에 on 함수로 설정된 메소드 이름
-				//OPTIONAL: methodNameOrParams.data			전송할 데이터. 이 경우 str를 사용하지 않습니다.
-				//OPTIONAL: methodNameOrParams.str			전송할 문자열. 이 경우 data를 사용하지 않습니다.
+				//REQUIRED: methodNameOrParams.methodName	클라이언트에 on 함수로 설정된 메소드 이름
+				//REQUIRED: methodNameOrParams.data			전송할 데이터
 				//OPTIONAL: callback
 
 				var
@@ -7541,9 +8077,6 @@ global.SOCKET_SERVER = METHOD({
 				// data
 				data,
 				
-				// str
-				str,
-				
 				// callback name
 				callbackName;
 				
@@ -7552,25 +8085,19 @@ global.SOCKET_SERVER = METHOD({
 				} else {
 					methodName = methodNameOrParams.methodName;
 					data = methodNameOrParams.data;
-					str = methodNameOrParams.str;
 				}
 				
 				if (conn !== undefined && conn.writable === true) {
 					
-					if (str !== undefined) {
-						conn.write(str + '\r\n');
-					}
-					
-					else {
+					if (callback === undefined) {
 						
 						conn.write(STRINGIFY({
 							methodName : methodName,
-							data : data,
-							sendKey : sendKey
+							data : data
 						}) + '\r\n');
 					}
-	
-					if (callback !== undefined) {
+					
+					else {
 						
 						callbackName = '__CALLBACK_' + sendKey;
 	
@@ -7583,11 +8110,17 @@ global.SOCKET_SERVER = METHOD({
 							// off callback.
 							off(callbackName);
 						});
+						
+						conn.write(STRINGIFY({
+							methodName : methodName,
+							data : data,
+							sendKey : sendKey
+						}) + '\r\n');
+						
+						sendKey += 1;
 					}
-	
-					sendKey += 1;
 					
-					clientInfo.lastReceiveTime = new Date();
+					clientInfo.lastSendTime = new Date();
 				}
 			},
 
@@ -8820,7 +9353,6 @@ global.WEB_SOCKET_SERVER = METHOD({
 				//REQUIRED: methodNameOrParams
 				//OPTIONAL: methodNameOrParams.methodName
 				//OPTIONAL: methodNameOrParams.data
-				//OPTIONAL: methodNameOrParams.str
 				//OPTIONAL: callback
 				
 				var
@@ -8830,9 +9362,6 @@ global.WEB_SOCKET_SERVER = METHOD({
 				// data
 				data,
 				
-				// str
-				str,
-				
 				// callback name
 				callbackName;
 				
@@ -8841,48 +9370,48 @@ global.WEB_SOCKET_SERVER = METHOD({
 				} else {
 					methodName = methodNameOrParams.methodName;
 					data = methodNameOrParams.data;
-					str = methodNameOrParams.str;
 				}
 				
 				if (conn !== undefined && conn.readyState === WebSocket.OPEN) {
 					
 					try {
 						
-						if (str !== undefined) {
-							conn.send(str);
+						if (callback === undefined) {
+							
+							conn.send(STRINGIFY({
+								methodName : methodName,
+								data : data
+							}));
 						}
-						
+	
 						else {
+							
+							callbackName = '__CALLBACK_' + sendKey;
+		
+							// on callback.
+							on(callbackName, function(data) {
+		
+								// run callback.
+								callback(data);
+		
+								// off callback.
+								off(callbackName);
+							});
 							
 							conn.send(STRINGIFY({
 								methodName : methodName,
 								data : data,
 								sendKey : sendKey
 							}));
+
+							sendKey += 1;
 						}
 						
 					} catch(error) {
 						SHOW_ERROR('WEB_SOCKET_SERVER', error.toString(), methodNameOrParams);
 					}
-	
-					if (callback !== undefined) {
-						
-						callbackName = '__CALLBACK_' + sendKey;
-	
-						// on callback.
-						on(callbackName, function(data) {
-	
-							// run callback.
-							callback(data);
-	
-							// off callback.
-							off(callbackName);
-						});
-					}
-	
-					sendKey += 1;
 					
-					clientInfo.lastReceiveTime = new Date();
+					clientInfo.lastSendTime = new Date();
 				}
 			},
 

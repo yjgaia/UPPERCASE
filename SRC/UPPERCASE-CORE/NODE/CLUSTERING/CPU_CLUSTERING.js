@@ -78,7 +78,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					sendKey = 0,
 
 					// run methods.
-					runMethods = function(methodName, data, sendKey, workerId) {
+					runMethods = function(methodName, data, sendKey, fromWorkerId) {
 		
 						var
 						// methods
@@ -101,7 +101,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 										if (sendKey !== undefined) {
 			
 											send({
-												workerId : workerId,
+												workerId : fromWorkerId,
 												methodName : '__CALLBACK_' + sendKey,
 												data : retData
 											});
@@ -141,9 +141,9 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						var
 						// params
 						params = PARSE_STR(paramsStr);
-
+						
 						if (params !== undefined && (params.workerId === undefined || params.workerId === thisWorkerId)) {
-							runMethods(params.methodName, params.data, parmas.sendKey, params.workerId);
+							runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
 						}
 					});
 
@@ -166,8 +166,17 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					// update shared data.
 					on('__SHARED_STORE_UPDATE', SHARED_STORE.update);
 
+					// get shared data.
+					on('__SHARED_STORE_GET', SHARED_STORE.get);
+
 					// remove shared data.
 					on('__SHARED_STORE_REMOVE', SHARED_STORE.remove);
+					
+					// get all shared data.
+					on('__SHARED_STORE_ALL', SHARED_STORE.all);
+					
+					// count shared data.
+					on('__SHARED_STORE_COUNT', SHARED_STORE.count);
 
 					// clear shared store.
 					on('__SHARED_STORE_CLEAR', SHARED_STORE.clear);
@@ -201,7 +210,11 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 							if (workerId === thisWorkerId) {
 								runMethods(methodName, data);
 							} else {
-								process.send(STRINGIFY(params));
+								process.send(STRINGIFY({
+									workerId : workerId,
+									methodName : methodName,
+									data : data
+								}));
 							}
 						}
 						
@@ -224,7 +237,13 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 							if (workerId === thisWorkerId) {
 								runMethods(methodName, data, sendKey - 1, thisWorkerId);
 							} else {
-								process.send(STRINGIFY(params));
+								process.send(STRINGIFY({
+									workerId : workerId,
+									methodName : methodName,
+									data : data,
+									sendKey : sendKey - 1,
+									fromWorkerId : thisWorkerId
+								}));
 							}
 						}
 					};
