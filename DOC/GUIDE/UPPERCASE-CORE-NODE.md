@@ -7,8 +7,8 @@ UPPERCASE-CORE-NODE는 Node.js 환경에서 사용할 수 있는 모듈입니다
 * [`NODE_CONFIG`](#node_config)
 * [파일 처리 기능](#파일-처리-기능)
 * [이미지 처리 기능](#이미지-처리-기능)
-* [손쉬운 서버 생성](#손쉬운-서버-생성)
 * [HTTP 요청 기능](#http-요청-기능)
+* [손쉬운 서버 생성](#손쉬운-서버-생성)
 * [손쉬운 클러스터링](#손쉬운-클러스터링)
 * [시스템 관련 기능](#시스템-관련-기능)
 * [콘솔 로그 관련 기능](#콘솔-로그-관련-기능)
@@ -449,6 +449,174 @@ IMAGEMAGICK_RESIZE({
 });
 ```
 
+## HTTP 요청 기능
+### `REQUEST`
+HTTP 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `REQUEST({파라미터들}, function(content, headers) {})`
+* `REQUEST({파라미터들}, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `method` 요청 메소드. `GET`, `POST`, `PUT`, `DELETE`를 설정할 수 있습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+
+```javascript
+REQUEST({
+	method : 'GET',
+	isSecure : true,
+	host : 'github.com',
+	uri : 'Hanul/UPPERCASE'
+}, function(content) {
+	...
+});
+```
+```javascript
+REQUEST({
+	method : 'GET',
+	url : 'https://github.com/Hanul/UPPERCASE'
+}, function(content) {
+	...
+});
+```
+
+### `GET`
+HTTP GET 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `GET({파라미터들}, function(content, headers) {})`
+* `GET({파라미터들}, {error:, success:})`
+* `GET(url, function(content, headers) {})`
+* `GET(url, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+
+```javascript
+GET({
+	isSecure : true,
+	host : 'github.com',
+	uri : 'Hanul/UPPERCASE'
+}, function(content) {
+	...
+});
+```
+```javascript
+GET('https://github.com/Hanul/UPPERCASE', function(content) {
+	...
+});
+```
+
+### `POST`
+HTTP POST 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `POST({파라미터들}, function(content, headers) {})`
+* `POST({파라미터들}, {error:, success:})`
+* `POST(url, function(content, headers) {})`
+* `POST(url, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+
+### `PUT`
+HTTP POST 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `PUT({파라미터들}, function(content, headers) {})`
+* `PUT({파라미터들}, {error:, success:})`
+* `PUT(url, function(content, headers) {})`
+* `PUT(url, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+
+### `DELETE`
+HTTP POST 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `DELETE({파라미터들}, function(content, headers) {})`
+* `DELETE({파라미터들}, {error:, success:})`
+* `DELETE(url, function(content, headers) {})`
+* `DELETE(url, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+
+### `DOWNLOAD`
+HTTP 리소스를 다운로드합니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `DOWNLOAD({파라미터들}, function(content, headers) {})`
+* `DOWNLOAD({파라미터들}, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+* `path` 리소스를 다운로드하여 저장할 경로
+
+```javascript
+DOWNLOAD({
+	isSecure : true,
+	host : 'github.com',
+	uri : 'Hanul/UPPERCASE/archive/master.zip',
+	path : 'UPPERCASE.zip'
+});
+```
+```javascript
+DOWNLOAD({
+	url : 'https://github.com/Hanul/UPPERCASE/archive/master.zip',
+	path : 'UPPERCASE.zip'
+});
+```
+
 ## 손쉬운 서버 생성
 UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽게 생성할 수 있습니다.
 
@@ -735,174 +903,6 @@ TODO:
 
 ### `UDP_SERVER`
 TODO:
-
-## HTTP 요청 기능
-### `REQUEST`
-HTTP 요청을 보냅니다.
-
-사용 가능한 형태들은 다음과 같습니다.
-* `REQUEST({파라미터들}, function(content, headers) {})`
-* `REQUEST({파라미터들}, {error:, success:})`
-
-사용 가능한 파라미터 목록은 다음과 같습니다.
-* `method` 요청 메소드. `GET`, `POST`, `PUT`, `DELETE`를 설정할 수 있습니다.
-* `isSecure` HTTPS 프로토콜인지 여부
-* `host`
-* `port`
-* `uri`
-* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
-* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
-* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
-* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
-* `headers` 요청 헤더
-
-```javascript
-REQUEST({
-	method : 'GET',
-	isSecure : true,
-	host : 'github.com',
-	uri : 'Hanul/UPPERCASE'
-}, function(content) {
-	...
-});
-```
-```javascript
-REQUEST({
-	method : 'GET',
-	url : 'https://github.com/Hanul/UPPERCASE'
-}, function(content) {
-	...
-});
-```
-
-### `GET`
-HTTP GET 요청을 보냅니다.
-
-사용 가능한 형태들은 다음과 같습니다.
-* `GET({파라미터들}, function(content, headers) {})`
-* `GET({파라미터들}, {error:, success:})`
-* `GET(url, function(content, headers) {})`
-* `GET(url, {error:, success:})`
-
-사용 가능한 파라미터 목록은 다음과 같습니다.
-* `isSecure` HTTPS 프로토콜인지 여부
-* `host`
-* `port`
-* `uri`
-* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
-* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
-* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
-* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
-* `headers` 요청 헤더
-
-```javascript
-GET({
-	isSecure : true,
-	host : 'github.com',
-	uri : 'Hanul/UPPERCASE'
-}, function(content) {
-	...
-});
-```
-```javascript
-GET('https://github.com/Hanul/UPPERCASE', function(content) {
-	...
-});
-```
-
-### `POST`
-HTTP POST 요청을 보냅니다.
-
-사용 가능한 형태들은 다음과 같습니다.
-* `POST({파라미터들}, function(content, headers) {})`
-* `POST({파라미터들}, {error:, success:})`
-* `POST(url, function(content, headers) {})`
-* `POST(url, {error:, success:})`
-
-사용 가능한 파라미터 목록은 다음과 같습니다.
-* `isSecure` HTTPS 프로토콜인지 여부
-* `host`
-* `port`
-* `uri`
-* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
-* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
-* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
-* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
-* `headers` 요청 헤더
-
-### `PUT`
-HTTP POST 요청을 보냅니다.
-
-사용 가능한 형태들은 다음과 같습니다.
-* `PUT({파라미터들}, function(content, headers) {})`
-* `PUT({파라미터들}, {error:, success:})`
-* `PUT(url, function(content, headers) {})`
-* `PUT(url, {error:, success:})`
-
-사용 가능한 파라미터 목록은 다음과 같습니다.
-* `isSecure` HTTPS 프로토콜인지 여부
-* `host`
-* `port`
-* `uri`
-* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
-* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
-* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
-* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
-* `headers` 요청 헤더
-
-### `DELETE`
-HTTP POST 요청을 보냅니다.
-
-사용 가능한 형태들은 다음과 같습니다.
-* `DELETE({파라미터들}, function(content, headers) {})`
-* `DELETE({파라미터들}, {error:, success:})`
-* `DELETE(url, function(content, headers) {})`
-* `DELETE(url, {error:, success:})`
-
-사용 가능한 파라미터 목록은 다음과 같습니다.
-* `isSecure` HTTPS 프로토콜인지 여부
-* `host`
-* `port`
-* `uri`
-* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
-* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
-* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
-* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
-* `headers` 요청 헤더
-
-### `DOWNLOAD`
-HTTP 리소스를 다운로드합니다.
-
-사용 가능한 형태들은 다음과 같습니다.
-* `DOWNLOAD({파라미터들}, function(content, headers) {})`
-* `DOWNLOAD({파라미터들}, {error:, success:})`
-
-사용 가능한 파라미터 목록은 다음과 같습니다.
-* `isSecure` HTTPS 프로토콜인지 여부
-* `host`
-* `port`
-* `uri`
-* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
-* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
-* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
-* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
-* `headers` 요청 헤더
-* `path` 리소스를 다운로드하여 저장할 경로
-
-```javascript
-DOWNLOAD({
-	isSecure : true,
-	host : 'github.com',
-	uri : 'Hanul/UPPERCASE/archive/master.zip',
-	path : 'UPPERCASE.zip'
-});
-```
-```javascript
-DOWNLOAD({
-	url : 'https://github.com/Hanul/UPPERCASE/archive/master.zip',
-	path : 'UPPERCASE.zip'
-});
-```
 
 ## 손쉬운 클러스터링
 TODO:

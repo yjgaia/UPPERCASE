@@ -1,5 +1,5 @@
 /**
- * Browser information object
+ * 웹 브라우저 정보 객체
  */
 global.INFO = OBJECT({
 
@@ -21,9 +21,6 @@ global.INFO = OBJECT({
 
 		// change lang.
 		changeLang,
-
-		// check is HD display.
-		checkIsHDDisplay,
 
 		// check is touch mode.
 		checkIsTouchMode,
@@ -63,10 +60,6 @@ global.INFO = OBJECT({
 			});
 
 			location.reload();
-		};
-
-		self.checkIsHDDisplay = checkIsHDDisplay = function() {
-			return global.devicePixelRatio !== undefined && devicePixelRatio > 1 ? true : false;
 		};
 
 		self.checkIsTouchMode = checkIsTouchMode = function() {

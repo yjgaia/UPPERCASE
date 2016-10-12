@@ -3655,6 +3655,9 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 
 			// is connectings
 			isConnectings = {},
+			
+			// waiting send info map
+			waitingSendInfoMap = {},
 
 			// server sends
 			serverSends = {},
@@ -3721,6 +3724,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 
 				if (isConnectings[serverName] !== true) {
 					isConnectings[serverName] = true;
+					waitingSendInfoMap[serverName] = [];
 
 					CONNECT_TO_SOCKET_SERVER({
 						host : hosts[serverName],
@@ -3771,6 +3775,13 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 									data : serverName
 								});
 							}
+							
+							EACH(waitingSendInfoMap[serverName], function(info) {
+								serverSends[serverName]({
+									methodName : info.methodName,
+									data : info.data
+								}, info.callback);
+							});
 						}
 					});
 				}
@@ -3845,24 +3856,24 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			};
 
 			// save shared data.
-			on('__SHARED_STORE_SAVE', function(params) {
-
+			on('__SHARED_STORE_SAVE', function(params, ret) {
+				
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
 						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
 						methodName : '__SHARED_STORE_SAVE',
 						data : params
-					});
+					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.save(params);
+					SHARED_STORE.save(params, ret);
 				}
 			});
 			
 			// update shared data.
-			on('__SHARED_STORE_UPDATE', function(params) {
+			on('__SHARED_STORE_UPDATE', function(params, ret) {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3870,16 +3881,16 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
 						methodName : '__SHARED_STORE_UPDATE',
 						data : params
-					});
+					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.update(params);
+					SHARED_STORE.update(params, ret);
 				}
 			});
 			
 			// get shared data.
-			on('__SHARED_STORE_GET', function(params) {
+			on('__SHARED_STORE_GET', function(params, ret) {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3887,16 +3898,16 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
 						methodName : '__SHARED_STORE_GET',
 						data : params
-					});
+					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.get(params);
+					SHARED_STORE.get(params, ret);
 				}
 			});
 
 			// remove shared data.
-			on('__SHARED_STORE_REMOVE', function(params) {
+			on('__SHARED_STORE_REMOVE', function(params, ret) {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3904,16 +3915,16 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
 						methodName : '__SHARED_STORE_REMOVE',
 						data : params
-					});
+					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.remove(params);
+					SHARED_STORE.remove(params, ret);
 				}
 			});
 
 			// get all shared data.
-			on('__SHARED_STORE_ALL', function(storeName) {
+			on('__SHARED_STORE_ALL', function(storeName, ret) {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3921,16 +3932,16 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						workerId : SHARED_STORE.getWorkerIdByStoreName(storeName),
 						methodName : '__SHARED_STORE_ALL',
 						data : storeName
-					});
+					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.all(storeName);
+					SHARED_STORE.all(storeName, ret);
 				}
 			});
 
 			// count shared data.
-			on('__SHARED_STORE_COUNT', function(storeName) {
+			on('__SHARED_STORE_COUNT', function(storeName, ret) {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3938,16 +3949,16 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						workerId : SHARED_STORE.getWorkerIdByStoreName(storeName),
 						methodName : '__SHARED_STORE_COUNT',
 						data : storeName
-					});
+					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.count(storeName);
+					SHARED_STORE.count(storeName, ret);
 				}
 			});
 
 			// clear shared store.
-			on('__SHARED_STORE_CLEAR', function(storeName) {
+			on('__SHARED_STORE_CLEAR', function(storeName, ret) {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3955,11 +3966,11 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						workerId : SHARED_STORE.getWorkerIdByStoreName(storeName),
 						methodName : '__SHARED_STORE_CLEAR',
 						data : storeName
-					});
+					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.clear(storeName);
+					SHARED_STORE.clear(storeName, ret);
 				}
 			});
 
@@ -3967,7 +3978,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				delete methodMap[methodName];
 			};
 
-			m.send = send = function(params) {
+			m.send = send = function(params, callback) {
 				//REQUIRED: params
 				//REQUIRED: params.serverName
 				//REQUIRED: params.methodName
@@ -3991,7 +4002,14 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 					}
 					
 					else if (serverSends[serverName] === undefined) {
-						SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+						if (isConnectings[serverName] === true) {
+							waitingSendInfoMap[serverName].push({
+								methodName : methodName,
+								data : data
+							});
+						} else {
+							SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+						}
 					}
 					
 					else {
@@ -4009,7 +4027,15 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 					}
 					
 					else if (serverSends[serverName] === undefined) {
-						SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+						if (isConnectings[serverName] === true) {
+							waitingSendInfoMap[serverName].push({
+								methodName : methodName,
+								data : data,
+								callback : callback
+							});
+						} else {
+							SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+						}
 					}
 					
 					else {
@@ -8137,6 +8163,80 @@ global.SOCKET_SERVER = METHOD({
 		server.listen(port);
 
 		console.log('[SOCKET_SERVER] TCP 소켓 서버가 실행중입니다... (포트:' + port + ')');
+	}
+});
+
+/*
+ * UDP 서버를 생성합니다.
+ */
+global.UDP_SERVER = METHOD({
+
+	run : function(portOrParams, requestListener) {
+		'use strict';
+		//REQUIRED: portOrParams
+		//REQUIRED: portOrParams.port
+		//OPTIONAL: portOrParams.ipVersion	ip 버전 (4 혹은 6)
+		//REQUIRED: requestListener
+
+		var
+		//IMPORT: dgram
+		dgram = require('dgram'),
+		
+		// port
+		port,
+		
+		// ip version
+		ipVersion = 4,
+		
+		// server
+		server;
+		
+		// init params.
+		if (CHECK_IS_DATA(portOrParams) !== true) {
+			port = portOrParams;
+		} else {
+			port = portOrParams.port;
+			ipVersion = portOrParams.ipVersion;
+		}
+		
+		server = dgram.createSocket('udp' + ipVersion);
+		
+		server.on('message', function(message, nativeRequestInfo) {
+			
+			var
+			// ip
+			ip = nativeRequestInfo.address,
+			
+			// port
+			port = nativeRequestInfo.port;
+			
+			requestListener(
+			
+			// request info	
+			{
+				ip : ip,
+				
+				port : port,
+				
+				content : message.toString()
+			},
+			
+			// response.
+			function(content) {
+				
+				var
+				// message
+				message = new Buffer(content);
+				
+				server.send(message, 0, message.length, port, ip);
+			});
+		});
+		
+		server.on('listening', function() {
+			console.log('[UDP_SERVER] UDP 서버가 실행중입니다... (포트:' + port + ')');
+		});
+		
+		server.bind(port);
 	}
 });
 

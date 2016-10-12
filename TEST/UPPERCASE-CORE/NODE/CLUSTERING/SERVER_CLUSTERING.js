@@ -1,10 +1,5 @@
-// load UJS.
-require('../../../UJS-NODE.js');
-
 TEST('SERVER_CLUSTERING', function(ok) {
 	'use strict';
-
-	INIT_OBJECTS();
 
 	SERVER_CLUSTERING({
 		hosts : {
