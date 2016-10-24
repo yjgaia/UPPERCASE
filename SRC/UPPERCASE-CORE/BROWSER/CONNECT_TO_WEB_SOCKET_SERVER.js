@@ -1,28 +1,27 @@
 /*
- * connect to web socket server.
+ * WEB_SOCKET_SERVER로 생성한 웹 소켓 서버에 연결합니다.
  */
 global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
-	run : function(params, connectionListenerOrListeners) {
+	run : function(portOrParams, connectionListenerOrListeners) {
 		'use strict';
-		//REQUIRED: params
-		//OPTIONAL: params.isSecure
-		//OPTIONAL: params.host
-		//REQUIRED: params.port
-		//OPTIONAL: params.fixRequestURI
+		//REQUIRED: portOrParams
+		//OPTIONAL: portOrParams.isSecure
+		//OPTIONAL: portOrParams.host
+		//REQUIRED: portOrParams.port
 		//REQUIRED: connectionListenerOrListeners
 		//REQUIRED: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
 
 		var
 		// is secure
-		isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure,
+		isSecure,
 		
 		// host
-		host = params.host === undefined ? BROWSER_CONFIG.host : params.host,
+		host,
 
 		// port
-		port = params.port,
+		port,
 
 		// connection listener
 		connectionListener,
@@ -53,6 +52,22 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
 		// run methods.
 		runMethods;
+
+		if (CHECK_IS_DATA(portOrParams) !== true) {
+			port = portOrParams;
+		} else {
+			isSecure = portOrParams.isSecure;
+			host = portOrParams.host;
+			port = portOrParams.port;
+		}
+		
+		if (isSecure === undefined) {
+			isSecure = BROWSER_CONFIG.isSecure;
+		}
+		
+		if (host === undefined) {
+			host = BROWSER_CONFIG.host;
+		}
 
 		if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
 			connectionListener = connectionListenerOrListeners;
@@ -226,7 +241,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 				if (errorListener !== undefined) {
 					errorListener(errorMsg);
 				} else {
-					console.log('[UPPERCASE-CONNECT_TO_WEB_SOCKET_SERVER] CONNECT TO WEB SOCKET SERVER FAILED: ' + errorMsg);
+					SHOW_ERROR('CONNECT_TO_WEB_SOCKET_SERVER', errorMsg);
 				}
 
 			} else {

@@ -1,15 +1,4 @@
-// if you not want error listener.
-//
-//	CONNECT_TO_WEB_SOCKET_SERVER({
-//		port : 8125
-//	}, function(on, send) {
-//		...
-//	});
-
-CONNECT_TO_WEB_SOCKET_SERVER({
-	port : 8125,
-	fixRequestURI : '__WEB_SOCKET_FIX'
-}, {
+CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 	error : function(error) {
 		console.log('ERROR!');
 	},

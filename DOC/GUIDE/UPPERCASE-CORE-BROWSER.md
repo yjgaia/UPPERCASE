@@ -13,6 +13,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
 * 저장소 기능
 * 국제화 관련 기능
+* [SHOW_ERROR](#show_error)
 * [기타 기능](#기타-기능)
 
 ## 사용방법
@@ -49,13 +50,92 @@ TODO:
 TODO:
 
 ## `CONNECT_TO_WEB_SOCKET_SERVER`
-TODO:
+* `CONNECT_TO_WEB_SOCKET_SERVER(port, connectionListenerOrListeners)`
+* `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:}, connectionListenerOrListeners)`
+
+[UPPERCASE-CORE-NODE의 `WEB_SOCKET_SERVER`](UPPERCASE-COMMON-NODE.md#web_socket_server)로 생성한 웹 소켓 서버에 연결합니다.
+
+```javascript
+CONNECT_TO_WEB_SOCKET_SERVER(8125, {
+	error : function(errorMsg) {
+		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	},
+	success : function(on, off, send, disconnect) {
+        // on           메소드를 생성합니다.
+        // off          메소드를 제거합니다.
+        // send         서버의 메소드에 데이터를 전송합니다.
+        // disconnect   서버와의 연결을 끊습니다.
+
+		send({
+			methodName : 'message',
+			data : {
+				name : 'YJ Sim'
+			}
+		}, function(retMsg) {
+		    console.log('서버로부터의 메시지:' + retMsg);
+		});
+		
+		on('__DISCONNECTED', function() {
+			console.log('연결이 끊어졌습니다.');
+		});
+	}
+});
+```
+
+클라이언트에서 사용하는 함수들은 다음과 같습니다.
+
+#### `on(methodName, method)`
+`on` 함수는 클라이언트에 메소드를 생성하는 함수로써, 서버에서 `send` 함수로 전송한 데이터를 받습니다.
+
+#### `off(methodName)` `off(methodName, method)`
+`off` 함수는 클라이언트에 생성된 메소드를 제거합니다.
+
+#### `send(params)` `send(params, callback)`
+`send`는 서버로 데이터를 전송하며, 서버에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
+
+사용 가능한 파라미터는 다음과 같습니다.
+* `methodName` 서버에 `on` 함수로 설정된 메소드 이름
+* `data` 전송할 데이터
+
+#### `disconnect()`
+서버와의 연결을 끊습니다.
 
 ## 저장소 기능
 TODO:
 
 ## 국제화 관련 기능
 TODO:
+
+## `SHOW_ERROR(tag, errorMsg)` `SHOW_ERROR(tag, errorMsg, params)`
+콘솔에 오류 메시지를 출력합니다.
+
+다음 코드를 실행하면,
+```javascript
+SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!');
+```
+콘솔에 다음과 같은 오류 메시지를 빨간색으로 출력합니다.
+```
+[샘플 오류] 오류가 발생했습니다. 오류 메시지: 엄청난 오류가 발생했습니다!
+```
+
+다음 코드를 실행하면,
+```javascript
+SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
+    a : 1,
+    b : 2,
+    c : 3
+});
+```
+콘솔에 다음과 같은 오류 메시지를 빨간색으로 출력합니다.
+```
+[샘플 오류] 오류가 발생했습니다. 오류 메시지: 엄청난 오류가 발생했습니다!
+다음은 오류를 발생시킨 파라미터입니다.
+{
+    "a": 1,
+    "b": 2,
+    "c": 3
+}
+```
 
 ## 기타 기능
 TODO:

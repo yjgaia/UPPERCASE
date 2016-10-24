@@ -127,8 +127,6 @@ global.WEB_SOCKET_SERVER = METHOD({
 			clientInfo = {
 				
 				ip : ip,
-
-				headers : headers,
 				
 				connectTime : new Date()
 			},

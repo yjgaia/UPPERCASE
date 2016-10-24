@@ -1,23 +1,4 @@
 
-## 각종 서버 구현체들
-
-* `UDP_SERVER` UDP 프로토콜로 통신하는 서버를 생성합니다. [예제보기](../EXAMPLES/NODE/SERVER/UDP_SERVER.js)
-    * `UDP_SERVER(port, requestListener)`
-    * `UDP_SERVER({port:, ipVersion}, requestListener)`
-
-    ```javascript
-    UDP_SERVER(8124, function(requestInfo, response) {
-        
-        // request informations
-        requestInfo.ip
-        requestInfo.port
-        requestInfo.content
-
-		response('Welcome to UJS UDP server!');
-	})
-    ```
-
-
 ## 클러스터링 관련 기능
 * `CPU_CLUSTERING(work)` CPU 클러스터링을 수행합니다. 이를 통해 멀티코어 CPU에 대응할 수 있습니다. [예제보기](../EXAMPLES/NODE/CLUSTERING/CPU_CLUSTERING.js)
 

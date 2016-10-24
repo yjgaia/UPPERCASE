@@ -4958,18 +4958,18 @@ global.CONSOLE_YELLOW = METHOD({
 });
 
 /*
- * 콘솔에 에러 메시지를 붉은색으로 출력합니다.
+ * 콘솔에 오류 메시지를 출력합니다.
  */
 global.SHOW_ERROR = function(tag, errorMsg, params) {
 	//REQUIRED: tag
 	//REQUIRED: errorMsg
 	//OPTIONAL: params
 	
-	console.log(CONSOLE_RED('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg));
+	console.error(CONSOLE_RED('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg));
 	
 	if (params !== undefined) {
-		console.log(CONSOLE_RED('다음은 오류를 발생시킨 파라미터입니다.'));
-		console.log(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
+		console.error(CONSOLE_RED('다음은 오류를 발생시킨 파라미터입니다.'));
+		console.error(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
 	}
 };
 /**
@@ -7903,6 +7903,39 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 });
 
 /*
+ * TCP 소켓 및 웹 소켓 서버를 통합하여 생성합니다.
+ */
+global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
+
+	init : function(inner, self, params, connectionListener) {
+		'use strict';
+		//REQUIRED: params
+		//OPTIONAL: params.socketServerPort
+		//OPTIONAL: params.webServer
+		//REQUIRED: connectionListener
+
+		var
+		// socket server port
+		socketServerPort = params.socketServerPort,
+		
+		// web server
+		webServer = params.webServer;
+
+		if (socketServerPort !== undefined) {
+
+			// create socket server.
+			SOCKET_SERVER(socketServerPort, connectionListener);
+		}
+
+		if (webServer !== undefined) {
+
+			// create web socket server.
+			WEB_SOCKET_SERVER(webServer, connectionListener);
+		}
+	}
+});
+
+/*
  * TCP 소켓 서버를 생성합니다.
  */
 global.SOCKET_SERVER = METHOD({
@@ -8167,39 +8200,37 @@ global.SOCKET_SERVER = METHOD({
 });
 
 /*
- * UDP 서버를 생성합니다.
+ * UDP 소켓 서버를 생성하는 CLASS
  */
-global.UDP_SERVER = METHOD({
+global.UDP_SERVER = CLASS({
 
-	run : function(portOrParams, requestListener) {
+	init : function(inner, self, port, requestListener) {
 		'use strict';
-		//REQUIRED: portOrParams
-		//REQUIRED: portOrParams.port
-		//OPTIONAL: portOrParams.ipVersion	ip 버전 (4 혹은 6)
+		//REQUIRED: port
 		//REQUIRED: requestListener
 
 		var
 		//IMPORT: dgram
 		dgram = require('dgram'),
 		
-		// port
-		port,
-		
-		// ip version
-		ipVersion = 4,
-		
 		// server
-		server;
+		server = dgram.createSocket('udp6'),
 		
-		// init params.
-		if (CHECK_IS_DATA(portOrParams) !== true) {
-			port = portOrParams;
-		} else {
-			port = portOrParams.port;
-			ipVersion = portOrParams.ipVersion;
-		}
+		// send.
+		send;
 		
-		server = dgram.createSocket('udp' + ipVersion);
+		self.send = send = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.ip
+			//REQUIRED: params.port
+			//REQUIRED: params.content
+			
+			var
+			// message
+			message = new Buffer(params.content);
+			
+			server.send(message, 0, message.length, params.port, params.ip);
+		};
 		
 		server.on('message', function(message, nativeRequestInfo) {
 			
@@ -8216,19 +8247,20 @@ global.UDP_SERVER = METHOD({
 			{
 				ip : ip,
 				
-				port : port,
-				
-				content : message.toString()
+				port : port
 			},
+			
+			// content
+			message.toString(),
 			
 			// response.
 			function(content) {
 				
-				var
-				// message
-				message = new Buffer(content);
-				
-				server.send(message, 0, message.length, port, ip);
+				send({
+					ip : ip,
+					port : port,
+					content : content
+				});
 			});
 		});
 		
@@ -9402,8 +9434,6 @@ global.WEB_SOCKET_SERVER = METHOD({
 			clientInfo = {
 				
 				ip : ip,
-
-				headers : headers,
 				
 				connectTime : new Date()
 			},

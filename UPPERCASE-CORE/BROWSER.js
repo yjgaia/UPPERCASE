@@ -3367,3 +3367,5469 @@ global.BROWSER_CONFIG = {
 	
 	isSecure : location.protocol === 'https:'
 };
+
+/*
+ * WEB_SOCKET_SERVER로 생성한 웹 소켓 서버에 연결합니다.
+ */
+global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
+
+	run : function(portOrParams, connectionListenerOrListeners) {
+		'use strict';
+		//REQUIRED: portOrParams
+		//OPTIONAL: portOrParams.isSecure
+		//OPTIONAL: portOrParams.host
+		//REQUIRED: portOrParams.port
+		//REQUIRED: connectionListenerOrListeners
+		//REQUIRED: connectionListenerOrListeners.success
+		//OPTIONAL: connectionListenerOrListeners.error
+
+		var
+		// is secure
+		isSecure,
+		
+		// host
+		host,
+
+		// port
+		port,
+
+		// connection listener
+		connectionListener,
+
+		// error listener
+		errorListener,
+
+		// connection
+		conn,
+
+		// is connected
+		isConnected,
+
+		// method map
+		methodMap = {},
+
+		// send key
+		sendKey = 0,
+
+		// on.
+		on,
+
+		// off.
+		off,
+
+		// send.
+		send,
+
+		// run methods.
+		runMethods;
+
+		if (CHECK_IS_DATA(portOrParams) !== true) {
+			port = portOrParams;
+		} else {
+			isSecure = portOrParams.isSecure;
+			host = portOrParams.host;
+			port = portOrParams.port;
+		}
+		
+		if (isSecure === undefined) {
+			isSecure = BROWSER_CONFIG.isSecure;
+		}
+		
+		if (host === undefined) {
+			host = BROWSER_CONFIG.host;
+		}
+
+		if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
+			connectionListener = connectionListenerOrListeners;
+		} else {
+			connectionListener = connectionListenerOrListeners.success;
+			errorListener = connectionListenerOrListeners.error;
+		}
+
+		runMethods = function(methodName, data, sendKey) {
+
+			var
+			// methods
+			methods = methodMap[methodName];
+
+			if (methods !== undefined) {
+
+				EACH(methods, function(method) {
+
+					// run method.
+					method(data,
+
+					// ret.
+					function(retData) {
+
+						if (send !== undefined && sendKey !== undefined) {
+
+							send({
+								methodName : '__CALLBACK_' + sendKey,
+								data : retData
+							});
+						}
+					});
+				});
+			}
+		};
+
+		conn = new WebSocket((isSecure === true ? 'wss://': 'ws://') + host + ':' + port);
+
+		conn.onopen = function() {
+
+			isConnected = true;
+
+			connectionListener(
+
+			// on.
+			on = function(methodName, method) {
+				//REQUIRED: methodName
+				//REQUIRED: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods === undefined) {
+					methods = methodMap[methodName] = [];
+				}
+
+				methods.push(method);
+			},
+
+			// off.
+			off = function(methodName, method) {
+				//REQUIRED: methodName
+				//OPTIONAL: method
+
+				var
+				// methods
+				methods = methodMap[methodName];
+
+				if (methods !== undefined) {
+
+					if (method !== undefined) {
+
+						REMOVE({
+							array : methods,
+							value : method
+						});
+
+					} else {
+						delete methodMap[methodName];
+					}
+				}
+			},
+
+			// send to server.
+			send = function(methodNameOrParams, callback) {
+				//REQUIRED: methodNameOrParams
+				//REQUIRED: methodNameOrParams.methodName
+				//OPTIONAL: methodNameOrParams.data
+				//OPTIONAL: callback
+				
+				var
+				// method name
+				methodName,
+				
+				// data
+				data,
+				
+				// callback name
+				callbackName;
+				
+				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
+					methodName = methodNameOrParams;
+				} else {
+					methodName = methodNameOrParams.methodName;
+					data = methodNameOrParams.data;
+				}
+				
+				if (conn !== undefined) {
+					
+					conn.send(STRINGIFY({
+						methodName : methodName,
+						data : data,
+						sendKey : sendKey
+					}));
+	
+					if (callback !== undefined) {
+						
+						callbackName = '__CALLBACK_' + sendKey;
+	
+						// on callback.
+						on(callbackName, function(data) {
+	
+							// run callback.
+							callback(data);
+	
+							// off callback.
+							off(callbackName);
+						});
+					}
+	
+					sendKey += 1;
+				}
+			},
+
+			// disconnect.
+			function() {
+				if (conn !== undefined) {
+					conn.close();
+					conn = undefined;
+				}
+			});
+		};
+
+		// receive data.
+		conn.onmessage = function(e) {
+
+			var
+			// params
+			params = PARSE_STR(e.data);
+
+			if (params !== undefined) {
+				runMethods(params.methodName, params.data, params.sendKey);
+			}
+		};
+
+		// when disconnected
+		conn.onclose = function() {
+			runMethods('__DISCONNECTED');
+		};
+
+		// when error
+		conn.onerror = function(error) {
+
+			var
+			// error msg
+			errorMsg = error.toString();
+
+			if (isConnected !== true) {
+
+				if (errorListener !== undefined) {
+					errorListener(errorMsg);
+				} else {
+					SHOW_ERROR('CONNECT_TO_WEB_SOCKET_SERVER', errorMsg);
+				}
+
+			} else {
+				runMethods('__ERROR', errorMsg);
+			}
+		};
+	}
+});
+
+/**
+ * 웹 브라우저 정보 객체
+ */
+global.INFO = OBJECT({
+
+	init : function(inner, self) {
+		'use strict';
+
+		var
+		// is touch mode
+		isTouchMode = global.ontouchstart !== undefined,
+		
+		// is touching
+		isTouching,
+		
+		// browser info
+		browserInfo,
+
+		// get lang.
+		getLang,
+
+		// change lang.
+		changeLang,
+
+		// check is touch mode.
+		checkIsTouchMode,
+
+		// check is exists tap delay.
+		checkIsExistsTapDelay,
+
+		// get browser info.
+		getBrowserInfo;
+
+		self.getLang = getLang = function() {
+
+			var
+			// language
+			lang = STORE('__INFO').get('lang');
+
+			if (lang === undefined) {
+
+				lang = navigator.language;
+
+				if (lang.length > 2) {
+					lang = lang.substring(0, 2);
+				}
+
+				lang = lang.toLowerCase();
+			}
+
+			return lang;
+		};
+
+		self.changeLang = changeLang = function(lang) {
+			//REQUIRED: lang
+
+			STORE('__INFO').save({
+				name : 'lang',
+				value : lang
+			});
+
+			location.reload();
+		};
+
+		self.checkIsTouchMode = checkIsTouchMode = function() {
+			return isTouchMode;
+		};
+
+		self.checkIsExistsTapDelay = checkIsExistsTapDelay = function() {
+			return false;
+		};
+
+		self.getBrowserInfo = getBrowserInfo = function() {
+			// using bowser. (https://github.com/ded/bowser)
+			return {
+				name : bowser.name,
+				version : REAL(bowser.version)
+			};
+		};
+		
+		EVENT_LOW('mousemove', function() {
+			if (isTouching !== true) {
+				isTouchMode = false;
+			}
+		});
+		
+		EVENT_LOW('touchstart', function() {
+			isTouchMode = true;
+			isTouching = true;
+		});
+		
+		EVENT_LOW('touchend', function() {
+			DELAY(function() {
+				isTouching = false;
+			});
+		});
+	}
+});
+
+/**
+ * JavaScript 파일을 불러옵니다.
+ */
+global.LOAD = METHOD({
+
+	run : function(urlOrParams, handlers) {
+		'use strict';
+		//REQUIRED: urlOrParams
+		//REQUIRED: urlOrParams.url
+		//OPTIONAL: urlOrParams.host
+		//OPTIONAL: urlOrParams.port
+		//OPTIONAL: urlOrParams.isSecure
+		//OPTIONAL: urlOrParams.uri
+		//OPTIONAL: urlOrParams.paramStr
+		//OPTIONAL: urlOrParams.isNoCache
+		//OPTIONAL: handlers
+		//OPTIONAL: handlers.error
+
+		var
+		// url
+		url,
+
+		// is no Cache
+		isNoCache,
+
+		// host
+		host,
+
+		// port
+		port,
+
+		// is secure
+		isSecure,
+
+		// uri
+		uri,
+
+		// param str
+		paramStr,
+
+		// error handler.
+		errorHandler,
+
+		// current script
+		currentScript,
+
+		// script els
+		scriptEls,
+
+		// script el
+		scriptEl,
+
+		// is loaded
+		isLoaded;
+
+		if (CHECK_IS_DATA(urlOrParams) !== true) {
+			url = urlOrParams;
+		} else {
+
+			url = urlOrParams.url;
+
+			if (url === undefined) {
+
+				host = urlOrParams.host === undefined ? BROWSER_CONFIG.host : urlOrParams.host;
+				port = urlOrParams.port === undefined ? BROWSER_CONFIG.port : urlOrParams.port;
+				isSecure = urlOrParams.isSecure;
+				uri = urlOrParams.uri;
+				paramStr = urlOrParams.paramStr;
+
+				url = (isSecure === true ? 'https://' : 'http://') + host + ':' + port + '/' + uri + '?' + paramStr;
+			}
+
+			isNoCache = urlOrParams.isNoCache;
+		}
+
+		if (handlers !== undefined) {
+			errorHandler = handlers.error;
+		}
+
+		READY.readyLoad();
+
+		scriptEls = document.getElementsByTagName('script');
+		currentScript = scriptEls[scriptEls.length - 1];
+
+		scriptEl = document.createElement('script');
+		scriptEl.src = (url.indexOf('?') === -1 ? url + '?' : url + '&') + (isNoCache !== true && CONFIG.version !== undefined ? 'version=' + CONFIG.version : (new Date()).getTime());
+
+		scriptEl.onload = function() {
+
+			if (isLoaded !== true) {
+				isLoaded = true;
+
+				READY.loaded();
+			}
+		};
+
+		scriptEl.onreadystatechange = function() {
+
+			var
+			// ready state
+			readyState = this.readyState;
+
+			if (isLoaded !== true && (readyState === 'loaded' || readyState === 'complete')) {
+				isLoaded = true;
+
+				DELAY(function() {
+					READY.loaded();
+				});
+			}
+		};
+
+		try {
+			// this work only IE >= 9
+			scriptEl.onerror = errorHandler;
+		} catch (e) {
+			// ignore.
+		}
+
+		// create script.
+		return DOM({
+			el : scriptEl
+		}).insertAfter(DOM({
+			el : currentScript
+		}));
+	}
+});
+
+/**
+ * 모든 JavaScript를 불러와, 웹 페이지가 실행될 준비가 되면 주어진 핸들러를 실행합니다.
+ */
+global.READY = METHOD(function(m) {
+	'use strict';
+
+	var
+	// ready count
+	readyCount = 0,
+
+	// is loaded
+	isLoaded,
+
+	// handlers
+	handlers = [],
+
+	// ready load.
+	readyLoad,
+
+	// loaded.
+	loaded;
+
+	m.readyLoad = readyLoad = function() {
+		readyCount += 1;
+	};
+
+	m.loaded = loaded = function() {
+
+		readyCount -= 1;
+
+		if (isLoaded === true && readyCount === 0) {
+
+			EACH(handlers, function(handler) {
+				handler();
+			});
+
+			handlers = [];
+		}
+	};
+
+	global.onload = function() {
+
+		isLoaded = true;
+
+		if (readyCount === 0) {
+
+			EACH(handlers, function(handler) {
+				handler();
+			});
+
+			handlers = [];
+		}
+	};
+
+	return {
+
+		run : function(handler) {
+			//REQUIRED: handler
+
+			if (readyCount > 0 || isLoaded !== true) {
+				handlers.push(handler);
+			} else {
+				handler();
+			}
+		}
+	};
+});
+
+/*
+ * 콘솔에 오류 메시지를 출력합니다.
+ */
+global.SHOW_ERROR = function(tag, errorMsg, params) {
+	//REQUIRED: tag
+	//REQUIRED: errorMsg
+	//OPTIONAL: params
+		
+	console.error('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	
+	if (params !== undefined) {
+		console.error('다음은 오류를 발생시킨 파라미터입니다.');
+		console.error(JSON.stringify(params, TO_DELETE, 4));
+	}
+};
+/**
+ * create clear:both div.
+ */
+global.CLEAR_BOTH = METHOD({
+
+	run : function() {
+		'use strict';
+
+		return DIV({
+			style : {
+				clear : 'both'
+			}
+		});
+	}
+});
+
+/**
+ * Dom wrapper class
+ */
+global.DOM = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return NODE;
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//OPTIONAL: params.tag
+		//OPTIONAL: params.style
+		//OPTIONAL: params.c
+		//OPTIONAL: params.on
+		//OPTIONAL: params.__TEXT
+		//OPTIONAL: params.el
+
+		var
+		// tag
+		tag = params.tag,
+
+		// __TEXT
+		__TEXT = params.__TEXT,
+
+		// HTML Element
+		el = params.el,
+
+		// get el.
+		getEl,
+
+		// set el.
+		setEl,
+
+		// set attr.
+		setAttr;
+
+		// when tag is not undefined
+		if (tag !== undefined) {
+
+			if (tag === 'body') {
+				el = document.body;
+			} else if (tag === '__STRING') {
+				el = document.createTextNode(__TEXT);
+			} else {
+				el = document.createElement(tag);
+			}
+		}
+
+		// when tag is undefined, el is not undefined
+		else if (el !== document.body && el.parentNode !== TO_DELETE) {
+
+			self.setParent(DOM({
+				el : el.parentNode
+			}));
+		}
+
+		self.getEl = getEl = function() {
+			return el;
+		};
+
+		inner.setEl = setEl = function(_el) {
+			//REQUIRED: _el
+
+			el = _el;
+
+			inner.setDom(self);
+		};
+
+		setEl(el);
+
+		inner.setAttr = setAttr = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//REQUIRED: params.value
+
+			var
+			// name
+			name = params.name,
+
+			// value
+			value = params.value;
+
+			el.setAttribute(name, value);
+		};
+	}
+});
+
+/**
+ * Node interface
+ */
+global.NODE = CLASS({
+
+	init : function(inner, self) {
+		'use strict';
+
+		var
+		// wrapper dom
+		wrapperDom,
+
+		// content dom
+		contentDom,
+
+		// wrapper el
+		wrapperEl,
+
+		// content el
+		contentEl,
+
+		// waiting after nodes
+		waitingAfterNodes,
+
+		// waiting before nodes
+		waitingBeforeNodes,
+
+		// parent node
+		parentNode,
+
+		// child nodes
+		childNodes = [],
+
+		// origin display
+		originDisplay,
+		
+		// data
+		data,
+
+		// set wrapper dom.
+		setWrapperDom,
+
+		// set content dom.
+		setContentDom,
+
+		// set dom.
+		setDom,
+
+		// get wrapper dom.
+		getWrapperDom,
+
+		// get content dom.
+		getContentDom,
+
+		// get wrapper el.
+		getWrapperEl,
+
+		// get content el.
+		getContentEl,
+
+		// attach.
+		attach,
+
+		// append.
+		append,
+
+		// append to.
+		appendTo,
+
+		// prepend.
+		prepend,
+
+		// prepend to.
+		prependTo,
+
+		// after.
+		after,
+
+		// insert after.
+		insertAfter,
+
+		// before.
+		before,
+
+		// insert before.
+		insertBefore,
+
+		// remove.
+		remove,
+
+		// empty.
+		empty,
+
+		// set parent.
+		setParent,
+
+		// get parent.
+		getParent,
+
+		// get children.
+		getChildren,
+
+		// on.
+		on,
+
+		// off.
+		off,
+
+		// add style.
+		addStyle,
+
+		// get style.
+		getStyle,
+
+		// get width.
+		getWidth,
+
+		// get inner width.
+		getInnerWidth,
+
+		// get height.
+		getHeight,
+
+		// get inner height.
+		getInnerHeight,
+
+		// get left.
+		getLeft,
+
+		// get top.
+		getTop,
+
+		// hide.
+		hide,
+
+		// show.
+		show,
+
+		// check is showing.
+		checkIsShowing,
+		
+		// set data.
+		setData,
+		
+		// get data.
+		getData,
+		
+		// scroll to.
+		scrollTo,
+		
+		// get scroll left.
+		getScrollLeft,
+		
+		// get scroll top.
+		getScrollTop,
+		
+		// get scroll width.
+		getScrollWidth,
+		
+		// get scroll height.
+		getScrollHeight;
+
+		inner.setWrapperDom = setWrapperDom = function(dom) {
+			//REQUIRED: dom
+
+			wrapperDom = dom;
+			wrapperEl = dom.getEl();
+
+			originDisplay = getStyle('display');
+
+			on('show', function() {
+
+				EACH(childNodes, function(childNode) {
+
+					if (childNode.checkIsShowing() === true) {
+
+						EVENT.fireAll({
+							node : childNode,
+							name : 'show'
+						});
+
+						EVENT.removeAll({
+							node : childNode,
+							name : 'show'
+						});
+					}
+				});
+			});
+		};
+
+		inner.setContentDom = setContentDom = function(dom) {
+			//REQUIRED: dom
+
+			contentDom = dom;
+			contentEl = dom.getEl();
+		};
+
+		inner.setDom = setDom = function(dom) {
+			//REQUIRED: dom
+
+			setWrapperDom(dom);
+			setContentDom(dom);
+		};
+
+		self.getWrapperDom = getWrapperDom = function() {
+			return wrapperDom;
+		};
+
+		self.getContentDom = getContentDom = function() {
+			return contentDom;
+		};
+
+		self.getWrapperEl = getWrapperEl = function() {
+			return wrapperEl;
+		};
+
+		self.getContentEl = getContentEl = function() {
+			return contentEl;
+		};
+
+		attach = function(node, index) {
+			//REQUIRED: node
+			//OPTIOANL: index
+
+			setParent(node);
+
+			if (index === undefined) {
+				parentNode.getChildren().push(self);
+			} else {
+				parentNode.getChildren().splice(index, 0, self);
+			}
+			
+			EVENT.fireAll({
+				node : self,
+				name : 'attach'
+			});
+
+			if (checkIsShowing() === true) {
+
+				EVENT.fireAll({
+					node : self,
+					name : 'show'
+				});
+
+				EVENT.removeAll({
+					node : self,
+					name : 'show'
+				});
+			}
+
+			// run after wating after nodes.
+			if (waitingAfterNodes !== undefined) {
+				EACH(waitingAfterNodes, function(node) {
+					after(node);
+				});
+			}
+
+			// run before wating before nodes.
+			if (waitingBeforeNodes !== undefined) {
+				EACH(waitingBeforeNodes, function(node) {
+					before(node);
+				});
+			}
+		};
+
+		self.append = append = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+
+			// append child.
+			if (CHECK_IS_DATA(node) === true) {
+				node.appendTo(self);
+			}
+
+			// append textarea content.
+			else if (self.type === TEXTAREA) {
+
+				append(DOM({
+					tag : '__STRING',
+					__TEXT : String(node === undefined ? '' : node)
+				}));
+			}
+
+			// append string.
+			else {
+
+				splits = String(node === undefined ? '' : node).split('\n');
+
+				EACH(splits, function(text, i) {
+
+					append(DOM({
+						tag : '__STRING',
+						__TEXT : text
+					}));
+
+					if (i < splits.length - 1) {
+						append(BR());
+					}
+				});
+			}
+		};
+
+		self.appendTo = appendTo = function(node) {
+			//REQUIRED: node
+			
+			var
+			// parent el
+			parentEl = node.getContentEl();
+
+			if (parentEl !== undefined) {
+				
+				parentEl.appendChild(wrapperEl);
+
+				attach(node);
+			}
+
+			return self;
+		};
+
+		self.prepend = prepend = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+
+			// prepend child.
+			if (CHECK_IS_DATA(node) === true) {
+				node.prependTo(self);
+			}
+
+			// prepend textarea content.
+			else if (self.type === TEXTAREA) {
+
+				prepend(DOM({
+					tag : '__STRING',
+					__TEXT : String(node === undefined ? '' : node)
+				}));
+			}
+
+			// prepend string.
+			else {
+
+				splits = String(node === undefined ? '' : node).split('\n');
+
+				REPEAT({
+					start : splits.length - 1,
+					end : 0
+				}, function(i) {
+
+					prepend(DOM({
+						tag : '__STRING',
+						__TEXT : splits[i]
+					}));
+
+					if (i < splits.length - 1) {
+						prepend(BR());
+					}
+				});
+			}
+		};
+
+		self.prependTo = prependTo = function(node) {
+			//REQUIRED: node
+
+			var
+			// parent el
+			parentEl = node.getContentEl();
+
+			if (parentEl !== undefined) {
+				
+				if (parentEl.childNodes[0] === undefined) {
+					parentEl.appendChild(wrapperEl);
+				} else {
+					parentEl.insertBefore(wrapperEl, parentEl.childNodes[0]);
+				}
+
+				attach(node, 0);
+			}
+
+			return self;
+		};
+
+		self.after = after = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+			
+			if (wrapperEl !== undefined) {
+	
+				// wait after node.
+				if (wrapperEl.parentNode === TO_DELETE) {
+	
+					if (waitingAfterNodes === undefined) {
+						waitingAfterNodes = [];
+					}
+	
+					waitingAfterNodes.push(node);
+				}
+	
+				// after node.
+				else {
+	
+					// after child.
+					if (CHECK_IS_DATA(node) === true) {
+						node.insertAfter(self);
+					}
+	
+					// after string.
+					else {
+	
+						splits = String(node === undefined ? '' : node).split('\n');
+	
+						REPEAT({
+							start : splits.length - 1,
+							end : 0
+						}, function(i) {
+	
+							after(DOM({
+								tag : '__STRING',
+								__TEXT : splits[i]
+							}));
+	
+							if (i < splits.length - 1) {
+								after(BR());
+							}
+						});
+					}
+				}
+			}
+		};
+
+		self.insertAfter = insertAfter = function(node) {
+			//REQUIRED: node
+
+			var
+			// before el
+			beforeEl = node.getWrapperEl(),
+			
+			// now index
+			nowIndex,
+			
+			// to index
+			toIndex;
+			
+			if (beforeEl !== undefined) {
+				
+				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
+				
+				nowIndex = FIND({
+					array : node.getParent().getChildren(),
+					value : self
+				});
+				
+				toIndex = FIND({
+					array : node.getParent().getChildren(),
+					value : node
+				}) + 1;
+
+				attach(node.getParent(), nowIndex < toIndex ? toIndex - 1 : toIndex);
+			}
+
+			return self;
+		};
+
+		self.before = before = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+			
+			if (wrapperEl !== undefined) {
+	
+				// wait before node.
+				if (wrapperEl.parentNode === TO_DELETE) {
+	
+					if (waitingBeforeNodes === undefined) {
+						waitingBeforeNodes = [];
+					}
+	
+					waitingBeforeNodes.push(node);
+				}
+	
+				// before node.
+				else {
+	
+					// before child.
+					if (CHECK_IS_DATA(node) === true) {
+						node.insertBefore(self);
+					}
+	
+					// before string.
+					else {
+	
+						splits = String(node === undefined ? '' : node).split('\n');
+	
+						EACH(splits, function(text, i) {
+	
+							before(DOM({
+								tag : '__STRING',
+								__TEXT : text
+							}));
+	
+							if (i < splits.length - 1) {
+								before(BR());
+							}
+						});
+					}
+				}
+			}
+		};
+
+		self.insertBefore = insertBefore = function(node) {
+			//REQUIRED: node
+
+			var
+			// after el
+			afterEl = node.getWrapperEl();
+
+			if (afterEl !== undefined) {
+				
+				afterEl.parentNode.insertBefore(wrapperEl, afterEl);
+
+				attach(node.getParent(), FIND({
+					array : node.getParent().getChildren(),
+					value : node
+				}));
+			}
+
+			return self;
+		};
+
+		self.remove = remove = function() {
+
+			if (wrapperEl !== undefined && wrapperEl.parentNode !== TO_DELETE) {
+
+				// empty children.
+				empty();
+
+				// remove from parent node.
+				wrapperEl.parentNode.removeChild(wrapperEl);
+
+				setParent(undefined);
+
+				// fire remove event.
+				EVENT.fireAll({
+					node : self,
+					name : 'remove'
+				});
+
+				EVENT.removeAll({
+					node : self
+				});
+
+				// free memory.
+				wrapperEl = undefined;
+				contentEl = undefined;
+			}
+			
+			// free memory.
+			data = undefined;
+		};
+
+		self.empty = empty = function() {
+			EACH(childNodes, function(child) {
+				child.remove();
+			});
+		};
+
+		self.setParent = setParent = function(node) {
+			//OPTIONAL: node
+			
+			if (parentNode !== undefined) {
+				REMOVE({
+					array : parentNode.getChildren(),
+					value : self
+				});
+			}
+
+			parentNode = node;
+		};
+		
+		self.getParent = getParent = function() {
+			return parentNode;
+		};
+
+		self.getChildren = getChildren = function() {
+			return childNodes;
+		};
+
+		self.on = on = function(eventName, eventHandler) {
+			//REQUIRED: eventName
+			//REQUIRED: eventHandler
+
+			EVENT({
+				node : self,
+				name : eventName
+			}, eventHandler);
+		};
+
+		self.off = off = function(eventName, eventHandler) {
+			//REQUIRED: eventName
+			//OPTIONAL: eventHandler
+
+			if (eventHandler !== undefined) {
+
+				EVENT.remove({
+					node : self,
+					name : eventName
+				}, eventHandler);
+
+			} else {
+
+				EVENT.removeAll({
+					node : self,
+					name : eventName
+				});
+			}
+		};
+
+		self.addStyle = addStyle = function(style) {
+			//REQUIRED: style
+
+			ADD_STYLE({
+				node : self,
+				style : style
+			});
+		};
+
+		self.getStyle = getStyle = function(name) {
+			//REQUIRED: name
+
+			var
+			// styles
+			styles,
+
+			// style
+			style;
+
+			if (wrapperEl !== undefined) {
+
+				styles = wrapperEl.style;
+
+				if (styles !== undefined) {
+
+					style = styles[name];
+
+					return style === '' ? undefined : (style.substring(style.length - 2) === 'px' ? REAL(style) : style);
+				}
+			}
+		};
+
+		self.getWidth = getWidth = function() {
+			return wrapperEl.offsetWidth;
+		};
+
+		self.getInnerWidth = getInnerWidth = function() {
+			return wrapperEl.clientWidth;
+		};
+
+		self.getHeight = getHeight = function() {
+			return wrapperEl.offsetHeight;
+		};
+
+		self.getInnerHeight = getInnerHeight = function() {
+			return wrapperEl.clientHeight;
+		};
+
+		self.getLeft = getLeft = function() {
+
+			var
+			// left
+			left = 0,
+
+			// parent el
+			parentEl = wrapperEl;
+
+			do {
+				left += parentEl.offsetLeft - (parentEl === document.body ? 0 : parentEl.scrollLeft);
+				parentEl = parentEl.offsetParent;
+			} while (parentEl !== TO_DELETE);
+
+			return left;
+		};
+
+		self.getTop = getTop = function() {
+
+			var
+			// top
+			top = 0,
+
+			// parent el
+			parentEl = wrapperEl;
+
+			do {
+				top += parentEl.offsetTop - (parentEl === document.body ? 0 : parentEl.scrollTop);
+				parentEl = parentEl.offsetParent;
+			} while (parentEl !== TO_DELETE);
+
+			return top;
+		};
+
+		self.hide = hide = function() {
+
+			addStyle({
+				display : 'none'
+			});
+		};
+
+		self.show = show = function() {
+
+			addStyle({
+				display : originDisplay === undefined ? '' : originDisplay
+			});
+
+			if (checkIsShowing() === true) {
+
+				EVENT.fireAll({
+					node : self,
+					name : 'show'
+				});
+
+				EVENT.removeAll({
+					node : self,
+					name : 'show'
+				});
+			}
+		};
+
+		self.checkIsShowing = checkIsShowing = function() {
+
+			if (wrapperEl === document.body) {
+				return true;
+			} else {
+				return parentNode !== undefined && parentNode.checkIsShowing() === true && getStyle('display') !== 'none';
+			}
+		};
+		
+		self.setData = setData = function(_data) {
+			//REQUIRED: _data
+			
+			data = _data;
+		};
+		
+		self.getData = getData = function() {
+			return data;
+		};
+		
+		self.scrollTo = scrollTo = function(params) {
+			//REQUIRED: params
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			
+			var
+			// left
+			left = params.left,
+			
+			// top
+			top = params.top;
+			
+			if (contentEl !== undefined) {
+			
+				if (left !== undefined) {
+					contentEl.scrollLeft = left;
+				}
+				
+				if (top !== undefined) {
+					contentEl.scrollTop = top;
+				}
+			}
+		};
+		
+		self.scrollTo = scrollTo = function(params) {
+			//REQUIRED: params
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			
+			var
+			// left
+			left = params.left,
+			
+			// top
+			top = params.top;
+			
+			if (contentEl !== undefined) {
+			
+				if (left !== undefined) {
+					contentEl.scrollLeft = left;
+				}
+				
+				if (top !== undefined) {
+					contentEl.scrollTop = top;
+				}
+			}
+		};
+		
+		self.getScrollLeft = getScrollLeft = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollLeft;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollTop = getScrollTop = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollTop;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollWidth = getScrollWidth = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollWidth;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollHeight = getScrollHeight = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollHeight;
+			} else {
+				return 0;
+			}
+		};
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.style
+		//OPTIONAL: params.c
+		//OPTIONAL: params.on
+
+		var
+		// style
+		style,
+
+		// children
+		children,
+
+		// on
+		on;
+
+		// init params.
+		if (params !== undefined) {
+			style = params.style;
+			children = params.c === undefined || CHECK_IS_ARRAY(params.c) === true ? params.c : [params.c];
+			on = params.on;
+		}
+
+		if (style !== undefined) {
+			self.addStyle(style);
+		}
+
+		if (on !== undefined) {
+			EACH(on, function(handler, name) {
+				self.on(name, handler);
+			});
+		}
+
+		if (children !== undefined) {
+			EACH(children, function(child, i) {
+				self.append(child);
+			});
+		}
+	}
+});
+
+/**
+ * animate node.
+ */
+global.ANIMATE = METHOD({
+
+	run : function(params, callback) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.node
+		//REQUIRED: params.keyframes
+		//OPTIONAL: params.duration
+		//OPTIONAL: params.timingFunction
+		//OPTIONAL: params.delay
+		//OPTIONAL: params.iterationCount
+		//OPTIONAL: params.direction
+		//OPTIONAL: params.playState
+		//OPTIONAL: callback
+
+		var
+		// node
+		node = params.node,
+
+		// keyframes
+		keyframes = params.keyframes,
+
+		// duration
+		duration = params.duration === undefined ? 0.5 : params.duration,
+
+		// timing function
+		timingFunction = params.timingFunction === undefined ? '' : params.timingFunction,
+
+		// delay
+		delay = params.delay === undefined ? '' : params.delay,
+
+		// iteration count
+		iterationCount = params.iterationCount === undefined ? '' : params.iterationCount,
+
+		// direction
+		direction = params.direction === undefined ? '' : params.direction,
+
+		// play state
+		playState = params.playState === undefined ? '' : params.playState,
+
+		// str
+		str = keyframes.getName() + ' ' + duration + 's ' + timingFunction + ' ' + delay + ' ' + iterationCount + ' ' + direction + ' ' + playState;
+
+		node.addStyle(keyframes.getStartStyle());
+
+		node.addStyle({
+			animation : str
+		});
+
+		node.addStyle(keyframes.getFinalStyle());
+
+		if (callback !== undefined && (iterationCount === '' || iterationCount === 1)) {
+
+			DELAY(duration, function() {
+				callback(node);
+			});
+		}
+	}
+});
+
+
+/**
+ * Animation keyframes class
+ */
+global.KEYFRAMES = CLASS({
+
+	init : function(inner, self, keyframes) {
+		'use strict';
+		//REQUIRED: keyframes
+
+		var
+		// name
+		name = '__KEYFRAMES_' + self.id,
+
+		// str
+		str = '',
+
+		// style el
+		styleEl,
+
+		// rules string
+		rulesStr = '',
+
+		// start style
+		startStyle,
+
+		// final style
+		finalStyle,
+
+		// get name.
+		getName,
+
+		// get start style.
+		getStartStyle,
+
+		// get final style.
+		getFinalStyle;
+
+		EACH(keyframes, function(style, key) {
+
+			str += key + '{';
+
+			EACH(style, function(value, name) {
+
+				if ( typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
+					value = value + 'px';
+				}
+
+				str += name.replace(/([A-Z])/g, '-$1').toLowerCase() + ':' + value + ';';
+
+				// cross browser transform
+				if (name === 'transform') {
+					str += '-webkit-transform:' + value + ';';
+					str += '-moz-transform:' + value + ';';
+					str += '-o-transform:' + value + ';';
+					str += '-ms-transform:' + value + ';';
+				}
+			});
+
+			str += '}';
+
+			if (key === 'from' || key === '0%') {
+				startStyle = style;
+			} else if (key === 'to' || key === '100%') {
+				finalStyle = style;
+			}
+		});
+
+		// cross browser @keyframes
+		rulesStr += '@-webkit-keyframes ' + name + '{' + str + '}';
+		rulesStr += '@-moz-keyframes ' + name + '{' + str + '}';
+		rulesStr += '@-o-keyframes ' + name + '{' + str + '}';
+		rulesStr += '@-ms-keyframes ' + name + '{' + str + '}';
+		rulesStr += '@keyframes ' + name + '{' + str + '}';
+
+		// create style element.
+		styleEl = document.createElement('style');
+		styleEl.type = 'text/css';
+		styleEl.appendChild(document.createTextNode(rulesStr));
+		document.getElementsByTagName('head')[0].appendChild(styleEl);
+
+		self.getName = getName = function() {
+			return name;
+		};
+
+		self.getStartStyle = getStartStyle = function() {
+			return startStyle;
+		};
+
+		self.getFinalStyle = getFinalStyle = function() {
+			return finalStyle;
+		};
+	}
+});
+
+/**
+ * Dom event object wrapper class
+ */
+global.E = CLASS({
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.e
+		//REQUIRED: params.el
+
+		var
+		// e
+		e = params.e,
+
+		// el
+		el = params.el,
+
+		// check is descendant.
+		checkIsDescendant,
+
+		// stop default.
+		stopDefault,
+
+		// stop bubbling.
+		stopBubbling,
+
+		// stop default and bubbling.
+		stop,
+
+		// get left.
+		getLeft,
+
+		// get top.
+		getTop,
+
+		// get key code.
+		getKeyCode,
+
+		// get key name.
+		getKeyName,
+		
+		// get state.
+		getState,
+		
+		// get detail.
+		getDetail,
+		
+		// get wheel delta
+		getWheelDelta;
+
+		checkIsDescendant = function(parent, child) {
+
+			var
+			// node
+			node = child.parentNode;
+
+			while (node !== TO_DELETE) {
+
+				if (node === parent) {
+					return true;
+				}
+
+				node = node.parentNode;
+			}
+
+			return false;
+		};
+
+		self.stopDefault = stopDefault = function() {
+			e.preventDefault();
+		};
+
+		self.stopBubbling = stopBubbling = function() {
+			e.stopPropagation();
+		};
+
+		self.stop = stop = function() {
+			stopDefault();
+			stopBubbling();
+		};
+
+		self.getLeft = getLeft = function() {
+
+			var
+			// touch page x
+			touchPageX;
+
+			// if is touch mode
+			if (INFO.checkIsTouchMode() === true) {
+
+				if (e.touches !== undefined && e.touches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.touches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageX = touch.pageX;
+							return false;
+						}
+					});
+
+					if (touchPageX === undefined) {
+						touchPageX = e.touches[0].pageX;
+					}
+
+					if (touchPageX !== undefined) {
+						return touchPageX;
+					}
+				}
+
+				if (e.changedTouches !== undefined && e.changedTouches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.changedTouches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageX = touch.pageX;
+							return false;
+						}
+					});
+
+					if (touchPageX === undefined) {
+						touchPageX = e.changedTouches[0].pageX;
+					}
+
+					if (touchPageX !== undefined) {
+						return touchPageX;
+					}
+				}
+			}
+
+			return e.pageX;
+		};
+
+		self.getTop = getTop = function() {
+
+			var
+			// touch page y
+			touchPageY;
+
+			// if is touch mode
+			if (INFO.checkIsTouchMode() === true) {
+
+				if (e.touches !== undefined && e.touches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.touches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageY = touch.pageY;
+							return false;
+						}
+					});
+
+					if (touchPageY === undefined) {
+						touchPageY = e.touches[0].pageY;
+					}
+
+					if (touchPageY !== undefined) {
+						return touchPageY;
+					}
+				}
+
+				if (e.changedTouches !== undefined && e.changedTouches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.changedTouches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageY = touch.pageY;
+							return false;
+						}
+					});
+
+					if (touchPageY === undefined) {
+						touchPageY = e.changedTouches[0].pageY;
+					}
+
+					if (touchPageY !== undefined) {
+						return touchPageY;
+					}
+				}
+			}
+
+			return e.pageY;
+		};
+
+		self.getKeyCode = getKeyCode = function() {
+			return e.keyCode;
+		};
+
+		self.getKeyName = getKeyName = function() {
+			return e.keyName;
+		};
+		
+		self.getState = getState = function() {
+			return e.state;
+		};
+		
+		self.getDetail = getDetail = function() {
+			return e.detail;
+		};
+		
+		self.getWheelDelta = getWheelDelta = function() {
+			
+			if (document.onmousewheel !== undefined) {
+				return e.wheelDelta;
+			}
+			
+			// FireFox
+			else {
+				return e.detail * -40;
+			}
+		};
+	}
+});
+
+/**
+ * Dom epmty event object class
+ */
+global.EMPTY_E = CLASS({
+
+	init : function(inner, self) {
+		'use strict';
+
+		var
+		// stop default.
+		stopDefault,
+
+		// stop bubbling.
+		stopBubbling,
+
+		// stop default and bubbling.
+		stop,
+
+		// get left.
+		getLeft,
+
+		// get top.
+		getTop,
+
+		// get key code.
+		getKeyCode,
+		
+		// get state.
+		getState;
+
+		self.stopDefault = stopDefault = function() {
+			// ignore.
+		};
+
+		self.stopBubbling = stopBubbling = function() {
+			// ignore.
+		};
+
+		self.stop = stop = function() {
+			// ignore.
+		};
+
+		self.getLeft = getLeft = function() {
+
+			// on heaven!
+			return -999999;
+		};
+
+		self.getTop = getTop = function() {
+
+			// on heaven!
+			return -999999;
+		};
+
+		self.getKeyCode = getKeyCode = function() {
+
+			// on heaven!
+			return -999999;
+		};
+		
+		self.getState = getState = function() {
+			// ignore.
+		};
+	}
+});
+
+/**
+ * Event class
+ */
+global.EVENT = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// event map
+	eventMaps = {},
+	
+	// vendors
+	vendors = ['webkit', 'moz', 'o', 'ms'],
+	
+	// visibility change event name
+	visibilityChangeEventName = 'visibilitychange',
+
+	// fire all.
+	fireAll,
+
+	// remove all.
+	removeAll,
+
+	// remove.
+	remove;
+	
+	if (document['hidden'] === undefined) {
+		
+		EACH(vendors, function(vendor) {
+			
+			if (document[vendor + 'Hidden'] !== undefined) {
+				
+				visibilityChangeEventName = vendor + 'visibilitychange';
+				
+				return false;
+			}
+		});
+	}
+
+	cls.fireAll = fireAll = function(nameOrParams) {
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node
+		//REQUIRED: nameOrParams.name
+
+		var
+		// node
+		node,
+
+		// name
+		name,
+
+		// node id
+		nodeId,
+
+		// event map
+		eventMap,
+
+		// events
+		events,
+
+		// ret
+		ret;
+
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			name = nameOrParams.name;
+		}
+
+		if (node === undefined) {
+			nodeId = 'body';
+		} else {
+			nodeId = node.id;
+		}
+
+		eventMap = eventMaps[nodeId];
+
+		if (eventMap !== undefined) {
+
+			events = eventMap[name];
+
+			if (events !== undefined) {
+
+				EACH(events, function(evt) {
+
+					if (evt.fire() === false) {
+						
+						ret = false;
+					}
+				});
+			}
+		}
+
+		return ret;
+	};
+
+	cls.removeAll = removeAll = function(nameOrParams) {
+		//OPTIONAL: nameOrParams
+		//OPTIONAL: nameOrParams.node
+		//OPTIONAL: nameOrParams.name
+
+		var
+		// node
+		node,
+
+		// name
+		name,
+
+		// node id
+		nodeId,
+
+		// event map
+		eventMap,
+
+		// events
+		events;
+
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			name = nameOrParams.name;
+		}
+
+		if (node === undefined) {
+			nodeId = 'body';
+		} else {
+			nodeId = node.id;
+		}
+
+		eventMap = eventMaps[nodeId];
+
+		if (eventMap !== undefined) {
+
+			if (name !== undefined) {
+
+				events = eventMap[name];
+
+				if (events !== undefined) {
+
+					EACH(events, function(evt) {
+						evt.remove();
+					});
+				}
+
+			} else {
+
+				EACH(eventMap, function(events) {
+					EACH(events, function(evt) {
+						evt.remove();
+					});
+				});
+			}
+		}
+	};
+
+	cls.remove = remove = function(params, eventHandler) {
+		//REQUIRED: params
+		//OPTIONAL: params.node
+		//REQUIRED: params.name
+		//REQUIRED: eventHandler
+
+		var
+		// node
+		node = params.node,
+
+		// name
+		name = params.name,
+
+		// node id
+		nodeId,
+
+		// event map
+		eventMap,
+
+		// events
+		events;
+
+		if (node === undefined) {
+			nodeId = 'body';
+		} else {
+			nodeId = node.id;
+		}
+
+		eventMap = eventMaps[nodeId];
+
+		if (eventMap !== undefined) {
+
+			events = eventMap[name];
+
+			if (events !== undefined) {
+
+				EACH(events, function(evt) {
+					if (evt.getEventHandler() === eventHandler) {
+						evt.remove();
+					}
+				});
+			}
+		}
+	};
+
+	return {
+
+		init : function(inner, self, nameOrParams, eventHandler) {
+			//REQUIRED: nameOrParams
+			//OPTIONAL: nameOrParams.node
+			//OPTIONAL: nameOrParams.lowNode
+			//REQUIRED: nameOrParams.name
+			//REQUIRED: eventHandler
+
+			var
+			// node
+			node,
+
+			// low node
+			lowNode,
+
+			// name
+			name,
+
+			// node id
+			nodeId,
+
+			// event lows
+			eventLows = [],
+
+			// sub event
+			subEvent,
+
+			// touch start left, top
+			startLeft, startTop,
+
+			// last tap time
+			lastTapTime,
+
+			// remove from map.
+			removeFromMap,
+
+			// remove.
+			remove,
+
+			// fire.
+			fire,
+			
+			// get event handler.
+			getEventHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				name = nameOrParams;
+			} else {
+				node = nameOrParams.node;
+				lowNode = nameOrParams.lowNode;
+				name = nameOrParams.name;
+
+				if (lowNode === undefined) {
+					lowNode = node;
+				}
+			}
+
+			if (node === undefined) {
+				nodeId = 'body';
+			} else {
+				nodeId = node.id;
+			}
+
+			// push event to map.
+
+			if (eventMaps[nodeId] === undefined) {
+				eventMaps[nodeId] = {};
+			}
+
+			if (eventMaps[nodeId][name] === undefined) {
+				eventMaps[nodeId][name] = [];
+			}
+
+			eventMaps[nodeId][name].push(self);
+
+			removeFromMap = function() {
+
+				REMOVE({
+					array : eventMaps[nodeId][name],
+					value : self
+				});
+
+				if (eventMaps[nodeId][name].length <= 0) {
+					delete eventMaps[nodeId][name];
+				}
+
+				if (CHECK_IS_EMPTY_DATA(eventMaps[nodeId]) === true) {
+					delete eventMaps[nodeId];
+				}
+			};
+
+			// tap event (for remove click delay, simulate click event.)
+			if (name === 'tap') {
+
+				// when is touch mode or when is exists tap delay (300ms)
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchstart'
+				}, function(e) {
+					if (INFO.checkIsTouchMode() === true && INFO.checkIsExistsTapDelay() === true && e !== undefined) {
+						startLeft = e.getLeft();
+						startTop = e.getTop();
+					}
+				}));
+
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchend'
+				}, function(e, node) {
+
+					var
+					// left
+					left,
+
+					// top
+					top;
+
+					if (INFO.checkIsTouchMode() === true && INFO.checkIsExistsTapDelay() === true && e !== undefined) {
+
+						left = e.getLeft();
+						top = e.getTop();
+
+						if (startLeft - 5 <= left && left <= startLeft + 5 && startTop - 5 <= top && top <= startTop + 5) {
+						
+							if (lastTapTime === undefined || Date.now() - lastTapTime > 100) {
+								
+								lastTapTime = Date.now();
+								
+								if (nodeId !== 'body') {
+									e.stopDefault();
+								}
+								
+								return eventHandler(e, node);
+							}
+						}
+					}
+				}));
+
+				// when is not touch mode or when is not exists tap delay (300ms)
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'click'
+				}, function(e, node) {
+					
+					if (INFO.checkIsTouchMode() !== true || INFO.checkIsExistsTapDelay() !== true) {
+						
+						if (lastTapTime === undefined || Date.now() - lastTapTime > 100) {
+							
+							lastTapTime = Date.now();
+							
+							if (nodeId !== 'body') {
+								e.stopDefault();
+							}
+							
+							return eventHandler(e, node);
+						}
+					}
+				}));
+			}
+
+			// double tap event (not exists, simulate.)
+			else if (name === 'doubletap') {
+
+				subEvent = EVENT({
+					node : node,
+					name : 'tap'
+				}, function(e) {
+
+					if (lastTapTime === undefined) {
+						lastTapTime = Date.now();
+					} else {
+
+						if (Date.now() - lastTapTime < 600) {
+							eventHandler(e, node);
+						}
+
+						lastTapTime = undefined;
+
+						// clear text selections.
+						getSelection().removeAllRanges();
+					}
+				});
+			}
+
+			// when is not touch mode, touchmove link to mousedown event
+			else if (name === 'touchstart') {
+				
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchstart'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+				
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mousedown'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// when is not touch mode, touchmove link to mousemove event
+			else if (name === 'touchmove') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchmove'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+				
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mousemove'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// when is not touch mode, touchend link to mouseup event
+			else if (name === 'touchend') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchend'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+				
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mouseup'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// mouse over event (when is touch mode, link to touchstart event.)
+			else if (name === 'mouseover') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchstart'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mouseover'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+			
+			// mouse wheel event (FireFox, using 'DOMMouseScroll')
+			else if (name === 'mousewheel') {
+				
+				if (document.onmousewheel !== undefined) {
+					eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
+				}
+				
+				// FireFox
+				else {
+					
+					eventLows.push(EVENT_LOW({
+						node : node,
+						lowNode : lowNode,
+						name : 'DOMMouseScroll'
+					}, eventHandler));
+				}
+			}
+
+			// other events
+			else if (name !== 'attach' && name !== 'show' && name !== 'remove') {
+				eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
+			}
+			
+			self.remove = remove = function() {
+
+				EACH(eventLows, function(eventLow) {
+					eventLow.remove();
+				});
+					
+				if (subEvent !== undefined) {
+					subEvent.remove();
+				}
+
+				removeFromMap();
+			};
+
+			self.fire = fire = function() {
+
+				// pass empty e object.
+				return eventHandler(EMPTY_E(), node);
+			};
+
+			self.getEventHandler = getEventHandler = function() {
+				return eventHandler;
+			};
+		}
+	};
+});
+/**
+ * Low event class
+ */
+global.EVENT_LOW = CLASS({
+
+	init : function(inner, self, nameOrParams, eventHandler) {
+		'use strict';
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node
+		//OPTIONAL: nameOrParams.lowNode
+		//REQUIRED: nameOrParams.name
+		//REQUIRED: eventHandler
+
+		var
+		// node
+		node,
+
+		// low node
+		lowNode,
+
+		// name
+		name,
+
+		// el
+		el,
+
+		// inner handler.
+		innerHandler,
+
+		// remove.
+		remove;
+
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			lowNode = nameOrParams.lowNode;
+			name = nameOrParams.name;
+
+			if (lowNode === undefined) {
+				lowNode = node;
+			}
+		}
+
+		if (lowNode !== undefined) {
+			el = lowNode.getWrapperEl();
+		} else if (global['on' + name] === undefined) {
+			el = document;
+		} else {
+			el = global;
+		}
+
+		inner.innerHandler = innerHandler = function(e) {
+			//REQUIRED: e
+			
+			var
+			// result
+			result = eventHandler(E({
+				e : e,
+				el : el
+			}), node);
+			
+			if (name === 'beforeunload' && result !== undefined) {
+				e.returnValue = result;
+			}
+
+			return result;
+		};
+
+		el.addEventListener(name, innerHandler, false);
+
+		self.remove = remove = function() {
+			el.removeEventListener(name, innerHandler, false);
+		};
+	}
+});
+
+/**
+ * Event once class
+ */
+global.EVENT_ONCE = CLASS({
+
+	init : function(inner, self, nameOrParams, eventHandler) {
+		'use strict';
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node
+		//OPTIONAL: nameOrParams.lowNode
+		//REQUIRED: nameOrParams.name
+		//REQUIRED: eventHandler
+
+		var
+		// evt
+		evt = EVENT(nameOrParams, function(e, node) {
+			eventHandler(e, node);
+			evt.remove();
+		}),
+
+		// remove.
+		remove,
+
+		// fire.
+		fire;
+
+		self.remove = remove = function() {
+			evt.remove();
+		};
+
+		self.fire = fire = function() {
+			evt.fire();
+		};
+	}
+});
+
+/**
+ * add style.
+ */
+global.ADD_STYLE = METHOD(function(m) {
+	'use strict';
+
+	var
+	// vendors
+	vendors = ['Webkit', 'Moz', 'O', 'Ms'],
+	
+	// cross browser style names
+	crossBrowserStyleNames = ['transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition'],
+	
+	// is support fixed
+	isSupportFixed;
+
+	NEXT([
+	function(next) {
+
+		// when body exsists
+		if (document.body === TO_DELETE) {
+
+			EVENT({
+				name : 'load'
+			}, next);
+		}
+
+		// when body not exsists
+		else {
+			next();
+		}
+	},
+
+	function() {
+
+		// check is support fixed.
+		return function() {
+
+			var
+			// el
+			el = document.createElement('div');
+
+			el.style.position = 'fixed';
+			el.style.top = '10px';
+
+			document.body.appendChild(el);
+
+			isSupportFixed = el.offsetTop === 10;
+
+			document.body.removeChild(el);
+		};
+	}]);
+
+	return {
+
+		run : function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.node
+			//REQUIRED: params.style
+
+			var
+			// node
+			node = params.node,
+
+			// style
+			style = params.style,
+
+			// el
+			el = node.getWrapperEl(),
+
+			// switch bg to X2.
+			switchBGToX2 = function(uri) {
+
+				if (X2.checkIsCached(uri) === true) {
+
+					// background switch to X2 image.
+					X2.switchBG({
+						node : node,
+						uri : uri
+					});
+
+				} else {
+
+					EXPORT_IMG_TYPE(IMG({
+						src : uri
+					}), function(type) {
+
+						if (type === 'png' || type === 'gif' || type === 'bmp') {
+
+							// background switch to X2 image.
+							X2.switchBG({
+								node : node,
+								uri : uri
+							});
+						}
+					});
+				}
+			};
+
+			EACH(style, function(value, name) {
+
+				var
+				// resize event
+				resizeEvent,
+
+				// scroll event
+				scrollEvent,
+
+				// fix position.
+				fixPosition;
+
+				if (value !== undefined) {
+
+					// on display resize
+					if (name === 'onDisplayResize') {
+
+						resizeEvent = EVENT({
+							name : 'resize'
+						}, RAR(function() {
+
+							// when this, value is function.
+							ADD_STYLE({
+								node : node,
+								style : value(WIN_WIDTH(), WIN_HEIGHT())
+							});
+						}));
+
+						// remove resize event when remove node.
+						node.on('remove', function() {
+							resizeEvent.remove();
+						});
+
+					} else {
+
+						try {
+
+							// fix position fixed when not support fixed.
+							if (name === 'position' && value === 'fixed' && isSupportFixed !== true) {
+
+								el.style.position = 'absolute';
+
+								node.__FIXED = true;
+
+								// save fixed position.
+								if (node.__FIXED_LEFT === undefined && el.style.left !== '') {
+									node.__FIXED_LEFT = INTEGER(el.style.left);
+								}
+
+								if (node.__FIXED_RIGHT === undefined && el.style.right !== '') {
+									node.__FIXED_RIGHT = INTEGER(el.style.right);
+								}
+
+								if (node.__FIXED_TOP === undefined && el.style.top !== '') {
+									node.__FIXED_TOP = INTEGER(el.style.top);
+								}
+
+								if (node.__FIXED_BOTTOM === undefined && el.style.bottom !== '') {
+									node.__FIXED_BOTTOM = INTEGER(el.style.bottom);
+								}
+
+								// when scroll
+								scrollEvent = EVENT({
+									name : 'scroll'
+								}, RAR( fixPosition = function() {
+
+									if (node.__FIXED_LEFT !== undefined) {
+										el.style.left = (node.__FIXED_LEFT + SCROLL_LEFT()) + 'px';
+									}
+
+									if (node.__FIXED_RIGHT !== undefined) {
+										el.style.left = (SCROLL_LEFT() + WIN_WIDTH() - node.getWidth() - node.__FIXED_RIGHT) + 'px';
+									}
+
+									if (node.__FIXED_TOP !== undefined) {
+										el.style.top = (node.__FIXED_TOP + SCROLL_TOP()) + 'px';
+									}
+
+									if (node.__FIXED_BOTTOM !== undefined) {
+										el.style.top = (SCROLL_TOP() + WIN_HEIGHT() - node.getHeight() - node.__FIXED_BOTTOM) + 'px';
+									}
+								}));
+
+								// fix position when show.
+								node.on('attach', function() {
+									fixPosition();
+								});
+
+								// fix position delayed.
+								DELAY(function() {
+									fixPosition();
+								});
+
+								// remove scroll event when remove node.
+								node.on('remove', function() {
+									scrollEvent.remove();
+								});
+							}
+
+							// save position when fixed.
+							else if (node.__FIXED === true && name === 'left') {
+
+								node.__FIXED_LEFT = INTEGER(value);
+
+								el.style.left = (value + SCROLL_LEFT()) + 'px';
+
+							} else if (node.__FIXED === true && name === 'right') {
+
+								node.__FIXED_RIGHT = INTEGER(value);
+
+								el.style.left = (SCROLL_LEFT() + WIN_WIDTH() - node.getWidth() - node.__FIXED_RIGHT) + 'px';
+
+							} else if (node.__FIXED === true && name === 'top') {
+
+								node.__FIXED_TOP = INTEGER(value);
+
+								el.style.top = (value + SCROLL_TOP()) + 'px';
+
+							} else if (node.__FIXED === true && name === 'bottom') {
+
+								node.__FIXED_BOTTOM = INTEGER(value);
+
+								el.style.top = (SCROLL_TOP() + WIN_HEIGHT() - node.getHeight() - node.__FIXED_BOTTOM) + 'px';
+							}
+
+							// flt -> float
+							else if (name === 'flt') {
+								el.style.cssFloat = value;
+							}
+
+							// assume number value is px value.
+							else if ( typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
+
+								el.style[name] = value + 'px';
+
+								// X2 support.
+								if (BROWSER_CONFIG.isSupportingX2 === true &&
+
+								// after INIT_OBJECTS(), check is hd display.
+								INFO.checkIsHDDisplay !== undefined && INFO.checkIsHDDisplay() === true) {
+
+									if (name === 'width' || name === 'height') {
+										el.removeAttribute('width');
+										el.removeAttribute('height');
+									}
+								}
+							}
+
+							// set background X2 image.
+							else if (name === 'backgroundX2Image') {
+								el.style.backgroundImage = 'url(' + value + ')';
+							}
+
+							// set background image. (not need url prefix.)
+							else if (name === 'backgroundImage' && value !== 'none') {
+
+								el.style[name] = 'url(' + value + ')';
+
+								// X2 support.
+								if (BROWSER_CONFIG.isSupportingX2 === true &&
+
+								// after INIT_OBJECTS(), check is hd display.
+								INFO.checkIsHDDisplay !== undefined && INFO.checkIsHDDisplay() === true) {
+
+									// background switch to X2 image.
+									switchBGToX2(value);
+								}
+							}
+
+							// set normal style.
+							else {
+
+								el.style[name] = value;
+
+								// X2 support.
+								if (BROWSER_CONFIG.isSupportingX2 === true &&
+
+								// after INIT_OBJECTS(), check is hd display.
+								INFO.checkIsHDDisplay !== undefined && INFO.checkIsHDDisplay() === true) {
+
+									// when image
+									if (name === 'width' || name === 'height') {
+										el.removeAttribute('width');
+										el.removeAttribute('height');
+									}
+
+									// when background
+									if (name === 'background' && value.length >= 7 && value.substring(0, 4) === 'url(') {
+
+										// background switch to X2 image.
+										switchBGToX2(value.charAt(4) === '\'' || value.charAt(4) === '"' ? value.substring(5, value.length - 2) : value.substring(4, value.length - 1));
+									}
+								}
+
+								// cross browser styles
+								if (CHECK_IS_IN({
+									array : crossBrowserStyleNames,
+									value : name
+								}) === true) {
+								
+									EACH(vendors, function(vender) {
+										el.style[vender + name.charAt(0).toUpperCase() + name.slice(1)] = value;
+									});
+								}
+							}
+
+						} catch(e) {
+							// ignore.
+						}
+					}
+				}
+			});
+		}
+	};
+});
+
+/**
+ * get rgba style string.
+ */
+global.RGBA = METHOD({
+
+	run : function(rgba) {
+		'use strict';
+		//REQUIRED: rgba
+
+		return 'rgba(' + rgba[0] + ',' + rgba[1] + ',' + rgba[2] + ',' + rgba[3] + ')';
+	}
+});
+
+/**
+ * A class
+ */
+global.A = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'a'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.href
+		//OPTIONAL: params.target
+		//OPTIONAL: params.style
+
+		var
+		// href
+		href,
+		
+		// target
+		target,
+		
+		// style
+		style,
+		
+		// set href.
+		setHref, 
+
+		// tap.
+		tap;
+
+		// init params.
+		if (params !== undefined) {
+			href = params.href;
+			target = params.target;
+			style = params.style;
+		}
+
+		self.setHref = setHref = function(href) {
+			inner.setAttr({
+				name : 'href',
+				value : href
+			});
+		};
+
+		if (href !== undefined) {
+			setHref(href);
+		}
+
+		if (target !== undefined) {
+			inner.setAttr({
+				name : 'target',
+				value : target
+			});
+		}
+		
+		self.tap = tap = function() {
+
+			EVENT.fireAll({
+				node : self,
+				name : 'tap'
+			});
+		};
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.href
+		//OPTIONAL: params.c
+
+		var
+		// href
+		href,
+		
+		// is content href
+		isContentHref = false,
+
+		// children
+		children,
+		
+		// append.
+		append,
+		
+		// prepend.
+		prepend;
+
+		// init params.
+		if (params !== undefined) {
+			href = params.href;
+			children = params.c;
+		}
+
+		if (children === undefined && href !== undefined) {
+			
+			self.append(href);
+			
+			isContentHref = true;
+			
+			OVERRIDE(self.append, function(origin) {
+				self.append = append = function(node) {
+					//REQUIRED: node
+					
+					if (isContentHref === true) {
+						self.empty();
+						isContentHref = false;
+					}
+					
+					origin(node);
+				};
+			});
+			
+			OVERRIDE(self.prepend, function(origin) {
+				self.prepend = prepend = function(node) {
+					//REQUIRED: node
+					
+					if (isContentHref === true) {
+						self.empty();
+						isContentHref = false;
+					}
+					
+					origin(node);
+				};
+			});
+		}
+	}
+});
+
+/**
+ * Body class
+ */
+global.BODY = OBJECT({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'body'
+		};
+	}
+});
+
+/**
+ * Br class
+ */
+global.BR = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'br'
+		};
+	}
+});
+
+/**
+ * Canvas class
+ */
+global.CANVAS = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'canvas'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.width
+		//OPTIONAL: params.height
+
+		var
+		// wdith
+		width,
+
+		// height
+		height,
+
+		// get context.
+		getContext,
+
+		// set size.
+		setSize,
+
+		// get width.
+		getWidth,
+
+		// get height.
+		getHeight,
+
+		// get data url.
+		getDataURL;
+
+		// init params.
+		if (params !== undefined) {
+			width = params.width;
+			height = params.height;
+		}
+
+		self.getContext = getContext = function() {
+			return CONTEXT(self);
+		};
+
+		self.setSize = setSize = function(size) {
+			//REQUIRED: size
+			//OPTIONAL: size.width
+			//OPTIONAL: size.height
+
+			var
+			// el
+			el = self.getEl();
+
+			if (size.width !== undefined) {
+				width = size.width;
+			}
+
+			if (size.height !== undefined) {
+				height = size.height;
+			}
+
+			if (width !== undefined) {
+				el.width = width;
+			}
+
+			if (height !== undefined) {
+				el.height = height;
+			}
+		};
+
+		setSize({
+			width : width,
+			height : height
+		});
+
+		self.getWidth = getWidth = function() {
+			return width;
+		};
+
+		self.getHeight = getHeight = function() {
+			return height;
+		};
+
+		self.getDataURL = getDataURL = function() {
+			return self.getEl().toDataURL();
+		};
+	}
+});
+
+/**
+ * Div class
+ */
+global.DIV = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'div'
+		};
+	}
+});
+
+/**
+ * Form class
+ */
+global.FORM = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'form'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.action
+		//OPTIONAL: params.target
+		//OPTIONAL: params.method
+		//OPTIONAL: params.enctype
+
+		var
+		// action
+		action,
+
+		// target
+		target,
+
+		// method
+		method,
+
+		// enctype
+		enctype,
+
+		// get data.
+		getData,
+
+		// set data.
+		setData,
+
+		// submit.
+		submit;
+
+		// init params.
+		if (params !== undefined) {
+			action = params.action;
+			target = params.target;
+			method = params.method;
+			enctype = params.enctype;
+		}
+
+		if (action !== undefined) {
+			
+			inner.setAttr({
+				name : 'action',
+				value : action
+			});
+			
+		} else {
+			
+			EVENT({
+				node : self,
+				name : 'submit'
+			}, function(e) {
+				e.stop();
+			});
+		}
+
+		if (target !== undefined) {
+			inner.setAttr({
+				name : 'target',
+				value : target
+			});
+		}
+
+		if (method !== undefined) {
+			inner.setAttr({
+				name : 'method',
+				value : method
+			});
+		}
+
+		if (enctype !== undefined) {
+			inner.setAttr({
+				name : 'enctype',
+				value : enctype
+			});
+		}
+
+		OVERRIDE(self.setData, function(origin) {
+			
+			self.getData = getData = function() {
+	
+				var
+				// data
+				data = origin(),
+	
+				// f.
+				f = function(node) {
+					//REQUIRED: node
+	
+					EACH(node.getChildren(), function(child) {
+	
+						if (child.getValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
+							data[child.getName()] = child.getValue();
+						}
+	
+						f(child);
+					});
+				};
+				
+				if (data === undefined) {
+					data = {};
+				}
+	
+				f(self);
+	
+				return data;
+			};
+		});
+
+		OVERRIDE(self.setData, function(origin) {
+			
+			self.setData = setData = function(data) {
+				//REQUIRED: data
+	
+				var
+				// f.
+				f = function(node) {
+					//REQUIRED: node
+	
+					EACH(node.getChildren(), function(child) {
+	
+						var
+						// value
+						value;
+	
+						if (child.setValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
+							value = data[child.getName()];
+							child.setValue(value === undefined ? '' : value);
+						}
+	
+						f(child);
+					});
+				};
+	
+				f(self);
+				
+				origin(data);
+			};
+		});
+
+		self.submit = submit = function(isRealSubmit) {
+			//OPTIONAL: isRealSubmit
+
+			EVENT.fireAll({
+				node : self,
+				name : 'submit'
+			});
+
+			if (isRealSubmit === true) {
+				self.getEl().submit();
+			}
+		};
+	}
+});
+
+/**
+ * H1 class
+ */
+global.H1 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h1'
+		};
+	}
+});
+
+/**
+ * H2 class
+ */
+global.H2 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h2'
+		};
+	}
+});
+
+/**
+ * H3 class
+ */
+global.H3 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h3'
+		};
+	}
+});
+
+/**
+ * H4 class
+ */
+global.H4 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h4'
+		};
+	}
+});
+
+/**
+ * H5 class
+ */
+global.H5 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h5'
+		};
+	}
+});
+
+/**
+ * H6 class
+ */
+global.H6 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h6'
+		};
+	}
+});
+
+/**
+ * Iframe class
+ */
+global.IFRAME = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'iframe',
+			style : {
+				border : 'none'
+			}
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.src
+
+		var
+		// name
+		name,
+
+		// src
+		src,
+
+		// set src.
+		setSrc,
+
+		// get src.
+		getSrc;
+
+		// init params.
+		if (params !== undefined) {
+			name = params.name;
+			src = params.src;
+		}
+
+		inner.setAttr({
+			name : 'allowTransparency',
+			value : true
+		});
+
+		inner.setAttr({
+			name : 'frameBorder',
+			value : 0
+		});
+
+		if (name !== undefined) {
+			inner.setAttr({
+				name : 'name',
+				value : name
+			});
+		}
+
+		self.setSrc = setSrc = function(_src) {
+			//REQUIRED: _src
+
+			src = _src;
+
+			inner.setAttr({
+				name : 'src',
+				value : src
+			});
+		};
+
+		if (src !== undefined) {
+			setSrc(src);
+		}
+
+		self.getSrc = getSrc = function() {
+			return src;
+		};
+	}
+});
+
+/**
+ * Img class
+ */
+global.IMG = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'img'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.src
+
+		var
+		// src
+		src = params.src,
+
+		// el
+		el = self.getEl(),
+
+		// is X2 switched
+		isX2Switched,
+
+		// get width.
+		getWidth,
+
+		// get height.
+		getHeight,
+
+		// set size.
+		setSize,
+
+		// get src.
+		getSrc,
+
+		// set x2 src.
+		setX2Src,
+
+		// set src.
+		setSrc,
+
+		// check is X2.
+		checkIsX2;
+
+		//OVERRIDE: self.getWidth
+		self.getWidth = getWidth = function() {
+			return el.width;
+		};
+
+		//OVERRIDE: self.getHeight
+		self.getHeight = getHeight = function() {
+			return el.height;
+		};
+
+		self.setSize = setSize = function(size) {
+			//REQUIRED: size
+			//OPTIONAL: size.width
+			//OPTIONAL: size.height
+
+			var
+			// width
+			width = size.width,
+
+			// height
+			height = size.height;
+
+			if (width !== undefined) {
+				el.width = width;
+			}
+
+			if (height !== undefined) {
+				el.height = height;
+			}
+		};
+
+		self.getSrc = getSrc = function() {
+			return src;
+		};
+
+		self.setX2Src = setX2Src = function(x2Src) {
+			//REQUIRED: x2Src
+
+			inner.setAttr({
+				name : 'src',
+				value : x2Src
+			});
+		};
+
+		self.setSrc = setSrc = function(_src) {
+			//REQUIRED: _src
+
+			src = _src;
+
+			inner.setAttr({
+				name : 'src',
+				value : src
+			});
+
+			// X2 support.
+			if (isX2Switched !== true && BROWSER_CONFIG.isSupportingX2 === true &&
+
+			// after INIT_OBJECTS(), check is hd display.
+			INFO.checkIsHDDisplay !== undefined && INFO.checkIsHDDisplay() === true) {
+
+				if (X2.checkIsCached(src) === true) {
+
+					// switch X2 img.
+					X2.switchImg(self);
+
+				} else {
+
+					EXPORT_IMG_TYPE(self, function(type) {
+
+						if (type === 'png' || type === 'gif' || type === 'bmp') {
+
+							isX2Switched = true;
+
+							// switch X2 img.
+							X2.switchImg(self);
+						}
+					});
+				}
+			}
+		};
+
+		if (src !== undefined) {
+			setSrc(src);
+		}
+
+		self.checkIsX2 = checkIsX2 = function() {
+			return isX2Switched;
+		};
+	}
+});
+
+/**
+ * Input class
+ */
+global.INPUT = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// focusing input ids
+	focusingInputIds = [],
+
+	// get focusing input ids.
+	getFocusingInputIds;
+
+	cls.getFocusingInputIds = getFocusingInputIds = function(id) {
+		return focusingInputIds;
+	};
+
+	return {
+
+		preset : function() {
+			return DOM;
+		},
+
+		params : function() {
+			return {
+				tag : 'input'
+			};
+		},
+
+		init : function(inner, self, params) {
+			//OPTIONAL: params
+			//OPTIONAL: params.name
+			//OPTIONAL: params.type
+			//OPTIONAL: params.placeholder
+			//OPTIONAL: params.value
+			//OPTIONAL: params.capture
+			//OPTIONAL: params.accept
+			//OPTIONAL: params.isMultiple
+			//OPTIONAL: params.isOffAutocomplete
+
+			var
+			// name
+			name,
+
+			// type
+			type,
+
+			// placeholder
+			placeholder,
+
+			// capture
+			capture,
+
+			// accept
+			accept,
+
+			// is multiple
+			isMultiple,
+			
+			// is off autocomplete
+			isOffAutocomplete,
+
+			// get name.
+			getName,
+
+			// get value.
+			getValue,
+
+			// set value.
+			setValue,
+
+			// select.
+			select,
+
+			// focus.
+			focus,
+
+			// blur.
+			blur,
+
+			// toggle check.
+			toggleCheck,
+
+			// check is checked.
+			checkIsChecked;
+
+			// init params.
+			if (params !== undefined) {
+				name = params.name;
+				type = params.type;
+				placeholder = params.placeholder;
+				capture = params.capture;
+				accept = params.accept;
+				isMultiple = params.isMultiple;
+				isOffAutocomplete = params.isOffAutocomplete;
+			}
+
+			if (type !== undefined) {
+				inner.setAttr({
+					name : 'type',
+					value : type
+				});
+			}
+
+			if (type !== 'submit' && type !== 'reset') {
+
+				if (name !== undefined) {
+					inner.setAttr({
+						name : 'name',
+						value : name
+					});
+				}
+
+				if (placeholder !== undefined) {
+					inner.setAttr({
+						name : 'placeholder',
+						value : placeholder
+					});
+				}
+				
+				if (capture !== undefined) {
+					inner.setAttr({
+						name : 'capture',
+						value : capture
+					});
+				}
+				
+				if (accept !== undefined) {
+					inner.setAttr({
+						name : 'accept',
+						value : accept
+					});
+				}
+
+				if (isMultiple === true) {
+					inner.setAttr({
+						name : 'multiple',
+						value : isMultiple
+					});
+				}
+
+				if (isOffAutocomplete === true) {
+					inner.setAttr({
+						name : 'autocomplete',
+						value : 'off'
+					});
+				}
+				
+				self.getName = getName = function() {
+					return name;
+				};
+
+				self.getValue = getValue = function() {
+					if (type === 'checkbox' || type === 'radio') {
+						return self.getEl().checked;
+					}
+					return self.getEl().value;
+				};
+
+				self.select = select = function() {
+					if (type === 'file') {
+						self.getEl().click();
+					} else {
+						self.getEl().select();
+					}
+				};
+
+				self.focus = focus = function() {
+					self.getEl().focus();
+				};
+
+				self.blur = blur = function() {
+					self.getEl().blur();
+				};
+
+				if (type === 'checkbox' || type === 'radio') {
+
+					self.toggleCheck = toggleCheck = function(e) {
+
+						if (self.getEl().checked === true) {
+							self.getEl().checked = false;
+						} else {
+							self.getEl().checked = true;
+						}
+
+						EVENT.fireAll({
+							node : self,
+							name : 'change'
+						});
+
+						return self.getEl().checked;
+					};
+
+					self.checkIsChecked = checkIsChecked = function() {
+						return self.getEl().checked;
+					};
+
+					EVENT({
+						node : self,
+						name : 'keyup'
+					}, function(e) {
+						if (e !== undefined && e.getKeyCode() === 32) {
+							DELAY(function() {
+								EVENT.fireAll({
+									node : self,
+									name : 'change'
+								});
+							});
+						}
+					});
+				}
+			}
+
+			self.setValue = setValue = function(value) {
+				//REQUIRED: value
+
+				if (type === 'checkbox' || type === 'radio') {
+
+					if (value === true) {
+
+						if (self.getEl().checked !== true) {
+
+							self.getEl().checked = true;
+
+							EVENT.fireAll({
+								node : self,
+								name : 'change'
+							});
+
+						} else {
+							self.getEl().checked = true;
+						}
+
+					} else {
+
+						if (self.getEl().checked === true) {
+
+							self.getEl().checked = false;
+
+							EVENT.fireAll({
+								node : self,
+								name : 'change'
+							});
+
+						} else {
+							self.getEl().checked = false;
+						}
+					}
+
+				} else {
+
+					if (self.getEl().value !== value) {
+
+						self.getEl().value = value;
+
+						EVENT.fireAll({
+							node : self,
+							name : 'change'
+						});
+
+					} else {
+						self.getEl().value = value;
+					}
+				}
+			};
+
+			EVENT({
+				node : self,
+				name : 'focus'
+			}, function() {
+				getFocusingInputIds().push(self.id);
+			});
+
+			EVENT({
+				node : self,
+				name : 'blur'
+			}, function() {
+
+				REMOVE({
+					array : getFocusingInputIds(),
+					value : self.id
+				});
+			});
+
+			self.on('remove', function() {
+
+				REMOVE({
+					array : getFocusingInputIds(),
+					value : self.id
+				});
+			});
+			
+			// can radio be false
+			if (type === 'radio') {
+				
+				EVENT({
+					node : self,
+					name : 'touchstart'
+				}, function() {
+					
+					if (checkIsChecked() === true) {
+						
+						EVENT_ONCE({
+							node : self,
+							name : 'touchend'
+						}, function() {
+							DELAY(function() {
+								setValue(false);
+							});
+						});
+					}
+				});
+			}
+		},
+
+		afterInit : function(inner, self, params) {
+			//OPTIONAL: params
+			//OPTIONAL: params.name
+			//OPTIONAL: params.type
+			//OPTIONAL: params.placeholder
+			//OPTIONAL: params.value
+			//OPTIONAL: params.isMultiple
+
+			var
+			// type
+			type,
+
+			// value
+			value;
+
+			// init params.
+			if (params !== undefined) {
+				type = params.type;
+				value = params.value;
+			}
+
+			if (value !== undefined) {
+
+				if (type === 'checkbox' || type === 'radio') {
+
+					if (value === true) {
+
+						if (self.getEl().checked !== true) {
+							self.getEl().checked = true;
+						} else {
+							self.getEl().checked = true;
+						}
+
+					} else {
+
+						if (self.getEl().checked === true) {
+							self.getEl().checked = false;
+						} else {
+							self.getEl().checked = false;
+						}
+					}
+
+				} else {
+
+					if (self.getEl().value !== value) {
+						self.getEl().value = value;
+					} else {
+						self.getEl().value = value;
+					}
+				}
+			}
+		}
+	};
+});
+
+/**
+ * LI class
+ */
+global.LI = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'li'
+		};
+	}
+});
+
+/**
+ * Optgroup class
+ */
+global.OPTGROUP = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'optgroup'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.label
+
+		var
+		// label
+		label = params.label;
+
+		inner.setAttr({
+			name : 'label',
+			value : label
+		});
+	}
+});
+
+/**
+ * Option class
+ */
+global.OPTION = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'option'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.value
+		//OPTIONAL: params.c
+
+		var
+		// get value.
+		getValue,
+
+		// set value.
+		setValue;
+
+		self.getValue = getValue = function() {
+			return self.getEl().value;
+		};
+
+		self.setValue = setValue = function(value) {
+			//REQUIRED: value
+
+			self.getEl().value = value;
+		};
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.value
+		//OPTIONAL: params.c
+
+		var
+		// value
+		value,
+		
+		// children
+		children;
+
+		// init params.
+		if (params !== undefined) {
+			value = params.value;
+			children = params.c;
+		}
+
+		if (value === undefined) {
+			self.setValue('');
+		} else {
+			self.setValue(value);
+			
+			if (children === undefined) {
+				self.append(value);
+			}
+		}
+	}
+});
+
+/**
+ * P class
+ */
+global.P = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'p'
+		};
+	}
+});
+
+/**
+ * Select class
+ */
+global.SELECT = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'select'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.value
+
+		var
+		// name
+		name,
+
+		// is ctrl down
+		isCtrlDown = false,
+
+		// get name.
+		getName,
+
+		// get value.
+		getValue,
+
+		// set value.
+		setValue,
+
+		// select.
+		select,
+
+		// focus.
+		focus,
+
+		// blur.
+		blur;
+
+		// init params.
+		if (params !== undefined) {
+			name = params.name;
+		}
+
+		if (name !== undefined) {
+			inner.setAttr({
+				name : 'name',
+				value : name
+			});
+		}
+
+		self.getName = getName = function() {
+			return name;
+		};
+
+		self.getValue = getValue = function() {
+			return self.getEl().value;
+		};
+
+		self.setValue = setValue = function(value) {
+			//REQUIRED: value
+
+			if (self.getEl().value !== value) {
+
+				self.getEl().value = value;
+
+				EVENT.fireAll({
+					node : self,
+					name : 'change'
+				});
+
+			} else {
+				self.getEl().value = value;
+			}
+		};
+
+		self.select = select = function() {
+			self.getEl().select();
+		};
+
+		self.focus = focus = function() {
+			self.getEl().focus();
+		};
+
+		self.blur = blur = function() {
+			self.getEl().blur();
+		};
+
+		EVENT({
+			node : self,
+			name : 'keydown'
+		}, function(e) {
+
+			var
+			// key code
+			keyCode = e.getKeyCode();
+
+			if (keyCode === 91 || keyCode === 17) {
+				isCtrlDown = true;
+			} else if (isCtrlDown !== true) {
+				e.stopBubbling();
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'keyup'
+		}, function(e) {
+
+			var
+			// key code
+			keyCode = e.getKeyCode();
+
+			if (keyCode === 91 || keyCode === 17) {
+				isCtrlDown = false;
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'focus'
+		}, function() {
+			INPUT.getFocusingInputIds().push(self.id);
+		});
+
+		EVENT({
+			node : self,
+			name : 'blur'
+		}, function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+
+		self.on('remove', function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder
+		//OPTIONAL: params.value
+
+		var
+		// value
+		value;
+
+		// init params.
+		if (params !== undefined) {
+			value = params.value;
+		}
+
+		if (value !== undefined) {
+			self.setValue(value);
+		}
+	}
+});
+
+/**
+ * Span class
+ */
+global.SPAN = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'span'
+		};
+	}
+});
+
+/**
+ * Table class
+ */
+global.TABLE = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'table'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.style
+
+		var
+		// style
+		style;
+
+		// init params.
+		if (params !== undefined) {
+			style = params.style;
+		}
+	}
+});
+
+/**
+ * Td class
+ */
+global.TD = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'td'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.rowspan
+		//OPTIONAL: params.colspan
+
+		var
+		// rowspan
+		rowspan,
+
+		// colspan
+		colspan;
+
+		// init params.
+		if (params !== undefined) {
+			rowspan = params.rowspan;
+			colspan = params.colspan;
+		}
+
+		if (rowspan !== undefined) {
+			inner.setAttr({
+				name : 'rowspan',
+				value : rowspan
+			});
+		}
+
+		if (colspan !== undefined) {
+			inner.setAttr({
+				name : 'colspan',
+				value : colspan
+			});
+		}
+	}
+});
+
+/**
+ * Textarea class
+ */
+global.TEXTAREA = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'textarea'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder
+		//OPTIONAL: params.value
+
+		var
+		// name
+		name,
+
+		// placeholder
+		placeholder,
+
+		// is ctrl down
+		isCtrlDown = false,
+
+		// get name.
+		getName,
+
+		// get value.
+		getValue,
+
+		// set value.
+		setValue,
+
+		// select.
+		select,
+
+		// focus.
+		focus,
+
+		// blur.
+		blur;
+
+		// init params.
+		if (params !== undefined) {
+			name = params.name;
+			placeholder = params.placeholder;
+		}
+
+		if (name !== undefined) {
+			inner.setAttr({
+				name : 'name',
+				value : name
+			});
+		}
+
+		if (placeholder !== undefined) {
+			inner.setAttr({
+				name : 'placeholder',
+				value : placeholder
+			});
+		}
+
+		self.getName = getName = function() {
+			return name;
+		};
+
+		self.getValue = getValue = function() {
+			return self.getEl().value;
+		};
+
+		self.setValue = setValue = function(value) {
+			//REQUIRED: value
+
+			if (self.getEl().value !== value) {
+
+				self.getEl().value = value;
+
+				EVENT.fireAll({
+					node : self,
+					name : 'change'
+				});
+
+			} else {
+				self.getEl().value = value;
+			}
+		};
+
+		self.select = select = function() {
+			self.getEl().select();
+		};
+
+		self.focus = focus = function() {
+			self.getEl().focus();
+		};
+
+		self.blur = blur = function() {
+			self.getEl().blur();
+		};
+
+		EVENT({
+			node : self,
+			name : 'keydown'
+		}, function(e) {
+
+			var
+			// key code
+			keyCode = e.getKeyCode();
+
+			if (keyCode === 91 || keyCode === 17) {
+				isCtrlDown = true;
+			} else if (isCtrlDown !== true) {
+				e.stopBubbling();
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'keyup'
+		}, function(e) {
+
+			var
+			// key code
+			keyCode = e.getKeyCode();
+
+			if (keyCode === 91 || keyCode === 17) {
+				isCtrlDown = false;
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'focus'
+		}, function() {
+			INPUT.getFocusingInputIds().push(self.id);
+		});
+
+		EVENT({
+			node : self,
+			name : 'blur'
+		}, function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+
+		self.on('remove', function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder
+		//OPTIONAL: params.value
+
+		var
+		// value
+		value;
+
+		// init params.
+		if (params !== undefined) {
+			value = params.value;
+		}
+
+		if (value !== undefined) {
+			self.setValue(value);
+		}
+	}
+});
+
+/**
+ * Th class
+ */
+global.TH = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'th'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.rowspan
+		//OPTIONAL: params.colspan
+
+		var
+		// rowspan
+		rowspan,
+
+		// colspan
+		colspan;
+
+		// init params.
+		if (params !== undefined) {
+			rowspan = params.rowspan;
+			colspan = params.colspan;
+		}
+
+		if (rowspan !== undefined) {
+			inner.setAttr({
+				name : 'rowspan',
+				value : rowspan
+			});
+		}
+
+		if (colspan !== undefined) {
+			inner.setAttr({
+				name : 'colspan',
+				value : colspan
+			});
+		}
+	}
+});
+
+/**
+ * Tr class
+ */
+global.TR = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'tr'
+		};
+	}
+});
+
+/**
+ * Ul class
+ */
+global.UL = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'ul'
+		};
+	}
+});
+
+/*!
+ * Bowser - a browser detector
+ * https://github.com/ded/bowser
+ * MIT License | (c) Dustin Diaz 2015
+ */
+
+!function (name, definition) {
+  if (typeof module != 'undefined' && module.exports) module.exports = definition()
+  else if (typeof define == 'function' && define.amd) define(name, definition)
+  else this[name] = definition()
+}('bowser', function () {
+  /**
+    * See useragents.js for examples of navigator.userAgent
+    */
+
+  var t = true
+
+  function detect(ua) {
+
+    function getFirstMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[1]) || '';
+    }
+
+    function getSecondMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[2]) || '';
+    }
+
+    var iosdevice = getFirstMatch(/(ipod|iphone|ipad)/i).toLowerCase()
+      , likeAndroid = /like android/i.test(ua)
+      , android = !likeAndroid && /android/i.test(ua)
+      , nexusMobile = /nexus\s*[0-6]\s*/i.test(ua)
+      , nexusTablet = !nexusMobile && /nexus\s*[0-9]+/i.test(ua)
+      , chromeos = /CrOS/.test(ua)
+      , silk = /silk/i.test(ua)
+      , sailfish = /sailfish/i.test(ua)
+      , tizen = /tizen/i.test(ua)
+      , webos = /(web|hpw)os/i.test(ua)
+      , windowsphone = /windows phone/i.test(ua)
+      , samsungBrowser = /SamsungBrowser/i.test(ua)
+      , windows = !windowsphone && /windows/i.test(ua)
+      , mac = !iosdevice && !silk && /macintosh/i.test(ua)
+      , linux = !android && !sailfish && !tizen && !webos && /linux/i.test(ua)
+      , edgeVersion = getFirstMatch(/edge\/(\d+(\.\d+)?)/i)
+      , versionIdentifier = getFirstMatch(/version\/(\d+(\.\d+)?)/i)
+      , tablet = /tablet/i.test(ua)
+      , mobile = !tablet && /[^-]mobi/i.test(ua)
+      , xbox = /xbox/i.test(ua)
+      , result
+
+    if (/opera/i.test(ua)) {
+      //  an old Opera
+      result = {
+        name: 'Opera'
+      , opera: t
+      , version: versionIdentifier || getFirstMatch(/(?:opera|opr|opios)[\s\/](\d+(\.\d+)?)/i)
+      }
+    } else if (/opr|opios/i.test(ua)) {
+      // a new Opera
+      result = {
+        name: 'Opera'
+        , opera: t
+        , version: getFirstMatch(/(?:opr|opios)[\s\/](\d+(\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (/SamsungBrowser/i.test(ua)) {
+      result = {
+        name: 'Samsung Internet for Android'
+        , samsungBrowser: t
+        , version: versionIdentifier || getFirstMatch(/(?:SamsungBrowser)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/coast/i.test(ua)) {
+      result = {
+        name: 'Opera Coast'
+        , coast: t
+        , version: versionIdentifier || getFirstMatch(/(?:coast)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/yabrowser/i.test(ua)) {
+      result = {
+        name: 'Yandex Browser'
+      , yandexbrowser: t
+      , version: versionIdentifier || getFirstMatch(/(?:yabrowser)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/ucbrowser/i.test(ua)) {
+      result = {
+          name: 'UC Browser'
+        , ucbrowser: t
+        , version: getFirstMatch(/(?:ucbrowser)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/mxios/i.test(ua)) {
+      result = {
+        name: 'Maxthon'
+        , maxthon: t
+        , version: getFirstMatch(/(?:mxios)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/epiphany/i.test(ua)) {
+      result = {
+        name: 'Epiphany'
+        , epiphany: t
+        , version: getFirstMatch(/(?:epiphany)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/puffin/i.test(ua)) {
+      result = {
+        name: 'Puffin'
+        , puffin: t
+        , version: getFirstMatch(/(?:puffin)[\s\/](\d+(?:\.\d+)?)/i)
+      }
+    }
+    else if (/sleipnir/i.test(ua)) {
+      result = {
+        name: 'Sleipnir'
+        , sleipnir: t
+        , version: getFirstMatch(/(?:sleipnir)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/k-meleon/i.test(ua)) {
+      result = {
+        name: 'K-Meleon'
+        , kMeleon: t
+        , version: getFirstMatch(/(?:k-meleon)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (windowsphone) {
+      result = {
+        name: 'Windows Phone'
+      , windowsphone: t
+      }
+      if (edgeVersion) {
+        result.msedge = t
+        result.version = edgeVersion
+      }
+      else {
+        result.msie = t
+        result.version = getFirstMatch(/iemobile\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/msie|trident/i.test(ua)) {
+      result = {
+        name: 'Internet Explorer'
+      , msie: t
+      , version: getFirstMatch(/(?:msie |rv:)(\d+(\.\d+)?)/i)
+      }
+    } else if (chromeos) {
+      result = {
+        name: 'Chrome'
+      , chromeos: t
+      , chromeBook: t
+      , chrome: t
+      , version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+      }
+    } else if (/chrome.+? edge/i.test(ua)) {
+      result = {
+        name: 'Microsoft Edge'
+      , msedge: t
+      , version: edgeVersion
+      }
+    }
+    else if (/vivaldi/i.test(ua)) {
+      result = {
+        name: 'Vivaldi'
+        , vivaldi: t
+        , version: getFirstMatch(/vivaldi\/(\d+(\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (sailfish) {
+      result = {
+        name: 'Sailfish'
+      , sailfish: t
+      , version: getFirstMatch(/sailfish\s?browser\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/seamonkey\//i.test(ua)) {
+      result = {
+        name: 'SeaMonkey'
+      , seamonkey: t
+      , version: getFirstMatch(/seamonkey\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/firefox|iceweasel|fxios/i.test(ua)) {
+      result = {
+        name: 'Firefox'
+      , firefox: t
+      , version: getFirstMatch(/(?:firefox|iceweasel|fxios)[ \/](\d+(\.\d+)?)/i)
+      }
+      if (/\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(ua)) {
+        result.firefoxos = t
+      }
+    }
+    else if (silk) {
+      result =  {
+        name: 'Amazon Silk'
+      , silk: t
+      , version : getFirstMatch(/silk\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/phantom/i.test(ua)) {
+      result = {
+        name: 'PhantomJS'
+      , phantom: t
+      , version: getFirstMatch(/phantomjs\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/slimerjs/i.test(ua)) {
+      result = {
+        name: 'SlimerJS'
+        , slimer: t
+        , version: getFirstMatch(/slimerjs\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/blackberry|\bbb\d+/i.test(ua) || /rim\stablet/i.test(ua)) {
+      result = {
+        name: 'BlackBerry'
+      , blackberry: t
+      , version: versionIdentifier || getFirstMatch(/blackberry[\d]+\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (webos) {
+      result = {
+        name: 'WebOS'
+      , webos: t
+      , version: versionIdentifier || getFirstMatch(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)
+      };
+      /touchpad\//i.test(ua) && (result.touchpad = t)
+    }
+    else if (/bada/i.test(ua)) {
+      result = {
+        name: 'Bada'
+      , bada: t
+      , version: getFirstMatch(/dolfin\/(\d+(\.\d+)?)/i)
+      };
+    }
+    else if (tizen) {
+      result = {
+        name: 'Tizen'
+      , tizen: t
+      , version: getFirstMatch(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i) || versionIdentifier
+      };
+    }
+    else if (/qupzilla/i.test(ua)) {
+      result = {
+        name: 'QupZilla'
+        , qupzilla: t
+        , version: getFirstMatch(/(?:qupzilla)[\s\/](\d+(?:\.\d+)+)/i) || versionIdentifier
+      }
+    }
+    else if (/chromium/i.test(ua)) {
+      result = {
+        name: 'Chromium'
+        , chromium: t
+        , version: getFirstMatch(/(?:chromium)[\s\/](\d+(?:\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (/chrome|crios|crmo/i.test(ua)) {
+      result = {
+        name: 'Chrome'
+        , chrome: t
+        , version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (android) {
+      result = {
+        name: 'Android'
+        , version: versionIdentifier
+      }
+    }
+    else if (/safari|applewebkit/i.test(ua)) {
+      result = {
+        name: 'Safari'
+      , safari: t
+      }
+      if (versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    }
+    else if (iosdevice) {
+      result = {
+        name : iosdevice == 'iphone' ? 'iPhone' : iosdevice == 'ipad' ? 'iPad' : 'iPod'
+      }
+      // WTF: version is not part of user agent in web apps
+      if (versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    }
+    else if(/googlebot/i.test(ua)) {
+      result = {
+        name: 'Googlebot'
+      , googlebot: t
+      , version: getFirstMatch(/googlebot\/(\d+(\.\d+))/i) || versionIdentifier
+      }
+    }
+    else {
+      result = {
+        name: getFirstMatch(/^(.*)\/(.*) /),
+        version: getSecondMatch(/^(.*)\/(.*) /)
+     };
+   }
+
+    // set webkit or gecko flag for browsers based on these engines
+    if (!result.msedge && /(apple)?webkit/i.test(ua)) {
+      if (/(apple)?webkit\/537\.36/i.test(ua)) {
+        result.name = result.name || "Blink"
+        result.blink = t
+      } else {
+        result.name = result.name || "Webkit"
+        result.webkit = t
+      }
+      if (!result.version && versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    } else if (!result.opera && /gecko\//i.test(ua)) {
+      result.name = result.name || "Gecko"
+      result.gecko = t
+      result.version = result.version || getFirstMatch(/gecko\/(\d+(\.\d+)?)/i)
+    }
+
+    // set OS flags for platforms that have multiple browsers
+    if (!result.msedge && (android || result.silk)) {
+      result.android = t
+    } else if (iosdevice) {
+      result[iosdevice] = t
+      result.ios = t
+    } else if (mac) {
+      result.mac = t
+    } else if (xbox) {
+      result.xbox = t
+    } else if (windows) {
+      result.windows = t
+    } else if (linux) {
+      result.linux = t
+    }
+
+    // OS version extraction
+    var osVersion = '';
+    if (result.windowsphone) {
+      osVersion = getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i);
+    } else if (iosdevice) {
+      osVersion = getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i);
+      osVersion = osVersion.replace(/[_\s]/g, '.');
+    } else if (android) {
+      osVersion = getFirstMatch(/android[ \/-](\d+(\.\d+)*)/i);
+    } else if (result.webos) {
+      osVersion = getFirstMatch(/(?:web|hpw)os\/(\d+(\.\d+)*)/i);
+    } else if (result.blackberry) {
+      osVersion = getFirstMatch(/rim\stablet\sos\s(\d+(\.\d+)*)/i);
+    } else if (result.bada) {
+      osVersion = getFirstMatch(/bada\/(\d+(\.\d+)*)/i);
+    } else if (result.tizen) {
+      osVersion = getFirstMatch(/tizen[\/\s](\d+(\.\d+)*)/i);
+    }
+    if (osVersion) {
+      result.osversion = osVersion;
+    }
+
+    // device type extraction
+    var osMajorVersion = osVersion.split('.')[0];
+    if (
+         tablet
+      || nexusTablet
+      || iosdevice == 'ipad'
+      || (android && (osMajorVersion == 3 || (osMajorVersion >= 4 && !mobile)))
+      || result.silk
+    ) {
+      result.tablet = t
+    } else if (
+         mobile
+      || iosdevice == 'iphone'
+      || iosdevice == 'ipod'
+      || android
+      || nexusMobile
+      || result.blackberry
+      || result.webos
+      || result.bada
+    ) {
+      result.mobile = t
+    }
+
+    // Graded Browser Support
+    // http://developer.yahoo.com/yui/articles/gbs
+    if (result.msedge ||
+        (result.msie && result.version >= 10) ||
+        (result.yandexbrowser && result.version >= 15) ||
+		    (result.vivaldi && result.version >= 1.0) ||
+        (result.chrome && result.version >= 20) ||
+        (result.samsungBrowser && result.version >= 4) ||
+        (result.firefox && result.version >= 20.0) ||
+        (result.safari && result.version >= 6) ||
+        (result.opera && result.version >= 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] >= 6) ||
+        (result.blackberry && result.version >= 10.1)
+        || (result.chromium && result.version >= 20)
+        ) {
+      result.a = t;
+    }
+    else if ((result.msie && result.version < 10) ||
+        (result.chrome && result.version < 20) ||
+        (result.firefox && result.version < 20.0) ||
+        (result.safari && result.version < 6) ||
+        (result.opera && result.version < 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] < 6)
+        || (result.chromium && result.version < 20)
+        ) {
+      result.c = t
+    } else result.x = t
+
+    return result
+  }
+
+  var bowser = detect(typeof navigator !== 'undefined' ? navigator.userAgent || '' : '')
+
+  bowser.test = function (browserList) {
+    for (var i = 0; i < browserList.length; ++i) {
+      var browserItem = browserList[i];
+      if (typeof browserItem=== 'string') {
+        if (browserItem in bowser) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Get version precisions count
+   *
+   * @example
+   *   getVersionPrecision("1.10.3") // 3
+   *
+   * @param  {string} version
+   * @return {number}
+   */
+  function getVersionPrecision(version) {
+    return version.split(".").length;
+  }
+
+  /**
+   * Array::map polyfill
+   *
+   * @param  {Array} arr
+   * @param  {Function} iterator
+   * @return {Array}
+   */
+  function map(arr, iterator) {
+    var result = [], i;
+    if (Array.prototype.map) {
+      return Array.prototype.map.call(arr, iterator);
+    }
+    for (i = 0; i < arr.length; i++) {
+      result.push(iterator(arr[i]));
+    }
+    return result;
+  }
+
+  /**
+   * Calculate browser version weight
+   *
+   * @example
+   *   compareVersions(['1.10.2.1',  '1.8.2.1.90'])    // 1
+   *   compareVersions(['1.010.2.1', '1.09.2.1.90']);  // 1
+   *   compareVersions(['1.10.2.1',  '1.10.2.1']);     // 0
+   *   compareVersions(['1.10.2.1',  '1.0800.2']);     // -1
+   *
+   * @param  {Array<String>} versions versions to compare
+   * @return {Number} comparison result
+   */
+  function compareVersions(versions) {
+    // 1) get common precision for both versions, for example for "10.0" and "9" it should be 2
+    var precision = Math.max(getVersionPrecision(versions[0]), getVersionPrecision(versions[1]));
+    var chunks = map(versions, function (version) {
+      var delta = precision - getVersionPrecision(version);
+
+      // 2) "9" -> "9.0" (for precision = 2)
+      version = version + new Array(delta + 1).join(".0");
+
+      // 3) "9.0" -> ["000000000"", "000000009"]
+      return map(version.split("."), function (chunk) {
+        return new Array(20 - chunk.length).join("0") + chunk;
+      }).reverse();
+    });
+
+    // iterate in reverse order by reversed chunks array
+    while (--precision >= 0) {
+      // 4) compare: "000000009" > "000000010" = false (but "9" > "10" = true)
+      if (chunks[0][precision] > chunks[1][precision]) {
+        return 1;
+      }
+      else if (chunks[0][precision] === chunks[1][precision]) {
+        if (precision === 0) {
+          // all version chunks are same
+          return 0;
+        }
+      }
+      else {
+        return -1;
+      }
+    }
+  }
+
+  /**
+   * Check if browser is unsupported
+   *
+   * @example
+   *   bowser.isUnsupportedBrowser({
+   *     msie: "10",
+   *     firefox: "23",
+   *     chrome: "29",
+   *     safari: "5.1",
+   *     opera: "16",
+   *     phantom: "534"
+   *   });
+   *
+   * @param  {Object}  minVersions map of minimal version to browser
+   * @param  {Boolean} [strictMode = false] flag to return false if browser wasn't found in map
+   * @param  {String}  [ua] user agent string
+   * @return {Boolean}
+   */
+  function isUnsupportedBrowser(minVersions, strictMode, ua) {
+    var _bowser = bowser;
+
+    // make strictMode param optional with ua param usage
+    if (typeof strictMode === 'string') {
+      ua = strictMode;
+      strictMode = void(0);
+    }
+
+    if (strictMode === void(0)) {
+      strictMode = false;
+    }
+    if (ua) {
+      _bowser = detect(ua);
+    }
+
+    var version = "" + _bowser.version;
+    for (var browser in minVersions) {
+      if (minVersions.hasOwnProperty(browser)) {
+        if (_bowser[browser]) {
+          // browser version and min supported version.
+          return compareVersions([version, minVersions[browser]]) < 0;
+        }
+      }
+    }
+
+    return strictMode; // not found
+  }
+
+  /**
+   * Check if browser is supported
+   *
+   * @param  {Object} minVersions map of minimal version to browser
+   * @param  {Boolean} [strictMode = false] flag to return false if browser wasn't found in map
+   * @param  {String}  [ua] user agent string
+   * @return {Boolean}
+   */
+  function check(minVersions, strictMode, ua) {
+    return !isUnsupportedBrowser(minVersions, strictMode, ua);
+  }
+
+  bowser.isUnsupportedBrowser = isUnsupportedBrowser;
+  bowser.compareVersions = compareVersions;
+  bowser.check = check;
+
+  /*
+   * Set our detect method to the main bowser object so we can
+   * reuse it to test other user agents.
+   * This is needed to implement future tests.
+   */
+  bowser._detect = detect;
+
+  return bowser
+});

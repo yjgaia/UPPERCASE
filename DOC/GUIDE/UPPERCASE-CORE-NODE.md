@@ -804,7 +804,7 @@ WEB_SERVER({
 TCP 소켓 서버를 생성합니다.
 
 ```javascript
-SOCKET_SERVER(8123, function(clientInfo, on, off, send, disconnect) {
+SOCKET_SERVER(8124, function(clientInfo, on, off, send, disconnect) {
     // clientInfo               클라이언트 정보
     // clientInfo.ip            클라이언트의 IP
     // clientInfo.connectTime   접속 시작 시간
@@ -894,15 +894,118 @@ CONNECT_TO_SOCKET_SERVER({
 #### `disconnect()`
 서버와의 연결을 끊습니다.
 
-### `WEB_SOCKET_SERVER`
-웹 소켓 서버를 생성합니다.
-TODO:
+### `WEB_SOCKET_SERVER(webServer, connectionListener)`
+웹 소켓 서버를 생성합니다. 이렇게 생성된 웹 소켓 서버에 접속하는 방법은 [UPPERCASE-COMMON-BROWSER의 `CONNECT_TO_WEB_SOCKET_SERVER`](UPPERCASE-COMMON-CORE.md#connect_to_web_socket_server)를 참고하시기 바랍니다.
 
-### `MULTI_PROTOCOL_SOCKET_SERVER`
-TODO:
+```javascript
+WEB_SOCKET_SERVER(WEB_SERVER(8125), function(clientInfo, on, off, send, disconnect) {
+    // clientInfo               클라이언트 정보
+    // clientInfo.ip            클라이언트의 IP
+    // clientInfo.connectTime   접속 시작 시간
+    // on                       메소드를 생성합니다.
+    // off                      메소드를 제거합니다.
+    // send                     클라이언트의 메소드에 데이터를 전송합니다.
+    // disconnect               클라이언트와의 연결을 끊습니다.
+    
+    on('message', function(data, ret) {
+        if (data !== undefined) {
+		    ret('Thanks, ' + data.name + '!');
+		}
+	});
+	
+	on('__DISCONNECTED', function() {
+		console.log('연결이 끊어졌습니다.');
+	});
+});
+```
 
-### `UDP_SERVER`
-TODO:
+웹 소켓 서버 내에서 사용하는 함수들은 다음과 같습니다.
+
+#### `on(methodName, method)`
+`on` 함수는 웹 소켓 서버 내 메소드를 생성하는 함수로써, 클라이언트에서 `send` 함수로 전송한 데이터를 받습니다.
+
+#### `off(methodName)` `off(methodName, method)`
+`off` 함수는 웹 소켓 서버 내 생성된 메소드를 제거합니다.
+
+#### `send(params)` `send(params, callback)`
+`send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
+
+사용 가능한 파라미터는 다음과 같습니다.
+* `methodName` 클라이언트에 `on` 함수로 설정된 메소드 이름
+* `data` 전송할 데이터
+
+#### `disconnect()`
+클라이언트와의 연결을 끊습니다.
+
+### `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webServer:}, connectionListener)`
+TCP 소켓 및 웹 소켓 서버를 통합하여 생성합니다.
+
+```javascript
+MULTI_PROTOCOL_SOCKET_SERVER({
+    socketServerPort : 8124,
+    webServer : WEB_SERVER(8125)
+}, function(clientInfo, on, off, send, disconnect) {
+    // clientInfo               클라이언트 정보
+    // clientInfo.ip            클라이언트의 IP
+    // clientInfo.connectTime   접속 시작 시간
+    // on                       메소드를 생성합니다.
+    // off                      메소드를 제거합니다.
+    // send                     클라이언트의 메소드에 데이터를 전송합니다.
+    // disconnect               클라이언트와의 연결을 끊습니다.
+    
+    on('message', function(data, ret) {
+        if (data !== undefined) {
+		    ret('Thanks, ' + data.name + '!');
+		}
+	});
+	
+	on('__DISCONNECTED', function() {
+		console.log('연결이 끊어졌습니다.');
+	});
+});
+```
+
+서버 내에서 사용하는 함수들은 다음과 같습니다.
+
+#### `on(methodName, method)`
+`on` 함수는 서버 내 메소드를 생성하는 함수로써, 클라이언트에서 `send` 함수로 전송한 데이터를 받습니다.
+
+#### `off(methodName)` `off(methodName, method)`
+`off` 함수는 서버 내 생성된 메소드를 제거합니다.
+
+#### `send(params)` `send(params, callback)`
+`send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
+
+사용 가능한 파라미터는 다음과 같습니다.
+* `methodName` 클라이언트에 `on` 함수로 설정된 메소드 이름
+* `data` 전송할 데이터
+
+#### `disconnect()`
+클라이언트와의 연결을 끊습니다.
+
+### `UDP_SERVER(port, requestListener)`
+UDP 소켓 서버를 생성합니다.
+
+```javascript
+var
+// server
+server = UDP_SERVER(8126, function(requestInfo, content, response) {
+    // requestInfo      요청 정보
+    // requestInfo.ip   요청자의 IP
+    // requestInfo.port 요청자의 포트
+    // content          전달 받은 내용
+    // response         응답 함수
+
+	response('Hello!');
+});
+
+// 다른 UDP 소켓 서버로 데이터를 전송합니다.
+server.send({
+    ip : '111.222.333.444',
+    port : 8126,
+    content : 'Hello!'
+});
+```
 
 ## 손쉬운 클러스터링
 TODO:

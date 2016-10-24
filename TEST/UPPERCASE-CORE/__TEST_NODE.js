@@ -75,10 +75,11 @@ RUN(function() {
 		
 		//test('NODE/SERVER/SOCKET_SERVER');
 		//test('NODE/SERVER/CONNECT_TO_SOCKET_SERVER');
+		test('NODE/SERVER/UDP_SERVER');
 		
 		//test('NODE/CLUSTERING/CPU_CLUSTERING');
 		//test('NODE/CLUSTERING/SERVER_CLUSTERING');
-		test('NODE/CLUSTERING/SHARED_STORE');
+		//test('NODE/CLUSTERING/SHARED_STORE');
 	}
 	
 	// init all singleton objects.

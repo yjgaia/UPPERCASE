@@ -1,37 +1,35 @@
 /*
- * UDP 서버를 생성합니다.
+ * UDP 소켓 서버를 생성하는 CLASS
  */
-global.UDP_SERVER = METHOD({
+global.UDP_SERVER = CLASS({
 
-	run : function(portOrParams, requestListener) {
+	init : function(inner, self, port, requestListener) {
 		'use strict';
-		//REQUIRED: portOrParams
-		//REQUIRED: portOrParams.port
-		//OPTIONAL: portOrParams.ipVersion	ip 버전 (4 혹은 6)
+		//REQUIRED: port
 		//REQUIRED: requestListener
 
 		var
 		//IMPORT: dgram
 		dgram = require('dgram'),
 		
-		// port
-		port,
-		
-		// ip version
-		ipVersion = 4,
-		
 		// server
-		server;
+		server = dgram.createSocket('udp6'),
 		
-		// init params.
-		if (CHECK_IS_DATA(portOrParams) !== true) {
-			port = portOrParams;
-		} else {
-			port = portOrParams.port;
-			ipVersion = portOrParams.ipVersion;
-		}
+		// send.
+		send;
 		
-		server = dgram.createSocket('udp' + ipVersion);
+		self.send = send = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.ip
+			//REQUIRED: params.port
+			//REQUIRED: params.content
+			
+			var
+			// message
+			message = new Buffer(params.content);
+			
+			server.send(message, 0, message.length, params.port, params.ip);
+		};
 		
 		server.on('message', function(message, nativeRequestInfo) {
 			
@@ -48,19 +46,20 @@ global.UDP_SERVER = METHOD({
 			{
 				ip : ip,
 				
-				port : port,
-				
-				content : message.toString()
+				port : port
 			},
+			
+			// content
+			message.toString(),
 			
 			// response.
 			function(content) {
 				
-				var
-				// message
-				message = new Buffer(content);
-				
-				server.send(message, 0, message.length, port, ip);
+				send({
+					ip : ip,
+					port : port,
+					content : content
+				});
 			});
 		});
 		
