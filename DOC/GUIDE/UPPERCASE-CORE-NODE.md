@@ -45,8 +45,8 @@ READ_FILE('some.txt', function(buffer) {
 
 // isSync를 true로 설정
 console.log('파일의 내용: ' + READ_FILE({
-    path : 'some.txt',
-    isSync : true
+	path : 'some.txt',
+	isSync : true
 }).toString());
 ```
 
@@ -167,7 +167,7 @@ MOVE_FILE({
 	from : 'from.txt',
 	to : 'to.txt'
 }, {
-    notExists : function() {
+	notExists : function() {
 		console.log('파일이 존재하지 않습니다.');
 	},
 	error : function(errorMsg) {
@@ -212,10 +212,10 @@ REMOVE_FILE('some.txt', {
 
 ```javascript
 CHECK_IS_EXISTS_FILE('some.txt', function(isExists) {
-    if (isExists === true) {
-	    console.log('파일이 존재합니다.');
+	if (isExists === true) {
+		console.log('파일이 존재합니다.');
 	} else {
-	    console.log('파일이 존재하지 않습니다.');
+		console.log('파일이 존재하지 않습니다.');
 	}
 });
 ```
@@ -272,10 +272,10 @@ REMOVE_FOLDER('SomeFolder', {
 
 ```javascript
 CHECK_IS_FOLDER('SomeFolder', function(isFolder) {
-    if (isFolder === true) {
-	    console.log('폴더입니다.');
+	if (isFolder === true) {
+		console.log('폴더입니다.');
 	} else {
-	    console.log('파일입니다.');
+		console.log('파일입니다.');
 	}
 });
 ```
@@ -353,7 +353,7 @@ IMAGEMAGICK_CONVERT(['sample.png', '-resize', '300x300\!', 'sample-square.png'],
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : function() {
-	    console.log('이미지 크기를 변경하였습니다.');
+		console.log('이미지 크기를 변경하였습니다.');
 	}
 });
 ```
@@ -377,8 +377,8 @@ IMAGEMAGICK_IDENTIFY('image.png', {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : function(metadata) {
-	    console.log('이미지 정보: ' + STRINGIFY(features));
-	    console.log('이미지 크기: ' + features.width + 'x' + features.height);
+		console.log('이미지 정보: ' + STRINGIFY(features));
+		console.log('이미지 크기: ' + features.width + 'x' + features.height);
 	}
 });
 ```
@@ -401,7 +401,7 @@ IMAGEMAGICK_READ_METADATA('image.png', {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : function(metadata) {
-	    console.log('이미지의 메타 데이터: ' + STRINGIFY(metadata));
+		console.log('이미지의 메타 데이터: ' + STRINGIFY(metadata));
 	}
 });
 ```
@@ -430,7 +430,7 @@ IMAGEMAGICK_RESIZE({
 	distPath : 'image-height-100.png',
 	height : 100
 }, function() {
-    console.log('이미지 크기를 변경하였습니다.');
+	console.log('이미지 크기를 변경하였습니다.');
 });
 ```
 ```javascript
@@ -444,7 +444,7 @@ IMAGEMAGICK_RESIZE({
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : function() {
-	    console.log('이미지 크기를 변경하였습니다.');
+		console.log('이미지 크기를 변경하였습니다.');
 	}
 });
 ```
@@ -632,17 +632,17 @@ UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽�
 아래 코드를 실행하면 [http://localhost:8123/main](http://localhost:8123/main)로 접속하면 `Welcome!` 이라는 메시지를 보여주는 간단한 웹 서버를 생성합니다.
 ```javascript
 WEB_SERVER(8123, function(requestInfo, response) {
-    // requestInfo          요청 정보
-    // requestInfo.headers  요청 헤더
-    // requestInfo.cookies  클라이언트에서 넘어온 HTTP 쿠키
-    // requestInfo.isSecure 요청 URL이 https 프로토콜인지 여부
-    // requestInfo.uri      요청 URI
-    // requestInfo.method   요청 메소드
-    // requestInfo.params   파라미터
-    // requestInfo.data     UPPERCASE 기반 요청을 하는 경우 data 파라미터
-    // requestInfo.ip       클라이언트의 IP
-    // response             응답 함수
-    
+	// requestInfo		  요청 정보
+	// requestInfo.headers  요청 헤더
+	// requestInfo.cookies  클라이언트에서 넘어온 HTTP 쿠키
+	// requestInfo.isSecure 요청 URL이 https 프로토콜인지 여부
+	// requestInfo.uri	  요청 URI
+	// requestInfo.method   요청 메소드
+	// requestInfo.params   파라미터
+	// requestInfo.data	 UPPERCASE 기반 요청을 하는 경우 data 파라미터
+	// requestInfo.ip	   클라이언트의 IP
+	// response			 응답 함수
+	
 	// http://localhost:8123/main 로 접속하면 Welcome!을 응답
 	if (requestInfo.uri === 'main') {
 		response('Welcome!');
@@ -650,8 +650,8 @@ WEB_SERVER(8123, function(requestInfo, response) {
 	
 	if (requestInfo.uri === 'html') {
 		response({
-		    contentType : 'text/html',
-		    content : '<b>Welcome!</b>'
+			contentType : 'text/html',
+			content : '<b>Welcome!</b>'
 		});
 	}
 });
@@ -684,20 +684,20 @@ WEB_SERVER(8123, function(requestInfo, response) {
 아래 코드를 실행하면 `R` 폴더의 리소스들을 제공하는 웹 서버가 생성됩니다. 만약 `R` 폴더에 `photo.png` 파일이 존재한다면, [http://localhost:8123/photo.png](http://localhost:8123/photo.png)로 접속하면 해당 이미지를 보여줍니다.
 ```javascript
 WEB_SERVER({
-    port : 8123,
+	port : 8123,
 	rootPath : __dirname + '/R'
 });
 ```
 
 ```javascript
 WEB_SERVER({
-    port : 8123,
+	port : 8123,
 	rootPath : __dirname + '/R'
 }, function(requestInfo, response, replaceRootPath, next) {
-    // requestInfo      요청 정보
-    // response         응답 함수
-    // replaceRootPath  이 요청에 한해 rootPath를 임시로 변경합니다.
-    // next             응답을 중단한 경우, 응답을 계속해서 수행합니다. 응답 파라미터를 추가할 수 있습니다.
+	// requestInfo	  요청 정보
+	// response		 응답 함수
+	// replaceRootPath  이 요청에 한해 rootPath를 임시로 변경합니다.
+	// next			 응답을 중단한 경우, 응답을 계속해서 수행합니다. 응답 파라미터를 추가할 수 있습니다.
 	
 	// 다른 rootPath에 존재하는 리소스를 전송합니다.
 	if (requestInfo.uri === 'private') {
@@ -706,29 +706,29 @@ WEB_SERVER({
 	}
 	
 	// pause.txt 리소스를 요청
-    if (requestInfo.uri === 'pause.txt') {
-        
-        // 1초 뒤 응답을 재개합니다.
-        DELAY(1, function() {
-        
-            // 응답을 재개합니다. 또한 응답 파라미터를 추가합니다.
-            next({
-                cookies : {
-                    msg : 'Hello!'
-                }
-            });
-        });
-        
-        // 응답을 중단합니다.
-        return false;
-    }
+	if (requestInfo.uri === 'pause.txt') {
+		
+		// 1초 뒤 응답을 재개합니다.
+		DELAY(1, function() {
+		
+			// 응답을 재개합니다. 또한 응답 파라미터를 추가합니다.
+			next({
+				cookies : {
+					msg : 'Hello!'
+				}
+			});
+		});
+		
+		// 응답을 중단합니다.
+		return false;
+	}
 });
 ```
 
 `version` 파라미터를 지정하면, 리소스를 다시 요청할 때 서버가 아닌 웹 브라우저에 캐싱된 것을 불러오게 되됩니다. 따라서 여는 속도가 매우 빠릅니다. `version`이 변경되면 다시 서버에서 불러온 뒤 재 캐싱하게 됩니다.
 ```javascript
 WEB_SERVER({
-    port : 8123,
+	port : 8123,
 	rootPath : __dirname + '/R',
 	version : Date.now()
 });
@@ -747,32 +747,32 @@ WEB_SERVER({
 웹 서버에 업로드 기능을 추가할 수 있습니다. 상세한 예제는  [UPPERCASE-UPLOAD-SAMPLE 프로젝트](https://github.com/Hanul/UPPERCASE-UPLOAD-SAMPLE)를 살펴보시기 바랍니다.
 ```javascript
 WEB_SERVER({
-    port : 8123,
+	port : 8123,
 	uploadURI : '__UPLOAD',
 	uploadPath : __dirname + '/UPLOAD_FILES'
 }, {
-    error : function(errorMsg) {
+	error : function(errorMsg) {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	uploadProgress : function(uriParams, bytesRecieved, bytesExpected) {
-	    // uriParams        아직 폼 데이터의 전송이 끊나지 않은 상태이므로, URI 주소에 지정된 파라미터(예를들어 uri?name=yj&age=23 등)만 가져올 수 있습니다.
-	    // bytesRecieved    이미 업로드 된 용량 (바이트 단위)
-	    // bytesExpected    전체 업로드 될 용량 (바이트 단위)
-	    
+		// uriParams		아직 폼 데이터의 전송이 끊나지 않은 상태이므로, URI 주소에 지정된 파라미터(예를들어 uri?name=yj&age=23 등)만 가져올 수 있습니다.
+		// bytesRecieved	이미 업로드 된 용량 (바이트 단위)
+		// bytesExpected	전체 업로드 될 용량 (바이트 단위)
+		
 		console.log('업로드 중... (' + bytesRecieved + '/' + bytesExpected + ')');
 	},
-    uploadOverFileSize : function(params, maxUploadFileMB, response) {
-        // params           파라미터
-        // maxUploadFileMB  최대 업로드 가능 용량 (메가바이트 단위)
-        // response         응답 함수
-        
+	uploadOverFileSize : function(params, maxUploadFileMB, response) {
+		// params		   파라미터
+		// maxUploadFileMB  최대 업로드 가능 용량 (메가바이트 단위)
+		// response		 응답 함수
+		
 		response('업로드 가능한 용량은 최대 ' + maxUploadFileMB + 'MB 입니다.');
 	},
 	uploadSuccess : function(params, fileDataSet, response) {
-        // params       파라미터
-        // fileDataSet  업로드 파일 데이터 목록
-        // response     응답 함수
-	    
+		// params	   파라미터
+		// fileDataSet  업로드 파일 데이터 목록
+		// response	 응답 함수
+		
 		response('업로드가 완료되었습니다. 파일 정보: ' + STRINGIFY(fileDataSet));
 	}
 });
@@ -805,17 +805,17 @@ TCP 소켓 서버를 생성합니다.
 
 ```javascript
 SOCKET_SERVER(8124, function(clientInfo, on, off, send, disconnect) {
-    // clientInfo               클라이언트 정보
-    // clientInfo.ip            클라이언트의 IP
-    // clientInfo.connectTime   접속 시작 시간
-    // on                       메소드를 생성합니다.
-    // off                      메소드를 제거합니다.
-    // send                     클라이언트의 메소드에 데이터를 전송합니다.
-    // disconnect               클라이언트와의 연결을 끊습니다.
-    
-    on('message', function(data, ret) {
-        if (data !== undefined) {
-		    ret('Thanks, ' + data.name + '!');
+	// clientInfo			   클라이언트 정보
+	// clientInfo.ip			클라이언트의 IP
+	// clientInfo.connectTime   접속 시작 시간
+	// on					   메소드를 생성합니다.
+	// off					  메소드를 제거합니다.
+	// send					 클라이언트의 메소드에 데이터를 전송합니다.
+	// disconnect			   클라이언트와의 연결을 끊습니다.
+	
+	on('message', function(data, ret) {
+		if (data !== undefined) {
+			ret('Thanks, ' + data.name + '!');
 		}
 	});
 	
@@ -855,10 +855,10 @@ CONNECT_TO_SOCKET_SERVER({
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : function(on, off, send, disconnect) {
-        // on           메소드를 생성합니다.
-        // off          메소드를 제거합니다.
-        // send         서버의 메소드에 데이터를 전송합니다.
-        // disconnect   서버와의 연결을 끊습니다.
+		// on		   메소드를 생성합니다.
+		// off		  메소드를 제거합니다.
+		// send		 서버의 메소드에 데이터를 전송합니다.
+		// disconnect   서버와의 연결을 끊습니다.
 
 		send({
 			methodName : 'message',
@@ -866,7 +866,7 @@ CONNECT_TO_SOCKET_SERVER({
 				name : 'YJ Sim'
 			}
 		}, function(retMsg) {
-		    console.log('서버로부터의 메시지:' + retMsg);
+			console.log('서버로부터의 메시지:' + retMsg);
 		});
 		
 		on('__DISCONNECTED', function() {
@@ -899,17 +899,17 @@ CONNECT_TO_SOCKET_SERVER({
 
 ```javascript
 WEB_SOCKET_SERVER(WEB_SERVER(8125), function(clientInfo, on, off, send, disconnect) {
-    // clientInfo               클라이언트 정보
-    // clientInfo.ip            클라이언트의 IP
-    // clientInfo.connectTime   접속 시작 시간
-    // on                       메소드를 생성합니다.
-    // off                      메소드를 제거합니다.
-    // send                     클라이언트의 메소드에 데이터를 전송합니다.
-    // disconnect               클라이언트와의 연결을 끊습니다.
-    
-    on('message', function(data, ret) {
-        if (data !== undefined) {
-		    ret('Thanks, ' + data.name + '!');
+	// clientInfo			   클라이언트 정보
+	// clientInfo.ip			클라이언트의 IP
+	// clientInfo.connectTime   접속 시작 시간
+	// on					   메소드를 생성합니다.
+	// off					  메소드를 제거합니다.
+	// send					 클라이언트의 메소드에 데이터를 전송합니다.
+	// disconnect			   클라이언트와의 연결을 끊습니다.
+	
+	on('message', function(data, ret) {
+		if (data !== undefined) {
+			ret('Thanks, ' + data.name + '!');
 		}
 	});
 	
@@ -942,20 +942,20 @@ TCP 소켓 및 웹 소켓 서버를 통합하여 생성합니다.
 
 ```javascript
 MULTI_PROTOCOL_SOCKET_SERVER({
-    socketServerPort : 8124,
-    webServer : WEB_SERVER(8125)
+	socketServerPort : 8124,
+	webServer : WEB_SERVER(8125)
 }, function(clientInfo, on, off, send, disconnect) {
-    // clientInfo               클라이언트 정보
-    // clientInfo.ip            클라이언트의 IP
-    // clientInfo.connectTime   접속 시작 시간
-    // on                       메소드를 생성합니다.
-    // off                      메소드를 제거합니다.
-    // send                     클라이언트의 메소드에 데이터를 전송합니다.
-    // disconnect               클라이언트와의 연결을 끊습니다.
-    
-    on('message', function(data, ret) {
-        if (data !== undefined) {
-		    ret('Thanks, ' + data.name + '!');
+	// clientInfo			   클라이언트 정보
+	// clientInfo.ip			클라이언트의 IP
+	// clientInfo.connectTime   접속 시작 시간
+	// on					   메소드를 생성합니다.
+	// off					  메소드를 제거합니다.
+	// send					 클라이언트의 메소드에 데이터를 전송합니다.
+	// disconnect			   클라이언트와의 연결을 끊습니다.
+	
+	on('message', function(data, ret) {
+		if (data !== undefined) {
+			ret('Thanks, ' + data.name + '!');
 		}
 	});
 	
@@ -990,31 +990,326 @@ UDP 소켓 서버를 생성합니다.
 var
 // server
 server = UDP_SERVER(8126, function(requestInfo, content, response) {
-    // requestInfo      요청 정보
-    // requestInfo.ip   요청자의 IP
-    // requestInfo.port 요청자의 포트
-    // content          전달 받은 내용
-    // response         응답 함수
+	// requestInfo	  요청 정보
+	// requestInfo.ip   요청자의 IP
+	// requestInfo.port 요청자의 포트
+	// content		  전달 받은 내용
+	// response		 응답 함수
 
 	response('Hello!');
 });
 
 // 다른 UDP 소켓 서버로 데이터를 전송합니다.
 server.send({
-    ip : '111.222.333.444',
-    port : 8126,
-    content : 'Hello!'
+	ip : '111.222.333.444',
+	port : 8126,
+	content : 'Hello!'
 });
 ```
 
 ## 손쉬운 클러스터링
-TODO:
+UPPERCASE를 사용하면, 병렬 처리 시스템을 구현하고자 할 때 클러스터링 기능을 쉽게 적용할 수 있습니다.
 
-### CPU 클러스터링
-TODO:
+### `CPU_CLUSTERING(work)`
+CPU 코어 간 클러스터링을 수행합니다.
 
-### 서버 간 클러스터링
-TODO:
+멀티코어 CPU 시스템에서, Node.js 기반 프로세스는 1개의 코어만 사용하기 때문에 성능을 100% 사용하기 힘듭니다. 이에 [Node.js의 `Cluster` 모듈](https://nodejs.org/api/cluster.html)을 사용하여 CPU 클러스터링 기능을 구현하면 성능을 최대한 사용할 수 있으나, 구현 방식이 복잡하고 어렵습니다. `CPU_CLUSTERING`를 사용하면 손쉽게 CPU 클러스터링을 적용할 수 있습니다.
+
+```javascript
+CPU_CLUSTERING(function() {
+
+	// 모든 CPU 코어에서 수행할 내용
+	...
+
+	// 워커 ID를 가져옵니다.
+	// 1, 2, 3, 4, ... (CPU 개수만큼)
+	// 만약 싱글코어로 실행하는 경우에는 오직 1
+	CPU_CLUSTERING.getWorkerId();
+	
+	...
+});
+```
+
+### `SERVER_CLUSTERING({hosts:, thisServerName:, port:}, work)`
+서버 간 클러스터링을 수행합니다.
+
+여러 대의 서버를 연동하는 분산 서버 시스템을 구현하고자 할 때 유용합니다.
+
+```javascript
+SERVER_CLUSTERING({
+	
+	// 연동할 서버들의 호스트 정보
+	hosts : {
+		serverA : '111.222.333.444',
+		serverB : '555.666.777.888'
+	},
+	
+	// 현재 서버의 이름 지정
+	thisServerName : 'serverA',
+	
+	// 클러스터링을 위한 포트 번호 지정
+	port : 8125
+	
+}, function() {
+
+	// 모든 서버에서 수행할 내용
+	...
+});
+```
+
+### `SHARED_STORE(storeName)`
+클러스터링 공유 저장소를 생성하는 클래스
+
+위 `CPU_CLUSTERING`과 `SERVER_CLUSTERING`을 사용하여 병렬 처리 시스템을 구현할 때, 공유 정보를 저장하기 위해 사용됩니다.
+
+```javascript
+CPU_CLUSTERING(function() {
+
+	SERVER_CLUSTERING({
+		hosts : {
+			serverA : '111.222.333.444',
+			serverB : '555.666.777.888'
+		},
+		thisServerName : 'serverA',
+		port : 8125
+	}, function() {
+
+		var
+		// sample store
+		sampleStore = TestBox.SHARED_STORE('sampleStore');
+
+		// 워커 ID가 1인 경우에만 저장
+		if (CPU_CLUSTERING.getWorkerId() === 1) {
+
+			sampleStore.save({
+				
+				// 데이터의 ID
+				id : '1234',
+				
+				// 데이터
+				data : {
+					msg : 'Hello World!'
+				},
+				
+				// 2초 뒤 데이터 삭제
+				removeAfterSeconds : 2
+			});
+		}
+		
+		// 1초 뒤
+		DELAY(1, function() {
+			
+			// 데이터를 가져옵니다.
+			sampleStore.get('1234', function() {
+			
+				// 데이터를 삭제합니다.
+				sampleStore.remove('1234');
+			});
+		});
+	});
+});
+```
+
+`SHARED_STORE`로 생성한 객체의 함수들은 다음과 같습니다.
+
+#### `save`
+* `save({id:, data:}, function(savedData) {})`
+* `save({id:, data:, removeAfterSeconds:}, function(savedData) {})`
+
+특정 `id`에 `data`를 저장합니다. `removeAfterSeconds` 파라미터를 지정하면 특정 시간 이후 데이터가 자동으로 지워집니다.
+
+```javascript
+sampleStore.save({
+	
+	// 데이터의 ID
+	id : '1234',
+	
+	// 데이터
+	data : {
+		msg : 'Hello World!'
+	},
+	
+	// 2초 뒤 데이터 삭제
+	removeAfterSeconds : 2
+	
+}, function(savedData) {
+	console.log('데이터 저장 완료', savedData);
+});
+```
+
+#### `update`
+* `update({id:, data:}, function(savedData) {})`
+* `update({id:, data:}, {notExists:, success:})`
+* `update({id:, data:, removeAfterSeconds:}, function(savedData) {})`
+* `update({id:, data:, removeAfterSeconds:}, {notExists:, success:})`
+
+`id`에 해당하는 `data`를 수정합니다. `removeAfterSeconds` 파라미터를 지정하면 특정 시간 이후 데이터가 자동으로 지워집니다.
+
+```javascript
+sampleStore.update({
+	
+	// 데이터의 ID
+	id : '1234',
+	
+	// 데이터
+	data : {
+		number : 1
+	}
+}, {
+    notExists : function() {
+        console.log('데이터가 존재하지 않습니다.');
+    },
+    success : function(savedData) {
+    	console.log('데이터 수정 완료', savedData);
+    }
+});
+```
+
+`update` 명령의 `data`에 다음과 같은 특수기호들을 사용하여 데이터를 수정할 수 있습니다. 이를 통해 분산 시스템에서 발생할 수 있는 **데이터 동시성 문제**를 피할 수 있습니다.
+
+* `$inc`
+```javascript
+// num이 2 증가합니다.
+sampleStore.update({
+	...
+	data : {
+		$inc : {
+			num : 2
+		}
+	}
+});
+```
+```javascript
+// num이 2 감소합니다.
+sampleStore.update({
+	...
+	data : {
+		$inc : {
+			num : -2
+		}
+	}
+});
+```
+
+* `$addToSet`
+```javascript
+// 배열 array에 3이 없는 경우에만 3을 추가합니다.
+sampleStore.update({
+	...
+	data : {
+		$addToSet : {
+			array : 3
+		}
+	}
+});
+```
+* `$push`
+```javascript
+// 배열 array에 3을 추가합니다.
+sampleStore.update({
+	...
+	data : {
+		$push : {
+			array : 3
+		}
+	}
+});
+```
+
+* `$pull`
+```javascript
+// 배열 array에서 3을 제거합니다.
+sampleStore.update({
+	...
+	data : {
+		$pull : {
+			array : 3
+		}
+	}
+});
+```
+
+* `$pull`
+```javascript
+// 배열 array에서 a가 3인 데이터를 제거합니다.
+sampleStore.update({
+	...
+	data : {
+		$pull : {
+			array : {
+				a : 3
+			}
+		}
+	}
+});
+```
+
+#### `get`
+* `get(id, function(savedData) {})`
+* `get(id, {notExists:, success:})`
+
+`id`에 해당하는 데이터를 가져옵니다.
+
+```javascript
+sampleStore.get('1234', {
+    notExists : function() {
+        console.log('데이터가 존재하지 않습니다.');
+    },
+    success : function(savedData) {
+    	console.log('데이터:', savedData);
+    }
+});
+```
+
+#### `remove`
+* `remove(id, function(originData) {})`
+* `remove(id, {notExists:, success:})`
+
+`id`에 해당하는 데이터를 지웁니다.
+
+```javascript
+sampleStore.remove('1234', {
+    notExists : function() {
+        console.log('데이터가 존재하지 않습니다.');
+    },
+    success : function(originData) {
+    	console.log('삭제된 데이터:', originData);
+    }
+});
+```
+
+#### `all`
+* `all(function(savedDataSet) {})`
+
+저장소의 모든 데이터를 가져옵니다.
+
+```javascript
+sampleStore.all(function(savedDataSet) {
+	console.log('저장소의 모든 데이터:', savedDataSet);
+});
+```
+
+#### `count`
+* `count(function(count) {})`
+
+저장소의 모든 데이터의 개수를 가져옵니다.
+
+```javascript
+sampleStore.count(function(count) {
+	console.log('저장소의 모든 데이터의 개수:', count);
+});
+```
+
+#### `clear`
+* `clear(function() {})`
+
+저장소의 모든 데이터를 삭제합니다.
+
+```javascript
+sampleStore.clear(function() {
+	console.log('저장소의 모든 데이터를 삭제하였습니다.');
+});
+```
 
 ## 시스템 관련 기능
 ### `CPU_USAGES()`
@@ -1034,7 +1329,7 @@ CPU 각 코어 당 사용률을 반환합니다.
 
 ```javascript
 DISK_USAGE('c:', function(usage) {
-    console.log(usage);
+	console.log(usage);
 });
 ```
 
@@ -1102,9 +1397,9 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!');
 다음 코드를 실행하면,
 ```javascript
 SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
-    a : 1,
-    b : 2,
-    c : 3
+	a : 1,
+	b : 2,
+	c : 3
 });
 ```
 콘솔에 다음과 같은 오류 메시지를 빨간색으로 출력합니다.
@@ -1112,9 +1407,9 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
 [샘플 오류] 오류가 발생했습니다. 오류 메시지: 엄청난 오류가 발생했습니다!
 다음은 오류를 발생시킨 파라미터입니다.
 {
-    "a": 1,
-    "b": 2,
-    "c": 3
+	"a": 1,
+	"b": 2,
+	"c": 3
 }
 ```
 
