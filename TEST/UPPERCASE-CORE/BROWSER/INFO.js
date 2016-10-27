@@ -10,10 +10,7 @@ TEST('INFO', function(ok) {
 
 	// change browser language.
 	//INFO.changeLang('ko');
-
-	// check is hd display.
-	console.log(INFO.checkIsHDDisplay());
-
+	
 	// check is touch mode.
 	console.log(INFO.checkIsTouchMode());
 

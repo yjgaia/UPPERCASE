@@ -10,15 +10,6 @@
 구버젼 웹 브라우저들을 지원하기 위해서는 `UJS-BROWSER-FIX`를 함께 구동시키시기 바랍니다. 관련 내용은 [하단에 수록](#uppercasejs-browser-fix)되어 있습니다.
 
 ## INFO
-브라우저의 정보들을 담고 있는 OBJECT입니다.
-[예제보기](../EXAMPLES/BROWSER/INFO.js)
-
-* `getLang` 현재 웹 애플리케이션의 언어 설정을 가져옵니다. 처음에는 브라우저의 언어 설정으로 설정됩니다.
-* `changeLang` 현재 웹 애플리케이션의 언어 설정을 변경합니다.
-* `checkIsHDDisplay` HD(High-definition) 화면인지 확인합니다.
-* `checkIsTouchMode` 터치 모드인지 확인합니다. 터치로만 조작이 가능한 기기에서는 항상 `true`를 반환하고, 마우스로만 조작이 가능한 기기에서는 항상 `false`를 반환합니다. 둘 다 가능한 기기에서는 터치를 할 경우나 마우스를 조작할 경우 변경됩니다.
-* `getBrowserInfo` 웹 브라우저의 정보를 반환합니다.
-
 ```javascript
 // 'ko'
 INFO.getLang()

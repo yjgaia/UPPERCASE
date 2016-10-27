@@ -1,5 +1,5 @@
 /**
- * 웹 브라우저 정보 객체
+ * 웹 브라우저 정보를 담고 있는 객체
  */
 global.INFO = OBJECT({
 
@@ -24,9 +24,6 @@ global.INFO = OBJECT({
 
 		// check is touch mode.
 		checkIsTouchMode,
-
-		// check is exists tap delay.
-		checkIsExistsTapDelay,
 
 		// get browser info.
 		getBrowserInfo;
@@ -64,10 +61,6 @@ global.INFO = OBJECT({
 
 		self.checkIsTouchMode = checkIsTouchMode = function() {
 			return isTouchMode;
-		};
-
-		self.checkIsExistsTapDelay = checkIsExistsTapDelay = function() {
-			return false;
 		};
 
 		self.getBrowserInfo = getBrowserInfo = function() {

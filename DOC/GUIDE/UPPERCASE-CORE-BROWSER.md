@@ -5,7 +5,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 ## 목차
 * [사용방법](#사용방법)
 * [`BROWSER_CONFIG`](#browser_config)
-* 브라우저 정보
+* [`INFO`](#info)
 * 창 관련 기능
 * DOM 기능
 * 뷰 기능
@@ -30,8 +30,38 @@ UPPERCASE 기반 프로젝트에서 웹 브라우저 환경 전용 설정값들�
 * `port` 현재 접속한 URL의 포트 번호
 * `isSecure` 현재 접속한 URL이 HTTPS 프로토콜인지 여부
 
-## 브라우저 정보
-TODO:
+## `INFO`
+웹 브라우저 정보를 담고 있는 객체
+
+`INFO`의 함수들은 다음과 같습니다.
+
+### `getLang()`
+2글자로 이루어진 현재 웹 애플리케이션의 언어 설정 코드를 가져옵니다. 기본은 브라우저의 언어 설정으로 설정됩니다.
+
+```javascript
+INFO.getLang(); // 'ko'
+```
+
+### `changeLang(lang)`
+현재 웹 애플리케이션의 언어 설정을 변경합니다. 이는 [`MSG`](#msg)에 영향을 끼칩니다.
+
+```javascript
+INFO.changeLang('ko');
+```
+
+### `checkIsTouchMode()`
+터치 모드인지 확인합니다. 터치로만 조작이 가능한 기기에서는 항상 `true`를 반환하고, 마우스로만 조작이 가능한 기기에서는 항상 `false`를 반환합니다. 터치와 마우스 조작 둘 다 가능한 기기에서는 터치를 하는 순간 혹은 마우스를 조작하는 순간 변경됩니다.
+
+```javascript
+INFO.checkIsTouchMode(); // 스마트폰에서는 true, PC에서는 false
+```
+
+### `getBrowserInfo()`
+웹 브라우저의 정보를 반환합니다.
+
+```javascript
+INFO.getBrowserInfo(); // ex) {name : "Chrome", version : 53}
+```
 
 ## 창 관련 기능
 TODO:
