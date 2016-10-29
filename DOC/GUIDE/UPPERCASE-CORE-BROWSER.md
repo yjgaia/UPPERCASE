@@ -6,8 +6,11 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [사용방법](#사용방법)
 * [`BROWSER_CONFIG`](#browser_config)
 * [`INFO`](#info)
-* 창 관련 기능
-* DOM 기능
+* [창 관련 기능](#창_관련_기능)
+* DOM 객체 생성
+* DOM 객체의 이벤트
+* DOM 객체의 스타일
+* DOM 객체의 애니메이션
 * 뷰 기능
 * [HTTP 요청 기능](#http-요청-기능)
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
@@ -64,14 +67,42 @@ INFO.getBrowserInfo(); // ex) {name : "Chrome", version : 53}
 ```
 
 ## 창 관련 기능
-TODO:
+### `TITLE()` `TITLE(title)`
+브라우저 창에 표시되는 문서의 제목을 가져오거나 변경합니다.
+```javascript
+TITLE('Welcome!');
 
-## DOM 기능
+TITLE(); // 'Welcome!'
+```
+
+### `WIN_WIDTH()`
+브라우저 창의 가로 길이를 픽셀 단위로 가져옵니다.
+
+### `WIN_HEIGHT()`
+브라우저 창의 세로 길이를 픽셀 단위로 가져옵니다.
+
+### `SCROLL_LEFT()`
+가로 스크롤의 현재 위치를 픽셀 단위로 가져옵니다.
+
+### `SCROLL_TOP()`
+세로 스크롤의 현재 위치를 픽셀 단위로 가져옵니다.
+
+## DOM 객체 생성
+TODO:
 HTML과 CSS 비판, vh 등을 들먹이며
 
 ### `CANVAS`
 ### `AUDIO`
 ### `VIDEO`
+
+## DOM 객체의 이벤트
+TODO:
+
+## DOM 객체의 스타일
+TODO:
+
+## DOM 객체의 애니메이션
+TODO:
 
 ## 뷰 기능
 TODO:
@@ -133,8 +164,8 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 ## 저장소 기능
 TODO:
 
-## 국제화 관련 기능
-TODO:
+## `MSG({ko:, en:, ...})`
+[`INFO`](#info)의 웹 애플리케이션 언어 설정 코드에 해당하는 문자열을 반환합니다.
 
 ## `SHOW_ERROR(tag, errorMsg)` `SHOW_ERROR(tag, errorMsg, params)`
 콘솔에 오류 메시지를 출력합니다.

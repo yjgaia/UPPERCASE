@@ -1,55 +1,6 @@
 # UJS-BROWSER
 웹 브라우저 환경에서 사용할 수 있는 유틸리티 라이브러리 및 DOM(Document Object Model) 템플릿 엔진입니다.
 
-## 설계 철학
-`UJS-BROWSER`는 UJS의 설계자이자 개발자인 [Hanul](https://github.com/Hanul)의 주관적인 철학에 의해 작성되었습니다.
-* HTML의 내용 중 그다지 필요하지 않다 싶은 기능은 과감히 빼버렸습니다. (예를들어 span 태그의 title 등) - 만약 필요한 기능인데도 지원하지 않는다고 생각하시면, [GitHub Issues](https://github.com/Hanul/UJS/issues)에 남겨주시면 감사하겠습니다.
-* 브라우저 호환성을 대단히 중요하게 생각합니다. - 국제사회와는 거리가 먼 대한민국의 웹 브라우저 사용 현황에 큰 영향을 받았습니다.
-
-* `UJS-BROWSER`는 기본적으로는 최신 웹 브라우저에서 돌아가도록 구현되어 있습니다.
-구버젼 웹 브라우저들을 지원하기 위해서는 `UJS-BROWSER-FIX`를 함께 구동시키시기 바랍니다. 관련 내용은 [하단에 수록](#uppercasejs-browser-fix)되어 있습니다.
-
-## INFO
-```javascript
-// 'ko'
-INFO.getLang()
-
-// ex) INFO.changeLang('ko')
-INFO.changeLang(lang)
-
-INFO.checkIsHDDisplay()
-
-INFO.checkIsTouchMode()
-
-// { name : 'Chrome', version : 41 }
-INFO.getBrowserInfo()
-```
-
-## 윈도우 관련 기능
-* `TITLE()`, `TITLE(title)` 윈도우의 제목을 가져오거나, 변경합니다. [예제보기](../EXAMPLES/BROWSER/WINDOW.js)
-* `WIN_WIDTH()` 윈도우의 가로 길이를 픽셀 단위로 반환합니다. [예제보기](../EXAMPLES/BROWSER/WIN_WIDTH.js)
-* `WIN_HEIGHT()` 윈도우의 세로 길이를 픽셀 단위로 반환합니다. [예제보기](../EXAMPLES/BROWSER/WIN_HEIGHT.js)
-* `SCROLL_LEFT()` 가로 스크롤 위치를 픽셀 단위로 반환합니다. [예제보기](../EXAMPLES/BROWSER/SCROLL_LEFT.js)
-* `SCROLL_TOP()` 세로 스크롤 위치를 픽셀 단위로 반환합니다. [예제보기](../EXAMPLES/BROWSER/SCROLL_TOP.js)
-
-## 그래픽 관련 기능
-* `CHECK_IS_BLANK_PIXEL({img:, left:, top:}, callback)` `CHECK_IS_BLANK_PIXEL({img:, right:, bottom:}, callback)` 특정 픽셀이 투명 픽셀인지 확인합니다. [예제보기](../EXAMPLES/BROWSER/GRAPHIC/CHECK_IS_BLANK_PIXEL.js)
-* `EXPORT_IMG_DATA(img, callback)` 이미지의 픽셀 데이터를 추출합니다. [예제보기](../EXAMPLES/BROWSER/GRAPHIC/EXPORT_IMG_DATA.js)
-* `EXPORT_IMG_TYPE(img, callback)` 이미지의 형식을 추출합니다. [예제보기](../EXAMPLES/BROWSER/GRAPHIC/EXPORT_IMG_TYPE.js)
-
-    ```javascript
-    var
-    // img
-    img = IMG({
-        src : 'image.png'
-    });
-    
-    EXPORT_IMG_TYPE(img, function(imgType) {
-        // png
-        console.log(imgType);
-    })
-    ```
-
 ## 사운드 관련 기능
 * `SOUND({mp3:, ogg:, isLoop:})` 사운드를 재생하는 클래스입니다. `play`로 사운드를 재생하고 `stop`으로 재생을 멈춥니다. [예제보기](../EXAMPLES/BROWSER/SOUND.js)
 
@@ -696,49 +647,3 @@ HTML5의 Push State기능을 이용해 Single Page Web Application을 구현할 
     ```
     
 * `REFRESH()` `Box.REFRESH()` `REFRESH(uri)` `Box.REFRESH(uri)` 뷰를 새로 불러옵니다. [예제보기](../EXAMPLES/BROWSER/VIEW/REFRESH.js)
-
-## UJS-BROWSER-FIX
-구형 웹 브라우저들을 지원하기 위해, UJS는 `UJS-BROWSER-FIX`라는 패키지를 지원하고 있습니다. 이는 객체지향의 상속 기능을 활용하여 구버젼 브라우저에서는 잘 동작하지 않는 기능들을 재작성한 것입니다. *Internet Explorer 5.5*나, *Android 2.1 Browser* 등 현재는 거의 쓰이지 않는 브라우저들까지 지원하기 때문에, 개발자는 브라우저의 하위 호환성을 신경쓰지 않아도 됩니다.
-
-### 설치하기
-[UJS 설치하기](INSTALL.md) 문서에도 잘 나와 있듯이, UJS-BROWSER-FIX를 설치하려면 UJS-BROWSER-FIX 폴더를 지정하고, `FIX.js`를 불러와야 합니다.
-
-```html
-<!-- UJS-BROWSER.js를 불러옵니다. -->
-<script src="/UJS-BROWSER.js"></script>
-<!-- 구버젼 브라우저에 대한 지원과, 각종 브라우저들이 갖고있는 버그를 고쳐주는 BROWSER-FIX를 불러옵니다. -->
-<script>
-	// UJS-BROWSER-FIX 폴더 지정
-    BROWSER_CONFIG.fixScriptsFolderPath = '/UJS-BROWSER-FIX';
-    // FIX.js를 불러옵니다.
-    LOAD('/UJS-BROWSER-FIX/FIX.js');
-</script>
-```
-
-### 구버젼 브라우저에서 작동하지 않는 기능들
-아래 기능들은 구버젼 브라우저에서는 작동하지 않는 기능들입니다. 다만, 호환성을 중요시하는 UJS 특성상 오류를 발생시키지는 않습니다.
-
-* SOUND
-* VIDEO
-
-### 기타 주의사항
-* `EXPORT_IMG_DATA`는 IE8 이하 버젼에서는 메모리 부족으로 제대로 처리되지 않을 수 있습니다.
-* IE10 미만의 브라우저에서는 AJAX 관련 기능을 사용할 때 CORS(Cross-Origin Resource Sharing)가 작동하지 않습니다.
-* IE8에서는 href의 값을 바꾸면 DOM의 내용이 해당 href로 변경되어 버리는 버그가 존잰하므로, A 태그의 `setHref` 함수에서 문제가 발생할 수 있습니다.
-* HTML5 Push State를 지원하지 않는 브라우저에서는 VIEW 관련 기능은 hashbang(#!) 방식으로 변경됩니다.
-
-## HTML5 Canvas 지원
-FlashCanvas를 이용해 구버젼 브라우저에서도 플래시를 통한 HTML5 Canvas가 지원됩니다.
-그러나 제공하는 기능에 제약이 있으므로, 제대로 된 Canvas 기능을 사용하시려면 `CANVAS`의 `getEl` 메소드로 element를 가져 온 뒤에 처리하시기 바랍니다.
-그러나 이럴 경우, UJS가 제공하는 하위 호환성은 무시됩니다.
-
-```javascript
-var
-// canvas
-canvas = CANVAS(),
-
-// canvas el
-canvasEl = canvas.getEl();
-```
-
-다음 문서: [UJS-NODE](UJS-NODE.md)

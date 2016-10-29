@@ -14,7 +14,9 @@
 			var
 			// test.
 			test = function(path) {
-				LOAD('./' + path + '.js');
+				var script = document.createElement('script');
+				script.src = './' + path + '.js';
+				document.body.appendChild(script);
 			};
 			
 			BOX('TestBox');
@@ -61,7 +63,14 @@
 			
 			// UPPERCASE-CORE-BROWSER
 			if (true) {
+				
 				test('BROWSER/INFO');
+				
+				test('BROWSER/WINDOW/TITLE');
+				test('BROWSER/WINDOW/WIN_WIDTH');
+				test('BROWSER/WINDOW/WIN_HEIGHT');
+				test('BROWSER/WINDOW/SCROLL_LEFT');
+				test('BROWSER/WINDOW/SCROLL_TOP');
 			}
 			
 			// init all singleton objects.
