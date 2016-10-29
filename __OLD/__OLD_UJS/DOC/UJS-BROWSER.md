@@ -98,24 +98,6 @@
     store.remove(name)
     ```
 
-* `MSG({ko:, en:, ...})` 국제화 문자열 처리 기능입니다. 기본적으로 브라우저의 언어 설정을 가져와 처리합니다. [예제보기](../EXAMPLES/BROWSER/I18N/MSG.js)
-
-    ```javascript
-    // 만약 브라우저 언어 설정이 한국어로 되어 있다면 '집'
-    MSG({
-        ko : '집',
-        en : 'Home'
-    })
-    ```
-
-* `META_DESCRIPTION(description)` HTML 페이지에 description meta 태그를 설정합니다. [예제보기](../EXAMPLES/BROWSER/META_DESCRIPTION.js)
-
-    ```javascript
-	META_DESCRIPTION('This is description!');
-
-	ok(META_DESCRIPTION() === 'This is description!');
-    ```
-
 ## DOM(Document Object Model) 템플릿 엔진
 UJS의 DOM 템플릿 엔진은 순수 JavaScript만을 기반으로 합니다. 따라서 HTML이나 CSS 코드를 작성하지 않습니다. 모든 구현은 JavaScript로 이루어집니다. 그러나 기본적인 Font-end 개발 방법을 알고 있어야 합니다.
 

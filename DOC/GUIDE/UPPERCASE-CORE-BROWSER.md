@@ -15,7 +15,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [HTTP 요청 기능](#http-요청-기능)
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
 * 저장소 기능
-* 국제화 관련 기능
+* [`MSG({ko:, en:, ...})`](#msgko-en-)
 * [SHOW_ERROR](#show_error)
 * [기타 기능](#기타-기능)
 
@@ -165,7 +165,17 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 TODO:
 
 ## `MSG({ko:, en:, ...})`
-[`INFO`](#info)의 웹 애플리케이션 언어 설정 코드에 해당하는 문자열을 반환합니다.
+[`INFO`](#info)의 [웹 애플리케이션 언어 설정 코드](#getlang)에 해당하는 문자열을 반환합니다. 만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
+
+```javascript
+// 브라우저 언어 설정이 한국어일 경우, '집'
+// 브라우저 언어 설정이 영어일 경우, 'Home'
+// 브라우저 언어 설정이 한국어나 영어가 아닌 경우, 알 수 없는 언어 설정 코드이므로 첫 문자열인 '집'
+MSG({
+    ko : '집',
+    en : 'Home'
+});
+```
 
 ## `SHOW_ERROR(tag, errorMsg)` `SHOW_ERROR(tag, errorMsg, params)`
 콘솔에 오류 메시지를 출력합니다.
