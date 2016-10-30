@@ -14,10 +14,10 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * 뷰 기능
 * [HTTP 요청 기능](#http-요청-기능)
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
-* 저장소 기능
+* [`STORE`](#store)
 * [`MSG({ko:, en:, ...})`](#msgko-en-)
-* [SHOW_ERROR](#show_error)
-* [기타 기능](#기타-기능)
+* [`SHOW_ERROR`](#show_error)
+* [`SOUND`](#sound)
 
 ## 사용방법
 `UPPERCASE-CORE` 폴더를 복사하여 사용합니다.
@@ -88,8 +88,80 @@ TITLE(); // 'Welcome!'
 세로 스크롤의 현재 위치를 픽셀 단위로 가져옵니다.
 
 ## DOM 객체 생성
-TODO:
-HTML과 CSS 비판, vh 등을 들먹이며
+단순히 정보를 제공하기 위한 웹 페이지를 개발하는 과거와는 달리, 현대에는 동적인 웹 애플리케이션을 개발하는 경우가 늘고 있습니다.
+
+아래 예제들을 보면, 동적으로 변하는 DOM 요소들을 처리하는 방법
+
+### HTML로 DOM 요소 생성
+HTML 코드와 JavaScript 코드가 분리되어 있던 기존 웹 개발 방식에서는, DOM 객체를 다루기 위한 코드를 작성하기가 굉장히 불편했습니다. JavaScript에서 DOM 객체를 일일히 찾아내어 다뤄야 하기 때문입니다. 또한 DOM 객체를 찾기 위하여, HTML 요소에 `id` 나 `class` 속성을 반드시 지정해 주어야 했습니다. 이는 HTML이 원래 정보 제공을 위한 문서 작성을 목적으로 만들어졌기 때문입니다.
+
+```html
+<html>
+    <head>
+        <style>
+            #hello {
+                color : red;
+            }
+        </style>
+    </head>
+    <body>
+        <p id="hello">안녕하세요.</p>
+        <script>
+        
+            var
+            // hello
+            hello = document.getElementById('hello');
+            
+            // 원래 빨간색인 글자 색을 파란색으로 변경
+            hello.style.color = 'blue';
+        
+        </script>
+    </body>
+</html>
+```
+
+### JavaScript로 DOM 요소 생성
+위와 같이, HTML 요소를 JavaScript에서 일일히 찾는 방식은 **웹 애플리케이션**을 개발하는데에는 적합하지 않습니다. 그렇다면, JavaScript에서 DOM 객체를 생성하여 다루면 어떨까요? 그러면 DOM 객체를 찾는 과정이 없어지기 때문에 좀 더 쉽게 DOM 객체를 다룰 수 있습니다. 그러나 이와 같은 방법은 JavaScript 코드가 복잡해진다는 단점이 있습니다.
+
+```javascript
+var
+// hello
+hello = document.createElement('p');
+hello.style.color = 'red';
+hello.appendChild(document.createTextNode('안녕하세요.'));
+document.body.appendChild(hello);
+
+// 원래 빨간색인 글자 색을 파란색으로 변경
+hello.style.color = 'blue';
+```
+
+### UPPERCASE의 DOM 객체 생성 기능을 사용하여 DOM 요소 생성
+UPPERCASE의 DOM 객체 생성 기능은, 위와 같이 JavaScript에서 직접 DOM 객체를 생성하는 방식을 명료하게 표현하여 이해하기 쉬운 코드를 만들 수 있도록 돕습니다.
+
+```javascript
+var
+// hello
+hello = P({
+    style : {
+        color : 'red'
+    },
+    c : '안녕하세요.'
+}).appendTo(BODY);
+
+// 원래 빨간색인 글자 색을 파란색으로 변경
+hello.addStyle({
+    color : 'blue'
+});
+```
+
+### `NODE`
+일반적으로 웹 페이지를 구성하는 DOM 요소들은 [트리 구조](https://ko.wikipedia.org/wiki/%ED%8A%B8%EB%A6%AC_%EA%B5%AC%EC%A1%B0)로 이루어지게 됩니다. 따라서 DOM 객체를 살펴보기 전에, 트리 구조를 정의하기 위한 `NODE` 클래스를 먼저 살펴보겠습니다. 아래의 DOM 객체를 생성하는 모든 기능들은 이 `NODE` 클래스를 상속하여 구현되어 있습니다. 또한 개발자가 `NODE`를 상속하여 새로운 종류의 `NODE`를 만들어 낼 수 있습니다.
+
+### `DOM`
+DOM 객체를 다루는 클래스입니다. UPPERCASE는 `DOM` 클래스를 상속한, 각 HTML 태그들과 대응되는 클래스들을 갖고 있습니다. 만약 UPPERCASE가 제공하지 않는 종류의 HTML 요소가 필요한 경우, `DOM`을 상속하여 직접 구현할 수 있습니다.
+
+### `BODY`
+HTML `body` 태그와 대응되는 객체입니다. (`BODY`는 웹 페이지에 단 하나만 존재할 수 있기 때문에 클래스가 아니라 객체입니다.)
 
 ### `CANVAS`
 ### `AUDIO`
@@ -99,7 +171,7 @@ HTML과 CSS 비판, vh 등을 들먹이며
 TODO:
 
 ## DOM 객체의 스타일
-TODO:
+TODO: CSS 비판, vh 등을 들먹이며
 
 ## DOM 객체의 애니메이션
 TODO:
@@ -161,8 +233,36 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 #### `disconnect()`
 서버와의 연결을 끊습니다.
 
-## 저장소 기능
-TODO:
+## `STORE`
+저장소 클래스
+
+웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
+
+```javascript
+var
+// store
+store = STORE('testStore');
+
+store.save({
+    name : 'name',
+    value : 'YJ Sim'
+});
+
+store.get(name); // 'YJ Sim'
+
+store.remove(name);
+```
+
+`STORE`로 생성한 객체의 함수들은 다음과 같습니다.
+
+### `save({name:, value:})`
+특정 `name`에 `value`를 저장합니다.
+
+### `get(name)`
+`name`에 해당하는 값을 가져옵니다.
+
+### `remove(name)`
+`name`에 해당하는 값을 지웁니다.
 
 ## `MSG({ko:, en:, ...})`
 [`INFO`](#info)의 [웹 애플리케이션 언어 설정 코드](#getlang)에 해당하는 문자열을 반환합니다. 만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
@@ -208,5 +308,5 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
 }
 ```
 
-## 기타 기능
+## `SOUND`
 TODO:

@@ -68,36 +68,6 @@
     * `DELETE({uri:, paramStr:}, responseListenerOrListeners)`
     * `DELETE({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)`
 
-## 기타 기능
-
-* `STORE(storeName)` `Box.STORE(storeName)` 저장소를 생성하여 데이터를 저장할 수 있는 클래스 입니다. 이를 이용해서 브라우저가 종료되더라도 특정 데이터를 저장할 수 있습니다. 저장할 때 `isToSession` 파라미터를 `true`로 지정하면 브라우저가 종료 될 때 데이터를 자동으로 지울수도 있습니다. [예제보기](../EXAMPLES/BROWSER/STORE.js)
-
-    ```javascript
-    var
-    // store
-    store = STORE('testStore');
-
-    store.save({ name:, value:, isToSession: })
-
-    store.get(name)
-
-    store.remove(name)
-    ```
-
-* `COOKIE_STORE(storeName)` `COOKIE_STORE({ storeName:, domain: })` `Box.COOKIE_STORE(storeName)` 쿠키에 데이터를 저장할 수 있는 클래스 입니다. 저장할 때 `isToSession` 파라미터를 `true`로 지정하면 브라우저가 종료 될 때 데이터를 자동으로 지울수도 있습니다. `domain`을 지정할 수 있습니다. [예제보기](../EXAMPLES/BROWSER/STORE.js)
-
-    ```javascript
-    var
-    // store
-    store = COOKIE_STORE('testStore');
-
-    store.save({ name:, value:, isToSession: })
-
-    store.get(name)
-
-    store.remove(name)
-    ```
-
 ## DOM(Document Object Model) 템플릿 엔진
 UJS의 DOM 템플릿 엔진은 순수 JavaScript만을 기반으로 합니다. 따라서 HTML이나 CSS 코드를 작성하지 않습니다. 모든 구현은 JavaScript로 이루어집니다. 그러나 기본적인 Font-end 개발 방법을 알고 있어야 합니다.
 
