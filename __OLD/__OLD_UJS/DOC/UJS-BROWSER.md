@@ -69,63 +69,6 @@
     * `DELETE({host:, port:, isSecure:, uri:, data:}, responseListenerOrListeners)`
 
 ## DOM(Document Object Model) 템플릿 엔진
-UJS의 DOM 템플릿 엔진은 순수 JavaScript만을 기반으로 합니다. 따라서 HTML이나 CSS 코드를 작성하지 않습니다. 모든 구현은 JavaScript로 이루어집니다. 그러나 기본적인 Font-end 개발 방법을 알고 있어야 합니다.
-
-아래는 DOM 태그들로 폼 화면을 구성하는 예제입니다.
-```javascript
-DIV({
-	style : {
-		backgroundColor : 'red',
-		padding : 20
-	},
-	c : FORM({
-    	c : [DIV({
-    		c : [H5({
-    			c : 'Name'
-    		}), input = INPUT({
-    			name : 'name'
-    		})]
-    	}), DIV({
-    		style : {
-    			marginTop : 10
-    		},
-    		c : [H5({
-    			c : 'Gender'
-    		}), SELECT({
-    			name : 'gender',
-    			c : [OPTION({
-    				value : 'male',
-    				c : 'Male'
-    			}), OPTION({
-    				value : 'female',
-    				c : 'Female'
-    			})]
-    		})]
-    	}), DIV({
-    		style : {
-    			marginTop : 10
-    		},
-    		c : [H5({
-    			c : 'Age'
-    		}), INPUT({
-    			name : 'age'
-    		})]
-    	}), DIV({
-    		style : {
-    			marginTop : 10
-    		},
-    		c : [H5({
-    			c : 'Profile'
-    		}), TEXTAREA({
-    			name : 'profile'
-    		})]
-    	}), INPUT({
-    	    type : 'submit',
-            value : 'Join'
-    	})]
-    })
-}).appendTo(BODY);
-```
 
 다음과 같은 기능들이 포함되어 있습니다.
 
@@ -134,113 +77,7 @@ DIV({
 * 스타일 및 애니메이션
 * 이벤트
 
-### NODE 인터페이스
-NODE 인터페이스를 사용하여 웹 페이지를 구성하는 NODE를 만들어낼 수 있습니다. 아래 DOM 태그 구현에서도 사용되지만, 개발자가 직접 NODE의 종류를 추가할 때도 이를 상속하여 사용할 수 있습니다. [예제보기](../EXAMPLES/BROWSER/DOM/NODE.js)
-#### 제공하는 메소드
-- `inner.setWrapperDom(dom)` 감싸는 DOM을 지정합니다.
-- `inner.setContentDom(dom)` 내부 DOM을 지정합니다.
-- `inner.setDom(dom)` 감싸는 DOM과 내부 DOM이 동일한 경우 둘을 같은 DOM으로 지정합니다.
-- `getWrapperDom` 감싸는 DOM을 반환합니다.
-- `getContentDom` 내부 DOM을 반환합니다.
-- `getWrapperEl` 감싸는 DOM의 HTML element를 반환합니다.
-- `getContentEl` 내부 DOM의 HTML element를 반환합니다.
-- `append(node)` 자식 노드를 맨 뒤에 붙힙니다.
-- `appendTo(node)` 특정 노드의 맨 뒤에 자식 노드로 붙습니다.
-- `prepend(node)` 자식 노드를 맨 앞에 붙힙니다.
-- `prependTo(node)` 특정 노드의 맨 앞에 자식 노드로 붙습니다.
-- `after(node)` 특정 노드를 바로 뒤에 붙힙니다.
-- `insertAfter(node)` 특정 노드의 바로 뒤에 붙습니다.
-- `before(node)` 특정 노드를 바로 앞에 붙힙니다.
-- `insertBefore(node)` 특정 노드의 바로 앞에 붙습니다.
-- `remove()` 노드를 지웁니다.
-- `empty()` 모든 자식 노드들을 지웁니다.
-- `setParent(node)` 부모 노드를 지정합니다.
-- `getParent()` 부모 노드를 반환합니다.
-- `getChildren()` 모든 자식 노드들을 반환합니다.
-- `on(eventName, eventHandler)` 이벤트를 지정합니다.
-- `off(eventName)` `off(eventName, eventHandler)` 이벤트를 제거합니다.
-- `addStyle(style)` 스타일을 지정합니다.
-- `getStyle()` 노드의 스타일 정보를 반환합니다.
-- `getWidth()` 가로 길이를 반환합니다.
-- `getInnerWidth()` 여백을 제외한 가로 길이를 반환합니다.
-- `getHeight()` 세로 길이를 반환합니다.
-- `getInnerHeight()` 여백을 제외한 세로 길이를 반환합니다.
-- `getLeft()` 화면에서 왼쪽으로부터 얼마나 떨어져 있는지 반환합니다.
-- `getTop()` 화면에서 위쪽으로부터 얼마나 떨어져 있는지 반환합니다.
-- `hide()` 노드를 숨깁니다.
-- `show()` 노드를 숨기지 않습니다.
-- `checkIsShowing()` 노드가 보여지고 있는지 확인합니다.
-- `setData(data)` 노드에 데이터를 저장합니다.
-- `getData()` 저장된 데이터를 반환합니다.
-- `scrollTo({left:, top:})` `overflow`가 `scroll`인 노드의 스크롤 위치를 지정합니다.
-- `getScrollLeft()` 노드의 왼쪽으로부터의 스크롤 위치를 가져옵니다.
-- `getScrollTop()` 노드의 위쪽으로부터의 스크롤 위치를 가져옵니다.
-- `getScrollWidth()` 노드의 스크롤 너비를 가져옵니다.
-- `getScrollHeight()` 노드의 스크롤 높이를 가져옵니다.
-
 ### DOM 태그 구현
-* `DOM` 새로 DOM을 만들어내는 클래스입니다. 이하 여러가지 태그와 대응되는 클래스들은 이를 상속합니다. 아래 만들어져 있는 태그들만으로도 보통의 웹 개발시에는 문제가 없다고 판단되나, 필요에 의해 특정 태그를 추가로 더 만들고자 하는 경우에는 이 클래스를 상속하여 만들 수 있습니다. [예제보기](../EXAMPLES/BROWSER/DOM/DOM.js)
-    * `DOM({tag:})`
-    * `DOM({tag:, style:})`
-    * `DOM({tag:, c:})`
-    * `DOM({tag:, on:})`
-    * `DOM({el:})`
-
-* `BODY` HTML의 body 태그와 대응되는 객체입니다. `BODY`는 그 자체로 객체이므로, 새로 생성할 수 없습니다.
-
-    ```javascript
-    // BODY는 새로 생성할 수 없이 그 자체로 객체이다.
-    DIV({
-        c : 'Hello!'
-    }).appendTo(BODY);
-    ```
-
-* `DIV` HTML의 div 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/DIV.js)
-    * `DIV({style:})`
-    * `DIV({c:})`
-    * `DIV({on:})`
-
-* `SPAN` HTML의 span 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/SPAN.js)
-    * `SPAN({style:})`
-    * `SPAN({c:})`
-    * `SPAN({on:})`
-
-* `H1` HTML의 h1 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/H1.js)
-    * `H1({style:})`
-    * `H1({c:})`
-    * `H1({on:})`
-
-* `H2` HTML의 h2 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/H1.js)
-    * `H2({style:})`
-    * `H2({c:})`
-    * `H2({on:})`
-
-* `H3` HTML의 h3 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/H1.js)
-    * `H3({style:})`
-    * `H3({c:})`
-    * `H3({on:})`
-
-* `H4` HTML의 h4 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/H1.js)
-    * `H4({style:})`
-    * `H4({c:})`
-    * `H4({on:})`
-
-* `H5` HTML의 h5 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/H1.js)
-    * `H5({style:})`
-    * `H5({c:})`
-    * `H5({on:})`
-
-* `H6` HTML의 h6 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/H1.js)
-    * `H6({style:})`
-    * `H6({c:})`
-    * `H6({on:})`
-
-* `P` HTML의 p 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/P.js)
-    * `P({style:})`
-    * `P({c:})`
-    * `P({on:})`
-
-* `BR()` HTML의 BR 태그와 대응되는 클래스입니다.
 
 * `UL` HTML의 ul 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/UL.js)
     * `UL({style:})`
@@ -251,13 +88,6 @@ NODE 인터페이스를 사용하여 웹 페이지를 구성하는 NODE를 만�
     * `LI({style:})`
     * `LI({c:})`
     * `LI({on:})`
-
-* `A` HTML의 a 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/A.js)
-    * `A({href:})`
-    * `A({href:, target:})`
-    * `A({style:})`
-    * `A({c:})`
-    * `A({on:})`
 
 * `IMG` HTML의 img 태그와 대응되는 클래스입니다. [예제보기](../EXAMPLES/BROWSER/DOM/TAG/IMG.js)
     * `IMG({src:})`

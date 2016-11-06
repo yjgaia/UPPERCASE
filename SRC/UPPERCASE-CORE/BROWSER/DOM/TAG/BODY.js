@@ -1,7 +1,7 @@
 /**
- * H4 class
+ * HTML body 태그와 대응되는 객체
  */
-global.H4 = CLASS({
+global.BODY = OBJECT({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.H4 = CLASS({
 		'use strict';
 
 		return {
-			tag : 'h4'
+			tag : 'body'
 		};
 	}
 });

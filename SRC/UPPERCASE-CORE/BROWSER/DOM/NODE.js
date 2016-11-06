@@ -1,10 +1,14 @@
 /**
- * Node interface
+ * DOM 트리 구조를 정의하기 위한 NODE 클래스
  */
 global.NODE = CLASS({
 
-	init : function(inner, self) {
+	init : function(inner, self, params) {
 		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.style	스타일을 지정합니다.
+		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트를 지정합니다.
 
 		var
 		// wrapper dom
@@ -85,11 +89,8 @@ global.NODE = CLASS({
 		// insert before.
 		insertBefore,
 
-		// remove.
-		remove,
-
-		// empty.
-		empty,
+		// get children.
+		getChildren,
 
 		// set parent.
 		setParent,
@@ -97,8 +98,11 @@ global.NODE = CLASS({
 		// get parent.
 		getParent,
 
-		// get children.
-		getChildren,
+		// empty.
+		empty,
+
+		// remove.
+		remove,
 
 		// on.
 		on,
@@ -139,12 +143,6 @@ global.NODE = CLASS({
 		// check is showing.
 		checkIsShowing,
 		
-		// set data.
-		setData,
-		
-		// get data.
-		getData,
-		
 		// scroll to.
 		scrollTo,
 		
@@ -158,7 +156,13 @@ global.NODE = CLASS({
 		getScrollWidth,
 		
 		// get scroll height.
-		getScrollHeight;
+		getScrollHeight,
+		
+		// set data.
+		setData,
+		
+		// get data.
+		getData;
 
 		inner.setWrapperDom = setWrapperDom = function(dom) {
 			//REQUIRED: dom
@@ -536,6 +540,33 @@ global.NODE = CLASS({
 			return self;
 		};
 
+		self.getChildren = getChildren = function() {
+			return childNodes;
+		};
+
+		setParent = function(node) {
+			//OPTIONAL: node
+			
+			if (parentNode !== undefined) {
+				REMOVE({
+					array : parentNode.getChildren(),
+					value : self
+				});
+			}
+
+			parentNode = node;
+		};
+		
+		self.getParent = getParent = function() {
+			return parentNode;
+		};
+
+		self.empty = empty = function() {
+			EACH(childNodes, function(child) {
+				child.remove();
+			});
+		};
+
 		self.remove = remove = function() {
 
 			if (wrapperEl !== undefined && wrapperEl.parentNode !== TO_DELETE) {
@@ -565,33 +596,6 @@ global.NODE = CLASS({
 			
 			// free memory.
 			data = undefined;
-		};
-
-		self.empty = empty = function() {
-			EACH(childNodes, function(child) {
-				child.remove();
-			});
-		};
-
-		self.setParent = setParent = function(node) {
-			//OPTIONAL: node
-			
-			if (parentNode !== undefined) {
-				REMOVE({
-					array : parentNode.getChildren(),
-					value : self
-				});
-			}
-
-			parentNode = node;
-		};
-		
-		self.getParent = getParent = function() {
-			return parentNode;
-		};
-
-		self.getChildren = getChildren = function() {
-			return childNodes;
 		};
 
 		self.on = on = function(eventName, eventHandler) {
@@ -742,16 +746,6 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.setData = setData = function(_data) {
-			//REQUIRED: _data
-			
-			data = _data;
-		};
-		
-		self.getData = getData = function() {
-			return data;
-		};
-		
 		self.scrollTo = scrollTo = function(params) {
 			//REQUIRED: params
 			//OPTIONAL: params.left
@@ -831,14 +825,24 @@ global.NODE = CLASS({
 				return 0;
 			}
 		};
+		
+		self.setData = setData = function(_data) {
+			//REQUIRED: _data
+			
+			data = _data;
+		};
+		
+		self.getData = getData = function() {
+			return data;
+		};
 	},
 
 	afterInit : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
-		//OPTIONAL: params.style
-		//OPTIONAL: params.c
-		//OPTIONAL: params.on
+		//OPTIONAL: params.style	스타일을 지정합니다.
+		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트를 지정합니다.
 
 		var
 		// style

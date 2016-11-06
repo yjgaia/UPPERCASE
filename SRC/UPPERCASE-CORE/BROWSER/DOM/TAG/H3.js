@@ -1,7 +1,7 @@
 /**
- * Body class
+ * HTML h3 태그와 대응되는 클래스
  */
-global.BODY = OBJECT({
+global.H3 = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.BODY = OBJECT({
 		'use strict';
 
 		return {
-			tag : 'body'
+			tag : 'h3'
 		};
 	}
 });

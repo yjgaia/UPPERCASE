@@ -1,7 +1,7 @@
 /**
- * P class
+ * HTML h4 태그와 대응되는 클래스
  */
-global.P = CLASS({
+global.H4 = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.P = CLASS({
 		'use strict';
 
 		return {
-			tag : 'p'
+			tag : 'h4'
 		};
 	}
 });

@@ -20,19 +20,21 @@ global.A = CLASS({
 	init : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
-		//OPTIONAL: params.href
-		//OPTIONAL: params.target
-		//OPTIONAL: params.style
+		//OPTIONAL: params.style	스타일을 지정합니다.
+		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트를 지정합니다.
+		//OPTIONAL: params.href		이동할 경로를 지정합니다.
+		//OPTIONAL: params.target	이동할 타겟을 지정합니다.
 
 		var
+		// style
+		style,
+		
 		// href
 		href,
 		
 		// target
 		target,
-		
-		// style
-		style,
 		
 		// set href.
 		setHref, 
@@ -42,9 +44,9 @@ global.A = CLASS({
 
 		// init params.
 		if (params !== undefined) {
+			style = params.style;
 			href = params.href;
 			target = params.target;
-			style = params.style;
 		}
 
 		self.setHref = setHref = function(href) {
@@ -77,18 +79,21 @@ global.A = CLASS({
 	afterInit : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
-		//OPTIONAL: params.href
-		//OPTIONAL: params.c
+		//OPTIONAL: params.style	스타일을 지정합니다.
+		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트를 지정합니다.
+		//OPTIONAL: params.href		이동할 경로를 지정합니다.
+		//OPTIONAL: params.target	이동할 타겟을 지정합니다.
 
 		var
+		// children
+		children,
+		
 		// href
 		href,
 		
-		// is content href
-		isContentHref = false,
-
-		// children
-		children,
+		// is href content
+		isHrefContent = false,
 		
 		// append.
 		append,
@@ -98,23 +103,24 @@ global.A = CLASS({
 
 		// init params.
 		if (params !== undefined) {
-			href = params.href;
 			children = params.c;
+			href = params.href;
 		}
 
+		// 아무런 내용이 없으면 이동할 경로를 그대로 표시합니다.
 		if (children === undefined && href !== undefined) {
 			
 			self.append(href);
 			
-			isContentHref = true;
+			isHrefContent = true;
 			
 			OVERRIDE(self.append, function(origin) {
 				self.append = append = function(node) {
 					//REQUIRED: node
 					
-					if (isContentHref === true) {
+					if (isHrefContent === true) {
 						self.empty();
-						isContentHref = false;
+						isHrefContent = false;
 					}
 					
 					origin(node);
@@ -125,9 +131,9 @@ global.A = CLASS({
 				self.prepend = prepend = function(node) {
 					//REQUIRED: node
 					
-					if (isContentHref === true) {
+					if (isHrefContent === true) {
 						self.empty();
-						isContentHref = false;
+						isHrefContent = false;
 					}
 					
 					origin(node);

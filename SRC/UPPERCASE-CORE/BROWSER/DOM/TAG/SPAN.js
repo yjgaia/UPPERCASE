@@ -1,7 +1,7 @@
 /**
- * H3 class
+ * HTML span 태그와 대응되는 클래스
  */
-global.H3 = CLASS({
+global.SPAN = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.H3 = CLASS({
 		'use strict';
 
 		return {
-			tag : 'h3'
+			tag : 'span'
 		};
 	}
 });

@@ -1,7 +1,7 @@
 /**
- * Span class
+ * HTML p 태그와 대응되는 클래스
  */
-global.SPAN = CLASS({
+global.P = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.SPAN = CLASS({
 		'use strict';
 
 		return {
-			tag : 'span'
+			tag : 'p'
 		};
 	}
 });

@@ -1,7 +1,7 @@
 /**
- * H2 class
+ * HTML h6 태그와 대응되는 클래스
  */
-global.H2 = CLASS({
+global.H6 = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.H2 = CLASS({
 		'use strict';
 
 		return {
-			tag : 'h2'
+			tag : 'h6'
 		};
 	}
 });

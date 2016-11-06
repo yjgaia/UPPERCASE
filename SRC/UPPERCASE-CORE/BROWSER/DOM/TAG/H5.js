@@ -1,7 +1,7 @@
 /**
- * Div class
+ * HTML h5 태그와 대응되는 클래스
  */
-global.DIV = CLASS({
+global.H5 = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.DIV = CLASS({
 		'use strict';
 
 		return {
-			tag : 'div'
+			tag : 'h5'
 		};
 	}
 });
