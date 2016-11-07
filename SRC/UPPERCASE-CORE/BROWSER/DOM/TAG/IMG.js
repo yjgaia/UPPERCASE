@@ -1,5 +1,5 @@
 /**
- * Img class
+ * HTML img 태그와 대응되는 클래스
  */
 global.IMG = CLASS({
 
@@ -20,7 +20,10 @@ global.IMG = CLASS({
 	init : function(inner, self, params) {
 		'use strict';
 		//REQUIRED: params
-		//REQUIRED: params.src
+		//OPTIONAL: params.style	스타일을 지정합니다.
+		//REQUIRED: params.src		이미지 경로를 지정합니다.
+		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트를 지정합니다.
 
 		var
 		// src
@@ -28,9 +31,6 @@ global.IMG = CLASS({
 
 		// el
 		el = self.getEl(),
-
-		// is X2 switched
-		isX2Switched,
 
 		// get width.
 		getWidth,
@@ -44,14 +44,8 @@ global.IMG = CLASS({
 		// get src.
 		getSrc,
 
-		// set x2 src.
-		setX2Src,
-
 		// set src.
-		setSrc,
-
-		// check is X2.
-		checkIsX2;
+		setSrc;
 
 		//OVERRIDE: self.getWidth
 		self.getWidth = getWidth = function() {
@@ -88,15 +82,6 @@ global.IMG = CLASS({
 			return src;
 		};
 
-		self.setX2Src = setX2Src = function(x2Src) {
-			//REQUIRED: x2Src
-
-			inner.setAttr({
-				name : 'src',
-				value : x2Src
-			});
-		};
-
 		self.setSrc = setSrc = function(_src) {
 			//REQUIRED: _src
 
@@ -106,40 +91,10 @@ global.IMG = CLASS({
 				name : 'src',
 				value : src
 			});
-
-			// X2 support.
-			if (isX2Switched !== true && BROWSER_CONFIG.isSupportingX2 === true &&
-
-			// after INIT_OBJECTS(), check is hd display.
-			INFO.checkIsHDDisplay !== undefined && INFO.checkIsHDDisplay() === true) {
-
-				if (X2.checkIsCached(src) === true) {
-
-					// switch X2 img.
-					X2.switchImg(self);
-
-				} else {
-
-					EXPORT_IMG_TYPE(self, function(type) {
-
-						if (type === 'png' || type === 'gif' || type === 'bmp') {
-
-							isX2Switched = true;
-
-							// switch X2 img.
-							X2.switchImg(self);
-						}
-					});
-				}
-			}
 		};
 
 		if (src !== undefined) {
 			setSrc(src);
 		}
-
-		self.checkIsX2 = checkIsX2 = function() {
-			return isX2Switched;
-		};
 	}
 });

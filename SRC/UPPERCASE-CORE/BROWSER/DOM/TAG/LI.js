@@ -1,7 +1,7 @@
 /**
- * Tr class
+ * HTML li 태그와 대응되는 클래스
  */
-global.TR = CLASS({
+global.LI = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.TR = CLASS({
 		'use strict';
 
 		return {
-			tag : 'tr'
+			tag : 'li'
 		};
 	}
 });

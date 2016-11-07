@@ -1,7 +1,7 @@
 /**
- * Ul class
+ * HTML tr 태그와 대응되는 클래스
  */
-global.UL = CLASS({
+global.TR = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.UL = CLASS({
 		'use strict';
 
 		return {
-			tag : 'ul'
+			tag : 'tr'
 		};
 	}
 });

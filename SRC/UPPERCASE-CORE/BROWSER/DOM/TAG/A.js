@@ -21,10 +21,10 @@ global.A = CLASS({
 		'use strict';
 		//OPTIONAL: params
 		//OPTIONAL: params.style	스타일을 지정합니다.
-		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
-		//OPTIONAL: params.on		이벤트를 지정합니다.
 		//OPTIONAL: params.href		이동할 경로를 지정합니다.
 		//OPTIONAL: params.target	이동할 타겟을 지정합니다.
+		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트를 지정합니다.
 
 		var
 		// style
@@ -80,10 +80,10 @@ global.A = CLASS({
 		'use strict';
 		//OPTIONAL: params
 		//OPTIONAL: params.style	스타일을 지정합니다.
-		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
-		//OPTIONAL: params.on		이벤트를 지정합니다.
 		//OPTIONAL: params.href		이동할 경로를 지정합니다.
 		//OPTIONAL: params.target	이동할 타겟을 지정합니다.
+		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트를 지정합니다.
 
 		var
 		// children

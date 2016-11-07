@@ -375,6 +375,15 @@ DOM({
 }).appendTo(BODY);
 ```
 
+`DOM`를 상속한 클래스 내부에서 사용 가능한 함수들은 다음과 같습니다.
+
+- `inner.setEl(el)` DOM 객체의 HTML element를 지정합니다.
+- `inner.setAttr({name:, value:})` DOM 객체의 HTML element에 속성을 지정합니다.
+
+`DOM`를 상속한 클래스로 생성한 객체에 존재하는 함수는 다음과 같습니다.
+
+- `getEl()` DOM 객체의 HTML element를 가져옵니다.
+
 사용 가능한 파라미터는 다음과 같습니다.
 - `tag` 생설할 DOM 객체에 해당하는 태그를 지정합니다.
 - `el` 태그를 지정하지 않고 HTML element를 직접 지정합니다.
@@ -456,23 +465,151 @@ A({
 - `tap()` 마치 눌러진 것 처럼 터치 혹은 클릭 이벤트를 발생시킵니다.
 
 ### `IMG`
+HTML `img` 태그와 대응되는 클래스입니다. `src` 파라미터를 추가로 사용할 수 있습니다.
+
+```javascript
+IMG({
+    src : 'logo.png'
+}).appendTo(BODY);
+```
+
+또한 `DOM`를 상속함으로 인해 생성된 함수들과 함께, 추가적으로 `IMG`로 생성한 객체의 함수들은 다음과 같습니다.
+
+- `getWidth()` 이미지의 가로 크기를 가져옵니다.
+- `getHeight()` 이미지의 세로 크기를 가져옵니다.
+- `setSize({width:})` `setSize({height:})` `setSize({width:, height})` 이미지의 크기를 지정합니다.
+- `getSrc()` 이미지의 경로를 가져옵니다.
+- `setSrc(src)` 이미지의 경로를 재지정합니다.
 
 ### `UL`
+HTML `ul` 태그와 대응되는 클래스입니다.
+
+```javascript
+UL({
+    c : [LI({
+        c : '홈'
+    }), LI({
+        c : '소개'
+    }), LI({
+        c : '게시판'
+    })]
+}).appendTo(BODY);
+```
+
 ### `LI`
+HTML `li` 태그와 대응되는 클래스입니다.
 
 ### `TABLE`
+HTML `table` 태그와 대응되는 클래스입니다.
+
+```javascript
+TABLE({
+    c : [TR({
+        c : [TH({
+            c : '이름'
+        }), TH({
+            c : '나이'
+        }), TH({
+            c : '성별'
+        })]
+    }), TR({
+        c : [TD({
+            c : 'YJ Sim'
+        }), TD({
+            c : 29
+        }), TD({
+            c : '남'
+        })]
+    }), TR({
+        c : [TD({
+            c : 'DS Hwang'
+        }), TD({
+            c : 26
+        }), TD({
+            c : '여'
+        })]
+    })]
+}).appendTo(BODY);
+```
+
 ### `TR`
+HTML `tr` 태그와 대응되는 클래스입니다.
+
 ### `TH`
+HTML `th` 태그와 대응되는 클래스입니다. `rowspan`과 `colspan` 파라미터를 추가로 사용할 수 있습니다.
+
 ### `TD`
+HTML `td` 태그와 대응되는 클래스입니다. `rowspan`과 `colspan` 파라미터를 추가로 사용할 수 있습니다.
 
 ### `FORM`
-### `INPUT`
-### `TEXTAREA`
+HTML `form` 태그와 대응되는 클래스입니다. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
 
-### `OPTGROUP`
-### `OPTION`
+- `action`
+- `target`
+- `method`
+- `enctype`
+
+TODO:
+
+### `INPUT`
+HTML `input` 태그와 대응되는 클래스입니다. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
+
+- `name`
+- `type`
+- `placeholder`
+- `value`
+- `capture`
+- `accept`
+- `isMultiple`
+- `isOffAutocomplete`
+
+TODO:
+
+### `TEXTAREA`
+HTML `textarea` 태그와 대응되는 클래스입니다. `name`과 `placeholder`, `value` 파라미터를 추가로 사용할 수 있습니다.
 
 ### `SELECT`
+HTML `select` 태그와 대응되는 클래스입니다. `name`과 `placeholder`, `value` 파라미터를 추가로 사용할 수 있습니다.
+
+TODO:
+
+### `OPTGROUP`
+HTML `optgroup` 태그와 대응되는 클래스입니다. `label` 파라미터를 추가로 사용할 수 있습니다.
+
+TODO:
+
+```javascript
+SELECT({
+    c : [OPTGROUP({
+        label : '',
+        c : [OPTION({
+            value : '',
+            c : '홈'
+        }), OPTION({
+            value : '',
+            c : '소개'
+        }), OPTION({
+            value : '',
+            c : '게시판'
+        })]
+    }), OPTGROUP({
+        label : '',
+        c : [OPTION({
+            value : '',
+            c : '홈'
+        }), OPTION({
+            value : '',
+            c : '소개'
+        }), OPTION({
+            value : '',
+            c : '게시판'
+        })]
+    })]
+}).appendTo(form);
+```
+
+### `OPTION`
+HTML `option` 태그와 대응되는 클래스입니다. `value` 파라미터를 추가로 사용할 수 있습니다.
 
 ### `CANVAS`
 

@@ -29,6 +29,7 @@ global.INPUT = CLASS(function(cls) {
 
 		init : function(inner, self, params) {
 			//OPTIONAL: params
+			//OPTIONAL: params.style	스타일을 지정합니다.
 			//OPTIONAL: params.name
 			//OPTIONAL: params.type
 			//OPTIONAL: params.placeholder
@@ -37,6 +38,8 @@ global.INPUT = CLASS(function(cls) {
 			//OPTIONAL: params.accept
 			//OPTIONAL: params.isMultiple
 			//OPTIONAL: params.isOffAutocomplete
+			//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+			//OPTIONAL: params.on		이벤트를 지정합니다.
 
 			var
 			// name
@@ -315,11 +318,17 @@ global.INPUT = CLASS(function(cls) {
 
 		afterInit : function(inner, self, params) {
 			//OPTIONAL: params
+			//OPTIONAL: params.style	스타일을 지정합니다.
 			//OPTIONAL: params.name
 			//OPTIONAL: params.type
 			//OPTIONAL: params.placeholder
 			//OPTIONAL: params.value
+			//OPTIONAL: params.capture
+			//OPTIONAL: params.accept
 			//OPTIONAL: params.isMultiple
+			//OPTIONAL: params.isOffAutocomplete
+			//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+			//OPTIONAL: params.on		이벤트를 지정합니다.
 
 			var
 			// type
