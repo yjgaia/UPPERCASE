@@ -46,7 +46,7 @@ global.E = CLASS({
 		// get detail.
 		getDetail,
 		
-		// get wheel delta
+		// get wheel delta.
 		getWheelDelta;
 
 		checkIsDescendant = function(parent, child) {
@@ -208,7 +208,7 @@ global.E = CLASS({
 				return e.wheelDelta;
 			}
 			
-			// FireFox
+			// for FireFox
 			else {
 				return e.detail * -40;
 			}

@@ -20,13 +20,13 @@ global.FORM = CLASS({
 	init : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
-		//OPTIONAL: params.style	스타일을 지정합니다.
-		//OPTIONAL: params.action
-		//OPTIONAL: params.target
-		//OPTIONAL: params.method
-		//OPTIONAL: params.enctype
-		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
-		//OPTIONAL: params.on		이벤트를 지정합니다.
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.action	폼 정보를 전송할 경로
+		//OPTIONAL: params.target	경로가 이동될 타겟. 지정하지 않으면 현재 창에서 이동됩니다.
+		//OPTIONAL: params.method	요청 메소드. `GET`, `POST`를 설정할 수 있습니다.
+		//OPTIONAL: params.enctype	폼을 전송할때 사용할 인코딩 방법. 업로드 기능 구현에 사용됩니다.
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
 
 		var
 		// action
@@ -132,7 +132,7 @@ global.FORM = CLASS({
 			
 			self.setData = setData = function(data) {
 				//REQUIRED: data
-	
+				
 				var
 				// f.
 				f = function(node) {
@@ -159,15 +159,14 @@ global.FORM = CLASS({
 			};
 		});
 
-		self.submit = submit = function(isRealSubmit) {
-			//OPTIONAL: isRealSubmit
-
+		self.submit = submit = function() {
+			
 			EVENT.fireAll({
 				node : self,
 				name : 'submit'
 			});
-
-			if (isRealSubmit === true) {
+			
+			if (action !== undefined) {
 				self.getEl().submit();
 			}
 		};

@@ -10,8 +10,8 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [DOM 객체 생성](#dom_객체_생성)
 * [DOM 객체의 이벤트](#dom_객체의_이벤트)
 * [DOM 객체의 스타일](#dom_객체의_스타일)
-* DOM 객체의 애니메이션
-* 뷰 기능
+* [DOM 객체의 애니메이션](#dom_객체의 애니메이션)
+* [뷰 기능](#뷰_기능)
 * [HTTP 요청 기능](#http-요청-기능)
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
 * [`STORE`](#store)
@@ -38,28 +38,28 @@ UPPERCASE 기반 프로젝트에서 웹 브라우저 환경 전용 설정값들�
 
 `INFO`의 함수들은 다음과 같습니다.
 
-### `getLang()`
+### `INFO.getLang()`
 2글자로 이루어진 현재 웹 애플리케이션의 언어 설정 코드를 가져옵니다. 기본은 브라우저의 언어 설정으로 설정됩니다.
 
 ```javascript
 INFO.getLang(); // 'ko'
 ```
 
-### `changeLang(lang)`
+### `INFO.changeLang(lang)`
 현재 웹 애플리케이션의 언어 설정을 변경합니다. 이는 [`MSG`](#msg)에 영향을 끼칩니다.
 
 ```javascript
 INFO.changeLang('ko');
 ```
 
-### `checkIsTouchMode()`
+### `INFO.checkIsTouchMode()`
 터치 모드인지 확인합니다. 터치로만 조작이 가능한 기기에서는 항상 `true`를 반환하고, 마우스로만 조작이 가능한 기기에서는 항상 `false`를 반환합니다. 터치와 마우스 조작 둘 다 가능한 기기에서는 터치를 하는 순간 혹은 마우스를 조작하는 순간 변경됩니다.
 
 ```javascript
 INFO.checkIsTouchMode(); // 스마트폰에서는 true, PC에서는 false
 ```
 
-### `getBrowserInfo()`
+### `INFO.getBrowserInfo()`
 웹 브라우저의 정보를 반환합니다.
 
 ```javascript
@@ -544,65 +544,181 @@ HTML `td` 태그와 대응되는 클래스입니다. `rowspan`과 `colspan` 파�
 ### `FORM`
 HTML `form` 태그와 대응되는 클래스입니다. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
 
-- `action`
-- `target`
-- `method`
-- `enctype`
+- `action` 폼 데이터를 전송할 경로
+- `target` 경로가 이동될 타겟. 지정하지 않으면 현재 창에서 이동됩니다.
+- `method` 요청 메소드. `GET`, `POST`를 설정할 수 있습니다.
+- `enctype` 폼 데이터를 전송할때 사용할 인코딩 방법. 업로드 기능 구현에 사용됩니다.
 
-TODO:
+```javascript
+var
+// form
+form = FORM({
+    action : 'account/create',
+    method : 'POST',
+    c : [INPUT({
+        name : 'name',
+        placeholder : '이름'
+    }), INPUT({
+        name : 'age',
+        placeholder : '나이'
+    }), SELECT({
+        name : 'sex',
+        placeholder : '성별',
+        c : [OPTION({
+            value : 'male',
+            c : '남자'
+        }), OPTION({
+            value : 'female',
+            c : '여자'
+        })]
+    }), TEXTAREA({
+        name : 'introduce',
+        placeholder : '소개'
+    }), INPUT({
+        type : 'submit',
+        value : '가입 완료'
+    })]
+}).appendTo(BODY);
+
+form.setData({
+    name : 'YJ Sim',
+    age : 29,
+    sex : 'male',
+    introduce : '안녕하세요.'
+});
+
+form.getData();
+```
+
+또한 `DOM`를 상속함으로 인해 생성된 함수들과 함께, 추가적으로 `FORM`로 생성한 객체의 함수들은 다음과 같습니다.
+
+- `getData()` 현재 폼에 작성된 데이터를 가져옵니다. (`DOM`의 `getData`와 다릅니다.)
+- `setData(data)` 주어진 데이터를 폼에 반영합니다. (`DOM`의 `setData`와 다릅니다.)
+- `submit()` 폼 데이터를 `action`에 지정한 경로로 전송합니다. `action`이 지정되어 있지 않은 경우에는 `submit` 이벤트만 발생시키고, 페이지를 이동하지 않습니다. 
 
 ### `INPUT`
 HTML `input` 태그와 대응되는 클래스입니다. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
 
 - `name`
 - `type`
-- `placeholder`
+- `placeholder` 값이 없는 경우 표시되는 짧은 설명
 - `value`
-- `capture`
-- `accept`
-- `isMultiple`
-- `isOffAutocomplete`
+- `accept` 파일 선택시 특정 파일만 선택 가능하도록 설정(예: `'.gif, .jpg, .png'`, `'image/gif, image/jpeg, image/png'`, `'image/*'` 등). 업로드 기능 구현에 사용됩니다.
+- `isMultiple` `true`인 경우 여러 파일 선택 가능. 업로드 기능 구현에 사용됩니다.
+- `isOffAutocomplete` `true`인 경우 브라우저가 제공하는 자동 완성 기능을 사용하지 않음
 
-TODO:
+```javascript
+var
+// input
+input;
+
+FORM({
+    action : 'upload',
+    method : 'POST',
+    enctype : 'multipart/form-data',
+    c : [input = INPUT({
+		name : 'fileName',
+		placeholder : '저장할 파일명'
+    }), INPUT({
+        type : 'file',
+		name : 'file',
+		accept : 'image/*',
+		isMultiple : true
+    }), INPUT({
+        type : 'submit',
+        value : '업로드'
+    })]
+}).appendTo(BODY);
+
+input.focus();
+input.getName();
+```
+
+또한 `DOM`를 상속함으로 인해 생성된 함수들과 함께, 추가적으로 `INPUT`으로 생성한 객체의 함수들은 다음과 같습니다.
+
+- `getName()` `name` 파라미터의 값을 가져옵니다.
+- `getValue()` 현재 작성되어 있는 값을 가져옵니다. `type` 파라미터가 `'checkbox'`거나 `'radio'`인 경우에는 결과가 `true`나 `false`가 됩니다.
+- `setValue(value)` 값을 지정합니다.
+- `select()` 현재 작성되어 있는 값을 블록 지정합니다. `type` 파라미터가 `'file'`인 경우에는 파일 선택 창이 뜨게 됩니다.
+- `focus()` 포커스 이벤트를 발생시킵니다. 일반적으로, 키보드로 값을 바로 입력할 수 있도록 입력 바가 생성됩니다.
+- `blur()` 포커스를 풉니다.
+- `toggleCheck()` `type` 파라미터가 `'checkbox'`거나 `'radio'`인 경우 이미 눌려져 있는 경우에는 취소시키고, 눌러져 있지 않은 경우에는 누르는 것과 같은 처리를 합니다.
+- `checkIsChecked()` `type` 파라미터가 `'checkbox'`거나 `'radio'`인 경우 눌러져 있는지 확인합니다.
 
 ### `TEXTAREA`
 HTML `textarea` 태그와 대응되는 클래스입니다. `name`과 `placeholder`, `value` 파라미터를 추가로 사용할 수 있습니다.
 
+또한 `DOM`를 상속함으로 인해 생성된 함수들과 함께, 추가적으로 `TEXTAREA`로 생성한 객체의 함수들은 다음과 같습니다.
+
+- `getName()` `name` 파라미터의 값을 가져옵니다.
+- `getValue()` 현재 작성되어 있는 값을 가져옵니다.
+- `setValue(value)` 값을 지정합니다.
+- `select()` 현재 작성되어 있는 값을 블록 지정합니다.
+- `focus()` 포커스 이벤트를 발생시킵니다. 일반적으로, 키보드로 값을 바로 입력할 수 있도록 입력 바가 생성됩니다.
+- `blur()` 포커스를 풉니다.
+
 ### `SELECT`
 HTML `select` 태그와 대응되는 클래스입니다. `name`과 `placeholder`, `value` 파라미터를 추가로 사용할 수 있습니다.
 
-TODO:
+```javascript
+var
+// select
+select = SELECT({
+    name : 'sex',
+    placeholder : '성별',
+    c : [OPTION({
+        value : 'male',
+        c : '남자'
+    }), OPTION({
+        value : 'female',
+        c : '여자'
+    })]
+}).appendTo(form);
+
+select.getName();
+select.setValue('female');
+select.getValue();
+```
+
+또한 `DOM`를 상속함으로 인해 생성된 함수들과 함께, 추가적으로 `SELECT`로 생성한 객체의 함수들은 다음과 같습니다.
+
+- `getName()` `name` 파라미터의 값을 가져옵니다.
+- `getValue()` 현재 작성되어 있는 값을 가져옵니다.
+- `setValue(value)` 값을 지정합니다.
+- `select()` 현재 작성되어 있는 값을 블록 지정합니다.
+- `focus()` 포커스 이벤트를 발생시킵니다. 일반적으로, 키보드로 값을 바로 입력할 수 있도록 입력 바가 생성됩니다.
+- `blur()` 포커스를 풉니다.
 
 ### `OPTGROUP`
 HTML `optgroup` 태그와 대응되는 클래스입니다. `label` 파라미터를 추가로 사용할 수 있습니다.
 
-TODO:
-
 ```javascript
 SELECT({
+    name : 'nation',
+    placeholder : '국가',
     c : [OPTGROUP({
-        label : '',
+        label : '아시아',
         c : [OPTION({
-            value : '',
-            c : '홈'
+            value : 'korea',
+            c : '대한민국'
         }), OPTION({
-            value : '',
-            c : '소개'
+            value : 'japan',
+            c : '일본'
         }), OPTION({
-            value : '',
-            c : '게시판'
+            value : 'china',
+            c : '중국'
         })]
     }), OPTGROUP({
-        label : '',
+        label : '유럽',
         c : [OPTION({
-            value : '',
-            c : '홈'
+            value : 'uk',
+            c : '영국'
         }), OPTION({
-            value : '',
-            c : '소개'
+            value : 'france',
+            c : '프랑스'
         }), OPTION({
-            value : '',
-            c : '게시판'
+            value : 'italy',
+            c : '이탈리아'
         })]
     })]
 }).appendTo(form);
@@ -611,18 +727,73 @@ SELECT({
 ### `OPTION`
 HTML `option` 태그와 대응되는 클래스입니다. `value` 파라미터를 추가로 사용할 수 있습니다.
 
+또한 `DOM`를 상속함으로 인해 생성된 함수들과 함께, 추가적으로 `OPTION`으로 생성한 객체의 함수들은 다음과 같습니다.
+
+- `getValue()` 현재 작성되어 있는 값을 가져옵니다.
+- `setValue(value)` 값을 지정합니다.
+
 ### `CANVAS`
+TODO:
 
 ### `AUDIO`
+TODO:
 
 ### `VIDEO`
+TODO:
 
 ### `IFRAME`
+TODO:
 
 ### `CLEAR_BOTH`
-TOOD:
+TODO:
 
 ## DOM 객체의 이벤트
+DOM 객체에 이벤트를 등록하는 방법에 대해 살펴보겠습니다.
+
+### `EVENT`를 사용하여 이벤트 등록/해제
+```javascript
+
+```
+
+### `DOM`의 `on`/`off`를 사용하여 이벤트 등록/해제
+`DOM`으로 생성한 객체의 함수인 `on`과 `off`를 사용하여 이벤트를 등록하거나 해제할 수 있습니다. 두 함수는 내부적으로 `EVENT`를 통해 구현되어 있습니다.
+
+```javascript
+
+```
+
+### `EVENT`
+TODO:
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+- `node`
+- `lowNode`
+- `name`
+
+`EVENT`로 생성한 객체의 함수들은 다음과 같습니다.
+
+- `remove()`
+- `fire()`
+- `getEventHandler()`
+
+`EVENT`의 함수들은 다음과 같습니다.
+
+- `EVENT.fireAll({node:, name:})` `EVENT.fireAll(name)`
+- `EVENT.removeAll({node:, name:})` `EVENT.removeAll({node:})` `EVENT.removeAll(name)` `EVENT.removeAll()`
+- `EVENT.remove({node:, name:}, function(e) {})` `EVENT.remove(name, function(e) {})`
+
+- `e.stopDefault()`
+- `e.stopBubbling()`
+- `e.stop()`
+- `e.getLeft()`
+- `e.getTop()`
+- `e.getKeyCode()`
+- `e.getKeyName()`
+- `e.getState()`
+- `e.getDetail()`
+- `e.getWheelDelta()`
+
+### `EVENT_ONCE`
 TODO:
 
 ## DOM 객체의 스타일

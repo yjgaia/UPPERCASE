@@ -156,18 +156,18 @@ global.EVENT = CLASS(function(cls) {
 		}
 	};
 
-	cls.remove = remove = function(params, eventHandler) {
-		//REQUIRED: params
-		//OPTIONAL: params.node
-		//REQUIRED: params.name
+	cls.remove = remove = function(nameOrParams, eventHandler) {
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node
+		//REQUIRED: nameOrParams.name
 		//REQUIRED: eventHandler
 
 		var
 		// node
-		node = params.node,
+		node,
 
 		// name
-		name = params.name,
+		name,
 
 		// node id
 		nodeId,
@@ -177,6 +177,14 @@ global.EVENT = CLASS(function(cls) {
 
 		// events
 		events;
+		
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			name = nameOrParams.name;
+		}
 
 		if (node === undefined) {
 			nodeId = 'body';

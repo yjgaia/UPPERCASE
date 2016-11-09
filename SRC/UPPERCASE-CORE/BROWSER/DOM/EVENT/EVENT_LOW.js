@@ -50,9 +50,8 @@ global.EVENT_LOW = CLASS({
 		} else {
 			el = global;
 		}
-
-		inner.innerHandler = innerHandler = function(e) {
-			//REQUIRED: e
+		
+		el.addEventListener(name, innerHandler = function(e) {
 			
 			var
 			// result
@@ -66,9 +65,8 @@ global.EVENT_LOW = CLASS({
 			}
 
 			return result;
-		};
-
-		el.addEventListener(name, innerHandler, false);
+			
+		}, false);
 
 		self.remove = remove = function() {
 			el.removeEventListener(name, innerHandler, false);
