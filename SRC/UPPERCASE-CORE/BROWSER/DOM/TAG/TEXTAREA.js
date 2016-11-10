@@ -117,11 +117,7 @@ global.TEXTAREA = CLASS({
 			name : 'keydown'
 		}, function(e) {
 
-			var
-			// key code
-			keyCode = e.getKeyCode();
-
-			if (keyCode === 91 || keyCode === 17) {
+			if (e.getKey() === 'Control') {
 				isCtrlDown = true;
 			} else if (isCtrlDown !== true) {
 				e.stopBubbling();
@@ -133,11 +129,7 @@ global.TEXTAREA = CLASS({
 			name : 'keyup'
 		}, function(e) {
 
-			var
-			// key code
-			keyCode = e.getKeyCode();
-
-			if (keyCode === 91 || keyCode === 17) {
+			if (e.getKey() === 'Control') {
 				isCtrlDown = false;
 			}
 		});

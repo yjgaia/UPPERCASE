@@ -752,52 +752,120 @@ DOM 객체에 이벤트를 등록하는 방법에 대해 살펴보겠습니다.
 
 ### `EVENT`를 사용하여 이벤트 등록/해제
 ```javascript
+var
+// div
+div = DIV({
+    c : 'TOUCH ME!'
+}).appendTo(BODY);
 
+EVENT({
+    node : div,
+    name : 'tap'
+}, function(e) {
+    alert('WOW!');
+});
 ```
 
-### `DOM`의 `on`/`off`를 사용하여 이벤트 등록/해제
-`DOM`으로 생성한 객체의 함수인 `on`과 `off`를 사용하여 이벤트를 등록하거나 해제할 수 있습니다. 두 함수는 내부적으로 `EVENT`를 통해 구현되어 있습니다.
+### `NODE`의 `on`/`off`를 사용하여 이벤트 등록/해제
+`NODE`를 상속한 클래스로 생성한 객체의 함수인 `on`과 `off`를 사용하여 이벤트를 등록하거나 해제할 수 있습니다. 두 함수는 내부적으로 `EVENT`를 통해 구현되어 있습니다.
 
 ```javascript
+var
+// div
+div = DIV({
+    c : 'TOUCH ME!'
+}).appendTo(BODY);
 
+div.on('tab', function(e) {
+    alert('WOW!');
+});
 ```
 
-### `EVENT`
-TODO:
+혹은, `on` 파라미터를 통해 이벤트를 등록할 수 있습니다.
+
+```javascript
+DIV({
+    c : 'TOUCH ME!',
+    on : {
+        tab : function(e) {
+            alert('WOW!');
+        }
+    }
+}).appendTo(BODY);
+```
+
+### `EVENT(params, eventHandler)`
+노드의 이벤트 처리를 담당하는 `EVENT` 클래스
+
+```javascript
+EVENT({
+    node : div,
+    name : 'tap'
+}, function(e) {
+    alert('WOW!');
+});
+```
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
-- `node`
-- `lowNode`
-- `name`
+- `node` 이벤트를 등록 및 적용할 노드
+- `lowNode` 이벤트 '등록'은 `node` 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
+- `name` 이벤트 이름
+
+[UPPERCASER가 지원하는 이벤트 목록](UPPERCASE-CORE-BROWSER/EVENT-LIST.md)은 해당 문서를 참고하시기 바랍니다.
 
 `EVENT`로 생성한 객체의 함수들은 다음과 같습니다.
 
-- `remove()`
-- `fire()`
-- `getEventHandler()`
+- `remove()` 이벤트를 제거합니다.
+- `fire()` 이벤트를 임의로 발생시킵니다.
+- `getEventHandler()` 이벤트 핸들러를 가져옵니다.
 
 `EVENT`의 함수들은 다음과 같습니다.
 
-- `EVENT.fireAll({node:, name:})` `EVENT.fireAll(name)`
-- `EVENT.removeAll({node:, name:})` `EVENT.removeAll({node:})` `EVENT.removeAll(name)` `EVENT.removeAll()`
-- `EVENT.remove({node:, name:}, function(e) {})` `EVENT.remove(name, function(e) {})`
+- `EVENT.fireAll({node:, name:})` `EVENT.fireAll(name)` `name`의 이름을 가진 모든 이벤트를 발생시킵니다. `node`가 지정되지 않은 경우 글로벌 이벤트를 발생시킵니다.
+- `EVENT.removeAll({node:, name:})` `EVENT.removeAll({node:})` `EVENT.removeAll(name)` `EVENT.removeAll()` `name`의 이름을 가진 모든 이벤트를 제거합니다. `name`가 지정되지 않은 경우 해당 노드의 모든 이벤트를 제거하며, `node`가 지정되지 않은 경우 글로벌 이벤트를 제거합니다.
+- `EVENT.remove({node:, name:}, eventHandler)` `EVENT.remove(name, eventHandler)` `name`의 이름을 가지며 이벤트 핸들러가 주어진 `eventHandler`에 해당하는 이벤트를 제거합니다. `node`가 지정되지 않은 경우 글로벌 이벤트를 제거합니다.
 
-- `e.stopDefault()`
-- `e.stopBubbling()`
-- `e.stop()`
-- `e.getLeft()`
-- `e.getTop()`
-- `e.getKeyCode()`
-- `e.getKeyName()`
-- `e.getState()`
-- `e.getDetail()`
-- `e.getWheelDelta()`
+이벤트 핸들러의 파라미터로 넘어오는 `e` 객체에는 다음과 같은 함수들이 있습니다.
 
-### `EVENT_ONCE`
-TODO:
+```javascript
+EVENT({
+    node : div,
+    name : 'tap'
+}, function(e) {
+    
+    console.log('이벤트가 발생한 화면 왼쪽으로부터의 위치: ' + e.getLeft());
+    console.log('이벤트가 발생한 화면 위쪽으로부터의 위치: ' + e.getTop());
+    
+    // 이벤트 버블링 중단
+    e.stopBubbling();
+});
+```
+
+- `e.stopDefault()` 특정 이벤트가 발생했을 때의 브라우저 기본 동작을 수행하지 않습니다.
+- `e.stopBubbling()` 현재 노드의 상위 노드로 이벤트가 전파되는, 일명 `이벤트 버블링`을 방지합니다. 상위 노드에 같은 이름의 이벤트가 등록되어 있더라도, 이 함수를 실행함으로써 상위 노드에서는 이벤트가 처리되지 않습니다.
+- `e.stop()` 브라우저의 기본 동작을 수행하지 않으며 이벤트 버블링 또한 방지합니다. 이는 `e.stopDefault`와 `e.stopBubbling`을 함께 실행하는 것과 같습니다.
+- `e.getLeft()` 마우스/터치 관련 이벤트(`'tab'`, `'touchstart'`, `'touchend'` 등)가 발생한 화면 왼쪽으로부터의 위치를 가져옵니다.
+- `e.getTop()` 마우스/터치 관련 이벤트(`'tab'`, `'touchstart'`, `'touchend'` 등)가 발생한 화면 위쪽으로부터의 위치를 가져옵니다.
+- `e.getKey()` 키보드 관련 이벤트(`'keydown'`, `'keyup'` 등)가 발생한 경우 입력된 키를 가져옵니다.
+- `e.getWheelDelta()` 마우스 휠 이벤트(`'mousewheel'`)가 발생한 경우 얼마나 휠이 돌아갔는지에 대한 값을 가져옵니다.
+
+### `EVENT_ONCE(params, eventHandler)`
+이벤트가 한번 발생하면 자동으로 제거되는 `EVENT_ONCE` 클래스
+
+```javascript
+EVENT_ONCE({
+    node : div,
+    name : 'tap'
+}, function(e) {
+    alert('WOW!');
+    // 더 이상 이벤트가 처리되지 않습니다.
+});
+```
 
 ## DOM 객체의 스타일
 TODO: CSS 비판, vh 등을 들먹이며
+
+[UPPERCASER가 지원하는 스타일 목록](UPPERCASE-CORE-BROWSER/STYLE-LIST.md)은 해당 문서를 참고하시기 바랍니다.
 
 ## DOM 객체의 애니메이션
 TODO:

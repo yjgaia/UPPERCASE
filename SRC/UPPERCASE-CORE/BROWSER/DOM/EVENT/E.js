@@ -1,5 +1,5 @@
 /**
- * Dom event object wrapper class
+ * 이벤트 정보를 제공하는 객체를 생성하는 E 클래스
  */
 global.E = CLASS({
 
@@ -34,17 +34,8 @@ global.E = CLASS({
 		// get top.
 		getTop,
 
-		// get key code.
-		getKeyCode,
-
-		// get key name.
-		getKeyName,
-		
-		// get state.
-		getState,
-		
-		// get detail.
-		getDetail,
+		// get key.
+		getKey,
 		
 		// get wheel delta.
 		getWheelDelta;
@@ -186,32 +177,12 @@ global.E = CLASS({
 			return e.pageY;
 		};
 
-		self.getKeyCode = getKeyCode = function() {
-			return e.keyCode;
-		};
-
-		self.getKeyName = getKeyName = function() {
-			return e.keyName;
-		};
-		
-		self.getState = getState = function() {
-			return e.state;
-		};
-		
-		self.getDetail = getDetail = function() {
-			return e.detail;
+		self.getKey = getKey = function() {
+			return e.key;
 		};
 		
 		self.getWheelDelta = getWheelDelta = function() {
-			
-			if (document.onmousewheel !== undefined) {
-				return e.wheelDelta;
-			}
-			
-			// for FireFox
-			else {
-				return e.detail * -40;
-			}
+			return e.deltaY;
 		};
 	}
 });

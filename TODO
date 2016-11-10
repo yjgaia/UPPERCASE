@@ -10,6 +10,4 @@
 * WEB_SERVER에 RESOURCE_SERVER, UPLOAD_REQUEST 통합, onDisconnected 제거
 * CPU_SHARED_DB, CPU_SHARED_STORE, SHARED_DB가 SHARED_STORE로 통합
 * clientInfo.lastReceiveTime가 clientInfo.lastSendTime으로 변경
-
-장점
-* 브라우저 파편화 문제 해결
+* 이벤트 처리 시 e.getKeyCode와 e.getKeyName 함수를 e.getKey로 통합

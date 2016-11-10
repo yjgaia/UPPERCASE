@@ -232,27 +232,6 @@ div.getEl().addAttribute('class', 'sample');
     ```
 
 ### 이벤트
-* `EVENT(name, func)` `EVENT({node:, name:}, func)` 특정 NODE에 이벤트를 적용하는 클래스입니다. NODE의 `on` 파라미터 처리에도 사용됩니다. `remove`로 이벤트를 중지시킬 수 있습니다. [예제보기](../EXAMPLES/BROWSER/DOM/EVENT/EVENT.js)
-
-    ```javascript
-    var
-    // div
-    div = DIV({
-        c : 'TOUCH ME!'
-    }).appendTo(BODY),
-    
-    // event
-    evt = EVENT({
-        node : div,
-        name : 'tap'
-    }, function(e) {
-    	e.getLeft();
-    	e.getTop();
-        ...
-    });
-    
-    evt.remove()
-    ```
 
 * `EVENT_ONCE(name, func)` `EVENT_ONCE({node:, name:}, func)` 특정 NODE에 한번만 발생하는 이벤트를 적용하는 클래스입니다. 이벤트가 처음 한번 발생하면 더 이상 이벤트가 발생하지 않습니다. [예제보기](../EXAMPLES/BROWSER/DOM/EVENT/EVENT_ONCE.js)
 

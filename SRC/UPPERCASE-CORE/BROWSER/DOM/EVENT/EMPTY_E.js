@@ -1,5 +1,5 @@
 /**
- * Dom epmty event object class
+ * 빈 이벤트 정보를 제공하는 객체를 생성하는 EMPTY_E 클래스
  */
 global.EMPTY_E = CLASS({
 
@@ -22,11 +22,11 @@ global.EMPTY_E = CLASS({
 		// get top.
 		getTop,
 
-		// get key code.
-		getKeyCode,
+		// get key.
+		getKey,
 		
-		// get state.
-		getState;
+		// get detail.
+		getWheelDelta;
 
 		self.stopDefault = stopDefault = function() {
 			// ignore.
@@ -41,25 +41,23 @@ global.EMPTY_E = CLASS({
 		};
 
 		self.getLeft = getLeft = function() {
-
+			
 			// on heaven!
 			return -999999;
 		};
 
 		self.getTop = getTop = function() {
-
+			
 			// on heaven!
 			return -999999;
 		};
 
-		self.getKeyCode = getKeyCode = function() {
-
-			// on heaven!
-			return -999999;
+		self.getKey = function() {
+			return '';
 		};
 		
-		self.getState = getState = function() {
-			// ignore.
+		self.getWheelDelta = getWheelDelta = function() {
+			return 0;
 		};
 	}
 });

@@ -1,5 +1,5 @@
 /**
- * Event class
+ * 노드의 이벤트 처리를 담당하는 EVENT 클래스
  */
 global.EVENT = CLASS(function(cls) {
 	'use strict';
@@ -8,12 +8,6 @@ global.EVENT = CLASS(function(cls) {
 	// event map
 	eventMaps = {},
 	
-	// vendors
-	vendors = ['webkit', 'moz', 'o', 'ms'],
-	
-	// visibility change event name
-	visibilityChangeEventName = 'visibilitychange',
-
 	// fire all.
 	fireAll,
 
@@ -23,23 +17,10 @@ global.EVENT = CLASS(function(cls) {
 	// remove.
 	remove;
 	
-	if (document['hidden'] === undefined) {
-		
-		EACH(vendors, function(vendor) {
-			
-			if (document[vendor + 'Hidden'] !== undefined) {
-				
-				visibilityChangeEventName = vendor + 'visibilitychange';
-				
-				return false;
-			}
-		});
-	}
-
 	cls.fireAll = fireAll = function(nameOrParams) {
 		//REQUIRED: nameOrParams
-		//OPTIONAL: nameOrParams.node
-		//REQUIRED: nameOrParams.name
+		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
+		//REQUIRED: nameOrParams.name	이벤트 이름
 
 		var
 		// node
@@ -97,8 +78,8 @@ global.EVENT = CLASS(function(cls) {
 
 	cls.removeAll = removeAll = function(nameOrParams) {
 		//OPTIONAL: nameOrParams
-		//OPTIONAL: nameOrParams.node
-		//OPTIONAL: nameOrParams.name
+		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
+		//OPTIONAL: nameOrParams.name	이벤트 이름
 
 		var
 		// node
@@ -158,8 +139,8 @@ global.EVENT = CLASS(function(cls) {
 
 	cls.remove = remove = function(nameOrParams, eventHandler) {
 		//REQUIRED: nameOrParams
-		//OPTIONAL: nameOrParams.node
-		//REQUIRED: nameOrParams.name
+		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
+		//REQUIRED: nameOrParams.name	이벤트 이름
 		//REQUIRED: eventHandler
 
 		var
@@ -213,9 +194,9 @@ global.EVENT = CLASS(function(cls) {
 
 		init : function(inner, self, nameOrParams, eventHandler) {
 			//REQUIRED: nameOrParams
-			//OPTIONAL: nameOrParams.node
-			//OPTIONAL: nameOrParams.lowNode
-			//REQUIRED: nameOrParams.name
+			//OPTIONAL: nameOrParams.node		이벤트를 등록 및 적용할 노드
+			//OPTIONAL: nameOrParams.lowNode	이벤트 '등록'은 node 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
+			//REQUIRED: nameOrParams.name		이벤트 이름
 			//REQUIRED: eventHandler
 
 			var
@@ -236,9 +217,6 @@ global.EVENT = CLASS(function(cls) {
 
 			// sub event
 			subEvent,
-
-			// touch start left, top
-			startLeft, startTop,
 
 			// last tap time
 			lastTapTime,
@@ -302,76 +280,14 @@ global.EVENT = CLASS(function(cls) {
 				}
 			};
 
-			// tap event (for remove click delay, simulate click event.)
+			// tap event (simulate click event.)
 			if (name === 'tap') {
-
-				// when is touch mode or when is exists tap delay (300ms)
-				eventLows.push(EVENT_LOW({
-					node : node,
-					lowNode : lowNode,
-					name : 'touchstart'
-				}, function(e) {
-					if (INFO.checkIsTouchMode() === true && INFO.checkIsExistsTapDelay() === true && e !== undefined) {
-						startLeft = e.getLeft();
-						startTop = e.getTop();
-					}
-				}));
-
-				eventLows.push(EVENT_LOW({
-					node : node,
-					lowNode : lowNode,
-					name : 'touchend'
-				}, function(e, node) {
-
-					var
-					// left
-					left,
-
-					// top
-					top;
-
-					if (INFO.checkIsTouchMode() === true && INFO.checkIsExistsTapDelay() === true && e !== undefined) {
-
-						left = e.getLeft();
-						top = e.getTop();
-
-						if (startLeft - 5 <= left && left <= startLeft + 5 && startTop - 5 <= top && top <= startTop + 5) {
-						
-							if (lastTapTime === undefined || Date.now() - lastTapTime > 100) {
-								
-								lastTapTime = Date.now();
-								
-								if (nodeId !== 'body') {
-									e.stopDefault();
-								}
-								
-								return eventHandler(e, node);
-							}
-						}
-					}
-				}));
-
-				// when is not touch mode or when is not exists tap delay (300ms)
+				
 				eventLows.push(EVENT_LOW({
 					node : node,
 					lowNode : lowNode,
 					name : 'click'
-				}, function(e, node) {
-					
-					if (INFO.checkIsTouchMode() !== true || INFO.checkIsExistsTapDelay() !== true) {
-						
-						if (lastTapTime === undefined || Date.now() - lastTapTime > 100) {
-							
-							lastTapTime = Date.now();
-							
-							if (nodeId !== 'body') {
-								e.stopDefault();
-							}
-							
-							return eventHandler(e, node);
-						}
-					}
-				}));
+				}, eventHandler);
 			}
 
 			// double tap event (not exists, simulate.)
@@ -500,24 +416,6 @@ global.EVENT = CLASS(function(cls) {
 						eventHandler(e, node);
 					}
 				}));
-			}
-			
-			// mouse wheel event (FireFox, using 'DOMMouseScroll')
-			else if (name === 'mousewheel') {
-				
-				if (document.onmousewheel !== undefined) {
-					eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
-				}
-				
-				// FireFox
-				else {
-					
-					eventLows.push(EVENT_LOW({
-						node : node,
-						lowNode : lowNode,
-						name : 'DOMMouseScroll'
-					}, eventHandler));
-				}
 			}
 
 			// other events

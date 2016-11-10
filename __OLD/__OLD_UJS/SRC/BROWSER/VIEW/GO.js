@@ -17,13 +17,13 @@ global.GO = METHOD(function(m) {
 				isCTRLKeyDown = false;
 							
 				EVENT('keydown', function(e) {
-					if (e.getKeyCode() === 17) {
+					if (e.getKey() === 'Control') {
 						isCTRLKeyDown = true;
 					}
 				});
 				
 				EVENT('keyup', function(e) {
-					if (e.getKeyCode() === 17) {
+					if (e.getKey() === 'Control') {
 						isCTRLKeyDown = false;
 					}
 				});

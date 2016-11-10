@@ -190,7 +190,7 @@ global.INPUT = CLASS(function(cls) {
 						node : self,
 						name : 'keyup'
 					}, function(e) {
-						if (e !== undefined && e.getKeyCode() === 32) {
+						if (e !== undefined && e.getKey() === 'Enter') {
 							DELAY(function() {
 								EVENT.fireAll({
 									node : self,
