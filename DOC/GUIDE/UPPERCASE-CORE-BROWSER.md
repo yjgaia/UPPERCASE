@@ -8,9 +8,9 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [`INFO`](#info)
 * [창 관련 기능](#창_관련_기능)
 * [DOM 객체 생성](#dom_객체_생성)
-* [DOM 객체의 이벤트](#dom_객체의_이벤트)
-* [DOM 객체의 스타일](#dom_객체의_스타일)
-* [DOM 객체의 애니메이션](#dom_객체의 애니메이션)
+* [노드에 이벤트 등록](#노드에_이벤트_등록)
+* [노드에 스타일 지정](#노드에_스타일_지정)
+* [노드에 애니메이션 지정](#노드에_애니메이션_지정)
 * [뷰 기능](#뷰_기능)
 * [HTTP 요청 기능](#http-요청-기능)
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
@@ -151,6 +151,8 @@ hello.addStyle({
     color : 'blue'
 });
 ```
+
+이렇게 DOM 객체 생성을 JavaScript에서 하게 되면, 이 코드들을 묶어 구조를 분리하거나 재활용 하는 등, 컴퍼넌트화 하기 쉽습니다.
 
 ### `NODE`
 일반적으로 웹 페이지를 구성하는 DOM 요소들은 [트리 구조](https://ko.wikipedia.org/wiki/%ED%8A%B8%EB%A6%AC_%EA%B5%AC%EC%A1%B0)로 이루어지게 됩니다. 따라서 DOM 객체를 살펴보기 전에, 노드로 이루어진 트리 구조를 정의하기 위한 `NODE` 클래스를 먼저 살펴보겠습니다. 아래의 DOM 객체를 생성하는 모든 기능들은 이 `NODE` 클래스를 상속하여 구현되어 있습니다. 또한 개발자가 `NODE`를 상속하여 새로운 종류의 노드를 만들어 낼 수 있습니다.
@@ -387,6 +389,8 @@ DOM({
 사용 가능한 파라미터는 다음과 같습니다.
 - `tag` 생설할 DOM 객체에 해당하는 태그를 지정합니다.
 - `el` 태그를 지정하지 않고 HTML element를 직접 지정합니다.
+- `id` id 속성
+- `cls` class 속성
 - `style` 스타일을 지정합니다.
 - `c` 자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 - `on` 이벤트를 지정합니다.
@@ -742,13 +746,45 @@ TODO:
 TODO:
 
 ### `IFRAME`
-TODO:
+HTML `iframe` 태그와 대응되는 클래스
 
-### `CLEAR_BOTH`
-TODO:
+```javascript
+IFRAME({
+	style : {
+		width : 560,
+		height : 315
+	},
+	src : 'https://www.youtube.com/embed/0E00Zuayv9Q'
+}).appendTo(BODY);
+```
 
-## DOM 객체의 이벤트
-DOM 객체에 이벤트를 등록하는 방법에 대해 살펴보겠습니다.
+### `CLEAR_BOTH()`
+`clear : 'both'` 스타일이 지정된 `DIV`를 생성합니다.
+
+```javascript
+DIV({
+    c : [DIV({
+        style : {
+            flt : 'left'
+        },
+        c : '로고'
+    }), DIV({
+        style : {
+            flt : 'right'
+        },
+        c : '메뉴'
+    }),
+    
+    CLEAR_BOTH(),
+    
+    DIV({
+        c : '안녕하세요!'
+    })]
+}).appendTo(BODY);
+```
+
+## 노드에 이벤트 등록
+노드에 이벤트를 등록하는 방법에 대해 살펴보겠습니다.
 
 ### `EVENT`를 사용하여 이벤트 등록/해제
 ```javascript
@@ -847,7 +883,7 @@ EVENT({
 - `e.getLeft()` 마우스/터치 관련 이벤트(`'tab'`, `'touchstart'`, `'touchend'` 등)가 발생한 화면 왼쪽으로부터의 위치를 가져옵니다.
 - `e.getTop()` 마우스/터치 관련 이벤트(`'tab'`, `'touchstart'`, `'touchend'` 등)가 발생한 화면 위쪽으로부터의 위치를 가져옵니다.
 - `e.getKey()` 키보드 관련 이벤트(`'keydown'`, `'keyup'` 등)가 발생한 경우 입력된 키를 가져옵니다.
-- `e.getWheelDelta()` 마우스 휠 이벤트(`'mousewheel'`)가 발생한 경우 얼마나 휠이 돌아갔는지에 대한 값을 가져옵니다.
+- `e.getWheelDelta()` 마우스 휠 이벤트(`'wheel'`)가 발생한 경우 얼마나 휠이 돌아갔는지에 대한 값을 가져옵니다.
 
 ### `EVENT_ONCE(params, eventHandler)`
 이벤트가 한번 발생하면 자동으로 제거되는 `EVENT_ONCE` 클래스
@@ -862,13 +898,173 @@ EVENT_ONCE({
 });
 ```
 
-## DOM 객체의 스타일
-TODO: CSS 비판, vh 등을 들먹이며
+## 노드에 스타일 지정
+노드에 스타일을 지정하는 방법에 대해 살펴보겠습니다.
+
+### `ADD_STYLE`를 사용하여 이벤트 등록/해제
+```javascript
+var
+// div
+div = DIV({
+    c : '안녕하세요!'
+}).appendTo(BODY);
+
+ADD_STYLE({
+    node : div,
+    style : {
+        backgroundColor : 'blue',
+        color : 'red',
+        fontWeight : 'bold'
+    }
+});
+```
+
+### `NODE`의 `addStyle`를 사용하여 이벤트 등록/해제
+`NODE`를 상속한 클래스로 생성한 객체의 함수인 `addStyle`을 사용하여 스타일을 지정할 수 있습니다. `addStyle`은 내부적으로 `ADD_STYLE`를 통해 구현되어 있습니다.
+
+```javascript
+var
+// div
+div = DIV({
+    c : '안녕하세요!'
+}).appendTo(BODY);
+
+div.addStyle({
+    backgroundColor : 'blue',
+    color : 'red',
+    fontWeight : 'bold'
+});
+```
+
+혹은, `style` 파라미터를 통해 이벤트를 등록할 수 있습니다.
+
+```javascript
+DIV({
+    c : '안녕하세요!'
+    style : {
+        backgroundColor : 'blue',
+        color : 'red',
+        fontWeight : 'bold'
+    }
+}).appendTo(BODY);
+```
+
+### `ADD_STYLE({node:, style:})`
+노드에 스타일을 지정합니다.
+
+```javascript
+ADD_STYLE({
+    node : div,
+    style : {
+        backgroundColor : 'blue',
+        color : 'red',
+        fontWeight : 'bold'
+    }
+});
+```
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+- `node` 스타일을 지정할 노드
+- `style` 스타일 데이터
 
 [UPPERCASER가 지원하는 스타일 목록](UPPERCASE-CORE-BROWSER/STYLE-LIST.md)은 해당 문서를 참고하시기 바랍니다.
 
-## DOM 객체의 애니메이션
-TODO:
+특수하게 `style`에 지정할 수 있는 함수가 하나 존재합니다. 바로 브라우저 창의 크기가 변경될 때 마다 실행되는 `onDisplayResize` 함수입니다. 이를 통해 CSS의 `vh`와 같은 복잡한 단위를 사용할 필요가 없습니다.
+
+```javascript
+// div를 화면 중앙에 고정합니다.
+ADD_STYLE({
+    node : div,
+    style : {
+        position : 'fixed',
+        width : 200,
+        height : 200,
+        // 창의 크기가 변경될 때 마다 위치를 가운데로 변경합니다.
+        onDisplayResize : function(width, height) {
+            return {
+                left : width / 2 - 100,
+                top : height / 2 - 100
+            };
+        }
+    }
+});
+```
+
+## 노드에 애니메이션 지정
+노드에 애니메이션을 지정하는 방법에 대해 살펴보겠습니다.
+
+```javascript
+var
+// div
+div = DIV({
+    style : {
+		position : 'fixed',
+		left : 50,
+		top : 50,
+		width : 100,
+		height : 100,
+		backgroundColor : 'red',
+		padding : 10
+	},
+	c : '움직여라!'
+}).appendTo(BODY);
+
+ANIMATE({
+	node : div,
+	keyframes : {
+		from : {
+			transform : 'rotate(0deg)'
+		},
+		to : {
+			transform : 'rotate(360deg)'
+		}
+	},
+	duration : 3,
+	timingFunction : 'linear'
+}, function() {
+
+	console.log('애니메이션 끝!');
+
+	// remove div.
+	div.remove();
+});
+```
+
+### `ANIMATE(params, animationEndHandler)`
+노드에 애니메이션을 지정합니다.
+
+```javascript
+ANIMATE({
+	node : div,
+	keyframes : {
+	    // 애니메이션 시작될때의 스타일
+		from : {
+			marginLeft : 0,
+			marginTop : 0
+		},
+		// 애니메이션이 절반 쯤 지날때의 스타일
+		'50%' : {
+			marginLeft : 100,
+			marginTop : 100
+		},
+		// 애니메이션 끝날때의 스타일
+		to : {
+			marginLeft : 0,
+			marginTop : 0
+		}
+	},
+	duration : 3
+});
+```
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+- `node` 애니메이션을 지정할 노드
+- `keyframes` 애니메이션이 진행되면서 변경될 노드의 스타일들을 정의
+- `duration` 애니메이션 지속 시간 (입력하지 않으면 `0.5`)
+- `timingFunction` 애니메이션 작동 방식, 점점 빨라지거나, 점점 느려지거나, 점점 빨라졌다 끝에서 점점 느려지는 등의 처리 (입력하지 않으면 `'ease'`, `'linear'`, `'ease'`, `'ease-in'`, `'ease-out'` 사용 가능)
+- `delay` 애니메이션이 발동하기 전 지연 시간 (입력하지 않으면 `0`)
+- `iterationCount` 애니메이션을 몇번 발동시킬지 (입력하지 않으면 `1`, 계속 애니메이션이 발동되도록 하려면 `'infinite'` 지정)
+- `direction` 애니메이션의 방향 (입력하지 않으면 `'normal'`, `'reverse'`, `'alternate'`, `'alternate-reverse'` 사용 가능)
 
 ## 뷰 기능
 TODO:

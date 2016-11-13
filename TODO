@@ -1,8 +1,7 @@
 * uppercase-core npm에 등록
-* BROWSER쪽도 CONSOLE 기능
-* requestAnimationFrame으로 LOOP OVERRIDE 하기
 * UPPERCASE-UPLOAD-SAMPLE 프로젝트 개발하기
 * REDIS_STORE-BOX 프로젝트 개발하기
+* 'transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition' 테스트
 
 1.x -> 2.x로 업데이트 시 유의할 점
 * VALID의 check는 checkAndWash로 변경

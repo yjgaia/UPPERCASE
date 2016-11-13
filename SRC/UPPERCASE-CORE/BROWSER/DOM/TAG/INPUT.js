@@ -1,5 +1,5 @@
 /**
- * Input class
+ * HTML input 태그와 대응되는 클래스
  */
 global.INPUT = CLASS(function(cls) {
 	'use strict';
@@ -29,6 +29,8 @@ global.INPUT = CLASS(function(cls) {
 
 		init : function(inner, self, params) {
 			//OPTIONAL: params
+			//OPTIONAL: params.id		id 속성
+			//OPTIONAL: params.cls		class 속성
 			//OPTIONAL: params.style	스타일
 			//OPTIONAL: params.name
 			//OPTIONAL: params.type
@@ -306,6 +308,8 @@ global.INPUT = CLASS(function(cls) {
 
 		afterInit : function(inner, self, params) {
 			//OPTIONAL: params
+			//OPTIONAL: params.id		id 속성
+			//OPTIONAL: params.cls		class 속성
 			//OPTIONAL: params.style	스타일
 			//OPTIONAL: params.name
 			//OPTIONAL: params.type

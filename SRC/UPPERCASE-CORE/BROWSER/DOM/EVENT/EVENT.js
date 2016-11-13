@@ -287,7 +287,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'click'
-				}, eventHandler);
+				}, eventHandler));
 			}
 
 			// double tap event (not exists, simulate.)

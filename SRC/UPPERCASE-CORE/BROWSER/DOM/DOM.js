@@ -14,6 +14,8 @@ global.DOM = CLASS({
 		//REQUIRED: params
 		//OPTIONAL: params.tag		생설할 DOM 객체에 해당하는 태그 지정
 		//OPTIONAL: params.el		태그를 지정하지 않고 HTML element를 직접 지정
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
@@ -25,6 +27,12 @@ global.DOM = CLASS({
 
 		// HTML Element
 		el = params.el,
+		
+		// id
+		id = params.id,
+		
+		// cls
+		cls = params.cls,
 
 		// __TEXT
 		__TEXT = params.__TEXT,
@@ -86,5 +94,19 @@ global.DOM = CLASS({
 
 			el.setAttribute(name, value);
 		};
+		
+		if (id !== undefined) {
+			setAttr({
+				name : 'id',
+				value : id
+			});
+		}
+		
+		if (cls !== undefined) {
+			setAttr({
+				name : 'class',
+				value : cls
+			});
+		}
 	}
 });

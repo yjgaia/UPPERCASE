@@ -20,6 +20,8 @@ global.A = CLASS({
 	init : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.href		이동할 경로
 		//OPTIONAL: params.target	이동할 타겟
@@ -79,6 +81,8 @@ global.A = CLASS({
 	afterInit : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.href		이동할 경로
 		//OPTIONAL: params.target	이동할 타겟

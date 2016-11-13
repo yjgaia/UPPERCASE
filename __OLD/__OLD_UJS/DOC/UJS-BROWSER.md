@@ -108,72 +108,6 @@
         CLEAR_BOTH()]
     }).appendTo(BODY);
     ```
-
-참고로 DOM 태그 구현에는 **`id`와 `class`를 지정할 수 없고, 그럴 필요도 없습니다.** 스타일을 지정하기 위해서는 `style` 파라미터를 넘기거나 `ADD_STYLE`로 지정할 수 있고, DOM을 가져오기 위해서 `id`로 가져올 필요 없이 DOM 자체를 변수에 지정하면 됩니다.
-
-```javascript
-// 아래와 같이 DOM 자체를 변수에 지정하면 됩니다.
-var
-// div
-div = DIV({
-	stlye : {
-		padding : 10
-	}
-}).appendTo(BODY);
-
-ADD_STYLE({
-    node : div,
-    style : {
-        backgroundColor : '#000',
-        color : '#fff'
-    }
-});
-```
-
-그러나 정말로 필요한 경우, 아래와 같이 HTML Element를 가져와 설정할 수 있습니다.
-
-```javascript
-var
-// div
-div = DIV().appendTo(BODY);
-
-div.getEl().addAttribute('id', 'test');
-div.getEl().addAttribute('class', 'sample');
-```
-
-### 스타일 및 애니메이션
-* `ADD_STYLE({node:, style:})` NODE에 스타일을 적용합니다. NODE의 `style` 파라미터 처리에도 사용됩니다. 참고로, 픽셀값(px)에는 `px`를 붙히지 않고 그냥 숫자만 써도 적용됩니다. [예제보기](../EXAMPLES/BROWSER/DOM/STYLE/ADD_STYLE.js)
-
-    ```javascript
-    var
-    // div
-    div = DIV({
-        style : {
-            padding : 10
-        },
-        c : 'I LOVE BLACK!'
-    }).appendTo(BODY);
-    
-    ADD_STYLE({
-        node : div,
-        style : {
-            backgroundColor : '#000',
-            color : '#fff'
-        }
-    })
-    ```
-
-* `RGBA([r, g, b, a])` `r`, `g`, `b`, `a`를 입력받아 RGBA 문자열을 만듭니다. [예제보기](../EXAMPLES/BROWSER/DOM/STYLE/RGBA.js)
-
-    ```javascript
-    ADD_STYLE({
-        node : dom,
-        style : {
-            // rgba(255, 0, 0, 0.5)
-            backgroundColor : RGBA([255, 0, 0, 0.5])
-        }
-    })
-    ```
     
 * `ANIMATE` 특정 NODE에 애니메이션을 추가합니다. [예제보기](../EXAMPLES/BROWSER/DOM/ANIMATION/ANIMATE.js)
     * `ANIMATE({node:, keyframes:})`
@@ -229,27 +163,6 @@ div.getEl().addAttribute('class', 'sample');
 		keyframes : keyframes,
 		duration : 3
 	});
-    ```
-
-### 이벤트
-
-* `EVENT_ONCE(name, func)` `EVENT_ONCE({node:, name:}, func)` 특정 NODE에 한번만 발생하는 이벤트를 적용하는 클래스입니다. 이벤트가 처음 한번 발생하면 더 이상 이벤트가 발생하지 않습니다. [예제보기](../EXAMPLES/BROWSER/DOM/EVENT/EVENT_ONCE.js)
-
-    ```javascript
-    var
-    // div
-    div = DIV({
-        c : 'TOUCH ME!'
-    }).appendTo(BODY),
-    
-    EVENT_ONCE({
-        node : div,
-        name : 'tap'
-    }, function(e) {
-    	e.getLeft();
-    	e.getTop();
-        ...
-    })
     ```
     
 ## VIEW 관련 기능

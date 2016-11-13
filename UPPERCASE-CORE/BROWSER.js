@@ -2795,7 +2795,7 @@ global.INTERVAL = CLASS({
 });
 
 /**
- * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스 (게임 개발 등에 사용됩니다.)
+ * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
  */
 global.LOOP = CLASS(function(cls) {
 	'use strict';
@@ -3713,6 +3713,256 @@ global.INFO = OBJECT({
 	}
 });
 
+OVERRIDE(LOOP, function(origin) {
+	
+	/**
+	 * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
+	 */
+	global.LOOP = CLASS(function(cls) {
+		'use strict';
+		
+		var
+		// before time
+		beforeTime,
+		
+		// animation interval
+		animationInterval,
+		
+		// loop infos
+		loopInfos = [],
+		
+		// runs
+		runs = [],
+		
+		// fire.
+		fire = function() {
+	
+			if (animationInterval === undefined) {
+	
+				beforeTime = Date.now();
+	
+				animationInterval = requestAnimationFrame(function() {
+	
+					var
+					// time
+					time = Date.now(),
+	
+					// times
+					times = time - beforeTime,
+	
+					// loop info
+					loopInfo,
+	
+					// count
+					count,
+	
+					// interval
+					interval,
+	
+					// i, j
+					i, j;
+	
+					if (times > 0) {
+	
+						for (i = 0; i < loopInfos.length; i += 1) {
+	
+							loopInfo = loopInfos[i];
+	
+							if (loopInfo.fps !== undefined && loopInfo.fps > 0) {
+	
+								if (loopInfo.timeSigma === undefined) {
+									loopInfo.timeSigma = 0;
+									loopInfo.countSigma = 0;
+								}
+	
+								// calculate count.
+								count = parseInt(loopInfo.fps / (1000 / times) * (loopInfo.timeSigma / times + 1), 10) - loopInfo.countSigma;
+	
+								// start.
+								if (loopInfo.start !== undefined) {
+									loopInfo.start();
+								}
+	
+								// run interval.
+								interval = loopInfo.interval;
+								for (j = 0; j < count; j += 1) {
+									interval(loopInfo.fps);
+								}
+	
+								// end.
+								if (loopInfo.end !== undefined) {
+									loopInfo.end(times);
+								}
+	
+								loopInfo.countSigma += count;
+	
+								loopInfo.timeSigma += times;
+								if (loopInfo.timeSigma > 1000) {
+									loopInfo.timeSigma = undefined;
+								}
+							}
+						}
+	
+						// run runs.
+						for (i = 0; i < runs.length; i += 1) {
+							runs[i](times);
+						}
+	
+						beforeTime = time;
+					}
+				});
+			}
+		},
+	
+		// stop.
+		stop = function() {
+	
+			if (loopInfos.length <= 0 && runs.length <= 0) {
+	
+				cancelAnimationFrame(animationInterval);
+				animationInterval = undefined;
+			}
+		};
+	
+		return {
+	
+			init : function(inner, self, fpsOrRun, intervalOrFuncs) {
+				//OPTIONAL: fpsOrRun
+				//OPTIONAL: intervalOrFuncs
+				//OPTIONAL: intervalOrFuncs.start
+				//REQUIRED: intervalOrFuncs.interval
+				//OPTIONAL: intervalOrFuncs.end
+	
+				var
+				// run.
+				run,
+	
+				// start.
+				start,
+	
+				// interval.
+				interval,
+	
+				// end.
+				end,
+	
+				// info
+				info,
+				
+				// resume.
+				resume,
+				
+				// pause.
+				pause,
+	
+				// change fps.
+				changeFPS,
+	
+				// remove.
+				remove;
+	
+				if (intervalOrFuncs !== undefined) {
+	
+					// init intervalOrFuncs.
+					if (CHECK_IS_DATA(intervalOrFuncs) !== true) {
+						interval = intervalOrFuncs;
+					} else {
+						start = intervalOrFuncs.start;
+						interval = intervalOrFuncs.interval;
+						end = intervalOrFuncs.end;
+					}
+				
+					self.resume = resume = RAR(function() {
+						
+						loopInfos.push( info = {
+							fps : fpsOrRun,
+							start : start,
+							interval : interval,
+							end : end
+						});
+						
+						fire();
+					});
+	
+					self.pause = pause = function() {
+	
+						REMOVE({
+							array : loopInfos,
+							value : info
+						});
+	
+						stop();
+					};
+	
+					self.changeFPS = changeFPS = function(fps) {
+						//REQUIRED: fps
+	
+						info.fps = fps;
+					};
+	
+					self.remove = remove = function() {
+						pause();
+					};
+				}
+	
+				// when fpsOrRun is run
+				else {
+					
+					self.resume = resume = RAR(function() {
+						
+						runs.push(run = fpsOrRun);
+						
+						fire();
+					});
+	
+					self.pause = pause = function() {
+	
+						REMOVE({
+							array : runs,
+							value : run
+						});
+	
+						stop();
+					};
+	
+					self.remove = remove = function() {
+						pause();
+					};
+				}
+			}
+		};
+	});
+});
+
+/**
+ * INFO의 웹 애플리케이션 언어 설정 코드에 해당하는 문자열을 반환합니다.
+ * 
+ * 만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
+ */
+global.MSG = METHOD({
+
+	run : function(msgs) {
+		'use strict';
+		//REQUIRED: msgs
+
+		var
+		// msg
+		msg = msgs[INFO.getLang()];
+
+		if (msg === undefined) {
+
+			// get first msg.
+			EACH(msgs, function(_msg) {
+				msg = _msg;
+				return false;
+			});
+		}
+
+		return msg;
+	}
+});
+
+
 /*
  * 콘솔에 오류 메시지를 출력합니다.
  */
@@ -3728,6 +3978,4112 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 		console.error(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
+/**
+ * 저장소 클래스
+ * 
+ * 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
+ */
+global.STORE = CLASS({
+
+	init : function(inner, self, storeName) {
+		'use strict';
+		//REQUIRED: storeName
+
+		var
+		// save.
+		save,
+
+		// get.
+		get,
+		
+		// all.
+		all,
+
+		// remove.
+		remove,
+		
+		// gen full name.
+		genFullName = function(name) {
+			//REQUIRED: name
+
+			return storeName + '.' + name;
+		};
+
+		self.save = save = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//REQUIRED: params.value
+
+			var
+			// name
+			name = params.name,
+			
+			// value
+			value = params.value;
+
+			localStorage.setItem(genFullName(name), STRINGIFY(value));
+		};
+
+		self.get = get = function(name) {
+			//REQUIRED: name
+
+			var
+			// value
+			value = PARSE_STR(localStorage.getItem(genFullName(name)));
+
+			if (value === TO_DELETE) {
+				value = undefined;
+			}
+
+			return value;
+		};
+
+		self.remove = remove = function(name) {
+			//REQUIRED: name
+			
+			localStorage.removeItem(genFullName(name));
+		};
+	}
+});
+
+FOR_BOX(function(box) {
+	'use strict';
+
+	box.STORE = CLASS({
+
+		init : function(inner, self, storeName) {
+			//REQUIRED: storeName
+
+			var
+			// store
+			store = STORE(box.boxName + '.' + storeName),
+
+			// save.
+			save,
+
+			// get.
+			get,
+			
+			// remove.
+			remove;
+
+			self.save = save = store.save;
+
+			self.get = get = store.get;
+			
+			self.remove = remove = store.remove;
+		}
+	});
+});
+
+/**
+ * 노드에 스타일을 지정합니다.
+ */
+global.ADD_STYLE = METHOD({
+	
+	run : function(params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.node		스타일을 지정할 노드
+		//REQUIRED: params.style	스타일 데이터
+
+		var
+		// node
+		node = params.node,
+
+		// style
+		style = params.style,
+
+		// el
+		el = node.getWrapperEl();
+
+		EACH(style, function(value, name) {
+
+			var
+			// resize event
+			resizeEvent;
+			
+			if (value !== undefined) {
+
+				// on display resize
+				if (name === 'onDisplayResize') {
+
+					resizeEvent = EVENT({
+						name : 'resize'
+					}, RAR(function() {
+
+						// when this, value is function.
+						ADD_STYLE({
+							node : node,
+							style : value(WIN_WIDTH(), WIN_HEIGHT())
+						});
+					}));
+
+					// remove resize event when remove node.
+					node.on('remove', function() {
+						resizeEvent.remove();
+					});
+
+				} else {
+					
+					// flt -> float
+					if (name === 'flt') {
+						el.style.cssFloat = value;
+					}
+
+					// assume number value is px value.
+					else if (typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
+						el.style[name] = value + 'px';
+					}
+					
+					// set background image. (not need url prefix.)
+					else if (name === 'backgroundImage' && value !== 'none') {
+						el.style[name] = 'url(' + value + ')';
+					}
+
+					// set normal style.
+					else {
+						el.style[name] = value;
+					}
+				}
+			}
+		});
+	}
+});
+
+/**
+ * 노드에 애니메이션을 지정합니다.
+ */
+global.ANIMATE = METHOD(function(m) {
+	'use strict';
+	
+	var
+	// keyframes count
+	keyframesCount = 0;
+	
+	return {
+		
+		run : function(params, animationEndHandler) {
+			//REQUIRED: params
+			//REQUIRED: params.node				애니메이션을 지정할 노드
+			//REQUIRED: params.keyframes		애니메이션 키 프레임
+			//OPTIONAL: params.duration			애니메이션 지속 시간 (입력하지 않으면 0.5)
+			//OPTIONAL: params.timingFunction	애니메이션 작동 방식, 점점 빨라지거나, 점점 느려지거나, 점점 빨라졌다 끝에서 점점 느려지는 등의 처리 (입력하지 않으면 'ease', 'linear', 'ease', 'ease-in', 'ease-out' 사용 가능)
+			//OPTIONAL: params.delay			애니메이션이 발동하기 전 지연 시간 (입력하지 않으면 0)
+			//OPTIONAL: params.iterationCount	애니메이션을 몇번 발동시킬지 (입력하지 않으면 1, 계속 애니메이션이 발동되도록 하려면 'infinite' 지정)
+			//OPTIONAL: params.direction		애니메이션의 방향 (입력하지 않으면 'normal', 'reverse', 'alternate', 'alternate-reverse' 사용 가능)
+			//OPTIONAL: animationEndHandler		애니메이션이 끝날 때 호출될 핸들러
+	
+			var
+			// node
+			node = params.node,
+	
+			// keyframes
+			keyframes = params.keyframes,
+			
+			// duration
+			duration = params.duration === undefined ? 0.5 : params.duration,
+			
+			// timing function
+			timingFunction = params.timingFunction === undefined ? 'ease' : params.timingFunction,
+			
+			// delay
+			delay = params.delay === undefined ? 0 : params.delay,
+			
+			// iteration count
+			iterationCount = params.iterationCount === undefined ? 1 : params.iterationCount,
+			
+			// direction
+			direction = params.direction === undefined ? 'normal' : params.direction,
+			
+			// keyframes name
+			keyframesName = '__KEYFRAMES_' + keyframesCount,
+			
+			// keyframes str
+			keyframesStr = '',
+			
+			// keyframes start style
+			keyframesStartStyle,
+			
+			// keyframes final style
+			keyframesFinalStyle,
+			
+			// keyframes style el
+			keyframesStyleEl;
+			
+			keyframesCount += 1;
+			
+			EACH(keyframes, function(style, key) {
+				
+				keyframesStr += key + '{';
+	
+				EACH(style, function(value, name) {
+	
+					if (typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
+						value = value + 'px';
+					}
+	
+					keyframesStr += name.replace(/([A-Z])/g, '-$1').toLowerCase() + ':' + value + ';';
+				});
+	
+				keyframesStr += '}';
+	
+				if (key === 'from' || key === '0%') {
+					keyframesStartStyle = style;
+				} else if (key === 'to' || key === '100%') {
+					keyframesFinalStyle = style;
+				}
+			});
+			
+			// create keyframes style element.
+			keyframesStyleEl = document.createElement('style');
+			keyframesStyleEl.type = 'text/css';
+			keyframesStyleEl.appendChild(document.createTextNode('@keyframes ' + keyframesName + '{' + keyframesStr + '}'));
+			document.getElementsByTagName('head')[0].appendChild(keyframesStyleEl);
+			
+			node.addStyle(keyframesStartStyle);
+			
+			node.addStyle({
+				animation : keyframesName + ' ' + duration + 's ' + timingFunction + ' ' + delay + 's ' + iterationCount + ' ' + direction
+			});
+			
+			node.addStyle(keyframesFinalStyle);
+	
+			if (animationEndHandler !== undefined && iterationCount === 1) {
+	
+				DELAY(duration, function() {
+					animationEndHandler(node);
+				});
+			}
+		}
+	};
+});
+
+
+/**
+ * clear : 'both' 스타일이 지정된 div를 생성합니다.
+ */
+global.CLEAR_BOTH = METHOD({
+
+	run : function() {
+		'use strict';
+
+		return DIV({
+			style : {
+				clear : 'both'
+			}
+		});
+	}
+});
+
+/**
+ * DOM 객체를 생성하고 다루는 클래스
+ */
+global.DOM = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return NODE;
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//OPTIONAL: params.tag		생설할 DOM 객체에 해당하는 태그 지정
+		//OPTIONAL: params.el		태그를 지정하지 않고 HTML element를 직접 지정
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+		//OPTIONAL: params.__TEXT	UPPERCASE가 문자열 DOM 객체를 생성하기 위해 내부적으로 사용하는 파라미터
+
+		var
+		// tag
+		tag = params.tag,
+
+		// HTML Element
+		el = params.el,
+		
+		// id
+		id = params.id,
+		
+		// cls
+		cls = params.cls,
+
+		// __TEXT
+		__TEXT = params.__TEXT,
+
+		// get el.
+		getEl,
+
+		// set el.
+		setEl,
+
+		// set attr.
+		setAttr;
+
+		// when tag is not undefined
+		if (tag !== undefined) {
+
+			if (tag === 'body') {
+				el = document.body;
+			} else if (tag === '__STRING') {
+				el = document.createTextNode(__TEXT);
+			} else {
+				el = document.createElement(tag);
+			}
+		}
+
+		// when tag is undefined, el is not undefined
+		else if (el !== document.body && el.parentNode !== TO_DELETE) {
+
+			self.setParent(DOM({
+				el : el.parentNode
+			}));
+		}
+
+		self.getEl = getEl = function() {
+			return el;
+		};
+
+		inner.setEl = setEl = function(_el) {
+			//REQUIRED: _el
+
+			el = _el;
+
+			inner.setDom(self);
+		};
+
+		setEl(el);
+
+		inner.setAttr = setAttr = function(params) {
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//REQUIRED: params.value
+
+			var
+			// name
+			name = params.name,
+
+			// value
+			value = params.value;
+
+			el.setAttribute(name, value);
+		};
+		
+		if (id !== undefined) {
+			setAttr({
+				name : 'id',
+				value : id
+			});
+		}
+		
+		if (cls !== undefined) {
+			setAttr({
+				name : 'class',
+				value : cls
+			});
+		}
+	}
+});
+
+/**
+ * DOM 트리 구조를 정의하기 위한 NODE 클래스
+ */
+global.NODE = CLASS({
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// wrapper dom
+		wrapperDom,
+
+		// content dom
+		contentDom,
+
+		// wrapper el
+		wrapperEl,
+
+		// content el
+		contentEl,
+
+		// waiting after nodes
+		waitingAfterNodes,
+
+		// waiting before nodes
+		waitingBeforeNodes,
+
+		// parent node
+		parentNode,
+
+		// child nodes
+		childNodes = [],
+
+		// origin display
+		originDisplay,
+		
+		// data
+		data,
+
+		// set wrapper dom.
+		setWrapperDom,
+
+		// set content dom.
+		setContentDom,
+
+		// set dom.
+		setDom,
+
+		// get wrapper dom.
+		getWrapperDom,
+
+		// get content dom.
+		getContentDom,
+
+		// get wrapper el.
+		getWrapperEl,
+
+		// get content el.
+		getContentEl,
+
+		// attach.
+		attach,
+
+		// append.
+		append,
+
+		// append to.
+		appendTo,
+
+		// prepend.
+		prepend,
+
+		// prepend to.
+		prependTo,
+
+		// after.
+		after,
+
+		// insert after.
+		insertAfter,
+
+		// before.
+		before,
+
+		// insert before.
+		insertBefore,
+
+		// get children.
+		getChildren,
+
+		// set parent.
+		setParent,
+
+		// get parent.
+		getParent,
+
+		// empty.
+		empty,
+
+		// remove.
+		remove,
+
+		// on.
+		on,
+
+		// off.
+		off,
+
+		// add style.
+		addStyle,
+
+		// get style.
+		getStyle,
+
+		// get width.
+		getWidth,
+
+		// get inner width.
+		getInnerWidth,
+
+		// get height.
+		getHeight,
+
+		// get inner height.
+		getInnerHeight,
+
+		// get left.
+		getLeft,
+
+		// get top.
+		getTop,
+
+		// hide.
+		hide,
+
+		// show.
+		show,
+
+		// check is showing.
+		checkIsShowing,
+		
+		// scroll to.
+		scrollTo,
+		
+		// get scroll left.
+		getScrollLeft,
+		
+		// get scroll top.
+		getScrollTop,
+		
+		// get scroll width.
+		getScrollWidth,
+		
+		// get scroll height.
+		getScrollHeight,
+		
+		// set data.
+		setData,
+		
+		// get data.
+		getData;
+
+		inner.setWrapperDom = setWrapperDom = function(dom) {
+			//REQUIRED: dom
+
+			wrapperDom = dom;
+			wrapperEl = dom.getEl();
+
+			originDisplay = getStyle('display');
+
+			on('show', function() {
+
+				EACH(childNodes, function(childNode) {
+
+					if (childNode.checkIsShowing() === true) {
+
+						EVENT.fireAll({
+							node : childNode,
+							name : 'show'
+						});
+
+						EVENT.removeAll({
+							node : childNode,
+							name : 'show'
+						});
+					}
+				});
+			});
+		};
+
+		inner.setContentDom = setContentDom = function(dom) {
+			//REQUIRED: dom
+
+			contentDom = dom;
+			contentEl = dom.getEl();
+		};
+
+		inner.setDom = setDom = function(dom) {
+			//REQUIRED: dom
+
+			setWrapperDom(dom);
+			setContentDom(dom);
+		};
+
+		self.getWrapperDom = getWrapperDom = function() {
+			return wrapperDom;
+		};
+
+		self.getContentDom = getContentDom = function() {
+			return contentDom;
+		};
+
+		self.getWrapperEl = getWrapperEl = function() {
+			return wrapperEl;
+		};
+
+		self.getContentEl = getContentEl = function() {
+			return contentEl;
+		};
+
+		attach = function(node, index) {
+			//REQUIRED: node
+			//OPTIOANL: index
+
+			setParent(node);
+
+			if (index === undefined) {
+				parentNode.getChildren().push(self);
+			} else {
+				parentNode.getChildren().splice(index, 0, self);
+			}
+			
+			EVENT.fireAll({
+				node : self,
+				name : 'attach'
+			});
+
+			if (checkIsShowing() === true) {
+
+				EVENT.fireAll({
+					node : self,
+					name : 'show'
+				});
+
+				EVENT.removeAll({
+					node : self,
+					name : 'show'
+				});
+			}
+
+			// run after wating after nodes.
+			if (waitingAfterNodes !== undefined) {
+				EACH(waitingAfterNodes, function(node) {
+					after(node);
+				});
+			}
+
+			// run before wating before nodes.
+			if (waitingBeforeNodes !== undefined) {
+				EACH(waitingBeforeNodes, function(node) {
+					before(node);
+				});
+			}
+		};
+
+		self.append = append = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+
+			// append child.
+			if (CHECK_IS_DATA(node) === true) {
+				node.appendTo(self);
+			}
+
+			// append textarea content.
+			else if (self.type === TEXTAREA) {
+
+				append(DOM({
+					tag : '__STRING',
+					__TEXT : String(node === undefined ? '' : node)
+				}));
+			}
+
+			// append string.
+			else {
+
+				splits = String(node === undefined ? '' : node).split('\n');
+
+				EACH(splits, function(text, i) {
+
+					append(DOM({
+						tag : '__STRING',
+						__TEXT : text
+					}));
+
+					if (i < splits.length - 1) {
+						append(BR());
+					}
+				});
+			}
+		};
+
+		self.appendTo = appendTo = function(node) {
+			//REQUIRED: node
+			
+			var
+			// parent el
+			parentEl = node.getContentEl();
+
+			if (parentEl !== undefined) {
+				
+				parentEl.appendChild(wrapperEl);
+
+				attach(node);
+			}
+
+			return self;
+		};
+
+		self.prepend = prepend = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+
+			// prepend child.
+			if (CHECK_IS_DATA(node) === true) {
+				node.prependTo(self);
+			}
+
+			// prepend textarea content.
+			else if (self.type === TEXTAREA) {
+
+				prepend(DOM({
+					tag : '__STRING',
+					__TEXT : String(node === undefined ? '' : node)
+				}));
+			}
+
+			// prepend string.
+			else {
+
+				splits = String(node === undefined ? '' : node).split('\n');
+
+				REPEAT({
+					start : splits.length - 1,
+					end : 0
+				}, function(i) {
+
+					prepend(DOM({
+						tag : '__STRING',
+						__TEXT : splits[i]
+					}));
+
+					if (i < splits.length - 1) {
+						prepend(BR());
+					}
+				});
+			}
+		};
+
+		self.prependTo = prependTo = function(node) {
+			//REQUIRED: node
+
+			var
+			// parent el
+			parentEl = node.getContentEl();
+
+			if (parentEl !== undefined) {
+				
+				if (parentEl.childNodes[0] === undefined) {
+					parentEl.appendChild(wrapperEl);
+				} else {
+					parentEl.insertBefore(wrapperEl, parentEl.childNodes[0]);
+				}
+
+				attach(node, 0);
+			}
+
+			return self;
+		};
+
+		self.after = after = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+			
+			if (wrapperEl !== undefined) {
+	
+				// wait after node.
+				if (wrapperEl.parentNode === TO_DELETE) {
+	
+					if (waitingAfterNodes === undefined) {
+						waitingAfterNodes = [];
+					}
+	
+					waitingAfterNodes.push(node);
+				}
+	
+				// after node.
+				else {
+	
+					// after child.
+					if (CHECK_IS_DATA(node) === true) {
+						node.insertAfter(self);
+					}
+	
+					// after string.
+					else {
+	
+						splits = String(node === undefined ? '' : node).split('\n');
+	
+						REPEAT({
+							start : splits.length - 1,
+							end : 0
+						}, function(i) {
+	
+							after(DOM({
+								tag : '__STRING',
+								__TEXT : splits[i]
+							}));
+	
+							if (i < splits.length - 1) {
+								after(BR());
+							}
+						});
+					}
+				}
+			}
+		};
+
+		self.insertAfter = insertAfter = function(node) {
+			//REQUIRED: node
+
+			var
+			// before el
+			beforeEl = node.getWrapperEl(),
+			
+			// now index
+			nowIndex,
+			
+			// to index
+			toIndex;
+			
+			if (beforeEl !== undefined) {
+				
+				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
+				
+				nowIndex = FIND({
+					array : node.getParent().getChildren(),
+					value : self
+				});
+				
+				toIndex = FIND({
+					array : node.getParent().getChildren(),
+					value : node
+				}) + 1;
+
+				attach(node.getParent(), nowIndex < toIndex ? toIndex - 1 : toIndex);
+			}
+
+			return self;
+		};
+
+		self.before = before = function(node) {
+			//REQUIRED: node
+
+			var
+			// splits
+			splits;
+			
+			if (wrapperEl !== undefined) {
+	
+				// wait before node.
+				if (wrapperEl.parentNode === TO_DELETE) {
+	
+					if (waitingBeforeNodes === undefined) {
+						waitingBeforeNodes = [];
+					}
+	
+					waitingBeforeNodes.push(node);
+				}
+	
+				// before node.
+				else {
+	
+					// before child.
+					if (CHECK_IS_DATA(node) === true) {
+						node.insertBefore(self);
+					}
+	
+					// before string.
+					else {
+	
+						splits = String(node === undefined ? '' : node).split('\n');
+	
+						EACH(splits, function(text, i) {
+	
+							before(DOM({
+								tag : '__STRING',
+								__TEXT : text
+							}));
+	
+							if (i < splits.length - 1) {
+								before(BR());
+							}
+						});
+					}
+				}
+			}
+		};
+
+		self.insertBefore = insertBefore = function(node) {
+			//REQUIRED: node
+
+			var
+			// after el
+			afterEl = node.getWrapperEl();
+
+			if (afterEl !== undefined) {
+				
+				afterEl.parentNode.insertBefore(wrapperEl, afterEl);
+
+				attach(node.getParent(), FIND({
+					array : node.getParent().getChildren(),
+					value : node
+				}));
+			}
+
+			return self;
+		};
+
+		self.getChildren = getChildren = function() {
+			return childNodes;
+		};
+
+		setParent = function(node) {
+			//OPTIONAL: node
+			
+			if (parentNode !== undefined) {
+				REMOVE({
+					array : parentNode.getChildren(),
+					value : self
+				});
+			}
+
+			parentNode = node;
+		};
+		
+		self.getParent = getParent = function() {
+			return parentNode;
+		};
+
+		self.empty = empty = function() {
+			EACH(childNodes, function(child) {
+				child.remove();
+			});
+		};
+
+		self.remove = remove = function() {
+
+			if (wrapperEl !== undefined && wrapperEl.parentNode !== TO_DELETE) {
+
+				// empty children.
+				empty();
+
+				// remove from parent node.
+				wrapperEl.parentNode.removeChild(wrapperEl);
+
+				setParent(undefined);
+
+				// fire remove event.
+				EVENT.fireAll({
+					node : self,
+					name : 'remove'
+				});
+
+				EVENT.removeAll({
+					node : self
+				});
+
+				// free memory.
+				wrapperEl = undefined;
+				contentEl = undefined;
+			}
+			
+			// free memory.
+			data = undefined;
+		};
+
+		self.on = on = function(eventName, eventHandler) {
+			//REQUIRED: eventName
+			//REQUIRED: eventHandler
+
+			EVENT({
+				node : self,
+				name : eventName
+			}, eventHandler);
+		};
+
+		self.off = off = function(eventName, eventHandler) {
+			//REQUIRED: eventName
+			//OPTIONAL: eventHandler
+
+			if (eventHandler !== undefined) {
+
+				EVENT.remove({
+					node : self,
+					name : eventName
+				}, eventHandler);
+
+			} else {
+
+				EVENT.removeAll({
+					node : self,
+					name : eventName
+				});
+			}
+		};
+
+		self.addStyle = addStyle = function(style) {
+			//REQUIRED: style
+
+			ADD_STYLE({
+				node : self,
+				style : style
+			});
+		};
+
+		self.getStyle = getStyle = function(name) {
+			//REQUIRED: name
+
+			var
+			// styles
+			styles,
+
+			// style
+			style;
+
+			if (wrapperEl !== undefined) {
+
+				styles = wrapperEl.style;
+
+				if (styles !== undefined) {
+
+					style = styles[name];
+
+					return style === '' ? undefined : (style.substring(style.length - 2) === 'px' ? REAL(style) : style);
+				}
+			}
+		};
+
+		self.getWidth = getWidth = function() {
+			return wrapperEl.offsetWidth;
+		};
+
+		self.getInnerWidth = getInnerWidth = function() {
+			return wrapperEl.clientWidth;
+		};
+
+		self.getHeight = getHeight = function() {
+			return wrapperEl.offsetHeight;
+		};
+
+		self.getInnerHeight = getInnerHeight = function() {
+			return wrapperEl.clientHeight;
+		};
+
+		self.getLeft = getLeft = function() {
+
+			var
+			// left
+			left = 0,
+
+			// parent el
+			parentEl = wrapperEl;
+
+			do {
+				left += parentEl.offsetLeft - (parentEl === document.body ? 0 : parentEl.scrollLeft);
+				parentEl = parentEl.offsetParent;
+			} while (parentEl !== TO_DELETE);
+
+			return left;
+		};
+
+		self.getTop = getTop = function() {
+
+			var
+			// top
+			top = 0,
+
+			// parent el
+			parentEl = wrapperEl;
+
+			do {
+				top += parentEl.offsetTop - (parentEl === document.body ? 0 : parentEl.scrollTop);
+				parentEl = parentEl.offsetParent;
+			} while (parentEl !== TO_DELETE);
+
+			return top;
+		};
+
+		self.hide = hide = function() {
+
+			addStyle({
+				display : 'none'
+			});
+		};
+
+		self.show = show = function() {
+
+			addStyle({
+				display : originDisplay === undefined ? '' : originDisplay
+			});
+
+			if (checkIsShowing() === true) {
+
+				EVENT.fireAll({
+					node : self,
+					name : 'show'
+				});
+
+				EVENT.removeAll({
+					node : self,
+					name : 'show'
+				});
+			}
+		};
+
+		self.checkIsShowing = checkIsShowing = function() {
+
+			if (wrapperEl === document.body) {
+				return true;
+			} else {
+				return parentNode !== undefined && parentNode.checkIsShowing() === true && getStyle('display') !== 'none';
+			}
+		};
+		
+		self.scrollTo = scrollTo = function(params) {
+			//REQUIRED: params
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			
+			var
+			// left
+			left = params.left,
+			
+			// top
+			top = params.top;
+			
+			if (contentEl !== undefined) {
+			
+				if (left !== undefined) {
+					contentEl.scrollLeft = left;
+				}
+				
+				if (top !== undefined) {
+					contentEl.scrollTop = top;
+				}
+			}
+		};
+		
+		self.scrollTo = scrollTo = function(params) {
+			//REQUIRED: params
+			//OPTIONAL: params.left
+			//OPTIONAL: params.top
+			
+			var
+			// left
+			left = params.left,
+			
+			// top
+			top = params.top;
+			
+			if (contentEl !== undefined) {
+			
+				if (left !== undefined) {
+					contentEl.scrollLeft = left;
+				}
+				
+				if (top !== undefined) {
+					contentEl.scrollTop = top;
+				}
+			}
+		};
+		
+		self.getScrollLeft = getScrollLeft = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollLeft;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollTop = getScrollTop = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollTop;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollWidth = getScrollWidth = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollWidth;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.getScrollHeight = getScrollHeight = function() {
+			if (contentEl !== undefined) {
+				return contentEl.scrollHeight;
+			} else {
+				return 0;
+			}
+		};
+		
+		self.setData = setData = function(_data) {
+			//REQUIRED: _data
+			
+			data = _data;
+		};
+		
+		self.getData = getData = function() {
+			return data;
+		};
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// style
+		style,
+
+		// children
+		children,
+
+		// on
+		on;
+
+		// init params.
+		if (params !== undefined) {
+			style = params.style;
+			children = params.c === undefined || CHECK_IS_ARRAY(params.c) === true ? params.c : [params.c];
+			on = params.on;
+		}
+
+		if (style !== undefined) {
+			self.addStyle(style);
+		}
+
+		if (on !== undefined) {
+			EACH(on, function(handler, name) {
+				self.on(name, handler);
+			});
+		}
+
+		if (children !== undefined) {
+			EACH(children, function(child, i) {
+				self.append(child);
+			});
+		}
+	}
+});
+
+/**
+ * 이벤트 정보를 제공하는 객체를 생성하는 E 클래스
+ */
+global.E = CLASS({
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//REQUIRED: params.e
+		//REQUIRED: params.el
+
+		var
+		// e
+		e = params.e,
+
+		// el
+		el = params.el,
+
+		// check is descendant.
+		checkIsDescendant,
+
+		// stop default.
+		stopDefault,
+
+		// stop bubbling.
+		stopBubbling,
+
+		// stop default and bubbling.
+		stop,
+
+		// get left.
+		getLeft,
+
+		// get top.
+		getTop,
+
+		// get key.
+		getKey,
+		
+		// get wheel delta.
+		getWheelDelta;
+
+		checkIsDescendant = function(parent, child) {
+
+			var
+			// node
+			node = child.parentNode;
+
+			while (node !== TO_DELETE) {
+
+				if (node === parent) {
+					return true;
+				}
+
+				node = node.parentNode;
+			}
+
+			return false;
+		};
+
+		self.stopDefault = stopDefault = function() {
+			e.preventDefault();
+		};
+
+		self.stopBubbling = stopBubbling = function() {
+			e.stopPropagation();
+		};
+
+		self.stop = stop = function() {
+			stopDefault();
+			stopBubbling();
+		};
+
+		self.getLeft = getLeft = function() {
+
+			var
+			// touch page x
+			touchPageX;
+
+			// if is touch mode
+			if (INFO.checkIsTouchMode() === true) {
+
+				if (e.touches !== undefined && e.touches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.touches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageX = touch.pageX;
+							return false;
+						}
+					});
+
+					if (touchPageX === undefined) {
+						touchPageX = e.touches[0].pageX;
+					}
+
+					if (touchPageX !== undefined) {
+						return touchPageX;
+					}
+				}
+
+				if (e.changedTouches !== undefined && e.changedTouches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.changedTouches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageX = touch.pageX;
+							return false;
+						}
+					});
+
+					if (touchPageX === undefined) {
+						touchPageX = e.changedTouches[0].pageX;
+					}
+
+					if (touchPageX !== undefined) {
+						return touchPageX;
+					}
+				}
+			}
+
+			return e.pageX;
+		};
+
+		self.getTop = getTop = function() {
+
+			var
+			// touch page y
+			touchPageY;
+
+			// if is touch mode
+			if (INFO.checkIsTouchMode() === true) {
+
+				if (e.touches !== undefined && e.touches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.touches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageY = touch.pageY;
+							return false;
+						}
+					});
+
+					if (touchPageY === undefined) {
+						touchPageY = e.touches[0].pageY;
+					}
+
+					if (touchPageY !== undefined) {
+						return touchPageY;
+					}
+				}
+
+				if (e.changedTouches !== undefined && e.changedTouches[0] !== undefined) {
+
+					// first touch position.
+
+					EACH(e.changedTouches, function(touch) {
+						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+							touchPageY = touch.pageY;
+							return false;
+						}
+					});
+
+					if (touchPageY === undefined) {
+						touchPageY = e.changedTouches[0].pageY;
+					}
+
+					if (touchPageY !== undefined) {
+						return touchPageY;
+					}
+				}
+			}
+
+			return e.pageY;
+		};
+
+		self.getKey = getKey = function() {
+			return e.key;
+		};
+		
+		self.getWheelDelta = getWheelDelta = function() {
+			return e.deltaY;
+		};
+	}
+});
+
+/**
+ * 빈 이벤트 정보를 제공하는 객체를 생성하는 EMPTY_E 클래스
+ */
+global.EMPTY_E = CLASS({
+
+	init : function(inner, self) {
+		'use strict';
+
+		var
+		// stop default.
+		stopDefault,
+
+		// stop bubbling.
+		stopBubbling,
+
+		// stop default and bubbling.
+		stop,
+
+		// get left.
+		getLeft,
+
+		// get top.
+		getTop,
+
+		// get key.
+		getKey,
+		
+		// get detail.
+		getWheelDelta;
+
+		self.stopDefault = stopDefault = function() {
+			// ignore.
+		};
+
+		self.stopBubbling = stopBubbling = function() {
+			// ignore.
+		};
+
+		self.stop = stop = function() {
+			// ignore.
+		};
+
+		self.getLeft = getLeft = function() {
+			
+			// on heaven!
+			return -999999;
+		};
+
+		self.getTop = getTop = function() {
+			
+			// on heaven!
+			return -999999;
+		};
+
+		self.getKey = function() {
+			return '';
+		};
+		
+		self.getWheelDelta = getWheelDelta = function() {
+			return 0;
+		};
+	}
+});
+
+/**
+ * 노드의 이벤트 처리를 담당하는 EVENT 클래스
+ */
+global.EVENT = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// event map
+	eventMaps = {},
+	
+	// fire all.
+	fireAll,
+
+	// remove all.
+	removeAll,
+
+	// remove.
+	remove;
+	
+	cls.fireAll = fireAll = function(nameOrParams) {
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
+		//REQUIRED: nameOrParams.name	이벤트 이름
+
+		var
+		// node
+		node,
+
+		// name
+		name,
+
+		// node id
+		nodeId,
+
+		// event map
+		eventMap,
+
+		// events
+		events,
+
+		// ret
+		ret;
+
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			name = nameOrParams.name;
+		}
+
+		if (node === undefined) {
+			nodeId = 'body';
+		} else {
+			nodeId = node.id;
+		}
+
+		eventMap = eventMaps[nodeId];
+
+		if (eventMap !== undefined) {
+
+			events = eventMap[name];
+
+			if (events !== undefined) {
+
+				EACH(events, function(evt) {
+
+					if (evt.fire() === false) {
+						
+						ret = false;
+					}
+				});
+			}
+		}
+
+		return ret;
+	};
+
+	cls.removeAll = removeAll = function(nameOrParams) {
+		//OPTIONAL: nameOrParams
+		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
+		//OPTIONAL: nameOrParams.name	이벤트 이름
+
+		var
+		// node
+		node,
+
+		// name
+		name,
+
+		// node id
+		nodeId,
+
+		// event map
+		eventMap,
+
+		// events
+		events;
+
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			name = nameOrParams.name;
+		}
+
+		if (node === undefined) {
+			nodeId = 'body';
+		} else {
+			nodeId = node.id;
+		}
+
+		eventMap = eventMaps[nodeId];
+
+		if (eventMap !== undefined) {
+
+			if (name !== undefined) {
+
+				events = eventMap[name];
+
+				if (events !== undefined) {
+
+					EACH(events, function(evt) {
+						evt.remove();
+					});
+				}
+
+			} else {
+
+				EACH(eventMap, function(events) {
+					EACH(events, function(evt) {
+						evt.remove();
+					});
+				});
+			}
+		}
+	};
+
+	cls.remove = remove = function(nameOrParams, eventHandler) {
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
+		//REQUIRED: nameOrParams.name	이벤트 이름
+		//REQUIRED: eventHandler
+
+		var
+		// node
+		node,
+
+		// name
+		name,
+
+		// node id
+		nodeId,
+
+		// event map
+		eventMap,
+
+		// events
+		events;
+		
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			name = nameOrParams.name;
+		}
+
+		if (node === undefined) {
+			nodeId = 'body';
+		} else {
+			nodeId = node.id;
+		}
+
+		eventMap = eventMaps[nodeId];
+
+		if (eventMap !== undefined) {
+
+			events = eventMap[name];
+
+			if (events !== undefined) {
+
+				EACH(events, function(evt) {
+					if (evt.getEventHandler() === eventHandler) {
+						evt.remove();
+					}
+				});
+			}
+		}
+	};
+
+	return {
+
+		init : function(inner, self, nameOrParams, eventHandler) {
+			//REQUIRED: nameOrParams
+			//OPTIONAL: nameOrParams.node		이벤트를 등록 및 적용할 노드
+			//OPTIONAL: nameOrParams.lowNode	이벤트 '등록'은 node 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
+			//REQUIRED: nameOrParams.name		이벤트 이름
+			//REQUIRED: eventHandler
+
+			var
+			// node
+			node,
+
+			// low node
+			lowNode,
+
+			// name
+			name,
+
+			// node id
+			nodeId,
+
+			// event lows
+			eventLows = [],
+
+			// sub event
+			subEvent,
+
+			// last tap time
+			lastTapTime,
+
+			// remove from map.
+			removeFromMap,
+
+			// remove.
+			remove,
+
+			// fire.
+			fire,
+			
+			// get event handler.
+			getEventHandler;
+
+			// init params.
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				name = nameOrParams;
+			} else {
+				node = nameOrParams.node;
+				lowNode = nameOrParams.lowNode;
+				name = nameOrParams.name;
+
+				if (lowNode === undefined) {
+					lowNode = node;
+				}
+			}
+
+			if (node === undefined) {
+				nodeId = 'body';
+			} else {
+				nodeId = node.id;
+			}
+
+			// push event to map.
+
+			if (eventMaps[nodeId] === undefined) {
+				eventMaps[nodeId] = {};
+			}
+
+			if (eventMaps[nodeId][name] === undefined) {
+				eventMaps[nodeId][name] = [];
+			}
+
+			eventMaps[nodeId][name].push(self);
+
+			removeFromMap = function() {
+
+				REMOVE({
+					array : eventMaps[nodeId][name],
+					value : self
+				});
+
+				if (eventMaps[nodeId][name].length <= 0) {
+					delete eventMaps[nodeId][name];
+				}
+
+				if (CHECK_IS_EMPTY_DATA(eventMaps[nodeId]) === true) {
+					delete eventMaps[nodeId];
+				}
+			};
+
+			// tap event (simulate click event.)
+			if (name === 'tap') {
+				
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'click'
+				}, eventHandler));
+			}
+
+			// double tap event (not exists, simulate.)
+			else if (name === 'doubletap') {
+
+				subEvent = EVENT({
+					node : node,
+					name : 'tap'
+				}, function(e) {
+
+					if (lastTapTime === undefined) {
+						lastTapTime = Date.now();
+					} else {
+
+						if (Date.now() - lastTapTime < 600) {
+							eventHandler(e, node);
+						}
+
+						lastTapTime = undefined;
+
+						// clear text selections.
+						getSelection().removeAllRanges();
+					}
+				});
+			}
+
+			// when is not touch mode, touchmove link to mousedown event
+			else if (name === 'touchstart') {
+				
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchstart'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+				
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mousedown'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// when is not touch mode, touchmove link to mousemove event
+			else if (name === 'touchmove') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchmove'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+				
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mousemove'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// when is not touch mode, touchend link to mouseup event
+			else if (name === 'touchend') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchend'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+				
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mouseup'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// mouse over event (when is touch mode, link to touchstart event.)
+			else if (name === 'mouseover') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchstart'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mouseover'
+				}, function(e, node) {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+
+			// other events
+			else if (name !== 'attach' && name !== 'show' && name !== 'remove') {
+				eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
+			}
+			
+			self.remove = remove = function() {
+
+				EACH(eventLows, function(eventLow) {
+					eventLow.remove();
+				});
+					
+				if (subEvent !== undefined) {
+					subEvent.remove();
+				}
+
+				removeFromMap();
+			};
+
+			self.fire = fire = function() {
+
+				// pass empty e object.
+				return eventHandler(EMPTY_E(), node);
+			};
+
+			self.getEventHandler = getEventHandler = function() {
+				return eventHandler;
+			};
+		}
+	};
+});
+/**
+ * 내부적으로 이벤트를 처리하기 위해 사용되는 EVENT_LOW 클래스
+ */
+global.EVENT_LOW = CLASS({
+
+	init : function(inner, self, nameOrParams, eventHandler) {
+		'use strict';
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node		이벤트를 등록 및 적용할 노드
+		//OPTIONAL: nameOrParams.lowNode	이벤트 '등록'은 node 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
+		//REQUIRED: nameOrParams.name		이벤트 이름
+		//REQUIRED: eventHandler
+
+		var
+		// node
+		node,
+
+		// low node
+		lowNode,
+
+		// name
+		name,
+
+		// el
+		el,
+
+		// inner handler.
+		innerHandler,
+
+		// remove.
+		remove;
+
+		// init params.
+		if (CHECK_IS_DATA(nameOrParams) !== true) {
+			name = nameOrParams;
+		} else {
+			node = nameOrParams.node;
+			lowNode = nameOrParams.lowNode;
+			name = nameOrParams.name;
+
+			if (lowNode === undefined) {
+				lowNode = node;
+			}
+		}
+
+		if (lowNode !== undefined) {
+			el = lowNode.getWrapperEl();
+		} else if (global['on' + name] === undefined) {
+			el = document;
+		} else {
+			el = global;
+		}
+		
+		el.addEventListener(name, innerHandler = function(e) {
+			
+			var
+			// result
+			result = eventHandler(E({
+				e : e,
+				el : el
+			}), node);
+			
+			if (name === 'beforeunload' && result !== undefined) {
+				e.returnValue = result;
+			}
+
+			return result;
+			
+		}, false);
+
+		self.remove = remove = function() {
+			el.removeEventListener(name, innerHandler, false);
+		};
+	}
+});
+
+/**
+ * 이벤트가 한번 발생하면 자동으로 제거되는 EVENT_ONCE 클래스
+ */
+global.EVENT_ONCE = CLASS({
+
+	init : function(inner, self, nameOrParams, eventHandler) {
+		'use strict';
+		//REQUIRED: nameOrParams
+		//OPTIONAL: nameOrParams.node		이벤트를 등록 및 적용할 노드
+		//OPTIONAL: nameOrParams.lowNode	이벤트 '등록'은 node 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
+		//REQUIRED: nameOrParams.name		이벤트 이름
+		//REQUIRED: eventHandler
+
+		var
+		// evt
+		evt = EVENT(nameOrParams, function(e, node) {
+			eventHandler(e, node);
+			evt.remove();
+		}),
+
+		// remove.
+		remove,
+
+		// fire.
+		fire;
+
+		self.remove = remove = function() {
+			evt.remove();
+		};
+
+		self.fire = fire = function() {
+			evt.fire();
+		};
+	}
+});
+
+/**
+ * A class
+ */
+global.A = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'a'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.href		이동할 경로
+		//OPTIONAL: params.target	이동할 타겟
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// style
+		style,
+		
+		// href
+		href,
+		
+		// target
+		target,
+		
+		// set href.
+		setHref, 
+
+		// tap.
+		tap;
+
+		// init params.
+		if (params !== undefined) {
+			style = params.style;
+			href = params.href;
+			target = params.target;
+		}
+
+		self.setHref = setHref = function(href) {
+			inner.setAttr({
+				name : 'href',
+				value : href
+			});
+		};
+
+		if (href !== undefined) {
+			setHref(href);
+		}
+
+		if (target !== undefined) {
+			inner.setAttr({
+				name : 'target',
+				value : target
+			});
+		}
+		
+		self.tap = tap = function() {
+
+			EVENT.fireAll({
+				node : self,
+				name : 'tap'
+			});
+		};
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.href		이동할 경로
+		//OPTIONAL: params.target	이동할 타겟
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// children
+		children,
+		
+		// href
+		href,
+		
+		// is href content
+		isHrefContent = false,
+		
+		// append.
+		append,
+		
+		// prepend.
+		prepend;
+
+		// init params.
+		if (params !== undefined) {
+			children = params.c;
+			href = params.href;
+		}
+
+		// 아무런 내용이 없으면 이동할 경로를 그대로 표시합니다.
+		if (children === undefined && href !== undefined) {
+			
+			self.append(href);
+			
+			isHrefContent = true;
+			
+			OVERRIDE(self.append, function(origin) {
+				self.append = append = function(node) {
+					//REQUIRED: node
+					
+					if (isHrefContent === true) {
+						self.empty();
+						isHrefContent = false;
+					}
+					
+					origin(node);
+				};
+			});
+			
+			OVERRIDE(self.prepend, function(origin) {
+				self.prepend = prepend = function(node) {
+					//REQUIRED: node
+					
+					if (isHrefContent === true) {
+						self.empty();
+						isHrefContent = false;
+					}
+					
+					origin(node);
+				};
+			});
+		}
+	}
+});
+
+/**
+ * HTML audio 태그와 대응되는 클래스
+ */
+global.AUDIO = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'audio'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.width
+		//OPTIONAL: params.height
+
+		var
+		// wdith
+		width,
+
+		// height
+		height,
+
+		// get context.
+		getContext,
+
+		// set size.
+		setSize,
+
+		// get width.
+		getWidth,
+
+		// get height.
+		getHeight,
+
+		// get data url.
+		getDataURL;
+
+		// init params.
+		if (params !== undefined) {
+			width = params.width;
+			height = params.height;
+		}
+
+		self.getContext = getContext = function(contextType) {
+			//REQUIRED: contextType
+			
+			return self.getEl().getContext(contextType);
+		};
+
+		self.setSize = setSize = function(size) {
+			//REQUIRED: size
+			//OPTIONAL: size.width
+			//OPTIONAL: size.height
+
+			var
+			// el
+			el = self.getEl();
+
+			if (size.width !== undefined) {
+				width = size.width;
+			}
+
+			if (size.height !== undefined) {
+				height = size.height;
+			}
+
+			if (width !== undefined) {
+				el.width = width;
+			}
+
+			if (height !== undefined) {
+				el.height = height;
+			}
+		};
+
+		setSize({
+			width : width,
+			height : height
+		});
+
+		self.getWidth = getWidth = function() {
+			return width;
+		};
+
+		self.getHeight = getHeight = function() {
+			return height;
+		};
+
+		self.getDataURL = getDataURL = function() {
+			return self.getEl().toDataURL();
+		};
+	}
+});
+
+/**
+ * HTML body 태그와 대응되는 객체
+ */
+global.BODY = OBJECT({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'body'
+		};
+	}
+});
+
+/**
+ * HTML br 태그와 대응되는 클래스
+ */
+global.BR = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'br'
+		};
+	}
+});
+
+/**
+ * HTML canvas 태그와 대응되는 클래스
+ */
+global.CANVAS = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'canvas'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.width
+		//OPTIONAL: params.height
+
+		var
+		// wdith
+		width,
+
+		// height
+		height,
+
+		// get context.
+		getContext,
+
+		// set size.
+		setSize,
+
+		// get width.
+		getWidth,
+
+		// get height.
+		getHeight,
+
+		// get data url.
+		getDataURL;
+
+		// init params.
+		if (params !== undefined) {
+			width = params.width;
+			height = params.height;
+		}
+
+		self.getContext = getContext = function(contextType) {
+			//REQUIRED: contextType
+			
+			return self.getEl().getContext(contextType);
+		};
+
+		self.setSize = setSize = function(size) {
+			//REQUIRED: size
+			//OPTIONAL: size.width
+			//OPTIONAL: size.height
+
+			var
+			// el
+			el = self.getEl();
+
+			if (size.width !== undefined) {
+				width = size.width;
+			}
+
+			if (size.height !== undefined) {
+				height = size.height;
+			}
+
+			if (width !== undefined) {
+				el.width = width;
+			}
+
+			if (height !== undefined) {
+				el.height = height;
+			}
+		};
+
+		setSize({
+			width : width,
+			height : height
+		});
+
+		self.getWidth = getWidth = function() {
+			return width;
+		};
+
+		self.getHeight = getHeight = function() {
+			return height;
+		};
+
+		self.getDataURL = getDataURL = function() {
+			return self.getEl().toDataURL();
+		};
+	}
+});
+
+/**
+ * HTML div 태그와 대응되는 클래스
+ */
+global.DIV = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'div'
+		};
+	}
+});
+
+/**
+ * Form class
+ */
+global.FORM = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'form'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.action	폼 정보를 전송할 경로
+		//OPTIONAL: params.target	경로가 이동될 타겟. 지정하지 않으면 현재 창에서 이동됩니다.
+		//OPTIONAL: params.method	요청 메소드. `GET`, `POST`를 설정할 수 있습니다.
+		//OPTIONAL: params.enctype	폼을 전송할때 사용할 인코딩 방법. 업로드 기능 구현에 사용됩니다.
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// action
+		action,
+
+		// target
+		target,
+
+		// method
+		method,
+
+		// enctype
+		enctype,
+
+		// get data.
+		getData,
+
+		// set data.
+		setData,
+
+		// submit.
+		submit;
+
+		// init params.
+		if (params !== undefined) {
+			action = params.action;
+			target = params.target;
+			method = params.method;
+			enctype = params.enctype;
+		}
+
+		if (action !== undefined) {
+			
+			inner.setAttr({
+				name : 'action',
+				value : action
+			});
+			
+		} else {
+			
+			EVENT({
+				node : self,
+				name : 'submit'
+			}, function(e) {
+				e.stop();
+			});
+		}
+
+		if (target !== undefined) {
+			inner.setAttr({
+				name : 'target',
+				value : target
+			});
+		}
+
+		if (method !== undefined) {
+			inner.setAttr({
+				name : 'method',
+				value : method
+			});
+		}
+
+		if (enctype !== undefined) {
+			inner.setAttr({
+				name : 'enctype',
+				value : enctype
+			});
+		}
+
+		OVERRIDE(self.setData, function(origin) {
+			
+			self.getData = getData = function() {
+	
+				var
+				// data
+				data = origin(),
+	
+				// f.
+				f = function(node) {
+					//REQUIRED: node
+	
+					EACH(node.getChildren(), function(child) {
+	
+						if (child.getValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
+							data[child.getName()] = child.getValue();
+						}
+	
+						f(child);
+					});
+				};
+				
+				if (data === undefined) {
+					data = {};
+				}
+	
+				f(self);
+	
+				return data;
+			};
+		});
+
+		OVERRIDE(self.setData, function(origin) {
+			
+			self.setData = setData = function(data) {
+				//REQUIRED: data
+				
+				var
+				// f.
+				f = function(node) {
+					//REQUIRED: node
+	
+					EACH(node.getChildren(), function(child) {
+	
+						var
+						// value
+						value;
+	
+						if (child.setValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
+							value = data[child.getName()];
+							child.setValue(value === undefined ? '' : value);
+						}
+	
+						f(child);
+					});
+				};
+	
+				f(self);
+				
+				origin(data);
+			};
+		});
+
+		self.submit = submit = function() {
+			
+			EVENT.fireAll({
+				node : self,
+				name : 'submit'
+			});
+			
+			if (action !== undefined) {
+				self.getEl().submit();
+			}
+		};
+	}
+});
+
+/**
+ * HTML h1 태그와 대응되는 클래스
+ */
+global.H1 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h1'
+		};
+	}
+});
+
+/**
+ * HTML h2 태그와 대응되는 클래스
+ */
+global.H2 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h2'
+		};
+	}
+});
+
+/**
+ * HTML h3 태그와 대응되는 클래스
+ */
+global.H3 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h3'
+		};
+	}
+});
+
+/**
+ * HTML h4 태그와 대응되는 클래스
+ */
+global.H4 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h4'
+		};
+	}
+});
+
+/**
+ * HTML h5 태그와 대응되는 클래스
+ */
+global.H5 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h5'
+		};
+	}
+});
+
+/**
+ * HTML h6 태그와 대응되는 클래스
+ */
+global.H6 = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'h6'
+		};
+	}
+});
+
+/**
+ * HTML iframe 태그와 대응되는 클래스
+ */
+global.IFRAME = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'iframe',
+			style : {
+				border : 'none'
+			}
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.name
+		//OPTIONAL: params.src
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// name
+		name,
+
+		// src
+		src,
+
+		// set src.
+		setSrc,
+
+		// get src.
+		getSrc;
+
+		// init params.
+		if (params !== undefined) {
+			name = params.name;
+			src = params.src;
+		}
+
+		if (name !== undefined) {
+			inner.setAttr({
+				name : 'name',
+				value : name
+			});
+		}
+
+		self.setSrc = setSrc = function(_src) {
+			//REQUIRED: _src
+
+			src = _src;
+
+			inner.setAttr({
+				name : 'src',
+				value : src
+			});
+		};
+
+		if (src !== undefined) {
+			setSrc(src);
+		}
+
+		self.getSrc = getSrc = function() {
+			return src;
+		};
+	}
+});
+
+/**
+ * HTML img 태그와 대응되는 클래스
+ */
+global.IMG = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'img'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//REQUIRED: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//REQUIRED: params.src		이미지 경로
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// src
+		src = params.src,
+
+		// el
+		el = self.getEl(),
+
+		// get width.
+		getWidth,
+
+		// get height.
+		getHeight,
+
+		// set size.
+		setSize,
+
+		// get src.
+		getSrc,
+
+		// set src.
+		setSrc;
+
+		//OVERRIDE: self.getWidth
+		self.getWidth = getWidth = function() {
+			return el.width;
+		};
+
+		//OVERRIDE: self.getHeight
+		self.getHeight = getHeight = function() {
+			return el.height;
+		};
+
+		self.setSize = setSize = function(size) {
+			//REQUIRED: size
+			//OPTIONAL: size.width
+			//OPTIONAL: size.height
+
+			var
+			// width
+			width = size.width,
+
+			// height
+			height = size.height;
+
+			if (width !== undefined) {
+				el.width = width;
+			}
+
+			if (height !== undefined) {
+				el.height = height;
+			}
+		};
+
+		self.getSrc = getSrc = function() {
+			return src;
+		};
+
+		self.setSrc = setSrc = function(_src) {
+			//REQUIRED: _src
+
+			src = _src;
+
+			inner.setAttr({
+				name : 'src',
+				value : src
+			});
+		};
+
+		if (src !== undefined) {
+			setSrc(src);
+		}
+	}
+});
+
+/**
+ * HTML input 태그와 대응되는 클래스
+ */
+global.INPUT = CLASS(function(cls) {
+	'use strict';
+
+	var
+	// focusing input ids
+	focusingInputIds = [],
+
+	// get focusing input ids.
+	getFocusingInputIds;
+
+	cls.getFocusingInputIds = getFocusingInputIds = function(id) {
+		return focusingInputIds;
+	};
+
+	return {
+
+		preset : function() {
+			return DOM;
+		},
+
+		params : function() {
+			return {
+				tag : 'input'
+			};
+		},
+
+		init : function(inner, self, params) {
+			//OPTIONAL: params
+			//OPTIONAL: params.id		id 속성
+			//OPTIONAL: params.cls		class 속성
+			//OPTIONAL: params.style	스타일
+			//OPTIONAL: params.name
+			//OPTIONAL: params.type
+			//OPTIONAL: params.placeholder
+			//OPTIONAL: params.value
+			//OPTIONAL: params.accept
+			//OPTIONAL: params.isMultiple
+			//OPTIONAL: params.isOffAutocomplete
+			//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+			//OPTIONAL: params.on		이벤트
+
+			var
+			// name
+			name,
+
+			// type
+			type,
+
+			// placeholder
+			placeholder,
+			
+			// accept
+			accept,
+
+			// is multiple
+			isMultiple,
+			
+			// is off autocomplete
+			isOffAutocomplete,
+
+			// get name.
+			getName,
+
+			// get value.
+			getValue,
+
+			// set value.
+			setValue,
+
+			// select.
+			select,
+
+			// focus.
+			focus,
+
+			// blur.
+			blur,
+
+			// toggle check.
+			toggleCheck,
+
+			// check is checked.
+			checkIsChecked;
+
+			// init params.
+			if (params !== undefined) {
+				name = params.name;
+				type = params.type;
+				placeholder = params.placeholder;
+				accept = params.accept;
+				isMultiple = params.isMultiple;
+				isOffAutocomplete = params.isOffAutocomplete;
+			}
+
+			if (type !== undefined) {
+				inner.setAttr({
+					name : 'type',
+					value : type
+				});
+			}
+
+			if (type !== 'submit' && type !== 'reset') {
+
+				if (name !== undefined) {
+					inner.setAttr({
+						name : 'name',
+						value : name
+					});
+				}
+
+				if (placeholder !== undefined) {
+					inner.setAttr({
+						name : 'placeholder',
+						value : placeholder
+					});
+				}
+				
+				if (accept !== undefined) {
+					inner.setAttr({
+						name : 'accept',
+						value : accept
+					});
+				}
+
+				if (isMultiple === true) {
+					inner.setAttr({
+						name : 'multiple',
+						value : isMultiple
+					});
+				}
+
+				if (isOffAutocomplete === true) {
+					inner.setAttr({
+						name : 'autocomplete',
+						value : 'off'
+					});
+				}
+				
+				self.getName = getName = function() {
+					return name;
+				};
+
+				self.getValue = getValue = function() {
+					if (type === 'checkbox' || type === 'radio') {
+						return self.getEl().checked;
+					}
+					return self.getEl().value;
+				};
+
+				self.select = select = function() {
+					if (type === 'file') {
+						self.getEl().click();
+					} else {
+						self.getEl().select();
+					}
+				};
+
+				self.focus = focus = function() {
+					self.getEl().focus();
+				};
+
+				self.blur = blur = function() {
+					self.getEl().blur();
+				};
+
+				if (type === 'checkbox' || type === 'radio') {
+
+					self.toggleCheck = toggleCheck = function(e) {
+
+						if (self.getEl().checked === true) {
+							self.getEl().checked = false;
+						} else {
+							self.getEl().checked = true;
+						}
+
+						EVENT.fireAll({
+							node : self,
+							name : 'change'
+						});
+
+						return self.getEl().checked;
+					};
+
+					self.checkIsChecked = checkIsChecked = function() {
+						return self.getEl().checked;
+					};
+
+					EVENT({
+						node : self,
+						name : 'keyup'
+					}, function(e) {
+						if (e !== undefined && e.getKey() === 'Enter') {
+							DELAY(function() {
+								EVENT.fireAll({
+									node : self,
+									name : 'change'
+								});
+							});
+						}
+					});
+				}
+			}
+
+			self.setValue = setValue = function(value) {
+				//REQUIRED: value
+
+				if (type === 'checkbox' || type === 'radio') {
+
+					if (value === true) {
+
+						if (self.getEl().checked !== true) {
+
+							self.getEl().checked = true;
+
+							EVENT.fireAll({
+								node : self,
+								name : 'change'
+							});
+
+						} else {
+							self.getEl().checked = true;
+						}
+
+					} else {
+
+						if (self.getEl().checked === true) {
+
+							self.getEl().checked = false;
+
+							EVENT.fireAll({
+								node : self,
+								name : 'change'
+							});
+
+						} else {
+							self.getEl().checked = false;
+						}
+					}
+
+				} else {
+
+					if (self.getEl().value !== value) {
+
+						self.getEl().value = value;
+
+						EVENT.fireAll({
+							node : self,
+							name : 'change'
+						});
+
+					} else {
+						self.getEl().value = value;
+					}
+				}
+			};
+
+			EVENT({
+				node : self,
+				name : 'focus'
+			}, function() {
+				getFocusingInputIds().push(self.id);
+			});
+
+			EVENT({
+				node : self,
+				name : 'blur'
+			}, function() {
+
+				REMOVE({
+					array : getFocusingInputIds(),
+					value : self.id
+				});
+			});
+
+			self.on('remove', function() {
+
+				REMOVE({
+					array : getFocusingInputIds(),
+					value : self.id
+				});
+			});
+			
+			// can radio be false
+			if (type === 'radio') {
+				
+				EVENT({
+					node : self,
+					name : 'touchstart'
+				}, function() {
+					
+					if (checkIsChecked() === true) {
+						
+						EVENT_ONCE({
+							node : self,
+							name : 'touchend'
+						}, function() {
+							DELAY(function() {
+								setValue(false);
+							});
+						});
+					}
+				});
+			}
+		},
+
+		afterInit : function(inner, self, params) {
+			//OPTIONAL: params
+			//OPTIONAL: params.id		id 속성
+			//OPTIONAL: params.cls		class 속성
+			//OPTIONAL: params.style	스타일
+			//OPTIONAL: params.name
+			//OPTIONAL: params.type
+			//OPTIONAL: params.placeholder
+			//OPTIONAL: params.value
+			//OPTIONAL: params.accept
+			//OPTIONAL: params.isMultiple
+			//OPTIONAL: params.isOffAutocomplete
+			//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+			//OPTIONAL: params.on		이벤트
+
+			var
+			// type
+			type,
+
+			// value
+			value;
+
+			// init params.
+			if (params !== undefined) {
+				type = params.type;
+				value = params.value;
+			}
+
+			if (value !== undefined) {
+
+				if (type === 'checkbox' || type === 'radio') {
+
+					if (value === true) {
+
+						if (self.getEl().checked !== true) {
+							self.getEl().checked = true;
+						} else {
+							self.getEl().checked = true;
+						}
+
+					} else {
+
+						if (self.getEl().checked === true) {
+							self.getEl().checked = false;
+						} else {
+							self.getEl().checked = false;
+						}
+					}
+
+				} else {
+
+					if (self.getEl().value !== value) {
+						self.getEl().value = value;
+					} else {
+						self.getEl().value = value;
+					}
+				}
+			}
+		}
+	};
+});
+
+/**
+ * HTML li 태그와 대응되는 클래스
+ */
+global.LI = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'li'
+		};
+	}
+});
+
+/**
+ * HTML optgroup 태그와 대응되는 클래스
+ */
+global.OPTGROUP = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'optgroup'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.label
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// label
+		label = params.label;
+
+		inner.setAttr({
+			name : 'label',
+			value : label
+		});
+	}
+});
+
+/**
+ * HTML option 태그와 대응되는 클래스
+ */
+global.OPTION = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'option'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.value
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// get value.
+		getValue,
+
+		// set value.
+		setValue;
+
+		self.getValue = getValue = function() {
+			return self.getEl().value;
+		};
+
+		self.setValue = setValue = function(value) {
+			//REQUIRED: value
+
+			self.getEl().value = value;
+		};
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.value
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// value
+		value,
+		
+		// children
+		children;
+
+		// init params.
+		if (params !== undefined) {
+			value = params.value;
+			children = params.c;
+		}
+
+		if (value === undefined) {
+			self.setValue('');
+		} else {
+			self.setValue(value);
+			
+			if (children === undefined) {
+				self.append(value);
+			}
+		}
+	}
+});
+
+/**
+ * HTML p 태그와 대응되는 클래스
+ */
+global.P = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'p'
+		};
+	}
+});
+
+/**
+ * HTML select 태그와 대응되는 클래스
+ */
+global.SELECT = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'select'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder
+		//OPTIONAL: params.value
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// name
+		name,
+
+		// is ctrl down
+		isCtrlDown = false,
+
+		// get name.
+		getName,
+
+		// get value.
+		getValue,
+
+		// set value.
+		setValue,
+
+		// select.
+		select,
+
+		// focus.
+		focus,
+
+		// blur.
+		blur;
+
+		// init params.
+		if (params !== undefined) {
+			name = params.name;
+		}
+
+		if (name !== undefined) {
+			inner.setAttr({
+				name : 'name',
+				value : name
+			});
+		}
+
+		self.getName = getName = function() {
+			return name;
+		};
+
+		self.getValue = getValue = function() {
+			return self.getEl().value;
+		};
+
+		self.setValue = setValue = function(value) {
+			//REQUIRED: value
+
+			if (self.getEl().value !== value) {
+
+				self.getEl().value = value;
+
+				EVENT.fireAll({
+					node : self,
+					name : 'change'
+				});
+
+			} else {
+				self.getEl().value = value;
+			}
+		};
+
+		self.select = select = function() {
+			self.getEl().select();
+		};
+
+		self.focus = focus = function() {
+			self.getEl().focus();
+		};
+
+		self.blur = blur = function() {
+			self.getEl().blur();
+		};
+
+		EVENT({
+			node : self,
+			name : 'keydown'
+		}, function(e) {
+			
+			if (e.getKey() === 'Control') {
+				isCtrlDown = true;
+			} else if (isCtrlDown !== true) {
+				e.stopBubbling();
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'keyup'
+		}, function(e) {
+
+			if (e.getKey() === 'Control') {
+				isCtrlDown = false;
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'focus'
+		}, function() {
+			INPUT.getFocusingInputIds().push(self.id);
+		});
+
+		EVENT({
+			node : self,
+			name : 'blur'
+		}, function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+
+		self.on('remove', function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일을 지정합니다.
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder
+		//OPTIONAL: params.value
+		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트를 지정합니다.
+
+		var
+		// value
+		value;
+
+		// init params.
+		if (params !== undefined) {
+			value = params.value;
+		}
+
+		if (value !== undefined) {
+			self.setValue(value);
+		}
+	}
+});
+
+/**
+ * HTML span 태그와 대응되는 클래스
+ */
+global.SPAN = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'span'
+		};
+	}
+});
+
+/**
+ * HTML table 태그와 대응되는 클래스
+ */
+global.TABLE = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'table'
+		};
+	}
+});
+
+/**
+ * HTML td 태그와 대응되는 클래스
+ */
+global.TD = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'td'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.rowspan
+		//OPTIONAL: params.colspan
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+		
+		var
+		// rowspan
+		rowspan,
+
+		// colspan
+		colspan;
+
+		// init params.
+		if (params !== undefined) {
+			rowspan = params.rowspan;
+			colspan = params.colspan;
+		}
+
+		if (rowspan !== undefined) {
+			inner.setAttr({
+				name : 'rowspan',
+				value : rowspan
+			});
+		}
+
+		if (colspan !== undefined) {
+			inner.setAttr({
+				name : 'colspan',
+				value : colspan
+			});
+		}
+	}
+});
+
+/**
+ * Textarea class
+ */
+global.TEXTAREA = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'textarea'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id			id 속성
+		//OPTIONAL: params.cls			class 속성
+		//OPTIONAL: params.style		스타일
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder	값이 없는 경우 표시되는 짧은 설명
+		//OPTIONAL: params.value
+		//OPTIONAL: params.c			자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on			이벤트
+
+		var
+		// name
+		name,
+
+		// placeholder
+		placeholder,
+
+		// is ctrl down
+		isCtrlDown = false,
+
+		// get name.
+		getName,
+
+		// get value.
+		getValue,
+
+		// set value.
+		setValue,
+
+		// select.
+		select,
+
+		// focus.
+		focus,
+
+		// blur.
+		blur;
+
+		// init params.
+		if (params !== undefined) {
+			name = params.name;
+			placeholder = params.placeholder;
+		}
+
+		if (name !== undefined) {
+			inner.setAttr({
+				name : 'name',
+				value : name
+			});
+		}
+
+		if (placeholder !== undefined) {
+			inner.setAttr({
+				name : 'placeholder',
+				value : placeholder
+			});
+		}
+
+		self.getName = getName = function() {
+			return name;
+		};
+
+		self.getValue = getValue = function() {
+			return self.getEl().value;
+		};
+
+		self.setValue = setValue = function(value) {
+			//REQUIRED: value
+
+			if (self.getEl().value !== value) {
+
+				self.getEl().value = value;
+
+				EVENT.fireAll({
+					node : self,
+					name : 'change'
+				});
+
+			} else {
+				self.getEl().value = value;
+			}
+		};
+
+		self.select = select = function() {
+			self.getEl().select();
+		};
+
+		self.focus = focus = function() {
+			self.getEl().focus();
+		};
+
+		self.blur = blur = function() {
+			self.getEl().blur();
+		};
+
+		EVENT({
+			node : self,
+			name : 'keydown'
+		}, function(e) {
+
+			if (e.getKey() === 'Control') {
+				isCtrlDown = true;
+			} else if (isCtrlDown !== true) {
+				e.stopBubbling();
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'keyup'
+		}, function(e) {
+
+			if (e.getKey() === 'Control') {
+				isCtrlDown = false;
+			}
+		});
+
+		EVENT({
+			node : self,
+			name : 'focus'
+		}, function() {
+			INPUT.getFocusingInputIds().push(self.id);
+		});
+
+		EVENT({
+			node : self,
+			name : 'blur'
+		}, function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+
+		self.on('remove', function() {
+
+			REMOVE({
+				array : INPUT.getFocusingInputIds(),
+				value : self.id
+			});
+		});
+	},
+
+	afterInit : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id			id 속성
+		//OPTIONAL: params.cls			class 속성
+		//OPTIONAL: params.style		스타일
+		//OPTIONAL: params.name
+		//OPTIONAL: params.placeholder	값이 없는 경우 표시되는 짧은 설명
+		//OPTIONAL: params.value
+		//OPTIONAL: params.c			자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on			이벤트
+
+		var
+		// value
+		value;
+
+		// init params.
+		if (params !== undefined) {
+			value = params.value;
+		}
+
+		if (value !== undefined) {
+			self.setValue(value);
+		}
+	}
+});
+
+/**
+ * HTML th 태그와 대응되는 클래스
+ */
+global.TH = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'th'
+		};
+	},
+
+	init : function(inner, self, params) {
+		'use strict';
+		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.rowspan
+		//OPTIONAL: params.colspan
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
+
+		var
+		// rowspan
+		rowspan,
+
+		// colspan
+		colspan;
+
+		// init params.
+		if (params !== undefined) {
+			rowspan = params.rowspan;
+			colspan = params.colspan;
+		}
+
+		if (rowspan !== undefined) {
+			inner.setAttr({
+				name : 'rowspan',
+				value : rowspan
+			});
+		}
+
+		if (colspan !== undefined) {
+			inner.setAttr({
+				name : 'colspan',
+				value : colspan
+			});
+		}
+	}
+});
+
+/**
+ * HTML tr 태그와 대응되는 클래스
+ */
+global.TR = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'tr'
+		};
+	}
+});
+
+/**
+ * HTML ul 태그와 대응되는 클래스
+ */
+global.UL = CLASS({
+
+	preset : function() {
+		'use strict';
+
+		return DOM;
+	},
+
+	params : function() {
+		'use strict';
+
+		return {
+			tag : 'ul'
+		};
+	}
+});
+
 /*!
  * Bowser - a browser detector
  * https://github.com/ded/bowser

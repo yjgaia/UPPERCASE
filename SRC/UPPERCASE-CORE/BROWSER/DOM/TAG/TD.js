@@ -20,6 +20,8 @@ global.TD = CLASS({
 	init : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.rowspan
 		//OPTIONAL: params.colspan

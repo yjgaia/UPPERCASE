@@ -20,6 +20,8 @@ global.FORM = CLASS({
 	init : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.action	폼 정보를 전송할 경로
 		//OPTIONAL: params.target	경로가 이동될 타겟. 지정하지 않으면 현재 창에서 이동됩니다.

@@ -20,6 +20,8 @@ global.SELECT = CLASS({
 	init : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.name
 		//OPTIONAL: params.placeholder
@@ -153,6 +155,8 @@ global.SELECT = CLASS({
 	afterInit : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
 		//OPTIONAL: params.style	스타일을 지정합니다.
 		//OPTIONAL: params.name
 		//OPTIONAL: params.placeholder

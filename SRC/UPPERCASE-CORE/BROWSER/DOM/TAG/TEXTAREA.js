@@ -20,6 +20,8 @@ global.TEXTAREA = CLASS({
 	init : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
+		//OPTIONAL: params.id			id 속성
+		//OPTIONAL: params.cls			class 속성
 		//OPTIONAL: params.style		스타일
 		//OPTIONAL: params.name
 		//OPTIONAL: params.placeholder	값이 없는 경우 표시되는 짧은 설명
@@ -164,6 +166,8 @@ global.TEXTAREA = CLASS({
 	afterInit : function(inner, self, params) {
 		'use strict';
 		//OPTIONAL: params
+		//OPTIONAL: params.id			id 속성
+		//OPTIONAL: params.cls			class 속성
 		//OPTIONAL: params.style		스타일
 		//OPTIONAL: params.name
 		//OPTIONAL: params.placeholder	값이 없는 경우 표시되는 짧은 설명

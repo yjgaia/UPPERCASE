@@ -17,10 +17,10 @@ TEST('IFRAME', function(ok) {
 		// iframe
 		IFRAME({
 			style : {
-				width : 200,
-				height : 200
+			width : 560,
+				height : 315
 			},
-			src : 'http://www.btncafe.com'
+			src : 'https://www.youtube.com/embed/0E00Zuayv9Q'
 		})
 	}).appendTo(BODY);
 

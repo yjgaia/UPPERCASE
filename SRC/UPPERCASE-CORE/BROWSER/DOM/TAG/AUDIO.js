@@ -1,7 +1,7 @@
 /**
- * Canvas class
+ * HTML audio 태그와 대응되는 클래스
  */
-global.CANVAS = CLASS({
+global.AUDIO = CLASS({
 
 	preset : function() {
 		'use strict';
@@ -13,7 +13,7 @@ global.CANVAS = CLASS({
 		'use strict';
 
 		return {
-			tag : 'canvas'
+			tag : 'audio'
 		};
 	},
 
@@ -51,8 +51,10 @@ global.CANVAS = CLASS({
 			height = params.height;
 		}
 
-		self.getContext = getContext = function() {
-			return CONTEXT(self);
+		self.getContext = getContext = function(contextType) {
+			//REQUIRED: contextType
+			
+			return self.getEl().getContext(contextType);
 		};
 
 		self.setSize = setSize = function(size) {
