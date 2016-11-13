@@ -20,7 +20,7 @@ global.ANIMATE = METHOD(function(m) {
 			//OPTIONAL: params.iterationCount	애니메이션을 몇번 발동시킬지 (입력하지 않으면 1, 계속 애니메이션이 발동되도록 하려면 'infinite' 지정)
 			//OPTIONAL: params.direction		애니메이션의 방향 (입력하지 않으면 'normal', 'reverse', 'alternate', 'alternate-reverse' 사용 가능)
 			//OPTIONAL: animationEndHandler		애니메이션이 끝날 때 호출될 핸들러
-	
+			
 			var
 			// node
 			node = params.node,

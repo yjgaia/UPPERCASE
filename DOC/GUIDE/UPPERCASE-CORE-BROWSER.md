@@ -359,7 +359,7 @@ DIV({
 - `on` 이벤트를 지정합니다.
 
 ### `DOM`
-DOM 객체를 생성하고 다루는 클래스입니다. `NODE` 클래스를 상속하기 때문에, `NODE`로부터 파생되는 모든 함수들을 사용할 수 있습니다. UPPERCASE는 `DOM` 클래스를 상속한, 각 HTML 태그들과 대응되는 클래스들을 갖고 있습니다. 만약 UPPERCASE가 제공하지 않는 종류의 HTML 요소가 필요한 경우, `DOM`을 상속하여 직접 구현할 수 있습니다.
+DOM 객체를 생성하고 다루는 클래스. `NODE` 클래스를 상속하기 때문에, `NODE`로부터 파생되는 모든 함수들을 사용할 수 있습니다. UPPERCASE는 `DOM` 클래스를 상속한, 각 HTML 태그들과 대응되는 클래스들을 갖고 있습니다. 만약 UPPERCASE가 제공하지 않는 종류의 HTML 요소가 필요한 경우, `DOM`을 상속하여 직접 구현할 수 있습니다.
 
 ```javascript
 DOM({
@@ -396,7 +396,7 @@ DOM({
 - `on` 이벤트를 지정합니다.
 
 ### `BODY`
-HTML `body` 태그와 대응되는 객체입니다. (`BODY`는 웹 페이지에 단 하나만 존재할 수 있기 때문에 클래스가 아니라 객체라는 점에 주의하시기 바랍니다.
+HTML `body` 태그와 대응되는 객체. (`BODY`는 웹 페이지에 단 하나만 존재할 수 있기 때문에 클래스가 아니라 객체라는 점에 주의하시기 바랍니다.
 
 ```javascript
 // BODY는 새로 생성할 수 없이 그 자체로 객체이다.
@@ -406,7 +406,7 @@ BODY.append(DIV({
 ```
 
 ### `DIV`
-HTML `div` 태그와 대응되는 클래스입니다.
+HTML `div` 태그와 대응되는 클래스
 
 ```javascript
 DIV({
@@ -415,13 +415,13 @@ DIV({
 ```
 
 ### `P`
-HTML `p` 태그와 대응되는 클래스입니다.
+HTML `p` 태그와 대응되는 클래스
 
 ### `SPAN`
-HTML `span` 태그와 대응되는 클래스입니다.
+HTML `span` 태그와 대응되는 클래스
 
 ### `BR`
-HTML `br` 태그와 대응되는 클래스입니다. 다른 태그와 다르게 아무런 파라미터가 지정되지 않는다는 점에 주의하시기 바랍니다.
+HTML `br` 태그와 대응되는 클래스. 다른 태그와 다르게 아무런 파라미터가 지정되지 않는다는 점에 주의하시기 바랍니다.
 
 ```javascript
 P({
@@ -430,25 +430,25 @@ P({
 ```
 
 ### `H1`
-HTML `h1` 태그와 대응되는 클래스입니다.
+HTML `h1` 태그와 대응되는 클래스
 
 ### `H2`
-HTML `h2` 태그와 대응되는 클래스입니다.
+HTML `h2` 태그와 대응되는 클래스
 
 ### `H3`
-HTML `h3` 태그와 대응되는 클래스입니다.
+HTML `h3` 태그와 대응되는 클래스
 
 ### `H4`
-HTML `h4` 태그와 대응되는 클래스입니다.
+HTML `h4` 태그와 대응되는 클래스
 
 ### `H5`
-HTML `h5` 태그와 대응되는 클래스입니다.
+HTML `h5` 태그와 대응되는 클래스
 
 ### `H6`
-HTML `h6` 태그와 대응되는 클래스입니다.
+HTML `h6` 태그와 대응되는 클래스
 
 ### `A`
-HTML `a` 태그와 대응되는 클래스입니다. `href`와 `target` 파라미터를 추가로 사용할 수 있습니다. 아무런 내용이 없으면 이동할 경로를 그대로 표시합니다.
+HTML `a` 태그와 대응되는 클래스. `href`와 `target` 파라미터를 추가로 사용할 수 있습니다. 아무런 내용이 없으면 이동할 경로를 그대로 표시합니다.
 
 ```javascript
 A({
@@ -469,7 +469,7 @@ A({
 - `tap()` 마치 눌러진 것 처럼 터치 혹은 클릭 이벤트를 발생시킵니다.
 
 ### `IMG`
-HTML `img` 태그와 대응되는 클래스입니다. `src` 파라미터를 추가로 사용할 수 있습니다.
+HTML `img` 태그와 대응되는 클래스. `src` 파라미터를 추가로 사용할 수 있습니다.
 
 ```javascript
 IMG({
@@ -486,7 +486,7 @@ IMG({
 - `setSrc(src)` 이미지의 경로를 재지정합니다.
 
 ### `UL`
-HTML `ul` 태그와 대응되는 클래스입니다.
+HTML `ul` 태그와 대응되는 클래스
 
 ```javascript
 UL({
@@ -501,10 +501,10 @@ UL({
 ```
 
 ### `LI`
-HTML `li` 태그와 대응되는 클래스입니다.
+HTML `li` 태그와 대응되는 클래스
 
 ### `TABLE`
-HTML `table` 태그와 대응되는 클래스입니다.
+HTML `table` 태그와 대응되는 클래스
 
 ```javascript
 TABLE({
@@ -537,16 +537,16 @@ TABLE({
 ```
 
 ### `TR`
-HTML `tr` 태그와 대응되는 클래스입니다.
+HTML `tr` 태그와 대응되는 클래스
 
 ### `TH`
-HTML `th` 태그와 대응되는 클래스입니다. `rowspan`과 `colspan` 파라미터를 추가로 사용할 수 있습니다.
+HTML `th` 태그와 대응되는 클래스. `rowspan`과 `colspan` 파라미터를 추가로 사용할 수 있습니다.
 
 ### `TD`
-HTML `td` 태그와 대응되는 클래스입니다. `rowspan`과 `colspan` 파라미터를 추가로 사용할 수 있습니다.
+HTML `td` 태그와 대응되는 클래스. `rowspan`과 `colspan` 파라미터를 추가로 사용할 수 있습니다.
 
 ### `FORM`
-HTML `form` 태그와 대응되는 클래스입니다. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
+HTML `form` 태그와 대응되는 클래스. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
 
 - `action` 폼 데이터를 전송할 경로
 - `target` 경로가 이동될 타겟. 지정하지 않으면 현재 창에서 이동됩니다.
@@ -601,7 +601,7 @@ form.getData();
 - `submit()` 폼 데이터를 `action`에 지정한 경로로 전송합니다. `action`이 지정되어 있지 않은 경우에는 `submit` 이벤트만 발생시키고, 페이지를 이동하지 않습니다. 
 
 ### `INPUT`
-HTML `input` 태그와 대응되는 클래스입니다. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
+HTML `input` 태그와 대응되는 클래스. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
 
 - `name`
 - `type`
@@ -650,7 +650,7 @@ input.getName();
 - `checkIsChecked()` `type` 파라미터가 `'checkbox'`거나 `'radio'`인 경우 눌러져 있는지 확인합니다.
 
 ### `TEXTAREA`
-HTML `textarea` 태그와 대응되는 클래스입니다. `name`과 `placeholder`, `value` 파라미터를 추가로 사용할 수 있습니다.
+HTML `textarea` 태그와 대응되는 클래스. `name`과 `placeholder`, `value` 파라미터를 추가로 사용할 수 있습니다.
 
 또한 `DOM`를 상속함으로 인해 생성된 함수들과 함께, 추가적으로 `TEXTAREA`로 생성한 객체의 함수들은 다음과 같습니다.
 
@@ -662,7 +662,7 @@ HTML `textarea` 태그와 대응되는 클래스입니다. `name`과 `placeholde
 - `blur()` 포커스를 풉니다.
 
 ### `SELECT`
-HTML `select` 태그와 대응되는 클래스입니다. `name`과 `placeholder`, `value` 파라미터를 추가로 사용할 수 있습니다.
+HTML `select` 태그와 대응되는 클래스. `name`과 `placeholder`, `value` 파라미터를 추가로 사용할 수 있습니다.
 
 ```javascript
 var
@@ -694,7 +694,7 @@ select.getValue();
 - `blur()` 포커스를 풉니다.
 
 ### `OPTGROUP`
-HTML `optgroup` 태그와 대응되는 클래스입니다. `label` 파라미터를 추가로 사용할 수 있습니다.
+HTML `optgroup` 태그와 대응되는 클래스. `label` 파라미터를 추가로 사용할 수 있습니다.
 
 ```javascript
 SELECT({
@@ -729,7 +729,7 @@ SELECT({
 ```
 
 ### `OPTION`
-HTML `option` 태그와 대응되는 클래스입니다. `value` 파라미터를 추가로 사용할 수 있습니다.
+HTML `option` 태그와 대응되는 클래스. `value` 파라미터를 추가로 사용할 수 있습니다.
 
 또한 `DOM`를 상속함으로 인해 생성된 함수들과 함께, 추가적으로 `OPTION`으로 생성한 객체의 함수들은 다음과 같습니다.
 
@@ -737,7 +737,44 @@ HTML `option` 태그와 대응되는 클래스입니다. `value` 파라미터를
 - `setValue(value)` 값을 지정합니다.
 
 ### `CANVAS`
-TODO:
+HTML `canvas` 태그와 대응되는 클래스. `width`와 `height` 파라미터를 추가로 사용할 수 있습니다.
+
+```javascript
+var
+// canvas
+canvas = CANVAS({
+	width : 300,
+	height : 200,
+	style : {
+		border : '1px solid #999'
+	}
+}).appendTo(BODY),
+
+// context
+context = canvas.getContext('2d');
+
+// 원을 그린다.
+context.strokeStyle = '#ffffff';
+context.beginPath();
+context.arc(95, 50, 40, 0, 2 * Math.PI, true);
+context.stroke();
+
+// 선을 그린다.
+context.beginPath();
+context.moveTo(100, 140);
+context.lineTo(250, 20);
+context.lineWidth = 10;
+context.strokeStyle = '#00ff00';
+context.stroke();
+```
+
+또한 `DOM`를 상속함으로 인해 생성된 함수들과 함께, 추가적으로 `CANVAS`으로 생성한 객체의 함수들은 다음과 같습니다.
+
+- `getContext(contextType)` 그리기 대상이 되는 컨텍스트를 가져옵니다.
+- `setSize({width:})` `setSize({height:})` `setSize({width:, height:})` 캔버스의 크기를 지정합니다. (엄밀히 말하면 그리기 가능한 영역의 크기를 지정하는 것으로써 `style`로 지정하는 크기와는 다릅니다.)
+- `getWidth()` 캔버스의 가로 길이를 반환합니다.
+- `getHeight()` 캔버스의 세로 길이를 반환합니다.
+- `getDataURL()` 현재 캔버스에 그려진 이미지 정보를 [Data URL](https://en.wikipedia.org/wiki/Data_URI_scheme) 형식으로 가져옵니다.
 
 ### `AUDIO`
 TODO:
@@ -746,7 +783,7 @@ TODO:
 TODO:
 
 ### `IFRAME`
-HTML `iframe` 태그와 대응되는 클래스
+HTML `iframe` 태그와 대응되는 클래스. `name`와 `src` 파라미터를 추가로 사용할 수 있습니다.
 
 ```javascript
 IFRAME({

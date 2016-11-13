@@ -1,16 +1,12 @@
 TEST('CANVAS', function(ok) {
 	'use strict';
-
-	/**
-	 * IE6 ~ IE8 need Flash Player.
-	 */
-
+	
 	var
 	// canvas
 	canvas,
 
-	// context (this is not UJS's CONTEXT, but native HTML5 canvas context.)
-	ctx,
+	// context
+	context,
 
 	// test div
 	div = DIV({
@@ -31,21 +27,21 @@ TEST('CANVAS', function(ok) {
 		})
 	}).appendTo(BODY);
 
-	ctx = canvas.getEl().getContext('2d');
+	context = canvas.getContext('2d');
 
 	// draw circle.
-	ctx.strokeStyle = '#ffffff';
-	ctx.beginPath();
-	ctx.arc(95, 50, 40, 0, 2 * Math.PI, true);
-	ctx.stroke();
+	context.strokeStyle = '#ffffff';
+	context.beginPath();
+	context.arc(95, 50, 40, 0, 2 * Math.PI, true);
+	context.stroke();
 
 	// draw line.
-	ctx.beginPath();
-	ctx.moveTo(100, 140);
-	ctx.lineTo(250, 20);
-	ctx.lineWidth = 10;
-	ctx.strokeStyle = '#00ff00';
-	ctx.stroke();
+	context.beginPath();
+	context.moveTo(100, 140);
+	context.lineTo(250, 20);
+	context.lineWidth = 10;
+	context.strokeStyle = '#00ff00';
+	context.stroke();
 
 	// remove div after 3 seconds.
 	DELAY(3, function() {
