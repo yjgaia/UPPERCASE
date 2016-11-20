@@ -25,9 +25,12 @@ TEST('CANVAS', function(ok) {
 				border : '1px solid #999'
 			}
 		})
-	}).appendTo(BODY);
+	}).appendTo(BODY),
+	
+	// gl
+	gl;
 
-	context = canvas.getContext('2d');
+	/*context = canvas.getContext('2d');
 
 	// draw circle.
 	context.strokeStyle = '#ffffff';
@@ -41,7 +44,14 @@ TEST('CANVAS', function(ok) {
 	context.lineTo(250, 20);
 	context.lineWidth = 10;
 	context.strokeStyle = '#00ff00';
-	context.stroke();
+	context.stroke();*/
+	
+	gl = canvas.getContext('webgl');
+	
+	gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	gl.enable(gl.DEPTH_TEST);
+	gl.depthFunc(gl.LEQUAL);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 	// remove div after 3 seconds.
 	DELAY(3, function() {

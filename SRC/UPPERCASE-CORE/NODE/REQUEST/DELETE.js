@@ -3,7 +3,7 @@
  */
 global.DELETE = METHOD({
 
-	run : function(params, responseListenerOrListeners) {
+	run : function(urlOrParams, responseListenerOrListeners) {
 		'use strict';
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부

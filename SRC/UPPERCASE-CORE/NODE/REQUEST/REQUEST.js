@@ -58,7 +58,7 @@ global.REQUEST = METHOD(function(m) {
 			paramStr = params.paramStr,
 
 			// params
-			params = params.params,
+			_params = params.params,
 
 			// data
 			data = params.data,
@@ -99,8 +99,8 @@ global.REQUEST = METHOD(function(m) {
 				uri = uri.substring(0, uri.indexOf('?'));
 			}
 			
-			if (params !== undefined) {
-				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(params);
+			if (_params !== undefined) {
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params);
 			}
 
 			if (data !== undefined) {

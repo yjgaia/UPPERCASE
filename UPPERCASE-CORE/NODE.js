@@ -7127,7 +7127,7 @@ global.MINIFY_JS = METHOD(function() {
  */
 global.DELETE = METHOD({
 
-	run : function(params, responseListenerOrListeners) {
+	run : function(urlOrParams, responseListenerOrListeners) {
 		'use strict';
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
@@ -7216,7 +7216,7 @@ global.DOWNLOAD = METHOD(function() {
 			paramStr = params.paramStr,
 
 			// params
-			params = params.params,
+			_params = params.params,
 
 			// data
 			data = params.data,
@@ -7258,8 +7258,8 @@ global.DOWNLOAD = METHOD(function() {
 				uri = uri.substring(0, uri.indexOf('?'));
 			}
 			
-			if (params !== undefined) {
-				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(params);
+			if (_params !== undefined) {
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params);
 			}
 
 			if (data !== undefined) {
@@ -7375,7 +7375,7 @@ global.GET = METHOD({
  */
 global.POST = METHOD({
 
-	run : function(params, responseListenerOrListeners) {
+	run : function(urlOrParams, responseListenerOrListeners) {
 		'use strict';
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
@@ -7408,7 +7408,7 @@ global.POST = METHOD({
  */
 global.PUT = METHOD({
 
-	run : function(params, responseListenerOrListeners) {
+	run : function(urlOrParams, responseListenerOrListeners) {
 		'use strict';
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
@@ -7496,7 +7496,7 @@ global.REQUEST = METHOD(function(m) {
 			paramStr = params.paramStr,
 
 			// params
-			params = params.params,
+			_params = params.params,
 
 			// data
 			data = params.data,
@@ -7537,8 +7537,8 @@ global.REQUEST = METHOD(function(m) {
 				uri = uri.substring(0, uri.indexOf('?'));
 			}
 			
-			if (params !== undefined) {
-				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(params);
+			if (_params !== undefined) {
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params);
 			}
 
 			if (data !== undefined) {

@@ -19,85 +19,64 @@ global.AUDIO = CLASS({
 
 	init : function(inner, self, params) {
 		'use strict';
-		//OPTIONAL: params
-		//OPTIONAL: params.width
-		//OPTIONAL: params.height
+		//REQUIRED: params
+		//OPTIONAL: params.id		id 속성
+		//OPTIONAL: params.cls		class 속성
+		//OPTIONAL: params.style	스타일
+		//OPTIONAL: params.ogg		OGG 사운드 파일 경로
+		//OPTIONAL: params.mp3		MP3 사운드 파일 경로
+		//OPTIONAL: params.isLoop	반복 재생할지 여부
+		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+		//OPTIONAL: params.on		이벤트
 
 		var
-		// wdith
-		width,
+		// mp3
+		mp3 = params.mp3,
 
-		// height
-		height,
-
-		// get context.
-		getContext,
-
-		// set size.
-		setSize,
-
-		// get width.
-		getWidth,
-
-		// get height.
-		getHeight,
-
-		// get data url.
-		getDataURL;
-
-		// init params.
-		if (params !== undefined) {
-			width = params.width;
-			height = params.height;
+		// ogg
+		ogg = params.ogg,
+		
+		// is loop
+		isLoop = params.isLoop,
+		
+		// play.
+		play,
+		
+		// pause.
+		pause,
+		
+		// stop.
+		stop;
+		
+		if (ogg !== undefined && self.getEl().canPlayType('audio/ogg') !== '') {
+			self.getEl().src = ogg;
+		} else if (mp3 !== undefined) {
+			self.getEl().src = mp3;
 		}
-
-		self.getContext = getContext = function(contextType) {
-			//REQUIRED: contextType
-			
-			return self.getEl().getContext(contextType);
-		};
-
-		self.setSize = setSize = function(size) {
-			//REQUIRED: size
-			//OPTIONAL: size.width
-			//OPTIONAL: size.height
-
-			var
-			// el
-			el = self.getEl();
-
-			if (size.width !== undefined) {
-				width = size.width;
-			}
-
-			if (size.height !== undefined) {
-				height = size.height;
-			}
-
-			if (width !== undefined) {
-				el.width = width;
-			}
-
-			if (height !== undefined) {
-				el.height = height;
-			}
-		};
-
-		setSize({
-			width : width,
-			height : height
+		
+		inner.setAttr({
+			name : 'controls',
+			value : 'controls'
 		});
-
-		self.getWidth = getWidth = function() {
-			return width;
+		
+		if (isLoop === true) {
+			inner.setAttr({
+				name : 'loop',
+				value : 'loop'
+			});
+		}
+		
+		self.play = play = function() {
+			self.getEl().play();
 		};
-
-		self.getHeight = getHeight = function() {
-			return height;
+		
+		self.pause = pause = function() {
+			self.getEl().pause();
 		};
-
-		self.getDataURL = getDataURL = function() {
-			return self.getEl().toDataURL();
+		
+		self.stop = stop = function() {
+			self.getEl().pause();
+			self.getEl().currentTime = 0;
 		};
 	}
 });

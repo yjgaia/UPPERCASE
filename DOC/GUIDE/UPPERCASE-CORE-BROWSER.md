@@ -29,9 +29,9 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 ## `BROWSER_CONFIG`
 UPPERCASE 기반 프로젝트에서 웹 브라우저 환경 전용 설정값들을 저장하는 데이터입니다. UPPERCASE의 다른 모듈들도 이를 확장하여 사용합니다. UPPERCASE-CORE-BROWSER에서는 아래와 같은 설정값들을 가지고 있습니다.
 
+* `isSecure` 현재 접속한 URL이 HTTPS 프로토콜인지 여부
 * `host` 현재 접속한 URL의 호스트
 * `port` 현재 접속한 URL의 포트 번호
-* `isSecure` 현재 접속한 URL이 HTTPS 프로토콜인지 여부
 
 ## `INFO`
 웹 브라우저 정보를 담고 있는 객체
@@ -777,10 +777,66 @@ context.stroke();
 - `getDataURL()` 현재 캔버스에 그려진 이미지 정보를 [Data URL](https://en.wikipedia.org/wiki/Data_URI_scheme) 형식으로 가져옵니다.
 
 ### `AUDIO`
-TODO:
+HTML `audio` 태그와 대응되는 클래스. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
+
+- `ogg` OGG 사운드 파일 경로
+- `mp3` MP3 사운드 파일 경로
+- `isLoop` 반복 재생할지 여부
+
+OGG 파일과 MP3 파일 중 브라우저가 지원하는 포맷의 사운드 파일을 재생합니다. [`SOUND`](#sound)와 다른 점은, 조작 메뉴를 제공한다는 점입니다.
+
+```javascript
+var
+// audio
+audio = AUDIO({
+	ogg : 'sound.ogg',
+	mp3 : 'sound.mp3',
+	isLoop : true
+}).appendTo(BODY);
+
+// 사운드 재생
+audio.play();
+
+// 일시정지
+audio.pause();
+
+// 정지 및 처음으로 돌아가기
+audio.stop();
+```
 
 ### `VIDEO`
-TODO:
+HTML `video` 태그와 대응되는 클래스. 아래와 같은 파라미터들을 추가로 사용할 수 있습니다.
+
+- `webm` WebM 동영상 파일 경로
+- `ogg` OGG 동영상 파일 경로
+- `mp4` MP4 동영상 파일 경로
+- `poster` 동영상이 로딩 중일 때 표시할 이미지 파일 경로
+- `isNoControls` 조작 메뉴를 숨길지 여부
+- `isLoop` 반복 재생할지 여부
+- `isMuted` 음소거로 재생할지 여부
+
+WebM 파일과 OGG 파일, MP4 파일 중 브라우저가 지원하는 포맷의 동영상 파일을 재생합니다.
+
+```javascript
+var
+// video
+video = VIDEO({
+	webm : 'video.webm',
+	ogg : 'video.ogg',
+	mp4 : 'video.mp4',
+	isNoControls : true,
+	isLoop : true
+}).appendTo(BODY);
+
+// 동영상 재생
+video.play();
+
+// 일시정지
+video.pause();
+
+// 정지 및 처음으로 돌아가기
+video.stop();
+```
 
 ### `IFRAME`
 HTML `iframe` 태그와 대응되는 클래스. `name`와 `src` 파라미터를 추가로 사용할 수 있습니다.
@@ -1107,7 +1163,138 @@ ANIMATE({
 TODO:
 
 ## HTTP 요청 기능
-TODO:
+### `REQUEST`
+HTTP 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `REQUEST({파라미터들}, function(content, headers) {})`
+* `REQUEST({파라미터들}, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `method` 요청 메소드. `GET`, `POST`, `PUT`, `DELETE`를 설정할 수 있습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+
+```javascript
+REQUEST({
+	method : 'GET',
+	host : 'localhost',
+	port : 8810,
+	uri : 'request_test'
+}, function(content) {
+	...
+});
+```
+```javascript
+REQUEST({
+	method : 'GET',
+	url : 'http://localhost:8810/request_test'
+}, function(content) {
+	...
+});
+```
+
+### `GET`
+HTTP GET 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `GET({파라미터들}, function(content, headers) {})`
+* `GET({파라미터들}, {error:, success:})`
+* `GET(url, function(content, headers) {})`
+* `GET(url, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+
+```javascript
+GET({
+	host : 'localhost',
+	port : 8810,
+	uri : 'request_test'
+}, function(content) {
+	...
+});
+```
+```javascript
+GET('http://localhost:8810/request_test', function(content) {
+	...
+});
+```
+
+### `POST`
+HTTP POST 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `POST({파라미터들}, function(content, headers) {})`
+* `POST({파라미터들}, {error:, success:})`
+* `POST(url, function(content, headers) {})`
+* `POST(url, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+
+### `PUT`
+HTTP POST 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `PUT({파라미터들}, function(content, headers) {})`
+* `PUT({파라미터들}, {error:, success:})`
+* `PUT(url, function(content, headers) {})`
+* `PUT(url, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
+
+### `DELETE`
+HTTP POST 요청을 보냅니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `DELETE({파라미터들}, function(content, headers) {})`
+* `DELETE({파라미터들}, {error:, success:})`
+* `DELETE(url, function(content, headers) {})`
+* `DELETE(url, {error:, success:})`
+
+사용 가능한 파라미터 목록은 다음과 같습니다.
+* `isSecure` HTTPS 프로토콜인지 여부
+* `host`
+* `port`
+* `uri`
+* `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
+* `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
+* `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `headers` 요청 헤더
 
 ## `CONNECT_TO_WEB_SOCKET_SERVER`
 * `CONNECT_TO_WEB_SOCKET_SERVER(port, connectionListenerOrListeners)`
@@ -1236,4 +1423,28 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
 ```
 
 ## `SOUND`
-TODO:
+사운드 파일을 재생하는 SOUND 클래스. 아래와 같은 파라미터들을 사용할 수 있습니다.
+
+- `ogg` OGG 사운드 파일 경로
+- `mp3` MP3 사운드 파일 경로
+- `isLoop` 반복 재생할지 여부
+
+OGG 파일과 MP3 파일 중 브라우저가 지원하는 포맷의 사운드 파일을 재생합니다. [`AUDIO`](#audio)와 다른 점은, 조작 메뉴를 제공하지 않는다는 점입니다. 게임 사운드 등을 재생할 때 유용합니다.
+
+```javascript
+var
+// audio
+sound = SOUND({
+	ogg : 'AMemoryAway.ogg',
+	mp3 : 'AMemoryAway.mp3'
+});
+
+// 사운드 재생
+sound.play();
+
+// 일시정지
+sound.pause();
+
+// 정지 및 처음으로 돌아가기
+sound.stop();
+```
