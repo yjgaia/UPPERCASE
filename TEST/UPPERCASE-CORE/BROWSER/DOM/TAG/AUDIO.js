@@ -1,4 +1,4 @@
-TEST('AUDIO', function(ok) {
+TEST('AUDIO', function(check) {
 	'use strict';
 	
 	var

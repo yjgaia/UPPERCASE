@@ -1,5 +1,5 @@
 /**
- * View interface
+ * 뷰를 정의하기 위한 VIEW 클래스
  */
 global.VIEW = CLASS({
 
@@ -40,28 +40,29 @@ global.VIEW = CLASS({
 		// check is closed.
 		checkIsClosed;
 
-		inner.on = on = function(methodName, handler) {
-			//REQUIRED: methodName
+		inner.on = on = function(eventName, eventHandler) {
+			//REQUIRED: eventName
+			//REQUIRED: eventHandler
 
 			// when change params
-			if (methodName === 'paramsChange') {
-				paramsChangeHandlers.push(handler);
+			if (eventName === 'paramsChange') {
+				paramsChangeHandlers.push(eventHandler);
 				if (nowParams !== undefined) {
-					handler(nowParams);
+					eventHandler(nowParams);
 				}
 			}
 			
 			// when change uri
-			if (methodName === 'uriChange') {
-				uriChangeHandlers.push(handler);
+			if (eventName === 'uriChange') {
+				uriChangeHandlers.push(eventHandler);
 				if (nowURI !== undefined) {
-					handler(nowURI);
+					eventHandler(nowURI);
 				}
 			}
 
 			// when close
-			else if (methodName === 'close') {
-				closeHandlers.push(handler);
+			else if (eventName === 'close') {
+				closeHandlers.push(eventHandler);
 			}
 		};
 

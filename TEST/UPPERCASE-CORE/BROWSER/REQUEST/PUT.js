@@ -1,4 +1,4 @@
-TEST('PUT', function(ok) {
+TEST('PUT', function(check) {
 	'use strict';
 
 	// test PUT request.

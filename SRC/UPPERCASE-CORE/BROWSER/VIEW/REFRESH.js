@@ -1,5 +1,5 @@
 /**
- * refresh view.
+ * 뷰를 새로 불러옵니다.
  */
 global.REFRESH = METHOD(function(m) {
 	'use strict';

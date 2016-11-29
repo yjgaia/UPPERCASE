@@ -1,4 +1,4 @@
-TEST('CLEAR_BOTH', function(ok) {
+TEST('CLEAR_BOTH', function(check) {
 	'use strict';
 
 	var

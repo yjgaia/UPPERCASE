@@ -1,4 +1,4 @@
-TEST('POST', function(ok) {
+TEST('POST', function(check) {
 	'use strict';
 
 	// test POST request.

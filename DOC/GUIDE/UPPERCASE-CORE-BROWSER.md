@@ -1160,7 +1160,165 @@ ANIMATE({
 - `direction` 애니메이션의 방향 (입력하지 않으면 `'normal'`, `'reverse'`, `'alternate'`, `'alternate-reverse'` 사용 가능)
 
 ## 뷰 기능
-TODO:
+HTML5의 Push State기능을 이용해, 특정 주소에 접근하면 해당하는 뷰를 보여주는 기능입니다. 이를 통해 [Single-page application](https://en.wikipedia.org/wiki/Single-page_application)을 구현할 수 있습니다.
+
+아래와 같이 작성한 후 `http://도메인/hello/YJ`로 접속하게 되면 `Hello, YJ!`라는 화면이 뜹니다. 이후 메인 페이지 버튼을 눌러 다른 경로로 이동하면 해당 화면은 사라집니다.
+
+```javascript
+MATCH_VIEW({
+	uri : 'hello/{name}',
+	target : CLASS({
+	
+		preset : function() {
+			return VIEW;
+		},
+		
+		init : function(inner, self) {
+
+			var
+			// page
+			page = DIV({
+			    c : 'Hello!'
+			}).appendTo(BODY);
+			
+			inner.on('paramsChange', function(params) {
+			
+				page.empty();
+				page.append('Hello, ' + params.name + '!');
+				
+				page.append(A({
+				    c : '메인 페이지',
+				    on : {
+				        tap : function() {
+				            GO('main');
+				        }
+				    }
+				}));
+			});
+			
+			inner.on('close', function() {
+			    page.remove();
+			});
+		}
+	})
+});
+```
+
+### `VIEW`
+뷰를 정의하기 위한 VIEW 클래스
+
+```javascript
+var
+// Hello View
+HelloView = CLASS({
+
+	preset : function() {
+		return VIEW;
+	},
+	
+	init : function(inner, self) {
+
+		var
+		// page
+		page = DIV({
+		    c : 'Hello!'
+		}).appendTo(BODY);
+		
+		inner.on('paramsChange', function(params) {
+		
+			page.empty();
+			page.append('Hello, ' + params.name + '!');
+			
+			page.append(A({
+			    c : '메인 페이지',
+			    on : {
+			        tap : function() {
+			            GO('main');
+			        }
+			    }
+			}));
+		});
+		
+		inner.on('close', function() {
+		    page.remove();
+		});
+	}
+});
+```
+
+`VIEW`를 상속한 클래스 내부에서 사용 가능한 함수들은 다음과 같습니다.
+
+#### `inner.on(eventName, eventHandler)`
+특정한 상황에서 실행되는 핸들러를 정의합니다. 사용 가능한 `eventName`은 다음과 같습니다.
+
+- `'paramsChange'` URI에 해당하는 파라미터가 변경될 때 실행됩니다.
+- `'uriChange'` URI가 변경될 때 실행됩니다.
+- `'close'` 다른 URI로 변경되어 현재 뷰가 종료될 때 실행됩니다.
+
+#### `inner.checkIsClosed()`
+현재 뷰가 종료되었는지 확인합니다.
+
+### `MATCH_VIEW({uri:, target:})` `Box.MATCH_VIEW({uri:, target:})`
+특정 URI와 뷰를 연결합니다.
+
+```javascript
+MATCH_VIEW({
+	uri : 'hello/{name}',
+	target : HelloView
+});
+```
+
+현재 URI가 지정한 `uri`와 같으면, 위 `VIEW`를 상속하여 만든 뷰가 실행됩니다. 중괄호(`{`, `}`)로 파라미터를 지정 할 수 있으며, 배열로 여러개의 URI를 한번에 지정할 수 있습니다.
+
+```javascript
+MATCH_VIEW({
+	uri : ['hello/{name}', 'hi/{name}'],
+	target : HelloView
+});
+```
+
+추가로, 제외하고 싶은 URI가 있는 경우 `excludeURI` 파라미터를 지정할 수 있습니다.
+
+```javascript
+MATCH_VIEW({
+	uri : ['hello/{name}', 'hi/{name}'],
+	excludeURI : ['hello/Admin', 'hi/Admin'],
+	target : HelloView
+});
+```
+
+### `URI()`
+현재 브라우저의 URI를 가져옵니다.
+
+### `HREF(uri)` `Box.HREF(uri)`
+URI로부터 주소를 생성하여 반환합니다.
+
+### `GO(uri)` `Box.GO(uri)`
+URI를 변경하여 다른 뷰로 이동합니다.
+
+```javascript
+GO('main');
+```
+
+### `GO_NEW_WIN(uri)` `Box.GO_NEW_WIN(uri)`
+새 창에서 URI에 해당하는 뷰를 띄웁니다.
+
+```javascript
+GO_NEW_WIN('hello/DS');
+```
+
+### `REFRESH()` `Box.REFRESH()` `REFRESH(uri)` `Box.REFRESH(uri)`
+뷰를 새로 불러옵니다. 같은 URI 패턴이지만 다른 URI로 새로고침 하는 경우 `uri`를 입력합니다.
+
+```javascript
+// 현재 URI가 hello/YJ라고 했을 때,
+
+// 다시 hello/YJ로 새로고침 합니다.
+REFRESH();
+
+// hello/DS로 새로고침 합니다.
+REFRESH('hello/DS');
+```
 
 ## HTTP 요청 기능
 ### `REQUEST`

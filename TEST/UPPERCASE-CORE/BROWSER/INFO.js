@@ -1,4 +1,4 @@
-TEST('INFO', function(ok) {
+TEST('INFO', function(check) {
 	'use strict';
 
 	var

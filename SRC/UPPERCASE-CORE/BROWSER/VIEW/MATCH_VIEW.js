@@ -1,5 +1,5 @@
 /**
- * match view.
+ * 특정 URI와 뷰를 연결합니다.
  */
 global.MATCH_VIEW = METHOD(function(m) {
 	'use strict';
@@ -61,7 +61,7 @@ global.MATCH_VIEW = METHOD(function(m) {
 				uriParams;
 	
 				// when view founded
-				if (uri !== REFRESH.getRefreshingURI() && ( result = uriMatcher.check(uri)).checkIsMatched() === true && (excludeURI === undefined || excludeURIMatcher.check(uri).checkIsMatched() !== true)) {
+				if (uri !== REFRESH.getRefreshingURI() && (result = uriMatcher.check(uri)).checkIsMatched() === true && (excludeURI === undefined || excludeURIMatcher.check(uri).checkIsMatched() !== true)) {
 	
 					uriParams = result.getURIParams();
 	

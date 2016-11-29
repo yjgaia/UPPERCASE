@@ -1,4 +1,4 @@
-TEST('TITLE', function(ok) {
+TEST('TITLE', function(check) {
 	'use strict';
 
 	// change browser's title.

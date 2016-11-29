@@ -1,4 +1,4 @@
-TEST('VIDEO', function(ok) {
+TEST('VIDEO', function(check) {
 	'use strict';
 	
 	var

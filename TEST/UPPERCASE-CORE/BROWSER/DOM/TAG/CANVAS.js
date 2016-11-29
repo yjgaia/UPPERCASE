@@ -1,4 +1,4 @@
-TEST('CANVAS', function(ok) {
+TEST('CANVAS', function(check) {
 	'use strict';
 	
 	var

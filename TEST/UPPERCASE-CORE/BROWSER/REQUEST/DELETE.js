@@ -1,4 +1,4 @@
-TEST('DELETE', function(ok) {
+TEST('DELETE', function(check) {
 	'use strict';
 
 	// test DELETE request.

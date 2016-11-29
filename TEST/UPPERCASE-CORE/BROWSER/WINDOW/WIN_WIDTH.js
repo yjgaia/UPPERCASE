@@ -1,4 +1,4 @@
-TEST('WIN_WIDTH', function(ok) {
+TEST('WIN_WIDTH', function(check) {
 	'use strict';
 
 	// get browser's width.

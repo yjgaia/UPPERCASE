@@ -1,4 +1,4 @@
-TEST('ANIMATE', function(ok) {
+TEST('ANIMATE', function(check) {
 	'use strict';
 
 	var

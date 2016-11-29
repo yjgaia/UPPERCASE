@@ -1,4 +1,4 @@
-TEST('WIN_HEIGHT', function(ok) {
+TEST('WIN_HEIGHT', function(check) {
 	'use strict';
 
 	// get browser's height.

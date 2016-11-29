@@ -1,4 +1,4 @@
-TEST('IFRAME', function(ok) {
+TEST('IFRAME', function(check) {
 	'use strict';
 
 	var

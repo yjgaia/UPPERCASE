@@ -1,4 +1,4 @@
-TEST('GET', function(ok) {
+TEST('GET', function(check) {
 	'use strict';
 
 	// test GET request.
