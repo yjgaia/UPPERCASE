@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+		<link rel="stylesheet" href="UPPERCASE/UPPERCASE-BOOT/R/BASE_STYLE.css">
+	</head>
+	<body>
+		<!-- 모듈 로드 -->
+		<script src="UPPERCASE/UPPERCASE-CORE/BROWSER.js"></script>
+		<!-- 테스트 시작 -->
+		<script>
+		RUN(function() {
+			'use strict';
+			
+			var
+			// require.
+			require = function(path) {
+				var script = document.createElement('script');
+				script.src = path;
+				document.body.appendChild(script);
+			};
+			
+			CONFIG.isDevMode = true;
+			
+			INIT_OBJECTS();
+			
+			require('./UPPERCASE-CORE/__TEST_BROWSER.js');
+		});
+		</script>
+		<script>
+		RUN(function() {
+			'use strict';
+			
+			DIV({
+				c : H1({
+					c : 'UPPERCASE 테스트 콘솔'
+				})
+			}).appendTo(BODY);
+		});
+		</script>
+	</body>
+</html>

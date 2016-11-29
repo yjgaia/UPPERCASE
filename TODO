@@ -10,3 +10,5 @@
 * CPU_SHARED_DB, CPU_SHARED_STORE, SHARED_DB가 SHARED_STORE로 통합
 * clientInfo.lastReceiveTime가 clientInfo.lastSendTime으로 변경
 * 이벤트 처리 시 e.getKeyCode와 e.getKeyName 함수를 e.getKey로 통합
+* RGBA 메소드 제거
+* LOAD, LOAD_CSS, READY 메소드 제거
