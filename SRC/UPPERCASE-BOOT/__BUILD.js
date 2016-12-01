@@ -9,7 +9,7 @@ RUN(function() {
 
 	var
 	// TITLE
-	TITLE = 'UPPERCASE-CORE',
+	TITLE = 'UPPERCASE-BOOT',
 	
 	// BASE_CONTENT
 	BASE_CONTENT = '/*\n\nWelcome to ' + TITLE + '! (http://uppercase.io)\n\n*/\n\n',

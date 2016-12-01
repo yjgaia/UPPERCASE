@@ -1,5 +1,6 @@
 일단 다 만들고, 문서 정리도 끝 -> box.uppercase.io 만들기 -> ubm -> 튜토리얼 제작 (프로젝트 따로 분리)
 VERSION 파일
+- UPPERCASE 1.0의 SHOW_ERROR 확인해서 메시지가 필요한 부분은 옮겨담기
 
 * uppercase-core npm에 등록
 * REDIS_STORE-BOX 프로젝트 개발하기
