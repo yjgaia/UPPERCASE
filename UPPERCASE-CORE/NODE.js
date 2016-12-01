@@ -2602,12 +2602,12 @@ global.CREATE_DATE = METHOD({
 	run : function(params) {
 		'use strict';
 		//REQUIRED: params
-		//OPTIONAL: params.year
-		//OPTIONAL: params.month
-		//OPTIONAL: params.date
-		//OPTIONAL: params.hour
-		//OPTIONAL: params.minute
-		//OPTIONAL: params.second
+		//OPTIONAL: params.year		년
+		//OPTIONAL: params.month	월
+		//OPTIONAL: params.date		일
+		//OPTIONAL: params.hour		시
+		//OPTIONAL: params.minute	분
+		//OPTIONAL: params.second	초
 		
 		var
 		// year
@@ -4972,6 +4972,21 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 		console.error(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
 	}
 };
+/*
+ * 콘솔에 경고 메시지를 출력합니다.
+ */
+global.SHOW_WARNING = function(tag, warningMsg, params) {
+	//REQUIRED: tag
+	//REQUIRED: warningMsg
+	//OPTIONAL: params
+	
+	console.error(CONSOLE_YELLOW('[' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg));
+	
+	if (params !== undefined) {
+		console.error(CONSOLE_YELLOW('다음은 경고를 발생시킨 파라미터입니다.'));
+		console.error(CONSOLE_YELLOW(JSON.stringify(params, TO_DELETE, 4)));
+	}
+};
 /**
  * 비밀번호를 주어진 키를 이용하여 HMAC SHA1 알고리즘으로 암호화 합니다.
  * 
@@ -5280,7 +5295,9 @@ global.COPY_FILE = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(from);
 								} else {
-									console.log(CONSOLE_YELLOW('[COPY_FILE] 파일이 존재하지 않습니다. 경로: ' + from));
+									SHOW_WARNING('COPY_FILE', '파일이 존재하지 않습니다.', {
+										from : from
+									});
 								}
 							}
 						});
@@ -5309,7 +5326,9 @@ global.COPY_FILE = METHOD(function() {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler(from);
 									} else {
-										console.log(CONSOLE_YELLOW('[COPY_FILE] 파일이 존재하지 않습니다. 경로: ' + from));
+										SHOW_WARNING('COPY_FILE', '파일이 존재하지 않습니다.', {
+											from : from
+										});
 									}
 
 									// do not run callback.
@@ -5646,7 +5665,9 @@ global.FIND_FILE_NAMES = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -5684,7 +5705,9 @@ global.FIND_FILE_NAMES = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[FIND_FILE_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('FIND_FILE_NAMES', '폴더가 존재하지 않습니다.', {
+									path : path
+								});
 							}
 
 							// do not run callback.
@@ -5851,7 +5874,9 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -5889,7 +5914,9 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+									path : path
+								});
 							}
 
 							// do not run callback.
@@ -6006,7 +6033,9 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
+									SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+										path : path
+									});
 								}
 
 							} else if (callback !== undefined) {
@@ -6023,7 +6052,9 @@ global.GET_FILE_INFO = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -6055,7 +6086,9 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
+									SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+										path : path
+									});
 								}
 								
 							} else {
@@ -6080,7 +6113,9 @@ global.GET_FILE_INFO = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+									path : path
+								});
 							}
 						}
 
@@ -6249,7 +6284,9 @@ global.READ_FILE = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+									SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+										path : path
+									});
 								}
 
 							} else {
@@ -6282,7 +6319,9 @@ global.READ_FILE = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -6312,7 +6351,9 @@ global.READ_FILE = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+									SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+										path : path
+									});
 								}
 								
 							} else {
@@ -6331,7 +6372,9 @@ global.READ_FILE = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+									path : path
+								});
 							}
 						}
 
@@ -6446,7 +6489,9 @@ global.REMOVE_FILE = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[REMOVE_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('REMOVE_FILE', '파일이 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -6475,7 +6520,9 @@ global.REMOVE_FILE = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[REMOVE_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('REMOVE_FILE', '파일이 존재하지 않습니다.', {
+									path : path
+								});
 							}
 
 							// do not run callback.
@@ -6634,7 +6681,9 @@ global.REMOVE_FOLDER = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] 폴더가 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('REMOVE_FOLDER', '폴더가 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -6685,7 +6734,9 @@ global.REMOVE_FOLDER = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] 폴더가 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('REMOVE_FOLDER', '폴더가 존재하지 않습니다.', {
+									path : path
+								});
 							}
 
 							// do not run callback.

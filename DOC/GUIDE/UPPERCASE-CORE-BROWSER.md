@@ -16,7 +16,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
 * [`STORE`](#store)
 * [`MSG({ko:, en:, ...})`](#msgko-en-)
-* [`SHOW_ERROR`](#show_error)
+* [콘솔 로그 관련 기능](#콘솔-로그-관련-기능)
 * [`SOUND`](#sound)
 
 ## 사용방법
@@ -1549,14 +1549,15 @@ MSG({
 });
 ```
 
-## `SHOW_ERROR(tag, errorMsg)` `SHOW_ERROR(tag, errorMsg, params)`
+## 콘솔 로그 관련 기능
+### `SHOW_ERROR(tag, errorMsg)` `SHOW_ERROR(tag, errorMsg, params)`
 콘솔에 오류 메시지를 출력합니다.
 
 다음 코드를 실행하면,
 ```javascript
 SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!');
 ```
-콘솔에 다음과 같은 오류 메시지를 빨간색으로 출력합니다.
+콘솔에 다음과 같은 오류 메시지를 출력합니다.
 ```
 [샘플 오류] 오류가 발생했습니다. 오류 메시지: 엄청난 오류가 발생했습니다!
 ```
@@ -1569,7 +1570,7 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
     c : 3
 });
 ```
-콘솔에 다음과 같은 오류 메시지를 빨간색으로 출력합니다.
+콘솔에 다음과 같은 오류 메시지를 출력합니다.
 ```
 [샘플 오류] 오류가 발생했습니다. 오류 메시지: 엄청난 오류가 발생했습니다!
 다음은 오류를 발생시킨 파라미터입니다.
@@ -1578,6 +1579,18 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
     "b": 2,
     "c": 3
 }
+```
+
+### `SHOW_WARNING(tag, warningMsg)` `SHOW_WARNING(tag, warningMsg, params)`
+콘솔에 경고 메시지를 출력합니다.
+
+다음 코드를 실행하면,
+```javascript
+SHOW_WARNING('샘플 경고', '당신에게 경고합니다!');
+```
+콘솔에 다음과 같은 경고 메시지를 출력합니다.
+```
+[샘플 경고] 경고가 발생했습니다. 경고 메시지: 당신에게 경고합니다!
 ```
 
 ## `SOUND`

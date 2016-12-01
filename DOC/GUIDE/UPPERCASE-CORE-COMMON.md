@@ -442,6 +442,30 @@ cal.getSecond(); // 5
 cal.getSecond(true); // '05'
 ```
 
+### `CREATE_DATE`
+Date형 값을 생성합니다.
+
+```javascript
+var
+// date
+date = CREATE_DATE({
+    year : 2016,
+    month : 11,
+    date : 29,
+    hour : 18,
+    minute : 8
+});
+```
+
+사용 가능한 파라미터들은 다음과 같습니다.
+
+- `year` 년
+- `month` 월
+- `date` 일
+- `hour` 시
+- `minute` 분
+- `second` 초
+
 ## 데이터(`{...}`) 및 배열(`[...]`) 관련 기능
 UPPERCASE 기반 프로젝트에서는 `{...}`로 표현되는 값을 데이터라 부르고, `[...]`로 표현되는 값을 배열이라 부릅니다.
 

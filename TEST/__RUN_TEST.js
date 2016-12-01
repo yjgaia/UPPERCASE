@@ -11,6 +11,8 @@ RUN(function() {
 	// 리소스 캐싱을 수행하지 않습니다.
 	CONFIG.isDevMode = true;
 	
+	BOX('TestBox');
+	
 	INIT_OBJECTS();
 	
 	// Node.js 환경에서의 테스트 실행

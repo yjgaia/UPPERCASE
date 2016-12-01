@@ -2605,12 +2605,12 @@ global.CREATE_DATE = METHOD({
 	run : function(params) {
 		'use strict';
 		//REQUIRED: params
-		//OPTIONAL: params.year
-		//OPTIONAL: params.month
-		//OPTIONAL: params.date
-		//OPTIONAL: params.hour
-		//OPTIONAL: params.minute
-		//OPTIONAL: params.second
+		//OPTIONAL: params.year		년
+		//OPTIONAL: params.month	월
+		//OPTIONAL: params.date		일
+		//OPTIONAL: params.hour		시
+		//OPTIONAL: params.minute	분
+		//OPTIONAL: params.second	초
 		
 		var
 		// year
@@ -3963,21 +3963,6 @@ global.MSG = METHOD({
 });
 
 
-/*
- * 콘솔에 오류 메시지를 출력합니다.
- */
-global.SHOW_ERROR = function(tag, errorMsg, params) {
-	//REQUIRED: tag
-	//REQUIRED: errorMsg
-	//OPTIONAL: params
-		
-	console.error('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg);
-	
-	if (params !== undefined) {
-		console.error('다음은 오류를 발생시킨 파라미터입니다.');
-		console.error(JSON.stringify(params, TO_DELETE, 4));
-	}
-};
 /**
  * 사운드 파일을 재생하는 SOUND 클래스
  */
@@ -4206,6 +4191,36 @@ FOR_BOX(function(box) {
 	});
 });
 
+/*
+ * 콘솔에 오류 메시지를 출력합니다.
+ */
+global.SHOW_ERROR = function(tag, errorMsg, params) {
+	//REQUIRED: tag
+	//REQUIRED: errorMsg
+	//OPTIONAL: params
+		
+	console.error('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	
+	if (params !== undefined) {
+		console.error('다음은 오류를 발생시킨 파라미터입니다.');
+		console.error(JSON.stringify(params, TO_DELETE, 4));
+	}
+};
+/*
+ * 콘솔에 경고 메시지를 출력합니다.
+ */
+global.SHOW_WARNING = function(tag, warningMsg, params) {
+	//REQUIRED: tag
+	//REQUIRED: warningMsg
+	//OPTIONAL: params
+	
+	console.error('[' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg);
+	
+	if (params !== undefined) {
+		console.error(CONSOLE_RED('다음은 경고를 발생시킨 파라미터입니다.'));
+		console.error(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
+	}
+};
 /**
  * 노드에 스타일을 지정합니다.
  */
@@ -9139,7 +9154,7 @@ global.REQUEST = METHOD({
 	}
 });
 /**
- * go another view.
+ * URI를 변경하여 다른 뷰로 이동합니다.
  */
 global.GO = METHOD(function(m) {
 	'use strict';
@@ -9200,7 +9215,7 @@ FOR_BOX(function(box) {
 });
 
 /**
- * go another view on new window.
+ * 새 창에서 URI에 해당하는 뷰를 띄웁니다.
  */
 global.GO_NEW_WIN = METHOD({
 
@@ -9226,7 +9241,7 @@ FOR_BOX(function(box) {
 });
 
 /**
- * get href.
+ * URI로부터 주소를 생성하여 반환합니다.
  */
 global.HREF = METHOD({
 
@@ -9252,7 +9267,7 @@ FOR_BOX(function(box) {
 });
 
 /**
- * match view.
+ * 특정 URI와 뷰를 연결합니다.
  */
 global.MATCH_VIEW = METHOD(function(m) {
 	'use strict';
@@ -9314,7 +9329,7 @@ global.MATCH_VIEW = METHOD(function(m) {
 				uriParams;
 	
 				// when view founded
-				if (uri !== REFRESH.getRefreshingURI() && ( result = uriMatcher.check(uri)).checkIsMatched() === true && (excludeURI === undefined || excludeURIMatcher.check(uri).checkIsMatched() !== true)) {
+				if (uri !== REFRESH.getRefreshingURI() && (result = uriMatcher.check(uri)).checkIsMatched() === true && (excludeURI === undefined || excludeURIMatcher.check(uri).checkIsMatched() !== true)) {
 	
 					uriParams = result.getURIParams();
 	
@@ -9430,7 +9445,7 @@ FOR_BOX(function(box) {
 });
 
 /**
- * refresh view.
+ * 뷰를 새로 불러옵니다.
  */
 global.REFRESH = METHOD(function(m) {
 	'use strict';
@@ -9478,7 +9493,7 @@ FOR_BOX(function(box) {
 });
 
 /**
- * get now page's URI.
+ * 현재 브라우저의 URI를 가져옵니다.
  */
 global.URI = METHOD({
 
@@ -9490,7 +9505,7 @@ global.URI = METHOD({
 });
 
 /**
- * View interface
+ * 뷰를 정의하기 위한 VIEW 클래스
  */
 global.VIEW = CLASS({
 
@@ -9531,28 +9546,29 @@ global.VIEW = CLASS({
 		// check is closed.
 		checkIsClosed;
 
-		inner.on = on = function(methodName, handler) {
-			//REQUIRED: methodName
+		inner.on = on = function(eventName, eventHandler) {
+			//REQUIRED: eventName
+			//REQUIRED: eventHandler
 
 			// when change params
-			if (methodName === 'paramsChange') {
-				paramsChangeHandlers.push(handler);
+			if (eventName === 'paramsChange') {
+				paramsChangeHandlers.push(eventHandler);
 				if (nowParams !== undefined) {
-					handler(nowParams);
+					eventHandler(nowParams);
 				}
 			}
 			
 			// when change uri
-			if (methodName === 'uriChange') {
-				uriChangeHandlers.push(handler);
+			if (eventName === 'uriChange') {
+				uriChangeHandlers.push(eventHandler);
 				if (nowURI !== undefined) {
-					handler(nowURI);
+					eventHandler(nowURI);
 				}
 			}
 
 			// when close
-			else if (methodName === 'close') {
-				closeHandlers.push(handler);
+			else if (eventName === 'close') {
+				closeHandlers.push(eventHandler);
 			}
 		};
 

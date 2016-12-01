@@ -6,12 +6,12 @@ global.CREATE_DATE = METHOD({
 	run : function(params) {
 		'use strict';
 		//REQUIRED: params
-		//OPTIONAL: params.year
-		//OPTIONAL: params.month
-		//OPTIONAL: params.date
-		//OPTIONAL: params.hour
-		//OPTIONAL: params.minute
-		//OPTIONAL: params.second
+		//OPTIONAL: params.year		년
+		//OPTIONAL: params.month	월
+		//OPTIONAL: params.date		일
+		//OPTIONAL: params.hour		시
+		//OPTIONAL: params.minute	분
+		//OPTIONAL: params.second	초
 		
 		var
 		// year

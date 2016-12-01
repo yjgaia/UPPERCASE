@@ -133,7 +133,9 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -171,7 +173,9 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[FIND_FOLDER_NAMES] 폴더가 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+									path : path
+								});
 							}
 
 							// do not run callback.

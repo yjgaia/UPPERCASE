@@ -100,7 +100,9 @@ global.COPY_FILE = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(from);
 								} else {
-									console.log(CONSOLE_YELLOW('[COPY_FILE] 파일이 존재하지 않습니다. 경로: ' + from));
+									SHOW_WARNING('COPY_FILE', '파일이 존재하지 않습니다.', {
+										from : from
+									});
 								}
 							}
 						});
@@ -129,7 +131,9 @@ global.COPY_FILE = METHOD(function() {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler(from);
 									} else {
-										console.log(CONSOLE_YELLOW('[COPY_FILE] 파일이 존재하지 않습니다. 경로: ' + from));
+										SHOW_WARNING('COPY_FILE', '파일이 존재하지 않습니다.', {
+											from : from
+										});
 									}
 
 									// do not run callback.

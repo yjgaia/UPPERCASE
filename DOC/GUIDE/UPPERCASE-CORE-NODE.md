@@ -1413,6 +1413,18 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
 }
 ```
 
+### `SHOW_WARNING(tag, warningMsg)` `SHOW_WARNING(tag, warningMsg, params)`
+콘솔에 경고 메시지를 출력합니다.
+
+다음 코드를 실행하면,
+```javascript
+SHOW_WARNING('샘플 경고', '당신에게 경고합니다!');
+```
+콘솔에 다음과 같은 경고 메시지를 노란색으로 출력합니다.
+```
+[샘플 경고] 경고가 발생했습니다. 경고 메시지: 당신에게 경고합니다!
+```
+
 ## 문자열 암호화 기능
 문자열 암호화 기능으로 `HMAC-SHA` 알고리즘들 중 `HMAC-SHA1`, `HMAC-SHA256`, `HMAC-SHA512` 세가지를 지원합니다. [`SHA1` 알고리즘의 취약점](https://en.wikipedia.org/wiki/SHA-1#The_SHAppening)이 발견되었기 때문에, `HMAC-SHA1` 보다는 `HMAC-SHA256`나 `HMAC-SHA512`를 사용하시기 바랍니다.
 

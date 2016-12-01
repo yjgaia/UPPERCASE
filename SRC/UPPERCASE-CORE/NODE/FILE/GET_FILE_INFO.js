@@ -83,7 +83,9 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
+									SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+										path : path
+									});
 								}
 
 							} else if (callback !== undefined) {
@@ -100,7 +102,9 @@ global.GET_FILE_INFO = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -132,7 +136,9 @@ global.GET_FILE_INFO = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
+									SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+										path : path
+									});
 								}
 								
 							} else {
@@ -157,7 +163,9 @@ global.GET_FILE_INFO = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[GET_FILE_INFO] 파일이 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+									path : path
+								});
 							}
 						}
 

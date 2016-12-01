@@ -127,7 +127,9 @@ global.REMOVE_FOLDER = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] 폴더가 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('REMOVE_FOLDER', '폴더가 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -178,7 +180,9 @@ global.REMOVE_FOLDER = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[REMOVE_FOLDER] 폴더가 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('REMOVE_FOLDER', '폴더가 존재하지 않습니다.', {
+									path : path
+								});
 							}
 
 							// do not run callback.

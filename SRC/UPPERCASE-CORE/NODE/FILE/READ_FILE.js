@@ -83,7 +83,9 @@ global.READ_FILE = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+									SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+										path : path
+									});
 								}
 
 							} else {
@@ -116,7 +118,9 @@ global.READ_FILE = METHOD(function() {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+							SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+								path : path
+							});
 						}
 					}
 				});
@@ -146,7 +150,9 @@ global.READ_FILE = METHOD(function() {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+									SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+										path : path
+									});
 								}
 								
 							} else {
@@ -165,7 +171,9 @@ global.READ_FILE = METHOD(function() {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								console.log(CONSOLE_YELLOW('[READ_FILE] 파일이 존재하지 않습니다. 경로: ' + path));
+								SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+									path : path
+								});
 							}
 						}
 
