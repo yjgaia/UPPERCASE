@@ -190,6 +190,10 @@ RUN(function() {
 		distFolder(commonScripts, 'BROWSER', true);
 		distFolder(commonScripts, 'NODE');
 		copyFolder('R', 'R');
+		
+		save(['BROWSER_INIT.js'], 'BROWSER_INIT', true);
+		save(['PRINT_HTML_SNAPSHOT.js'], 'PRINT_HTML_SNAPSHOT', false);
+		save(['404.js'], '404', false);
 	};
 
 	INIT_OBJECTS();

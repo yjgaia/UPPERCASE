@@ -623,14 +623,14 @@ FOR_BOX(function(box) {
 					// MongoDB collection for error log
 					errorLogCollection,
 				
-					// cached get db
-					cachedGetDB = box.SHARED_DB(box.boxName + '.' + name + '.cachedGetDB'),
+					// cached get store
+					cachedGetStore = box.SHARED_STORE(box.boxName + '.' + name + '.cachedGetStore'),
 					
-					// cached find db
-					cachedFindDB = box.SHARED_DB(box.boxName + '.' + name + '.cachedFindDB'),
+					// cached find store
+					cachedFindStore = box.SHARED_STORE(box.boxName + '.' + name + '.cachedFindStore'),
 					
-					// cached count db
-					cachedCountDB = box.SHARED_DB(box.boxName + '.' + name + '.cachedCountDB'),
+					// cached count store
+					cachedCountStore = box.SHARED_STORE(box.boxName + '.' + name + '.cachedCountStore'),
 					
 					// add history.
 					addHistory = function(method, id, change, time) {
@@ -721,17 +721,17 @@ FOR_BOX(function(box) {
 								get(PARSE_STR(paramsStr), {
 									
 									notExists : function() {
-										cachedGetDB.remove(paramsStr);
+										cachedGetStore.remove(paramsStr);
 										done();
 									},
 									error : function() {
-										cachedGetDB.remove(paramsStr);
+										cachedGetStore.remove(paramsStr);
 										done();
 									},
 									
 									success : function(savedData) {
 										
-										cachedGetDB.save({
+										cachedGetStore.save({
 											id : paramsStr,
 											data : {
 												filter : info.filter,
@@ -761,13 +761,13 @@ FOR_BOX(function(box) {
 								find(PARSE_STR(paramsStr), {
 									
 									error : function() {
-										cachedFindDB.remove(paramsStr);
+										cachedFindStore.remove(paramsStr);
 										done();
 									},
 									
 									success : function(savedDataSet) {
 										
-										cachedFindDB.save({
+										cachedFindStore.save({
 											id : paramsStr,
 											data : {
 												filter : info.filter,
@@ -797,13 +797,13 @@ FOR_BOX(function(box) {
 								count(PARSE_STR(paramsStr), {
 									
 									error : function() {
-										cachedCountDB.remove(paramsStr);
+										cachedCountStore.remove(paramsStr);
 										done();
 									},
 									
 									success : function(count) {
 										
-										cachedCountDB.save({
+										cachedCountStore.save({
 											id : paramsStr,
 											data : {
 												filter : info.filter,
@@ -841,7 +841,7 @@ FOR_BOX(function(box) {
 						// cached count infos
 						cachedCountInfos = [];
 						
-						EACH(cachedGetDB.list(), function(info, paramsStr) {
+						EACH(cachedGetStore.list(), function(info, paramsStr) {
 							
 							var
 							// filter
@@ -856,7 +856,7 @@ FOR_BOX(function(box) {
 							}
 						});
 						
-						EACH(cachedFindDB.list(), function(info, paramsStr) {
+						EACH(cachedFindStore.list(), function(info, paramsStr) {
 							
 							var
 							// filter
@@ -871,7 +871,7 @@ FOR_BOX(function(box) {
 							}
 						});
 						
-						EACH(cachedCountDB.list(), function(info, paramsStr) {
+						EACH(cachedCountStore.list(), function(info, paramsStr) {
 							
 							var
 							// filter
@@ -905,7 +905,7 @@ FOR_BOX(function(box) {
 						// cached count infos
 						cachedCountInfos = [];
 						
-						EACH(cachedGetDB.list(), function(info, paramsStr) {
+						EACH(cachedGetStore.list(), function(info, paramsStr) {
 							
 							var
 							// filter
@@ -920,7 +920,7 @@ FOR_BOX(function(box) {
 							}
 						});
 						
-						EACH(cachedFindDB.list(), function(info, paramsStr) {
+						EACH(cachedFindStore.list(), function(info, paramsStr) {
 							
 							var
 							// filter
@@ -935,7 +935,7 @@ FOR_BOX(function(box) {
 							}
 						});
 						
-						EACH(cachedCountDB.list(), function(info, paramsStr) {
+						EACH(cachedCountStore.list(), function(info, paramsStr) {
 							
 							var
 							// filter
@@ -1111,7 +1111,7 @@ FOR_BOX(function(box) {
 												
 								cleanedFilter = cleanFilter(filter);
 								
-								cachedInfo = cachedGetDB.get(STRINGIFY({
+								cachedInfo = cachedGetStore.get(STRINGIFY({
 									filter : cleanedFilter,
 									sort : sort
 								}));
@@ -1143,7 +1143,7 @@ FOR_BOX(function(box) {
 											// cache data.
 											if (isToCache === true) {
 												
-												cachedGetDB.save({
+												cachedGetStore.save({
 													id : STRINGIFY({
 														filter : cleanedFilter,
 														sort : sort
@@ -1905,7 +1905,7 @@ FOR_BOX(function(box) {
 								
 								cleanedFilter = cleanFilter(filter);
 								
-								cachedInfo = cachedFindDB.get(STRINGIFY({
+								cachedInfo = cachedFindStore.get(STRINGIFY({
 									filter : cleanedFilter,
 									sort : sort,
 									start : start,
@@ -1930,7 +1930,7 @@ FOR_BOX(function(box) {
 										// cache data set.
 										if (isToCache === true) {
 											
-											cachedFindDB.save({
+											cachedFindStore.save({
 												id : STRINGIFY({
 													filter : cleanedFilter,
 													sort : sort,
@@ -2053,7 +2053,7 @@ FOR_BOX(function(box) {
 								
 								cleanedFilter = cleanFilter(filter);
 								
-								cachedInfo = cachedCountDB.get(STRINGIFY({
+								cachedInfo = cachedCountStore.get(STRINGIFY({
 									filter : cleanedFilter
 								}));
 							}
@@ -2069,7 +2069,7 @@ FOR_BOX(function(box) {
 										// cache count.
 										if (isToCache === true) {
 											
-											cachedCountDB.save({
+											cachedCountStore.save({
 												id : STRINGIFY({
 													filter : cleanedFilter
 												}),
@@ -2183,7 +2183,7 @@ FOR_BOX(function(box) {
 								
 								cleanedFilter = cleanFilter(filter);
 								
-								cachedInfo = cachedCountDB.get(STRINGIFY({
+								cachedInfo = cachedCountStore.get(STRINGIFY({
 									filter : cleanedFilter
 								}));
 							}
@@ -2203,7 +2203,7 @@ FOR_BOX(function(box) {
 										// cache count.
 										if (isToCache === true) {
 											
-											cachedCountDB.save({
+											cachedCountStore.save({
 												id : STRINGIFY({
 													filter : cleanedFilter
 												}),

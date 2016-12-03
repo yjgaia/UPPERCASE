@@ -64,7 +64,7 @@ global.UDP_SERVER = CLASS({
 		});
 		
 		server.on('listening', function() {
-			console.log('[UDP_SERVER] UDP 서버가 실행중입니다... (포트:' + port + ')');
+			console.log('[UDP_SERVER] UDP 서버가 실행중입니다. (포트:' + port + ')');
 		});
 		
 		server.bind(port);

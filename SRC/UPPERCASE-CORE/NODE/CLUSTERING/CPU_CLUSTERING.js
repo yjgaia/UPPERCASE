@@ -59,7 +59,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					});
 
 					cluster.on('exit', function(worker, code, signal) {
-						SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다...');
+						SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다.');
 						fork();
 					});
 				});
@@ -258,7 +258,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					
 					work();
 
-					console.log(CONSOLE_GREEN('[CPU_CLUSTERING] 클러스터링 워커가 실행중입니다... (워커 ID:' + thisWorkerId + ')'));
+					console.log('[CPU_CLUSTERING] 클러스터링 워커가 실행중입니다. (워커 ID:' + thisWorkerId + ')');
 				});
 			}
 		}

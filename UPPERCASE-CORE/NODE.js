@@ -3419,7 +3419,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					});
 
 					cluster.on('exit', function(worker, code, signal) {
-						SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다...');
+						SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다.');
 						fork();
 					});
 				});
@@ -3618,7 +3618,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					
 					work();
 
-					console.log(CONSOLE_GREEN('[CPU_CLUSTERING] 클러스터링 워커가 실행중입니다... (워커 ID:' + thisWorkerId + ')'));
+					console.log('[CPU_CLUSTERING] 클러스터링 워커가 실행중입니다. (워커 ID:' + thisWorkerId + ')');
 				});
 			}
 		}
@@ -4061,7 +4061,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				work();
 			}
 
-			console.log(CONSOLE_BLUE('[SERVER_CLUSTERING] 클러스터링 서버가 실행중입니다.... (현재 서버 이름:' + thisServerName + ', 포트:' + port + ')'));
+			console.log(CONSOLE_BLUE('[SERVER_CLUSTERING] 클러스터링 서버가 실행중입니다. (현재 서버 이름:' + thisServerName + ', 포트:' + port + ')'));
 		}
 	};
 });
@@ -8246,7 +8246,7 @@ global.SOCKET_SERVER = METHOD({
 		// listen.
 		server.listen(port);
 
-		console.log('[SOCKET_SERVER] TCP 소켓 서버가 실행중입니다... (포트:' + port + ')');
+		console.log('[SOCKET_SERVER] TCP 소켓 서버가 실행중입니다. (포트:' + port + ')');
 	}
 });
 
@@ -8316,7 +8316,7 @@ global.UDP_SERVER = CLASS({
 		});
 		
 		server.on('listening', function() {
-			console.log('[UDP_SERVER] UDP 서버가 실행중입니다... (포트:' + port + ')');
+			console.log('[UDP_SERVER] UDP 서버가 실행중입니다. (포트:' + port + ')');
 		});
 		
 		server.bind(port);
@@ -9351,7 +9351,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 				preprocessors[extension] = preprocessor;
 			};
 			
-			console.log('[WEB_SERVER] 웹 서버가 실행중입니다...' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')')));
+			console.log('[WEB_SERVER] 웹 서버가 실행중입니다.' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')')));
 		}
 	};
 });
@@ -9609,7 +9609,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 			server : webServer.getNativeServer()
 		}).on('connection', nativeConnectionListener);
 		
-		console.log('[WEB_SOCKET_SERVER] 웹 소켓 서버가 실행중입니다...');
+		console.log('[WEB_SOCKET_SERVER] 웹 소켓 서버가 실행중입니다.');
 	}
 });
 

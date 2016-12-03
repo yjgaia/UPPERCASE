@@ -64,7 +64,6 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 			//OPTIONAL: params.socketServerPort
 			//OPTIONAL: params.webSocketServerPort
 			//OPTIONAL: params.webServer
-			//OPTIONAL: params.isCreateWebSocketFixRequestManager
 			
 			if (CPU_CLUSTERING.on !== undefined) {
 

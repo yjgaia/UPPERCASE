@@ -434,7 +434,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				work();
 			}
 
-			console.log(CONSOLE_BLUE('[SERVER_CLUSTERING] 클러스터링 서버가 실행중입니다.... (현재 서버 이름:' + thisServerName + ', 포트:' + port + ')'));
+			console.log(CONSOLE_BLUE('[SERVER_CLUSTERING] 클러스터링 서버가 실행중입니다. (현재 서버 이름:' + thisServerName + ', 포트:' + port + ')'));
 		}
 	};
 });

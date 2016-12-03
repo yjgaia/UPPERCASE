@@ -251,6 +251,6 @@ global.WEB_SOCKET_SERVER = METHOD({
 			server : webServer.getNativeServer()
 		}).on('connection', nativeConnectionListener);
 		
-		console.log('[WEB_SOCKET_SERVER] 웹 소켓 서버가 실행중입니다...');
+		console.log('[WEB_SOCKET_SERVER] 웹 소켓 서버가 실행중입니다.');
 	}
 });

@@ -1,5 +1,25 @@
 # UPPERCASE
-UPPERCASE는 JavaScript 기반 웹 애플리케이션 프레임워크입니다.
+UPPERCASE는 웹 어플리케이션 개발을 도와주는 JavaScript 기반 프레임워크입니다. 서버와 클라이언트를 부드럽게 연결는데 특화되어, 예를 들면 메신저나 SNS 같이 실시간 통신이 중요한 애플리케이션 개발에 유용합니다. 또한 서버 프레임워크로만으로 사용할 수 있으며, 반대로 서버가 불필요한 웹 애플리케이션 개발을 할 때도 유용하게 사용할 수 있습니다.
+
+## 왜 이름이 UPPERCASE인가요?
+UPPERCASE의 모든 기능들의 이름은 JavaScript의 키워드나 변수 이름, 다른 라이브러리들에서 사용하는 이름을 피하기 위해 대문자로 이루어져 있습니다. 비슷한 논리로, [jQuery](https://jquery.com/)는 `$`를, [Underscore](http://underscorejs.org/)는 `_`를 접두사로 사용하고 있습니다.
+
+```javascript
+// UPPERCASE
+EACH([52, 97], function(value, index) {
+    alert(index + ': ' + value);
+});
+
+// jQuery
+$.each([52, 97], function(index, value) {
+    alert(index + ': ' + value);
+});
+
+// Underscore
+_.each([52, 97], function(value, index) {
+    alert(index + ': ' + value);
+});
+```
 
 ## UPPERCASE는 웹 개발의 모든 영역을 지원합니다.
 웹 사이트, 웹 애플리케이션, 웹 게임 등 웹 개발의 모든 영역을 지원합니다.
@@ -13,8 +33,13 @@ UPPERCASE는 JavaScript 기반 웹 애플리케이션 프레임워크입니다.
 ## UPPERCASE는 Node.js를 제외한 다른 네이티브 모듈의 의존성이 없습니다.
 따라서 Node.js가 구동되는 모든 운영체제와 시스템에서 구동됩니다.
 
+## 설치하기
+
+## Hello, UPPERCASE!
+
+## 업데이트
+
 ## 문서
-* [설치하기](DOC/INSTALL.md)
 * [튜토리얼](DOC/TUTORIAL.md)
 * [가이드](DOC/GUIDE.md)
 * [API 문서](API/README.md)

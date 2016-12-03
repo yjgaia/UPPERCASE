@@ -258,6 +258,6 @@ global.SOCKET_SERVER = METHOD({
 		// listen.
 		server.listen(port);
 
-		console.log('[SOCKET_SERVER] TCP 소켓 서버가 실행중입니다... (포트:' + port + ')');
+		console.log('[SOCKET_SERVER] TCP 소켓 서버가 실행중입니다. (포트:' + port + ')');
 	}
 });

@@ -6,6 +6,7 @@
 		"formidable": "latest",
 		"diskspace": "latest",
 		"uglify-js": "latest",
-		"sqwish": "latest"
+		"sqwish": "latest",
+		"ws": "latest"
 	}
 }

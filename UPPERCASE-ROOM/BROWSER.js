@@ -291,7 +291,6 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 			//OPTIONAL: params.isSecure
 			//OPTIONAL: params.host
 			//REQUIRED: params.port
-			//OPTIONAL: params.fixRequestURI
 			//OPTIONAL: connectionListenerOrListeners
 			//OPTIONAL: connectionListenerOrListeners.success
 			//OPTIONAL: connectionListenerOrListeners.error
@@ -322,8 +321,7 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 			CONNECT_TO_WEB_SOCKET_SERVER({
 				isSecure : params.isSecure,
 				host : params.host,
-				port : params.port,
-				fixRequestURI : params.fixRequestURI
+				port : params.port
 			}, {
 
 				error : errorListener,
