@@ -52,9 +52,4 @@ TEST('CANVAS', function(check) {
 	gl.enable(gl.DEPTH_TEST);
 	gl.depthFunc(gl.LEQUAL);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-	// remove div after 3 seconds.
-	DELAY(3, function() {
-		div.remove();
-	});
 });

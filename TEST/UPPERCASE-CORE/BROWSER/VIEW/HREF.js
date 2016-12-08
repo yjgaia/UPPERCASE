@@ -4,11 +4,11 @@ TEST('HREF', function(check) {
 	if (history.pushState !== undefined) {
 		
 		// get test href.
-		ok(HREF('Test') === '/Test');
+		check(HREF('Test') === '/Test');
 		
 	} else {
 		
 		// get test href.
-		ok(HREF('Test') === '#!/Test');
+		check(HREF('Test') === '#!/Test');
 	}
 });

@@ -19,9 +19,4 @@ TEST('P', function(check) {
 			c : 'This is paragraph.'
 		})
 	}).appendTo(BODY);
-
-	// remove div after 3 seconds.
-	DELAY(3, function() {
-		div.remove();
-	});
 });

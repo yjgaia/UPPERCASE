@@ -23,9 +23,4 @@ TEST('IFRAME', function(check) {
 			src : 'https://www.youtube.com/embed/0E00Zuayv9Q'
 		})
 	}).appendTo(BODY);
-
-	// remove div after 3 seconds.
-	DELAY(3, function() {
-		div.remove();
-	});
 });

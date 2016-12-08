@@ -1,10 +1,8 @@
-TEST('REMOVE_FOLDER', function(ok) {
+TEST('REMOVE_FOLDER', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-
 	REMOVE_FOLDER({
-		path : 'testFolder',
+		path : 'UPPERCASE-CORE/testFolder',
 		isSync : true
 	}, {
 
@@ -17,7 +15,18 @@ TEST('REMOVE_FOLDER', function(ok) {
 		}
 	});
 
-	REMOVE_FOLDER('testFolder2', {
+	REMOVE_FOLDER('UPPERCASE-CORE/test', {
+
+		error : function(errorMsg) {
+			console.log('ERROR!', errorMsg);
+		},
+
+		success : function() {
+			console.log('good!');
+		}
+	});
+
+	REMOVE_FOLDER('UPPERCASE-CORE/test2', {
 
 		error : function(errorMsg) {
 			console.log('ERROR!', errorMsg);

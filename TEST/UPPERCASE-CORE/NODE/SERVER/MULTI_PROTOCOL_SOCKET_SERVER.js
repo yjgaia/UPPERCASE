@@ -1,4 +1,4 @@
-TEST('MULTI_PROTOCOL_SOCKET_SERVER', function(ok) {
+TEST('MULTI_PROTOCOL_SOCKET_SERVER', function(check) {
 	'use strict';
 	
 	MULTI_PROTOCOL_SOCKET_SERVER({

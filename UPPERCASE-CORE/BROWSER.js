@@ -545,6 +545,32 @@ global.OBJECT = METHOD(function(m) {
 });
 
 /**
+ * target이 JavaScript arguments인지 확인합니다.
+ */
+global.CHECK_IS_ARGUMENTS = METHOD({
+
+	run : function(target) {'use strict';
+		//OPTIONAL: target
+
+		if (
+		target !== undefined &&
+		target !== TO_DELETE &&
+		typeof target === 'object' &&
+		(
+			Object.prototype.toString.call(target) === '[object Arguments]' ||
+			(
+				target.callee !== undefined &&
+				typeof target.callee === 'function'
+			)
+		)) {
+			return true;
+		}
+
+		return false;
+	}
+});
+
+/**
  * 주어진 비동기 함수들을 순서대로 실행합니다.
  */
 global.NEXT = METHOD({
@@ -1728,32 +1754,6 @@ global.VALID = CLASS(function(cls) {
 			};
 		}
 	};
-});
-
-/**
- * target이 JavaScript arguments인지 확인합니다.
- */
-global.CHECK_IS_ARGUMENTS = METHOD({
-
-	run : function(target) {'use strict';
-		//OPTIONAL: target
-
-		if (
-		target !== undefined &&
-		target !== TO_DELETE &&
-		typeof target === 'object' &&
-		(
-			Object.prototype.toString.call(target) === '[object Arguments]' ||
-			(
-				target.callee !== undefined &&
-				typeof target.callee === 'function'
-			)
-		)) {
-			return true;
-		}
-
-		return false;
-	}
 });
 
 /**
@@ -3736,12 +3736,16 @@ OVERRIDE(LOOP, function(origin) {
 		
 		// fire.
 		fire = function() {
+			
+			var
+			// step.
+			step;
 	
 			if (animationInterval === undefined) {
 	
 				beforeTime = Date.now();
 	
-				animationInterval = requestAnimationFrame(function() {
+				animationInterval = requestAnimationFrame(step = function() {
 	
 					var
 					// time
@@ -3810,6 +3814,8 @@ OVERRIDE(LOOP, function(origin) {
 	
 						beforeTime = time;
 					}
+					
+					animationInterval = requestAnimationFrame(step);
 				});
 			}
 		},
@@ -4214,11 +4220,11 @@ global.SHOW_WARNING = function(tag, warningMsg, params) {
 	//REQUIRED: warningMsg
 	//OPTIONAL: params
 	
-	console.error('[' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg);
+	console.warn('[' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg);
 	
 	if (params !== undefined) {
-		console.error(CONSOLE_RED('다음은 경고를 발생시킨 파라미터입니다.'));
-		console.error(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
+		console.warn('다음은 경고를 발생시킨 파라미터입니다.');
+		console.warn(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
 /**

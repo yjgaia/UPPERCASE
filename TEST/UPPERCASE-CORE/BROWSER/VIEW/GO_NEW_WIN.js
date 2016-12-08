@@ -24,9 +24,4 @@ TEST('GO_NEW_WIN', function(check) {
 			}
 		})
 	}).appendTo(BODY);
-
-	// remove div after 5 seconds.
-	DELAY(5, function() {
-		div.remove();
-	});
 });

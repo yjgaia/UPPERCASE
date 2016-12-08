@@ -1,11 +1,9 @@
-TEST('COPY_FILE', function(ok) {
+TEST('COPY_FILE', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-
 	COPY_FILE({
-		from : 'test.txt',
-		to : 'test2.txt',
+		from : 'UPPERCASE-CORE/test.txt',
+		to : 'UPPERCASE-CORE/test2.txt',
 		isSync : true
 	}, {
 
@@ -18,14 +16,15 @@ TEST('COPY_FILE', function(ok) {
 		}
 	});
 
-	ok(READ_FILE({
-		path : 'test2.txt',
+	check(READ_FILE({
+		path : 'UPPERCASE-CORE/test2.txt',
 		isSync : true
 	}).toString() === 'this is test file.');
 
 	COPY_FILE({
-		from : 'test.txt',
-		to : 'test3.txt'
+		from : 'UPPERCASE-CORE/test.txt',
+		to : 'UPPERCASE-CORE/test3.txt',
+		isSync : true
 	}, {
 
 		error : function(errorMsg) {
@@ -37,8 +36,8 @@ TEST('COPY_FILE', function(ok) {
 		},
 
 		success : function() {
-			ok(READ_FILE({
-				path : 'test3.txt',
+			check(READ_FILE({
+				path : 'UPPERCASE-CORE/test3.txt',
 				isSync : true
 			}).toString() === 'this is test file.');
 		}

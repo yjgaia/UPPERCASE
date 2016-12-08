@@ -1,7 +1,7 @@
-TEST('WEB_SOCKET_SERVER', function(ok) {
+TEST('WEB_SOCKET_SERVER', function(check) {
 	'use strict';
 	
-	WEB_SOCKET_SERVER(WEB_SERVER(8124), function(clientInfo, on, off, send, disconnect) {
+	WEB_SOCKET_SERVER(WEB_SERVER(8125), function(clientInfo, on, off, send, disconnect) {
 
 		var
 		// roles

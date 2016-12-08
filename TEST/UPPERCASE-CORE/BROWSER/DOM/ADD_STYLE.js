@@ -20,7 +20,7 @@ TEST('ADD_STYLE', function(check) {
 			height : 200,
 
 			// background image
-			backgroundImage : '/EXAMPLES/test.png',
+			backgroundImage : 'UPPERCASE-CORE/image.png',
 
 			// position fixed (if not support fixed browser, simulate fixed.)
 			position : 'fixed',
@@ -47,9 +47,4 @@ TEST('ADD_STYLE', function(check) {
 		},
 		c : 'Float right.'
 	}));
-
-	// remove dom after 3 seconds.
-	DELAY(3, function() {
-		dom.remove();
-	});
 });

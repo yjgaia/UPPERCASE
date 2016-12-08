@@ -92,17 +92,12 @@ TEST('FORM', function(check) {
 		profile : 'Young man.'
 	});
 
-	ok(CHECK_ARE_SAME([form.getData(), {
+	check(CHECK_ARE_SAME([form.getData(), {
 		name : 'SYJ',
 		gender : 'male',
 		age : '26',
 		profile : 'Young man.'
 	}]) === true);
 
-	ok(input.getValue() === 'SYJ');
-
-	// remove div after 3 seconds.
-	DELAY(3, function() {
-		div.remove();
-	});
+	check(input.getValue() === 'SYJ');
 });

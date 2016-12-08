@@ -242,6 +242,21 @@ global.BOOT = function(params) {
 			});
 		});
 	},
+	
+	// load BROWSER_INIT.
+	loadBrowserInit = function() {
+		
+		var
+		// content
+		content = READ_FILE({
+			path : UPPERCASE_PATH + '/UPPERCASE-BOOT/BROWSER_INIT' + (CONFIG.isDevMode === true ? '' : '.MIN') + '.js',
+			isSync : true
+		}).toString();
+		
+		browserScript += content;
+		
+		return content;
+	},
 
 	// reload browser script.
 	reloadBrowserScript = function() {
@@ -257,6 +272,8 @@ global.BOOT = function(params) {
 		scanAllBoxFolders('BROWSER', loadForBrowser);
 		
 		scanAllBoxJS('BROWSER', loadForBrowser);
+		
+		loadBrowserInit();
 	},
 	
 	// configuration.
@@ -518,8 +535,6 @@ global.BOOT = function(params) {
 			_404PageContent += '</noscript>';
 			
 			// load script.
-			_404PageContent += '<script type="text/javascript">global=window;</script>';
-			_404PageContent += '<script type="text/javascript" src="/__UJS?version=' + CONFIG.version + '"></script>';
 			_404PageContent += '<script>' + READ_FILE({
 				path : UPPERCASE_PATH + '/UPPERCASE-BOOT/404.js',
 				isSync : true
@@ -1253,7 +1268,7 @@ global.BOOT = function(params) {
 	
 	// load all UPPERCASE modules for browser.
 	EACH(['CORE', 'ROOM', 'MODEL', 'BOOT'], function(name) {
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-' + name + '/BROWSER' + (CONFIG.isDevMode === true ? '.MIN' : '') + '.js');
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-' + name + '/BROWSER' + (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true) ? '' : '.MIN') + '.js');
 	});
 	
 	// configuration.
@@ -1282,7 +1297,7 @@ global.BOOT = function(params) {
 		scanAllBoxJS('BROWSER', loadForBrowser);
 		
 		// load BROWSER_INIT.
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-BOOT/BROWSER_INIT' + (CONFIG.isDevMode === true ? '.MIN' : '') + '.js');
+		loadBrowserInit();
 		
 		// generate 404 page.
 		generate404Page();

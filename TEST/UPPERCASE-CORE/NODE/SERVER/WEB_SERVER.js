@@ -1,4 +1,4 @@
-TEST('WEB_SERVER', function(ok) {
+TEST('WEB_SERVER', function(check) {
 	'use strict';
 	
 	// 리소스를 캐싱하지 않으려면 dev mode가 true여야함

@@ -1,4 +1,4 @@
-TEST('CONNECT_TO_SOCKET_SERVER', function(ok) {
+TEST('CONNECT_TO_SOCKET_SERVER', function(check) {
 	'use strict';
 	
 	// if you not want error listener.
@@ -21,7 +21,7 @@ TEST('CONNECT_TO_SOCKET_SERVER', function(ok) {
 
 			on('message', function(data, ret) {
 
-				ok(CHECK_ARE_SAME([data, {
+				check(CHECK_ARE_SAME([data, {
 					msg : 'message from server.'
 				}]));
 
@@ -34,7 +34,7 @@ TEST('CONNECT_TO_SOCKET_SERVER', function(ok) {
 					msg : 'message from client.'
 				}
 			}, function(retMsg) {
-				ok(retMsg === 'Thanks!');
+				check(retMsg === 'Thanks!');
 			});
 
 			send({

@@ -1,15 +1,20 @@
-TEST('VIEW', function(check) {
+TEST('REFRESH', function(check) {
 	'use strict';
 
 	var
+	// div
+	div,
+	
 	// test view
 	TestView = CLASS({
 
 		preset : function() {
+			'use strict';
 			return VIEW;
 		},
 
 		init : function(inner, self) {
+			'use strict';
 
 			var
 			// change params.
@@ -22,7 +27,7 @@ TEST('VIEW', function(check) {
 			console.log('View Opened!');
 
 			self.changeParams = changeParams = function(params) {
-
+			
 				// when change params.
 				console.log(params);
 			};
@@ -33,9 +38,17 @@ TEST('VIEW', function(check) {
 				console.log('View Closed!');
 			};
 		}
-	}),
+	});
 
-	// test div
+	// match view.
+	MATCH_VIEW({
+		uri : ['refresh', 'refresh/{id}'],
+		target : TestView
+	});
+
+	// go test view.
+	//GO('refresh/1');
+
 	div = DIV({
 		style : {
 			position : 'fixed',
@@ -45,37 +58,16 @@ TEST('VIEW', function(check) {
 			padding : 20,
 			margin : 0
 		},
-		c : [A({
+		c : A({
 			style : {
 				textDecoration : 'underline'
 			},
-			c : 'view',
+			c : 'Refresh this view.',
 			on : {
 				tap : function() {
-					GO('view');
+					REFRESH();
 				}
 			}
-		}), BR(), A({
-			style : {
-				textDecoration : 'underline'
-			},
-			c : 'view/1',
-			on : {
-				tap : function() {
-					GO('view/1');
-				}
-			}
-		})]
+		})
 	}).appendTo(BODY);
-
-	// match view.
-	MATCH_VIEW({
-		uri : ['view', 'view/{id}'],
-		target : TestView
-	});
-
-	// remove div after 5 seconds.
-	DELAY(5, function() {
-		div.remove();
-	});
 });

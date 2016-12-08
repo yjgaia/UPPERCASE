@@ -542,6 +542,32 @@ global.OBJECT = METHOD(function(m) {
 });
 
 /**
+ * target이 JavaScript arguments인지 확인합니다.
+ */
+global.CHECK_IS_ARGUMENTS = METHOD({
+
+	run : function(target) {'use strict';
+		//OPTIONAL: target
+
+		if (
+		target !== undefined &&
+		target !== TO_DELETE &&
+		typeof target === 'object' &&
+		(
+			Object.prototype.toString.call(target) === '[object Arguments]' ||
+			(
+				target.callee !== undefined &&
+				typeof target.callee === 'function'
+			)
+		)) {
+			return true;
+		}
+
+		return false;
+	}
+});
+
+/**
  * 주어진 비동기 함수들을 순서대로 실행합니다.
  */
 global.NEXT = METHOD({
@@ -1725,32 +1751,6 @@ global.VALID = CLASS(function(cls) {
 			};
 		}
 	};
-});
-
-/**
- * target이 JavaScript arguments인지 확인합니다.
- */
-global.CHECK_IS_ARGUMENTS = METHOD({
-
-	run : function(target) {'use strict';
-		//OPTIONAL: target
-
-		if (
-		target !== undefined &&
-		target !== TO_DELETE &&
-		typeof target === 'object' &&
-		(
-			Object.prototype.toString.call(target) === '[object Arguments]' ||
-			(
-				target.callee !== undefined &&
-				typeof target.callee === 'function'
-			)
-		)) {
-			return true;
-		}
-
-		return false;
-	}
 });
 
 /**
@@ -7656,7 +7656,7 @@ global.REQUEST = METHOD(function(m) {
 				req = (isSecure !== true ? HTTP : HTTPS).request({
 					hostname : host,
 					port : port,
-					path : '/' + (uri === undefined ? '' : uri),
+					path : '/' + (uri === undefined ? '' : uri) + (method === 'DELETE' ? '?' + paramStr : ''),
 					method : method,
 					headers : headers
 				}, function(httpResponse) {
@@ -7676,7 +7676,9 @@ global.REQUEST = METHOD(function(m) {
 					});
 				});
 
-				req.write(paramStr);
+				if (method !== 'DELETE') {
+					req.write(paramStr);
+				}
 				req.end();
 			}
 
@@ -9128,51 +9130,64 @@ global.WEB_SERVER = CLASS(function(cls) {
 									// stream audio or video.
 									if (headers.range !== undefined) {
 										
-										GET_FILE_INFO(rootPath + '/' + uri, function(fileInfo) {
-			
-											var
-											// positions
-											positions = headers.range.replace(/bytes=/, '').split('-'),
+										GET_FILE_INFO(rootPath + '/' + uri, {
 											
-											// total size
-											totalSize = fileInfo.size,
+											notExists : function() {
 											
-											// start position
-											startPosition = INTEGER(positions[0]),
-											
-											// end position
-											endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]),
-											
-											// stream
-											stream = fs.createReadStream(rootPath + '/' + uri, {
-												start : startPosition,
-												end : endPosition
-											}).on('open', function() {
-												
 												response(EXTEND({
 													origin : {
-														contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
-														totalSize : totalSize,
-														startPosition : startPosition,
-														endPosition : endPosition,
-														stream : stream
+														statusCode : 404
 													},
 													extend : overrideResponseInfo
 												}));
+											},
+											
+											success : function(fileInfo) {
 												
-											}).on('error', function(error) {
+												var
+												// positions
+												positions = headers.range.replace(/bytes=/, '').split('-'),
 												
-												response(EXTEND({
-													origin : {
-														contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
-														totalSize : totalSize,
-														startPosition : startPosition,
-														endPosition : endPosition,
-														content : error.toString()
-													},
-													extend : overrideResponseInfo
-												}));
-											});
+												// total size
+												totalSize = fileInfo.size,
+												
+												// start position
+												startPosition = INTEGER(positions[0]),
+												
+												// end position
+												endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]),
+												
+												// stream
+												stream = fs.createReadStream(rootPath + '/' + uri, {
+													start : startPosition,
+													end : endPosition
+												}).on('open', function() {
+													
+													response(EXTEND({
+														origin : {
+															contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+															totalSize : totalSize,
+															startPosition : startPosition,
+															endPosition : endPosition,
+															stream : stream
+														},
+														extend : overrideResponseInfo
+													}));
+													
+												}).on('error', function(error) {
+													
+													response(EXTEND({
+														origin : {
+															contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+															totalSize : totalSize,
+															startPosition : startPosition,
+															endPosition : endPosition,
+															content : error.toString()
+														},
+														extend : overrideResponseInfo
+													}));
+												});
+											}
 										});
 									}
 									

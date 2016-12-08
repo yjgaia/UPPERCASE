@@ -21,13 +21,7 @@ TEST('EVENT_ONCE', function(check) {
 		node : div,
 		name : 'tap'
 	}, function(e, div) {
-
 		console.log('tap:', e.getLeft(), e.getTop());
-
-		// remove div after 1 second.
-		DELAY(1, function() {
-			div.remove();
-		});
 	});
 
 	// touchstart event

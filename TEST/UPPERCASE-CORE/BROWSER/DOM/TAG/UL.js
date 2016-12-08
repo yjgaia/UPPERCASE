@@ -28,9 +28,4 @@ TEST('UL', function(check) {
 			})]
 		})
 	}).appendTo(BODY);
-
-	// remove div after 3 seconds.
-	DELAY(3, function() {
-		div.remove();
-	});
 });

@@ -55,9 +55,4 @@ TEST('H1', function(check) {
 		},
 		c : 'H6 Header'
 	}).appendTo(div);
-
-	// remove div after 3 seconds.
-	DELAY(3, function() {
-		div.remove();
-	});
 });

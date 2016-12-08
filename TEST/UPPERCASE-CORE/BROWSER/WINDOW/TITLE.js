@@ -4,5 +4,5 @@ TEST('TITLE', function(check) {
 	// change browser's title.
 	TITLE('Title Changed.');
 	
-	ok(TITLE() === 'Title Changed.');
+	check(TITLE() === 'Title Changed.');
 });

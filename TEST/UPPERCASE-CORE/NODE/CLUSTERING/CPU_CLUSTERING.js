@@ -1,4 +1,4 @@
-TEST('CPU_CLUSTERING', function(ok) {
+TEST('CPU_CLUSTERING', function(check) {
 	'use strict';
 	
 	CPU_CLUSTERING(function() {
@@ -6,7 +6,7 @@ TEST('CPU_CLUSTERING', function(ok) {
 		console.log('WORK, WORKER!: ', CPU_CLUSTERING.getWorkerId());
 
 		CPU_CLUSTERING.on('receive', function(data) {
-			ok(CHECK_ARE_SAME([data, {
+			check(CHECK_ARE_SAME([data, {
 				msg : 'Hey!'
 			}]));
 		});

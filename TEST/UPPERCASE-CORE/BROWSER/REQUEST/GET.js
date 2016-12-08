@@ -5,7 +5,7 @@ TEST('GET', function(check) {
 	GET({
 		uri : 'request_test'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test GET request with parameters.
@@ -13,7 +13,7 @@ TEST('GET', function(check) {
 		uri : 'request_test',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test GET request with data.
@@ -23,14 +23,14 @@ TEST('GET', function(check) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test GET request.
 	GET({
 		uri : 'request_test_json'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});
@@ -40,7 +40,7 @@ TEST('GET', function(check) {
 		uri : 'request_test_json',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});
@@ -52,7 +52,7 @@ TEST('GET', function(check) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});

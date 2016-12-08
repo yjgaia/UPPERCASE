@@ -38,9 +38,4 @@ TEST('CLEAR_BOTH', function(check) {
 			c : 'LEFT-2-2'
 		}), CLEAR_BOTH()]
 	}).appendTo(BODY);
-
-	// remove div after 3 seconds.
-	DELAY(3, function() {
-		div.remove();
-	});
 });

@@ -26,7 +26,7 @@ TEST('GO', function(check) {
 			self.changeParams = changeParams = function(params) {
 
 				// when change params.
-				ok(params.id === '1');
+				check(params.id === '1');
 			};
 
 			//OVERRIDE: self.close

@@ -4,14 +4,14 @@ TEST('AUDIO', function(check) {
 	var
 	// audio
 	/*audio = AUDIO({
-		ogg : 'AMemoryAway.ogg',
-		mp3 : 'AMemoryAway.mp3'
+		ogg : 'UPPERCASE-CORE/AMemoryAway.ogg',
+		mp3 : 'UPPERCASE-CORE/AMemoryAway.mp3'
 	}).appendTo(BODY),*/
 	
 	// audio2
 	audio2 = AUDIO({
-		ogg : 'sound.ogg',
-		mp3 : 'sound.mp3',
+		ogg : 'UPPERCASE-CORE/sound.ogg',
+		mp3 : 'UPPERCASE-CORE/sound.mp3',
 		isLoop : true
 	}).appendTo(BODY);
 	

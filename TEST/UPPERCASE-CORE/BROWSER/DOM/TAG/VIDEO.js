@@ -4,9 +4,9 @@ TEST('VIDEO', function(check) {
 	var
 	// video
 	video = VIDEO({
-		webm : 'video.webm',
-		ogg : 'video.ogg',
-		mp4 : 'video.mp4',
+		webm : 'UPPERCASE-CORE/video.webm',
+		ogg : 'UPPERCASE-CORE/video.ogg',
+		mp4 : 'UPPERCASE-CORE/video.mp4',
 		isNoControls : true,
 		isLoop : true,
 		isMuted : true

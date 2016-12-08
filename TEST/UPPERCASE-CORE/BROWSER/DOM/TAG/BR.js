@@ -19,9 +19,4 @@ TEST('BR', function(check) {
 			c : ['Hi!', BR(), 'This is', BR(), BR(), BR(), 'paragraph.']
 		})
 	}).appendTo(BODY);
-
-	// remove div after 3 seconds.
-	DELAY(3, function() {
-		div.remove();
-	});
 });

@@ -5,7 +5,7 @@ TEST('POST', function(check) {
 	POST({
 		uri : 'request_test'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test POST request with parameters.
@@ -13,7 +13,7 @@ TEST('POST', function(check) {
 		uri : 'request_test',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test POST request with data.
@@ -23,14 +23,14 @@ TEST('POST', function(check) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test POST request.
 	POST({
 		uri : 'request_test_json'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});
@@ -40,7 +40,7 @@ TEST('POST', function(check) {
 		uri : 'request_test_json',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});
@@ -52,7 +52,7 @@ TEST('POST', function(check) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});

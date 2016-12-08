@@ -1,4 +1,4 @@
-TEST('SERVER_CLUSTERING', function(ok) {
+TEST('SERVER_CLUSTERING', function(check) {
 	'use strict';
 
 	SERVER_CLUSTERING({
@@ -11,7 +11,7 @@ TEST('SERVER_CLUSTERING', function(ok) {
 	}, function() {
 
 		SERVER_CLUSTERING.on('receive', function(data) {
-			ok(CHECK_ARE_SAME([data, {
+			check(CHECK_ARE_SAME([data, {
 				msg : 'Hey!'
 			}]));
 		});

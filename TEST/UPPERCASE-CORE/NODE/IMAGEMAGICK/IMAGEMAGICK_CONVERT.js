@@ -1,13 +1,13 @@
-TEST('IMAGEMAGICK_CONVERT', function(ok) {
+TEST('IMAGEMAGICK_CONVERT', function(check) {
 	'use strict';
 
-	IMAGEMAGICK_CONVERT(['NODE/IMAGEMAGICK/sample.png', '-resize', '100x100\!', 'NODE/IMAGEMAGICK/sample-square.png']);
+	IMAGEMAGICK_CONVERT(['UPPERCASE-CORE/sample.png', '-resize', '100x100\!', 'UPPERCASE-CORE/sample-square.png']);
 
-	IMAGEMAGICK_CONVERT(['NODE/IMAGEMAGICK/sample.png', '-resize', '200x200\!', 'NODE/IMAGEMAGICK/sample-square.png'], function() {
+	IMAGEMAGICK_CONVERT(['UPPERCASE-CORE/sample.png', '-resize', '200x200\!', 'UPPERCASE-CORE/sample-square.png'], function() {
 		console.log('DONE.');
 	});
 
-	IMAGEMAGICK_CONVERT(['NODE/IMAGEMAGICK/sample.png', '-resize', '300x300\!', 'NODE/IMAGEMAGICK/sample-square.png'], {
+	IMAGEMAGICK_CONVERT(['UPPERCASE-CORE/sample.png', '-resize', '300x300\!', 'UPPERCASE-CORE/sample-square.png'], {
 		error : function() {
 			console.log('ERROR!');
 		},

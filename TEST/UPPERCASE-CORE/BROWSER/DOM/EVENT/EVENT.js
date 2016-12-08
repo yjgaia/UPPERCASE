@@ -55,11 +55,6 @@ TEST('EVENT', function(check) {
 			node : div,
 			name : 'touchmove'
 		});
-
-		// remove div after 1 second.
-		DELAY(1, function() {
-			div.remove();
-		});
 	});
 
 	// touchstart event

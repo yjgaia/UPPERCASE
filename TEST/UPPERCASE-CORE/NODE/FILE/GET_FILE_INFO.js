@@ -1,10 +1,8 @@
-TEST('GET_FILE_INFO', function(ok) {
+TEST('GET_FILE_INFO', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-
 	var info = GET_FILE_INFO({
-		path : 'test.txt',
+		path : 'UPPERCASE-CORE/test.txt',
 		isSync : true
 	}, {
 
@@ -17,13 +15,16 @@ TEST('GET_FILE_INFO', function(ok) {
 		},
 
 		success : function(info) {
-			ok(info.size === 18);
+			check(info.size === 18);
 		}
 	});
 
-	ok(info.size === 18);
+	check(info.size === 18);
 
-	GET_FILE_INFO('test.txt', {
+	GET_FILE_INFO({
+		path : 'UPPERCASE-CORE/test.txt',
+		isSync : true
+	}, {
 
 		error : function(errorMsg) {
 			console.log('ERROR!', errorMsg);
@@ -34,7 +35,7 @@ TEST('GET_FILE_INFO', function(ok) {
 		},
 
 		success : function(info) {
-			ok(info.size === 18);
+			check(info.size === 18);
 		}
 	});
 });

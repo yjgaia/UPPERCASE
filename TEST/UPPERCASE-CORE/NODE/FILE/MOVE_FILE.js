@@ -1,11 +1,9 @@
-TEST('MOVE_FILE', function(ok) {
+TEST('MOVE_FILE', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-
 	MOVE_FILE({
-		from : 'test2.txt',
-		to : 'testFolder/test2.txt',
+		from : 'UPPERCASE-CORE/test2.txt',
+		to : 'UPPERCASE-CORE/testFolder/test2.txt',
 		isSync : true
 	}, {
 
@@ -18,14 +16,15 @@ TEST('MOVE_FILE', function(ok) {
 		}
 	});
 
-	ok(READ_FILE({
-		path : 'testFolder/test2.txt',
+	check(READ_FILE({
+		path : 'UPPERCASE-CORE/testFolder/test2.txt',
 		isSync : true
 	}).toString() === 'this is test file.');
 
 	MOVE_FILE({
-		from : 'test3.txt',
-		to : 'testFolder/test3.txt'
+		from : 'UPPERCASE-CORE/test3.txt',
+		to : 'UPPERCASE-CORE/testFolder/test3.txt',
+		isSync : true
 	}, {
 
 		error : function(errorMsg) {
@@ -37,8 +36,8 @@ TEST('MOVE_FILE', function(ok) {
 		},
 
 		success : function() {
-			ok(READ_FILE({
-				path : 'testFolder/test3.txt',
+			check(READ_FILE({
+				path : 'UPPERCASE-CORE/testFolder/test3.txt',
 				isSync : true
 			}).toString() === 'this is test file.');
 		}

@@ -1,10 +1,8 @@
-TEST('REMOVE_FILE', function(ok) {
+TEST('REMOVE_FILE', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-
 	REMOVE_FILE({
-		path : 'testFolder/test2.txt',
+		path : 'UPPERCASE-CORE/testFolder/test2.txt',
 		isSync : true
 	}, {
 
@@ -17,7 +15,21 @@ TEST('REMOVE_FILE', function(ok) {
 		}
 	});
 
-	REMOVE_FILE('testFolder/test3.txt', {
+	REMOVE_FILE({
+		path : 'UPPERCASE-CORE/testFolder/test3.txt',
+		isSync : true
+	}, {
+
+		error : function(errorMsg) {
+			console.log('ERROR!', errorMsg);
+		},
+
+		success : function() {
+			console.log('good!');
+		}
+	});
+	
+	REMOVE_FILE('UPPERCASE-CORE/test.txt', {
 
 		error : function(errorMsg) {
 			console.log('ERROR!', errorMsg);

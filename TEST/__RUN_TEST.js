@@ -29,11 +29,40 @@ RUN(function() {
 		
 		var
 		// uri
-		uri = requestInfo.uri;
+		uri = requestInfo.uri,
+
+		// method
+		method = requestInfo.method,
+
+		// params
+		params = requestInfo.params;
 		
 		if (uri.substring(0, 10) === 'UPPERCASE/') {
 			requestInfo.uri = uri.substring(10);
 			replaceRootPath(__dirname + '/..');
+		}
+		
+		if (uri === 'request_test') {
+	
+			console.log(method, params);
+			
+			response({
+				content : 'Request DONE!',
+				headers : {
+					'Access-Control-Allow-Origin' : '*'
+				}
+			});
+		
+		} else if (uri === 'request_test_json') {
+	
+			console.log(method, params);
+	
+			response({
+				content : '{ "thisis" : "JSON" }',
+				headers : {
+					'Access-Control-Allow-Origin' : '*'
+				}
+			});
 		}
 	});
 	

@@ -76,7 +76,7 @@ TEST('DOM', function(check) {
 	});
 
 	// get style.
-	ok(dom.getStyle('color') === 'red');
+	check(dom.getStyle('color') === 'red');
 
 	// get size.
 	console.log(dom.getWidth(), dom.getHeight());
@@ -103,10 +103,5 @@ TEST('DOM', function(check) {
 		afterDom.remove();
 
 		blinkInterval.remove();
-	});
-
-	// remove dom after 5 seconds.
-	DELAY(5, function() {
-		dom.remove();
 	});
 });

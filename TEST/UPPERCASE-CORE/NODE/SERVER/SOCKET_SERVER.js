@@ -1,4 +1,4 @@
-TEST('SOCKET_SERVER', function(ok) {
+TEST('SOCKET_SERVER', function(check) {
 	'use strict';
 
 	SOCKET_SERVER(8124, function(clientInfo, on, off, send, disconnect) {
@@ -9,7 +9,7 @@ TEST('SOCKET_SERVER', function(ok) {
 
 		on('message', function(data, ret) {
 
-			ok(CHECK_ARE_SAME([data, {
+			check(CHECK_ARE_SAME([data, {
 				msg : 'message from client.'
 			}]));
 
@@ -22,7 +22,7 @@ TEST('SOCKET_SERVER', function(ok) {
 				msg : 'message from server.'
 			}
 		}, function(retMsg) {
-			ok(retMsg === 'Thanks!');
+			check(retMsg === 'Thanks!');
 		});
 
 		send({
@@ -44,7 +44,7 @@ TEST('SOCKET_SERVER', function(ok) {
 				data : roles,
 				value : role
 			}) === true) {
-				ok(role === 'USER');
+				check(role === 'USER');
 			}
 		});
 

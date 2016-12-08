@@ -10,11 +10,6 @@ TEST('IMG', function(check) {
 			left : 40,
 			top : 40
 		},
-		src : '/EXAMPLES/test.png'
+		src : 'UPPERCASE-CORE/image.png'
 	}).appendTo(BODY);
-
-	// remove img after 3 seconds.
-	DELAY(3, function() {
-		img.remove();
-	});
 });

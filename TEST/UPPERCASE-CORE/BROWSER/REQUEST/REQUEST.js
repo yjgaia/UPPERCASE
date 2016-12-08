@@ -6,7 +6,7 @@ TEST('REQUEST', function(check) {
 		method : 'GET',
 		uri : 'request_test'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test request(GET) with parameters.
@@ -15,7 +15,7 @@ TEST('REQUEST', function(check) {
 		uri : 'request_test',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test request(POST) with parameters.
@@ -24,7 +24,7 @@ TEST('REQUEST', function(check) {
 		uri : 'request_test',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test request with data.
@@ -35,7 +35,7 @@ TEST('REQUEST', function(check) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(content === 'Request DONE!');
+		check(content === 'Request DONE!');
 	});
 
 	// test request.
@@ -43,7 +43,7 @@ TEST('REQUEST', function(check) {
 		method : 'GET',
 		uri : 'request_test_json'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});
@@ -54,7 +54,7 @@ TEST('REQUEST', function(check) {
 		uri : 'request_test_json',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});
@@ -65,7 +65,7 @@ TEST('REQUEST', function(check) {
 		uri : 'request_test_json',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});
@@ -78,7 +78,7 @@ TEST('REQUEST', function(check) {
 			thisis : 'data'
 		}
 	}, function(content) {
-		ok(CHECK_ARE_SAME([PARSE_STR(content), {
+		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
 	});

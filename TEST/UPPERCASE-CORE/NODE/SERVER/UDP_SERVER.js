@@ -1,4 +1,4 @@
-TEST('UDP_SERVER', function(ok) {
+TEST('UDP_SERVER', function(check) {
 	'use strict';
 
 	var

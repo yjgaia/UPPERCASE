@@ -167,7 +167,7 @@ global.REQUEST = METHOD(function(m) {
 				req = (isSecure !== true ? HTTP : HTTPS).request({
 					hostname : host,
 					port : port,
-					path : '/' + (uri === undefined ? '' : uri),
+					path : '/' + (uri === undefined ? '' : uri) + (method === 'DELETE' ? '?' + paramStr : ''),
 					method : method,
 					headers : headers
 				}, function(httpResponse) {
@@ -187,7 +187,9 @@ global.REQUEST = METHOD(function(m) {
 					});
 				});
 
-				req.write(paramStr);
+				if (method !== 'DELETE') {
+					req.write(paramStr);
+				}
 				req.end();
 			}
 

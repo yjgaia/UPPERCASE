@@ -5,7 +5,7 @@ TEST('DELETE', function(check) {
 	DELETE({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_TEST'
+		uri : 'request_test'
 	}, function(content) {
 		check(content === 'Request DONE!');
 	});
@@ -14,7 +14,7 @@ TEST('DELETE', function(check) {
 	DELETE({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_TEST',
+		uri : 'request_test',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
 		check(content === 'Request DONE!');
@@ -24,7 +24,7 @@ TEST('DELETE', function(check) {
 	DELETE({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_TEST',
+		uri : 'request_test',
 		data : {
 			thisis : 'data'
 		}
@@ -36,7 +36,7 @@ TEST('DELETE', function(check) {
 	DELETE({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_JSON_TEST'
+		uri : 'request_test_json'
 	}, function(content) {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
@@ -47,7 +47,7 @@ TEST('DELETE', function(check) {
 	DELETE({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_JSON_TEST',
+		uri : 'request_test_json',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
@@ -59,7 +59,7 @@ TEST('DELETE', function(check) {
 	DELETE({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_JSON_TEST',
+		uri : 'request_test_json',
 		data : {
 			thisis : 'data'
 		}

@@ -1,10 +1,8 @@
-TEST('FIND_FOLDER_NAMES', function(ok) {
+TEST('FIND_FOLDER_NAMES', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-
-	ok(CHECK_ARE_SAME([FIND_FOLDER_NAMES({
-		path : 'testFolder',
+	check(CHECK_ARE_SAME([FIND_FOLDER_NAMES({
+		path : 'UPPERCASE-CORE/testFolder',
 		isSync : true
 	}, {
 		error : function(errorMsg) {
@@ -16,7 +14,10 @@ TEST('FIND_FOLDER_NAMES', function(ok) {
 		}
 	}), ['subFolder1', 'subFolder2']]));
 
-	FIND_FOLDER_NAMES('testFolder', {
+	FIND_FOLDER_NAMES({
+		path : 'UPPERCASE-CORE/testFolder',
+		isSync : true
+	}, {
 
 		error : function(errorMsg) {
 			console.log('ERROR!', errorMsg);
@@ -27,7 +28,7 @@ TEST('FIND_FOLDER_NAMES', function(ok) {
 		},
 
 		success : function(folderNames) {
-			ok(CHECK_ARE_SAME([folderNames, ['subFolder1', 'subFolder2']]));
+			check(CHECK_ARE_SAME([folderNames, ['subFolder1', 'subFolder2']]));
 		}
 	});
 });

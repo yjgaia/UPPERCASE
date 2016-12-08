@@ -92,23 +92,18 @@ TEST('INPUT', function(check) {
 
 	input.setValue('HDS');
 
-	ok(input.getValue() === 'HDS');
+	check(input.getValue() === 'HDS');
 
 	manOption.setValue('man');
 	womanOption.setValue('woman');
 
 	select.setValue('woman');
 
-	ok(select.getValue() === 'woman');
-	ok(manOption.getValue() === 'man');
-	ok(womanOption.getValue() === 'woman');
+	check(select.getValue() === 'woman');
+	check(manOption.getValue() === 'man');
+	check(womanOption.getValue() === 'woman');
 
 	textarea.setValue('Old woman.');
 
-	ok(textarea.getValue() === 'Old woman.');
-
-	// remove div after 5 seconds.
-	DELAY(5, function() {
-		div.remove();
-	});
+	check(textarea.getValue() === 'Old woman.');
 });

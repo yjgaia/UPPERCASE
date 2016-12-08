@@ -24,7 +24,7 @@ TEST('NODE', function(check) {
 			// div
 			div = DIV({
 				style : {
-					backgroundImage : '/EXAMPLES/test.png',
+					backgroundImage : 'UPPERCASE-CORE/image.png',
 					position : 'fixed',
 					left : 40,
 					top : 40
@@ -39,7 +39,7 @@ TEST('NODE', function(check) {
 	// node
 	iat = ImageAndText({
 		img : IMG({
-			src : '/EXAMPLES/test.png'
+			src : 'UPPERCASE-CORE/image.png'
 		}),
 		text : 'Hello, UJS!'
 	}).appendTo(BODY),
@@ -66,10 +66,4 @@ TEST('NODE', function(check) {
 	console.log(div.getScrollTop());
 	console.log(div.getScrollWidth());
 	console.log(div.getScrollHeight());
-	
-	// remove node after 3 seconds.
-	DELAY(3, function() {
-		iat.remove();
-		div.remove();
-	});
 });

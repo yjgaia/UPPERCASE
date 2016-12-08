@@ -4,8 +4,8 @@ TEST('SOUND', function(check) {
 	var
 	// sound
 	sound = SOUND({
-		ogg : 'AMemoryAway.ogg',
-		mp3 : 'AMemoryAway.mp3'
+		ogg : 'UPPERCASE-CORE/AMemoryAway.ogg',
+		mp3 : 'UPPERCASE-CORE/AMemoryAway.mp3'
 	});
 	
 	sound.play();
@@ -16,5 +16,9 @@ TEST('SOUND', function(check) {
 	
 	DELAY(4, function() {
 		sound.play();
+	});
+	
+	DELAY(5, function() {
+		sound.stop();
 	});
 });

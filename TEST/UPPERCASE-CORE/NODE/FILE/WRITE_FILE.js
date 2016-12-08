@@ -1,10 +1,8 @@
-TEST('WRITE_FILE', function(ok) {
+TEST('WRITE_FILE', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-
 	WRITE_FILE({
-		path : 'test.txt',
+		path : 'UPPERCASE-CORE/test.txt',
 		content : 'this is test file.',
 		isSync : true
 	}, {
@@ -13,13 +11,13 @@ TEST('WRITE_FILE', function(ok) {
 		}
 	});
 
-	ok(READ_FILE({
-		path : 'test.txt',
+	check(READ_FILE({
+		path : 'UPPERCASE-CORE/test.txt',
 		isSync : true
 	}).toString() === 'this is test file.');
 
 	WRITE_FILE({
-		path : 'testFolder/subFolder1/subFolder1/test1',
+		path : 'UPPERCASE-CORE/testFolder/subFolder1/subFolder1/test1',
 		content : 'test!!!',
 		isSync : true
 	}, {
@@ -28,13 +26,14 @@ TEST('WRITE_FILE', function(ok) {
 		}
 	});
 
-	ok(READ_FILE({
-		path : 'testFolder/subFolder1/subFolder1/test1',
+	check(READ_FILE({
+		path : 'UPPERCASE-CORE/testFolder/subFolder1/subFolder1/test1',
 		isSync : true
 	}).toString() === 'test!!!');
 
 	WRITE_FILE({
-		path : 'testFolder/subFolder2/subFolder2/test2',
+		path : 'UPPERCASE-CORE/testFolder/subFolder2/subFolder2/test2',
+		isSync : true,
 		content : 'test!!!'
 	}, {
 
@@ -43,8 +42,11 @@ TEST('WRITE_FILE', function(ok) {
 		},
 
 		success : function() {
-			READ_FILE('testFolder/subFolder2/subFolder2/test2', function(buffer) {
-				ok(buffer.toString() === 'test!!!');
+			READ_FILE({
+				path : 'UPPERCASE-CORE/testFolder/subFolder2/subFolder2/test2',
+				isSync : true
+			}, function(buffer) {
+				check(buffer.toString() === 'test!!!');
 			});
 		}
 	});

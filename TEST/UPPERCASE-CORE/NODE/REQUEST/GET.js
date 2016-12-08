@@ -7,7 +7,7 @@ TEST('GET', function(check) {
 	});
 	
 	// test GET request with url.
-	GET('http://localhost:8810/AJAX_TEST', function(content) {
+	GET('http://localhost:8810/request_test', function(content) {
 		check(content === 'Request DONE!');
 	});
 
@@ -15,7 +15,7 @@ TEST('GET', function(check) {
 	GET({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_TEST'
+		uri : 'request_test'
 	}, function(content) {
 		check(content === 'Request DONE!');
 	});
@@ -24,7 +24,7 @@ TEST('GET', function(check) {
 	GET({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_TEST',
+		uri : 'request_test',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
 		check(content === 'Request DONE!');
@@ -34,7 +34,7 @@ TEST('GET', function(check) {
 	GET({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_TEST',
+		uri : 'request_test',
 		data : {
 			thisis : 'data'
 		}
@@ -46,7 +46,7 @@ TEST('GET', function(check) {
 	GET({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_JSON_TEST'
+		uri : 'request_test_json'
 	}, function(content) {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
@@ -57,7 +57,7 @@ TEST('GET', function(check) {
 	GET({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_JSON_TEST',
+		uri : 'request_test_json',
 		paramStr : 'thisis=parameter'
 	}, function(content) {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
@@ -69,7 +69,7 @@ TEST('GET', function(check) {
 	GET({
 		host : 'localhost',
 		port : 8810,
-		uri : 'AJAX_JSON_TEST',
+		uri : 'request_test_json',
 		data : {
 			thisis : 'data'
 		}

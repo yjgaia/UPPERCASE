@@ -1,11 +1,11 @@
-TEST('IMAGEMAGICK_READ_METADATA', function(ok) {
+TEST('IMAGEMAGICK_READ_METADATA', function(check) {
 	'use strict';
 
-	IMAGEMAGICK_READ_METADATA('NODE/IMAGEMAGICK/sample.png', function(metadata) {
+	IMAGEMAGICK_READ_METADATA('UPPERCASE-CORE/sample.png', function(metadata) {
 		console.log(metadata);
 	});
 
-	IMAGEMAGICK_READ_METADATA('NODE/IMAGEMAGICK/sample.png', {
+	IMAGEMAGICK_READ_METADATA('UPPERCASE-CORE/sample.png', {
 		error : function() {
 			console.log('ERROR!');
 		},

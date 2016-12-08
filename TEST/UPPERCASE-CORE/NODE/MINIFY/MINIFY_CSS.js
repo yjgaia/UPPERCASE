@@ -1,7 +1,7 @@
 TEST('MINIFY_CSS', function(check) {
 	'use strict';
 
-	READ_FILE('NODE/MINIFY/sample.css', function(content) {
+	READ_FILE('UPPERCASE-CORE/NODE/MINIFY/sample.css', function(content) {
 
 		var
 		// css code

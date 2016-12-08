@@ -22,9 +22,4 @@ TEST('SPAN', function(check) {
 			c : 'This is test span.'
 		})
 	}).appendTo(BODY);
-
-	// remove div after 3 seconds.
-	DELAY(3, function() {
-		div.remove();
-	});
 });

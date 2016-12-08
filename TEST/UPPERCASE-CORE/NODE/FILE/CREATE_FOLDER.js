@@ -1,10 +1,8 @@
-TEST('CREATE_FOLDER', function(ok) {
+TEST('CREATE_FOLDER', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-
 	CREATE_FOLDER({
-		path : 'test',
+		path : 'UPPERCASE-CORE/test',
 		isSync : true
 	}, {
 
@@ -17,7 +15,10 @@ TEST('CREATE_FOLDER', function(ok) {
 		}
 	});
 
-	CREATE_FOLDER('test2', {
+	CREATE_FOLDER({
+		path : 'UPPERCASE-CORE/test2',
+		isSync : true
+	}, {
 
 		error : function(errorMsg) {
 			console.log('ERROR!', errorMsg);

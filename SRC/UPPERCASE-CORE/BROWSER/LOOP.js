@@ -21,12 +21,16 @@ OVERRIDE(LOOP, function(origin) {
 		
 		// fire.
 		fire = function() {
+			
+			var
+			// step.
+			step;
 	
 			if (animationInterval === undefined) {
 	
 				beforeTime = Date.now();
 	
-				animationInterval = requestAnimationFrame(function() {
+				animationInterval = requestAnimationFrame(step = function() {
 	
 					var
 					// time
@@ -95,6 +99,8 @@ OVERRIDE(LOOP, function(origin) {
 	
 						beforeTime = time;
 					}
+					
+					animationInterval = requestAnimationFrame(step);
 				});
 			}
 		},

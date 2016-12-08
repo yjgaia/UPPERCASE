@@ -7,9 +7,6 @@ TEST('INFO', function(check) {
 
 	// get browser language.
 	console.log(nowLang);
-
-	// change browser language.
-	//INFO.changeLang('ko');
 	
 	// check is touch mode.
 	console.log(INFO.checkIsTouchMode());

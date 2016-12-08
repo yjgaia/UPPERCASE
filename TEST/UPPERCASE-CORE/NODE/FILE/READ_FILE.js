@@ -1,10 +1,8 @@
-TEST('READ_FILE', function(ok) {
+TEST('READ_FILE', function(check) {
 	'use strict';
 
-	INIT_OBJECTS();
-
 	var buffer = READ_FILE({
-		path : 'test.txt',
+		path : 'UPPERCASE-CORE/test.txt',
 		isSync : true
 	}, {
 
@@ -17,13 +15,16 @@ TEST('READ_FILE', function(ok) {
 		},
 
 		success : function(buffer) {
-			ok(buffer.toString() === 'this is test file.');
+			check(buffer.toString() === 'this is test file.');
 		}
 	});
 
-	ok(buffer.toString() === 'this is test file.');
+	check(buffer.toString() === 'this is test file.');
 
-	READ_FILE('test.txt', {
+	READ_FILE({
+		path : 'UPPERCASE-CORE/test.txt',
+		isSync : true
+	}, {
 
 		error : function(errorMsg) {
 			console.log('ERROR!', errorMsg);
@@ -34,7 +35,7 @@ TEST('READ_FILE', function(ok) {
 		},
 
 		success : function(buffer) {
-			ok(buffer.toString() === 'this is test file.');
+			check(buffer.toString() === 'this is test file.');
 		}
 	});
 });
