@@ -29,7 +29,7 @@ global.BOOT = function(params) {
 	browserScriptContents = [],
 
 	// browser script
-	browserScript = '',
+	browserScript = 'global=window;',
 	
 	// box browser scripts
 	boxBrowserScripts = {},
@@ -230,7 +230,7 @@ global.BOOT = function(params) {
 	// reload browser script.
 	reloadBrowserScript = function() {
 
-		browserScript = '';
+		browserScript = 'global=window;';
 		boxBrowserScripts = {};
 
 		EACH(browserScriptContents, function(browserScriptContent) {
@@ -1237,7 +1237,16 @@ global.BOOT = function(params) {
 	
 	// load all UPPERCASE modules for browser.
 	EACH(['CORE', 'ROOM', 'MODEL', 'BOOT'], function(name) {
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-' + name + '/BROWSER' + (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true) ? '' : '.MIN') + '.js');
+		
+		var
+		// is dev mode
+		isDevMode = (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true));
+		
+		if (isDevMode === true) {
+			addContentToBrowserScript('\n\n');
+		}
+		
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-' + name + '/BROWSER' + (isDevMode === true ? '' : '.MIN') + '.js');
 	});
 	
 	// configuration.
