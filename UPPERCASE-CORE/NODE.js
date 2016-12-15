@@ -2770,8 +2770,8 @@ global.LOOP = CLASS(function(cls) {
 				// time
 				time = Date.now(),
 
-				// times
-				times = time - beforeTime,
+				// delta time
+				deltaTime = time - beforeTime,
 
 				// loop info
 				loopInfo,
@@ -2785,7 +2785,7 @@ global.LOOP = CLASS(function(cls) {
 				// i, j
 				i, j;
 
-				if (times > 0) {
+				if (deltaTime > 0) {
 
 					for (i = 0; i < loopInfos.length; i += 1) {
 
@@ -2799,7 +2799,7 @@ global.LOOP = CLASS(function(cls) {
 							}
 
 							// calculate count.
-							count = parseInt(loopInfo.fps / (1000 / times) * (loopInfo.timeSigma / times + 1), 10) - loopInfo.countSigma;
+							count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
 
 							// start.
 							if (loopInfo.start !== undefined) {
@@ -2814,12 +2814,12 @@ global.LOOP = CLASS(function(cls) {
 
 							// end.
 							if (loopInfo.end !== undefined) {
-								loopInfo.end(times);
+								loopInfo.end(deltaTime);
 							}
 
 							loopInfo.countSigma += count;
 
-							loopInfo.timeSigma += times;
+							loopInfo.timeSigma += deltaTime;
 							if (loopInfo.timeSigma > 1000) {
 								loopInfo.timeSigma = undefined;
 							}
@@ -2828,7 +2828,7 @@ global.LOOP = CLASS(function(cls) {
 
 					// run runs.
 					for (i = 0; i < runs.length; i += 1) {
-						runs[i](times);
+						runs[i](deltaTime);
 					}
 
 					beforeTime = time;
@@ -7170,7 +7170,7 @@ global.DELETE = METHOD({
 		if (CHECK_IS_DATA(urlOrParams) !== true) {
 			urlOrParams = {
 				url : urlOrParams
-			}
+			};
 		}
 		
 		REQUEST(COMBINE([{
@@ -7385,7 +7385,7 @@ global.GET = METHOD({
 		if (CHECK_IS_DATA(urlOrParams) !== true) {
 			urlOrParams = {
 				url : urlOrParams
-			}
+			};
 		}
 		
 		REQUEST(COMBINE([{
@@ -7418,7 +7418,7 @@ global.POST = METHOD({
 		if (CHECK_IS_DATA(urlOrParams) !== true) {
 			urlOrParams = {
 				url : urlOrParams
-			}
+			};
 		}
 		
 		REQUEST(COMBINE([{
@@ -7451,7 +7451,7 @@ global.PUT = METHOD({
 		if (CHECK_IS_DATA(urlOrParams) !== true) {
 			urlOrParams = {
 				url : urlOrParams
-			}
+			};
 		}
 		
 		REQUEST(COMBINE([{

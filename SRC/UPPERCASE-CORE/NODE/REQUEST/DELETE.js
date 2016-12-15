@@ -22,7 +22,7 @@ global.DELETE = METHOD({
 		if (CHECK_IS_DATA(urlOrParams) !== true) {
 			urlOrParams = {
 				url : urlOrParams
-			}
+			};
 		}
 		
 		REQUEST(COMBINE([{
