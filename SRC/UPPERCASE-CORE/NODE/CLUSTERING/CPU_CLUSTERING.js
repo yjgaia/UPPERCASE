@@ -177,6 +177,9 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					
 					// count shared data.
 					on('__SHARED_STORE_COUNT', SHARED_STORE.count);
+					
+					// check is exists shared data.
+					on('__SHARED_STORE_CHECK_IS_EXISTS', SHARED_STORE.checkIsExists);
 
 					// clear shared store.
 					on('__SHARED_STORE_CLEAR', SHARED_STORE.clear);

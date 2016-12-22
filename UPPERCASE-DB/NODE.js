@@ -841,52 +841,79 @@ FOR_BOX(function(box) {
 						// cached count infos
 						cachedCountInfos = [];
 						
-						EACH(cachedGetStore.list(), function(info, paramsStr) {
+						PARALLEL([
+						function(done) {
 							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true) {
-							
-								cachedGetInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+							cachedGetStore.all(function(infos) {
+								
+								EACH(infos, function(info, paramsStr) {
+									
+									var
+									// filter
+									filter = info.filter;
+									
+									if (sift(filter)(originData) === true) {
+									
+										cachedGetInfos.push({
+											filter : filter,
+											paramsStr : paramsStr
+										});
+									}
 								});
-							}
-						});
+								
+								done();
+							});
+						},
 						
-						EACH(cachedFindStore.list(), function(info, paramsStr) {
+						function(done) {
 							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true) {
-							
-								cachedFindInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+							cachedFindStore.all(function(infos) {
+								
+								EACH(infos, function(info, paramsStr) {
+									
+									var
+									// filter
+									filter = info.filter;
+									
+									if (sift(filter)(originData) === true) {
+									
+										cachedFindInfos.push({
+											filter : filter,
+											paramsStr : paramsStr
+										});
+									}
 								});
-							}
-						});
+								
+								done();
+							});
+						},
 						
-						EACH(cachedCountStore.list(), function(info, paramsStr) {
+						function(done) {
 							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true) {
-							
-								cachedCountInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+							cachedCountStore.all(function(infos) {
+								
+								EACH(infos, function(info, paramsStr) {
+									
+									var
+									// filter
+									filter = info.filter;
+									
+									if (sift(filter)(originData) === true) {
+									
+										cachedCountInfos.push({
+											filter : filter,
+											paramsStr : paramsStr
+										});
+									}
 								});
-							}
-						});
+								
+								done();
+							});
+						},
 						
-						innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
+						function() {
+							innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
+						}]);
 					},
 					
 					// recache data for update.
@@ -905,52 +932,79 @@ FOR_BOX(function(box) {
 						// cached count infos
 						cachedCountInfos = [];
 						
-						EACH(cachedGetStore.list(), function(info, paramsStr) {
+						PARALLEL([
+						function(done) {
 							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
-							
-								cachedGetInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+							cachedGetStore.all(function(infos) {
+								
+								EACH(infos, function(info, paramsStr) {
+									
+									var
+									// filter
+									filter = info.filter;
+									
+									if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+									
+										cachedGetInfos.push({
+											filter : filter,
+											paramsStr : paramsStr
+										});
+									}
 								});
-							}
-						});
+								
+								done();
+							});
+						},
 						
-						EACH(cachedFindStore.list(), function(info, paramsStr) {
+						function(done) {
 							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
-							
-								cachedFindInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+							cachedFindStore.all(function(infos) {
+								
+								EACH(infos, function(info, paramsStr) {
+									
+									var
+									// filter
+									filter = info.filter;
+									
+									if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+									
+										cachedFindInfos.push({
+											filter : filter,
+											paramsStr : paramsStr
+										});
+									}
 								});
-							}
-						});
+								
+								done();
+							});
+						},
 						
-						EACH(cachedCountStore.list(), function(info, paramsStr) {
+						function(done) {
 							
-							var
-							// filter
-							filter = info.filter;
-							
-							if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
-							
-								cachedCountInfos.push({
-									filter : filter,
-									paramsStr : paramsStr
+							cachedCountStore.all(function(infos) {
+								
+								EACH(infos, function(info, paramsStr) {
+									
+									var
+									// filter
+									filter = info.filter;
+									
+									if (sift(filter)(originData) === true || sift(filter)(savedData) === true) {
+									
+										cachedCountInfos.push({
+											filter : filter,
+											paramsStr : paramsStr
+										});
+									}
 								});
-							}
-						});
+								
+								done();
+							});
+						},
 						
-						innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
+						function() {
+							innerRecacheData(cachedGetInfos, cachedFindInfos, cachedCountInfos, callback);
+						}]);
 					},
 	
 					// inner get.
@@ -1606,6 +1660,14 @@ FOR_BOX(function(box) {
 															return isSame;
 															
 														}) !== true) {
+															
+															// save TO_DELETE
+															EACH(updateData, function(value, name) {
+																if (value === TO_DELETE) {
+																	updateData[name] = 'TO_DELETE';
+																}
+															});
+															
 															addHistory('update', id, updateData, savedData.lastUpdateTime);
 														}
 				

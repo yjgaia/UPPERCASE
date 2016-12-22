@@ -330,6 +330,23 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				}
 			});
 
+			// check is exists shared data.
+			on('__SHARED_STORE_CHECK_IS_EXISTS', function(params, ret) {
+
+				if (CPU_CLUSTERING.send !== undefined) {
+
+					CPU_CLUSTERING.send({
+						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
+						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
+						data : params
+					}, ret);
+				}
+				
+				else {
+					SHARED_STORE.checkIsExists(params, ret);
+				}
+			});
+
 			// clear shared store.
 			on('__SHARED_STORE_CLEAR', function(storeName, ret) {
 

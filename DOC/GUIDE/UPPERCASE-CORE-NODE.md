@@ -1300,6 +1300,21 @@ sampleStore.count(function(count) {
 });
 ```
 
+#### `checkIsExists`
+* `checkIsExists(id, function(isExists) {})`
+
+`id`에 해당하는 데이터가 존재하는지 확인합니다.
+
+```javascript
+sampleStore.checkIsExists('1234', function(isExists) {
+	if (isExists === true) {
+		console.log('데이터가 존재합니다.');
+	} else {
+		console.log('데이터가 존재하지 않습니다.');
+	}
+});
+```
+
 #### `clear`
 * `clear(function() {})`
 
