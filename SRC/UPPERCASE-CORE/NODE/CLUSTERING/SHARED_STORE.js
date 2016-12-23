@@ -557,7 +557,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
 						} else {
-							SHOW_ERROR('SHARED_STORE (' + storeName + ')', '수정할 데이터가 존재하지 않습니다.', params);
+							SHOW_WARNING('SHARED_STORE (' + storeName + ')', '수정할 데이터가 존재하지 않습니다.', params);
 						}
 					} else if (callback !== undefined) {
 						callback(savedData);
@@ -633,7 +633,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
 						} else {
-							SHOW_ERROR('SHARED_STORE (' + storeName + ')', '가져올 데이터가 존재하지 않습니다.', id);
+							SHOW_WARNING('SHARED_STORE (' + storeName + ')', '가져올 데이터가 존재하지 않습니다.', id);
 						}
 					} else if (callback !== undefined) {
 						callback(savedData);
@@ -703,7 +703,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
 						} else {
-							SHOW_ERROR('SHARED_STORE (' + storeName + ')', '삭제할 데이터가 존재하지 않습니다.', id);
+							SHOW_WARNING('SHARED_STORE (' + storeName + ')', '삭제할 데이터가 존재하지 않습니다.', id);
 						}
 					} else if (callback !== undefined) {
 						callback(savedData);
