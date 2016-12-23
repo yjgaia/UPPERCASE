@@ -671,6 +671,10 @@ FOR_BOX(function(box) {
 									if (isNotUsingHistory !== true) {
 										addHistory('create', savedData.id, savedData, savedData.createTime);
 									}
+									
+									if (callback !== undefined) {
+										callback(savedData);
+									}
 								}
 	
 								// if error is not TO_DELETE
@@ -1205,6 +1209,10 @@ FOR_BOX(function(box) {
 															
 															addHistory('update', id, updateData, savedData.lastUpdateTime);
 														}
+														
+														if (callback !== undefined) {
+															callback(savedData, originData);
+														}
 													}
 												});
 											}
@@ -1359,6 +1367,10 @@ FOR_BOX(function(box) {
 	
 											if (isNotUsingHistory !== true) {
 												addHistory('remove', id, undefined, new Date());
+											}
+											
+											if (callback !== undefined) {
+												callback(originData);
 											}
 										}
 									});

@@ -14,3 +14,4 @@
 - 버전 정보가 저장되어 있는 V 파일이 VERSION 파일로 이름이 변경되었습니다.
 - REDIS_STORE가 다음 경로로 분리되었습니다. https://github.com/Hanul/REDIS_STORE-BOX
 - CPU_SHARED_DB, CPU_SHARED_STORE, SHARED_DB가 SHARED_STORE로 통합되었습니다.
+- 큰 장점이 없는 DB 캐시 기능을 제거하였습니다.
