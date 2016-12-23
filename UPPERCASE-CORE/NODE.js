@@ -4446,7 +4446,9 @@ global.SHARED_STORE = CLASS(function(cls) {
 		//REQUIRED: storeName
 		//REQUIRED: callback
 		
-		callback(COUNT_PROPERTIES(all(storeName)));
+		all(storeName, function(dataSet) {
+			callback(COUNT_PROPERTIES(dataSet));
+		});
 	};
 
 	cls.checkIsExists = checkIsExists = function(params, callback) {
