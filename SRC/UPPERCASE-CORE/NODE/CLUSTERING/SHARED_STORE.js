@@ -621,13 +621,11 @@ global.SHARED_STORE = CLASS(function(cls) {
 				// inner callback.
 				innerCallback;
 				
-				if (callbackOrHandlers !== undefined) {
-					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-						callback = callbackOrHandlers;
-					} else {
-						notExistsHandler = callbackOrHandlers.notExists;
-						callback = callbackOrHandlers.success;
-					}
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					notExistsHandler = callbackOrHandlers.notExists;
+					callback = callbackOrHandlers.success;
 				}
 				
 				innerCallback = function(savedData) {
@@ -700,15 +698,15 @@ global.SHARED_STORE = CLASS(function(cls) {
 					}
 				}
 				
-				innerCallback = function(savedData) {
-					if (savedData === undefined) {
+				innerCallback = function(originData) {
+					if (originData === undefined) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
 						} else {
 							SHOW_WARNING('SHARED_STORE (' + storeName + ')', '삭제할 데이터가 존재하지 않습니다.', id);
 						}
 					} else if (callback !== undefined) {
-						callback(savedData);
+						callback(originData);
 					}
 				};
 
