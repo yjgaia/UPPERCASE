@@ -4027,7 +4027,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 					}
 					
 					else if (serverSends[serverName] === undefined) {
-						if (waitingSendInfoMap[serverName] === true) {
+						if (waitingSendInfoMap[serverName] !== true) {
 							waitingSendInfoMap[serverName].push({
 								methodName : methodName,
 								data : data
@@ -4052,7 +4052,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 					}
 					
 					else if (serverSends[serverName] === undefined) {
-						if (waitingSendInfoMap[serverName] === true) {
+						if (waitingSendInfoMap[serverName] !== true) {
 							waitingSendInfoMap[serverName].push({
 								methodName : methodName,
 								data : data,
