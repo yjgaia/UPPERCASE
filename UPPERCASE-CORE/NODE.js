@@ -3735,60 +3735,54 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 					CONNECT_TO_SOCKET_SERVER({
 						host : hosts[serverName],
 						port : port
-					}, {
-						error : function() {
-							delete isConnectings[serverName];
-						},
+					}, function(on, off, send) {
 
-						success : function(on, off, send) {
+						send({
+							methodName : '__BOOTED',
+							data : thisServerName
+						});
 
-							send({
-								methodName : '__BOOTED',
-								data : thisServerName
-							});
+						serverSends[serverName] = function(params, callback) {
+							//REQUIRED: params
+							//REQUIRED: params.methodName
+							//REQUIRED: params.data
 
-							serverSends[serverName] = function(params, callback) {
-								//REQUIRED: params
-								//REQUIRED: params.methodName
-								//REQUIRED: params.data
+							var
+							// method name
+							methodName = params.methodName,
 
-								var
-								// method name
-								methodName = params.methodName,
-
-								// data
-								data = params.data;
-								
-								send({
-									methodName : 'SERVER_CLUSTERING.' + methodName,
-									data : data
-								}, callback);
-							};
-
-							on('__DISCONNECTED', function() {
-								delete serverSends[serverName];
-								delete isConnectings[serverName];
-								
-								SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
-							});
-
-							console.log('[SERVER_CLUSTERING] 클러스터링 서버와 연결되었습니다. (연결된 서버 이름:' + serverName + ')');
-
-							if (CPU_CLUSTERING.broadcast !== undefined) {
-
-								CPU_CLUSTERING.broadcast({
-									methodName : '__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER',
-									data : serverName
-								});
-							}
+							// data
+							data = params.data;
 							
-							EACH(waitingSendInfoMap[serverName], function(info) {
-								serverSends[serverName]({
-									methodName : info.methodName,
-									data : info.data
-								}, info.callback);
+							send({
+								methodName : 'SERVER_CLUSTERING.' + methodName,
+								data : data
+							}, callback);
+						};
+
+						on('__DISCONNECTED', function() {
+							delete serverSends[serverName];
+							delete isConnectings[serverName];
+							
+							SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
+						});
+
+						console.log('[SERVER_CLUSTERING] 클러스터링 서버와 연결되었습니다. (연결된 서버 이름:' + serverName + ')');
+
+						if (CPU_CLUSTERING.broadcast !== undefined) {
+
+							CPU_CLUSTERING.broadcast({
+								methodName : '__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER',
+								data : serverName
 							});
 						}
+						
+						EACH(waitingSendInfoMap[serverName], function(info) {
+							serverSends[serverName]({
+								methodName : info.methodName,
+								data : info.data
+							}, info.callback);
+						});
 					});
 				}
 			};
