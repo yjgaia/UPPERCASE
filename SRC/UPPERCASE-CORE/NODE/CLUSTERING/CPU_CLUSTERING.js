@@ -46,7 +46,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 							
 							var
 							// index
-							index,
+							index = paramsStr.indexOf(':'),
 							
 							// worker id
 							workerId = paramsStr.substring(0, index),
@@ -235,7 +235,6 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 								runMethods(methodName, data);
 							} else {
 								process.send(workerId + ':' + STRINGIFY({
-									workerId : workerId,
 									methodName : methodName,
 									data : data
 								}));
@@ -262,7 +261,6 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 								runMethods(methodName, data, sendKey - 1, thisWorkerId);
 							} else {
 								process.send(workerId + ':' + STRINGIFY({
-									workerId : workerId,
 									methodName : methodName,
 									data : data,
 									sendKey : sendKey - 1,
