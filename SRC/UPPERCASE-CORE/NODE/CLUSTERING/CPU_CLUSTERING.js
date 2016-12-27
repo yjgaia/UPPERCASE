@@ -42,19 +42,22 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						newWorker = cluster.fork();
 						
 						// receive params from new worker.
-						newWorker.on('message', function(params) {
+						newWorker.on('message', function(paramsStr) {
 							
 							var
+							// worker id
+							workerId = paramsStr.substring(0, paramsStr.indexOf(':')),
+							
 							// worker
 							worker;
 							
-							if (params.workerId !== undefined) {
-								worker = cluster.workers[params.workerId];
-							}
-							
-							if (worker !== undefined) {
-								if (worker !== newWorker) {
-									worker.send(params);
+							if (workerId !== '~') {
+								worker = cluster.workers[workerId];
+								
+								if (worker !== undefined) {
+									if (worker !== newWorker) {
+										worker.send(paramsStr);
+									}
 								}
 							}
 							
@@ -63,7 +66,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 								// send params to all workers except new worker.
 								EACH(cluster.workers, function(worker) {
 									if (worker !== newWorker) {
-										worker.send(params);
+										worker.send(paramsStr);
 									}
 								});
 							}
@@ -153,9 +156,11 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					thisWorkerId = cluster.worker.id;
 
 					// receive data.
-					process.on('message', function(params) {
+					process.on('message', function(paramsStr) {
 						
-						params = UNPACK_DATA(params);
+						var
+						// params
+						params = PARSE_STR(paramsStr);
 						
 						runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
 					});
@@ -226,7 +231,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 							if (workerId === thisWorkerId) {
 								runMethods(methodName, data);
 							} else {
-								process.send(PACK_DATA({
+								process.send(workerId + ':' + STRINGIFY({
 									workerId : workerId,
 									methodName : methodName,
 									data : data
@@ -253,7 +258,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 							if (workerId === thisWorkerId) {
 								runMethods(methodName, data, sendKey - 1, thisWorkerId);
 							} else {
-								process.send(PACK_DATA({
+								process.send(workerId + ':' + STRINGIFY({
 									workerId : workerId,
 									methodName : methodName,
 									data : data,
@@ -269,7 +274,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						//REQUIRED: params.methodName
 						//REQUIRED: params.data
 
-						process.send(PACK_DATA({
+						process.send('~:' + STRINGIFY({
 							methodName : params.methodName,
 							data : params.data
 						}));
