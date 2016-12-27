@@ -3730,7 +3730,10 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 
 				if (isConnectings[serverName] !== true) {
 					isConnectings[serverName] = true;
-					waitingSendInfoMap[serverName] = [];
+					
+					if (waitingSendInfoMap[serverName] === undefined) {
+						waitingSendInfoMap[serverName] = [];
+					}
 
 					CONNECT_TO_SOCKET_SERVER({
 						host : hosts[serverName],
