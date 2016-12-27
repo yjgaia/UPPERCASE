@@ -95,67 +95,71 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 
 			connectToClusteringServer = function(serverName) {
 
-				isConnectings[serverName] = true;
-				waitingSendInfoMap[serverName] = [];
+				if (isConnectings[serverName] !== true) {
+					isConnectings[serverName] = true;
+					waitingSendInfoMap[serverName] = [];
 
-				CONNECT_TO_SOCKET_SERVER({
-					host : hosts[serverName],
-					port : port
-				}, {
-					error : function() {
-						SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 불가능합니다. 상대 서버에서 연결을 시도하면, 다시 연결됩니다. (연결 실패한 서버 이름:' + serverName + ')');
-					},
-
-					success : function(on, off, send) {
-
-						send({
-							methodName : '__BOOTED',
-							data : thisServerName
-						});
-
-						serverSends[serverName] = function(params, callback) {
-							//REQUIRED: params
-							//REQUIRED: params.methodName
-							//REQUIRED: params.data
-
-							var
-							// method name
-							methodName = params.methodName,
-
-							// data
-							data = params.data;
-							
-							send({
-								methodName : 'SERVER_CLUSTERING.' + methodName,
-								data : data
-							}, callback);
-						};
-
-						on('__DISCONNECTED', function() {
-							delete serverSends[serverName];
+					CONNECT_TO_SOCKET_SERVER({
+						host : hosts[serverName],
+						port : port
+					}, {
+						error : function() {
 							delete isConnectings[serverName];
-							
-							SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
-						});
+						},
 
-						console.log('[SERVER_CLUSTERING] 클러스터링 서버와 연결되었습니다. (연결된 서버 이름:' + serverName + ')');
+						success : function(on, off, send) {
 
-						if (CPU_CLUSTERING.broadcast !== undefined) {
-
-							CPU_CLUSTERING.broadcast({
-								methodName : '__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER',
-								data : serverName
+							send({
+								methodName : '__BOOTED',
+								data : thisServerName
 							});
+
+							serverSends[serverName] = function(params, callback) {
+								//REQUIRED: params
+								//REQUIRED: params.methodName
+								//REQUIRED: params.data
+
+								var
+								// method name
+								methodName = params.methodName,
+
+								// data
+								data = params.data;
+								
+								send({
+									methodName : 'SERVER_CLUSTERING.' + methodName,
+									data : data
+								}, callback);
+							};
+
+							on('__DISCONNECTED', function() {
+								delete serverSends[serverName];
+								delete isConnectings[serverName];
+								
+								SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
+							});
+
+							console.log('[SERVER_CLUSTERING] 클러스터링 서버와 연결되었습니다. (연결된 서버 이름:' + serverName + ')');
+
+							if (CPU_CLUSTERING.broadcast !== undefined) {
+
+								CPU_CLUSTERING.broadcast({
+									methodName : '__SERVER_CLUSTERING__CONNECT_TO_CLUSTERING_SERVER',
+									data : serverName
+								});
+							}
+							
+							EACH(waitingSendInfoMap[serverName], function(info) {
+								serverSends[serverName]({
+									methodName : info.methodName,
+									data : info.data
+								}, info.callback);
+							});
+							
+							delete waitingSendInfoMap[serverName];
 						}
-						
-						EACH(waitingSendInfoMap[serverName], function(info) {
-							serverSends[serverName]({
-								methodName : info.methodName,
-								data : info.data
-							}, info.callback);
-						});
-					}
-				});
+					});
+				}
 			};
 
 			if (CPU_CLUSTERING.on !== undefined) {
@@ -390,7 +394,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 					}
 					
 					else if (serverSends[serverName] === undefined) {
-						if (isConnectings[serverName] === true) {
+						if (waitingSendInfoMap[serverName] === true) {
 							waitingSendInfoMap[serverName].push({
 								methodName : methodName,
 								data : data
@@ -415,7 +419,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 					}
 					
 					else if (serverSends[serverName] === undefined) {
-						if (isConnectings[serverName] === true) {
+						if (waitingSendInfoMap[serverName] === true) {
 							waitingSendInfoMap[serverName].push({
 								methodName : methodName,
 								data : data,
