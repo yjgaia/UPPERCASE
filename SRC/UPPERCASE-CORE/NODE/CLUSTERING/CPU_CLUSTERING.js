@@ -41,29 +41,29 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						// new worker
 						newWorker = cluster.fork();
 						
-						// receive data from new worker.
-						newWorker.on('message', function(data) {
+						// receive params from new worker.
+						newWorker.on('message', function(params) {
 							
 							var
 							// worker
 							worker;
 							
-							if (data.workerId !== undefined) {
-								worker = cluster.workers[data.workerId];
+							if (params.workerId !== undefined) {
+								worker = cluster.workers[params.workerId];
 							}
 							
 							if (worker !== undefined) {
 								if (worker !== newWorker) {
-									worker.send(data);
+									worker.send(params);
 								}
 							}
 							
 							else {
 								
-								// send data to all workers except new worker.
+								// send params to all workers except new worker.
 								EACH(cluster.workers, function(worker) {
 									if (worker !== newWorker) {
-										worker.send(data);
+										worker.send(params);
 									}
 								});
 							}
@@ -154,7 +154,10 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 
 					// receive data.
 					process.on('message', function(params) {
-						runMethods(params.methodName, UNPACK_DATA(params.data), params.sendKey, params.fromWorkerId);
+						
+						params = UNPACK_DATA(params);
+						
+						runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
 					});
 
 					m.on = on = function(methodName, method) {
@@ -223,11 +226,11 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 							if (workerId === thisWorkerId) {
 								runMethods(methodName, data);
 							} else {
-								process.send({
+								process.send(PACK_DATA({
 									workerId : workerId,
 									methodName : methodName,
-									data : PACK_DATA(data)
-								});
+									data : data
+								}));
 							}
 						}
 						
@@ -250,13 +253,13 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 							if (workerId === thisWorkerId) {
 								runMethods(methodName, data, sendKey - 1, thisWorkerId);
 							} else {
-								process.send({
+								process.send(PACK_DATA({
 									workerId : workerId,
 									methodName : methodName,
-									data : PACK_DATA(data),
+									data : data,
 									sendKey : sendKey - 1,
 									fromWorkerId : thisWorkerId
-								});
+								}));
 							}
 						}
 					};
@@ -266,10 +269,10 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						//REQUIRED: params.methodName
 						//REQUIRED: params.data
 
-						process.send({
+						process.send(PACK_DATA({
 							methodName : params.methodName,
-							data : PACK_DATA(params.data)
-						});
+							data : params.data
+						}));
 					};
 					
 					work();
