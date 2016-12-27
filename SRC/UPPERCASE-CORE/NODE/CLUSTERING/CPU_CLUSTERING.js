@@ -96,7 +96,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 
 					// run methods.
 					runMethods = function(methodName, data, sendKey, fromWorkerId) {
-		
+						
 						var
 						// methods
 						methods;
@@ -154,7 +154,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 
 					// receive data.
 					process.on('message', function(params) {
-						runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
+						runMethods(params.methodName, UNPACK_DATA(params.data), params.sendKey, params.fromWorkerId);
 					});
 
 					m.on = on = function(methodName, method) {
@@ -226,7 +226,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 								process.send({
 									workerId : workerId,
 									methodName : methodName,
-									data : data
+									data : PACK_DATA(data)
 								});
 							}
 						}
@@ -253,7 +253,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 								process.send({
 									workerId : workerId,
 									methodName : methodName,
-									data : data,
+									data : PACK_DATA(data),
 									sendKey : sendKey - 1,
 									fromWorkerId : thisWorkerId
 								});
@@ -266,7 +266,10 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						//REQUIRED: params.methodName
 						//REQUIRED: params.data
 
-						process.send(params);
+						process.send({
+							methodName : params.methodName,
+							data : PACK_DATA(params.data)
+						});
 					};
 					
 					work();
