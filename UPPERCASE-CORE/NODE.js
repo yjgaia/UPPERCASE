@@ -3408,8 +3408,11 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						newWorker.on('message', function(paramsStr) {
 							
 							var
+							// index
+							index,
+							
 							// worker id
-							workerId = paramsStr.substring(0, paramsStr.indexOf(':')),
+							workerId = paramsStr.substring(0, index),
 							
 							// worker
 							worker;
@@ -3419,7 +3422,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 								
 								if (worker !== undefined) {
 									if (worker !== newWorker) {
-										worker.send(paramsStr);
+										worker.send(paramsStr.substring(index));
 									}
 								}
 							}
@@ -3429,7 +3432,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 								// send params to all workers except new worker.
 								EACH(cluster.workers, function(worker) {
 									if (worker !== newWorker) {
-										worker.send(paramsStr);
+										worker.send(paramsStr.substring(index));
 									}
 								});
 							}
