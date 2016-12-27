@@ -95,14 +95,18 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 
 			connectToClusteringServer = function(serverName) {
 
-				if (isConnectings[serverName] !== true) {
-					isConnectings[serverName] = true;
-					waitingSendInfoMap[serverName] = [];
+				isConnectings[serverName] = true;
+				waitingSendInfoMap[serverName] = [];
 
-					CONNECT_TO_SOCKET_SERVER({
-						host : hosts[serverName],
-						port : port
-					}, function(on, off, send) {
+				CONNECT_TO_SOCKET_SERVER({
+					host : hosts[serverName],
+					port : port
+				}, {
+					error : function() {
+						SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 불가능합니다. 상대 서버에서 연결을 시도하면, 다시 연결됩니다. (연결 실패한 서버 이름:' + serverName + ')');
+					},
+
+					success : function(on, off, send) {
 
 						send({
 							methodName : '__BOOTED',
@@ -150,8 +154,8 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 								data : info.data
 							}, info.callback);
 						});
-					});
-				}
+					}
+				});
 			};
 
 			if (CPU_CLUSTERING.on !== undefined) {
