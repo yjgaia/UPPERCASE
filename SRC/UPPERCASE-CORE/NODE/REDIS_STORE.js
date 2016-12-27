@@ -35,6 +35,9 @@ global.REDIS_STORE = CLASS(function(cls) {
 			// count.
 			count,
 			
+			// check is exists.
+			checkIsExists,
+			
 			// clear.
 			clear;
 			
