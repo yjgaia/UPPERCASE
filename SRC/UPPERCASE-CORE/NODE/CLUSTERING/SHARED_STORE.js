@@ -5,12 +5,6 @@ global.SHARED_STORE = CLASS(function(cls) {
 	'use strict';
 
 	var
-	// cpu count
-	cpuCount = require('os').cpus().length,
-	
-	// worker ids
-	workerIds = {},
-	
 	// storages
 	storages = {},
 
@@ -46,12 +40,6 @@ global.SHARED_STORE = CLASS(function(cls) {
 	
 	// clear.
 	clear;
-	
-	cls.getWorkerIdByStoreName = getWorkerIdByStoreName = function(storeName) {
-		//REQUIRED: storeName
-		
-		return workerIds[storeName];
-	};
 	
 	cls.getStorages = getStorages = function() {
 		return storages;
@@ -400,17 +388,14 @@ global.SHARED_STORE = CLASS(function(cls) {
 			//REQUIRED: storeName
 
 			var
-			// a, b
-			a = 0, b = 0,
+			// a
+			a = 0,
 			
 			// server names
 			serverNames,
 			
 			// server name
 			serverName,
-			
-			// worker id
-			workerId,
 			
 			// save.
 			save,
@@ -437,11 +422,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 			clear;
 			
 			REPEAT(storeName.length, function(i) {
-				if (i % 2 === 0) {
-					a += storeName.charCodeAt(i);
-				} else {
-					b += storeName.charCodeAt(i);
-				}
+				a += storeName.charCodeAt(i);
 			});
 			
 			if (SERVER_CLUSTERING.getHosts !== undefined) {
@@ -454,8 +435,6 @@ global.SHARED_STORE = CLASS(function(cls) {
 				
 				serverName = serverNames[a % serverNames.length];
 			}
-			
-			workerIds[storeName] = workerId = (b % cpuCount) + 1;
 
 			self.save = save = function(params, callback) {
 				//REQUIRED: params
@@ -491,7 +470,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : workerId,
+						workerId : '~',
 						methodName : '__SHARED_STORE_SAVE',
 						data : {
 							storeName : storeName,
@@ -583,7 +562,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : workerId,
+						workerId : '~',
 						methodName : '__SHARED_STORE_UPDATE',
 						data : {
 							storeName : storeName,
@@ -655,7 +634,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : workerId,
+						workerId : '~',
 						methodName : '__SHARED_STORE_GET',
 						data : {
 							storeName : storeName,
@@ -725,7 +704,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : workerId,
+						workerId : '~',
 						methodName : '__SHARED_STORE_REMOVE',
 						data : {
 							storeName : storeName,
@@ -758,7 +737,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : workerId,
+						workerId : '~',
 						methodName : '__SHARED_STORE_ALL',
 						data : storeName
 					}, callback);
@@ -784,7 +763,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : workerId,
+						workerId : '~',
 						methodName : '__SHARED_STORE_COUNT',
 						data : storeName
 					}, callback);
@@ -814,7 +793,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : workerId,
+						workerId : '~',
 						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
 						data : {
 							storeName : storeName,
@@ -846,7 +825,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				else if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : workerId,
+						workerId : '~',
 						methodName : '__SHARED_STORE_CLEAR',
 						data : storeName
 					}, callback);

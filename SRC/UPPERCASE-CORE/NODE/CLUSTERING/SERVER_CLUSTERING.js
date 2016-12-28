@@ -239,7 +239,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
+						workerId : '~',
 						methodName : '__SHARED_STORE_SAVE',
 						data : params
 					}, ret);
@@ -256,7 +256,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
+						workerId : '~',
 						methodName : '__SHARED_STORE_UPDATE',
 						data : params
 					}, ret);
@@ -273,7 +273,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
+						workerId : '~',
 						methodName : '__SHARED_STORE_GET',
 						data : params
 					}, ret);
@@ -290,7 +290,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
+						workerId : '~',
 						methodName : '__SHARED_STORE_REMOVE',
 						data : params
 					}, ret);
@@ -307,7 +307,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : SHARED_STORE.getWorkerIdByStoreName(storeName),
+						workerId : '~',
 						methodName : '__SHARED_STORE_ALL',
 						data : storeName
 					}, ret);
@@ -324,7 +324,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : SHARED_STORE.getWorkerIdByStoreName(storeName),
+						workerId : '~',
 						methodName : '__SHARED_STORE_COUNT',
 						data : storeName
 					}, ret);
@@ -341,7 +341,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : SHARED_STORE.getWorkerIdByStoreName(params.storeName),
+						workerId : '~',
 						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
 						data : params
 					}, ret);
@@ -358,7 +358,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
-						workerId : SHARED_STORE.getWorkerIdByStoreName(storeName),
+						workerId : '~',
 						methodName : '__SHARED_STORE_CLEAR',
 						data : storeName
 					}, ret);
