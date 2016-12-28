@@ -136,11 +136,11 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					if (workerId === thisWorkerId) {
 						runMethods(methodName, data);
 					} else {
-						innerSend(PACK_DATA({
+						innerSend({
 							workerId : workerId,
 							methodName : methodName,
 							data : data
-						}));
+						});
 					}
 				}
 				
@@ -163,26 +163,26 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					if (workerId === thisWorkerId) {
 						runMethods(methodName, data, sendKey - 1, thisWorkerId);
 					} else {
-						innerSend(PACK_DATA({
+						innerSend({
 							workerId : workerId,
 							methodName : methodName,
 							data : data,
 							sendKey : sendKey - 1,
 							fromWorkerId : thisWorkerId
-						}));
+						});
 					}
 				}
 			};
-
+			
 			m.broadcast = broadcast = function(params) {
 				//REQUIRED: params
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
 
-				innerSend(PACK_DATA({
+				innerSend({
 					methodName : params.methodName,
 					data : params.data
-				}));
+				});
 			};
 
 			// when master
@@ -202,34 +202,22 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					// worker
 					worker;
 					
+					// send.
 					if (params.workerId !== undefined) {
 						
-						// for master
-						if (params.workerId === '~') {
-							
-							params = UNPACK_DATA(params);
-							
-							runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
-						}
+						worker = cluster.workers[params.workerId];
 						
-						else {
-							worker = cluster.workers[params.workerId];
+						if (worker !== undefined) {
+							worker.send(PACK_DATA(params));
 						}
 					}
 					
-					if (worker !== undefined) {
-						if (worker !== newWorker) {
-							worker.send(params);
-						}
-					}
-					
+					// broadcast.
 					else {
 						
 						// send params to all workers except new worker.
 						EACH(cluster.workers, function(worker) {
-							if (worker !== newWorker) {
-								worker.send(params);
-							}
+							worker.send(PACK_DATA(params));
 						});
 					}
 				};
@@ -269,7 +257,44 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						newWorker = cluster.fork();
 						
 						// receive params from new worker.
-						newWorker.on('message', innerSend);
+						newWorker.on('message', function(params) {
+							
+							var
+							// worker
+							worker;
+							
+							// send.
+							if (params.workerId !== undefined) {
+								
+								// for master
+								if (params.workerId === '~') {
+									
+									params = UNPACK_DATA(params);
+									
+									runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
+								}
+								
+								else {
+									
+									worker = cluster.workers[params.workerId];
+									
+									if (worker !== undefined) {
+										worker.send(params);
+									}
+								}
+							}
+							
+							// broadcast.
+							else {
+								
+								// send params to all workers except new worker.
+								EACH(cluster.workers, function(worker) {
+									if (worker !== newWorker) {
+										worker.send(params);
+									}
+								});
+							}
+						});
 					};
 
 					// fork workers.
@@ -297,7 +322,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					//OPTIONAL: params.sendKey
 					//OPTIONAL: params.fromWorkerId
 					
-					process.send(params);
+					process.send(PACK_DATA(params));
 				};
 				
 				// receive data.
