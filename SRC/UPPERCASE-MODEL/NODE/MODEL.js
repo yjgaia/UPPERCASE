@@ -299,7 +299,7 @@ FOR_BOX(function(box) {
 								
 								if (notInitedDataSet.length > 0) {
 									
-									console.log('[UPPERCASE-MODEL] Found ' + notInitedDataSet.length + ' not inited data set in `' + box.boxName + '.' + name + '`.');
+									SHOW_WARNING(box.boxName + '.' + name + 'Model', '초기화 되지 않은 데이터가 ' + notInitedDataSet.length + '개 있습니다. 모두 초기화합니다.');
 									
 									EACH(notInitedDataSet, function(notInitedData) {
 										
@@ -1400,7 +1400,10 @@ FOR_BOX(function(box) {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validErrors);
 								} else {
-									SHOW_WARNING(box.boxName + '.' + name + 'Model.create', '데이터가 유효하지 않습니다.', validErrors);
+									SHOW_WARNING(box.boxName + '.' + name + 'Model.create', '데이터가 유효하지 않습니다.', {
+										data : data,
+										validErrors : validErrors
+									});
 								}
 							} else if (callback !== undefined) {
 								callback(savedData);
@@ -1539,7 +1542,10 @@ FOR_BOX(function(box) {
 							if (notValidHandler !== undefined) {
 								notValidHandler(validErrors);
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', validErrors);
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', {
+									data : data,
+									validErrors : validErrors
+								});
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {
@@ -1614,7 +1620,10 @@ FOR_BOX(function(box) {
 							if (notValidHandler !== undefined) {
 								notValidHandler(validErrors);
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', validErrors);
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', {
+									data : data,
+									validErrors : validErrors
+								});
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {
@@ -1690,7 +1699,10 @@ FOR_BOX(function(box) {
 							if (notValidHandler !== undefined) {
 								notValidHandler(validErrors);
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', validErrors);
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', {
+									data : data,
+									validErrors : validErrors
+								});
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {

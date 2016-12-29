@@ -8,19 +8,26 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 	//IMPORT: cluster
 	cluster = require('cluster'),
 	
-	// cpu count
-	cpuCount = require('os').cpus().length,
-
-	// this worker id
+	// worker count (클러스터링을 수행하지 않을 경우 기본적으로 1개)
+	workerCount = 1,
+	
+	// this worker id (클러스터링을 수행하지 않을 경우 기본적으로 1)
 	thisWorkerId = 1,
 
 	// get worker id.
-	getWorkerId;
+	getWorkerId,
+	
+	// get worker count.
+	getWorkerCount;
 	
 	cluster.schedulingPolicy = cluster.SCHED_RR;
 
 	m.getWorkerId = getWorkerId = function() {
 		return thisWorkerId;
+	};
+	
+	m.getWorkerCount = getWorkerCount = function() {
+		return workerCount;
 	};
 
 	return {
@@ -93,6 +100,14 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 
 			// broadcast.
 			broadcast;
+			
+			// 워커 개수 (CPU 개수보다 하나 적음, 하나는 마스터에게 배분)
+			workerCount = require('os').cpus().length - 1;
+			
+			// 최소한 한개의 워커는 필요
+			if (workerCount < 1) {
+				workerCount = 1;
+			}
 			
 			m.on = on = function(methodName, method) {
 
@@ -188,6 +203,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 			// when master
 			if (cluster.isMaster) {
 				
+				// 마스터용 아이디
 				thisWorkerId = '~';
 				
 				innerSend = function(params) {
@@ -297,8 +313,8 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						});
 					};
 
-					// fork workers.
-					REPEAT(cpuCount, function() {
+					// 워커 생성
+					REPEAT(workerCount, function() {
 						fork();
 					});
 
