@@ -107,6 +107,8 @@ global.SOCKET_SERVER = METHOD({
 
 					receivedStr = receivedStr.substring(index + 1);
 				}
+				
+				clientInfo.lastRecieveTime = new Date();
 			});
 
 			// when disconnected

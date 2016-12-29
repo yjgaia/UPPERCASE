@@ -92,6 +92,8 @@ global.WEB_SOCKET_SERVER = METHOD({
 				if (params !== undefined) {
 					runMethods(params.methodName, params.data, params.sendKey);
 				}
+				
+				clientInfo.lastRecieveTime = new Date();
 			});
 
 			// when disconnected

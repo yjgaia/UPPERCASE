@@ -8271,6 +8271,8 @@ global.SOCKET_SERVER = METHOD({
 
 					receivedStr = receivedStr.substring(index + 1);
 				}
+				
+				clientInfo.lastRecieveTime = new Date();
 			});
 
 			// when disconnected
@@ -9639,6 +9641,8 @@ global.WEB_SOCKET_SERVER = METHOD({
 				if (params !== undefined) {
 					runMethods(params.methodName, params.data, params.sendKey);
 				}
+				
+				clientInfo.lastRecieveTime = new Date();
 			});
 
 			// when disconnected
