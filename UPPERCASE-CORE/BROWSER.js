@@ -4004,8 +4004,8 @@ global.SOUND = CLASS(function(cls) {
 			// ogg
 			ogg = params.ogg,
 			
-			// src
-			src = params.mp3,
+			// mp3
+			mp3 = params.mp3,
 
 			// is loop
 			isLoop = params.isLoop,
