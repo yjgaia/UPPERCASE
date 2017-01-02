@@ -699,13 +699,171 @@ global.BOOT = function(params) {
 				securedPort : CONFIG.securedWebServerPort,
 				securedKeyFilePath : rootPath + '/' + NODE_CONFIG.securedKeyFilePath,
 				securedCertFilePath : rootPath + '/' + NODE_CONFIG.securedCertFilePath,
-
-				noParsingParamsURI : '__UPLOAD',
-
+				
+				uploadURI : '__UPLOAD',
+				uploadPath : rootPath + '/__RF/__TEMP',
+				maxUploadFileMB : NODE_CONFIG.maxUploadFileMB,
+				
 				rootPath : rootPath,
 
 				version : version
 			}, {
+				
+				uploadProgress : function(uriParams, bytesRecieved, bytesExpected) {
+					
+					var
+					// box name
+					boxName,
+					
+					// box
+					box;
+					
+					// broadcast.
+					if (uriParams.uploadKey !== undefined) {
+						
+						boxName = uriParams.boxName;
+						box = BOX.getAllBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName];
+						
+						box.BROADCAST({
+							roomName : 'uploadProgressRoom/' + uriParams.uploadKey,
+							methodName : 'progress',
+							data : {
+								bytesRecieved : bytesRecieved,
+								bytesExpected : bytesExpected
+							}
+						});
+					}
+				},
+				
+				uploadOverFileSize : function(params, maxUploadFileMB, response) {
+					
+					response({
+						statusCode : 302,
+						headers : {
+							'Location' : params.callbackURL + '?maxUploadFileMB=' + encodeURIComponent(maxUploadFileMB)
+						}
+					});
+				},
+				
+				uploadSuccess : function(params, fileDataSet, response) {
+					
+					var
+					// upload file database
+					uploadFileDB,
+					
+					// box name
+					boxName = params.boxName,
+					
+					// box
+					box = BOX.getAllBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName];
+
+					if (box !== undefined) {
+
+						uploadFileDB = box.DB('__UPLOAD_FILE');
+
+						NEXT(fileDataSet, [
+						function(fileData, next) {
+
+							var
+							// path
+							tempPath = fileData.path;
+
+							// delete temp path.
+							delete fileData.path;
+
+							fileData.serverName = NODE_CONFIG.thisServerName;
+							fileData.downloadCount = 0;
+
+							uploadFileDB.create(fileData, function(savedData) {
+								
+								var
+								// to path
+								toPath = rootPath + '/__RF/' + boxName + '/' + savedData.id;
+
+								MOVE_FILE({
+									from : tempPath,
+									to : toPath
+								}, function() {
+									
+									var
+									// dist path
+									distPath;
+									
+									// create thumbnail.
+									if (
+									// check is image
+									savedData.type !== undefined && savedData.type.substring(0, 6) === 'image/' &&
+									// check config exists
+									(CONFIG.maxThumbWidth !== undefined || CONFIG.maxThumbHeight !== undefined)) {
+										
+										distPath = rootPath + '/__RF/' + boxName + '/THUMB/' + savedData.id;
+										
+										IMAGEMAGICK_IDENTIFY(toPath, {
+											
+											// when error, just copy.
+											error : function() {
+												COPY_FILE({
+													from : toPath,
+													to : distPath
+												}, next);
+											},
+											
+											success : function(features) {
+					
+												var
+												// frs
+												frs;
+												
+												if (CONFIG.maxThumbWidth !== undefined && features.width !== undefined && features.width > CONFIG.maxThumbWidth) {
+					
+													IMAGEMAGICK_RESIZE({
+														srcPath : toPath,
+														distPath : distPath,
+														width : CONFIG.maxThumbWidth
+													}, next);
+					
+												} else if (CONFIG.maxThumbHeight !== undefined && features.height !== undefined && features.height > CONFIG.maxThumbHeight) {
+					
+													IMAGEMAGICK_RESIZE({
+														srcPath : toPath,
+														distPath : distPath,
+														height : CONFIG.maxThumbHeight
+													}, next);
+					
+												} else {
+					
+													COPY_FILE({
+														from : toPath,
+														to : distPath
+													}, next);
+												}
+											}
+										});
+										
+									} else {
+										next();
+									}
+								});
+							});
+						},
+
+						function() {
+							return function() {
+
+								var
+								// file data set str
+								fileDataSetStr = STRINGIFY(fileDataSet);
+
+								response(params.callbackURL === undefined ? fileDataSetStr : {
+									statusCode : 302,
+									headers : {
+										'Location' : params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(fileDataSetStr)
+									}
+								});
+							};
+						}]);
+					}
+				},
 				
 				notExistsResource : function(resourcePath, requestInfo, response) {
 					
@@ -740,9 +898,6 @@ global.BOOT = function(params) {
 
 					// box name
 					boxName,
-					
-					// box
-					box,
 
 					// upload file database
 					uploadFileDB,
@@ -863,161 +1018,6 @@ global.BOOT = function(params) {
 								nextUploadServerHostIndex = 0;
 							}
 						}
-
-						return false;
-					}
-
-					// serve upload request.
-					else if (uri === '__UPLOAD') {
-						
-						boxName = params.boxName;
-						box = BOX.getAllBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName];
-
-						UPLOAD_REQUEST({
-							requestInfo : requestInfo,
-							uploadPath : rootPath + '/__RF/__TEMP'
-						}, {
-							
-							overFileSize : function() {
-
-								response({
-									statusCode : 302,
-									headers : {
-										'Location' : params.callbackURL + '?maxUploadFileMB=' + encodeURIComponent(NODE_CONFIG.maxUploadFileMB)
-									}
-								});
-							},
-							
-							progress : function(bytesRecieved, bytesExpected) {
-								
-								// broadcast.
-								if (params.uploadKey !== undefined) {
-									
-									box.BROADCAST({
-										roomName : 'uploadProgressRoom/' + params.uploadKey,
-										methodName : 'progress',
-										data : {
-											bytesRecieved : bytesRecieved,
-											bytesExpected : bytesExpected
-										}
-									});
-								}
-							},
-							
-							success : function(fileDataSet) {
-
-								var
-								// upload file database
-								uploadFileDB;
-
-								if (box !== undefined) {
-
-									uploadFileDB = box.DB('__UPLOAD_FILE');
-
-									NEXT(fileDataSet, [
-									function(fileData, next) {
-
-										var
-										// path
-										tempPath = fileData.path;
-
-										// delete temp path.
-										delete fileData.path;
-
-										fileData.serverName = NODE_CONFIG.thisServerName;
-										fileData.downloadCount = 0;
-
-										uploadFileDB.create(fileData, function(savedData) {
-											
-											var
-											// to path
-											toPath = rootPath + '/__RF/' + boxName + '/' + savedData.id;
-
-											MOVE_FILE({
-												from : tempPath,
-												to : toPath
-											}, function() {
-												
-												var
-												// dist path
-												distPath;
-												
-												// create thumbnail.
-												if (
-												// check is image
-												savedData.type !== undefined && savedData.type.substring(0, 6) === 'image/' &&
-												// check config exists
-												(CONFIG.maxThumbWidth !== undefined || CONFIG.maxThumbHeight !== undefined)) {
-													
-													distPath = rootPath + '/__RF/' + boxName + '/THUMB/' + savedData.id;
-													
-													IMAGEMAGICK_IDENTIFY(toPath, {
-														
-														// when error, just copy.
-														error : function() {
-															COPY_FILE({
-																from : toPath,
-																to : distPath
-															}, next);
-														},
-														
-														success : function(features) {
-								
-															var
-															// frs
-															frs;
-															
-															if (CONFIG.maxThumbWidth !== undefined && features.width !== undefined && features.width > CONFIG.maxThumbWidth) {
-								
-																IMAGEMAGICK_RESIZE({
-																	srcPath : toPath,
-																	distPath : distPath,
-																	width : CONFIG.maxThumbWidth
-																}, next);
-								
-															} else if (CONFIG.maxThumbHeight !== undefined && features.height !== undefined && features.height > CONFIG.maxThumbHeight) {
-								
-																IMAGEMAGICK_RESIZE({
-																	srcPath : toPath,
-																	distPath : distPath,
-																	height : CONFIG.maxThumbHeight
-																}, next);
-								
-															} else {
-								
-																COPY_FILE({
-																	from : toPath,
-																	to : distPath
-																}, next);
-															}
-														}
-													});
-													
-												} else {
-													next();
-												}
-											});
-										});
-									},
-
-									function() {
-										return function() {
-
-											var
-											// file data set str
-											fileDataSetStr = STRINGIFY(fileDataSet);
-
-											response(params.callbackURL === undefined ? fileDataSetStr : {
-												statusCode : 302,
-												headers : {
-													'Location' : params.callbackURL + '?fileDataSetStr=' + encodeURIComponent(fileDataSetStr)
-												}
-											});
-										};
-									}]);
-								}
-							}
-						});
 
 						return false;
 					}
