@@ -178,6 +178,36 @@ global.FOR_BOX = METHOD(function(m) {
 	};
 });
 
+/*
+ * 콘솔에 오류 메시지를 출력합니다.
+ */
+global.SHOW_ERROR = function(tag, errorMsg, params) {
+	//REQUIRED: tag
+	//REQUIRED: errorMsg
+	//OPTIONAL: params
+		
+	console.error('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	
+	if (params !== undefined) {
+		console.error('다음은 오류를 발생시킨 파라미터입니다.');
+		console.error(JSON.stringify(params, TO_DELETE, 4));
+	}
+};
+/*
+ * 콘솔에 경고 메시지를 출력합니다.
+ */
+global.SHOW_WARNING = function(tag, warningMsg, params) {
+	//REQUIRED: tag
+	//REQUIRED: warningMsg
+	//OPTIONAL: params
+	
+	console.warn('[' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg);
+	
+	if (params !== undefined) {
+		console.warn('다음은 경고를 발생시킨 파라미터입니다.');
+		console.warn(JSON.stringify(params, TO_DELETE, 4));
+	}
+};
 /**
  * 클래스를 생성합니다.
  */
@@ -4210,36 +4240,6 @@ FOR_BOX(function(box) {
 	});
 });
 
-/*
- * 콘솔에 오류 메시지를 출력합니다.
- */
-global.SHOW_ERROR = function(tag, errorMsg, params) {
-	//REQUIRED: tag
-	//REQUIRED: errorMsg
-	//OPTIONAL: params
-		
-	console.error('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg);
-	
-	if (params !== undefined) {
-		console.error('다음은 오류를 발생시킨 파라미터입니다.');
-		console.error(JSON.stringify(params, TO_DELETE, 4));
-	}
-};
-/*
- * 콘솔에 경고 메시지를 출력합니다.
- */
-global.SHOW_WARNING = function(tag, warningMsg, params) {
-	//REQUIRED: tag
-	//REQUIRED: warningMsg
-	//OPTIONAL: params
-	
-	console.warn('[' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg);
-	
-	if (params !== undefined) {
-		console.warn('다음은 경고를 발생시킨 파라미터입니다.');
-		console.warn(JSON.stringify(params, TO_DELETE, 4));
-	}
-};
 /**
  * 노드에 스타일을 지정합니다.
  */
