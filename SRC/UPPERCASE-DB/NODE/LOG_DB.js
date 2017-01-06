@@ -11,7 +11,7 @@ FOR_BOX(function(box) {
 		gen_id = function(id) {
 			//REQUIRED: id
 			
-			return VALID.id(id) === true ? new ObjectID(id) : -1;
+			return VALID.mongoId(id) === true ? new ObjectID(id) : -1;
 		},
 		
 		// make up filter.

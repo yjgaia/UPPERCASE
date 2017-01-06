@@ -103,8 +103,8 @@ global.CLASS = METHOD(function(m) {
 				afterInit = funcs.afterInit;
 			}
 
-			// set type.
 			cls.type = CLASS;
+			cls.id = getNextInstanceId();
 
 			cls.innerInit = innerInit = function(inner, self, params, funcs) {
 				//OPTIONAL: params

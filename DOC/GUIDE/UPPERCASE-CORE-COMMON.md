@@ -945,7 +945,7 @@ console.log(data); // { name : TO_DELETE, age : 28 }
 * `png` 값이 PNG [Data URI 형식](https://en.wikipedia.org/wiki/Data_URI_scheme)인지 확인합니다.
 * `url` 값이 URL 형식인지 확인합니다.
 * `username` 값이 일반적인 아이디 형식(영어 대소문자, 숫자, 하이픈, 언더바로 이루어진)인지 확인합니다. 이 검증은 영어 대문자를 포함하기 때문에, 소문자로만 이루어진 아이디를 입력받고 싶다면 `toLowerCase()`를 사용하여 대문자를 소문자로 바꾸어 처리하시기 바랍니다.
-* `id` 값이 [`MongoDB`의 `ObjectId` 클래스](https://docs.mongodb.com/manual/reference/method/ObjectId/)의 문자열 형태인지 확인합니다.
+* `id` 혹은 `mongoId` 값이 [`MongoDB`의 `ObjectId` 클래스](https://docs.mongodb.com/manual/reference/method/ObjectId/)의 문자열 형태인지 확인합니다.
 * `one` 값이 검증값으로 제공된 배열에 포함되어 있는지 확인합니다. 검증값으로 배열이 필요합니다.
 * `array` 값이 배열인지 확인합니다.
 * `data` 값이 데이터인지 확인합니다.
@@ -968,7 +968,7 @@ console.log(data); // { name : TO_DELETE, age : 28 }
 * `VALID.png(value)` 값이 PNG [Data URI 형식](https://en.wikipedia.org/wiki/Data_URI_scheme)인지 확인합니다.
 * `VALID.url(value)` 값이 URL 형식인지 확인합니다.
 * `VALID.username(value)` 값이 일반적인 아이디 형식(영어 대소문자, 숫자, 하이픈, 언더바로 이루어진)인지 확인합니다. 이 검증은 영어 대문자를 포함하기 때문에, 소문자로만 이루어진 아이디를 입력받고 싶다면 `toLowerCase()`를 사용하여 대문자를 소문자로 바꾸어 처리하시기 바랍니다.
-* `VALID.id(value)` 값이 [`MongoDB`의 `ObjectId` 클래스](https://docs.mongodb.com/manual/reference/method/ObjectId/)의 문자열 형태인지 확인합니다.
+* `VALID.mongoId(value)` 값이 [`MongoDB`의 `ObjectId` 클래스](https://docs.mongodb.com/manual/reference/method/ObjectId/)의 문자열 형태인지 확인합니다.
 * `VALID.one({value:, array:})` 값이 검증값으로 제공된 배열에 포함되어 있는지 확인합니다.
 * `VALID.array(value)` 값이 배열인지 확인합니다.
 * `VALID.data(value)` 값이 데이터인지 확인합니다.

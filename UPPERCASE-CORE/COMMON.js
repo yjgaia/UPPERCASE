@@ -310,8 +310,8 @@ global.CLASS = METHOD(function(m) {
 				afterInit = funcs.afterInit;
 			}
 
-			// set type.
 			cls.type = CLASS;
+			cls.id = getNextInstanceId();
 
 			cls.innerInit = innerInit = function(inner, self, params, funcs) {
 				//OPTIONAL: params
@@ -1118,8 +1118,8 @@ global.VALID = CLASS(function(cls) {
 	// username.
 	username,
 
-	// id.
-	id,
+	// mongoId.
+	mongoId,
 
 	// one.
 	one,
@@ -1288,7 +1288,7 @@ global.VALID = CLASS(function(cls) {
 	};
 
 	// mongodb id check
-	cls.id = id = function(value) {
+	cls.mongoId = mongoId = function(value) {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/[0-9a-f]{24}/) !== TO_DELETE && value.length === 24;
@@ -1671,7 +1671,7 @@ global.VALID = CLASS(function(cls) {
 								// need value
 								else if (validParams === true) {
 
-									if (cls[name](value) === false) {
+									if (cls[name === 'id' ? 'mongoId' : name](value) === false) {
 
 										hasError = true;
 										errors[attr] = {
