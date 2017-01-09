@@ -1,10 +1,13 @@
 "use strict";
 
 var Query = require('../connection/commands').Query
+  , retrieveBSON = require('../connection/utils').retrieveBSON
   , f = require('util').format
   , MongoError = require('../error')
-  , Long = require('bson').Long
   , getReadPreference = require('./shared').getReadPreference;
+
+var BSON = retrieveBSON(),
+  Long = BSON.Long;
 
 var WireProtocol = function(legacyWireProtocol) {
   this.legacyWireProtocol = legacyWireProtocol;

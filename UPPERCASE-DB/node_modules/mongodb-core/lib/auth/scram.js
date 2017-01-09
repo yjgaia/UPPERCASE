@@ -2,9 +2,12 @@
 
 var f = require('util').format
   , crypto = require('crypto')
+  , retrieveBSON = require('../connection/utils').retrieveBSON
   , Query = require('../connection/commands').Query
-  , Binary = require('bson').Binary
   , MongoError = require('../error');
+
+var BSON = retrieveBSON(),
+  Binary = BSON.Binary;
 
 var AuthSession = function(db, username, password) {
   this.db = db;

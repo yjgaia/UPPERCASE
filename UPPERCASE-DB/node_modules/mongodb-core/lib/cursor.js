@@ -1,9 +1,12 @@
 "use strict";
 
-var Long = require('bson').Long
-  , Logger = require('./connection/logger')
+var Logger = require('./connection/logger')
+  , retrieveBSON = require('./connection/utils').retrieveBSON
   , MongoError = require('./error')
   , f = require('util').format;
+
+var BSON = retrieveBSON(),
+  Long = BSON.Long;
 
 /**
  * This is a cursor results callback

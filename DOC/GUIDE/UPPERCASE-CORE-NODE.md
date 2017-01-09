@@ -203,15 +203,15 @@ REMOVE_FILE('some.txt', {
 });
 ```
 
-### `CHECK_IS_FILE_EXISTS`
+### `CHECK_FILE_EXISTS`
 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `CHECK_IS_FILE_EXISTS(path, function(isExists) {})`
-* `CHECK_IS_FILE_EXISTS({path:, isSync: true})`
+* `CHECK_FILE_EXISTS(path, function(isExists) {})`
+* `CHECK_FILE_EXISTS({path:, isSync: true})`
 
 ```javascript
-CHECK_IS_FILE_EXISTS('some.txt', function(isExists) {
+CHECK_FILE_EXISTS('some.txt', function(isExists) {
 	if (isExists === true) {
 		console.log('파일이 존재합니다.');
 	} else {

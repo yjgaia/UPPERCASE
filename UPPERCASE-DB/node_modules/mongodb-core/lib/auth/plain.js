@@ -1,9 +1,14 @@
 "use strict";
 
+var BSON = require('bson');
+
 var f = require('util').format
-  , Binary = require('bson').Binary
+  , Binary = BSON.Binary
+  , retrieveBSON = require('../connection/utils').retrieveBSON
   , Query = require('../connection/commands').Query
   , MongoError = require('../error');
+
+var BSON = retrieveBSON();
 
 var AuthSession = function(db, username, password) {
   this.db = db;

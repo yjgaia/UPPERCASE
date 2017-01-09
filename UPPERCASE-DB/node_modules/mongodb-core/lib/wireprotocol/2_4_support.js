@@ -4,14 +4,17 @@ var Insert = require('./commands').Insert
   , Update = require('./commands').Update
   , Remove = require('./commands').Remove
   , copy = require('../connection/utils').copy
+  , retrieveBSON = require('../connection/utils').retrieveBSON
   , KillCursor = require('../connection/commands').KillCursor
   , GetMore = require('../connection/commands').GetMore
   , Query = require('../connection/commands').Query
   , f = require('util').format
   , CommandResult = require('../connection/command_result')
   , MongoError = require('../error')
-  , Long = require('bson').Long
   , getReadPreference = require('./shared').getReadPreference;
+
+var BSON = retrieveBSON(),
+  Long = BSON.Long;
 
 // Write concern fields
 var writeConcernFields = ['w', 'wtimeout', 'j', 'fsync'];

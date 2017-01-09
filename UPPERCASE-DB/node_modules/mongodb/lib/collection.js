@@ -247,7 +247,7 @@ Collection.prototype.find = function() {
   }
 
   // Check special case where we are using an objectId
-  if(selector instanceof ObjectID || (selector != null && selector._bsontype == 'ObjectID')) {
+  if(selector != null && selector._bsontype == 'ObjectID') {
     selector = {_id:selector};
   }
 
@@ -893,7 +893,7 @@ var updateOne = function(self, filter, update, options, callback) {
     if(err && callback) return callback(err);
     if(r == null) return callback(null, {result: {ok:1}});
     r.modifiedCount = r.result.nModified != null ? r.result.nModified : r.result.n;
-    r.upsertedId = Array.isArray(r.result.upserted) && r.result.upserted.length > 0 ? r.result.upserted[0]._id : null;
+    r.upsertedId = Array.isArray(r.result.upserted) && r.result.upserted.length > 0 ? r.result.upserted[0] : null;
     r.upsertedCount = Array.isArray(r.result.upserted) && r.result.upserted.length ? r.result.upserted.length : 0;
     r.matchedCount = Array.isArray(r.result.upserted) && r.result.upserted.length > 0 ? 0 : r.result.n;
     if(callback) callback(null, r);
@@ -948,8 +948,9 @@ var replaceOne = function(self, filter, doc, options, callback) {
     if(callback == null) return;
     if(err && callback) return callback(err);
     if(r == null) return callback(null, {result: {ok:1}});
+
     r.modifiedCount = r.result.nModified != null ? r.result.nModified : r.result.n;
-    r.upsertedId = Array.isArray(r.result.upserted) && r.result.upserted.length > 0 ? r.result.upserted[0]._id : null;
+    r.upsertedId = Array.isArray(r.result.upserted) && r.result.upserted.length > 0 ? r.result.upserted[0] : null;
     r.upsertedCount = Array.isArray(r.result.upserted) && r.result.upserted.length ? r.result.upserted.length : 0;
     r.matchedCount = Array.isArray(r.result.upserted) && r.result.upserted.length > 0 ? 0 : r.result.n;
     r.ops = [doc];
@@ -1004,7 +1005,7 @@ var updateMany = function(self, filter, update, options, callback) {
     if(err && callback) return callback(err);
     if(r == null) return callback(null, {result: {ok:1}});
     r.modifiedCount = r.result.nModified != null ? r.result.nModified : r.result.n;
-    r.upsertedId = Array.isArray(r.result.upserted) && r.result.upserted.length > 0 ? r.result.upserted[0]._id : null;
+    r.upsertedId = Array.isArray(r.result.upserted) && r.result.upserted.length > 0 ? r.result.upserted[0] : null;
     r.upsertedCount = Array.isArray(r.result.upserted) && r.result.upserted.length ? r.result.upserted.length : 0;
     r.matchedCount = Array.isArray(r.result.upserted) && r.result.upserted.length > 0 ? 0 : r.result.n;
     if(callback) callback(null, r);
@@ -2996,7 +2997,7 @@ Collection.prototype.group = function(keys, condition, initial, reduce, finalize
     finalize = null;
   }
 
-  if (!Array.isArray(keys) && keys instanceof Object && typeof(keys) !== 'function' && !(keys instanceof Code)) {
+  if (!Array.isArray(keys) && keys instanceof Object && typeof(keys) !== 'function' && !(keys._bsontype == 'Code')) {
     keys = Object.keys(keys);
   }
 
@@ -3025,7 +3026,7 @@ Collection.prototype.group = function(keys, condition, initial, reduce, finalize
 var group = function(self, keys, condition, initial, reduce, finalize, command, options, callback) {
   // Execute using the command
   if(command) {
-    var reduceFunction = reduce instanceof Code
+    var reduceFunction = reduce && reduce._bsontype == 'Code'
         ? reduce
         : new Code(reduce);
 
@@ -3042,8 +3043,8 @@ var group = function(self, keys, condition, initial, reduce, finalize, command, 
     // if finalize is defined
     if(finalize != null) selector.group['finalize'] = finalize;
     // Set up group selector
-    if ('function' === typeof keys || keys instanceof Code) {
-      selector.group.$keyf = keys instanceof Code
+    if ('function' === typeof keys || (keys && keys._bsontype == 'Code')) {
+      selector.group.$keyf = keys && keys._bsontype == 'Code'
         ? keys
         : new Code(keys);
     } else {
@@ -3073,7 +3074,7 @@ var group = function(self, keys, condition, initial, reduce, finalize, command, 
     });
   } else {
     // Create execution scope
-    var scope = reduce != null && reduce instanceof Code
+    var scope = reduce != null && reduce._bsontype == 'Code'
       ? reduce.scope
       : {};
 
@@ -3100,7 +3101,7 @@ define.classMethod('group', {callback: true, promise:true});
  * @ignore
  */
 function processScope (scope) {
-  if(!isObject(scope) || scope instanceof ObjectID) {
+  if(!isObject(scope) || scope._bsontype == 'ObjectID') {
     return scope;
   }
 

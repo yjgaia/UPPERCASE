@@ -91,6 +91,7 @@ var release = os.release();
  * @fires ReplSet#error
  * @fires ReplSet#timeout
  * @fires ReplSet#parseError
+ * @property {string} parserType the parser type used (c++ or js).
  * @return {ReplSet} a ReplSet instance.
  */
 var ReplSet = function(servers, options) {
@@ -213,6 +214,12 @@ inherits(ReplSet, EventEmitter);
 // Last ismaster
 Object.defineProperty(ReplSet.prototype, 'isMasterDoc', {
   enumerable:true, get: function() { return this.s.replset.lastIsMaster(); }
+});
+
+Object.defineProperty(ReplSet.prototype, 'parserType', {
+  enumerable:true, get: function() {
+    return this.s.replset.parserType;
+  }
 });
 
 // BSON property
@@ -411,8 +418,16 @@ ReplSet.prototype.isDestroyed = function() {
 }
 
 // IsConnected
-ReplSet.prototype.isConnected = function() {
-  return this.s.replset.isConnected();
+ReplSet.prototype.isConnected = function(options) {
+  options = options || {};
+
+  // If we passed in a readPreference, translate to
+  // a CoreReadPreference instance
+  if(options.readPreference) {
+    options.readPreference = translateReadPreference(options.readPreference);
+  }
+
+  return this.s.replset.isConnected(options);
 }
 
 define.classMethod('isConnected', {callback: false, promise:false, returns: [Boolean]});

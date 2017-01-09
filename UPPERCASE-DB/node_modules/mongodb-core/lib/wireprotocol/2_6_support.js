@@ -1,13 +1,16 @@
 "use strict";
 
 var copy = require('../connection/utils').copy
+  , retrieveBSON = require('../connection/utils').retrieveBSON
   , KillCursor = require('../connection/commands').KillCursor
   , GetMore = require('../connection/commands').GetMore
   , Query = require('../connection/commands').Query
   , f = require('util').format
   , MongoError = require('../error')
-  , Long = require('bson').Long
   , getReadPreference = require('./shared').getReadPreference;
+
+var BSON = retrieveBSON(),
+  Long = BSON.Long;
 
 var WireProtocol = function() {}
 

@@ -3,14 +3,16 @@
 var inherits = require('util').inherits,
   f = require('util').format,
   EventEmitter = require('events').EventEmitter,
-  BSON = require('bson').native().BSON,
   BasicCursor = require('../cursor'),
   Logger = require('../connection/logger'),
+  retrieveBSON = require('../connection/utils').retrieveBSON,
   MongoError = require('../error'),
   Server = require('./server'),
   assign = require('./shared').assign,
   clone = require('./shared').clone,
   createClientInfo = require('./shared').createClientInfo;
+
+var BSON = retrieveBSON();
 
 /**
  * @fileOverview The **Mongos** class is a class that represents a Mongos Proxy topology and is
@@ -108,6 +110,8 @@ var handlers = ['connect', 'close', 'error', 'timeout', 'parseError'];
  * @fires Mongos#topologyOpening
  * @fires Mongos#topologyClosed
  * @fires Mongos#topologyDescriptionChanged
+ * @property {string} type the topology type.
+ * @property {string} parserType the parser type used (c++ or js).
  */
 var Mongos = function(seedlist, options) {
   options = options || {};
@@ -119,7 +123,9 @@ var Mongos = function(seedlist, options) {
   this.s = {
     options: assign({}, options),
     // BSON instance
-    bson: options.bson || new BSON(),
+    bson: options.bson || new BSON([BSON.Binary, BSON.Code, BSON.DBRef, BSON.Decimal128,
+      BSON.Double, BSON.Int32, BSON.Long, BSON.Map, BSON.MaxKey, BSON.MinKey,
+      BSON.ObjectId, BSON.BSONRegExp, BSON.Symbol, BSON.Timestamp]),
     // Factory overrides
     Cursor: options.cursorFactory || BasicCursor,
     // Logger instance
@@ -187,6 +193,12 @@ inherits(Mongos, EventEmitter);
 
 Object.defineProperty(Mongos.prototype, 'type', {
   enumerable:true, get: function() { return 'mongos'; }
+});
+
+Object.defineProperty(Mongos.prototype, 'parserType', {
+  enumerable:true, get: function() {
+    return BSON.native ? "c++" : "js";
+  }
 });
 
 /**

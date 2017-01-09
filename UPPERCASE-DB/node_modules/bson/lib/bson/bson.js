@@ -38,15 +38,24 @@ var BSON = function() {
  * Serialize a Javascript object.
  *
  * @param {Object} object the Javascript object to serialize.
- * @param {Boolean} checkKeys the serializer will check if keys are valid.
- * @param {Boolean} asBuffer return the serialized object as a Buffer object **(ignore)**.
- * @param {Boolean} serializeFunctions serialize the javascript functions **(default:false)**.
+ * @param {Boolean} [options.checkKeys] the serializer will check if keys are valid.
+ * @param {Boolean} [options.serializeFunctions=false] serialize the javascript functions **(default:false)**.
+ * @param {Boolean} [options.ignoreUndefined=true] ignore undefined fields **(default:true)**.
  * @return {Buffer} returns the Buffer object containing the serialized object.
  * @api public
  */
-BSON.prototype.serialize = function serialize(object, checkKeys, asBuffer, serializeFunctions, index, ignoreUndefined) {
+BSON.prototype.serialize = function serialize(object, options) {
+	options = options || {};
+	// Unpack the options
+	var checkKeys = typeof options.checkKeys == 'boolean'
+		? options.checkKeys : false;
+	var serializeFunctions = typeof options.serializeFunctions == 'boolean'
+		? options.serializeFunctions : false;
+	var ignoreUndefined = typeof options.ignoreUndefined == 'boolean'
+		? options.ignoreUndefined : true;
+
 	// Attempt to serialize
-	var serializationIndex = serializer(buffer, object, checkKeys, index || 0, 0, serializeFunctions, ignoreUndefined, []);
+	var serializationIndex = serializer(buffer, object, checkKeys, 0, 0, serializeFunctions, ignoreUndefined, []);
 	// Create the final buffer
 	var finishedBuffer = new Buffer(serializationIndex);
 	// Copy into the finished buffer
@@ -59,17 +68,30 @@ BSON.prototype.serialize = function serialize(object, checkKeys, asBuffer, seria
  * Serialize a Javascript object using a predefined Buffer and index into the buffer, useful when pre-allocating the space for serialization.
  *
  * @param {Object} object the Javascript object to serialize.
- * @param {Boolean} checkKeys the serializer will check if keys are valid.
  * @param {Buffer} buffer the Buffer you pre-allocated to store the serialized BSON object.
- * @param {Number} index the index in the buffer where we wish to start serializing into.
- * @param {Boolean} serializeFunctions serialize the javascript functions **(default:false)**.
+ * @param {Boolean} [options.checkKeys] the serializer will check if keys are valid.
+ * @param {Boolean} [options.serializeFunctions=false] serialize the javascript functions **(default:false)**.
+ * @param {Boolean} [options.ignoreUndefined=true] ignore undefined fields **(default:true)**.
+ * @param {Number} [options.index] the index in the buffer where we wish to start serializing into.
  * @return {Number} returns the index pointing to the last written byte in the buffer.
  * @api public
  */
-BSON.prototype.serializeWithBufferAndIndex = function(object, checkKeys, finalBuffer, startIndex, serializeFunctions, ignoreUndefined) {
+BSON.prototype.serializeWithBufferAndIndex = function(object, finalBuffer, options) {
+	options = options || {};
+	// Unpack the options
+	var checkKeys = typeof options.checkKeys == 'boolean'
+		? options.checkKeys : false;
+	var serializeFunctions = typeof options.serializeFunctions == 'boolean'
+		? options.serializeFunctions : false;
+	var ignoreUndefined = typeof options.ignoreUndefined == 'boolean'
+		? options.ignoreUndefined : true;
+	var startIndex = typeof options.index == 'number'
+		? options.index : 0;
+
 	// Attempt to serialize
 	var serializationIndex = serializer(buffer, object, checkKeys, startIndex || 0, 0, serializeFunctions, ignoreUndefined);
 	buffer.copy(finalBuffer, startIndex, 0, serializationIndex);
+
 	// Return the index
 	return serializationIndex - 1;
 }
@@ -77,42 +99,44 @@ BSON.prototype.serializeWithBufferAndIndex = function(object, checkKeys, finalBu
 /**
  * Deserialize data as BSON.
  *
- * Options
- *  - **evalFunctions** {Boolean, default:false}, evaluate functions in the BSON document scoped to the object deserialized.
- *  - **cacheFunctions** {Boolean, default:false}, cache evaluated functions for reuse.
- *  - **cacheFunctionsCrc32** {Boolean, default:false}, use a crc32 code for caching, otherwise use the string of the function.
- *  - **promoteLongs** {Boolean, default:true}, when deserializing a Long will fit it into a Number if it's smaller than 53 bits
- *
  * @param {Buffer} buffer the buffer containing the serialized set of BSON documents.
- * @param {Object} [options] additional options used for the deserialization.
- * @param {Boolean} [isArray] ignore used for recursive parsing.
+ * @param {Object} [options.evalFunctions=false] evaluate functions in the BSON document scoped to the object deserialized.
+ * @param {Object} [options.cacheFunctions=false] cache evaluated functions for reuse.
+ * @param {Object} [options.cacheFunctionsCrc32=false] use a crc32 code for caching, otherwise use the string of the function.
+ * @param {Object} [options.promoteLongs=true] when deserializing a Long will fit it into a Number if it's smaller than 53 bits
+ * @param {Object} [options.promoteBuffers=false] when deserializing a Binary will return it as a node.js Buffer instance.
+ * @param {Object} [options.promoteValues=false] when deserializing will promote BSON values to their Node.js closest equivalent types.
+ * @param {Object} [options.fieldsAsRaw=null] allow to specify if there what fields we wish to return as unserialized raw buffer.
+ * @param {Object} [options.bsonRegExp=false] return BSON regular expressions as BSONRegExp instances.
  * @return {Object} returns the deserialized Javascript Object.
  * @api public
  */
-BSON.prototype.deserialize = function(data, options) {
-  return deserialize(data, options);
+BSON.prototype.deserialize = function(buffer, options) {
+  return deserialize(buffer, options);
 }
 
 /**
  * Calculate the bson size for a passed in Javascript object.
  *
  * @param {Object} object the Javascript object to calculate the BSON byte size for.
- * @param {Boolean} [serializeFunctions] serialize all functions in the object **(default:false)**.
+ * @param {Boolean} [options.serializeFunctions=false] serialize the javascript functions **(default:false)**.
+ * @param {Boolean} [options.ignoreUndefined=true] ignore undefined fields **(default:true)**.
  * @return {Number} returns the number of bytes the BSON object will take up.
  * @api public
  */
-BSON.prototype.calculateObjectSize = function(object, serializeFunctions, ignoreUndefined) {
+BSON.prototype.calculateObjectSize = function(object, options) {
+	options = options || {};
+
+	var serializeFunctions = typeof options.serializeFunctions == 'boolean'
+		? options.serializeFunctions : false;
+	var ignoreUndefined = typeof options.ignoreUndefined == 'boolean'
+		? options.ignoreUndefined : true;
+
   return calculateObjectSize(object, serializeFunctions, ignoreUndefined);
 }
 
 /**
  * Deserialize stream data as BSON documents.
- *
- * Options
- *  - **evalFunctions** {Boolean, default:false}, evaluate functions in the BSON document scoped to the object deserialized.
- *  - **cacheFunctions** {Boolean, default:false}, cache evaluated functions for reuse.
- *  - **cacheFunctionsCrc32** {Boolean, default:false}, use a crc32 code for caching, otherwise use the string of the function.
- *  - **promoteLongs** {Boolean, default:true}, when deserializing a Long will fit it into a Number if it's smaller than 53 bits
  *
  * @param {Buffer} data the buffer containing the serialized set of BSON documents.
  * @param {Number} startIndex the start index in the data Buffer where the deserialization is to start.
@@ -120,11 +144,18 @@ BSON.prototype.calculateObjectSize = function(object, serializeFunctions, ignore
  * @param {Array} documents an array where to store the deserialized documents.
  * @param {Number} docStartIndex the index in the documents array from where to start inserting documents.
  * @param {Object} [options] additional options used for the deserialization.
+ * @param {Object} [options.evalFunctions=false] evaluate functions in the BSON document scoped to the object deserialized.
+ * @param {Object} [options.cacheFunctions=false] cache evaluated functions for reuse.
+ * @param {Object} [options.cacheFunctionsCrc32=false] use a crc32 code for caching, otherwise use the string of the function.
+ * @param {Object} [options.promoteLongs=true] when deserializing a Long will fit it into a Number if it's smaller than 53 bits
+ * @param {Object} [options.promoteBuffers=false] when deserializing a Binary will return it as a node.js Buffer instance.
+ * @param {Object} [options.promoteValues=false] when deserializing will promote BSON values to their Node.js closest equivalent types.
+ * @param {Object} [options.fieldsAsRaw=null] allow to specify if there what fields we wish to return as unserialized raw buffer.
+ * @param {Object} [options.bsonRegExp=false] return BSON regular expressions as BSONRegExp instances.
  * @return {Number} returns the next index in the buffer after deserialization **x** numbers of documents.
  * @api public
  */
 BSON.prototype.deserializeStream = function(data, startIndex, numberOfDocuments, documents, docStartIndex, options) {
-  // if(numberOfDocuments !== documents.length) throw new Error("Number of expected results back is less than the number of documents");
   options = options != null ? options : {};
   var index = startIndex;
   // Loop over all documents

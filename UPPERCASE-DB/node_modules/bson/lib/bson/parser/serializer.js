@@ -125,7 +125,7 @@ var serializeNumber = function(buffer, key, value, index, isArray) {
   return index;
 }
 
-var serializeUndefined = function(buffer, key, value, index, isArray) {
+var serializeNull = function(buffer, key, value, index, isArray) {
   // Set long type
   buffer[index++] = BSON.BSON_DATA_NULL;
   // Number of written bytes
@@ -207,6 +207,14 @@ var serializeBSONRegExp = function(buffer, key, value, index, isArray) {
   // Encode the name
   index = index + numberOfWrittenBytes;
   buffer[index++] = 0;
+
+  // Check the pattern for 0 bytes
+  if (value.pattern.match(regexp) != null) {
+    // The BSON spec doesn't allow keys with null bytes because keys are
+    // null-terminated.
+    throw Error("pattern " + value.pattern + " must not contain null bytes");
+  }
+
   // Adjust the index
   index = index + buffer.write(value.pattern, index, 'utf8');
   // Write zero
@@ -596,8 +604,10 @@ var serializeInto = function serializeInto(buffer, object, checkKeys, startingIn
         index = serializeBoolean(buffer, key, value, index, true);
       } else if(value instanceof Date || isDate(value)) {
         index = serializeDate(buffer, key, value, index, true);
-      } else if(type == 'undefined' || value == null) {
-        index = serializeUndefined(buffer, key, value, index, true);
+      } else if(value === undefined) {
+        index = serializeNull(buffer, key, value, index, true);
+      } else if(value === null) {
+        index = serializeNull(buffer, key, value, index, true);
       } else if(value['_bsontype'] == 'ObjectID') {
         index = serializeObjectId(buffer, key, value, index, true);
       } else if(Buffer.isBuffer(value)) {
@@ -675,7 +685,7 @@ var serializeInto = function serializeInto(buffer, object, checkKeys, startingIn
         index = serializeDate(buffer, key, value, index);
       } else if(value === undefined && ignoreUndefined == true) {
       } else if(value === null || value === undefined) {
-        index = serializeUndefined(buffer, key, value, index);
+        index = serializeNull(buffer, key, value, index);
       } else if(value['_bsontype'] == 'ObjectID') {
         index = serializeObjectId(buffer, key, value, index);
       } else if(Buffer.isBuffer(value)) {
@@ -755,7 +765,7 @@ var serializeInto = function serializeInto(buffer, object, checkKeys, startingIn
         index = serializeDate(buffer, key, value, index);
       } else if(value === undefined && ignoreUndefined == true) {
       } else if(value === null || value === undefined) {
-        index = serializeUndefined(buffer, key, value, index);
+        index = serializeNull(buffer, key, value, index);
       } else if(value['_bsontype'] == 'ObjectID') {
         index = serializeObjectId(buffer, key, value, index);
       } else if(Buffer.isBuffer(value)) {

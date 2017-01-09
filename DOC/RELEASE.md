@@ -5,7 +5,8 @@
 - UJS의 모든 코드는 UPPERCASE-CORE에 흡수되었습니다.
 - box.uppercase.io라는 BOX 저장소 및 UPPERCASE BOX Manager를 만들었습니다.
 - 기존 VALID의 check는 checkAndWash로 변경되었으며, 빈 값을 임의로 삭제하지 않는 check 함수가 따로 추가되었습니다.
-- CHECK_IS_EXISTS_FILE는 CHECK_IS_FILE_EXISTS로 이름이 변경되었습니다.
+- VALID.id가 VALID.mongoId로 변경되었습니다.
+- CHECK_IS_EXISTS_FILE는 CHECK_FILE_EXISTS로 이름이 변경되었습니다.
 - RESOURCE_SERVER와 UPLOAD_REQUEST가 WEB_SERVER로 통합되었으며, onDisconnected 기능은 제거되었습니다.
 - clientInfo.lastReceiveTime가 clientInfo.lastSendTime으로 변경되었습니다.
 - 이벤트 처리 시 e.getKeyCode와 e.getKeyName 함수가 e.getKey로 통합되었습니다.

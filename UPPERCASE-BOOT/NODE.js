@@ -417,7 +417,7 @@ global.BOOT = function(params) {
 			});
 		});
 
-		if (CHECK_IS_FILE_EXISTS({
+		if (CHECK_FILE_EXISTS({
 			path : rootPath + '/BOX',
 			isSync : true
 		}) === true) {
@@ -487,7 +487,7 @@ global.BOOT = function(params) {
 			value : CONFIG.defaultBoxName
 		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/404.html' : CONFIG.defaultBoxName + '/404.html';
 		
-		if (CHECK_IS_FILE_EXISTS({
+		if (CHECK_FILE_EXISTS({
 			path : custom404Path,
 			isSync : true
 		}) === true) {
@@ -553,7 +553,7 @@ global.BOOT = function(params) {
 			value : CONFIG.defaultBoxName
 		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/index.html' : CONFIG.defaultBoxName + '/index.html';
 		
-		if (CHECK_IS_FILE_EXISTS({
+		if (CHECK_FILE_EXISTS({
 			path : customIndexPath,
 			isSync : true
 		}) === true) {

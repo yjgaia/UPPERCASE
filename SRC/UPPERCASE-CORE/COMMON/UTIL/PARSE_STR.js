@@ -9,13 +9,33 @@ global.PARSE_STR = METHOD({
 
 		var
 		// data
-		data;
+		data,
+		
+		// array
+		array;
 
 		try {
 
 			data = JSON.parse(dataStr);
-
-			return CHECK_IS_DATA(data) === true ? UNPACK_DATA(data) : data;
+			
+			if (CHECK_IS_DATA(data) === true) {
+				return UNPACK_DATA(data);
+			}
+			
+			else if (CHECK_IS_ARRAY(data) === true) {
+				
+				array = [];
+				
+				EACH(data, function(data) {
+					array.push(UNPACK_DATA(data));
+				});
+				
+				return array;
+			}
+			
+			else {
+				return data;
+			}
 
 		} catch(e) {
 

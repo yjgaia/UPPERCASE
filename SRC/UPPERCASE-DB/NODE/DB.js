@@ -482,7 +482,7 @@ FOR_BOX(function(box) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.errorMsg);
 						} else {
-							SHOW_ERROR('DB', errorInfo, {
+							SHOW_ERROR('DB', errorInfo.errorMsg, {
 								boxName : box.boxName,
 								name : name
 							});

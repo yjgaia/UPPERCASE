@@ -54,7 +54,7 @@ global.REMOVE_FILE = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_IS_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, function(isExists) {
 
 					if (isExists === true) {
 
@@ -106,7 +106,7 @@ global.REMOVE_FILE = METHOD(function() {
 
 					try {
 
-						if (CHECK_IS_FILE_EXISTS({
+						if (CHECK_FILE_EXISTS({
 							path : path,
 							isSync : true
 						}) === true) {
