@@ -27,14 +27,10 @@ UPPERCASE는 아래 모듈들을 내장하고 있기 때문에, 따로 설치하
 * BROWSER.js는 웹 브라우저 환경에서 구동되는 기능들이 작성되며, COMMON.js를 포함합니다.
 * NODE.js는 Node.js 환경에서 구동되는 기능들이 작성되며, COMMON.js를 포함합니다.
 
-
 ## BOX
 BOX는 UPPERCASE용 모듈을 지칭합니다. 코드 상에서는 UPPERCASE-CORE의 BOX 기능을 통해 만들 수 있으며,
 
-box.uppercase.io
-
-### 공식 BOX
-* []
+http://box.uppercase.io
 
 ## UPPERCASE 사용 방안
 ### 웹 애플리케이션을 만들고 싶어요.

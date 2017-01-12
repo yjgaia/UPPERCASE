@@ -44,6 +44,9 @@ global.BOOT = function(params) {
 	// UPPERCASE_PATH
 	UPPERCASE_PATH = __dirname + '/..',
 	
+	// BOX_SITE_URL
+	BOX_SITE_URL = 'http://box.uppercase.io',
+	
 	//IMPORT: path
 	path = require('path'),
 
@@ -1322,6 +1325,88 @@ global.BOOT = function(params) {
 			BOOT_UADMIN(UPPERCASE_PATH);
 		}
 	});
+	
+	if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.getWorkerId() === '~') {
+		
+		READ_FILE(rootPath + '/DEPENDENCY', {
+			
+			notExists : function() {
+				// ignore.
+			},
+			
+			success : function(content) {
+				
+				EACH(content.toString().split('\n'), function(box) {
+					
+					var
+					// username
+					username,
+					
+					// box name
+					boxName;
+					
+					box = box.trim();
+					
+					if (box !== '' && box.indexOf('/') !== -1) {
+						
+						username = box.substring(0, box.indexOf('/'));
+						boxName = box.substring(box.indexOf('/') + 1);
+						
+						GET({
+							url : BOX_SITE_URL + '/_/info',
+							data : {
+								username : username,
+								boxName : boxName
+							}
+						}, function(result) {
+							
+							var
+							// valid errors
+							validErrors,
+							
+							// box data
+							boxData;
+							
+							result = PARSE_STR(result);
+							
+							if (result.boxData !== undefined) {
+								
+								boxData = result.boxData;
+								
+								NEXT([
+								function(next) {
+									
+									READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
+										
+										notExists : function() {
+											next(boxData.version);
+										},
+										
+										success : function(versionContent) {
+											
+											var
+											// now version
+											nowVersion = versionContent.toString();
+											
+											if (boxData.version !== nowVersion) {
+												next(boxData.version, nowVersion);
+											}
+										}
+									});
+								},
+								
+								function() {
+									return function(version, nowVersion) {
+										SHOW_WARNING('BOOT', '[' + boxName + '] BOX의 새 버전이 존재합니다. 현재 버전: ' + nowVersion + ', 새 버전: ' + version);
+									};
+								}]);
+							}
+						});
+					}
+				});
+			}
+		});
+	}
 };
 
 /**
