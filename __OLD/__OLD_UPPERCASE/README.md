@@ -1,19 +1,3 @@
-# ![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/LOGO.png)
-UPPERCASE는 실시간성에 특화된 풀스택 프레임워크입니다.
-* [Node.js](http://nodejs.org) 기반
-* JavaScript 유틸리티 셋 [UJS](DOC/UJS.md) 기반
-* Model-View 패턴
-* 모듈 시스템 [BOX](https://github.com/Hanul/UJS/blob/master/DOC/UJS-COMMON.md#box) 기반
-* 멀티 코어 CPU 지원
-* 구형 브라우저 호환
-
-## 사전 지식
-UPPERCASE를 사용하기 위해서는 이하 기술셋을 알고있어야 합니다.
-* JavaScript, Node.js
-* MongoDB
-* HTML, CSS
-* Git
-
 ## 시작하기
 * [설치하기](DOC/INSTALL.md)
 * [프로젝트 생성](DOC/CREATE_PROJECT.md)
@@ -93,18 +77,5 @@ UPPERCASE를 서버로 사용하고, 클라이언트는 다른 솔루션들과 �
 * [SkyProxy](https://github.com/Hanul/SkyProxy) 한 서버에서 여러 도메인을 사용하고자 할때 필요한 프록시 서버입니다.
 * [SkyRelay](https://github.com/Hanul/SkyRelay) 실시간 멀티플레이 게임을 구현하고자 할 때 홀펀칭에 사용되는 릴레이 서버입니다.
 
-## 샘플 프로젝트
-* [UPPERCASE-Sample-Chat](https://github.com/Hanul/UPPERCASE-Sample-Chat)
-
 ## 기타
 * [UPPERCASE 빌드](DOC/BUILD.md)
-
-## 라이센스
-[MIT](LICENSE)
-
-## 작성자
-[Young Jae Sim](https://github.com/Hanul)
-
-## 문의하기
-* [GitHub Issues](https://github.com/Hanul/UPPERCASE/issues)
-* [UPPERCASE 페이스북 그룹](https://www.facebook.com/groups/uppercase/)

@@ -32,6 +32,9 @@ BOX는 UPPERCASE용 모듈을 지칭합니다. 코드 상에서는 UPPERCASE-COR
 
 http://box.uppercase.io
 
+## 서버 운영 팁
+[서버 운영 팁](TIP.md)
+
 ## UPPERCASE 사용 방안
 ### 웹 애플리케이션을 만들고 싶어요.
 UPPERCASE는 웹 애플리케이션 개발을 도와주는 프레임워크입니다. 따라서 이런 경우 최적의 솔루션이 될 수 있습니다!

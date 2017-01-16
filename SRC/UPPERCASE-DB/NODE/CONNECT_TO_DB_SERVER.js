@@ -48,22 +48,16 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 		run : function(params, callback) {
 			//REQUIRED: params
 			//OPTIONAL: params.dbServerName
-			//OPTIONAL: params.username
-			//OPTIONAL: params.password
 			//OPTIONAL: params.host
 			//OPTIONAL: params.port
 			//REQUIRED: params.name
+			//OPTIONAL: params.username
+			//OPTIONAL: params.password
 			//OPTIONAL: callback
 
 			var
 			// db server name
 			dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName,
-			
-			// username
-			username = params.username,
-
-			// password
-			password = params.password,
 
 			// host
 			host = params.host === undefined ? '127.0.0.1' : params.host,
@@ -72,7 +66,13 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 			port = params.port === undefined ? 27017 : params.port,
 
 			// name
-			name = params.name;
+			name = params.name,
+			
+			// username
+			username = params.username,
+
+			// password
+			password = params.password;
 
 			require('mongodb').MongoClient.connect('mongodb://' + (username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') + host + ':' + port + '/' + name, function(error, nativeDB) {
 

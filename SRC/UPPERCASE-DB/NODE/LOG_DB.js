@@ -69,10 +69,18 @@ FOR_BOX(function(box) {
 
 		return {
 		
-			init : function(inner, self, name) {
-				//REQUIRED: name
+			init : function(inner, self, nameOrParams) {
+				//REQUIRED: nameOrParams
+				//OPTIONAL: nameOrParams.dbServerName
+				//REQUIRED: nameOrParams.name
 	
 				var
+				// name
+				name,
+				
+				// db server name
+				dbServerName,
+				
 				// waiting log data set
 				waitingLogDataSet = [],
 				
@@ -84,6 +92,13 @@ FOR_BOX(function(box) {
 				
 				// find.
 				find;
+				
+				if (CHECK_IS_DATA(nameOrParams) !== true) {
+					name = nameOrParams;
+				} else {
+					dbServerName = nameOrParams.dbServerName;
+					name = nameOrParams.name;
+				}
 	
 				self.log = log = function(data) {
 					//REQUIRED: data
@@ -108,7 +123,7 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(function(nativeDB) {
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, function(nativeDB) {
 	
 					var
 					// MongoDB collection
