@@ -8,8 +8,8 @@
 * `HTML5` 및 `CSS` UPPERCASE는 웹 애플리케이션 개발에 사용되기 때문에, HTML5와 CSS를 알고 있으면 더욱 쉽게 접근할 수 있습니다.
 * `Git` UPPERCASE는 Git을 이용해 설치 및 업그레이드를 수행합니다.
 
-## 그럼 설치해 봅시다.
-[UPPERCASE 설치하기](INSTALL.md)
+## 일단 설치해 봅시다.
+[UPPERCASE 설치하기](../README.md#설치하기)
 
 ## [UPPERCASE 코드 컨벤션 규칙](GUIDE/CONVENTION.md)
 UPPERCASE를 구현할 때와 UPPERCASE 기반 프로젝트를 개발할 때는 이 규칙에 따라 개발합니다.

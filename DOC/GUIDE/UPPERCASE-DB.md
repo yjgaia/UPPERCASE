@@ -6,8 +6,8 @@ UPPERCASE-DB는 Node.js 환경에서 MongoDB 기반 데이터베이스를 다루
 * [사용방법](#사용방법)
 * [`NODE_CONFIG`](#node_config)
 * [`CONNECT_TO_DB_SERVER`](#connect_to_db_server)
-* [`Box.DB`](#db)
-* [`Box.LOG_DB`](#log_db)
+* [`Box.DB`](#boxdb)
+* [`Box.LOG_DB`](#boxlog_db)
 
 ## 사용방법
 `UPPERCASE-DB` 폴더를 복사하여 사용하거나, `npm`으로 설치하여 사용합니다.
