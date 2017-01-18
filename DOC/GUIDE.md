@@ -8,8 +8,8 @@
 * `HTML5` 및 `CSS` UPPERCASE는 웹 애플리케이션 개발에 사용되기 때문에, HTML5와 CSS를 알고 있으면 더욱 쉽게 접근할 수 있습니다.
 * `Git` UPPERCASE는 Git을 이용해 설치 및 업그레이드를 수행합니다.
 
-## 그럼 설치해 봅시다.
-[UPPERCASE 설치하기](INSTALL.md)
+## 일단 설치해 봅시다.
+[UPPERCASE 설치하기](../README.md#설치하기)
 
 ## [UPPERCASE 코드 컨벤션 규칙](GUIDE/CONVENTION.md)
 UPPERCASE를 구현할 때와 UPPERCASE 기반 프로젝트를 개발할 때는 이 규칙에 따라 개발합니다.
@@ -27,14 +27,13 @@ UPPERCASE는 아래 모듈들을 내장하고 있기 때문에, 따로 설치하
 * BROWSER.js는 웹 브라우저 환경에서 구동되는 기능들이 작성되며, COMMON.js를 포함합니다.
 * NODE.js는 Node.js 환경에서 구동되는 기능들이 작성되며, COMMON.js를 포함합니다.
 
-
 ## BOX
 BOX는 UPPERCASE용 모듈을 지칭합니다. 코드 상에서는 UPPERCASE-CORE의 BOX 기능을 통해 만들 수 있으며,
 
-box.uppercase.io
+http://box.uppercase.io
 
-### 공식 BOX
-* []
+## 서버 운영 팁
+[서버 운영 팁](TIP.md)
 
 ## UPPERCASE 사용 방안
 ### 웹 애플리케이션을 만들고 싶어요.

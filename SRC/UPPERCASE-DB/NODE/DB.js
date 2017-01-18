@@ -233,8 +233,8 @@ FOR_BOX(function(box) {
 				if (CHECK_IS_DATA(nameOrParams) !== true) {
 					name = nameOrParams;
 				} else {
-					name = nameOrParams.name;
 					dbServerName = nameOrParams.dbServerName;
+					name = nameOrParams.name;
 					isNotUsingObjectId = nameOrParams.isNotUsingObjectId;
 					isNotUsingHistory = nameOrParams.isNotUsingHistory;
 				}
@@ -573,7 +573,7 @@ FOR_BOX(function(box) {
 									logError({
 										method : 'create',
 										data : data,
-										errorMsg : error !== TO_DELETE ? error.toString() : '_id existed.'
+										errorMsg : error !== TO_DELETE ? error.toString() : '_id가 이미 존재합니다.'
 									}, errorHandler);
 								}
 							});

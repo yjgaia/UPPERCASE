@@ -632,16 +632,16 @@ UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽�
 아래 코드를 실행하면 [http://localhost:8123/main](http://localhost:8123/main)로 접속하면 `Welcome!` 이라는 메시지를 보여주는 간단한 웹 서버를 생성합니다.
 ```javascript
 WEB_SERVER(8123, function(requestInfo, response) {
-	// requestInfo		  요청 정보
+	// requestInfo			요청 정보
 	// requestInfo.headers  요청 헤더
 	// requestInfo.cookies  클라이언트에서 넘어온 HTTP 쿠키
 	// requestInfo.isSecure 요청 URL이 https 프로토콜인지 여부
-	// requestInfo.uri	  요청 URI
+	// requestInfo.uri		요청 URI
 	// requestInfo.method   요청 메소드
 	// requestInfo.params   파라미터
-	// requestInfo.data	 UPPERCASE 기반 요청을 하는 경우 data 파라미터
-	// requestInfo.ip	   클라이언트의 IP
-	// response			 응답 함수
+	// requestInfo.data		UPPERCASE 기반 요청을 하는 경우 data 파라미터
+	// requestInfo.ip	   	클라이언트의 IP
+	// response			 	응답 함수
 	
 	// http://localhost:8123/main 로 접속하면 Welcome!을 응답
 	if (requestInfo.uri === 'main') {
@@ -694,10 +694,10 @@ WEB_SERVER({
 	port : 8123,
 	rootPath : __dirname + '/R'
 }, function(requestInfo, response, replaceRootPath, next) {
-	// requestInfo	  요청 정보
-	// response		 응답 함수
-	// replaceRootPath  이 요청에 한해 rootPath를 임시로 변경합니다.
-	// next			 응답을 중단한 경우, 응답을 계속해서 수행합니다. 응답 파라미터를 추가할 수 있습니다.
+	// requestInfo		요청 정보
+	// response			응답 함수
+	// replaceRootPath	이 요청에 한해 rootPath를 임시로 변경합니다.
+	// next				응답을 중단한 경우, 응답을 계속해서 수행합니다. 응답 파라미터를 추가할 수 있습니다.
 	
 	// 다른 rootPath에 존재하는 리소스를 전송합니다.
 	if (requestInfo.uri === 'private') {
@@ -754,24 +754,27 @@ WEB_SERVER({
 	error : function(errorMsg) {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	uploadProgress : function(uriParams, bytesRecieved, bytesExpected) {
+	uploadProgress : function(uriParams, bytesRecieved, bytesExpected, requestInfo) {
 		// uriParams		아직 폼 데이터의 전송이 끊나지 않은 상태이므로, URI 주소에 지정된 파라미터(예를들어 uri?name=yj&age=23 등)만 가져올 수 있습니다.
 		// bytesRecieved	이미 업로드 된 용량 (바이트 단위)
 		// bytesExpected	전체 업로드 될 용량 (바이트 단위)
+		// requestInfo		요청 정보
 		
 		console.log('업로드 중... (' + bytesRecieved + '/' + bytesExpected + ')');
 	},
-	uploadOverFileSize : function(params, maxUploadFileMB, response) {
-		// params		   파라미터
-		// maxUploadFileMB  최대 업로드 가능 용량 (메가바이트 단위)
-		// response		 응답 함수
+	uploadOverFileSize : function(params, maxUploadFileMB, requestInfo, response) {
+		// params			파라미터
+		// maxUploadFileMB	최대 업로드 가능 용량 (메가바이트 단위)
+		// requestInfo		요청 정보
+		// response			응답 함수
 		
 		response('업로드 가능한 용량은 최대 ' + maxUploadFileMB + 'MB 입니다.');
 	},
-	uploadSuccess : function(params, fileDataSet, response) {
-		// params	   파라미터
-		// fileDataSet  업로드 파일 데이터 목록
-		// response	 응답 함수
+	uploadSuccess : function(params, fileDataSet, requestInfo, response) {
+		// params		파라미터
+		// fileDataSet	업로드 파일 데이터 목록
+		// requestInfo	요청 정보
+		// response		응답 함수
 		
 		response('업로드가 완료되었습니다. 파일 정보: ' + STRINGIFY(fileDataSet));
 	}
@@ -805,13 +808,13 @@ TCP 소켓 서버를 생성합니다.
 
 ```javascript
 SOCKET_SERVER(8124, function(clientInfo, on, off, send, disconnect) {
-	// clientInfo			   클라이언트 정보
+	// clientInfo				클라이언트 정보
 	// clientInfo.ip			클라이언트의 IP
-	// clientInfo.connectTime   접속 시작 시간
-	// on					   메소드를 생성합니다.
-	// off					  메소드를 제거합니다.
-	// send					 클라이언트의 메소드에 데이터를 전송합니다.
-	// disconnect			   클라이언트와의 연결을 끊습니다.
+	// clientInfo.connectTime	접속 시작 시간
+	// on						메소드를 생성합니다.
+	// off						메소드를 제거합니다.
+	// send						클라이언트의 메소드에 데이터를 전송합니다.
+	// disconnect				클라이언트와의 연결을 끊습니다.
 	
 	on('message', function(data, ret) {
 		if (data !== undefined) {
@@ -855,10 +858,10 @@ CONNECT_TO_SOCKET_SERVER({
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : function(on, off, send, disconnect) {
-		// on		   메소드를 생성합니다.
-		// off		  메소드를 제거합니다.
-		// send		 서버의 메소드에 데이터를 전송합니다.
-		// disconnect   서버와의 연결을 끊습니다.
+		// on			메소드를 생성합니다.
+		// off			메소드를 제거합니다.
+		// send			서버의 메소드에 데이터를 전송합니다.
+		// disconnect	서버와의 연결을 끊습니다.
 
 		send({
 			methodName : 'message',
@@ -899,13 +902,13 @@ CONNECT_TO_SOCKET_SERVER({
 
 ```javascript
 WEB_SOCKET_SERVER(WEB_SERVER(8125), function(clientInfo, on, off, send, disconnect) {
-	// clientInfo			   클라이언트 정보
+	// clientInfo				클라이언트 정보
 	// clientInfo.ip			클라이언트의 IP
-	// clientInfo.connectTime   접속 시작 시간
-	// on					   메소드를 생성합니다.
-	// off					  메소드를 제거합니다.
-	// send					 클라이언트의 메소드에 데이터를 전송합니다.
-	// disconnect			   클라이언트와의 연결을 끊습니다.
+	// clientInfo.connectTime	접속 시작 시간
+	// on						메소드를 생성합니다.
+	// off						메소드를 제거합니다.
+	// send						클라이언트의 메소드에 데이터를 전송합니다.
+	// disconnect				클라이언트와의 연결을 끊습니다.
 	
 	on('message', function(data, ret) {
 		if (data !== undefined) {
@@ -945,13 +948,13 @@ MULTI_PROTOCOL_SOCKET_SERVER({
 	socketServerPort : 8124,
 	webServer : WEB_SERVER(8125)
 }, function(clientInfo, on, off, send, disconnect) {
-	// clientInfo			   클라이언트 정보
+	// clientInfo				클라이언트 정보
 	// clientInfo.ip			클라이언트의 IP
-	// clientInfo.connectTime   접속 시작 시간
-	// on					   메소드를 생성합니다.
-	// off					  메소드를 제거합니다.
-	// send					 클라이언트의 메소드에 데이터를 전송합니다.
-	// disconnect			   클라이언트와의 연결을 끊습니다.
+	// clientInfo.connectTime	접속 시작 시간
+	// on						메소드를 생성합니다.
+	// off						메소드를 제거합니다.
+	// send						클라이언트의 메소드에 데이터를 전송합니다.
+	// disconnect				클라이언트와의 연결을 끊습니다.
 	
 	on('message', function(data, ret) {
 		if (data !== undefined) {
@@ -990,11 +993,11 @@ UDP 소켓 서버를 생성합니다.
 var
 // server
 server = UDP_SERVER(8126, function(requestInfo, content, response) {
-	// requestInfo	  요청 정보
-	// requestInfo.ip   요청자의 IP
-	// requestInfo.port 요청자의 포트
-	// content		  전달 받은 내용
-	// response		 응답 함수
+	// requestInfo		요청 정보
+	// requestInfo.ip	요청자의 IP
+	// requestInfo.port	요청자의 포트
+	// content			전달 받은 내용
+	// response			응답 함수
 
 	response('Hello!');
 });
@@ -1156,12 +1159,12 @@ sampleStore.update({
 		number : 1
 	}
 }, {
-    notExists : function() {
-        console.log('데이터가 존재하지 않습니다.');
-    },
-    success : function(savedData) {
-    	console.log('데이터 수정 완료', savedData);
-    }
+	notExists : function() {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : function(savedData) {
+		console.log('데이터 수정 완료', savedData);
+	}
 });
 ```
 
@@ -1252,12 +1255,12 @@ sampleStore.update({
 
 ```javascript
 sampleStore.get('1234', {
-    notExists : function() {
-        console.log('데이터가 존재하지 않습니다.');
-    },
-    success : function(savedData) {
-    	console.log('데이터:', savedData);
-    }
+	notExists : function() {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : function(savedData) {
+		console.log('데이터:', savedData);
+	}
 });
 ```
 
@@ -1269,12 +1272,12 @@ sampleStore.get('1234', {
 
 ```javascript
 sampleStore.remove('1234', {
-    notExists : function() {
-        console.log('데이터가 존재하지 않습니다.');
-    },
-    success : function(originData) {
-    	console.log('삭제된 데이터:', originData);
-    }
+	notExists : function() {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : function(originData) {
+		console.log('삭제된 데이터:', originData);
+	}
 });
 ```
 

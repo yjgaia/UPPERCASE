@@ -5,7 +5,7 @@ OVERRIDE(NODE_CONFIG, function(origin) {
 	 */
 	global.NODE_CONFIG = COMBINE([{
 
-		// 데이터가 갱신될 때 로그를 출력할 지 여부
+		// 데이터가 갱신될 때 콘솔 로그를 출력할 지 여부
 		isDBLogMode : false,
 
 		// find 함수를 수행할 때 최대로 가져올 데이터의 개수

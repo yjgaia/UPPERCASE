@@ -2,7 +2,7 @@ FOR_BOX(function(box) {
 	'use strict';
 
 	/**
-	 * 같은 이름을 가진 모든 룸에 데이터를 전송합니다.
+	 * 주어진 이름을 가진 모든 룸에 데이터를 전송합니다.
 	 */
 	box.BROADCAST = METHOD({
 

@@ -671,7 +671,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 									form.on('progress', function(bytesRecieved, bytesExpected) {
 										
 										if (uploadProgressHandler !== undefined) {
-											uploadProgressHandler(params, bytesRecieved, bytesExpected);
+											uploadProgressHandler(params, bytesRecieved, bytesExpected, requestInfo);
 										}
 										
 									}).on('field', function(name, value) {
@@ -715,7 +715,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 												function() {
 													return function() {
 														if (uploadOverFileSizeHandler !== undefined) {
-															uploadOverFileSizeHandler(params, maxUploadFileMB, response);
+															uploadOverFileSizeHandler(params, maxUploadFileMB, requestInfo, response);
 														}
 													};
 												}]);
@@ -753,7 +753,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 				
 										function() {
 											return function() {
-												uploadSuccessHandler(params, fileDataSet, response);
+												uploadSuccessHandler(params, fileDataSet, requestInfo, response);
 											};
 										}]);
 										

@@ -54,22 +54,16 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 		run : function(params, callback) {
 			//REQUIRED: params
 			//OPTIONAL: params.dbServerName
-			//OPTIONAL: params.username
-			//OPTIONAL: params.password
 			//OPTIONAL: params.host
 			//OPTIONAL: params.port
 			//REQUIRED: params.name
+			//OPTIONAL: params.username
+			//OPTIONAL: params.password
 			//OPTIONAL: callback
 
 			var
 			// db server name
 			dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName,
-			
-			// username
-			username = params.username,
-
-			// password
-			password = params.password,
 
 			// host
 			host = params.host === undefined ? '127.0.0.1' : params.host,
@@ -78,7 +72,13 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 			port = params.port === undefined ? 27017 : params.port,
 
 			// name
-			name = params.name;
+			name = params.name,
+			
+			// username
+			username = params.username,
+
+			// password
+			password = params.password;
 
 			require('mongodb').MongoClient.connect('mongodb://' + (username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') + host + ':' + port + '/' + name, function(error, nativeDB) {
 
@@ -343,8 +343,8 @@ FOR_BOX(function(box) {
 				if (CHECK_IS_DATA(nameOrParams) !== true) {
 					name = nameOrParams;
 				} else {
-					name = nameOrParams.name;
 					dbServerName = nameOrParams.dbServerName;
+					name = nameOrParams.name;
 					isNotUsingObjectId = nameOrParams.isNotUsingObjectId;
 					isNotUsingHistory = nameOrParams.isNotUsingHistory;
 				}
@@ -592,7 +592,7 @@ FOR_BOX(function(box) {
 						if (errorHandler !== undefined) {
 							errorHandler(errorInfo.errorMsg);
 						} else {
-							SHOW_ERROR('DB', errorInfo, {
+							SHOW_ERROR('DB', errorInfo.errorMsg, {
 								boxName : box.boxName,
 								name : name
 							});
@@ -683,7 +683,7 @@ FOR_BOX(function(box) {
 									logError({
 										method : 'create',
 										data : data,
-										errorMsg : error !== TO_DELETE ? error.toString() : '_id existed.'
+										errorMsg : error !== TO_DELETE ? error.toString() : '_id가 이미 존재합니다.'
 									}, errorHandler);
 								}
 							});
@@ -2085,10 +2085,18 @@ FOR_BOX(function(box) {
 
 		return {
 		
-			init : function(inner, self, name) {
-				//REQUIRED: name
+			init : function(inner, self, nameOrParams) {
+				//REQUIRED: nameOrParams
+				//OPTIONAL: nameOrParams.dbServerName
+				//REQUIRED: nameOrParams.name
 	
 				var
+				// name
+				name,
+				
+				// db server name
+				dbServerName,
+				
 				// waiting log data set
 				waitingLogDataSet = [],
 				
@@ -2100,6 +2108,13 @@ FOR_BOX(function(box) {
 				
 				// find.
 				find;
+				
+				if (CHECK_IS_DATA(nameOrParams) !== true) {
+					name = nameOrParams;
+				} else {
+					dbServerName = nameOrParams.dbServerName;
+					name = nameOrParams.name;
+				}
 	
 				self.log = log = function(data) {
 					//REQUIRED: data
@@ -2124,7 +2139,7 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(function(nativeDB) {
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, function(nativeDB) {
 	
 					var
 					// MongoDB collection
@@ -2323,7 +2338,7 @@ OVERRIDE(NODE_CONFIG, function(origin) {
 	 */
 	global.NODE_CONFIG = COMBINE([{
 
-		// 데이터가 갱신될 때 로그를 출력할 지 여부
+		// 데이터가 갱신될 때 콘솔 로그를 출력할 지 여부
 		isDBLogMode : false,
 
 		// find 함수를 수행할 때 최대로 가져올 데이터의 개수

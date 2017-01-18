@@ -15,7 +15,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [HTTP 요청 기능](#http-요청-기능)
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
 * [`STORE`](#store)
-* [`MSG({ko:, en:, ...})`](#msgko-en-)
+* [`MSG({ko:, en:, ...})`](#msg)
 * [`SOUND`](#sound)
 
 ## 사용방법
