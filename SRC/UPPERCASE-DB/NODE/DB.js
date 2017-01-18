@@ -1089,14 +1089,6 @@ FOR_BOX(function(box) {
 															return isSame;
 															
 														}) !== true) {
-															
-															// save TO_DELETE
-															EACH(updateData, function(value, name) {
-																if (value === TO_DELETE) {
-																	updateData[name] = 'TO_DELETE';
-																}
-															});
-															
 															addHistory('update', id, updateData, savedData.lastUpdateTime);
 														}
 														
