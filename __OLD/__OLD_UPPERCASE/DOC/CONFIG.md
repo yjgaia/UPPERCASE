@@ -29,11 +29,6 @@
 * `isDBLogMode` 데이터베이스 로그 모드를 켜고자 할 때 `true`로 설정합니다. 데이터가 수정 될 경우 console에 로그를 띄어줍니다. 기본값은 `false` 입니다.
 * `maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000` 입니다.
 
-### 업로드 설정
-* `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
-* `maxThumbWidth` 자동으로 만들어지는 섬네일의 최대 가로 길이를 설정합니다.
-* `maxThumbHeight` 자동으로 만들어지는 섬네일의 최대 세로 길이를 설정합니다.
-
 ### 보안 웹서버 설정
 * `securedKeyFilePath` https 프로토콜을 사용하는 보안 웹서버를 위한 key file의 경로를 설정합니다.
 * `securedCertFilePath` https 프로토콜을 사용하는 보안 웹서버를 위한 cert file의 경로를 설정합니다.

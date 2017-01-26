@@ -1,1 +1,0 @@
-UPPERCASE-MODEL은, UPPERCASE-DB와 UPPERCASE-ROOM을 확장하여 데이터 모델 구조에 맞게끔 통신과 데이터 저장을 수행하는 모듈입니다.

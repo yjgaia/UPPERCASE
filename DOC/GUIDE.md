@@ -11,6 +11,18 @@
 ## 일단 설치해 봅시다.
 [UPPERCASE 설치하기](INSTALL.md)
 
+## 프로젝트 구조
+* `Project.js`
+* `Project`
+* `Project/BROWSER`
+* `Project/COMMON`
+* `Project/NODE`
+* `Project/R`
+* `__RF`
+* `VERSION`
+* `DEPENDENCY`
+* `BOX`
+
 ## [UPPERCASE 코드 컨벤션 규칙](GUIDE/CONVENTION.md)
 UPPERCASE를 구현할 때와 UPPERCASE 기반 프로젝트를 개발할 때는 이 규칙에 따라 개발합니다.
 
@@ -26,14 +38,6 @@ UPPERCASE는 아래 모듈들을 내장하고 있기 때문에, 따로 설치하
 * COMMON.js는 어떤 JavaScript 환경에서도 구동됩니다.
 * BROWSER.js는 웹 브라우저 환경에서 구동되는 기능들이 작성되며, COMMON.js를 포함합니다.
 * NODE.js는 Node.js 환경에서 구동되는 기능들이 작성되며, COMMON.js를 포함합니다.
-
-## BOX
-BOX는 UPPERCASE용 모듈을 지칭합니다. 코드 상에서는 UPPERCASE-CORE의 BOX 기능을 통해 만들 수 있으며,
-
-http://box.uppercase.io
-
-## 서버 운영 팁
-[서버 운영 팁](TIP.md)
 
 ## UPPERCASE 사용 방안
 ### 웹 애플리케이션을 만들고 싶어요.

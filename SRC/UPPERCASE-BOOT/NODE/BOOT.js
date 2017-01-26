@@ -7,8 +7,7 @@ global.BOOT = function(params) {
 	//OPTIONAL: params.CONFIG
 	//OPTIONAL: params.NODE_CONFIG
 	//OPTIONAL: params.BROWSER_CONFIG
-	//OPTIONAL: params.UADMIN_CONFIG
-
+	
 	var
 	// UPPERCASE_PATH
 	UPPERCASE_PATH = __dirname + '/..',
@@ -298,12 +297,9 @@ global.BOOT = function(params) {
 		NODE_CONFIG.rootPath = rootPath;
 
 		if (params !== undefined) {
-			
 			_CONFIG = params.CONFIG;
 			_NODE_CONFIG = params.NODE_CONFIG;
 			_BROWSER_CONFIG = params.BROWSER_CONFIG;
-			
-			global.UADMIN_CONFIG = params.UADMIN_CONFIG;
 		}
 
 		// override CONFIG.
@@ -1288,11 +1284,6 @@ global.BOOT = function(params) {
 
 		// run.
 		run();
-		
-		// run UADMIN.
-		if (UADMIN_CONFIG !== undefined) {
-			BOOT_UADMIN(UPPERCASE_PATH);
-		}
 	});
 	
 	if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.getWorkerId() === '~') {

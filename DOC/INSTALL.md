@@ -39,6 +39,9 @@ UPPERCASE의 전체 기능을 모두 사용하기 위해서는 전부 설치해�
 * [ImageMagick](http://www.imagemagick.org) - [이미지 처리 기능](DOC/GUIDE/UPPERCASE-CORE-NODE.md#%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B2%98%EB%A6%AC-%EA%B8%B0%EB%8A%A5) 혹은 [업로드 기능](https://github.com/Hanul/UPPERCASE/blob/master/DOC/GUIDE/UPPERCASE-CORE-NODE.md#업로드-기능을-제공하는-웹-서버)을 사용하지 않는 경우에는 설치하지 않아도 됩니다.
 * [MongoDB](http://www.mongodb.org) - 데이터를 저장할 필요가 없는 경우에는 설치하지 않아도 됩니다.
 
+### MongoDB 사용 시 주의사항
+* **MongoDB는 32bit 컴퓨터에서는 심각한 제한이 있습니다. 32bit 컴퓨터가 다룰 수 있는 크기가 최대 4gb 이기 때문입니다. 따라서 실제 운영 시에는 반드시 64bit 운영체제 위에서 구동하시기 바랍니다.**
+
 ## 업데이트
 UPPERCASE가 설치된 폴더로 이동하여 `git push` 명령을 실행합니다.
 ```
