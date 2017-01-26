@@ -12,7 +12,7 @@ UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를
 * [`SERVER_TIME(date)`](#server_timedate)
 
 ## 사용방법
-[UPPERCASE를 설치](../README.md#설치하기)하였다면, 다음과 같이 프로젝트를 실행할 수 있습니다.
+[UPPERCASE를 설치](../INSTALL.md)하였다면, 다음과 같이 프로젝트를 실행할 수 있습니다.
 
 ```javascript
 require(process.env.UPPERCASE_PATH + '/LOAD.js');

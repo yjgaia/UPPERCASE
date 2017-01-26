@@ -9,7 +9,7 @@
 * `Git` UPPERCASE는 Git을 이용해 설치 및 업그레이드를 수행합니다.
 
 ## 일단 설치해 봅시다.
-[UPPERCASE 설치하기](../README.md#설치하기)
+[UPPERCASE 설치하기](INSTALL.md)
 
 ## [UPPERCASE 코드 컨벤션 규칙](GUIDE/CONVENTION.md)
 UPPERCASE를 구현할 때와 UPPERCASE 기반 프로젝트를 개발할 때는 이 규칙에 따라 개발합니다.
