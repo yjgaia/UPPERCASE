@@ -677,7 +677,7 @@ global.BOOT = function(params) {
 				version : version
 			}, {
 				
-				uploadProgress : function(uriParams, bytesRecieved, bytesExpected) {
+				uploadProgress : function(uriParams, bytesRecieved, bytesExpected, requestInfo) {
 					
 					var
 					// box name
@@ -703,7 +703,7 @@ global.BOOT = function(params) {
 					}
 				},
 				
-				uploadOverFileSize : function(params, maxUploadFileMB, response) {
+				uploadOverFileSize : function(params, maxUploadFileMB, requestInfo, response) {
 					
 					response({
 						statusCode : 302,
@@ -713,7 +713,7 @@ global.BOOT = function(params) {
 					});
 				},
 				
-				uploadSuccess : function(params, fileDataSet, response) {
+				uploadSuccess : function(params, fileDataSet, requestInfo, response) {
 					
 					var
 					// upload file database
