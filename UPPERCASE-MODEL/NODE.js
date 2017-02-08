@@ -654,6 +654,9 @@ FOR_BOX(function(box) {
 					//OPTIONAL: idOrParams.clientInfo
 
 					var
+					// is id mode
+					isIdMode,
+					
 					// id
 					id,
 
@@ -667,14 +670,23 @@ FOR_BOX(function(box) {
 					isRandom,
 					
 					// is to cache
-					isToCache;
+					isToCache,
+					
+					// params
+					params;
 
 					// init params.
 					if (idOrParams !== undefined) {
 						
 						if (CHECK_IS_DATA(idOrParams) !== true) {
+							
+							isIdMode = true;
+							
 							id = idOrParams;
-						} else {
+						}
+						
+						else {
+							
 							id = idOrParams.id;
 							filter = idOrParams.filter;
 							sort = idOrParams.sort;
@@ -685,6 +697,14 @@ FOR_BOX(function(box) {
 								clientInfo = idOrParams.clientInfo;
 							}
 						}
+						
+						params = {
+							id : id,
+							filter : filter,
+							sort : sort,
+							isRandom : isRandom,
+							isToCache : isToCache
+						};
 					}
 					
 					NEXT([
@@ -696,9 +716,7 @@ FOR_BOX(function(box) {
 
 						// run before get listeners.
 						EACH(beforeGetListeners, function(beforeGetListener) {
-							
-							if (beforeGetListener(idOrParams, next, ret, clientInfo) === false) {
-								
+							if (beforeGetListener(isIdMode === true ? id : params, next, ret, clientInfo) === false) {
 								isNotRunNext = true;
 							}
 						});
@@ -712,24 +730,18 @@ FOR_BOX(function(box) {
 						return function() {
 						
 							// get data in database.
-							db.get(idOrParams === undefined ? undefined : {
-								id : id,
-								filter : filter,
-								sort : sort,
-								isRandom : isRandom,
-								isToCache : isToCache
-							}, {
-		
+							db.get(params, {
+								
 								error : function(errorMsg) {
 									ret({
 										errorMsg : errorMsg
 									});
 								},
-		
+								
 								notExists : function() {
 									ret({});
 								},
-		
+								
 								success : function(savedData) {
 									
 									var
@@ -1106,6 +1118,15 @@ FOR_BOX(function(box) {
 						}
 					}
 					
+					params = {
+						filter : filter,
+						sort : sort,
+						start : start,
+						count : count,
+						isFindAll : isFindAll,
+						isToCache : isToCache
+					};
+					
 					NEXT([
 					function(next) {
 						
@@ -1115,16 +1136,7 @@ FOR_BOX(function(box) {
 
 						// run before find listeners.
 						EACH(beforeFindListeners, function(beforeFindListener) {
-							
-							if (beforeFindListener({
-								filter : filter,
-								sort : sort,
-								start : start,
-								count : count,
-								isFindAll : isFindAll,
-								isToCache : isToCache
-							}, next, ret, clientInfo) === false) {
-								
+							if (beforeFindListener(params, next, ret, clientInfo) === false) {
 								isNotRunNext = true;
 							}
 						});
@@ -1138,14 +1150,7 @@ FOR_BOX(function(box) {
 						return function() {
 							
 							// find data set in database.
-							db.find({
-								filter : filter,
-								sort : sort,
-								start : start,
-								count : count,
-								isFindAll : isFindAll,
-								isToCache : isToCache
-							}, {
+							db.find(params, {
 		
 								error : function(errorMsg) {
 									ret({
@@ -1210,6 +1215,11 @@ FOR_BOX(function(box) {
 						}
 					}
 					
+					params = {
+						filter : filter,
+						isToCache : isToCache
+					};
+					
 					NEXT([
 					function(next) {
 						
@@ -1219,12 +1229,7 @@ FOR_BOX(function(box) {
 
 						// run before count listeners.
 						EACH(beforeCountListeners, function(beforeCountListener) {
-							
-							if (beforeCountListener({
-								filter : filter,
-								isToCache : isToCache
-							}, next, ret, clientInfo) === false) {
-								
+							if (beforeCountListener(params, next, ret, clientInfo) === false) {
 								isNotRunNext = true;
 							}
 						});
@@ -1238,10 +1243,7 @@ FOR_BOX(function(box) {
 						return function() {
 							
 							// count data in database.
-							db.count({
-								filter : filter,
-								isToCache : isToCache
-							}, {
+							db.count(params, {
 		
 								error : function(errorMsg) {
 									ret({
@@ -1306,6 +1308,11 @@ FOR_BOX(function(box) {
 						}
 					}
 					
+					params = {
+						filter : filter,
+						isToCache : isToCache
+					};
+					
 					NEXT([
 					function(next) {
 						
@@ -1315,12 +1322,7 @@ FOR_BOX(function(box) {
 
 						// run before check is exists listeners.
 						EACH(beforeCheckIsExistsListeners, function(beforeCheckIsExistsListener) {
-							
-							if (beforeCheckIsExistsListener({
-								filter : filter,
-								isToCache : isToCache
-							}, next, ret, clientInfo) === false) {
-								
+							if (beforeCheckIsExistsListener(params, next, ret, clientInfo) === false) {
 								isNotRunNext = true;
 							}
 						});
@@ -1334,10 +1336,7 @@ FOR_BOX(function(box) {
 						return function() {
 						
 							// check is exists data in database.
-							db.checkIsExists({
-								filter : filter,
-								isToCache : isToCache
-							}, {
+							db.checkIsExists(params, {
 		
 								error : function(errorMsg) {
 									ret({
