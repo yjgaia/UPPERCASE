@@ -16,20 +16,14 @@ global.CONFIG = {
 /**
  * 메소드를 생성합니다.
  */
-global.METHOD = function(define) {
-	'use strict';
+global.METHOD = (define) => {
 	//REQUIRED: define		메소드 정의 구문
 	//REQUIRED: define.run	메소드 실행 구문
 
-	var
-	// funcs
-	funcs,
+	let funcs;
+	let run;
 
-	// run.
-	run,
-
-	// method.
-	m = function(params, funcs) {
+	let m = (params, funcs) => {
 		//OPTIONAL: params
 		//OPTIONAL: funcs
 
@@ -37,11 +31,9 @@ global.METHOD = function(define) {
 			return run(params, funcs);
 		}
 	};
-
-	// set type.
+	
 	m.type = METHOD;
-
-	// when define is function
+	
 	if (typeof define === 'function') {
 		funcs = define(m);
 	}
@@ -71,38 +63,27 @@ global.TO_DELETE = null;
 /**
  * BOX를 생성합니다.
  */
-global.BOX = METHOD(function(m) {
-	'use strict';
+global.BOX = METHOD((m) => {
 
-	var
-	// boxes
-	boxes = {},
-
-	// get all boxes.
-	getAllBoxes;
-
-	m.getAllBoxes = getAllBoxes = function() {
+	let boxes = {};
+	
+	let getAllBoxes = m.getAllBoxes = () => {
 		return boxes;
 	};
 
 	return {
 
-		run : function(boxName) {
+		run : (boxName) => {
 			//REQUIRED: boxName
 
-			var
-			// box.
-			box = function(packName) {
+			let box = (packName) => {
 				//REQUIRED: packName
 
-				var
-				// packNameSps
-				packNameSps = packName.split('.'),
+				let packNameSps = packName.split('.');
+				
+				let pack;
 
-				// pack
-				pack;
-
-				EACH(packNameSps, function(packNameSp) {
+				EACH(packNameSps, (packNameSp) => {
 
 					if (pack === undefined) {
 
@@ -145,28 +126,22 @@ global.BOX = METHOD(function(m) {
 /**
  * 모든 박스를 대상으로 하는 메소드와 클래스, 싱글톤 객체를 선언할 때 사용합니다.
  */
-global.FOR_BOX = METHOD(function(m) {
-	'use strict';
+global.FOR_BOX = METHOD((m) => {
 
-	var
-	// funcs
-	funcs = [],
-
-	// inject.
-	inject;
-
-	m.inject = inject = function(box) {
-		EACH(funcs, function(func) {
+	let funcs = [];
+	
+	let inject = m.inject = (box) => {
+		EACH(funcs, (func) => {
 			func(box);
 		});
 	};
 
 	return {
 
-		run : function(func) {
+		run : (func) => {
 			//REQUIRED: func
 
-			EACH(BOX.getAllBoxes(), function(box) {
+			EACH(BOX.getAllBoxes(), (box) => {
 				func(box);
 			});
 
@@ -178,7 +153,7 @@ global.FOR_BOX = METHOD(function(m) {
 /*
  * 콘솔에 오류 메시지를 출력합니다.
  */
-global.SHOW_ERROR = function(tag, errorMsg, params) {
+global.SHOW_ERROR = (tag, errorMsg, params) => {
 	//REQUIRED: tag
 	//REQUIRED: errorMsg
 	//OPTIONAL: params
@@ -190,24 +165,10 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 		console.error(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
-
-FOR_BOX(function(box) {
-
-	box.SHOW_ERROR = METHOD({
-
-		run : function(tag, errorMsg, params) {
-			//REQUIRED: tag
-			//REQUIRED: errorMsg
-			//OPTIONAL: params
-
-			SHOW_ERROR(box.boxName + '.' + tag, errorMsg, params);
-		}
-	});
-});
 /*
  * 콘솔에 경고 메시지를 출력합니다.
  */
-global.SHOW_WARNING = function(tag, warningMsg, params) {
+global.SHOW_WARNING = (tag, warningMsg, params) => {
 	//REQUIRED: tag
 	//REQUIRED: warningMsg
 	//OPTIONAL: params
@@ -219,34 +180,14 @@ global.SHOW_WARNING = function(tag, warningMsg, params) {
 		console.warn(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
-
-FOR_BOX(function(box) {
-
-	box.SHOW_WARNING = METHOD({
-
-		run : function(tag, warningMsg, params) {
-			//REQUIRED: tag
-			//REQUIRED: warningMsg
-			//OPTIONAL: params
-
-			SHOW_WARNING(box.boxName + '.' + tag, warningMsg, params);
-		}
-	});
-});
 /**
  * 클래스를 생성합니다.
  */
-global.CLASS = METHOD(function(m) {
-	'use strict';
+global.CLASS = METHOD((m) => {
 
-	var
-	// instance count
-	instanceCount = 0,
+	let instanceCount = 0;
 
-	// get next instance id.
-	getNextInstanceId;
-
-	m.getNextInstanceId = getNextInstanceId = function() {
+	let getNextInstanceId = m.getNextInstanceId = () => {
 
 		instanceCount += 1;
 
@@ -255,54 +196,33 @@ global.CLASS = METHOD(function(m) {
 
 	return {
 
-		run : function(define) {
+		run : (define) => {
 			//REQUIRED: define	클래스 정의 구문
 
-			var
-			// funcs
-			funcs,
-
-			// preset.
-			preset,
-
-			// init.
-			init,
-
-			// params.
-			_params,
-
-			// after init.
-			afterInit,
-
-			// cls.
-			cls,
-
-			// inner init.
-			innerInit,
-
-			// inner after init.
-			innerAfterInit;
+			let funcs;
 			
-			cls = function(params, funcs) {
+			let preset;
+			let init;
+			let _params;
+			let afterInit;
+			
+			let cls = (params, funcs) => {
 				//OPTIONAL: params
 				//OPTIONAL: funcs
 
-				var
 				// inner (protected)
-				inner = {},
+				let inner = {};
 
 				// self (public)
-				self = {
+				let self = {
 					
 					type : cls,
 					
 					id : getNextInstanceId(),
 					
-					checkIsInstanceOf : function(checkCls) {
+					checkIsInstanceOf : (checkCls) => {
 	
-						var
-						// target cls
-						targetCls = cls;
+						let targetCls = cls;
 	
 						// check moms.
 						while (targetCls !== undefined) {
@@ -341,24 +261,18 @@ global.CLASS = METHOD(function(m) {
 			cls.type = CLASS;
 			cls.id = getNextInstanceId();
 
-			cls.innerInit = innerInit = function(inner, self, params, funcs) {
+			let innerInit = cls.innerInit = (inner, self, params, funcs) => {
 				//OPTIONAL: params
 				//OPTIONAL: funcs
-
-				var
+				
 				// mom (parent class)
-				mom,
+				let mom;
+				
+				let paramValue;
 
-				// temp params
-				tempParams,
+				let extend = (params, tempParams) => {
 
-				// param value
-				paramValue,
-
-				// extend.
-				extend = function(params, tempParams) {
-
-					EACH(tempParams, function(value, name) {
+					EACH(tempParams, (value, name) => {
 
 						if (params[name] === undefined) {
 							params[name] = value;
@@ -377,7 +291,7 @@ global.CLASS = METHOD(function(m) {
 					
 					else if (CHECK_IS_DATA(params) === true) {
 
-						tempParams = _params(cls);
+						let tempParams = _params(cls);
 
 						if (tempParams !== undefined) {
 							extend(params, tempParams);
@@ -417,13 +331,11 @@ global.CLASS = METHOD(function(m) {
 				return params;
 			};
 
-			cls.innerAfterInit = innerAfterInit = function(inner, self, params, funcs) {
+			let innerAfterInit = cls.innerAfterInit = (inner, self, params, funcs) => {
 				//OPTIONAL: params
 				//OPTIONAL: funcs
 
-				var
-				// mom
-				mom = cls.mom;
+				let mom = cls.mom;
 
 				// when mom exists, run mom's after init.
 				if (mom !== undefined) {
@@ -454,8 +366,7 @@ global.CLASS = METHOD(function(m) {
  */
 global.INIT_OBJECTS = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 
 		OBJECT.initObjects();
 	}
@@ -464,40 +375,17 @@ global.INIT_OBJECTS = METHOD({
 /**
  * 실글톤 객체를 생성합니다.
  */
-global.OBJECT = METHOD(function(m) {
-	'use strict';
+global.OBJECT = METHOD((m) => {
 
-	var
-	// ready objects
-	readyObjects = [],
+	let readyObjects = [];
+	let isInited = false;
 
-	// is inited
-	isInited = false,
-
-	// init object.
-	initObject,
-
-	// add ready object.
-	addReadyObject,
-
-	// remove ready object.
-	removeReadyObject,
-
-	// init objects.
-	initObjects;
-
-	initObject = function(object) {
+	let initObject = (object) => {
 		//REQUIRED: object	초기화 할 싱글톤 객체
 
-		var
-		// cls
-		cls = object.type,
-
-		// inner (protected)
-		inner = {},
-
-		// params
-		params = {};
+		let cls = object.type;
+		let inner = {};
+		let params = {};
 
 		// set id.
 		object.id = CLASS.getNextInstanceId();
@@ -506,7 +394,7 @@ global.OBJECT = METHOD(function(m) {
 		cls.innerAfterInit(inner, object, params);
 	};
 
-	addReadyObject = function(object) {
+	let addReadyObject = (object) => {
 		//REQUIRED: object	초기화를 대기시킬 싱글톤 객체
 
 		if (isInited === true) {
@@ -516,7 +404,7 @@ global.OBJECT = METHOD(function(m) {
 		}
 	};
 
-	m.removeReadyObject = removeReadyObject = function(object) {
+	let removeReadyObject = m.removeReadyObject = (object) => {
 		//REQUIRED: object	대기열에서 삭제할 싱글톤 객체
 		
 		REMOVE({
@@ -525,10 +413,10 @@ global.OBJECT = METHOD(function(m) {
 		});
 	};
 
-	m.initObjects = initObjects = function() {
+	let initObjects = m.initObjects = () => {
 
 		// init all objects.
-		EACH(readyObjects, function(object) {
+		EACH(readyObjects, (object) => {
 			initObject(object);
 		});
 
@@ -537,23 +425,18 @@ global.OBJECT = METHOD(function(m) {
 
 	return {
 
-		run : function(define) {
+		run : (define) => {
 			//REQUIRED: define	클래스 정의 구문
 
-			var
-			// cls
-			cls = CLASS(define),
+			let cls = CLASS(define);
 
-			// self
-			self = {
+			let self = {
 				
 				type : cls,
 				
-				checkIsInstanceOf : function(checkCls) {
+				checkIsInstanceOf : (checkCls) => {
 
-					var
-					// target cls
-					targetCls = cls;
+					let targetCls = cls;
 	
 					// check moms.
 					while (targetCls !== undefined) {
@@ -581,7 +464,7 @@ global.OBJECT = METHOD(function(m) {
  */
 global.CHECK_IS_ARGUMENTS = METHOD({
 
-	run : function(target) {'use strict';
+	run : (target) => {
 		//OPTIONAL: target
 
 		if (
@@ -607,21 +490,15 @@ global.CHECK_IS_ARGUMENTS = METHOD({
  */
 global.NEXT = METHOD({
 
-	run : function(countOrArray, funcs) {
-		'use strict';
+	run : (countOrArray, funcs) => {
 		//OPTIONAL: countOrArray
 		//REQUIRED: funcs
 
-		var
-		// count
-		count,
-
-		// array
-		array,
-
-		// f.
-		f;
-
+		let count;
+		let array;
+		
+		let f;
+		
 		if (funcs === undefined) {
 			funcs = countOrArray;
 			countOrArray = undefined;
@@ -638,11 +515,9 @@ global.NEXT = METHOD({
 		REPEAT({
 			start : funcs.length - 1,
 			end : 0
-		}, function(i) {
+		}, (i) => {
 
-			var
-			// next.
-			next;
+			let next;
 
 			// get last function.
 			if (i !== 0 && f === undefined) {
@@ -666,7 +541,7 @@ global.NEXT = METHOD({
 
 				// when next not exists, next is empty function.
 				if (next === undefined) {
-					next = function() {
+					next = () => {
 						// ignore.
 					};
 				}
@@ -674,63 +549,55 @@ global.NEXT = METHOD({
 				f = funcs[i];
 
 				if (count !== undefined) {
+					
+					let i = -1;
 
-					RUN(function() {
+					RUN((self) => {
 
-						var
-						// i
-						i = -1;
+						i += 1;
 
-						RUN(function(self) {
+						if (i + 1 < count) {
+							f(i, self);
+						} else {
+							f(i, next);
+						}
+					});
+				}
+				
+				else if (array !== undefined) {
+
+					let length = array.length;
+
+					if (length === 0) {
+						next();
+					}
+					
+					else {
+						
+						let i = -1;
+
+						RUN((self) => {
 
 							i += 1;
 
-							if (i + 1 < count) {
-								f(i, self);
+							if (i + 1 < length) {
+
+								// if shrink
+								if (array.length === length - 1) {
+									i -= 1;
+									length -= 1;
+								}
+
+								f(array[i], self, i);
+
 							} else {
-								f(i, next);
+								f(array[i], next, i);
 							}
 						});
-					});
-
-				} else if (array !== undefined) {
-
-					RUN(function() {
-
-						var
-						// length
-						length = array.length,
-
-						// i
-						i = -1;
-
-						if (length === 0) {
-							next();
-						} else {
-
-							RUN(function(self) {
-
-								i += 1;
-
-								if (i + 1 < length) {
-
-									// if shrink
-									if (array.length === length - 1) {
-										i -= 1;
-										length -= 1;
-									}
-
-									f(array[i], self, i);
-
-								} else {
-									f(array[i], next, i);
-								}
-							});
-						}
-					});
-
-				} else {
-
+					}
+				}
+				
+				else {
 					f(next);
 				}
 			}
@@ -743,8 +610,7 @@ global.NEXT = METHOD({
  */
 global.OVERRIDE = METHOD({
 
-	run : function(origin, func) {
-		'use strict';
+	run : (origin, func) => {
 		//REQUIRED: origin	오버라이드 할 대상
 		//REQUIRED: func
 
@@ -764,42 +630,31 @@ global.OVERRIDE = METHOD({
  */
 global.PARALLEL = METHOD({
 
-	run : function(dataOrArrayOrCount, funcs) {
-		'use strict';
+	run : (dataOrArrayOrCount, funcs) => {
 		//OPTIONAL: dataOrArrayOrCount
 		//REQUIRED: funcs
-
-		var
-		// property count
-		propertyCount,
 		
-		// done count
-		doneCount = 0;
+		let doneCount = 0;
 
 		// only funcs
 		if (funcs === undefined) {
 			funcs = dataOrArrayOrCount;
 			
-			RUN(function() {
+			let length = funcs.length - 1;
 
-				var
-				// length
-				length = funcs.length - 1;
+			EACH(funcs, (func, i) => {
 
-				EACH(funcs, function(func, i) {
+				if (i < length) {
 
-					if (i < length) {
+					func(() => {
 
-						func(function() {
+						doneCount += 1;
 
-							doneCount += 1;
-
-							if (doneCount === length) {
-								funcs[length]();
-							}
-						});
-					}
-				});
+						if (doneCount === length) {
+							funcs[length]();
+						}
+					});
+				}
 			});
 		}
 		
@@ -809,15 +664,15 @@ global.PARALLEL = METHOD({
 		
 		else if (CHECK_IS_DATA(dataOrArrayOrCount) === true) {
 			
-			propertyCount = COUNT_PROPERTIES(dataOrArrayOrCount);
+			let propertyCount = COUNT_PROPERTIES(dataOrArrayOrCount);
 
 			if (propertyCount === 0) {
 				funcs[1]();
 			} else {
 
-				EACH(dataOrArrayOrCount, function(value, name) {
+				EACH(dataOrArrayOrCount, (value, name) => {
 
-					funcs[0](value, function() {
+					funcs[0](value, () => {
 
 						doneCount += 1;
 
@@ -835,9 +690,9 @@ global.PARALLEL = METHOD({
 				funcs[1]();
 			} else {
 
-				EACH(dataOrArrayOrCount, function(value, i) {
+				EACH(dataOrArrayOrCount, (value, i) => {
 
-					funcs[0](value, function() {
+					funcs[0](value, () => {
 
 						doneCount += 1;
 
@@ -856,9 +711,9 @@ global.PARALLEL = METHOD({
 				funcs[1]();
 			} else {
 
-				REPEAT(dataOrArrayOrCount, function(i) {
+				REPEAT(dataOrArrayOrCount, (i) => {
 
-					funcs[0](i, function() {
+					funcs[0](i, () => {
 
 						doneCount += 1;
 
@@ -877,20 +732,12 @@ global.PARALLEL = METHOD({
  */
 global.PARSE_STR = METHOD({
 
-	run : function(dataStr) {
-		'use strict';
+	run : (dataStr) => {
 		//REQUIRED: dataStr
-
-		var
-		// data
-		data,
 		
-		// array
-		array;
-
 		try {
 
-			data = JSON.parse(dataStr);
+			let data = JSON.parse(dataStr);
 			
 			if (CHECK_IS_DATA(data) === true) {
 				return UNPACK_DATA(data);
@@ -898,9 +745,9 @@ global.PARSE_STR = METHOD({
 			
 			else if (CHECK_IS_ARRAY(data) === true) {
 				
-				array = [];
+				let array = [];
 				
-				EACH(data, function(data) {
+				EACH(data, (data) => {
 					array.push(UNPACK_DATA(data));
 				});
 				
@@ -922,32 +769,28 @@ global.PARSE_STR = METHOD({
 /**
  * 알파벳 대, 소문자와 숫자로 이루어진 임의의 문자열을 생성합니다.
  */
-global.RANDOM_STR = METHOD({
-
-	run : function(length) {
-		'use strict';
-		//REQUIRED: length
-
-		var
-		// random string
-		randomStr = '',
-
-		// characters
-		characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-
-		// i
-		i;
-
-		REPEAT(length, function() {
-
-			// add random character to random string.
-			randomStr += characters.charAt(RANDOM({
-				limit : characters.length
-			}));
-		});
-
-		return randomStr;
-	}
+global.RANDOM_STR = METHOD(() => {
+	
+	const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	
+	return {
+	
+		run : (length) => {
+			//REQUIRED: length
+	
+			let randomStr = '';
+	
+			REPEAT(length, () => {
+	
+				// add random character to random string.
+				randomStr += CHARACTERS.charAt(RANDOM({
+					limit : CHARACTERS.length
+				}));
+			});
+	
+			return randomStr;
+		}
+	};
 });
 
 /**
@@ -955,13 +798,8 @@ global.RANDOM_STR = METHOD({
  */
 global.STRINGIFY = METHOD({
 
-	run : function(data) {
-		'use strict';
+	run : (data) => {
 		//REQUIRED: data
-		
-		var
-		// array
-		array;
 		
 		if (CHECK_IS_DATA(data) === true) {
 			return JSON.stringify(PACK_DATA(data));
@@ -969,9 +807,9 @@ global.STRINGIFY = METHOD({
 		
 		else if (CHECK_IS_ARRAY(data) === true) {
 			
-			array = [];
+			let array = [];
 			
-			EACH(data, function(data) {
+			EACH(data, (data) => {
 				array.push(PACK_DATA(data));
 			});
 			
@@ -989,37 +827,27 @@ global.STRINGIFY = METHOD({
  * 
  * 테스트에 성공하거나 실패하면 콘솔에 메시지를 출력합니다.
  */
-global.TEST = METHOD(function(m) {
-	'use strict';
+global.TEST = METHOD((m) => {
 
-	var
-	// error count
-	errorCount = 0;
+	let errorCount = 0;
 
 	return {
 
-		run : function(name, test) {
+		run : (name, test) => {
 			//REQUIRED: name
 			//REQUIRED: test
 
-			test(function(bool) {
+			test((bool) => {
 				//REQUIRED: bool
 
-				var
-				// temp
-				temp = {},
-
-				// line
-				line,
-
-				// throw error.
-				throwError;
-
+				let temp = {};
+				let line;
+				
 				if (bool === true) {
 					console.log('[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
 				} else {
 
-					temp.__THROW_ERROR_$$$ = function() {
+					temp.__THROW_ERROR_$$$ = () => {
 						try {
 							throw Error();
 						} catch(error) {
@@ -1051,39 +879,26 @@ global.TEST = METHOD(function(m) {
  */
 global.URI_MATCHER = CLASS({
 
-	init : function(inner, self, format) {
-		'use strict';
+	init : (inner, self, format) => {
 		//REQUIRED: format
 
-		var
-		// Check class
-		Check = CLASS({
+		let Check = CLASS({
 
-			init : function(inner, self, uri) {
+			init : (inner, self, uri) => {
 				//REQUIRED: uri
 
-				var
-				// uri parts
-				uriParts = uri.split('/'),
+				let uriParts = uri.split('/');
+				
+				let isMatched;
+				let uriParams = {};
 
-				// is matched
-				isMatched,
+				let find = function(format) {
 
-				// uri parmas
-				uriParams = {},
+					let formatParts = format.split('/');
 
-				// find.
-				find = function(format) {
+					return EACH(uriParts, (uriPart, i) => {
 
-					var
-					// format parts
-					formatParts = format.split('/');
-
-					return EACH(uriParts, function(uriPart, i) {
-
-						var
-						// format part
-						formatPart = formatParts[i];
+						let formatPart = formatParts[i];
 
 						if (formatPart === '**') {
 							isMatched = true;
@@ -1106,36 +921,27 @@ global.URI_MATCHER = CLASS({
 						}
 
 					}) === true || isMatched === true;
-				},
-
-				// check is matched.
-				checkIsMatched,
-
-				// get uri params.
-				getURIParams;
+				};
 
 				if (CHECK_IS_ARRAY(format) === true) {
-					isMatched = EACH(format, function(format) {
+					isMatched = EACH(format, (format) => {
 						return find(format) !== true;
 					}) !== true;
 				} else {
 					isMatched = find(format);
 				}
 
-				self.checkIsMatched = checkIsMatched = function() {
+				let checkIsMatched = self.checkIsMatched = () => {
 					return isMatched;
 				};
 
-				self.getURIParams = getURIParams = function() {
+				let getURIParams = self.getURIParams = () => {
 					return uriParams;
 				};
 			}
-		}),
-
-		// check.
-		check;
-
-		self.check = check = function(uri) {
+		});
+		
+		let check = self.check = (uri) => {
 			return Check(uri);
 		};
 	}
@@ -1144,113 +950,36 @@ global.URI_MATCHER = CLASS({
 /**
  * 데이터를 검증하고, 어떤 부분이 잘못되었는지 오류를 확인할 수 있는 VALID 클래스
  */
-global.VALID = CLASS(function(cls) {
-	'use strict';
-
-	var
-	// not empty.
-	notEmpty,
-
-	// regex.
-	regex,
-
-	// size.
-	size,
-
-	// integer.
-	integer,
-
-	// real.
-	real,
-
-	// bool.
-	bool,
-
-	// date.
-	date,
-
-	// min.
-	min,
-
-	// max.
-	max,
-
-	// email.
-	email,
-
-	// png.
-	png,
-
-	// url.
-	url,
-
-	// username.
-	username,
-
-	// mongoId.
-	mongoId,
-
-	// one.
-	one,
-
-	// array.
-	array,
-
-	// data.
-	data,
-
-	// element.
-	element,
-
-	// property.
-	property,
-
-	// detail.
-	detail,
-
-	// equal.
-	equal;
-
-	cls.notEmpty = notEmpty = function(value) {
+global.VALID = CLASS((cls) => {
+	
+	let notEmpty = cls.notEmpty = (value) => {
 		//REQUIRED: value
 
-		var
-		// string
-		str = (value === undefined || value === TO_DELETE) ? '' : String(value);
+		let str = (value === undefined || value === TO_DELETE) ? '' : String(value);
 
 		return CHECK_IS_ARRAY(value) === true || str.trim() !== '';
 	};
 
-	cls.regex = regex = function(params) {
+	let regex = cls.regex = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.pattern
 
-		var
-		// string
-		str = String(params.value),
-		
-		// pattern
-		pattern = params.pattern;
+		let str = String(params.value);
+		let pattern = params.pattern;
 
 		return str === str.match(pattern)[0];
 	};
 
-	cls.size = size = function(params) {
+	let size = cls.size = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//OPTIONAL: params.min
 		//REQUIRED: params.max
-
-		var
-		// string
-		str = String(params.value),
 		
-		// min
-		min = params.min,
-
-		// max
-		max = params.max;
+		let str = String(params.value);
+		let min = params.min;
+		let max = params.max;
 		
 		if (min === undefined) {
 			min = 0;
@@ -1259,160 +988,134 @@ global.VALID = CLASS(function(cls) {
 		return min <= str.trim().length && (max === undefined || str.length <= max);
 	};
 
-	cls.integer = integer = function(value) {
+	let integer = cls.integer = (value) => {
 		//REQUIRED: value
 
-		var
-		// string
-		str = String(value);
+		let str = String(value);
 
 		return notEmpty(str) === true && str.match(/^(?:-?(?:0|[1-9][0-9]*))$/) !== TO_DELETE;
 	};
 
-	cls.real = real = function(value) {
+	let real = cls.real = (value) => {
 		//REQUIRED: value
-
-		var
-		// string
-		str = String(value);
+		
+		let str = String(value);
 
 		return notEmpty(str) === true && str.match(/^(?:-?(?:0|[1-9][0-9]*))?(?:\.[0-9]*)?$/) !== TO_DELETE;
 	};
 
-	cls.bool = bool = function(value) {
+	let bool = cls.bool = (value) => {
 		//REQUIRED: value
-
-		var
-		// string
-		str = String(value);
+		
+		let str = String(value);
 
 		return str === 'true' || str === 'false';
 	};
 
-	cls.date = date = function(value) {
+	let date = cls.date = (value) => {
 		//REQUIRED: value
 
-		var
-		// string
-		str = String(value),
-
-		// date
-		date = Date.parse(str);
+		let str = String(value);
+		let date = Date.parse(str);
 
 		return isNaN(date) === false;
 	};
 
-	cls.min = min = function(params) {
+	let min = cls.min = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.min
-
-		var
-		// value
-		value = params.value,
 		
-		// min
-		min = params.min;
+		let value = params.value;
+		let min = params.min;
 
 		return real(value) === true && min <= value;
 	};
 
-	cls.max = max = function(params) {
+	let max = cls.max = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.max
-
-		var
-		// value
-		value = params.value,
 		
-		// max
-		max = params.max;
+		let value = params.value;
+		let max = params.max;
 
 		return real(value) === true && max >= value;
 	};
 
-	cls.email = email = function(value) {
+	let email = cls.email = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/) !== TO_DELETE;
 	};
 
-	cls.png = png = function(value) {
+	let png = cls.png = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^data:image\/png;base64,/) !== TO_DELETE;
 	};
 
-	cls.url = url = function(value) {
+	let url = cls.url = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?:\w+:\w+@)?((?:(?:[-\w\d{1-3}]+\.)+(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|edu|co\.uk|ac\.uk|it|fr|tv|museum|asia|local|travel|[a-z]{2}))|((\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)(\.(\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)){3}))(?::[\d]{1,5})?(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?:#(?:[-\w~!$ |\/.,*:;=]|%[a-f\d]{2})*)?$/i) !== TO_DELETE && value.length <= 2083;
 	};
 
-	cls.username = username = function(value) {
+	let username = cls.username = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^[_a-zA-Z0-9\-]+$/) !== TO_DELETE;
 	};
 
 	// mongodb id check
-	cls.mongoId = mongoId = function(value) {
+	let mongoId = cls.mongoId = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/[0-9a-f]{24}/) !== TO_DELETE && value.length === 24;
 	};
 
-	cls.one = one = function(params) {
+	let one = cls.one = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.array
 
-		var
-		// value
-		value = params.value,
-		
-		// array
-		array = params.array;
+		let value = params.value;
+		let array = params.array;
 
-		return EACH(array, function(_value) {
+		return EACH(array, (_value) => {
 			if (value === _value) {
 				return false;
 			}
 		}) === false;
 	};
 
-	cls.array = array = function(value) {
+	let array = cls.array = (value) => {
 		//REQUIRED: value
 
 		return CHECK_IS_ARRAY(value) === true;
 	};
 
-	cls.data = data = function(value) {
+	let data = cls.data = (value) => {
 		//REQUIRED: value
 
 		return CHECK_IS_DATA(value) === true;
 	};
 
-	cls.element = element = function(params) {
+	let element = cls.element = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.array
 		//REQUIRED: params.validData
 		//OPTIONAL: params.isToWash
+		
+		let array = params.array;
 
-		var
-		// array
-		array = params.array,
-
-		// valid
-		valid = VALID({
+		let valid = VALID({
 			_ : params.validData
-		}),
+		});
 		
-		// is to wash
-		isToWash = params.isToWash;
+		let isToWash = params.isToWash;
 		
-		return EACH(array, function(value) {
+		return EACH(array, (value) => {
 			if ((isToWash === true ? valid.checkAndWash : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
@@ -1421,25 +1124,21 @@ global.VALID = CLASS(function(cls) {
 		}) === true;
 	};
 
-	cls.property = property = function(params) {
+	let property = cls.property = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validData
 		//OPTIONAL: params.isToWash
 
-		var
-		// array
-		data = params.data,
+		let data = params.data;
 
-		// valid
-		valid = VALID({
+		let valid = VALID({
 			_ : params.validData
-		}),
+		});
 		
-		// is to wash
-		isToWash = params.isToWash;
+		let isToWash = params.isToWash;
 		
-		return EACH(data, function(value) {
+		return EACH(data, (value) => {
 			if ((isToWash === true ? valid.checkAndWash : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
@@ -1448,93 +1147,58 @@ global.VALID = CLASS(function(cls) {
 		}) === true;
 	};
 
-	cls.detail = detail = function(params) {
+	let detail = cls.detail = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validDataSet
 		//OPTIONAL: params.isToWash
-
-		var
-		// data
-		data = params.data,
-
-		// valid
-		valid = VALID(params.validDataSet),
 		
-		// is to wash
-		isToWash = params.isToWash;
+		let data = params.data;
+		let valid = VALID(params.validDataSet);
+		let isToWash = params.isToWash;
 		
 		return (isToWash === true ? valid.checkAndWash : valid.check)(data).checkHasError() !== true;
 	};
 
-	cls.equal = equal = function(params) {
+	let equal = cls.equal = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.validValue
 
-		var
-		// value
-		value = params.value,
-
-		// string
-		str = String(value),
-
-		// valid value
-		validValue = params.validValue,
-
-		// valid str
-		validStr = String(validValue);
+		let str = String(params.value);
+		let validStr = String(params.validValue);
 
 		return str === validStr;
 	};
 
 	return {
 
-		init : function(inner, self, validDataSet) {
+		init : (inner, self, validDataSet) => {
 			//REQUIRED: validDataSet
 
-			var
-			// Check class
-			Check = CLASS({
+			let Check = CLASS({
 
-				init : function(inner, self, params) {
+				init : (inner, self, params) => {
 					//REQUIRED: params
 					//REQUIRED: params.data
 					//OPTIONAL: params.isToWash
 					//OPTIONAL: params.isForUpdate
 
-					var
-					// data
-					data = params.data,
+					let data = params.data;
+					let isToWash = params.isToWash;
+					let isForUpdate = params.isForUpdate;
 
-					// is to wash
-					isToWash = params.isToWash,
-					
-					// is for update
-					isForUpdate = params.isForUpdate,
+					let hasError = false;
+					let errors = {};
 
-					// has error
-					hasError = false,
-
-					// errors
-					errors = {},
-
-					// check has error.
-					checkHasError,
-
-					// get errors.
-					getErrors;
-
-					EACH(validDataSet, function(validData, attr) {
+					EACH(validDataSet, (validData, attr) => {
 
 						// when valid data is true, pass
 						if (validData !== true) {
 
-							EACH(validData, function(validParams, name) {
+							EACH(validData, (validParams, name) => {
 
-								var
-								// value
-								value = data[attr];
+								let value = data[attr];
 								
 								if (isForUpdate === true && value === undefined) {
 
@@ -1772,49 +1436,37 @@ global.VALID = CLASS(function(cls) {
 
 					if (isToWash === true) {
 						
-						EACH(data, function(value, attr) {
+						EACH(data, (value, attr) => {
 							if (validDataSet[attr] === undefined) {
 								delete data[attr];
 							}
 						});
 					}
 
-					self.checkHasError = checkHasError = function() {
+					let checkHasError = self.checkHasError = () => {
 						return hasError;
 					};
 
-					self.getErrors = getErrors = function() {
+					let getErrors = self.getErrors = () => {
 						return errors;
 					};
 				}
-			}),
+			});
 
-			// check.
-			check,
-
-			// check and wash.
-			checkAndWash,
-			
-			// check for update.
-			checkForUpdate,
-			
-			// get valid data set.
-			getValidDataSet;
-
-			self.check = check = function(data) {
+			let check = self.check = (data) => {
 				return Check({
 					data : data
 				});
 			};
 
-			self.checkAndWash = checkAndWash = function(data) {
+			let checkAndWash = self.checkAndWash = (data) => {
 				return Check({
 					data : data,
 					isToWash : true
 				});
 			};
 
-			self.checkForUpdate = checkForUpdate = function(data) {
+			let checkForUpdate = self.checkForUpdate = (data) => {
 				return Check({
 					data : data,
 					isToWash : true,
@@ -1822,7 +1474,7 @@ global.VALID = CLASS(function(cls) {
 				});
 			};
 			
-			self.getValidDataSet = getValidDataSet = function() {
+			let getValidDataSet = self.getValidDataSet = () => {
 				return validDataSet;
 			};
 		}
@@ -1834,16 +1486,12 @@ global.VALID = CLASS(function(cls) {
  */
 global.CHECK_ARE_SAME = METHOD({
 
-	run : function(array) {
-		'use strict';
+	run : (array) => {
 		//REQUIRED: array
 
-		var
-		// are same
-		areSame = false,
+		let areSame = false;
 
-		// check two same.
-		checkTwoSame = function(a, b) {
+		let checkTwoSame = (a, b) => {
 
 			// when a, b are date
 			if ( a instanceof Date === true && b instanceof Date === true) {
@@ -1857,14 +1505,14 @@ global.CHECK_ARE_SAME = METHOD({
 
 			// when a, b are data (JS object)
 			else if (CHECK_IS_DATA(a) === true && CHECK_IS_DATA(b) === true) {
-				return EACH(a, function(value, name) {
+				return EACH(a, (value, name) => {
 					return checkTwoSame(value, b[name]);
 				});
 			}
 
 			// when a, b are array
 			else if (CHECK_IS_ARRAY(a) === true && CHECK_IS_ARRAY(b) === true) {
-				return EACH(a, function(value, i) {
+				return EACH(a, (value, i) => {
 					return checkTwoSame(value, b[i]);
 				});
 			}
@@ -1877,7 +1525,7 @@ global.CHECK_ARE_SAME = METHOD({
 
 		if (array.length > 1) {
 
-			areSame = REPEAT(array.length, function(i) {
+			areSame = REPEAT(array.length, (i) => {
 				if (i < array.length - 1) {
 					return checkTwoSame(array[i], array[i + 1]);
 				} else {
@@ -1895,8 +1543,7 @@ global.CHECK_ARE_SAME = METHOD({
  */
 global.CHECK_IS_ARRAY = METHOD({
 
-	run : function(target) {
-		'use strict';
+	run : (target) => {
 		//OPTIONAL: target
 
 		if (
@@ -1916,8 +1563,7 @@ global.CHECK_IS_ARRAY = METHOD({
  */
 global.CHECK_IS_DATA = METHOD({
 
-	run : function(target) {
-		'use strict';
+	run : (target) => {
 		//OPTIONAL: target
 
 		if (
@@ -1940,8 +1586,7 @@ global.CHECK_IS_DATA = METHOD({
  */
 global.CHECK_IS_EMPTY_DATA = METHOD({
 
-	run : function(data) {
-		'use strict';
+	run : (data) => {
 		//REQUIRED: data
 
 		return CHECK_ARE_SAME([data, {}]);
@@ -1953,15 +1598,12 @@ global.CHECK_IS_EMPTY_DATA = METHOD({
  */
 global.COUNT_PROPERTIES = METHOD({
 
-	run : function(data) {
-		'use strict';
+	run : (data) => {
 		//OPTIONAL: data
 
-		var
-		// count
-		count = 0;
+		let count = 0;
 		
-		EACH(data, function() {
+		EACH(data, () => {
 			count += 1;
 		});
 		
@@ -1974,21 +1616,14 @@ global.COUNT_PROPERTIES = METHOD({
  */
 global.PACK_DATA = METHOD({
 
-	run : function(data) {
-		'use strict';
+	run : (data) => {
 		//REQUIRED: data
 
-		var
-		// result
-		result = COPY(data),
+		let result = COPY(data);
+		let dateNames = [];
+		let regexNames = [];
 
-		// date property names
-		dateNames = [],
-		
-		// regex property names
-		regexNames = [];
-
-		EACH(result, function(value, name) {
+		EACH(result, (value, name) => {
 
 			if (value instanceof Date === true) {
 
@@ -2010,7 +1645,7 @@ global.PACK_DATA = METHOD({
 
 			else if (CHECK_IS_ARRAY(value) === true) {
 
-				EACH(value, function(v, i) {
+				EACH(value, (v, i) => {
 
 					if (CHECK_IS_DATA(v) === true) {
 						value[i] = PACK_DATA(v);
@@ -2031,19 +1666,16 @@ global.PACK_DATA = METHOD({
  */
 global.UNPACK_DATA = METHOD({
 
-	run : function(packedData) {
-		'use strict';
+	run : (packedData) => {
 		//REQUIRED: packedData	PACK_DATA가 적용된 데이터
 
-		var
-		// result
-		result = COPY(packedData);
+		let result = COPY(packedData);
 
 		// when date property names exists
 		if (result.__D !== undefined) {
 
 			// change timestamp integer to Date type.
-			EACH(result.__D, function(dateName, i) {
+			EACH(result.__D, (dateName, i) => {
 				result[dateName] = new Date(result[dateName]);
 			});
 			
@@ -2054,19 +1686,12 @@ global.UNPACK_DATA = METHOD({
 		if (result.__R !== undefined) {
 
 			// change string to RegExp type.
-			EACH(result.__R, function(regexName, i) {
+			EACH(result.__R, (regexName, i) => {
 				
-				var
-				// pattern
-				pattern = result[regexName],
+				let pattern = result[regexName];
+				let flags;
 				
-				// flags
-				flags,
-				
-				// j
-				j;
-				
-				for (j = pattern.length - 1; j >= 0; j -= 1) {
+				for (let j = pattern.length - 1; j >= 0; j -= 1) {
 					if (pattern[j] === '/') {
 						flags = pattern.substring(j + 1);
 						pattern = pattern.substring(1, j);
@@ -2080,7 +1705,7 @@ global.UNPACK_DATA = METHOD({
 			delete result.__R;
 		}
 
-		EACH(result, function(value, name) {
+		EACH(result, (value, name) => {
 
 			if (CHECK_IS_DATA(value) === true) {
 				result[name] = UNPACK_DATA(value);
@@ -2088,7 +1713,7 @@ global.UNPACK_DATA = METHOD({
 
 			else if (CHECK_IS_ARRAY(value) === true) {
 
-				EACH(value, function(v, i) {
+				EACH(value, (v, i) => {
 
 					if (CHECK_IS_DATA(v) === true) {
 						value[i] = UNPACK_DATA(v);
@@ -2106,25 +1731,18 @@ global.UNPACK_DATA = METHOD({
  */
 global.CHECK_IS_IN = METHOD({
 
-	run : function(params) {
-		'use strict';
+	run : (params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.data
 		//OPTIONAL: params.array
 		//REQUIRED: params.value	존재하는지 확인 할 값
 
-		var
-		// data
-		data = params.data,
-
-		// array
-		array = params.array,
-
-		// value
-		value = params.value;
+		let data = params.data;
+		let array = params.array;
+		let value = params.value;
 
 		if (data !== undefined) {
-			return EACH(data, function(_value, name) {
+			return EACH(data, (_value, name) => {
 				if (CHECK_ARE_SAME([_value, value]) === true) {
 					return false;
 				}
@@ -2132,7 +1750,7 @@ global.CHECK_IS_IN = METHOD({
 		}
 
 		if (array !== undefined) {
-			return EACH(array, function(_value, key) {
+			return EACH(array, (_value, key) => {
 				if (CHECK_ARE_SAME([_value, value]) === true) {
 					return false;
 				}
@@ -2146,26 +1764,20 @@ global.CHECK_IS_IN = METHOD({
  */
 global.COMBINE = METHOD({
 
-	run : function(dataSetOrArrays) {
-		'use strict';
+	run : (dataSetOrArrays) => {
 		//REQUIRED: dataSetOrArrays
 
-		var
-		// first
-		first,
-
-		// result
-		result;
+		let result;
 
 		if (dataSetOrArrays.length > 0) {
 
-			first = dataSetOrArrays[0];
+			let first = dataSetOrArrays[0];
 
 			if (CHECK_IS_DATA(first) === true) {
 
 				result = {};
 
-				EACH(dataSetOrArrays, function(data) {
+				EACH(dataSetOrArrays, (data) => {
 					EXTEND({
 						origin : result,
 						extend : data
@@ -2177,7 +1789,7 @@ global.COMBINE = METHOD({
 
 				result = [];
 
-				EACH(dataSetOrArrays, function(array) {
+				EACH(dataSetOrArrays, (array) => {
 					EXTEND({
 						origin : result,
 						extend : array
@@ -2195,14 +1807,11 @@ global.COMBINE = METHOD({
  */
 global.COPY = METHOD({
 
-	run : function(dataOrArray) {
-		'use strict';
+	run : (dataOrArray) => {
 		//REQUIRED: dataOrArray
-
-		var
-		// copy
-		copy;
-
+		
+		let copy;
+		
 		if (CHECK_IS_DATA(dataOrArray) === true) {
 
 			copy = {};
@@ -2232,32 +1841,17 @@ global.COPY = METHOD({
  */
 global.EXTEND = METHOD({
 
-	run : function(params) {
-		'use strict';
+	run : (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.origin	기존 데이터나 배열
 		//REQUIRED: params.extend	덧붙힐 데이터나 배열
 
-		var
-		// origin
-		origin = params.origin,
-
-		// extend
-		extend = params.extend;
+		let origin = params.origin;
+		let extend = params.extend;
 
 		if (CHECK_IS_DATA(origin) === true) {
 
-			EACH(extend, function(value, name) {
-				
-				var
-				// pattern
-				pattern,
-				
-				// flags
-				flags,
-				
-				// i
-				i;
+			EACH(extend, (value, name) => {
 				
 				if ( value instanceof Date === true) {
 					origin[name] = new Date(value.getTime());
@@ -2265,9 +1859,10 @@ global.EXTEND = METHOD({
 				
 				else if ( value instanceof RegExp === true) {
 					
-					pattern = value.toString();
+					let pattern = value.toString();
+					let flags;
 					
-					for (i = pattern.length - 1; i >= 0; i -= 1) {
+					for (let i = pattern.length - 1; i >= 0; i -= 1) {
 						if (pattern[i] === '/') {
 							flags = pattern.substring(i + 1);
 							pattern = pattern.substring(1, i);
@@ -2290,17 +1885,7 @@ global.EXTEND = METHOD({
 
 		else if (CHECK_IS_ARRAY(origin) === true) {
 
-			EACH(extend, function(value) {
-				
-				var
-				// pattern
-				pattern,
-				
-				// flags
-				flags,
-				
-				// i
-				i;
+			EACH(extend, (value) => {
 
 				if ( value instanceof Date === true) {
 					origin.push(new Date(value.getTime()));
@@ -2308,9 +1893,10 @@ global.EXTEND = METHOD({
 				
 				else if ( value instanceof RegExp === true) {
 					
-					pattern = value.toString();
+					let pattern = value.toString();
+					let flags;
 					
-					for (i = pattern.length - 1; i >= 0; i -= 1) {
+					for (let i = pattern.length - 1; i >= 0; i -= 1) {
 						if (pattern[i] === '/') {
 							flags = pattern.substring(i + 1);
 							pattern = pattern.substring(1, i);
@@ -2340,32 +1926,20 @@ global.EXTEND = METHOD({
  */
 global.FIND = METHOD({
 
-	run : function(dataOrArrayOrParams, filter) {
-		'use strict';
+	run : (dataOrArrayOrParams, filter) => {
 		//REQUIRED: dataOrArrayOrParams
 		//OPTIONAL: dataOrArrayOrParams.data
 		//OPTIONAL: dataOrArrayOrParams.array
 		//REQUIRED: dataOrArrayOrParams.value	찾을 값
 		//OPTIONAL: filter
 
-		var
-		// data
-		data,
-
-		// array
-		array,
-
-		// value
-		value,
-
-		// ret
-		ret;
+		let ret;
 
 		if (filter !== undefined) {
 
 			if (CHECK_IS_DATA(dataOrArrayOrParams) === true) {
 
-				EACH(dataOrArrayOrParams, function(value, name) {
+				EACH(dataOrArrayOrParams, (value, name) => {
 
 					// value passed filter.
 					if (filter(value, name) === true) {
@@ -2377,7 +1951,7 @@ global.FIND = METHOD({
 
 			else if (CHECK_IS_ARRAY(dataOrArrayOrParams) === true) {
 
-				EACH(dataOrArrayOrParams, function(value, key) {
+				EACH(dataOrArrayOrParams, (value, key) => {
 
 					// value passed filter.
 					if (filter(value, key) === true) {
@@ -2391,13 +1965,13 @@ global.FIND = METHOD({
 		else {
 
 			// init params.
-			data = dataOrArrayOrParams.data;
-			array = dataOrArrayOrParams.array;
-			value = dataOrArrayOrParams.value;
+			let data = dataOrArrayOrParams.data;
+			let array = dataOrArrayOrParams.array;
+			let value = dataOrArrayOrParams.value;
 
 			if (data !== undefined) {
 
-				EACH(data, function(_value, name) {
+				EACH(data, (_value, name) => {
 					if (_value === value) {
 						ret = name;
 						return false;
@@ -2407,7 +1981,7 @@ global.FIND = METHOD({
 
 			if (array !== undefined) {
 
-				EACH(array, function(_value, key) {
+				EACH(array, (_value, key) => {
 					if (_value === value) {
 						ret = key;
 						return false;
@@ -2425,8 +1999,7 @@ global.FIND = METHOD({
  */
 global.REMOVE = METHOD({
 
-	run : function(dataOrArrayOrParams, filter) {
-		'use strict';
+	run : (dataOrArrayOrParams, filter) => {
 		//REQUIRED: dataOrArrayOrParams
 		//OPTIONAL: dataOrArrayOrParams.data
 		//OPTIONAL: dataOrArrayOrParams.array
@@ -2434,28 +2007,12 @@ global.REMOVE = METHOD({
 		//OPTIONAL: dataOrArrayOrParams.key		배열에서 삭제할 값의 키 (index)
 		//OPTIONAL: dataOrArrayOrParams.value	삭제할 값, 이 값을 찾아 삭제합니다.
 		//OPTIONAL: filter
-
-		var
-		// data
-		data,
-
-		// array
-		array,
-
-		// name
-		name,
-
-		// key
-		key,
-
-		// value
-		value;
 		
 		if (filter !== undefined) {
 
 			if (CHECK_IS_DATA(dataOrArrayOrParams) === true) {
 
-				EACH(dataOrArrayOrParams, function(value, name) {
+				EACH(dataOrArrayOrParams, (value, name) => {
 
 					// remove value passed filter.
 					if (filter(value, name) === true) {
@@ -2470,7 +2027,7 @@ global.REMOVE = METHOD({
 
 			else if (CHECK_IS_ARRAY(dataOrArrayOrParams) === true) {
 
-				EACH(dataOrArrayOrParams, function(value, key) {
+				EACH(dataOrArrayOrParams, (value, key) => {
 
 					// remove value passed filter.
 					if (filter(value, key) === true) {
@@ -2487,11 +2044,11 @@ global.REMOVE = METHOD({
 		else {
 
 			// init params.
-			data = dataOrArrayOrParams.data;
-			array = dataOrArrayOrParams.array;
-			name = dataOrArrayOrParams.name;
-			key = dataOrArrayOrParams.key;
-			value = dataOrArrayOrParams.value;
+			let data = dataOrArrayOrParams.data;
+			let array = dataOrArrayOrParams.array;
+			let name = dataOrArrayOrParams.name;
+			let key = dataOrArrayOrParams.key;
+			let value = dataOrArrayOrParams.value;
 
 			if (name !== undefined) {
 				delete data[name];
@@ -2505,7 +2062,7 @@ global.REMOVE = METHOD({
 
 				if (data !== undefined) {
 
-					EACH(data, function(_value, name) {
+					EACH(data, (_value, name) => {
 
 						if (CHECK_ARE_SAME([_value, value]) === true) {
 
@@ -2519,7 +2076,7 @@ global.REMOVE = METHOD({
 
 				if (array !== undefined) {
 
-					EACH(array, function(_value, key) {
+					EACH(array, (_value, key) => {
 
 						if (CHECK_ARE_SAME([_value, value]) === true) {
 
@@ -2540,129 +2097,76 @@ global.REMOVE = METHOD({
  */
 global.CALENDAR = CLASS({
 
-	init : function(inner, self, date) {
-		'use strict';
+	init : (inner, self, date) => {
 		//OPTIONAL: date	입력하지 않으면 현재 시각을 기준으로 생성합니다.
-
-		var
-		// get year.
-		getYear,
-
-		// get month.
-		getMonth,
-
-		// get date.
-		getDate,
-
-		// get day.
-		getDay,
-
-		// get hour.
-		getHour,
-
-		// get minute
-		getMinute,
-
-		// get second.
-		getSecond;
 
 		if (date === undefined) {
 			date = new Date();
 		}
 
-		self.getYear = getYear = function() {
+		let getYear = self.getYear = () => {
 			return date.getFullYear();
 		};
 
-		self.getMonth = getMonth = function(isFormal) {
+		let getMonth = self.getMonth = (isFormal) => {
 			//OPTIONAL: isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09
 			
-			var
-			// month
-			month = date.getMonth() + 1;
+			let month = date.getMonth() + 1;
 			
 			if (isFormal === true) {
-				if (month < 10) {
-					return '0' + month;
-				} else {
-					return '' + month;
-				}
+				return month < 10 ? '0' + month : '' + month;
 			} else {
 				return month;
 			}
 		};
 
-		self.getDate = getDate = function(isFormal) {
+		let getDate = self.getDate = (isFormal) => {
 			//OPTIONAL: isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09
 			
-			var
-			// date
-			d = date.getDate();
+			let d = date.getDate();
 			
 			if (isFormal === true) {
-				if (d < 10) {
-					return '0' + d;
-				} else {
-					return '' + d;
-				}
+				return d < 10 ? '0' + d : '' + d;
 			} else {
 				return d;
 			}
 		};
 
-		self.getDay = getDay = function() {
+		let getDay = self.getDay = () => {
 			return date.getDay();
 		};
 
-		self.getHour = getHour = function(isFormal) {
+		let getHour = self.getHour = (isFormal) => {
 			//OPTIONAL: isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09
 			
-			var
-			// hour
-			hour = date.getHours();
+			let hour = date.getHours();
 			
 			if (isFormal === true) {
-				if (hour < 10) {
-					return '0' + hour;
-				} else {
-					return '' + hour;
-				}
+				return hour < 10 ? '0' + hour : '' + hour;
 			} else {
 				return hour;
 			}
 		};
 
-		self.getMinute = getMinute = function(isFormal) {
+		let getMinute = self.getMinute = (isFormal) => {
 			//OPTIONAL: isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09
 			
-			var
-			// minute
-			minute = date.getMinutes();
+			let minute = date.getMinutes();
 			
 			if (isFormal === true) {
-				if (minute < 10) {
-					return '0' + minute;
-				} else {
-					return '' + minute;
-				}
+				return minute < 10 ? '0' + minute : '' + minute;
 			} else {
 				return minute;
 			}
 		};
 
-		self.getSecond = getSecond = function(isFormal) {
+		let getSecond = self.getSecond = (isFormal) => {
 			//OPTIONAL: isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09
 			
-			var
-			// second
-			second = date.getSeconds();
+			let second = date.getSeconds();
 			
 			if (isFormal === true) {
-				if (second < 10) {
-					return '0' + second;
-				} else {
-					return '' + second;
-				}
+				return second < 10 ? '0' + second : '' + second;
 			} else {
 				return second;
 			}
@@ -2675,8 +2179,7 @@ global.CALENDAR = CLASS({
  */
 global.CREATE_DATE = METHOD({
 
-	run : function(params) {
-		'use strict';
+	run : (params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.year		년
 		//OPTIONAL: params.month	월
@@ -2685,27 +2188,14 @@ global.CREATE_DATE = METHOD({
 		//OPTIONAL: params.minute	분
 		//OPTIONAL: params.second	초
 		
-		var
-		// year
-		year = params.year,
+		let year = params.year;
+		let month = params.month;
+		let date = params.date;
+		let hour = params.hour;
+		let minute = params.minute;
+		let second = params.second;
 		
-		// month
-		month = params.month,
-		
-		// date
-		date = params.date,
-		
-		// hour
-		hour = params.hour,
-		
-		// minute
-		minute = params.minute,
-		
-		// second
-		second = params.second,
-		
-		// now cal
-		nowCal = CALENDAR(new Date());
+		let nowCal = CALENDAR(new Date());
 		
 		if (year === undefined) {
 			year = nowCal.getYear();
@@ -2740,51 +2230,34 @@ global.CREATE_DATE = METHOD({
  */
 global.DELAY = CLASS({
 
-	init : function(inner, self, seconds, func) {
-		'use strict';
+	init : (inner, self, seconds, func) => {
 		//REQUIRED: seconds
 		//OPTIONAL: func
-
-		var
-		// milliseconds
-		milliseconds,
-		
-		// start time
-		startTime = Date.now(),
-		
-		// remaining
-		remaining,
-		
-		// timeout
-		timeout,
-
-		// resume.
-		resume,
-		
-		// pause.
-		pause,
-		
-		// remove.
-		remove;
 
 		if (func === undefined) {
 			func = seconds;
 			seconds = 0;
 		}
 		
-		remaining = milliseconds = seconds * 1000;
+		let milliseconds;
 		
-		self.resume = resume = RAR(function() {
+		let startTime = Date.now();
+		
+		let remaining = milliseconds = seconds * 1000;
+		
+		let timeout;
+		
+		let resume = self.resume = RAR(() => {
 			
 			if (timeout === undefined) {
 				
-				timeout = setTimeout(function() {
+				timeout = setTimeout(() => {
 					func();
 				}, remaining);
 			}
 		});
 		
-		self.pause = pause = function() {
+		let pause = self.pause = () => {
 			
 			remaining = milliseconds - (Date.now() - startTime);
 			
@@ -2792,7 +2265,7 @@ global.DELAY = CLASS({
 			timeout = undefined;
 		};
 		
-		self.remove = remove = function() {
+		let remove = self.remove = () => {
 			pause();
 		};
 	}
@@ -2803,45 +2276,28 @@ global.DELAY = CLASS({
  */
 global.INTERVAL = CLASS({
 
-	init : function(inner, self, seconds, func) {
-		'use strict';
+	init : (inner, self, seconds, func) => {
 		//REQUIRED: seconds
 		//OPTIONAL: func
-
-		var
-		// milliseconds
-		milliseconds,
-		
-		// start time
-		startTime = Date.now(),
-		
-		// remaining
-		remaining,
-		
-		// interval
-		interval,
-		
-		// resume.
-		resume,
-		
-		// pause.
-		pause,
-
-		// remove.
-		remove;
 
 		if (func === undefined) {
 			func = seconds;
 			seconds = 0;
 		}
+
+		let milliseconds;
 		
-		remaining = milliseconds = seconds === 0 ? 1 : seconds * 1000;
+		let startTime = Date.now();
 		
-		self.resume = resume = RAR(function() {
+		let remaining = milliseconds = seconds === 0 ? 1 : seconds * 1000;
+		
+		let interval;
+		
+		let resume = self.resume = RAR(() => {
 			
 			if (interval === undefined) {
 				
-				interval = setInterval(function() {
+				interval = setInterval(() => {
 					
 					if (func(self) === false) {
 						remove();
@@ -2853,7 +2309,7 @@ global.INTERVAL = CLASS({
 			}
 		});
 		
-		self.pause = pause = function() {
+		let pause = self.pause = () => {
 			
 			remaining = milliseconds - (Date.now() - startTime);
 			
@@ -2861,7 +2317,7 @@ global.INTERVAL = CLASS({
 			interval = undefined;
 		};
 		
-		self.remove = remove = function() {
+		let remove = self.remove = () => {
 			pause();
 		};
 	}
@@ -2870,55 +2326,28 @@ global.INTERVAL = CLASS({
 /**
  * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
  */
-global.LOOP = CLASS(function(cls) {
-	'use strict';
+global.LOOP = CLASS((cls) => {
+	
+	let animationInterval;
+	let loopInfos = [];
+	let runs = [];
 
-	var
-	// before time
-	beforeTime,
-
-	// animation interval
-	animationInterval,
-
-	// loop infos
-	loopInfos = [],
-
-	// runs
-	runs = [],
-
-	// fire.
-	fire = function() {
+	let fire = () => {
 
 		if (animationInterval === undefined) {
 
-			beforeTime = Date.now();
+			let beforeTime = Date.now();
 
-			animationInterval = INTERVAL(function() {
+			animationInterval = INTERVAL(() => {
 
-				var
-				// time
-				time = Date.now(),
-
-				// delta time
-				deltaTime = time - beforeTime,
-
-				// loop info
-				loopInfo,
-
-				// count
-				count,
-
-				// interval
-				interval,
-
-				// i, j
-				i, j;
-
+				let time = Date.now();
+				let deltaTime = time - beforeTime;
+				
 				if (deltaTime > 0) {
 
-					for (i = 0; i < loopInfos.length; i += 1) {
+					for (let i = 0; i < loopInfos.length; i += 1) {
 
-						loopInfo = loopInfos[i];
+						let loopInfo = loopInfos[i];
 
 						if (loopInfo.fps !== undefined && loopInfo.fps > 0) {
 
@@ -2928,7 +2357,7 @@ global.LOOP = CLASS(function(cls) {
 							}
 
 							// calculate count.
-							count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
+							let count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
 
 							// start.
 							if (loopInfo.start !== undefined) {
@@ -2936,7 +2365,7 @@ global.LOOP = CLASS(function(cls) {
 							}
 
 							// run interval.
-							interval = loopInfo.interval;
+							let interval = loopInfo.interval;
 							for (j = 0; j < count; j += 1) {
 								interval(loopInfo.fps);
 							}
@@ -2956,7 +2385,7 @@ global.LOOP = CLASS(function(cls) {
 					}
 
 					// run runs.
-					for (i = 0; i < runs.length; i += 1) {
+					for (let i = 0; i < runs.length; i += 1) {
 						runs[i](deltaTime);
 					}
 
@@ -2964,10 +2393,9 @@ global.LOOP = CLASS(function(cls) {
 				}
 			});
 		}
-	},
-
-	// stop.
-	stop = function() {
+	};
+	
+	let stop = () => {
 
 		if (loopInfos.length <= 0 && runs.length <= 0) {
 
@@ -2978,40 +2406,19 @@ global.LOOP = CLASS(function(cls) {
 
 	return {
 
-		init : function(inner, self, fpsOrRun, intervalOrFuncs) {
+		init : (inner, self, fpsOrRun, intervalOrFuncs) => {
 			//OPTIONAL: fpsOrRun
 			//OPTIONAL: intervalOrFuncs
 			//OPTIONAL: intervalOrFuncs.start
 			//REQUIRED: intervalOrFuncs.interval
 			//OPTIONAL: intervalOrFuncs.end
 
-			var
-			// run.
-			run,
+			let run;
+			let start;
+			let interval;
+			let end;
 
-			// start.
-			start,
-
-			// interval.
-			interval,
-
-			// end.
-			end,
-
-			// info
-			info,
-			
-			// resume.
-			resume,
-			
-			// pause.
-			pause,
-
-			// change fps.
-			changeFPS,
-
-			// remove.
-			remove;
+			let info;
 
 			if (intervalOrFuncs !== undefined) {
 
@@ -3024,7 +2431,7 @@ global.LOOP = CLASS(function(cls) {
 					end = intervalOrFuncs.end;
 				}
 			
-				self.resume = resume = RAR(function() {
+				let resume = self.resume = RAR(() => {
 					
 					loopInfos.push( info = {
 						fps : fpsOrRun,
@@ -3036,7 +2443,7 @@ global.LOOP = CLASS(function(cls) {
 					fire();
 				});
 
-				self.pause = pause = function() {
+				let pause = self.pause = () => {
 
 					REMOVE({
 						array : loopInfos,
@@ -3046,13 +2453,13 @@ global.LOOP = CLASS(function(cls) {
 					stop();
 				};
 
-				self.changeFPS = changeFPS = function(fps) {
+				let changeFPS = self.changeFPS = (fps) => {
 					//REQUIRED: fps
 
 					info.fps = fps;
 				};
 
-				self.remove = remove = function() {
+				let remove = self.remove = () => {
 					pause();
 				};
 			}
@@ -3060,14 +2467,14 @@ global.LOOP = CLASS(function(cls) {
 			// when fpsOrRun is run
 			else {
 				
-				self.resume = resume = RAR(function() {
+				let resume = self.resume = RAR(() => {
 					
 					runs.push(run = fpsOrRun);
 					
 					fire();
 				});
 
-				self.pause = pause = function() {
+				let pause = self.pause = () => {
 
 					REMOVE({
 						array : runs,
@@ -3077,7 +2484,7 @@ global.LOOP = CLASS(function(cls) {
 					stop();
 				};
 
-				self.remove = remove = function() {
+				let remove = self.remove = () => {
 					pause();
 				};
 			}
@@ -3092,8 +2499,7 @@ global.LOOP = CLASS(function(cls) {
  */
 global.RAR = METHOD({
 
-	run : function(params, func) {
-		'use strict';
+	run : (params, func) => {
 		//OPTIONAL: params
 		//REQUIRED: func
 
@@ -3111,18 +2517,13 @@ global.RAR = METHOD({
 
 /**
  * 주어진 함수를 즉시 실행합니다.
- * 
- * 새로운 코드 블록이 필요할 때 사용합니다.
  */
 global.RUN = METHOD({
 
-	run : function(func) {
-		'use strict';
+	run : (func) => {
 		//REQUIRED: func
-
-		var
-		// f.
-		f = function() {
+		
+		let f = () => {
 			return func(f);
 		};
 
@@ -3135,8 +2536,7 @@ global.RUN = METHOD({
  */
 global.INTEGER = METHOD({
 
-	run : function(integerString) {
-		'use strict';
+	run : (integerString) => {
 		//OPTIONAL: integerString
 
 		return integerString === undefined ? undefined : parseInt(integerString, 10);
@@ -3148,22 +2548,15 @@ global.INTEGER = METHOD({
  */
 global.RANDOM = METHOD({
 
-	run : function(limitOrParams) {
-		'use strict';
+	run : (limitOrParams) => {
 		//REQUIRED: limitOrParams
 		//OPTIONAL: limitOrParams.min	생성할 정수 범위 최소값, 이 값 이상인 값만 생성합니다.
 		//OPTIONAL: limitOrParams.max	생성할 정수 범위 최대값, 이 값 이하인 값만 생성합니다.
 		//OPTIONAL: limitOrParams.limit	생성할 정수 범위 제한값, 이 값 미만인 값만 생성합니다.
 
-		var
-		// min
-		min,
-
-		// max
-		max,
-
-		// limit
-		limit;
+		let min;
+		let max
+		let limit;
 
 		// init limitOrParams.
 		if (CHECK_IS_DATA(limitOrParams) !== true) {
@@ -3191,8 +2584,7 @@ global.RANDOM = METHOD({
  */
 global.REAL = METHOD({
 
-	run : function(realNumberString) {
-		'use strict';
+	run : (realNumberString) => {
 		//OPTIONAL: realNumberString
 
 		return realNumberString === undefined ? undefined : parseFloat(realNumberString);
@@ -3204,28 +2596,17 @@ global.REAL = METHOD({
  */
 global.EACH = METHOD({
 
-	run : function(dataOrArrayOrString, func) {
-		'use strict';
+	run : (dataOrArrayOrString, func) => {
 		//OPTIONAL: dataOrArrayOrString
 		//REQUIRED: func
-
-		var
-		// length
-		length,
-
-		// name
-		name,
-
-		// extras
-		i;
-
+		
 		if (dataOrArrayOrString === undefined) {
 			return false;
 		}
 
 		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
-			for (name in dataOrArrayOrString) {
+			for (let name in dataOrArrayOrString) {
 				if (dataOrArrayOrString.hasOwnProperty === undefined || dataOrArrayOrString.hasOwnProperty(name) === true) {
 					if (func(dataOrArrayOrString[name], name) === false) {
 						return false;
@@ -3239,7 +2620,7 @@ global.EACH = METHOD({
 			func = dataOrArrayOrString;
 			dataOrArrayOrString = undefined;
 
-			return function(dataOrArrayOrString) {
+			return (dataOrArrayOrString) => {
 				return EACH(dataOrArrayOrString, func);
 			};
 		}
@@ -3247,9 +2628,9 @@ global.EACH = METHOD({
 		// when dataOrArrayOrString is array or arguments or string
 		else {
 
-			length = dataOrArrayOrString.length;
+			let length = dataOrArrayOrString.length;
 
-			for ( i = 0; i < length; i += 1) {
+			for (let i = 0; i < length; i += 1) {
 
 				if (func(dataOrArrayOrString[i], i) === false) {
 					return false;
@@ -3277,8 +2658,7 @@ global.EACH = METHOD({
  */
 global.REPEAT = METHOD({
 
-	run : function(countOrParams, func) {
-		'use strict';
+	run : (countOrParams, func) => {
 		//OPTIONAL: countOrParams
 		//REQUIRED: countOrParams.start
 		//OPTIONAL: countOrParams.end
@@ -3286,24 +2666,11 @@ global.REPEAT = METHOD({
 		//OPTIONAL: countOrParams.step
 		//REQUIRED: func
 
-		var
-		// count
-		count,
-
-		// start
-		start,
-
-		// end
-		end,
-
-		// limit
-		limit,
-
-		// step
-		step,
-
-		// extras
-		i;
+		let count;
+		let start;
+		let end;
+		let limit;
+		let step;
 		
 		if (func === undefined) {
 			func = countOrParams;
@@ -3332,7 +2699,7 @@ global.REPEAT = METHOD({
 		// count mode
 		if (count !== undefined) {
 
-			for ( i = 0; i < parseInt(count, 10); i += 1) {
+			for (let i = 0; i < parseInt(count, 10); i += 1) {
 				if (func(i) === false) {
 					return false;
 				}
@@ -3342,7 +2709,7 @@ global.REPEAT = METHOD({
 		// end mode
 		else if (end !== undefined && start > end) {
 
-			for ( i = start; i >= end; i -= step) {
+			for (let i = start; i >= end; i -= step) {
 				if (func(i) === false) {
 					return false;
 				}
@@ -3353,7 +2720,7 @@ global.REPEAT = METHOD({
 		// limit mode
 		else if (limit !== undefined) {
 
-			for ( i = start; i < limit; i += step) {
+			for (let i = start; i < limit; i += step) {
 				if (func(i) === false) {
 					return false;
 				}
@@ -3363,7 +2730,7 @@ global.REPEAT = METHOD({
 		// func mode
 		else {
 			
-			return function(countOrParams) {
+			return (countOrParams) => {
 				return REPEAT(countOrParams, func);
 			};
 		}
@@ -3377,21 +2744,10 @@ global.REPEAT = METHOD({
  */
 global.REVERSE_EACH = METHOD({
 
-	run : function(arrayOrString, func) {
-		'use strict';
+	run : (arrayOrString, func) => {
 		//OPTIONAL: arrayOrString
 		//REQUIRED: func
-
-		var
-		// length
-		length,
-
-		// name
-		name,
-
-		// extras
-		i;
-
+		
 		if (arrayOrString === undefined) {
 			return false;
 		}
@@ -3402,7 +2758,7 @@ global.REVERSE_EACH = METHOD({
 			func = arrayOrString;
 			arrayOrString = undefined;
 
-			return function(arrayOrString) {
+			return (arrayOrString) => {
 				return REVERSE_EACH(arrayOrString, func);
 			};
 		}
@@ -3410,9 +2766,9 @@ global.REVERSE_EACH = METHOD({
 		// when arrayOrString is array or arguments or string
 		else {
 
-			length = arrayOrString.length;
+			let length = arrayOrString.length;
 
-			for ( i = length - 1; i >= 0; i -= 1) {
+			for (let i = length - 1; i >= 0; i -= 1) {
 
 				if (func(arrayOrString[i], i) === false) {
 					return false;

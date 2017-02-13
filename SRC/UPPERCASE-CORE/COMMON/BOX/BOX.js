@@ -1,38 +1,27 @@
 /**
  * BOX를 생성합니다.
  */
-global.BOX = METHOD(function(m) {
-	'use strict';
+global.BOX = METHOD((m) => {
 
-	var
-	// boxes
-	boxes = {},
-
-	// get all boxes.
-	getAllBoxes;
-
-	m.getAllBoxes = getAllBoxes = function() {
+	let boxes = {};
+	
+	let getAllBoxes = m.getAllBoxes = () => {
 		return boxes;
 	};
 
 	return {
 
-		run : function(boxName) {
+		run : (boxName) => {
 			//REQUIRED: boxName
 
-			var
-			// box.
-			box = function(packName) {
+			let box = (packName) => {
 				//REQUIRED: packName
 
-				var
-				// packNameSps
-				packNameSps = packName.split('.'),
+				let packNameSps = packName.split('.');
+				
+				let pack;
 
-				// pack
-				pack;
-
-				EACH(packNameSps, function(packNameSp) {
+				EACH(packNameSps, (packNameSp) => {
 
 					if (pack === undefined) {
 

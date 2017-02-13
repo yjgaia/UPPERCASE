@@ -3,26 +3,20 @@
  */
 global.COMBINE = METHOD({
 
-	run : function(dataSetOrArrays) {
-		'use strict';
+	run : (dataSetOrArrays) => {
 		//REQUIRED: dataSetOrArrays
 
-		var
-		// first
-		first,
-
-		// result
-		result;
+		let result;
 
 		if (dataSetOrArrays.length > 0) {
 
-			first = dataSetOrArrays[0];
+			let first = dataSetOrArrays[0];
 
 			if (CHECK_IS_DATA(first) === true) {
 
 				result = {};
 
-				EACH(dataSetOrArrays, function(data) {
+				EACH(dataSetOrArrays, (data) => {
 					EXTEND({
 						origin : result,
 						extend : data
@@ -34,7 +28,7 @@ global.COMBINE = METHOD({
 
 				result = [];
 
-				EACH(dataSetOrArrays, function(array) {
+				EACH(dataSetOrArrays, (array) => {
 					EXTEND({
 						origin : result,
 						extend : array

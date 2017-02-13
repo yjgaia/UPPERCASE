@@ -3,8 +3,7 @@
  */
 global.CHECK_IS_EMPTY_DATA = METHOD({
 
-	run : function(data) {
-		'use strict';
+	run : (data) => {
 		//REQUIRED: data
 
 		return CHECK_ARE_SAME([data, {}]);

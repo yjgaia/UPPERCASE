@@ -3,13 +3,8 @@
  */
 global.STRINGIFY = METHOD({
 
-	run : function(data) {
-		'use strict';
+	run : (data) => {
 		//REQUIRED: data
-		
-		var
-		// array
-		array;
 		
 		if (CHECK_IS_DATA(data) === true) {
 			return JSON.stringify(PACK_DATA(data));
@@ -17,9 +12,9 @@ global.STRINGIFY = METHOD({
 		
 		else if (CHECK_IS_ARRAY(data) === true) {
 			
-			array = [];
+			let array = [];
 			
-			EACH(data, function(data) {
+			EACH(data, (data) => {
 				array.push(PACK_DATA(data));
 			});
 			

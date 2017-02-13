@@ -3,8 +3,7 @@
  */
 global.REPEAT = METHOD({
 
-	run : function(countOrParams, func) {
-		'use strict';
+	run : (countOrParams, func) => {
 		//OPTIONAL: countOrParams
 		//REQUIRED: countOrParams.start
 		//OPTIONAL: countOrParams.end
@@ -12,24 +11,11 @@ global.REPEAT = METHOD({
 		//OPTIONAL: countOrParams.step
 		//REQUIRED: func
 
-		var
-		// count
-		count,
-
-		// start
-		start,
-
-		// end
-		end,
-
-		// limit
-		limit,
-
-		// step
-		step,
-
-		// extras
-		i;
+		let count;
+		let start;
+		let end;
+		let limit;
+		let step;
 		
 		if (func === undefined) {
 			func = countOrParams;
@@ -58,7 +44,7 @@ global.REPEAT = METHOD({
 		// count mode
 		if (count !== undefined) {
 
-			for ( i = 0; i < parseInt(count, 10); i += 1) {
+			for (let i = 0; i < parseInt(count, 10); i += 1) {
 				if (func(i) === false) {
 					return false;
 				}
@@ -68,7 +54,7 @@ global.REPEAT = METHOD({
 		// end mode
 		else if (end !== undefined && start > end) {
 
-			for ( i = start; i >= end; i -= step) {
+			for (let i = start; i >= end; i -= step) {
 				if (func(i) === false) {
 					return false;
 				}
@@ -79,7 +65,7 @@ global.REPEAT = METHOD({
 		// limit mode
 		else if (limit !== undefined) {
 
-			for ( i = start; i < limit; i += step) {
+			for (let i = start; i < limit; i += step) {
 				if (func(i) === false) {
 					return false;
 				}
@@ -89,7 +75,7 @@ global.REPEAT = METHOD({
 		// func mode
 		else {
 			
-			return function(countOrParams) {
+			return (countOrParams) => {
 				return REPEAT(countOrParams, func);
 			};
 		}

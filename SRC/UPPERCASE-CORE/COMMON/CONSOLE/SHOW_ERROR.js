@@ -1,7 +1,7 @@
 /*
  * 콘솔에 오류 메시지를 출력합니다.
  */
-global.SHOW_ERROR = function(tag, errorMsg, params) {
+global.SHOW_ERROR = (tag, errorMsg, params) => {
 	//REQUIRED: tag
 	//REQUIRED: errorMsg
 	//OPTIONAL: params
@@ -13,17 +13,3 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 		console.error(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
-
-FOR_BOX(function(box) {
-
-	box.SHOW_ERROR = METHOD({
-
-		run : function(tag, errorMsg, params) {
-			//REQUIRED: tag
-			//REQUIRED: errorMsg
-			//OPTIONAL: params
-
-			SHOW_ERROR(box.boxName + '.' + tag, errorMsg, params);
-		}
-	});
-});

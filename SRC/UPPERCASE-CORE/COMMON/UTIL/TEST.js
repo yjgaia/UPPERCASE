@@ -3,37 +3,27 @@
  * 
  * 테스트에 성공하거나 실패하면 콘솔에 메시지를 출력합니다.
  */
-global.TEST = METHOD(function(m) {
-	'use strict';
+global.TEST = METHOD((m) => {
 
-	var
-	// error count
-	errorCount = 0;
+	let errorCount = 0;
 
 	return {
 
-		run : function(name, test) {
+		run : (name, test) => {
 			//REQUIRED: name
 			//REQUIRED: test
 
-			test(function(bool) {
+			test((bool) => {
 				//REQUIRED: bool
 
-				var
-				// temp
-				temp = {},
-
-				// line
-				line,
-
-				// throw error.
-				throwError;
-
+				let temp = {};
+				let line;
+				
 				if (bool === true) {
 					console.log('[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
 				} else {
 
-					temp.__THROW_ERROR_$$$ = function() {
+					temp.__THROW_ERROR_$$$ = () => {
 						try {
 							throw Error();
 						} catch(error) {

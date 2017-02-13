@@ -1,28 +1,22 @@
 /**
  * 모든 박스를 대상으로 하는 메소드와 클래스, 싱글톤 객체를 선언할 때 사용합니다.
  */
-global.FOR_BOX = METHOD(function(m) {
-	'use strict';
+global.FOR_BOX = METHOD((m) => {
 
-	var
-	// funcs
-	funcs = [],
-
-	// inject.
-	inject;
-
-	m.inject = inject = function(box) {
-		EACH(funcs, function(func) {
+	let funcs = [];
+	
+	let inject = m.inject = (box) => {
+		EACH(funcs, (func) => {
 			func(box);
 		});
 	};
 
 	return {
 
-		run : function(func) {
+		run : (func) => {
 			//REQUIRED: func
 
-			EACH(BOX.getAllBoxes(), function(box) {
+			EACH(BOX.getAllBoxes(), (box) => {
 				func(box);
 			});
 

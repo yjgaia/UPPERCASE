@@ -3,8 +3,7 @@
  */
 global.INIT_OBJECTS = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 
 		OBJECT.initObjects();
 	}

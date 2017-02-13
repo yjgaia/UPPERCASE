@@ -3,28 +3,17 @@
  */
 global.EACH = METHOD({
 
-	run : function(dataOrArrayOrString, func) {
-		'use strict';
+	run : (dataOrArrayOrString, func) => {
 		//OPTIONAL: dataOrArrayOrString
 		//REQUIRED: func
-
-		var
-		// length
-		length,
-
-		// name
-		name,
-
-		// extras
-		i;
-
+		
 		if (dataOrArrayOrString === undefined) {
 			return false;
 		}
 
 		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
-			for (name in dataOrArrayOrString) {
+			for (let name in dataOrArrayOrString) {
 				if (dataOrArrayOrString.hasOwnProperty === undefined || dataOrArrayOrString.hasOwnProperty(name) === true) {
 					if (func(dataOrArrayOrString[name], name) === false) {
 						return false;
@@ -38,7 +27,7 @@ global.EACH = METHOD({
 			func = dataOrArrayOrString;
 			dataOrArrayOrString = undefined;
 
-			return function(dataOrArrayOrString) {
+			return (dataOrArrayOrString) => {
 				return EACH(dataOrArrayOrString, func);
 			};
 		}
@@ -46,9 +35,9 @@ global.EACH = METHOD({
 		// when dataOrArrayOrString is array or arguments or string
 		else {
 
-			length = dataOrArrayOrString.length;
+			let length = dataOrArrayOrString.length;
 
-			for ( i = 0; i < length; i += 1) {
+			for (let i = 0; i < length; i += 1) {
 
 				if (func(dataOrArrayOrString[i], i) === false) {
 					return false;

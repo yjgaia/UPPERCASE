@@ -1,40 +1,17 @@
 /**
  * 실글톤 객체를 생성합니다.
  */
-global.OBJECT = METHOD(function(m) {
-	'use strict';
+global.OBJECT = METHOD((m) => {
 
-	var
-	// ready objects
-	readyObjects = [],
+	let readyObjects = [];
+	let isInited = false;
 
-	// is inited
-	isInited = false,
-
-	// init object.
-	initObject,
-
-	// add ready object.
-	addReadyObject,
-
-	// remove ready object.
-	removeReadyObject,
-
-	// init objects.
-	initObjects;
-
-	initObject = function(object) {
+	let initObject = (object) => {
 		//REQUIRED: object	초기화 할 싱글톤 객체
 
-		var
-		// cls
-		cls = object.type,
-
-		// inner (protected)
-		inner = {},
-
-		// params
-		params = {};
+		let cls = object.type;
+		let inner = {};
+		let params = {};
 
 		// set id.
 		object.id = CLASS.getNextInstanceId();
@@ -43,7 +20,7 @@ global.OBJECT = METHOD(function(m) {
 		cls.innerAfterInit(inner, object, params);
 	};
 
-	addReadyObject = function(object) {
+	let addReadyObject = (object) => {
 		//REQUIRED: object	초기화를 대기시킬 싱글톤 객체
 
 		if (isInited === true) {
@@ -53,7 +30,7 @@ global.OBJECT = METHOD(function(m) {
 		}
 	};
 
-	m.removeReadyObject = removeReadyObject = function(object) {
+	let removeReadyObject = m.removeReadyObject = (object) => {
 		//REQUIRED: object	대기열에서 삭제할 싱글톤 객체
 		
 		REMOVE({
@@ -62,10 +39,10 @@ global.OBJECT = METHOD(function(m) {
 		});
 	};
 
-	m.initObjects = initObjects = function() {
+	let initObjects = m.initObjects = () => {
 
 		// init all objects.
-		EACH(readyObjects, function(object) {
+		EACH(readyObjects, (object) => {
 			initObject(object);
 		});
 
@@ -74,23 +51,18 @@ global.OBJECT = METHOD(function(m) {
 
 	return {
 
-		run : function(define) {
+		run : (define) => {
 			//REQUIRED: define	클래스 정의 구문
 
-			var
-			// cls
-			cls = CLASS(define),
+			let cls = CLASS(define);
 
-			// self
-			self = {
+			let self = {
 				
 				type : cls,
 				
-				checkIsInstanceOf : function(checkCls) {
+				checkIsInstanceOf : (checkCls) => {
 
-					var
-					// target cls
-					targetCls = cls;
+					let targetCls = cls;
 	
 					// check moms.
 					while (targetCls !== undefined) {

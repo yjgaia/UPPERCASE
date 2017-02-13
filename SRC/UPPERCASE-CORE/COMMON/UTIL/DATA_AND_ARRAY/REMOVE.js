@@ -3,8 +3,7 @@
  */
 global.REMOVE = METHOD({
 
-	run : function(dataOrArrayOrParams, filter) {
-		'use strict';
+	run : (dataOrArrayOrParams, filter) => {
 		//REQUIRED: dataOrArrayOrParams
 		//OPTIONAL: dataOrArrayOrParams.data
 		//OPTIONAL: dataOrArrayOrParams.array
@@ -12,28 +11,12 @@ global.REMOVE = METHOD({
 		//OPTIONAL: dataOrArrayOrParams.key		배열에서 삭제할 값의 키 (index)
 		//OPTIONAL: dataOrArrayOrParams.value	삭제할 값, 이 값을 찾아 삭제합니다.
 		//OPTIONAL: filter
-
-		var
-		// data
-		data,
-
-		// array
-		array,
-
-		// name
-		name,
-
-		// key
-		key,
-
-		// value
-		value;
 		
 		if (filter !== undefined) {
 
 			if (CHECK_IS_DATA(dataOrArrayOrParams) === true) {
 
-				EACH(dataOrArrayOrParams, function(value, name) {
+				EACH(dataOrArrayOrParams, (value, name) => {
 
 					// remove value passed filter.
 					if (filter(value, name) === true) {
@@ -48,7 +31,7 @@ global.REMOVE = METHOD({
 
 			else if (CHECK_IS_ARRAY(dataOrArrayOrParams) === true) {
 
-				EACH(dataOrArrayOrParams, function(value, key) {
+				EACH(dataOrArrayOrParams, (value, key) => {
 
 					// remove value passed filter.
 					if (filter(value, key) === true) {
@@ -65,11 +48,11 @@ global.REMOVE = METHOD({
 		else {
 
 			// init params.
-			data = dataOrArrayOrParams.data;
-			array = dataOrArrayOrParams.array;
-			name = dataOrArrayOrParams.name;
-			key = dataOrArrayOrParams.key;
-			value = dataOrArrayOrParams.value;
+			let data = dataOrArrayOrParams.data;
+			let array = dataOrArrayOrParams.array;
+			let name = dataOrArrayOrParams.name;
+			let key = dataOrArrayOrParams.key;
+			let value = dataOrArrayOrParams.value;
 
 			if (name !== undefined) {
 				delete data[name];
@@ -83,7 +66,7 @@ global.REMOVE = METHOD({
 
 				if (data !== undefined) {
 
-					EACH(data, function(_value, name) {
+					EACH(data, (_value, name) => {
 
 						if (CHECK_ARE_SAME([_value, value]) === true) {
 
@@ -97,7 +80,7 @@ global.REMOVE = METHOD({
 
 				if (array !== undefined) {
 
-					EACH(array, function(_value, key) {
+					EACH(array, (_value, key) => {
 
 						if (CHECK_ARE_SAME([_value, value]) === true) {
 

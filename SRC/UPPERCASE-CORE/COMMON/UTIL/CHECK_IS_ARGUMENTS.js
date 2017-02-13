@@ -3,7 +3,7 @@
  */
 global.CHECK_IS_ARGUMENTS = METHOD({
 
-	run : function(target) {'use strict';
+	run : (target) => {
 		//OPTIONAL: target
 
 		if (

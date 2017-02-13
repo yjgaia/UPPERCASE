@@ -13,3 +13,17 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 		console.error(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
 	}
 };
+
+FOR_BOX(function(box) {
+
+	box.SHOW_ERROR = METHOD({
+
+		run : function(tag, errorMsg, params) {
+			//REQUIRED: tag
+			//REQUIRED: errorMsg
+			//OPTIONAL: params
+
+			SHOW_ERROR(box.boxName + '.' + tag, errorMsg, params);
+		}
+	});
+});

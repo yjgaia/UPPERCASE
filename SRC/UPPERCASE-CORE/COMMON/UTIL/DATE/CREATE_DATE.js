@@ -3,8 +3,7 @@
  */
 global.CREATE_DATE = METHOD({
 
-	run : function(params) {
-		'use strict';
+	run : (params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.year		년
 		//OPTIONAL: params.month	월
@@ -13,27 +12,14 @@ global.CREATE_DATE = METHOD({
 		//OPTIONAL: params.minute	분
 		//OPTIONAL: params.second	초
 		
-		var
-		// year
-		year = params.year,
+		let year = params.year;
+		let month = params.month;
+		let date = params.date;
+		let hour = params.hour;
+		let minute = params.minute;
+		let second = params.second;
 		
-		// month
-		month = params.month,
-		
-		// date
-		date = params.date,
-		
-		// hour
-		hour = params.hour,
-		
-		// minute
-		minute = params.minute,
-		
-		// second
-		second = params.second,
-		
-		// now cal
-		nowCal = CALENDAR(new Date());
+		let nowCal = CALENDAR(new Date());
 		
 		if (year === undefined) {
 			year = nowCal.getYear();

@@ -1,55 +1,28 @@
 /**
  * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
  */
-global.LOOP = CLASS(function(cls) {
-	'use strict';
+global.LOOP = CLASS((cls) => {
+	
+	let animationInterval;
+	let loopInfos = [];
+	let runs = [];
 
-	var
-	// before time
-	beforeTime,
-
-	// animation interval
-	animationInterval,
-
-	// loop infos
-	loopInfos = [],
-
-	// runs
-	runs = [],
-
-	// fire.
-	fire = function() {
+	let fire = () => {
 
 		if (animationInterval === undefined) {
 
-			beforeTime = Date.now();
+			let beforeTime = Date.now();
 
-			animationInterval = INTERVAL(function() {
+			animationInterval = INTERVAL(() => {
 
-				var
-				// time
-				time = Date.now(),
-
-				// delta time
-				deltaTime = time - beforeTime,
-
-				// loop info
-				loopInfo,
-
-				// count
-				count,
-
-				// interval
-				interval,
-
-				// i, j
-				i, j;
-
+				let time = Date.now();
+				let deltaTime = time - beforeTime;
+				
 				if (deltaTime > 0) {
 
-					for (i = 0; i < loopInfos.length; i += 1) {
+					for (let i = 0; i < loopInfos.length; i += 1) {
 
-						loopInfo = loopInfos[i];
+						let loopInfo = loopInfos[i];
 
 						if (loopInfo.fps !== undefined && loopInfo.fps > 0) {
 
@@ -59,7 +32,7 @@ global.LOOP = CLASS(function(cls) {
 							}
 
 							// calculate count.
-							count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
+							let count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
 
 							// start.
 							if (loopInfo.start !== undefined) {
@@ -67,7 +40,7 @@ global.LOOP = CLASS(function(cls) {
 							}
 
 							// run interval.
-							interval = loopInfo.interval;
+							let interval = loopInfo.interval;
 							for (j = 0; j < count; j += 1) {
 								interval(loopInfo.fps);
 							}
@@ -87,7 +60,7 @@ global.LOOP = CLASS(function(cls) {
 					}
 
 					// run runs.
-					for (i = 0; i < runs.length; i += 1) {
+					for (let i = 0; i < runs.length; i += 1) {
 						runs[i](deltaTime);
 					}
 
@@ -95,10 +68,9 @@ global.LOOP = CLASS(function(cls) {
 				}
 			});
 		}
-	},
-
-	// stop.
-	stop = function() {
+	};
+	
+	let stop = () => {
 
 		if (loopInfos.length <= 0 && runs.length <= 0) {
 
@@ -109,40 +81,19 @@ global.LOOP = CLASS(function(cls) {
 
 	return {
 
-		init : function(inner, self, fpsOrRun, intervalOrFuncs) {
+		init : (inner, self, fpsOrRun, intervalOrFuncs) => {
 			//OPTIONAL: fpsOrRun
 			//OPTIONAL: intervalOrFuncs
 			//OPTIONAL: intervalOrFuncs.start
 			//REQUIRED: intervalOrFuncs.interval
 			//OPTIONAL: intervalOrFuncs.end
 
-			var
-			// run.
-			run,
+			let run;
+			let start;
+			let interval;
+			let end;
 
-			// start.
-			start,
-
-			// interval.
-			interval,
-
-			// end.
-			end,
-
-			// info
-			info,
-			
-			// resume.
-			resume,
-			
-			// pause.
-			pause,
-
-			// change fps.
-			changeFPS,
-
-			// remove.
-			remove;
+			let info;
 
 			if (intervalOrFuncs !== undefined) {
 
@@ -155,7 +106,7 @@ global.LOOP = CLASS(function(cls) {
 					end = intervalOrFuncs.end;
 				}
 			
-				self.resume = resume = RAR(function() {
+				let resume = self.resume = RAR(() => {
 					
 					loopInfos.push( info = {
 						fps : fpsOrRun,
@@ -167,7 +118,7 @@ global.LOOP = CLASS(function(cls) {
 					fire();
 				});
 
-				self.pause = pause = function() {
+				let pause = self.pause = () => {
 
 					REMOVE({
 						array : loopInfos,
@@ -177,13 +128,13 @@ global.LOOP = CLASS(function(cls) {
 					stop();
 				};
 
-				self.changeFPS = changeFPS = function(fps) {
+				let changeFPS = self.changeFPS = (fps) => {
 					//REQUIRED: fps
 
 					info.fps = fps;
 				};
 
-				self.remove = remove = function() {
+				let remove = self.remove = () => {
 					pause();
 				};
 			}
@@ -191,14 +142,14 @@ global.LOOP = CLASS(function(cls) {
 			// when fpsOrRun is run
 			else {
 				
-				self.resume = resume = RAR(function() {
+				let resume = self.resume = RAR(() => {
 					
 					runs.push(run = fpsOrRun);
 					
 					fire();
 				});
 
-				self.pause = pause = function() {
+				let pause = self.pause = () => {
 
 					REMOVE({
 						array : runs,
@@ -208,7 +159,7 @@ global.LOOP = CLASS(function(cls) {
 					stop();
 				};
 
-				self.remove = remove = function() {
+				let remove = self.remove = () => {
 					pause();
 				};
 			}

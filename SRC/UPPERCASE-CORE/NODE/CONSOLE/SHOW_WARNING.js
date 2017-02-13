@@ -13,3 +13,17 @@ global.SHOW_WARNING = function(tag, warningMsg, params) {
 		console.error(CONSOLE_YELLOW(JSON.stringify(params, TO_DELETE, 4)));
 	}
 };
+
+FOR_BOX(function(box) {
+
+	box.SHOW_WARNING = METHOD({
+
+		run : function(tag, warningMsg, params) {
+			//REQUIRED: tag
+			//REQUIRED: warningMsg
+			//OPTIONAL: params
+
+			SHOW_WARNING(box.boxName + '.' + tag, warningMsg, params);
+		}
+	});
+});

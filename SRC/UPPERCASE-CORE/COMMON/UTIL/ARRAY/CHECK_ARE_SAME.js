@@ -3,16 +3,12 @@
  */
 global.CHECK_ARE_SAME = METHOD({
 
-	run : function(array) {
-		'use strict';
+	run : (array) => {
 		//REQUIRED: array
 
-		var
-		// are same
-		areSame = false,
+		let areSame = false;
 
-		// check two same.
-		checkTwoSame = function(a, b) {
+		let checkTwoSame = (a, b) => {
 
 			// when a, b are date
 			if ( a instanceof Date === true && b instanceof Date === true) {
@@ -26,14 +22,14 @@ global.CHECK_ARE_SAME = METHOD({
 
 			// when a, b are data (JS object)
 			else if (CHECK_IS_DATA(a) === true && CHECK_IS_DATA(b) === true) {
-				return EACH(a, function(value, name) {
+				return EACH(a, (value, name) => {
 					return checkTwoSame(value, b[name]);
 				});
 			}
 
 			// when a, b are array
 			else if (CHECK_IS_ARRAY(a) === true && CHECK_IS_ARRAY(b) === true) {
-				return EACH(a, function(value, i) {
+				return EACH(a, (value, i) => {
 					return checkTwoSame(value, b[i]);
 				});
 			}
@@ -46,7 +42,7 @@ global.CHECK_ARE_SAME = METHOD({
 
 		if (array.length > 1) {
 
-			areSame = REPEAT(array.length, function(i) {
+			areSame = REPEAT(array.length, (i) => {
 				if (i < array.length - 1) {
 					return checkTwoSame(array[i], array[i + 1]);
 				} else {

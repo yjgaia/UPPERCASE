@@ -3,45 +3,28 @@
  */
 global.INTERVAL = CLASS({
 
-	init : function(inner, self, seconds, func) {
-		'use strict';
+	init : (inner, self, seconds, func) => {
 		//REQUIRED: seconds
 		//OPTIONAL: func
-
-		var
-		// milliseconds
-		milliseconds,
-		
-		// start time
-		startTime = Date.now(),
-		
-		// remaining
-		remaining,
-		
-		// interval
-		interval,
-		
-		// resume.
-		resume,
-		
-		// pause.
-		pause,
-
-		// remove.
-		remove;
 
 		if (func === undefined) {
 			func = seconds;
 			seconds = 0;
 		}
+
+		let milliseconds;
 		
-		remaining = milliseconds = seconds === 0 ? 1 : seconds * 1000;
+		let startTime = Date.now();
 		
-		self.resume = resume = RAR(function() {
+		let remaining = milliseconds = seconds === 0 ? 1 : seconds * 1000;
+		
+		let interval;
+		
+		let resume = self.resume = RAR(() => {
 			
 			if (interval === undefined) {
 				
-				interval = setInterval(function() {
+				interval = setInterval(() => {
 					
 					if (func(self) === false) {
 						remove();
@@ -53,7 +36,7 @@ global.INTERVAL = CLASS({
 			}
 		});
 		
-		self.pause = pause = function() {
+		let pause = self.pause = () => {
 			
 			remaining = milliseconds - (Date.now() - startTime);
 			
@@ -61,7 +44,7 @@ global.INTERVAL = CLASS({
 			interval = undefined;
 		};
 		
-		self.remove = remove = function() {
+		let remove = self.remove = () => {
 			pause();
 		};
 	}

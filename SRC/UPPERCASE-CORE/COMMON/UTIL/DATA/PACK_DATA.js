@@ -3,21 +3,14 @@
  */
 global.PACK_DATA = METHOD({
 
-	run : function(data) {
-		'use strict';
+	run : (data) => {
 		//REQUIRED: data
 
-		var
-		// result
-		result = COPY(data),
+		let result = COPY(data);
+		let dateNames = [];
+		let regexNames = [];
 
-		// date property names
-		dateNames = [],
-		
-		// regex property names
-		regexNames = [];
-
-		EACH(result, function(value, name) {
+		EACH(result, (value, name) => {
 
 			if (value instanceof Date === true) {
 
@@ -39,7 +32,7 @@ global.PACK_DATA = METHOD({
 
 			else if (CHECK_IS_ARRAY(value) === true) {
 
-				EACH(value, function(v, i) {
+				EACH(value, (v, i) => {
 
 					if (CHECK_IS_DATA(v) === true) {
 						value[i] = PACK_DATA(v);

@@ -3,14 +3,11 @@
  */
 global.COPY = METHOD({
 
-	run : function(dataOrArray) {
-		'use strict';
+	run : (dataOrArray) => {
 		//REQUIRED: dataOrArray
-
-		var
-		// copy
-		copy;
-
+		
+		let copy;
+		
 		if (CHECK_IS_DATA(dataOrArray) === true) {
 
 			copy = {};

@@ -3,51 +3,34 @@
  */
 global.DELAY = CLASS({
 
-	init : function(inner, self, seconds, func) {
-		'use strict';
+	init : (inner, self, seconds, func) => {
 		//REQUIRED: seconds
 		//OPTIONAL: func
-
-		var
-		// milliseconds
-		milliseconds,
-		
-		// start time
-		startTime = Date.now(),
-		
-		// remaining
-		remaining,
-		
-		// timeout
-		timeout,
-
-		// resume.
-		resume,
-		
-		// pause.
-		pause,
-		
-		// remove.
-		remove;
 
 		if (func === undefined) {
 			func = seconds;
 			seconds = 0;
 		}
 		
-		remaining = milliseconds = seconds * 1000;
+		let milliseconds;
 		
-		self.resume = resume = RAR(function() {
+		let startTime = Date.now();
+		
+		let remaining = milliseconds = seconds * 1000;
+		
+		let timeout;
+		
+		let resume = self.resume = RAR(() => {
 			
 			if (timeout === undefined) {
 				
-				timeout = setTimeout(function() {
+				timeout = setTimeout(() => {
 					func();
 				}, remaining);
 			}
 		});
 		
-		self.pause = pause = function() {
+		let pause = self.pause = () => {
 			
 			remaining = milliseconds - (Date.now() - startTime);
 			
@@ -55,7 +38,7 @@ global.DELAY = CLASS({
 			timeout = undefined;
 		};
 		
-		self.remove = remove = function() {
+		let remove = self.remove = () => {
 			pause();
 		};
 	}

@@ -1,17 +1,11 @@
 /**
  * 클래스를 생성합니다.
  */
-global.CLASS = METHOD(function(m) {
-	'use strict';
+global.CLASS = METHOD((m) => {
 
-	var
-	// instance count
-	instanceCount = 0,
+	let instanceCount = 0;
 
-	// get next instance id.
-	getNextInstanceId;
-
-	m.getNextInstanceId = getNextInstanceId = function() {
+	let getNextInstanceId = m.getNextInstanceId = () => {
 
 		instanceCount += 1;
 
@@ -20,54 +14,33 @@ global.CLASS = METHOD(function(m) {
 
 	return {
 
-		run : function(define) {
+		run : (define) => {
 			//REQUIRED: define	클래스 정의 구문
 
-			var
-			// funcs
-			funcs,
-
-			// preset.
-			preset,
-
-			// init.
-			init,
-
-			// params.
-			_params,
-
-			// after init.
-			afterInit,
-
-			// cls.
-			cls,
-
-			// inner init.
-			innerInit,
-
-			// inner after init.
-			innerAfterInit;
+			let funcs;
 			
-			cls = function(params, funcs) {
+			let preset;
+			let init;
+			let _params;
+			let afterInit;
+			
+			let cls = (params, funcs) => {
 				//OPTIONAL: params
 				//OPTIONAL: funcs
 
-				var
 				// inner (protected)
-				inner = {},
+				let inner = {};
 
 				// self (public)
-				self = {
+				let self = {
 					
 					type : cls,
 					
 					id : getNextInstanceId(),
 					
-					checkIsInstanceOf : function(checkCls) {
+					checkIsInstanceOf : (checkCls) => {
 	
-						var
-						// target cls
-						targetCls = cls;
+						let targetCls = cls;
 	
 						// check moms.
 						while (targetCls !== undefined) {
@@ -106,24 +79,18 @@ global.CLASS = METHOD(function(m) {
 			cls.type = CLASS;
 			cls.id = getNextInstanceId();
 
-			cls.innerInit = innerInit = function(inner, self, params, funcs) {
+			let innerInit = cls.innerInit = (inner, self, params, funcs) => {
 				//OPTIONAL: params
 				//OPTIONAL: funcs
-
-				var
+				
 				// mom (parent class)
-				mom,
+				let mom;
+				
+				let paramValue;
 
-				// temp params
-				tempParams,
+				let extend = (params, tempParams) => {
 
-				// param value
-				paramValue,
-
-				// extend.
-				extend = function(params, tempParams) {
-
-					EACH(tempParams, function(value, name) {
+					EACH(tempParams, (value, name) => {
 
 						if (params[name] === undefined) {
 							params[name] = value;
@@ -142,7 +109,7 @@ global.CLASS = METHOD(function(m) {
 					
 					else if (CHECK_IS_DATA(params) === true) {
 
-						tempParams = _params(cls);
+						let tempParams = _params(cls);
 
 						if (tempParams !== undefined) {
 							extend(params, tempParams);
@@ -182,13 +149,11 @@ global.CLASS = METHOD(function(m) {
 				return params;
 			};
 
-			cls.innerAfterInit = innerAfterInit = function(inner, self, params, funcs) {
+			let innerAfterInit = cls.innerAfterInit = (inner, self, params, funcs) => {
 				//OPTIONAL: params
 				//OPTIONAL: funcs
 
-				var
-				// mom
-				mom = cls.mom;
+				let mom = cls.mom;
 
 				// when mom exists, run mom's after init.
 				if (mom !== undefined) {

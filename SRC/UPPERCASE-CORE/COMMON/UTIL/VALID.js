@@ -1,113 +1,36 @@
 /**
  * 데이터를 검증하고, 어떤 부분이 잘못되었는지 오류를 확인할 수 있는 VALID 클래스
  */
-global.VALID = CLASS(function(cls) {
-	'use strict';
-
-	var
-	// not empty.
-	notEmpty,
-
-	// regex.
-	regex,
-
-	// size.
-	size,
-
-	// integer.
-	integer,
-
-	// real.
-	real,
-
-	// bool.
-	bool,
-
-	// date.
-	date,
-
-	// min.
-	min,
-
-	// max.
-	max,
-
-	// email.
-	email,
-
-	// png.
-	png,
-
-	// url.
-	url,
-
-	// username.
-	username,
-
-	// mongoId.
-	mongoId,
-
-	// one.
-	one,
-
-	// array.
-	array,
-
-	// data.
-	data,
-
-	// element.
-	element,
-
-	// property.
-	property,
-
-	// detail.
-	detail,
-
-	// equal.
-	equal;
-
-	cls.notEmpty = notEmpty = function(value) {
+global.VALID = CLASS((cls) => {
+	
+	let notEmpty = cls.notEmpty = (value) => {
 		//REQUIRED: value
 
-		var
-		// string
-		str = (value === undefined || value === TO_DELETE) ? '' : String(value);
+		let str = (value === undefined || value === TO_DELETE) ? '' : String(value);
 
 		return CHECK_IS_ARRAY(value) === true || str.trim() !== '';
 	};
 
-	cls.regex = regex = function(params) {
+	let regex = cls.regex = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.pattern
 
-		var
-		// string
-		str = String(params.value),
-		
-		// pattern
-		pattern = params.pattern;
+		let str = String(params.value);
+		let pattern = params.pattern;
 
 		return str === str.match(pattern)[0];
 	};
 
-	cls.size = size = function(params) {
+	let size = cls.size = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//OPTIONAL: params.min
 		//REQUIRED: params.max
-
-		var
-		// string
-		str = String(params.value),
 		
-		// min
-		min = params.min,
-
-		// max
-		max = params.max;
+		let str = String(params.value);
+		let min = params.min;
+		let max = params.max;
 		
 		if (min === undefined) {
 			min = 0;
@@ -116,160 +39,134 @@ global.VALID = CLASS(function(cls) {
 		return min <= str.trim().length && (max === undefined || str.length <= max);
 	};
 
-	cls.integer = integer = function(value) {
+	let integer = cls.integer = (value) => {
 		//REQUIRED: value
 
-		var
-		// string
-		str = String(value);
+		let str = String(value);
 
 		return notEmpty(str) === true && str.match(/^(?:-?(?:0|[1-9][0-9]*))$/) !== TO_DELETE;
 	};
 
-	cls.real = real = function(value) {
+	let real = cls.real = (value) => {
 		//REQUIRED: value
-
-		var
-		// string
-		str = String(value);
+		
+		let str = String(value);
 
 		return notEmpty(str) === true && str.match(/^(?:-?(?:0|[1-9][0-9]*))?(?:\.[0-9]*)?$/) !== TO_DELETE;
 	};
 
-	cls.bool = bool = function(value) {
+	let bool = cls.bool = (value) => {
 		//REQUIRED: value
-
-		var
-		// string
-		str = String(value);
+		
+		let str = String(value);
 
 		return str === 'true' || str === 'false';
 	};
 
-	cls.date = date = function(value) {
+	let date = cls.date = (value) => {
 		//REQUIRED: value
 
-		var
-		// string
-		str = String(value),
-
-		// date
-		date = Date.parse(str);
+		let str = String(value);
+		let date = Date.parse(str);
 
 		return isNaN(date) === false;
 	};
 
-	cls.min = min = function(params) {
+	let min = cls.min = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.min
-
-		var
-		// value
-		value = params.value,
 		
-		// min
-		min = params.min;
+		let value = params.value;
+		let min = params.min;
 
 		return real(value) === true && min <= value;
 	};
 
-	cls.max = max = function(params) {
+	let max = cls.max = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.max
-
-		var
-		// value
-		value = params.value,
 		
-		// max
-		max = params.max;
+		let value = params.value;
+		let max = params.max;
 
 		return real(value) === true && max >= value;
 	};
 
-	cls.email = email = function(value) {
+	let email = cls.email = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/) !== TO_DELETE;
 	};
 
-	cls.png = png = function(value) {
+	let png = cls.png = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^data:image\/png;base64,/) !== TO_DELETE;
 	};
 
-	cls.url = url = function(value) {
+	let url = cls.url = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?:\w+:\w+@)?((?:(?:[-\w\d{1-3}]+\.)+(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|edu|co\.uk|ac\.uk|it|fr|tv|museum|asia|local|travel|[a-z]{2}))|((\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)(\.(\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)){3}))(?::[\d]{1,5})?(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?:#(?:[-\w~!$ |\/.,*:;=]|%[a-f\d]{2})*)?$/i) !== TO_DELETE && value.length <= 2083;
 	};
 
-	cls.username = username = function(value) {
+	let username = cls.username = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^[_a-zA-Z0-9\-]+$/) !== TO_DELETE;
 	};
 
 	// mongodb id check
-	cls.mongoId = mongoId = function(value) {
+	let mongoId = cls.mongoId = (value) => {
 		//REQUIRED: value
 
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/[0-9a-f]{24}/) !== TO_DELETE && value.length === 24;
 	};
 
-	cls.one = one = function(params) {
+	let one = cls.one = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.array
 
-		var
-		// value
-		value = params.value,
-		
-		// array
-		array = params.array;
+		let value = params.value;
+		let array = params.array;
 
-		return EACH(array, function(_value) {
+		return EACH(array, (_value) => {
 			if (value === _value) {
 				return false;
 			}
 		}) === false;
 	};
 
-	cls.array = array = function(value) {
+	let array = cls.array = (value) => {
 		//REQUIRED: value
 
 		return CHECK_IS_ARRAY(value) === true;
 	};
 
-	cls.data = data = function(value) {
+	let data = cls.data = (value) => {
 		//REQUIRED: value
 
 		return CHECK_IS_DATA(value) === true;
 	};
 
-	cls.element = element = function(params) {
+	let element = cls.element = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.array
 		//REQUIRED: params.validData
 		//OPTIONAL: params.isToWash
+		
+		let array = params.array;
 
-		var
-		// array
-		array = params.array,
-
-		// valid
-		valid = VALID({
+		let valid = VALID({
 			_ : params.validData
-		}),
+		});
 		
-		// is to wash
-		isToWash = params.isToWash;
+		let isToWash = params.isToWash;
 		
-		return EACH(array, function(value) {
+		return EACH(array, (value) => {
 			if ((isToWash === true ? valid.checkAndWash : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
@@ -278,25 +175,21 @@ global.VALID = CLASS(function(cls) {
 		}) === true;
 	};
 
-	cls.property = property = function(params) {
+	let property = cls.property = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validData
 		//OPTIONAL: params.isToWash
 
-		var
-		// array
-		data = params.data,
+		let data = params.data;
 
-		// valid
-		valid = VALID({
+		let valid = VALID({
 			_ : params.validData
-		}),
+		});
 		
-		// is to wash
-		isToWash = params.isToWash;
+		let isToWash = params.isToWash;
 		
-		return EACH(data, function(value) {
+		return EACH(data, (value) => {
 			if ((isToWash === true ? valid.checkAndWash : valid.check)({
 				_ : value
 			}).checkHasError() === true) {
@@ -305,93 +198,58 @@ global.VALID = CLASS(function(cls) {
 		}) === true;
 	};
 
-	cls.detail = detail = function(params) {
+	let detail = cls.detail = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.data
 		//REQUIRED: params.validDataSet
 		//OPTIONAL: params.isToWash
-
-		var
-		// data
-		data = params.data,
-
-		// valid
-		valid = VALID(params.validDataSet),
 		
-		// is to wash
-		isToWash = params.isToWash;
+		let data = params.data;
+		let valid = VALID(params.validDataSet);
+		let isToWash = params.isToWash;
 		
 		return (isToWash === true ? valid.checkAndWash : valid.check)(data).checkHasError() !== true;
 	};
 
-	cls.equal = equal = function(params) {
+	let equal = cls.equal = (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.value
 		//REQUIRED: params.validValue
 
-		var
-		// value
-		value = params.value,
-
-		// string
-		str = String(value),
-
-		// valid value
-		validValue = params.validValue,
-
-		// valid str
-		validStr = String(validValue);
+		let str = String(params.value);
+		let validStr = String(params.validValue);
 
 		return str === validStr;
 	};
 
 	return {
 
-		init : function(inner, self, validDataSet) {
+		init : (inner, self, validDataSet) => {
 			//REQUIRED: validDataSet
 
-			var
-			// Check class
-			Check = CLASS({
+			let Check = CLASS({
 
-				init : function(inner, self, params) {
+				init : (inner, self, params) => {
 					//REQUIRED: params
 					//REQUIRED: params.data
 					//OPTIONAL: params.isToWash
 					//OPTIONAL: params.isForUpdate
 
-					var
-					// data
-					data = params.data,
+					let data = params.data;
+					let isToWash = params.isToWash;
+					let isForUpdate = params.isForUpdate;
 
-					// is to wash
-					isToWash = params.isToWash,
-					
-					// is for update
-					isForUpdate = params.isForUpdate,
+					let hasError = false;
+					let errors = {};
 
-					// has error
-					hasError = false,
-
-					// errors
-					errors = {},
-
-					// check has error.
-					checkHasError,
-
-					// get errors.
-					getErrors;
-
-					EACH(validDataSet, function(validData, attr) {
+					EACH(validDataSet, (validData, attr) => {
 
 						// when valid data is true, pass
 						if (validData !== true) {
 
-							EACH(validData, function(validParams, name) {
+							EACH(validData, (validParams, name) => {
 
-								var
-								// value
-								value = data[attr];
+								let value = data[attr];
 								
 								if (isForUpdate === true && value === undefined) {
 
@@ -629,49 +487,37 @@ global.VALID = CLASS(function(cls) {
 
 					if (isToWash === true) {
 						
-						EACH(data, function(value, attr) {
+						EACH(data, (value, attr) => {
 							if (validDataSet[attr] === undefined) {
 								delete data[attr];
 							}
 						});
 					}
 
-					self.checkHasError = checkHasError = function() {
+					let checkHasError = self.checkHasError = () => {
 						return hasError;
 					};
 
-					self.getErrors = getErrors = function() {
+					let getErrors = self.getErrors = () => {
 						return errors;
 					};
 				}
-			}),
+			});
 
-			// check.
-			check,
-
-			// check and wash.
-			checkAndWash,
-			
-			// check for update.
-			checkForUpdate,
-			
-			// get valid data set.
-			getValidDataSet;
-
-			self.check = check = function(data) {
+			let check = self.check = (data) => {
 				return Check({
 					data : data
 				});
 			};
 
-			self.checkAndWash = checkAndWash = function(data) {
+			let checkAndWash = self.checkAndWash = (data) => {
 				return Check({
 					data : data,
 					isToWash : true
 				});
 			};
 
-			self.checkForUpdate = checkForUpdate = function(data) {
+			let checkForUpdate = self.checkForUpdate = (data) => {
 				return Check({
 					data : data,
 					isToWash : true,
@@ -679,7 +525,7 @@ global.VALID = CLASS(function(cls) {
 				});
 			};
 			
-			self.getValidDataSet = getValidDataSet = function() {
+			let getValidDataSet = self.getValidDataSet = () => {
 				return validDataSet;
 			};
 		}

@@ -3,8 +3,7 @@
  */
 global.REAL = METHOD({
 
-	run : function(realNumberString) {
-		'use strict';
+	run : (realNumberString) => {
 		//OPTIONAL: realNumberString
 
 		return realNumberString === undefined ? undefined : parseFloat(realNumberString);

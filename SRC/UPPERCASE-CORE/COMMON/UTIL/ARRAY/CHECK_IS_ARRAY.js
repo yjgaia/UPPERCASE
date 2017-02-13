@@ -3,8 +3,7 @@
  */
 global.CHECK_IS_ARRAY = METHOD({
 
-	run : function(target) {
-		'use strict';
+	run : (target) => {
 		//OPTIONAL: target
 
 		if (

@@ -3,19 +3,16 @@
  */
 global.UNPACK_DATA = METHOD({
 
-	run : function(packedData) {
-		'use strict';
+	run : (packedData) => {
 		//REQUIRED: packedData	PACK_DATA가 적용된 데이터
 
-		var
-		// result
-		result = COPY(packedData);
+		let result = COPY(packedData);
 
 		// when date property names exists
 		if (result.__D !== undefined) {
 
 			// change timestamp integer to Date type.
-			EACH(result.__D, function(dateName, i) {
+			EACH(result.__D, (dateName, i) => {
 				result[dateName] = new Date(result[dateName]);
 			});
 			
@@ -26,19 +23,12 @@ global.UNPACK_DATA = METHOD({
 		if (result.__R !== undefined) {
 
 			// change string to RegExp type.
-			EACH(result.__R, function(regexName, i) {
+			EACH(result.__R, (regexName, i) => {
 				
-				var
-				// pattern
-				pattern = result[regexName],
+				let pattern = result[regexName];
+				let flags;
 				
-				// flags
-				flags,
-				
-				// j
-				j;
-				
-				for (j = pattern.length - 1; j >= 0; j -= 1) {
+				for (let j = pattern.length - 1; j >= 0; j -= 1) {
 					if (pattern[j] === '/') {
 						flags = pattern.substring(j + 1);
 						pattern = pattern.substring(1, j);
@@ -52,7 +42,7 @@ global.UNPACK_DATA = METHOD({
 			delete result.__R;
 		}
 
-		EACH(result, function(value, name) {
+		EACH(result, (value, name) => {
 
 			if (CHECK_IS_DATA(value) === true) {
 				result[name] = UNPACK_DATA(value);
@@ -60,7 +50,7 @@ global.UNPACK_DATA = METHOD({
 
 			else if (CHECK_IS_ARRAY(value) === true) {
 
-				EACH(value, function(v, i) {
+				EACH(value, (v, i) => {
 
 					if (CHECK_IS_DATA(v) === true) {
 						value[i] = UNPACK_DATA(v);

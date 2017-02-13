@@ -5,8 +5,7 @@
  */
 global.RAR = METHOD({
 
-	run : function(params, func) {
-		'use strict';
+	run : (params, func) => {
 		//OPTIONAL: params
 		//REQUIRED: func
 

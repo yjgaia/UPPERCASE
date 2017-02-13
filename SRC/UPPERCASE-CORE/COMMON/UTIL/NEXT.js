@@ -3,21 +3,15 @@
  */
 global.NEXT = METHOD({
 
-	run : function(countOrArray, funcs) {
-		'use strict';
+	run : (countOrArray, funcs) => {
 		//OPTIONAL: countOrArray
 		//REQUIRED: funcs
 
-		var
-		// count
-		count,
-
-		// array
-		array,
-
-		// f.
-		f;
-
+		let count;
+		let array;
+		
+		let f;
+		
 		if (funcs === undefined) {
 			funcs = countOrArray;
 			countOrArray = undefined;
@@ -34,11 +28,9 @@ global.NEXT = METHOD({
 		REPEAT({
 			start : funcs.length - 1,
 			end : 0
-		}, function(i) {
+		}, (i) => {
 
-			var
-			// next.
-			next;
+			let next;
 
 			// get last function.
 			if (i !== 0 && f === undefined) {
@@ -62,7 +54,7 @@ global.NEXT = METHOD({
 
 				// when next not exists, next is empty function.
 				if (next === undefined) {
-					next = function() {
+					next = () => {
 						// ignore.
 					};
 				}
@@ -70,63 +62,55 @@ global.NEXT = METHOD({
 				f = funcs[i];
 
 				if (count !== undefined) {
+					
+					let i = -1;
 
-					RUN(function() {
+					RUN((self) => {
 
-						var
-						// i
-						i = -1;
+						i += 1;
 
-						RUN(function(self) {
+						if (i + 1 < count) {
+							f(i, self);
+						} else {
+							f(i, next);
+						}
+					});
+				}
+				
+				else if (array !== undefined) {
+
+					let length = array.length;
+
+					if (length === 0) {
+						next();
+					}
+					
+					else {
+						
+						let i = -1;
+
+						RUN((self) => {
 
 							i += 1;
 
-							if (i + 1 < count) {
-								f(i, self);
+							if (i + 1 < length) {
+
+								// if shrink
+								if (array.length === length - 1) {
+									i -= 1;
+									length -= 1;
+								}
+
+								f(array[i], self, i);
+
 							} else {
-								f(i, next);
+								f(array[i], next, i);
 							}
 						});
-					});
-
-				} else if (array !== undefined) {
-
-					RUN(function() {
-
-						var
-						// length
-						length = array.length,
-
-						// i
-						i = -1;
-
-						if (length === 0) {
-							next();
-						} else {
-
-							RUN(function(self) {
-
-								i += 1;
-
-								if (i + 1 < length) {
-
-									// if shrink
-									if (array.length === length - 1) {
-										i -= 1;
-										length -= 1;
-									}
-
-									f(array[i], self, i);
-
-								} else {
-									f(array[i], next, i);
-								}
-							});
-						}
-					});
-
-				} else {
-
+					}
+				}
+				
+				else {
 					f(next);
 				}
 			}

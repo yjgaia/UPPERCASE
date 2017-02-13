@@ -1,20 +1,14 @@
 /**
  * 메소드를 생성합니다.
  */
-global.METHOD = function(define) {
-	'use strict';
+global.METHOD = (define) => {
 	//REQUIRED: define		메소드 정의 구문
 	//REQUIRED: define.run	메소드 실행 구문
 
-	var
-	// funcs
-	funcs,
+	let funcs;
+	let run;
 
-	// run.
-	run,
-
-	// method.
-	m = function(params, funcs) {
+	let m = (params, funcs) => {
 		//OPTIONAL: params
 		//OPTIONAL: funcs
 
@@ -22,11 +16,9 @@ global.METHOD = function(define) {
 			return run(params, funcs);
 		}
 	};
-
-	// set type.
+	
 	m.type = METHOD;
-
-	// when define is function
+	
 	if (typeof define === 'function') {
 		funcs = define(m);
 	}

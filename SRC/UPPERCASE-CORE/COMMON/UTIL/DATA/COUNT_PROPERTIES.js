@@ -3,15 +3,12 @@
  */
 global.COUNT_PROPERTIES = METHOD({
 
-	run : function(data) {
-		'use strict';
+	run : (data) => {
 		//OPTIONAL: data
 
-		var
-		// count
-		count = 0;
+		let count = 0;
 		
-		EACH(data, function() {
+		EACH(data, () => {
 			count += 1;
 		});
 		

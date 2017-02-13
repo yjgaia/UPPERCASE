@@ -3,8 +3,7 @@
  */
 global.OVERRIDE = METHOD({
 
-	run : function(origin, func) {
-		'use strict';
+	run : (origin, func) => {
 		//REQUIRED: origin	오버라이드 할 대상
 		//REQUIRED: func
 

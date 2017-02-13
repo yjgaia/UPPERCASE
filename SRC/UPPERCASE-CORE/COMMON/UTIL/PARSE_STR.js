@@ -3,20 +3,12 @@
  */
 global.PARSE_STR = METHOD({
 
-	run : function(dataStr) {
-		'use strict';
+	run : (dataStr) => {
 		//REQUIRED: dataStr
-
-		var
-		// data
-		data,
 		
-		// array
-		array;
-
 		try {
 
-			data = JSON.parse(dataStr);
+			let data = JSON.parse(dataStr);
 			
 			if (CHECK_IS_DATA(data) === true) {
 				return UNPACK_DATA(data);
@@ -24,9 +16,9 @@ global.PARSE_STR = METHOD({
 			
 			else if (CHECK_IS_ARRAY(data) === true) {
 				
-				array = [];
+				let array = [];
 				
-				EACH(data, function(data) {
+				EACH(data, (data) => {
 					array.push(UNPACK_DATA(data));
 				});
 				

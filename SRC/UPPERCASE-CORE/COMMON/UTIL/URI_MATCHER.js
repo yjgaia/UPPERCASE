@@ -5,39 +5,26 @@
  */
 global.URI_MATCHER = CLASS({
 
-	init : function(inner, self, format) {
-		'use strict';
+	init : (inner, self, format) => {
 		//REQUIRED: format
 
-		var
-		// Check class
-		Check = CLASS({
+		let Check = CLASS({
 
-			init : function(inner, self, uri) {
+			init : (inner, self, uri) => {
 				//REQUIRED: uri
 
-				var
-				// uri parts
-				uriParts = uri.split('/'),
+				let uriParts = uri.split('/');
+				
+				let isMatched;
+				let uriParams = {};
 
-				// is matched
-				isMatched,
+				let find = function(format) {
 
-				// uri parmas
-				uriParams = {},
+					let formatParts = format.split('/');
 
-				// find.
-				find = function(format) {
+					return EACH(uriParts, (uriPart, i) => {
 
-					var
-					// format parts
-					formatParts = format.split('/');
-
-					return EACH(uriParts, function(uriPart, i) {
-
-						var
-						// format part
-						formatPart = formatParts[i];
+						let formatPart = formatParts[i];
 
 						if (formatPart === '**') {
 							isMatched = true;
@@ -60,36 +47,27 @@ global.URI_MATCHER = CLASS({
 						}
 
 					}) === true || isMatched === true;
-				},
-
-				// check is matched.
-				checkIsMatched,
-
-				// get uri params.
-				getURIParams;
+				};
 
 				if (CHECK_IS_ARRAY(format) === true) {
-					isMatched = EACH(format, function(format) {
+					isMatched = EACH(format, (format) => {
 						return find(format) !== true;
 					}) !== true;
 				} else {
 					isMatched = find(format);
 				}
 
-				self.checkIsMatched = checkIsMatched = function() {
+				let checkIsMatched = self.checkIsMatched = () => {
 					return isMatched;
 				};
 
-				self.getURIParams = getURIParams = function() {
+				let getURIParams = self.getURIParams = () => {
 					return uriParams;
 				};
 			}
-		}),
-
-		// check.
-		check;
-
-		self.check = check = function(uri) {
+		});
+		
+		let check = self.check = (uri) => {
 			return Check(uri);
 		};
 	}

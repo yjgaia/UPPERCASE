@@ -3,22 +3,15 @@
  */
 global.RANDOM = METHOD({
 
-	run : function(limitOrParams) {
-		'use strict';
+	run : (limitOrParams) => {
 		//REQUIRED: limitOrParams
 		//OPTIONAL: limitOrParams.min	생성할 정수 범위 최소값, 이 값 이상인 값만 생성합니다.
 		//OPTIONAL: limitOrParams.max	생성할 정수 범위 최대값, 이 값 이하인 값만 생성합니다.
 		//OPTIONAL: limitOrParams.limit	생성할 정수 범위 제한값, 이 값 미만인 값만 생성합니다.
 
-		var
-		// min
-		min,
-
-		// max
-		max,
-
-		// limit
-		limit;
+		let min;
+		let max
+		let limit;
 
 		// init limitOrParams.
 		if (CHECK_IS_DATA(limitOrParams) !== true) {

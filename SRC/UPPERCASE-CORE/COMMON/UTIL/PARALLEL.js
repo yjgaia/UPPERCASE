@@ -3,42 +3,31 @@
  */
 global.PARALLEL = METHOD({
 
-	run : function(dataOrArrayOrCount, funcs) {
-		'use strict';
+	run : (dataOrArrayOrCount, funcs) => {
 		//OPTIONAL: dataOrArrayOrCount
 		//REQUIRED: funcs
-
-		var
-		// property count
-		propertyCount,
 		
-		// done count
-		doneCount = 0;
+		let doneCount = 0;
 
 		// only funcs
 		if (funcs === undefined) {
 			funcs = dataOrArrayOrCount;
 			
-			RUN(function() {
+			let length = funcs.length - 1;
 
-				var
-				// length
-				length = funcs.length - 1;
+			EACH(funcs, (func, i) => {
 
-				EACH(funcs, function(func, i) {
+				if (i < length) {
 
-					if (i < length) {
+					func(() => {
 
-						func(function() {
+						doneCount += 1;
 
-							doneCount += 1;
-
-							if (doneCount === length) {
-								funcs[length]();
-							}
-						});
-					}
-				});
+						if (doneCount === length) {
+							funcs[length]();
+						}
+					});
+				}
 			});
 		}
 		
@@ -48,15 +37,15 @@ global.PARALLEL = METHOD({
 		
 		else if (CHECK_IS_DATA(dataOrArrayOrCount) === true) {
 			
-			propertyCount = COUNT_PROPERTIES(dataOrArrayOrCount);
+			let propertyCount = COUNT_PROPERTIES(dataOrArrayOrCount);
 
 			if (propertyCount === 0) {
 				funcs[1]();
 			} else {
 
-				EACH(dataOrArrayOrCount, function(value, name) {
+				EACH(dataOrArrayOrCount, (value, name) => {
 
-					funcs[0](value, function() {
+					funcs[0](value, () => {
 
 						doneCount += 1;
 
@@ -74,9 +63,9 @@ global.PARALLEL = METHOD({
 				funcs[1]();
 			} else {
 
-				EACH(dataOrArrayOrCount, function(value, i) {
+				EACH(dataOrArrayOrCount, (value, i) => {
 
-					funcs[0](value, function() {
+					funcs[0](value, () => {
 
 						doneCount += 1;
 
@@ -95,9 +84,9 @@ global.PARALLEL = METHOD({
 				funcs[1]();
 			} else {
 
-				REPEAT(dataOrArrayOrCount, function(i) {
+				REPEAT(dataOrArrayOrCount, (i) => {
 
-					funcs[0](i, function() {
+					funcs[0](i, () => {
 
 						doneCount += 1;
 

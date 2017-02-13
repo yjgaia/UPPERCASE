@@ -1,17 +1,12 @@
 /**
  * 주어진 함수를 즉시 실행합니다.
- * 
- * 새로운 코드 블록이 필요할 때 사용합니다.
  */
 global.RUN = METHOD({
 
-	run : function(func) {
-		'use strict';
+	run : (func) => {
 		//REQUIRED: func
-
-		var
-		// f.
-		f = function() {
+		
+		let f = () => {
 			return func(f);
 		};
 

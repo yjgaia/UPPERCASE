@@ -3,32 +3,20 @@
  */
 global.FIND = METHOD({
 
-	run : function(dataOrArrayOrParams, filter) {
-		'use strict';
+	run : (dataOrArrayOrParams, filter) => {
 		//REQUIRED: dataOrArrayOrParams
 		//OPTIONAL: dataOrArrayOrParams.data
 		//OPTIONAL: dataOrArrayOrParams.array
 		//REQUIRED: dataOrArrayOrParams.value	찾을 값
 		//OPTIONAL: filter
 
-		var
-		// data
-		data,
-
-		// array
-		array,
-
-		// value
-		value,
-
-		// ret
-		ret;
+		let ret;
 
 		if (filter !== undefined) {
 
 			if (CHECK_IS_DATA(dataOrArrayOrParams) === true) {
 
-				EACH(dataOrArrayOrParams, function(value, name) {
+				EACH(dataOrArrayOrParams, (value, name) => {
 
 					// value passed filter.
 					if (filter(value, name) === true) {
@@ -40,7 +28,7 @@ global.FIND = METHOD({
 
 			else if (CHECK_IS_ARRAY(dataOrArrayOrParams) === true) {
 
-				EACH(dataOrArrayOrParams, function(value, key) {
+				EACH(dataOrArrayOrParams, (value, key) => {
 
 					// value passed filter.
 					if (filter(value, key) === true) {
@@ -54,13 +42,13 @@ global.FIND = METHOD({
 		else {
 
 			// init params.
-			data = dataOrArrayOrParams.data;
-			array = dataOrArrayOrParams.array;
-			value = dataOrArrayOrParams.value;
+			let data = dataOrArrayOrParams.data;
+			let array = dataOrArrayOrParams.array;
+			let value = dataOrArrayOrParams.value;
 
 			if (data !== undefined) {
 
-				EACH(data, function(_value, name) {
+				EACH(data, (_value, name) => {
 					if (_value === value) {
 						ret = name;
 						return false;
@@ -70,7 +58,7 @@ global.FIND = METHOD({
 
 			if (array !== undefined) {
 
-				EACH(array, function(_value, key) {
+				EACH(array, (_value, key) => {
 					if (_value === value) {
 						ret = key;
 						return false;
