@@ -339,17 +339,17 @@ TEST('VALID', function(check) {
 	check(VALID.username(new Date()) === false);
 
 	// test id.
-	check(VALID.id('51889ace0000001106000002') === true);
-	check(VALID.id('abc') === false);
-	check(VALID.id(undefined) === false);
-	check(VALID.id(null) === false);
-	check(VALID.id(1) === false);
-	check(VALID.id(1.2) === false);
-	check(VALID.id([]) === false);
-	check(VALID.id({}) === false);
-	check(VALID.id(true) === false);
-	check(VALID.id(false) === false);
-	check(VALID.id(new Date()) === false);
+	check(VALID.mongoId('51889ace0000001106000002') === true);
+	check(VALID.mongoId('abc') === false);
+	check(VALID.mongoId(undefined) === false);
+	check(VALID.mongoId(null) === false);
+	check(VALID.mongoId(1) === false);
+	check(VALID.mongoId(1.2) === false);
+	check(VALID.mongoId([]) === false);
+	check(VALID.mongoId({}) === false);
+	check(VALID.mongoId(true) === false);
+	check(VALID.mongoId(false) === false);
+	check(VALID.mongoId(new Date()) === false);
 
 	// test one.
 	check(VALID.one({

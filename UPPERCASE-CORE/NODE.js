@@ -7400,7 +7400,7 @@ global.MINIFY_JS = METHOD(function() {
 
 	var
 	// uglify-js
-	uglifyJS = require('uglify-js');
+	uglifyJS = require('hanul-uglify-js');
 
 	return {
 

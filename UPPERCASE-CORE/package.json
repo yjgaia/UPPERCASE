@@ -1,11 +1,11 @@
 {
 	"name": "uppercase-core",
-	"version": "0.0.3-beta",
+	"version": "0.0.5-beta",
 	"dependencies": {
 		"hanul-imagemagick": "latest",
+		"hanul-uglify-js": "latest",
 		"formidable": "latest",
 		"diskspace": "latest",
-		"uglify-js": "latest",
 		"sqwish": "latest",
 		"ws": "latest"
 	},

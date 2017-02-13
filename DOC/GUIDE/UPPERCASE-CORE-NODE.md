@@ -466,7 +466,7 @@ HTTP 요청을 보냅니다.
 * `url` 요청을 보낼 URL. `url`을 입력하면 `isSecure`, `host`, `port`, `uri`를 입력할 필요가 없습니다.
 * `paramStr` `a=1&b=2&c=3`과 같은 형태의 파라미터 문자열
 * `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
-* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
+* `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다. [`WEB_SERVER`](#web_server) 항목을 살펴보시기 바랍니다.
 * `headers` 요청 헤더
 
 ```javascript
@@ -639,7 +639,7 @@ WEB_SERVER(8123, function(requestInfo, response) {
 	// requestInfo.uri		요청 URI
 	// requestInfo.method   요청 메소드
 	// requestInfo.params   파라미터
-	// requestInfo.data		UPPERCASE 기반 요청을 하는 경우 data 파라미터
+	// requestInfo.data		UPPERCASE 기반 요청을 하는 경우 data 파라미터 - REQUEST 항목을 살펴보시기 바랍니다.
 	// requestInfo.ip	   	클라이언트의 IP
 	// response			 	응답 함수
 	

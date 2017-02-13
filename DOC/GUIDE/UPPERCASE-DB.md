@@ -164,3 +164,233 @@ find 명령시 filter의 모든 property가 `undefined`로만 이루어진 경�
 
 ## 자주 변경되는 문서는 `updateNoHistory`를 사용합니다.
 게시판 게시글의 조회수 같은 경우는 굳이 history를 남길 필요가 없습니다. 이럴 경우 `updateNoHistory`를 사용합니다. 또한 `updateNoHistory`는 `lastUpdateTime`을 갱신하지 않습니다.
+
+
+
+
+
+
+
+
+
+
+
+## API
+
+* `DB(name)` `DB({dbServerName:, name:})` MongoDB collection wrapper [예제보기](../EXAMPLES/DB/NODE/DB.js)
+```javascript
+db = TestBox.DB('test');
+
+// 데이터를 저장합니다.
+db.create(data, function(savedData) {...})
+db.create(data, {error:, success:})
+
+// 데이터를 가져옵니다.
+db.get(id, function(savedData) {...})
+db.get(id, {success:, notExists:, error:})
+db.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
+
+// 데이터를 수정합니다.
+db.update(data, function(savedData, originData) {...})
+db.update(data, {success:, notExists:, error:})
+db.updateNoHistory(data, function() {...}) // 변경 내역을 남기지 않습니다.
+db.updateNoHistory(data, {success:, notExists:, error:}) // 변경 내역을 남기지 않습니다.
+db.updateNoRecord(data, function() {...}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
+db.updateNoRecord(data, {success:, notExists:, error:}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
+
+// 데이터를 삭제합니다.
+db.remove(id, function(originData) {...})
+db.remove(id, {success:, notExists:, error:})
+
+// 데이터를 찾아 목록으로 가져옵니다.
+db.find({filter:, sort:, start:, count:}, function(savedDataSet) {...})
+db.find({filter:, sort:, start:, count:}, {error:, success:})
+
+// 데이터의 개수를 가져옵니다.
+db.count({filter:}, function(count) {...})
+db.count({filter:}, {error:, success:})
+
+// 데이터가 존재하는지 확인합니다.
+db.checkIsExists({filter:}, function(isExists) {...})
+db.checkIsExists({filter:}, {error:, success:})
+
+// MongoDB의 Aggregation 기능을 이용해, 데이터를 가공해서 가져옵니다. 자세한 내용은 MongoDB의 Aggregation 기능을 참고하시기 바랍니다.
+db.aggregate(params, function(dataSet) {...})
+db.aggregate(params, {error:, success:})
+```
+* `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](../EXAMPLES/DB/NODE/LOG_DB.js)
+```javascript
+logDB = TestBox.LOG_DB('testLog');
+logDB.log(data)
+```
+
+`CONNECT_TO_DB_SERVER`의 `dbServerName`을 지정하면, 여러 데이터베이스 서버에 접속할 수 있습니다. `DB`의 `dbServerName` 설정으로 연결할 데이터베이스 서버를 선택할 수 있습니다.
+
+### 사용 가능한 특수 기호
+`get`, `find` 명령의 `filter`에는 다음과 같은 특수기호를 사용할 수 있습니다.
+* `$and`
+```javascript
+// a가 3이고, b가 2인 데이터를 찾습니다.
+filter : {
+    $and : [{
+        a : 3
+    }, {
+        b : 2
+    }]
+}
+```
+* `$or`
+```javascript
+// a가 3이거나, b가 2인 데이터를 찾습니다.
+filter : {
+    $or : [{
+        a : 3
+    }, {
+        b : 2
+    }]
+}
+```
+* `$gt`
+```javascript
+// a가 3보다 큰 데이터를 찾습니다.
+filter : {
+    a : {
+        $gt : 3
+    }
+}
+```
+* `$gte`
+```javascript
+// a가 3보다 크거나 같은 데이터를 찾습니다.
+filter : {
+    a : {
+        $gte : 3
+    }
+}
+```
+* `$lt`
+```javascript
+// a가 3보다 작은 데이터를 찾습니다.
+filter : {
+    a : {
+        $lt : 3
+    }
+}
+```
+* `$lte`
+```javascript
+// a가 3보다 작거나 같은 데이터를 찾습니다.
+filter : {
+    a : {
+        $lte : 3
+    }
+}
+```
+* `$ne`
+```javascript
+// a가 3이 아닌 데이터를 찾습니다.
+filter : {
+    a : {
+        $ne : 3
+    }
+}
+```
+
+`update` 명령의 `data`에 다음과 같은 특수기호를 사용하여 데이터를 가공할 수 있습니다.
+* `$inc`
+```javascript
+// num이 2 증가합니다.
+SampleModel.update({
+    ...
+    $inc : {
+        num : 2
+    }
+})
+```
+```javascript
+// num이 2 감소합니다.
+SampleModel.update({
+    ...
+    $inc : {
+        num : -2
+    }
+})
+```
+* `$addToSet`
+```javascript
+// 배열 array에 3이 없는 경우에만 3을 추가합니다.
+SampleModel.update({
+    ...
+    $addToSet : {
+        array : 3
+    }
+})
+```
+* `$push`
+```javascript
+// 배열 array에 3을 추가합니다.
+SampleModel.update({
+    ...
+    $push : {
+        array : 3
+    }
+})
+```
+* `$pull`
+```javascript
+// 배열 array에서 3을 제거합니다.
+SampleModel.update({
+    ...
+    $pull : {
+        array : 3
+    }
+})
+```
+* `$pull`
+```javascript
+// 배열 array에서 a가 3인 데이터를 제거합니다.
+SampleModel.update({
+    ...
+    $pull : {
+        array : {
+            a : 3
+        }
+    }
+})
+```
+
+## 특정 문서의 수정 내역을 가져오는 방법
+특정 문서의 수정 내역은 문서가 저장된 데이터베이스 이름 뒤에 `__HISTORY`를 붙혀 `DB` 오브젝트를 만들고, `find`로 가져올 수 있습니다. 
+```javascript
+var
+// history db
+historyDB = TestBox.DB('test__HISTORY');
+
+db.find({filter:}, function(historyDataSet) {...})
+```
+
+## UPPERCASE-DB 단독 사용
+`UPPERCASE-DB`는 `UPPERCASE`에 포함되어 있으나, 단독으로 사용할 수도 있습니다.
+
+### 의존 모듈
+`UPPERCASE-DB`는 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-DB` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
+* UJS-NODE.js
+
+## 사용 방법
+```javascript
+// load UJS.
+require('../../../UJS-NODE.js');
+
+// load UPPERCASE-DB.
+require('../../../UPPERCASE-DB/NODE.js');
+
+CONNECT_TO_DB_SERVER({
+	name : 'test'
+}, function() {
+
+	var
+	// db
+	db = TestBox.DB('test');
+	...
+});
+```

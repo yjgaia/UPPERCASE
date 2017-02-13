@@ -1,9 +1,6 @@
 일단 다 만들고, 문서 정리도 끝 -> box.uppercase.io 만들기 -> ubm -> 튜토리얼 제작 (프로젝트 따로 분리)
-VERSION 파일
 - UPPERCASE 1.0의 SHOW_ERROR 확인해서 메시지가 필요한 부분은 옮겨담기
-- gitignore 내용 추가 __RF/, __PACK/ 빼야한다고
 
-* uppercase-core npm에 등록
 * REDIS_STORE-BOX 프로젝트 개발하기
 * 'transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition' 테스트
 
@@ -11,14 +8,6 @@ VERSION 파일
 - AUDIO/VIDEO) 확장자를 파악해서 재생, 확장자가 지정되지 않는 경우 기본 XXX입니다.
 - ROOM 서버 undefined 데이터 보내보기
 
-- EXAMPLES에 NODE쪽 파일들도 require 쓰지 않고 실행되도록 __PACK과 같은 녀석을 만듦
-- box.uppercase.io에 쉽게 올리기 위한 기능을 만들고, 예시 스크립트인 __UPLOAD_BOX를 만듦
-- UPPERCASE-UTIL은 UPPERCASE-CORE/NODE에 포함
-- username/box 이름 의 형태를 띰
-- DEPENDENCY 파일
-- box.uppercase.io 개발
-- uppercase.io 개발
-- 3rd party 의존도 최소화하기
 - 예제는 채팅, 게시판, SNS 개발
 - 새 버전 확인하는 기능
 - UAPI에서 문서 만들 때, README.md 파일이 이미 있으면 ## API 밑에 API 목록 넣고, 없으면 맨 하단에 넣기
@@ -35,9 +24,7 @@ VERSION 파일
 - Cordova용 어떻게 할지
 - 웹 앱과 코르도바 앱을 동시에 개발하는 경우에 대한 처리
 
-- 어퍼케이스 Angular사용하는 내용 추가
-- 어퍼케이스 jQuery사용하는 내용 추가
-- U.IO 및 BOX들 문서화
+- BOX들 문서화
 - ondrop, file reader 등 처리
 
 - Unicorn waitingSendInfos 처리
@@ -45,7 +32,6 @@ VERSION 파일
 - Game maker studio Client Extension 만들기
 - U.IO 맨 처음에 서버에 접속할 수 없을 때 처리
 - 모니터링 툴, 트래픽 모니터링 에러 모니터링
-- @2x 처리 기능 (서버와 연동 필요)
 - UPPERCASE-Java-Client watching 등 만들기 and Method handle 타입별로 다 만들기
 - 자동으로 썸네일 만들어주는 기능
 - R도 분산 서버 구성하기 (IE는 10 이상부터 하기)
@@ -63,4 +49,6 @@ VERSION 파일
 - get, find, count, checkIsExists 등은 restful 하게 제공할 수 있도록 (만약 role이 없다면.)
 - UADMIN 값이 배열이거나 데이터일 경우 표현할 방법 -> 그냥 json 형태로 표현 및 저장 해야할듯
 - UPPERCASE 접속한 사용자 분석 툴
-- CLASS를 더 이상 참조하지 않을 때 사라지는지 메모리 체크
+
+- let, const 적용하기
+
