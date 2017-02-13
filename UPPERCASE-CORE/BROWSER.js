@@ -193,6 +193,20 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 		console.error(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
+
+FOR_BOX(function(box) {
+
+	box.SHOW_ERROR = METHOD({
+
+		run : function(tag, errorMsg, params) {
+			//REQUIRED: tag
+			//REQUIRED: errorMsg
+			//OPTIONAL: params
+
+			SHOW_ERROR(box.boxName + '.' + tag, errorMsg, params);
+		}
+	});
+});
 /*
  * 콘솔에 경고 메시지를 출력합니다.
  */
@@ -208,6 +222,20 @@ global.SHOW_WARNING = function(tag, warningMsg, params) {
 		console.warn(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
+
+FOR_BOX(function(box) {
+
+	box.SHOW_WARNING = METHOD({
+
+		run : function(tag, warningMsg, params) {
+			//REQUIRED: tag
+			//REQUIRED: warningMsg
+			//OPTIONAL: params
+
+			SHOW_WARNING(box.boxName + '.' + tag, warningMsg, params);
+		}
+	});
+});
 /**
  * 클래스를 생성합니다.
  */
