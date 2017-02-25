@@ -1,16 +1,13 @@
 /**
  * 파일을 삭제합니다.
  */
-global.REMOVE_FILE = METHOD(function() {
-	'use strict';
+global.REMOVE_FILE = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs');
+	let FS = require('fs');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	삭제할 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -19,21 +16,12 @@ global.REMOVE_FILE = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//REQUIRED: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// not eixsts handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path;
+			let isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -54,19 +42,15 @@ global.REMOVE_FILE = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
-						fs.unlink(path, function(error) {
-
-							var
-							// error msg
-							errorMsg;
+						FS.unlink(path, (error) => {
 
 							if (error !== TO_DELETE) {
 
-								errorMsg = error.toString();
+								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
@@ -98,11 +82,7 @@ global.REMOVE_FILE = METHOD(function() {
 			// when sync mode
 			else {
 
-				RUN(function() {
-
-					var
-					// error msg
-					errorMsg;
+				RUN(() => {
 
 					try {
 
@@ -111,7 +91,7 @@ global.REMOVE_FILE = METHOD(function() {
 							isSync : true
 						}) === true) {
 
-							fs.unlinkSync(path);
+							FS.unlinkSync(path);
 
 						} else {
 
@@ -131,7 +111,7 @@ global.REMOVE_FILE = METHOD(function() {
 
 						if (error !== TO_DELETE) {
 
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);

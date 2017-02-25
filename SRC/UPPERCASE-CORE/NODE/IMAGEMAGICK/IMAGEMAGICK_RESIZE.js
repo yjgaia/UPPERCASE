@@ -1,40 +1,26 @@
 /**
  * ImageMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
  */
-global.IMAGEMAGICK_RESIZE = METHOD(function() {
-	'use strict';
+global.IMAGEMAGICK_RESIZE = METHOD(() => {
 
-	var
-	//IMPORT: path
-	_path = require('path');
+	let Path = require('path');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params.srcPath
 			//REQUIRED: params.distPath
 			//OPTIONAL: params.width
 			//OPTIONAL: params.height
 			//OPTIONAL: callbackOrHandlers
 
-			var
-			// src path
-			srcPath = params.srcPath,
-
-			// dist path
-			distPath = params.distPath,
-
-			// width
-			width = params.width,
-
-			// height
-			height = params.height,
-
-			// callback.
-			callback,
-
-			// error handler.
-			errorHandler;
+			let srcPath = params.srcPath;
+			let distPath = params.distPath;
+			let width = params.width;
+			let height = params.height;
+			
+			let callback;
+			let errorHandler;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -45,13 +31,13 @@ global.IMAGEMAGICK_RESIZE = METHOD(function() {
 				}
 			}
 
-			CREATE_FOLDER(_path.dirname(distPath), {
+			CREATE_FOLDER(Path.dirname(distPath), {
 				error : errorHandler,
-				success : function() {
+				success : () => {
 
 					IMAGEMAGICK_IDENTIFY(srcPath, {
 						error : errorHandler,
-						success : function(features) {
+						success : (features) => {
 
 							if (width === undefined) {
 								width = height / features.height * features.width;

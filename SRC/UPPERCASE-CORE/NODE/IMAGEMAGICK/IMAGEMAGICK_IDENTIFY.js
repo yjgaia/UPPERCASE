@@ -1,25 +1,18 @@
 /**
  * ImageMagick의 identify 기능을 사용합니다.
  */
-global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
-	'use strict';
+global.IMAGEMAGICK_IDENTIFY = METHOD(() => {
 
-	var
-	//IMPORT: imagemagick
-	imagemagick = require('hanul-imagemagick');
+	let ImageMagick = require('hanul-imagemagick');
 
 	return {
 
-		run : function(path, callbackOrHandlers) {
+		run : (path, callbackOrHandlers) => {
 			//REQUIRED: path
 			//REQUIRED: callbackOrHandlers
 
-			var
-			// callback.
-			callback,
-
-			// error handler.
-			errorHandler;
+			let callback;
+			let errorHandler;
 
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
@@ -28,15 +21,11 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 				errorHandler = callbackOrHandlers.error;
 			}
 			
-			imagemagick.identify(path, function(error, features) {
-
-				var
-				// error msg
-				errorMsg;
+			ImageMagick.identify(path, (error, features) => {
 
 				if (error !== TO_DELETE) {
 
-					errorMsg = error.toString();
+					let errorMsg = error.toString();
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);

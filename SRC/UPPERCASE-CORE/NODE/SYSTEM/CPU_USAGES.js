@@ -1,34 +1,24 @@
 /**
  * CPU 각 코어 당 사용률을 반환합니다.
  */
-global.CPU_USAGES = METHOD(function(m) {
-	'use strict';
+global.CPU_USAGES = METHOD((m) => {
 	
-	var
-	//IMPORT: os
-	os = require('os');
+	let os = require('os');
 	
 	return {
 		
-		run : function() {
+		run : () => {
 			
-			var
-			// cpu infos
-			cpuInfos = os.cpus(),
+			let cpuInfos = os.cpus();
+			let usages = [];
 			
-			// usages
-			usages = [];
-			
-			EACH(cpuInfos, function(cpuInfo) {
+			EACH(cpuInfos, (cpuInfo) => {
 				
-				var
-				// total
-				total = 0,
+				let total = 0;
 				
-				// idle time
-				idleTime;
+				let idleTime;
 				
-				EACH(cpuInfo.times, function(time, type) {
+				EACH(cpuInfo.times, (time, type) => {
 					total += time;
 					if (type === 'idle') {
 						idleTime = time;

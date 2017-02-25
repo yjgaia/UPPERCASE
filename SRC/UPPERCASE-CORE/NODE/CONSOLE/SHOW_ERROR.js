@@ -1,7 +1,7 @@
 /*
  * 콘솔에 오류 메시지를 출력합니다.
  */
-global.SHOW_ERROR = function(tag, errorMsg, params) {
+global.SHOW_ERROR = (tag, errorMsg, params) => {
 	//REQUIRED: tag
 	//REQUIRED: errorMsg
 	//OPTIONAL: params
@@ -14,11 +14,11 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 	}
 };
 
-FOR_BOX(function(box) {
+FOR_BOX((box) => {
 
 	box.SHOW_ERROR = METHOD({
 
-		run : function(tag, errorMsg, params) {
+		run : (tag, errorMsg, params) => {
 			//REQUIRED: tag
 			//REQUIRED: errorMsg
 			//OPTIONAL: params

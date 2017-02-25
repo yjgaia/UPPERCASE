@@ -1,25 +1,16 @@
 /**
  * HTTP 리소스를 다운로드합니다.
  */
-global.DOWNLOAD = METHOD(function() {
-	'use strict';
+global.DOWNLOAD = METHOD(() => {
 
-	var
-	//IMPORT: HTTP
-	HTTP = require('http'),
-
-	//IMPORT: HTTPS
-	HTTPS = require('https'),
-	
-	//IMPORT: URL
-	URL = require('url'),
-	
-	//IMPORT: Querystring
-	Querystring = require('querystring');
+	let HTTP = require('http');
+	let HTTPS = require('https');
+	let URL = require('url');
+	let Querystring = require('querystring');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params
 			//REQUIRED: params.method
 			//OPTIONAL: params.isSecure	HTTPS 프로토콜인지 여부
@@ -36,51 +27,23 @@ global.DOWNLOAD = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.error
 
-			var
-			// method
-			method = params.method,
+			let method = params.method;
+			let isSecure = params.isSecure;
+			let host = params.host;
+			let port = params.port;
+			let uri = params.uri;
+			let url = params.url;
+			let paramStr = params.paramStr;
+			let _params = params.params;
+			let data = params.data;
+			let headers = params.headers;
+			let path = params.path;
 			
-			// is secure
-			isSecure = params.isSecure,
+			let errorHandler;
+			let callback;
 			
-			// host
-			host = params.host,
-
-			// port
-			port = params.port,
-
-			// uri
-			uri = params.uri,
-			
-			// url
-			url = params.url,
-
-			// param str
-			paramStr = params.paramStr,
-
-			// params
-			_params = params.params,
-
-			// data
-			data = params.data,
-			
-			// headers
-			headers = params.headers,
-			
-			// path
-			path = params.path,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback,
-			
-			// url data
-			urlData,
-
-			// http request
-			req;
+			let urlData;
+			let req;
 			
 			if (url !== undefined) {
 				urlData = URL.parse(url);
@@ -125,11 +88,7 @@ global.DOWNLOAD = METHOD(function() {
 				port : port,
 				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
 				headers : headers
-			}, function(httpResponse) {
-				
-				var
-				// data
-				data;
+			}, (httpResponse) => {
 				
 				// redirect.
 				if (httpResponse.statusCode === 301 || httpResponse.statusCode === 302) {
@@ -146,12 +105,12 @@ global.DOWNLOAD = METHOD(function() {
 					
 				} else {
 				
-					data = [];
+					let data = [];
 	
-					httpResponse.on('data', function(chunk) {
+					httpResponse.on('data', (chunk) => {
 						data.push(chunk);
 					});
-					httpResponse.on('end', function() {
+					httpResponse.on('end', () => {
 						
 						WRITE_FILE({
 							path : path,
@@ -164,11 +123,9 @@ global.DOWNLOAD = METHOD(function() {
 				}
 			});
 
-			req.on('error', function(error) {
+			req.on('error', (error) => {
 
-				var
-				// error msg
-				errorMsg = error.toString();
+				let errorMsg = error.toString();
 
 				if (errorHandler !== undefined) {
 					errorHandler(errorMsg);

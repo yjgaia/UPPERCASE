@@ -1,25 +1,18 @@
 /**
  * ImageMagick을 이용해 이미지의 메타데이터를 반한홥니다.
  */
-global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
-	'use strict';
+global.IMAGEMAGICK_READ_METADATA = METHOD(() => {
 
-	var
-	//IMPORT: imagemagick
-	imagemagick = require('hanul-imagemagick');
+	let ImageMagick = require('hanul-imagemagick');
 
 	return {
 
-		run : function(path, callbackOrHandlers) {
+		run : (path, callbackOrHandlers) => {
 			//REQUIRED: path
 			//REQUIRED: callbackOrHandlers
 
-			var
-			// callback.
-			callback,
-
-			// error handler.
-			errorHandler;
+			let callback;
+			let errorHandler;
 
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
@@ -28,15 +21,11 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 				errorHandler = callbackOrHandlers.error;
 			}
 			
-			imagemagick.readMetadata(path, function(error, metadata) {
-
-				var
-				// error msg
-				errorMsg;
+			ImageMagick.readMetadata(path, (error, metadata) => {
 
 				if (error !== TO_DELETE) {
 
-					errorMsg = error.toString();
+					let errorMsg = error.toString();
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);

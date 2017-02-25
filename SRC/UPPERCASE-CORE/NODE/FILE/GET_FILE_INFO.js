@@ -3,16 +3,13 @@
  * 
  * 파일의 크기(size), 생성 시간(createTime), 최종 수정 시간(lastUpdateTime)을 불러옵니다.
  */
-global.GET_FILE_INFO = METHOD(function() {
-	'use strict';
-
-	var
-	//IMPORT: fs
-	fs = require('fs');
+global.GET_FILE_INFO = METHOD(() => {
+	
+	let FS = require('fs');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	불러올 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -21,21 +18,12 @@ global.GET_FILE_INFO = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// not eixsts handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path;
+			let isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -58,19 +46,15 @@ global.GET_FILE_INFO = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
-						fs.stat(path, function(error, stat) {
-
-							var
-							// error msg
-							errorMsg;
+						FS.stat(path, (error, stat) => {
 
 							if (error !== TO_DELETE) {
 
-								errorMsg = error.toString();
+								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
@@ -113,14 +97,7 @@ global.GET_FILE_INFO = METHOD(function() {
 			// when sync mode
 			else {
 
-				return RUN(function() {
-
-					var
-					// error msg
-					errorMsg,
-
-					// stat
-					stat;
+				return RUN(() => {
 
 					try {
 
@@ -129,7 +106,7 @@ global.GET_FILE_INFO = METHOD(function() {
 							isSync : true
 						}) === true) {
 							
-							stat = fs.statSync(path);
+							let stat = FS.statSync(path);
 
 							if (stat.isDirectory() === true) {
 
@@ -173,7 +150,7 @@ global.GET_FILE_INFO = METHOD(function() {
 
 						if (error !== TO_DELETE) {
 
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -183,7 +160,7 @@ global.GET_FILE_INFO = METHOD(function() {
 						}
 					}
 
-					// do not run callback.
+					// return undefined.
 					return;
 				});
 			}

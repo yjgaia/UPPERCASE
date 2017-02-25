@@ -1,25 +1,18 @@
 /**
  * ImageMagick의 convert 기능을 사용합니다.
  */
-global.IMAGEMAGICK_CONVERT = METHOD(function() {
-	'use strict';
+global.IMAGEMAGICK_CONVERT = METHOD(() => {
 
-	var
-	//IMPORT: imagemagick
-	imagemagick = require('hanul-imagemagick');
+	let ImageMagick = require('hanul-imagemagick');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params
 			//OPTIONAL: callbackOrHandlers
 
-			var
-			// callback.
-			callback,
-
-			// error handler.
-			errorHandler;
+			let callback;
+			let errorHandler;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -30,15 +23,11 @@ global.IMAGEMAGICK_CONVERT = METHOD(function() {
 				}
 			}
 			
-			imagemagick.convert(params, function(error) {
-
-				var
-				// error msg
-				errorMsg;
+			ImageMagick.convert(params, (error) => {
 
 				if (error !== TO_DELETE) {
 
-					errorMsg = error.toString();
+					let errorMsg = error.toString();
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);

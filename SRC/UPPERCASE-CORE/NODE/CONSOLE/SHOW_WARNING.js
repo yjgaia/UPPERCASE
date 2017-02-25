@@ -1,7 +1,7 @@
 /*
  * 콘솔에 경고 메시지를 출력합니다.
  */
-global.SHOW_WARNING = function(tag, warningMsg, params) {
+global.SHOW_WARNING = (tag, warningMsg, params) => {
 	//REQUIRED: tag
 	//REQUIRED: warningMsg
 	//OPTIONAL: params
@@ -14,11 +14,11 @@ global.SHOW_WARNING = function(tag, warningMsg, params) {
 	}
 };
 
-FOR_BOX(function(box) {
+FOR_BOX((box) => {
 
 	box.SHOW_WARNING = METHOD({
 
-		run : function(tag, warningMsg, params) {
+		run : (tag, warningMsg, params) => {
 			//REQUIRED: tag
 			//REQUIRED: warningMsg
 			//OPTIONAL: params

@@ -1,19 +1,14 @@
 /**
  * 폴더를 생성합니다.
  */
-global.CREATE_FOLDER = METHOD(function() {
-	'use strict';
+global.CREATE_FOLDER = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs'),
-
-	//IMPORT: path
-	_path = require('path');
+	let FS = require('fs');
+	let Path = require('path');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	폴더를 생성할 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -21,21 +16,11 @@ global.CREATE_FOLDER = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// folder path
-			folderPath,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path;
+			let isSync;
+			
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -57,7 +42,7 @@ global.CREATE_FOLDER = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
@@ -67,21 +52,17 @@ global.CREATE_FOLDER = METHOD(function() {
 
 					} else {
 
-						folderPath = _path.dirname(path);
+						let folderPath = Path.dirname(path);
 
-						CHECK_FILE_EXISTS(folderPath, function(isExists) {
+						CHECK_FILE_EXISTS(folderPath, (isExists) => {
 
 							if (isExists === true) {
 
-								fs.mkdir(path, function(error) {
-
-									var
-									// error msg
-									errorMsg;
+								FS.mkdir(path, (error) => {
 
 									if (error !== TO_DELETE) {
 
-										errorMsg = error.toString();
+										let errorMsg = error.toString();
 
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
@@ -96,7 +77,7 @@ global.CREATE_FOLDER = METHOD(function() {
 
 							} else {
 
-								CREATE_FOLDER(folderPath, function() {
+								CREATE_FOLDER(folderPath, () => {
 
 									// retry.
 									CREATE_FOLDER(path, callback);
@@ -110,59 +91,52 @@ global.CREATE_FOLDER = METHOD(function() {
 			// when sync mode
 			else {
 
-				RUN(function() {
+				try {
 
-					var
-					// error msg
-					errorMsg;
+					if (CHECK_FILE_EXISTS({
+						path : path,
+						isSync : true
+					}) !== true) {
 
-					try {
+						let folderPath = Path.dirname(path);
 
 						if (CHECK_FILE_EXISTS({
-							path : path,
+							path : folderPath,
 							isSync : true
-						}) !== true) {
+						}) === true) {
+							FS.mkdirSync(path);
+						} else {
 
-							folderPath = _path.dirname(path);
-
-							if (CHECK_FILE_EXISTS({
+							CREATE_FOLDER({
 								path : folderPath,
 								isSync : true
-							}) === true) {
-								fs.mkdirSync(path);
-							} else {
+							});
 
-								CREATE_FOLDER({
-									path : folderPath,
-									isSync : true
-								});
-
-								// retry.
-								CREATE_FOLDER({
-									path : path,
-									isSync : true
-								});
-							}
-						}
-
-					} catch(error) {
-
-						if (error !== TO_DELETE) {
-
-							errorMsg = error.toString();
-
-							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
-							} else {
-								SHOW_ERROR('CREATE_FOLDER', errorMsg);
-							}
+							// retry.
+							CREATE_FOLDER({
+								path : path,
+								isSync : true
+							});
 						}
 					}
 
-					if (callback !== undefined) {
-						callback();
+				} catch(error) {
+
+					if (error !== TO_DELETE) {
+
+						let errorMsg = error.toString();
+
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						} else {
+							SHOW_ERROR('CREATE_FOLDER', errorMsg);
+						}
 					}
-				});
+				}
+
+				if (callback !== undefined) {
+					callback();
+				}
 			}
 		}
 	};

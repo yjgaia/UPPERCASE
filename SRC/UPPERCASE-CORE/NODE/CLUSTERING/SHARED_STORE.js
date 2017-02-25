@@ -1,51 +1,17 @@
 /**
  * 클러스터링 공유 저장소를 생성하는 클래스
  */
-global.SHARED_STORE = CLASS(function(cls) {
-	'use strict';
+global.SHARED_STORE = CLASS((cls) => {
 
-	var
-	// storages
-	storages = {},
-
-	// remove delay map
-	removeDelayMap = {},
+	let storages = {};
+	let removeDelayMap = {};
+	let getWorkerIdByStoreName;
 	
-	// get worker id by store name.
-	getWorkerIdByStoreName,
-	
-	// get storages.
-	getStorages,
-
-	// save.
-	save,
-	
-	// update.
-	update,
-
-	// get.
-	get,
-
-	// remove.
-	remove,
-	
-	// all.
-	all,
-	
-	// count.
-	count,
-	
-	// check is exists.
-	checkIsExists,
-	
-	// clear.
-	clear;
-	
-	cls.getStorages = getStorages = function() {
+	let getStorages = cls.getStorages = () => {
 		return storages;
 	};
 
-	cls.save = save = function(params, callback) {
+	let save = cls.save = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
@@ -53,24 +19,13 @@ global.SHARED_STORE = CLASS(function(cls) {
 		//OPTIONAL: params.removeAfterSeconds
 		//OPTIONAL: callback
 
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
+		let data = params.data;
+		let removeAfterSeconds = params.removeAfterSeconds;
 		
-		// id
-		id = params.id,
-
-		// data
-		data = params.data,
-
-		// remove after seconds
-		removeAfterSeconds = params.removeAfterSeconds,
-		
-		// storage
-		storage = storages[storeName],
-		
-		// remove delays
-		removeDelays = removeDelayMap[storeName];
+		let storage = storages[storeName];
+		let removeDelays = removeDelayMap[storeName];
 		
 		if (storage === undefined) {
 			storage = storages[storeName] = {};
@@ -96,7 +51,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 		}
 	};
 	
-	cls.update = update = function(params, callback) {
+	let update = cls.update = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
@@ -108,39 +63,18 @@ global.SHARED_STORE = CLASS(function(cls) {
 		//OPTIONAL: params.removeAfterSeconds
 		//OPTIONAL: callback
 
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
+		let data = COPY(params.data);
+		let $inc = data.$inc;
+		let $push = data.$push;
+		let $addToSet = data.$addToSet;
+		let $pull = data.$pull;
+		let removeAfterSeconds = params.removeAfterSeconds;
 		
-		// id
-		id = params.id,
-
-		// data
-		data = COPY(params.data),
-		
-		// $inc
-		$inc = data.$inc,
-		
-		// $push
-		$push = data.$push,
-		
-		// $addToSet
-		$addToSet = data.$addToSet,
-		
-		// $pull
-		$pull = data.$pull,
-
-		// remove after seconds
-		removeAfterSeconds = params.removeAfterSeconds,
-		
-		// storage
-		storage = storages[storeName],
-		
-		// remove delays
-		removeDelays = removeDelayMap[storeName],
-		
-		// saved data
-		savedData;
+		let storage = storages[storeName];
+		let removeDelays = removeDelayMap[storeName];
+		let savedData;
 		
 		if (storage === undefined) {
 			storage = storages[storeName] = {};
@@ -161,14 +95,14 @@ global.SHARED_STORE = CLASS(function(cls) {
 			});
 			
 			if ($inc !== undefined) {
-				EACH($inc, function(value, name) {
+				EACH($inc, (value, name) => {
 					savedData[name] += value;
 				});
 			}
 			
 			if ($push !== undefined) {
 				
-				EACH($push, function(value, name) {
+				EACH($push, (value, name) => {
 					
 					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
@@ -176,7 +110,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 							
 							if (value.$each !== undefined) {
 								
-								EACH(value.$each, function(v, i) {
+								EACH(value.$each, (v, i) => {
 									if (value.$position !== undefined) {
 										savedData[name].splice(value.$position + i, 0, v);
 									} else {
@@ -197,7 +131,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 			
 			if ($addToSet !== undefined) {
 				
-				EACH($addToSet, function(value, name) {
+				EACH($addToSet, (value, name) => {
 					
 					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
@@ -205,7 +139,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 							
 							if (value.$each !== undefined) {
 								
-								EACH(value.$each, function(value) {
+								EACH(value.$each, (value) => {
 									if (CHECK_IS_IN({
 										array : savedData[name],
 										value : value
@@ -233,7 +167,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 			
 			if ($pull !== undefined) {
 				
-				EACH($pull, function(value, name) {
+				EACH($pull, (value, name) => {
 					
 					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
@@ -264,24 +198,17 @@ global.SHARED_STORE = CLASS(function(cls) {
 		}
 	};
 
-	cls.get = get = function(params, callback) {
+	let get = cls.get = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
 		//REQUIRED: callback
 		
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
+		let storage = storages[storeName];
 		
-		// id
-		id = params.id,
-		
-		// storage
-		storage = storages[storeName],
-		
-		// saved data
-		savedData;
+		let savedData;
 		
 		if (storage !== undefined) {
 			savedData = storage[id];
@@ -290,27 +217,19 @@ global.SHARED_STORE = CLASS(function(cls) {
 		callback(savedData);
 	};
 
-	cls.remove = remove = function(params, callback) {
+	let remove = cls.remove = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
 		//OPTIONAL: callback
 		
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
 		
-		// id
-		id = params.id,
+		let storage = storages[storeName];
+		let removeDelays = removeDelayMap[storeName];
 		
-		// storage
-		storage = storages[storeName],
-		
-		// remove delays
-		removeDelays = removeDelayMap[storeName],
-		
-		// orign data
-		originData;
+		let originData;
 		
 		if (storage !== undefined) {
 			originData = storage[id];
@@ -328,41 +247,34 @@ global.SHARED_STORE = CLASS(function(cls) {
 		}
 	};
 	
-	cls.all = all = function(storeName, callback) {
+	let all = cls.all = (storeName, callback) => {
 		//REQUIRED: storeName
 		//REQUIRED: callback
 		
-		var
-		// storage
-		storage = storages[storeName];
+		let storage = storages[storeName];
 		
 		callback(storage === undefined ? {} : storage);
 	};
 	
-	cls.count = count = function(storeName, callback) {
+	let count = cls.count = (storeName, callback) => {
 		//REQUIRED: storeName
 		//REQUIRED: callback
 		
-		all(storeName, function(dataSet) {
+		all(storeName, (dataSet) => {
 			callback(COUNT_PROPERTIES(dataSet));
 		});
 	};
 
-	cls.checkIsExists = checkIsExists = function(params, callback) {
+	let checkIsExists = cls.checkIsExists = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
 		//REQUIRED: callback
 		
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
 		
-		// id
-		id = params.id,
-		
-		// storage
-		storage = storages[storeName];
+		let storage = storages[storeName];
 		
 		if (storage === undefined) {
 			callback(false);
@@ -371,7 +283,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 		}
 	};
 	
-	cls.clear = clear = function(storeName, callback) {
+	let clear = cls.clear = (storeName, callback) => {
 		//REQUIRED: storeName
 		//OPTIONAL: callback
 		
@@ -384,74 +296,38 @@ global.SHARED_STORE = CLASS(function(cls) {
 
 	return {
 
-		init : function(inner, self, storeName) {
+		init : (inner, self, storeName) => {
 			//REQUIRED: storeName
-
-			var
-			// a
-			a = 0,
 			
-			// server names
-			serverNames,
+			let serverName;
 			
-			// server name
-			serverName,
+			let a = 0;
 			
-			// save.
-			save,
-			
-			// update.
-			update,
-
-			// get.
-			get,
-
-			// remove.
-			remove,
-			
-			// all.
-			all,
-			
-			// count.
-			count,
-			
-			// check is exists.
-			checkIsExists,
-			
-			// clear.
-			clear;
-			
-			REPEAT(storeName.length, function(i) {
+			REPEAT(storeName.length, (i) => {
 				a += storeName.charCodeAt(i);
 			});
 			
 			if (SERVER_CLUSTERING.getHosts !== undefined) {
 				
-				serverNames = [];
+				let serverNames = [];
 				
-				EACH(SERVER_CLUSTERING.getHosts(), function(host, serverName) {
+				EACH(SERVER_CLUSTERING.getHosts(), (host, serverName) => {
 					serverNames.push(serverName);
 				});
 				
 				serverName = serverNames[a % serverNames.length];
 			}
 
-			self.save = save = function(params, callback) {
+			let save = self.save = (params, callback) => {
 				//REQUIRED: params
 				//REQUIRED: params.id
 				//REQUIRED: params.data
 				//OPTIONAL: params.removeAfterSeconds
 				//OPTIONAL: callback
 
-				var
-				// id
-				id = params.id,
-
-				// data
-				data = params.data,
-
-				// remove after seconds
-				removeAfterSeconds = params.removeAfterSeconds;
+				let id = params.id;
+				let data = params.data;
+				let removeAfterSeconds = params.removeAfterSeconds;
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
 
@@ -492,7 +368,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.update = update = function(params, callbackOrHandlers) {
+			let update = self.update = (params, callbackOrHandlers) => {
 				//REQUIRED: params
 				//REQUIRED: params.id
 				//REQUIRED: params.data
@@ -505,24 +381,12 @@ global.SHARED_STORE = CLASS(function(cls) {
 				//OPTIONAL: callbackOrHandlers.notExists
 				//OPTIONAL: callbackOrHandlers.success
 
-				var
-				// id
-				id = params.id,
-
-				// data
-				data = params.data,
-
-				// remove after seconds
-				removeAfterSeconds = params.removeAfterSeconds,
+				let id = params.id;
+				let data = params.data;
+				let removeAfterSeconds = params.removeAfterSeconds;
 				
-				// not exists handler.
-				notExistsHandler,
-				
-				// callback.
-				callback,
-				
-				// inner callback.
-				innerCallback;
+				let notExistsHandler;
+				let callback;
 				
 				if (callbackOrHandlers !== undefined) {
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -533,7 +397,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 					}
 				}
 				
-				innerCallback = function(savedData) {
+				let innerCallback = (savedData) => {
 					if (savedData === undefined) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
@@ -584,21 +448,14 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 
-			self.get = get = function(id, callbackOrHandlers) {
+			let get = self.get = (id, callbackOrHandlers) => {
 				//REQUIRED: id
 				//REQUIRED: callbackOrHandlers
 				//OPTIONAL: callbackOrHandlers.notExists
 				//OPTIONAL: callbackOrHandlers.success
 				
-				var
-				// not exists handler.
-				notExistsHandler,
-				
-				// callback.
-				callback,
-				
-				// inner callback.
-				innerCallback;
+				let notExistsHandler;
+				let callback;
 				
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
@@ -607,7 +464,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 					callback = callbackOrHandlers.success;
 				}
 				
-				innerCallback = function(savedData) {
+				let innerCallback = (savedData) => {
 					if (savedData === undefined) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
@@ -652,21 +509,14 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 
-			self.remove = remove = function(id, callbackOrHandlers) {
+			let remove = self.remove = (id, callbackOrHandlers) => {
 				//REQUIRED: id
 				//OPTIONAL: callbackOrHandlers
 				//OPTIONAL: callbackOrHandlers.notExists
 				//OPTIONAL: callbackOrHandlers.success
 				
-				var
-				// not exists handler.
-				notExistsHandler,
-				
-				// callback.
-				callback,
-				
-				// inner callback.
-				innerCallback;
+				let notExistsHandler;
+				let callback;
 				
 				if (callbackOrHandlers !== undefined) {
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -677,7 +527,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 					}
 				}
 				
-				innerCallback = function(originData) {
+				let innerCallback = (originData) => {
 					if (originData === undefined) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
@@ -722,7 +572,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.all = all = function(callback) {
+			let all = self.all = (callback) => {
 				//REQUIRED: callback
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
@@ -748,7 +598,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.count = count = function(callback) {
+			let count = self.count = (callback) => {
 				//REQUIRED: callback
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
@@ -774,7 +624,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.checkIsExists = checkIsExists = function(id, callback) {
+			let checkIsExists = self.checkIsExists = (id, callback) => {
 				//REQUIRED: id
 				//REQUIRED: callback
 				
@@ -810,7 +660,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.clear = clear = function(callback) {
+			let clear = self.clear = (callback) => {
 				//OPTIONAL: callback
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
@@ -839,57 +689,30 @@ global.SHARED_STORE = CLASS(function(cls) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.SHARED_STORE = CLASS({
 
-		init : function(inner, self, name) {
+		init : (inner, self, name) => {
 			//REQUIRED: name
 
-			var
-			// shared store
-			sharedStore = SHARED_STORE(box.boxName + '.' + name),
+			let sharedStore = SHARED_STORE(box.boxName + '.' + name);
 
-			// save.
-			save,
+			let save = self.save = sharedStore.save;
 			
-			// update.
-			update,
-
-			// get.
-			get,
-
-			// remove.
-			remove,
+			let update = self.update = sharedStore.update;
 			
-			// all.
-			all,
+			let get = self.get = sharedStore.get;
 			
-			// count.
-			count,
+			let remove = self.remove = sharedStore.remove;
 			
-			// check is exists.
-			checkIsExists,
+			let all = self.all = sharedStore.all;
 			
-			// clear.
-			clear;
-
-			self.save = save = sharedStore.save;
-
-			self.update = update = sharedStore.update;
-
-			self.get = get = sharedStore.get;
-
-			self.remove = remove = sharedStore.remove;
+			let count = self.count = sharedStore.count;
 			
-			self.all = all = sharedStore.all;
-
-			self.count = count = sharedStore.count;
+			le tcheckIsExists = self.checkIsExists = sharedStore.checkIsExists;
 			
-			self.checkIsExists = checkIsExists = sharedStore.checkIsExists;
-
-			self.clear = clear = sharedStore.clear;
+			let clear = self.clear = sharedStore.clear;
 		}
 	});
 });

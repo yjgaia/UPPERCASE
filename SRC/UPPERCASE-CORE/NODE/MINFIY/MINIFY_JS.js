@@ -1,23 +1,20 @@
 /**
  * JavaScript 코드를 압축합니다.
  */
-global.MINIFY_JS = METHOD(function() {
-	'use strict';
+global.MINIFY_JS = METHOD(() => {
 
-	var
-	// uglify-js
-	uglifyJS = require('hanul-uglify-js');
+	let UglifyJS = require('hanul-uglify-js');
 
 	return {
 
-		run : function(code) {
+		run : (code) => {
 			//REQUIRED: code
 			
 			code = code.toString();
 			
 			try {
 
-    			return uglifyJS.minify(code, {
+    			return UglifyJS.minify(code, {
     				fromString : true,
     				mangle : true,
     				output : {

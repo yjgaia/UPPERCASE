@@ -1,19 +1,16 @@
 /**
  * CSS 코드를 압축합니다.
  */
-global.MINIFY_CSS = METHOD(function() {
-	'use strict';
+global.MINIFY_CSS = METHOD(() => {
 
-	var
-	// sqwish
-	sqwish = require('sqwish');
+	let Sqwish = require('sqwish');
 
 	return {
 
-		run : function(code) {
+		run : (code) => {
 			//REQUIRED: code
 
-			return sqwish.minify(code.toString());
+			return Sqwish.minify(code.toString());
 		}
 	};
 });

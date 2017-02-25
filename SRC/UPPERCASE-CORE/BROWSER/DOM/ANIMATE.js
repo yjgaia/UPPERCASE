@@ -34,11 +34,11 @@ global.ANIMATE = METHOD((m) => {
 			
 			keyframesCount += 1;
 			
-			EACH(keyframes, function(style, key) {
+			EACH(keyframes, (style, key) => {
 				
 				keyframesStr += key + '{';
 	
-				EACH(style, function(value, name) {
+				EACH(style, (value, name) => {
 	
 					if (typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
 						value = value + 'px';

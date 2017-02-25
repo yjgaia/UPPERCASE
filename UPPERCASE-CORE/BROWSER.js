@@ -897,7 +897,7 @@ global.URI_MATCHER = CLASS({
 				let isMatched;
 				let uriParams = {};
 
-				let find = function(format) {
+				let find = (format) => {
 
 					let formatParts = format.split('/');
 
@@ -2790,6 +2790,9 @@ global.REVERSE_EACH = METHOD({
 	}
 });
 
+/**
+ * 웹 폰트를 사용할 수 있도록 불러옵니다.
+ */
 global.ADD_FONT = METHOD({
 
 	run : (params) => {
@@ -3662,11 +3665,11 @@ global.ANIMATE = METHOD((m) => {
 			
 			keyframesCount += 1;
 			
-			EACH(keyframes, function(style, key) {
+			EACH(keyframes, (style, key) => {
 				
 				keyframesStr += key + '{';
 	
-				EACH(style, function(value, name) {
+				EACH(style, (value, name) => {
 	
 					if (typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
 						value = value + 'px';

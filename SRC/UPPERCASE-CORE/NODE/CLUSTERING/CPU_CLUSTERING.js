@@ -1,70 +1,51 @@
 /*
  * CPU 코어 간 클러스터링을 수행합니다.
  */
-global.CPU_CLUSTERING = METHOD(function(m) {
-	'use strict';
+global.CPU_CLUSTERING = METHOD((m) => {
 
-	var
-	//IMPORT: cluster
-	cluster = require('cluster'),
+	let Cluster = require('cluster');
 	
-	// worker count (클러스터링을 수행하지 않을 경우 기본적으로 1개)
-	workerCount = 1,
+	// 클러스터링을 수행하지 않을 경우 기본적으로 1개
+	let workerCount = 1;
 	
-	// this worker id (클러스터링을 수행하지 않을 경우 기본적으로 1)
-	thisWorkerId = 1,
+	// 클러스터링을 수행하지 않을 경우 기본적으로 1
+	let thisWorkerId = 1;
+	
+	Cluster.schedulingPolicy = Cluster.SCHED_RR;
 
-	// get worker id.
-	getWorkerId,
-	
-	// get worker count.
-	getWorkerCount;
-	
-	cluster.schedulingPolicy = cluster.SCHED_RR;
-
-	m.getWorkerId = getWorkerId = function() {
+	let getWorkerId = m.getWorkerId = () => {
 		return thisWorkerId;
 	};
 	
-	m.getWorkerCount = getWorkerCount = function() {
+	let getWorkerCount = m.getWorkerCount = () => {
 		return workerCount;
 	};
 
 	return {
 
-		run : function(work) {
+		run : (work) => {
 			//REQUIRED: work
 			
-			var
-			// inner send.
-			innerSend,
+			let methodMap = {};
+			let sendKey = 0;
 			
-			// method map
-			methodMap = {},
-			
-			// send key
-			sendKey = 0,
+			let innerSend;
 
-			// run methods.
-			runMethods = function(methodName, data, sendKey, fromWorkerId) {
-				
-				var
-				// methods
-				methods;
+			let runMethods = (methodName, data, sendKey, fromWorkerId) => {
 				
 				try {
 					
-					methods = methodMap[methodName];
+					let methods = methodMap[methodName];
 
 					if (methods !== undefined) {
 	
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 	
 							// run method.
 							method(data,
 	
 							// ret.
-							function(retData) {
+							(retData) => {
 	
 								if (sendKey !== undefined) {
 	
@@ -87,33 +68,19 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						data : data
 					});
 				}
-			},
-
-			// on.
-			on,
-
-			// off.
-			off,
-			
-			// send.
-			send,
-
-			// broadcast.
-			broadcast;
+			};
 			
 			// 워커 개수 (CPU 개수보다 하나 적음, 하나는 마스터에게 배분)
-			workerCount = require('os').cpus().length - 1;
+			let workerCount = require('os').cpus().length - 1;
 			
 			// 최소한 한개의 워커는 필요
 			if (workerCount < 1) {
 				workerCount = 1;
 			}
 			
-			m.on = on = function(methodName, method) {
+			let on = m.on = (methodName, method) => {
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -122,29 +89,20 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				methods.push(method);
 			};
 			
-			m.off = off = function(methodName) {
+			let off = m.off = (methodName) => {
 				delete methodMap[methodName];
 			};
 
-			m.send = send = function(params, callback) {
+			let send = m.send = (params, callback) => {
 				//REQUIRED: params
 				//REQUIRED: params.workerId
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
 				//OPTIONAL: callback
 				
-				var
-				// worker id
-				workerId = params.workerId,
-				
-				// method name
-				methodName = params.methodName,
-				
-				// data
-				data = params.data,
-				
-				// callback name
-				callbackName;
+				let workerId = params.workerId;
+				let methodName = params.methodName;
+				let data = params.data;
 				
 				if (callback === undefined) {
 					
@@ -161,10 +119,10 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				
 				else {
 					
-					callbackName = '__CALLBACK_' + sendKey;
+					let callbackName = '__CALLBACK_' + sendKey;
 					
 					// on callback.
-					on(callbackName, function(data) {
+					on(callbackName, (data) => {
 
 						// run callback.
 						callback(data);
@@ -189,7 +147,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				}
 			};
 			
-			m.broadcast = broadcast = function(params) {
+			let broadcast = m.broadcast = (params) => {
 				//REQUIRED: params
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
@@ -201,12 +159,12 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 			};
 
 			// when master
-			if (cluster.isMaster) {
+			if (Cluster.isMaster) {
 				
 				// 마스터용 아이디
 				thisWorkerId = '~';
 				
-				innerSend = function(params) {
+				innerSend = (params) => {
 					//REQUIRED: params
 					//OPTIONAL: params.workerId
 					//REQUIRED: params.methodName
@@ -214,14 +172,10 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					//OPTIONAL: params.sendKey
 					//OPTIONAL: params.fromWorkerId
 					
-					var
-					// worker
-					worker;
-					
 					// send.
 					if (params.workerId !== undefined) {
 						
-						worker = cluster.workers[params.workerId];
+						let worker = Cluster.workers[params.workerId];
 						
 						if (worker !== undefined) {
 							worker.send(PACK_DATA(params));
@@ -232,7 +186,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					else {
 						
 						// send params to all workers except new worker.
-						EACH(cluster.workers, function(worker) {
+						EACH(Cluster.workers, (worker) => {
 							worker.send(PACK_DATA(params));
 						});
 					}
@@ -262,75 +216,64 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				// clear shared store.
 				on('__SHARED_STORE_CLEAR', SHARED_STORE.clear);
 				
-				RUN(function() {
+				let fork = () => {
 
-					var
-					// fork.
-					fork = function() {
-
-						var
-						// new worker
-						newWorker = cluster.fork();
+					let newWorker = Cluster.fork();
+					
+					// receive params from new worker.
+					newWorker.on('message', (params) => {
 						
-						// receive params from new worker.
-						newWorker.on('message', function(params) {
+						// send.
+						if (params.workerId !== undefined) {
 							
-							var
-							// worker
-							worker;
-							
-							// send.
-							if (params.workerId !== undefined) {
+							// for master
+							if (params.workerId === '~') {
 								
-								// for master
-								if (params.workerId === '~') {
-									
-									params = UNPACK_DATA(params);
-									
-									runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
-								}
+								params = UNPACK_DATA(params);
 								
-								else {
-									
-									worker = cluster.workers[params.workerId];
-									
-									if (worker !== undefined) {
-										worker.send(params);
-									}
-								}
+								runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
 							}
 							
-							// broadcast.
 							else {
 								
-								// send params to all workers except new worker.
-								EACH(cluster.workers, function(worker) {
-									if (worker !== newWorker) {
-										worker.send(params);
-									}
-								});
+								let worker = Cluster.workers[params.workerId];
+								
+								if (worker !== undefined) {
+									worker.send(params);
+								}
 							}
-						});
-					};
-
-					// 워커 생성
-					REPEAT(workerCount, function() {
-						fork();
+						}
+						
+						// broadcast.
+						else {
+							
+							// send params to all workers except new worker.
+							EACH(Cluster.workers, (worker) => {
+								if (worker !== newWorker) {
+									worker.send(params);
+								}
+							});
+						}
 					});
+				};
 
-					cluster.on('exit', function(worker, code, signal) {
-						SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다.');
-						fork();
-					});
+				// 워커 생성
+				REPEAT(workerCount, () => {
+					fork();
+				});
+
+				Cluster.on('exit', (worker, code, signal) => {
+					SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다.');
+					fork();
 				});
 			}
 
 			// when worker
 			else {
 				
-				thisWorkerId = cluster.worker.id;
+				thisWorkerId = Cluster.worker.id;
 				
-				innerSend = function(params) {
+				innerSend = (params) => {
 					//REQUIRED: params
 					//OPTIONAL: params.workerId
 					//REQUIRED: params.methodName
@@ -342,7 +285,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				};
 				
 				// receive data.
-				process.on('message', function(params) {
+				process.on('message', (params) => {
 					
 					params = UNPACK_DATA(params);
 					

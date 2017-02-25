@@ -3,19 +3,14 @@
  * 
  * 파일이 없으면 파일을 생성하고, 파일이 이미 있으면 내용을 덮어씁니다.
  */
-global.WRITE_FILE = METHOD(function() {
-	'use strict';
+global.WRITE_FILE = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs'),
-
-	//IMPORT: path
-	_path = require('path');
+	let FS = require('fs');
+	let Path = require('path');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params
 			//REQUIRED: params.path		작성할 파일의 경로
 			//OPTIONAL: params.content	파일에 작성할 내용 (문자열)
@@ -25,24 +20,13 @@ global.WRITE_FILE = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path = params.path,
-
-			// content
-			content = params.content,
-
-			// buffer
-			buffer = params.buffer,
-
-			// is sync
-			isSync = params.isSync,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path = params.path;
+			let content = params.content;
+			let buffer = params.buffer;
+			let isSync = params.isSync;
+			
+			let errorHandler;
+			let callback;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -54,22 +38,18 @@ global.WRITE_FILE = METHOD(function() {
 			}
 
 			CREATE_FOLDER({
-				path : _path.dirname(path),
+				path : Path.dirname(path),
 				isSync : isSync
-			}, function() {
+			}, () => {
 
 				// when normal mode
 				if (isSync !== true) {
 
-					fs.writeFile(path, buffer !== undefined ? buffer : content, function(error) {
-						
-						var
-						// error msg
-						errorMsg;
+					FS.writeFile(path, buffer !== undefined ? buffer : content, (error) => {
 						
 						if (error !== TO_DELETE) {
 							
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -85,35 +65,28 @@ global.WRITE_FILE = METHOD(function() {
 
 				// when sync mode
 				else {
+					
+					try {
 
-					RUN(function() {
+						FS.writeFileSync(path, buffer !== undefined ? buffer : content);
 
-						var
-						// error msg
-						errorMsg;
-
-						try {
-
-							fs.writeFileSync(path, buffer !== undefined ? buffer : content);
-
-						} catch(error) {
+					} catch(error) {
+						
+						if (error !== TO_DELETE) {
 							
-							if (error !== TO_DELETE) {
+							let errorMsg = error.toString();
 								
-								errorMsg = error.toString();
-									
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									SHOW_ERROR('WRITE_FILE', errorMsg);
-								}
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('WRITE_FILE', errorMsg);
 							}
 						}
+					}
 
-						if (callback !== undefined) {
-							callback();
-						}
-					});
+					if (callback !== undefined) {
+						callback();
+					}
 				}
 			});
 		}

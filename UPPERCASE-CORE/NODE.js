@@ -894,7 +894,7 @@ global.URI_MATCHER = CLASS({
 				let isMatched;
 				let uriParams = {};
 
-				let find = function(format) {
+				let find = (format) => {
 
 					let formatParts = format.split('/');
 
@@ -2787,21 +2787,19 @@ global.REVERSE_EACH = METHOD({
 	}
 });
 
-OVERRIDE(BOX, function(origin) {
+OVERRIDE(BOX, (origin) => {
 	
 	/**
 	 * BOX를 생성합니다.
 	 */
-	global.BOX = METHOD(function(m) {
-		'use strict';
+	global.BOX = METHOD((m) => {
 		
 		m.getAllBoxes = origin.getAllBoxes;
 		
 		return {
 			
-			run : function(boxName) {
+			run : (boxName) => {
 				//REQUIRED: boxName
-				'use strict';
 				
 				if (NODE_CONFIG[boxName] === undefined) {
 					NODE_CONFIG[boxName] = {};
@@ -2821,70 +2819,51 @@ global.NODE_CONFIG = {};
 /*
  * CPU 코어 간 클러스터링을 수행합니다.
  */
-global.CPU_CLUSTERING = METHOD(function(m) {
-	'use strict';
+global.CPU_CLUSTERING = METHOD((m) => {
 
-	var
-	//IMPORT: cluster
-	cluster = require('cluster'),
+	let Cluster = require('cluster');
 	
-	// worker count (클러스터링을 수행하지 않을 경우 기본적으로 1개)
-	workerCount = 1,
+	// 클러스터링을 수행하지 않을 경우 기본적으로 1개
+	let workerCount = 1;
 	
-	// this worker id (클러스터링을 수행하지 않을 경우 기본적으로 1)
-	thisWorkerId = 1,
+	// 클러스터링을 수행하지 않을 경우 기본적으로 1
+	let thisWorkerId = 1;
+	
+	Cluster.schedulingPolicy = Cluster.SCHED_RR;
 
-	// get worker id.
-	getWorkerId,
-	
-	// get worker count.
-	getWorkerCount;
-	
-	cluster.schedulingPolicy = cluster.SCHED_RR;
-
-	m.getWorkerId = getWorkerId = function() {
+	let getWorkerId = m.getWorkerId = () => {
 		return thisWorkerId;
 	};
 	
-	m.getWorkerCount = getWorkerCount = function() {
+	let getWorkerCount = m.getWorkerCount = () => {
 		return workerCount;
 	};
 
 	return {
 
-		run : function(work) {
+		run : (work) => {
 			//REQUIRED: work
 			
-			var
-			// inner send.
-			innerSend,
+			let methodMap = {};
+			let sendKey = 0;
 			
-			// method map
-			methodMap = {},
-			
-			// send key
-			sendKey = 0,
+			let innerSend;
 
-			// run methods.
-			runMethods = function(methodName, data, sendKey, fromWorkerId) {
-				
-				var
-				// methods
-				methods;
+			let runMethods = (methodName, data, sendKey, fromWorkerId) => {
 				
 				try {
 					
-					methods = methodMap[methodName];
+					let methods = methodMap[methodName];
 
 					if (methods !== undefined) {
 	
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 	
 							// run method.
 							method(data,
 	
 							// ret.
-							function(retData) {
+							(retData) => {
 	
 								if (sendKey !== undefined) {
 	
@@ -2907,33 +2886,19 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 						data : data
 					});
 				}
-			},
-
-			// on.
-			on,
-
-			// off.
-			off,
-			
-			// send.
-			send,
-
-			// broadcast.
-			broadcast;
+			};
 			
 			// 워커 개수 (CPU 개수보다 하나 적음, 하나는 마스터에게 배분)
-			workerCount = require('os').cpus().length - 1;
+			let workerCount = require('os').cpus().length - 1;
 			
 			// 최소한 한개의 워커는 필요
 			if (workerCount < 1) {
 				workerCount = 1;
 			}
 			
-			m.on = on = function(methodName, method) {
+			let on = m.on = (methodName, method) => {
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -2942,29 +2907,20 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				methods.push(method);
 			};
 			
-			m.off = off = function(methodName) {
+			let off = m.off = (methodName) => {
 				delete methodMap[methodName];
 			};
 
-			m.send = send = function(params, callback) {
+			let send = m.send = (params, callback) => {
 				//REQUIRED: params
 				//REQUIRED: params.workerId
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
 				//OPTIONAL: callback
 				
-				var
-				// worker id
-				workerId = params.workerId,
-				
-				// method name
-				methodName = params.methodName,
-				
-				// data
-				data = params.data,
-				
-				// callback name
-				callbackName;
+				let workerId = params.workerId;
+				let methodName = params.methodName;
+				let data = params.data;
 				
 				if (callback === undefined) {
 					
@@ -2981,10 +2937,10 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				
 				else {
 					
-					callbackName = '__CALLBACK_' + sendKey;
+					let callbackName = '__CALLBACK_' + sendKey;
 					
 					// on callback.
-					on(callbackName, function(data) {
+					on(callbackName, (data) => {
 
 						// run callback.
 						callback(data);
@@ -3009,7 +2965,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				}
 			};
 			
-			m.broadcast = broadcast = function(params) {
+			let broadcast = m.broadcast = (params) => {
 				//REQUIRED: params
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
@@ -3021,12 +2977,12 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 			};
 
 			// when master
-			if (cluster.isMaster) {
+			if (Cluster.isMaster) {
 				
 				// 마스터용 아이디
 				thisWorkerId = '~';
 				
-				innerSend = function(params) {
+				innerSend = (params) => {
 					//REQUIRED: params
 					//OPTIONAL: params.workerId
 					//REQUIRED: params.methodName
@@ -3034,14 +2990,10 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					//OPTIONAL: params.sendKey
 					//OPTIONAL: params.fromWorkerId
 					
-					var
-					// worker
-					worker;
-					
 					// send.
 					if (params.workerId !== undefined) {
 						
-						worker = cluster.workers[params.workerId];
+						let worker = Cluster.workers[params.workerId];
 						
 						if (worker !== undefined) {
 							worker.send(PACK_DATA(params));
@@ -3052,7 +3004,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 					else {
 						
 						// send params to all workers except new worker.
-						EACH(cluster.workers, function(worker) {
+						EACH(Cluster.workers, (worker) => {
 							worker.send(PACK_DATA(params));
 						});
 					}
@@ -3082,75 +3034,64 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				// clear shared store.
 				on('__SHARED_STORE_CLEAR', SHARED_STORE.clear);
 				
-				RUN(function() {
+				let fork = () => {
 
-					var
-					// fork.
-					fork = function() {
-
-						var
-						// new worker
-						newWorker = cluster.fork();
+					let newWorker = Cluster.fork();
+					
+					// receive params from new worker.
+					newWorker.on('message', (params) => {
 						
-						// receive params from new worker.
-						newWorker.on('message', function(params) {
+						// send.
+						if (params.workerId !== undefined) {
 							
-							var
-							// worker
-							worker;
-							
-							// send.
-							if (params.workerId !== undefined) {
+							// for master
+							if (params.workerId === '~') {
 								
-								// for master
-								if (params.workerId === '~') {
-									
-									params = UNPACK_DATA(params);
-									
-									runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
-								}
+								params = UNPACK_DATA(params);
 								
-								else {
-									
-									worker = cluster.workers[params.workerId];
-									
-									if (worker !== undefined) {
-										worker.send(params);
-									}
-								}
+								runMethods(params.methodName, params.data, params.sendKey, params.fromWorkerId);
 							}
 							
-							// broadcast.
 							else {
 								
-								// send params to all workers except new worker.
-								EACH(cluster.workers, function(worker) {
-									if (worker !== newWorker) {
-										worker.send(params);
-									}
-								});
+								let worker = Cluster.workers[params.workerId];
+								
+								if (worker !== undefined) {
+									worker.send(params);
+								}
 							}
-						});
-					};
-
-					// 워커 생성
-					REPEAT(workerCount, function() {
-						fork();
+						}
+						
+						// broadcast.
+						else {
+							
+							// send params to all workers except new worker.
+							EACH(Cluster.workers, (worker) => {
+								if (worker !== newWorker) {
+									worker.send(params);
+								}
+							});
+						}
 					});
+				};
 
-					cluster.on('exit', function(worker, code, signal) {
-						SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다.');
-						fork();
-					});
+				// 워커 생성
+				REPEAT(workerCount, () => {
+					fork();
+				});
+
+				Cluster.on('exit', (worker, code, signal) => {
+					SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다.');
+					fork();
 				});
 			}
 
 			// when worker
 			else {
 				
-				thisWorkerId = cluster.worker.id;
+				thisWorkerId = Cluster.worker.id;
 				
-				innerSend = function(params) {
+				innerSend = (params) => {
 					//REQUIRED: params
 					//OPTIONAL: params.workerId
 					//REQUIRED: params.methodName
@@ -3162,7 +3103,7 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 				};
 				
 				// receive data.
-				process.on('message', function(params) {
+				process.on('message', (params) => {
 					
 					params = UNPACK_DATA(params);
 					
@@ -3180,66 +3121,36 @@ global.CPU_CLUSTERING = METHOD(function(m) {
 /*
  * 서버 간 클러스터링을 수행합니다.
  */
-global.SERVER_CLUSTERING = METHOD(function(m) {
-	'use strict';
+global.SERVER_CLUSTERING = METHOD((m) => {
 
 	return {
 
-		run : function(params, work) {
+		run : (params, work) => {
 			//REQUIRED: params
 			//REQUIRED: params.hosts
 			//REQUIRED: params.thisServerName
 			//REQUIRED: params.port
 			//OPTIONAL: work
 
-			var
-			// hosts
-			hosts = params.hosts,
-
-			// this server name
-			thisServerName = params.thisServerName,
-
-			// port
-			port = params.port,
-
-			// method map
-			methodMap = {},
-
-			// is connectings
-			isConnectings = {},
+			let hosts = params.hosts;
+			let thisServerName = params.thisServerName;
+			let port = params.port;
 			
-			// waiting send info map
-			waitingSendInfoMap = {},
-
-			// server sends
-			serverSends = {},
-
-			// socket server ons
-			socketServeOns = [],
-
-			// connect to clustering server.
-			connectToClusteringServer,
+			let methodMap = {};
+			let isConnectings = {};
+			let waitingSendInfoMap = {};
+			let serverSends = {};
+			let socketServeOns = [];
 			
-			// get hosts.
-			getHosts,
-			
-			// get this server name.
-			getThisServerName,
+			let runMethods = (methodName, data, callback) => {
 
-			// run methods.
-			runMethods = function(methodName, data, callback) {
-
-				var
-				// methods
-				methods;
-				
 				try {
 					
-					methods = methodMap[methodName];
+					let methods = methodMap[methodName];
 
 					if (methods !== undefined) {
 	
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 	
 							// run method.
 							method(data,
@@ -3258,21 +3169,9 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						data : data
 					});
 				}
-			},
+			};
 
-			// on.
-			on,
-
-			// off.
-			off,
-			
-			// send.
-			send,
-
-			// broadcast.
-			broadcast;
-
-			connectToClusteringServer = function(serverName) {
+			let connectToClusteringServer = (serverName) => {
 
 				if (isConnectings[serverName] !== true) {
 					isConnectings[serverName] = true;
@@ -3285,28 +3184,24 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						host : hosts[serverName],
 						port : port
 					}, {
-						error : function() {
+						error : () => {
 							delete isConnectings[serverName];
 						},
 
-						success : function(on, off, send) {
+						success : (on, off, send) => {
 
 							send({
 								methodName : '__BOOTED',
 								data : thisServerName
 							});
 
-							serverSends[serverName] = function(params, callback) {
+							serverSends[serverName] = (params, callback) => {
 								//REQUIRED: params
 								//REQUIRED: params.methodName
 								//REQUIRED: params.data
 
-								var
-								// method name
-								methodName = params.methodName,
-
-								// data
-								data = params.data;
+								let methodName = params.methodName;
+								let data = params.data;
 								
 								send({
 									methodName : 'SERVER_CLUSTERING.' + methodName,
@@ -3314,7 +3209,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 								}, callback);
 							};
 
-							on('__DISCONNECTED', function() {
+							on('__DISCONNECTED', () => {
 								delete serverSends[serverName];
 								delete isConnectings[serverName];
 								
@@ -3331,7 +3226,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 								});
 							}
 							
-							EACH(waitingSendInfoMap[serverName], function(info) {
+							EACH(waitingSendInfoMap[serverName], (info) => {
 								serverSends[serverName]({
 									methodName : info.methodName,
 									data : info.data
@@ -3349,34 +3244,32 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			}
 
 			// try connect to all clustering hosts.
-			EACH(hosts, function(host, serverName) {
+			EACH(hosts, (host, serverName) => {
 				if (serverName !== thisServerName) {
 					connectToClusteringServer(serverName);
 				}
 			});
 
-			SOCKET_SERVER(port, function(clientInfo, socketServeOn) {
+			SOCKET_SERVER(port, (clientInfo, socketServeOn) => {
 				
-				var
-				// server name
-				serverName;
+				let serverName;
 
 				socketServeOns.push(socketServeOn);
 
-				socketServeOn('__BOOTED', function(_serverName) {
+				socketServeOn('__BOOTED', (_serverName) => {
 					
 					serverName = _serverName;
 					
 					connectToClusteringServer(serverName);
 				});
 
-				EACH(methodMap, function(methods, methodName) {
-					EACH(methods, function(method) {
+				EACH(methodMap, (methods, methodName) => {
+					EACH(methods, (method) => {
 						socketServeOn('SERVER_CLUSTERING.' + methodName, method);
 					});
 				});
 
-				socketServeOn('__DISCONNECTED', function() {
+				socketServeOn('__DISCONNECTED', () => {
 					
 					REMOVE({
 						array : socketServeOns,
@@ -3387,19 +3280,17 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				});
 			});
 
-			m.getHosts = getHosts = function() {
+			let getHosts = m.getHosts = () => {
 				return hosts;
 			};
 			
-			m.getThisServerName = getThisServerName = function() {
+			let getThisServerName = m.getThisServerName = () => {
 				return thisServerName;
 			};
 			
-			m.on = on = function(methodName, method) {
+			let on = m.on = (methodName, method) => {
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -3407,13 +3298,13 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 
 				methods.push(method);
 
-				EACH(socketServeOns, function(socketServeOn) {
+				EACH(socketServeOns, (socketServeOn) => {
 					socketServeOn('SERVER_CLUSTERING.' + methodName, method);
 				});
 			};
 
 			// save shared data.
-			on('__SHARED_STORE_SAVE', function(params, ret) {
+			on('__SHARED_STORE_SAVE', (params, ret) => {
 				
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3430,7 +3321,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 			
 			// update shared data.
-			on('__SHARED_STORE_UPDATE', function(params, ret) {
+			on('__SHARED_STORE_UPDATE', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3447,7 +3338,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 			
 			// get shared data.
-			on('__SHARED_STORE_GET', function(params, ret) {
+			on('__SHARED_STORE_GET', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3464,7 +3355,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// remove shared data.
-			on('__SHARED_STORE_REMOVE', function(params, ret) {
+			on('__SHARED_STORE_REMOVE', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3481,7 +3372,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// get all shared data.
-			on('__SHARED_STORE_ALL', function(storeName, ret) {
+			on('__SHARED_STORE_ALL', (storeName, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3498,7 +3389,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// count shared data.
-			on('__SHARED_STORE_COUNT', function(storeName, ret) {
+			on('__SHARED_STORE_COUNT', (storeName, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3515,7 +3406,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// check is exists shared data.
-			on('__SHARED_STORE_CHECK_IS_EXISTS', function(params, ret) {
+			on('__SHARED_STORE_CHECK_IS_EXISTS', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3532,7 +3423,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// clear shared store.
-			on('__SHARED_STORE_CLEAR', function(storeName, ret) {
+			on('__SHARED_STORE_CLEAR', (storeName, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -3548,26 +3439,20 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				}
 			});
 
-			m.off = off = function(methodName) {
+			let off = m.off = (methodName) => {
 				delete methodMap[methodName];
 			};
 
-			m.send = send = function(params, callback) {
+			let send = m.send = (params, callback) => {
 				//REQUIRED: params
 				//REQUIRED: params.serverName
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
 				//OPTIONAL: callback
 				
-				var
-				// server name
-				serverName = params.serverName,
-				
-				// method name
-				methodName = params.methodName,
-				
-				// data
-				data = params.data;
+				let serverName = params.serverName;
+				let methodName = params.methodName;
+				let data = params.data;
 				
 				if (callback === undefined) {
 					
@@ -3621,12 +3506,12 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				}
 			};
 
-			m.broadcast = broadcast = function(params) {
+			let broadcast = m.broadcast = (params) => {
 				//REQUIRED: params
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
 
-				EACH(serverSends, function(serverSend) {
+				EACH(serverSends, (serverSend) => {
 					serverSend(params);
 				});
 			};
@@ -3643,51 +3528,17 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 /**
  * 클러스터링 공유 저장소를 생성하는 클래스
  */
-global.SHARED_STORE = CLASS(function(cls) {
-	'use strict';
+global.SHARED_STORE = CLASS((cls) => {
 
-	var
-	// storages
-	storages = {},
-
-	// remove delay map
-	removeDelayMap = {},
+	let storages = {};
+	let removeDelayMap = {};
+	let getWorkerIdByStoreName;
 	
-	// get worker id by store name.
-	getWorkerIdByStoreName,
-	
-	// get storages.
-	getStorages,
-
-	// save.
-	save,
-	
-	// update.
-	update,
-
-	// get.
-	get,
-
-	// remove.
-	remove,
-	
-	// all.
-	all,
-	
-	// count.
-	count,
-	
-	// check is exists.
-	checkIsExists,
-	
-	// clear.
-	clear;
-	
-	cls.getStorages = getStorages = function() {
+	let getStorages = cls.getStorages = () => {
 		return storages;
 	};
 
-	cls.save = save = function(params, callback) {
+	let save = cls.save = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
@@ -3695,24 +3546,13 @@ global.SHARED_STORE = CLASS(function(cls) {
 		//OPTIONAL: params.removeAfterSeconds
 		//OPTIONAL: callback
 
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
+		let data = params.data;
+		let removeAfterSeconds = params.removeAfterSeconds;
 		
-		// id
-		id = params.id,
-
-		// data
-		data = params.data,
-
-		// remove after seconds
-		removeAfterSeconds = params.removeAfterSeconds,
-		
-		// storage
-		storage = storages[storeName],
-		
-		// remove delays
-		removeDelays = removeDelayMap[storeName];
+		let storage = storages[storeName];
+		let removeDelays = removeDelayMap[storeName];
 		
 		if (storage === undefined) {
 			storage = storages[storeName] = {};
@@ -3738,7 +3578,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 		}
 	};
 	
-	cls.update = update = function(params, callback) {
+	let update = cls.update = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
@@ -3750,39 +3590,18 @@ global.SHARED_STORE = CLASS(function(cls) {
 		//OPTIONAL: params.removeAfterSeconds
 		//OPTIONAL: callback
 
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
+		let data = COPY(params.data);
+		let $inc = data.$inc;
+		let $push = data.$push;
+		let $addToSet = data.$addToSet;
+		let $pull = data.$pull;
+		let removeAfterSeconds = params.removeAfterSeconds;
 		
-		// id
-		id = params.id,
-
-		// data
-		data = COPY(params.data),
-		
-		// $inc
-		$inc = data.$inc,
-		
-		// $push
-		$push = data.$push,
-		
-		// $addToSet
-		$addToSet = data.$addToSet,
-		
-		// $pull
-		$pull = data.$pull,
-
-		// remove after seconds
-		removeAfterSeconds = params.removeAfterSeconds,
-		
-		// storage
-		storage = storages[storeName],
-		
-		// remove delays
-		removeDelays = removeDelayMap[storeName],
-		
-		// saved data
-		savedData;
+		let storage = storages[storeName];
+		let removeDelays = removeDelayMap[storeName];
+		let savedData;
 		
 		if (storage === undefined) {
 			storage = storages[storeName] = {};
@@ -3803,14 +3622,14 @@ global.SHARED_STORE = CLASS(function(cls) {
 			});
 			
 			if ($inc !== undefined) {
-				EACH($inc, function(value, name) {
+				EACH($inc, (value, name) => {
 					savedData[name] += value;
 				});
 			}
 			
 			if ($push !== undefined) {
 				
-				EACH($push, function(value, name) {
+				EACH($push, (value, name) => {
 					
 					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
@@ -3818,7 +3637,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 							
 							if (value.$each !== undefined) {
 								
-								EACH(value.$each, function(v, i) {
+								EACH(value.$each, (v, i) => {
 									if (value.$position !== undefined) {
 										savedData[name].splice(value.$position + i, 0, v);
 									} else {
@@ -3839,7 +3658,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 			
 			if ($addToSet !== undefined) {
 				
-				EACH($addToSet, function(value, name) {
+				EACH($addToSet, (value, name) => {
 					
 					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
@@ -3847,7 +3666,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 							
 							if (value.$each !== undefined) {
 								
-								EACH(value.$each, function(value) {
+								EACH(value.$each, (value) => {
 									if (CHECK_IS_IN({
 										array : savedData[name],
 										value : value
@@ -3875,7 +3694,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 			
 			if ($pull !== undefined) {
 				
-				EACH($pull, function(value, name) {
+				EACH($pull, (value, name) => {
 					
 					if (CHECK_IS_ARRAY(savedData[name]) === true) {
 						
@@ -3906,24 +3725,17 @@ global.SHARED_STORE = CLASS(function(cls) {
 		}
 	};
 
-	cls.get = get = function(params, callback) {
+	let get = cls.get = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
 		//REQUIRED: callback
 		
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
+		let storage = storages[storeName];
 		
-		// id
-		id = params.id,
-		
-		// storage
-		storage = storages[storeName],
-		
-		// saved data
-		savedData;
+		let savedData;
 		
 		if (storage !== undefined) {
 			savedData = storage[id];
@@ -3932,27 +3744,19 @@ global.SHARED_STORE = CLASS(function(cls) {
 		callback(savedData);
 	};
 
-	cls.remove = remove = function(params, callback) {
+	let remove = cls.remove = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
 		//OPTIONAL: callback
 		
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
 		
-		// id
-		id = params.id,
+		let storage = storages[storeName];
+		let removeDelays = removeDelayMap[storeName];
 		
-		// storage
-		storage = storages[storeName],
-		
-		// remove delays
-		removeDelays = removeDelayMap[storeName],
-		
-		// orign data
-		originData;
+		let originData;
 		
 		if (storage !== undefined) {
 			originData = storage[id];
@@ -3970,41 +3774,34 @@ global.SHARED_STORE = CLASS(function(cls) {
 		}
 	};
 	
-	cls.all = all = function(storeName, callback) {
+	let all = cls.all = (storeName, callback) => {
 		//REQUIRED: storeName
 		//REQUIRED: callback
 		
-		var
-		// storage
-		storage = storages[storeName];
+		let storage = storages[storeName];
 		
 		callback(storage === undefined ? {} : storage);
 	};
 	
-	cls.count = count = function(storeName, callback) {
+	let count = cls.count = (storeName, callback) => {
 		//REQUIRED: storeName
 		//REQUIRED: callback
 		
-		all(storeName, function(dataSet) {
+		all(storeName, (dataSet) => {
 			callback(COUNT_PROPERTIES(dataSet));
 		});
 	};
 
-	cls.checkIsExists = checkIsExists = function(params, callback) {
+	let checkIsExists = cls.checkIsExists = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//REQUIRED: params.id
 		//REQUIRED: callback
 		
-		var
-		// store name
-		storeName = params.storeName,
+		let storeName = params.storeName;
+		let id = params.id;
 		
-		// id
-		id = params.id,
-		
-		// storage
-		storage = storages[storeName];
+		let storage = storages[storeName];
 		
 		if (storage === undefined) {
 			callback(false);
@@ -4013,7 +3810,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 		}
 	};
 	
-	cls.clear = clear = function(storeName, callback) {
+	let clear = cls.clear = (storeName, callback) => {
 		//REQUIRED: storeName
 		//OPTIONAL: callback
 		
@@ -4026,74 +3823,38 @@ global.SHARED_STORE = CLASS(function(cls) {
 
 	return {
 
-		init : function(inner, self, storeName) {
+		init : (inner, self, storeName) => {
 			//REQUIRED: storeName
-
-			var
-			// a
-			a = 0,
 			
-			// server names
-			serverNames,
+			let serverName;
 			
-			// server name
-			serverName,
+			let a = 0;
 			
-			// save.
-			save,
-			
-			// update.
-			update,
-
-			// get.
-			get,
-
-			// remove.
-			remove,
-			
-			// all.
-			all,
-			
-			// count.
-			count,
-			
-			// check is exists.
-			checkIsExists,
-			
-			// clear.
-			clear;
-			
-			REPEAT(storeName.length, function(i) {
+			REPEAT(storeName.length, (i) => {
 				a += storeName.charCodeAt(i);
 			});
 			
 			if (SERVER_CLUSTERING.getHosts !== undefined) {
 				
-				serverNames = [];
+				let serverNames = [];
 				
-				EACH(SERVER_CLUSTERING.getHosts(), function(host, serverName) {
+				EACH(SERVER_CLUSTERING.getHosts(), (host, serverName) => {
 					serverNames.push(serverName);
 				});
 				
 				serverName = serverNames[a % serverNames.length];
 			}
 
-			self.save = save = function(params, callback) {
+			let save = self.save = (params, callback) => {
 				//REQUIRED: params
 				//REQUIRED: params.id
 				//REQUIRED: params.data
 				//OPTIONAL: params.removeAfterSeconds
 				//OPTIONAL: callback
 
-				var
-				// id
-				id = params.id,
-
-				// data
-				data = params.data,
-
-				// remove after seconds
-				removeAfterSeconds = params.removeAfterSeconds;
+				let id = params.id;
+				let data = params.data;
+				let removeAfterSeconds = params.removeAfterSeconds;
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
 
@@ -4134,7 +3895,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.update = update = function(params, callbackOrHandlers) {
+			let update = self.update = (params, callbackOrHandlers) => {
 				//REQUIRED: params
 				//REQUIRED: params.id
 				//REQUIRED: params.data
@@ -4147,24 +3908,12 @@ global.SHARED_STORE = CLASS(function(cls) {
 				//OPTIONAL: callbackOrHandlers.notExists
 				//OPTIONAL: callbackOrHandlers.success
 
-				var
-				// id
-				id = params.id,
-
-				// data
-				data = params.data,
-
-				// remove after seconds
-				removeAfterSeconds = params.removeAfterSeconds,
+				let id = params.id;
+				let data = params.data;
+				let removeAfterSeconds = params.removeAfterSeconds;
 				
-				// not exists handler.
-				notExistsHandler,
-				
-				// callback.
-				callback,
-				
-				// inner callback.
-				innerCallback;
+				let notExistsHandler;
+				let callback;
 				
 				if (callbackOrHandlers !== undefined) {
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -4175,7 +3924,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 					}
 				}
 				
-				innerCallback = function(savedData) {
+				let innerCallback = (savedData) => {
 					if (savedData === undefined) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
@@ -4226,21 +3975,14 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 
-			self.get = get = function(id, callbackOrHandlers) {
+			let get = self.get = (id, callbackOrHandlers) => {
 				//REQUIRED: id
 				//REQUIRED: callbackOrHandlers
 				//OPTIONAL: callbackOrHandlers.notExists
 				//OPTIONAL: callbackOrHandlers.success
 				
-				var
-				// not exists handler.
-				notExistsHandler,
-				
-				// callback.
-				callback,
-				
-				// inner callback.
-				innerCallback;
+				let notExistsHandler;
+				let callback;
 				
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 					callback = callbackOrHandlers;
@@ -4249,7 +3991,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 					callback = callbackOrHandlers.success;
 				}
 				
-				innerCallback = function(savedData) {
+				let innerCallback = (savedData) => {
 					if (savedData === undefined) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
@@ -4294,21 +4036,14 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 
-			self.remove = remove = function(id, callbackOrHandlers) {
+			let remove = self.remove = (id, callbackOrHandlers) => {
 				//REQUIRED: id
 				//OPTIONAL: callbackOrHandlers
 				//OPTIONAL: callbackOrHandlers.notExists
 				//OPTIONAL: callbackOrHandlers.success
 				
-				var
-				// not exists handler.
-				notExistsHandler,
-				
-				// callback.
-				callback,
-				
-				// inner callback.
-				innerCallback;
+				let notExistsHandler;
+				let callback;
 				
 				if (callbackOrHandlers !== undefined) {
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -4319,7 +4054,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 					}
 				}
 				
-				innerCallback = function(originData) {
+				let innerCallback = (originData) => {
 					if (originData === undefined) {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
@@ -4364,7 +4099,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.all = all = function(callback) {
+			let all = self.all = (callback) => {
 				//REQUIRED: callback
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
@@ -4390,7 +4125,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.count = count = function(callback) {
+			let count = self.count = (callback) => {
 				//REQUIRED: callback
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
@@ -4416,7 +4151,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.checkIsExists = checkIsExists = function(id, callback) {
+			let checkIsExists = self.checkIsExists = (id, callback) => {
 				//REQUIRED: id
 				//REQUIRED: callback
 				
@@ -4452,7 +4187,7 @@ global.SHARED_STORE = CLASS(function(cls) {
 				}
 			};
 			
-			self.clear = clear = function(callback) {
+			let clear = self.clear = (callback) => {
 				//OPTIONAL: callback
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
@@ -4481,57 +4216,30 @@ global.SHARED_STORE = CLASS(function(cls) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.SHARED_STORE = CLASS({
 
-		init : function(inner, self, name) {
+		init : (inner, self, name) => {
 			//REQUIRED: name
 
-			var
-			// shared store
-			sharedStore = SHARED_STORE(box.boxName + '.' + name),
+			let sharedStore = SHARED_STORE(box.boxName + '.' + name);
 
-			// save.
-			save,
+			let save = self.save = sharedStore.save;
 			
-			// update.
-			update,
-
-			// get.
-			get,
-
-			// remove.
-			remove,
+			let update = self.update = sharedStore.update;
 			
-			// all.
-			all,
+			let get = self.get = sharedStore.get;
 			
-			// count.
-			count,
+			let remove = self.remove = sharedStore.remove;
 			
-			// check is exists.
-			checkIsExists,
+			let all = self.all = sharedStore.all;
 			
-			// clear.
-			clear;
-
-			self.save = save = sharedStore.save;
-
-			self.update = update = sharedStore.update;
-
-			self.get = get = sharedStore.get;
-
-			self.remove = remove = sharedStore.remove;
+			let count = self.count = sharedStore.count;
 			
-			self.all = all = sharedStore.all;
-
-			self.count = count = sharedStore.count;
+			le tcheckIsExists = self.checkIsExists = sharedStore.checkIsExists;
 			
-			self.checkIsExists = checkIsExists = sharedStore.checkIsExists;
-
-			self.clear = clear = sharedStore.clear;
+			let clear = self.clear = sharedStore.clear;
 		}
 	});
 });
@@ -4541,8 +4249,7 @@ FOR_BOX(function(box) {
  */
 global.CONSOLE_BLUE = METHOD({
 
-	run : function(text) {
-		'use strict';
+	run : (text) => {
 		//REQUIRED: text
 
 		return '[36m' + text + '[0m';
@@ -4554,8 +4261,7 @@ global.CONSOLE_BLUE = METHOD({
  */
 global.CONSOLE_GREEN = METHOD({
 
-	run : function(text) {
-		'use strict';
+	run : (text) => {
 		//REQUIRED: text
 
 		return '[32m' + text + '[0m';
@@ -4567,8 +4273,7 @@ global.CONSOLE_GREEN = METHOD({
  */
 global.CONSOLE_RED = METHOD({
 
-	run : function(text) {
-		'use strict';
+	run : (text) => {
 		//REQUIRED: text
 
 		return '[31m' + text + '[0m';
@@ -4580,8 +4285,7 @@ global.CONSOLE_RED = METHOD({
  */
 global.CONSOLE_YELLOW = METHOD({
 
-	run : function(text) {
-		'use strict';
+	run : (text) => {
 		//REQUIRED: text
 
 		return '[33m' + text + '[0m';
@@ -4591,7 +4295,7 @@ global.CONSOLE_YELLOW = METHOD({
 /*
  * 콘솔에 오류 메시지를 출력합니다.
  */
-global.SHOW_ERROR = function(tag, errorMsg, params) {
+global.SHOW_ERROR = (tag, errorMsg, params) => {
 	//REQUIRED: tag
 	//REQUIRED: errorMsg
 	//OPTIONAL: params
@@ -4604,11 +4308,11 @@ global.SHOW_ERROR = function(tag, errorMsg, params) {
 	}
 };
 
-FOR_BOX(function(box) {
+FOR_BOX((box) => {
 
 	box.SHOW_ERROR = METHOD({
 
-		run : function(tag, errorMsg, params) {
+		run : (tag, errorMsg, params) => {
 			//REQUIRED: tag
 			//REQUIRED: errorMsg
 			//OPTIONAL: params
@@ -4620,7 +4324,7 @@ FOR_BOX(function(box) {
 /*
  * 콘솔에 경고 메시지를 출력합니다.
  */
-global.SHOW_WARNING = function(tag, warningMsg, params) {
+global.SHOW_WARNING = (tag, warningMsg, params) => {
 	//REQUIRED: tag
 	//REQUIRED: warningMsg
 	//OPTIONAL: params
@@ -4633,11 +4337,11 @@ global.SHOW_WARNING = function(tag, warningMsg, params) {
 	}
 };
 
-FOR_BOX(function(box) {
+FOR_BOX((box) => {
 
 	box.SHOW_WARNING = METHOD({
 
-		run : function(tag, warningMsg, params) {
+		run : (tag, warningMsg, params) => {
 			//REQUIRED: tag
 			//REQUIRED: warningMsg
 			//OPTIONAL: params
@@ -4653,21 +4357,15 @@ FOR_BOX(function(box) {
  */
 global.SHA1 = METHOD({
 
-	run : function(params) {
-		'use strict';
+	run : (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.password
 		//REQUIRED: params.key
 
-		var
-		// password
-		password = params.password,
-
-		// key
-		key = params.key,
-
-		// crypto
-		crypto = require('crypto');
+		let password = params.password;
+		let key = params.key;
+		
+		let crypto = require('crypto');
 
 		return crypto.createHmac('sha1', key).update(password).digest('hex');
 	}
@@ -4678,21 +4376,15 @@ global.SHA1 = METHOD({
  */
 global.SHA256 = METHOD({
 
-	run : function(params) {
-		'use strict';
+	run : (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.password
 		//REQUIRED: params.key
 
-		var
-		// password
-		password = params.password,
-
-		// key
-		key = params.key,
-
-		// crypto
-		crypto = require('crypto');
+		let password = params.password;
+		let key = params.key;
+		
+		let crypto = require('crypto');
 
 		return crypto.createHmac('sha256', key).update(password).digest('hex');
 	}
@@ -4703,21 +4395,15 @@ global.SHA256 = METHOD({
  */
 global.SHA512 = METHOD({
 
-	run : function(params) {
-		'use strict';
+	run : (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.password
 		//REQUIRED: params.key
 
-		var
-		// password
-		password = params.password,
-
-		// key
-		key = params.key,
-
-		// crypto
-		crypto = require('crypto');
+		let password = params.password;
+		let key = params.key;
+		
+		let crypto = require('crypto');
 
 		return crypto.createHmac('sha512', key).update(password).digest('hex');
 	}
@@ -4726,27 +4412,20 @@ global.SHA512 = METHOD({
 /**
  * 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
  */
-global.CHECK_FILE_EXISTS = METHOD(function() {
-	'use strict';
+global.CHECK_FILE_EXISTS = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs');
+	let FS = require('fs');
 
 	return {
 
-		run : function(pathOrParams, callback) {
+		run : (pathOrParams, callback) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	확인할 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
 			//OPTIONAL: callback
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync;
+			let path;
+			let isSync;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -4758,12 +4437,12 @@ global.CHECK_FILE_EXISTS = METHOD(function() {
 
 			// when normal mode
 			if (isSync !== true) {
-				fs.exists(path, callback);
+				FS.exists(path, callback);
 			}
 
 			// when sync mode
 			else {
-				return fs.existsSync(path);
+				return FS.existsSync(path);
 			}
 		}
 	};
@@ -4772,16 +4451,13 @@ global.CHECK_FILE_EXISTS = METHOD(function() {
 /**
  * 지정된 경로가 (파일이 아닌) 폴더인지 확인합니다.
  */
-global.CHECK_IS_FOLDER = METHOD(function() {
-	'use strict';
+global.CHECK_IS_FOLDER = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs');
+	let FS = require('fs');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	확인할 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -4789,18 +4465,11 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// error handler.
-			errorHandler,
+			let path;
+			let isSync;
 			
-			// callback.
-			callback;
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -4822,15 +4491,11 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 				
-				fs.stat(path, function(error, stat) {
+				FS.stat(path, (error, stat) => {
 					
-					var
-					// error msg
-					errorMsg;
-
 					if (error !== TO_DELETE) {
 
-						errorMsg = error.toString();
+						let errorMsg = error.toString();
 
 						if (errorHandler !== undefined) {
 							errorHandler(errorMsg);
@@ -4846,7 +4511,7 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 
 			// when sync mode
 			else {
-				return fs.statSync(path).isDirectory();
+				return FS.statSync(path).isDirectory();
 			}
 		}
 	};
@@ -4855,19 +4520,14 @@ global.CHECK_IS_FOLDER = METHOD(function() {
 /**
  * 파일을 복사합니다.
  */
-global.COPY_FILE = METHOD(function() {
-	'use strict';
+global.COPY_FILE = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs'),
-
-	//IMPORT: path
-	_path = require('path');
+	let FS = require('fs');
+	let Path = require('path');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params
 			//REQUIRED: params.from		복사할 파일의 위치
 			//REQUIRED: params.to		파일을 복사할 위치
@@ -4877,24 +4537,13 @@ global.COPY_FILE = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// from
-			from = params.from,
-
-			// to
-			to = params.to,
-
-			// is sync
-			isSync = params.isSync,
-
-			// not exists handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let from = params.from;
+			let to = params.to;
+			let isSync = params.isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -4907,34 +4556,28 @@ global.COPY_FILE = METHOD(function() {
 			}
 
 			CREATE_FOLDER({
-				path : _path.dirname(to),
+				path : Path.dirname(to),
 				isSync : isSync
 			}, {
 
 				error : errorHandler,
 
-				success : function() {
+				success : () => {
 
 					// when normal mode
 					if (isSync !== true) {
 
-						CHECK_FILE_EXISTS(from, function(isExists) {
-
-							var
-							// reader
-							reader;
+						CHECK_FILE_EXISTS(from, (isExists) => {
 
 							if (isExists === true) {
 
-								reader = fs.createReadStream(from);
+								let reader = FS.createReadStream(from);
 
-								reader.pipe(fs.createWriteStream(to));
+								reader.pipe(FS.createWriteStream(to));
 
-								reader.on('error', function(error) {
+								reader.on('error', (error) => {
 
-									var
-									// error msg
-									errorMsg = error.toString();
+									let errorMsg = error.toString();
 
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
@@ -4943,7 +4586,7 @@ global.COPY_FILE = METHOD(function() {
 									}
 								});
 
-								reader.on('end', function() {
+								reader.on('end', () => {
 									if (callback !== undefined) {
 										callback();
 									}
@@ -4965,11 +4608,7 @@ global.COPY_FILE = METHOD(function() {
 					// when sync mode
 					else {
 
-						RUN(function() {
-
-							var
-							// error msg
-							errorMsg;
+						RUN(() => {
 
 							try {
 
@@ -4978,7 +4617,7 @@ global.COPY_FILE = METHOD(function() {
 									isSync : true
 								}) === true) {
 
-									fs.writeFileSync(to, fs.readFileSync(from));
+									FS.writeFileSync(to, FS.readFileSync(from));
 
 								} else {
 
@@ -4998,7 +4637,7 @@ global.COPY_FILE = METHOD(function() {
 
 								if (error !== TO_DELETE) {
 
-									errorMsg = error.toString();
+									let errorMsg = error.toString();
 
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
@@ -5022,19 +4661,14 @@ global.COPY_FILE = METHOD(function() {
 /**
  * 폴더를 생성합니다.
  */
-global.CREATE_FOLDER = METHOD(function() {
-	'use strict';
+global.CREATE_FOLDER = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs'),
-
-	//IMPORT: path
-	_path = require('path');
+	let FS = require('fs');
+	let Path = require('path');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	폴더를 생성할 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -5042,21 +4676,11 @@ global.CREATE_FOLDER = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// folder path
-			folderPath,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path;
+			let isSync;
+			
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -5078,7 +4702,7 @@ global.CREATE_FOLDER = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
@@ -5088,21 +4712,17 @@ global.CREATE_FOLDER = METHOD(function() {
 
 					} else {
 
-						folderPath = _path.dirname(path);
+						let folderPath = Path.dirname(path);
 
-						CHECK_FILE_EXISTS(folderPath, function(isExists) {
+						CHECK_FILE_EXISTS(folderPath, (isExists) => {
 
 							if (isExists === true) {
 
-								fs.mkdir(path, function(error) {
-
-									var
-									// error msg
-									errorMsg;
+								FS.mkdir(path, (error) => {
 
 									if (error !== TO_DELETE) {
 
-										errorMsg = error.toString();
+										let errorMsg = error.toString();
 
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
@@ -5117,7 +4737,7 @@ global.CREATE_FOLDER = METHOD(function() {
 
 							} else {
 
-								CREATE_FOLDER(folderPath, function() {
+								CREATE_FOLDER(folderPath, () => {
 
 									// retry.
 									CREATE_FOLDER(path, callback);
@@ -5131,59 +4751,52 @@ global.CREATE_FOLDER = METHOD(function() {
 			// when sync mode
 			else {
 
-				RUN(function() {
+				try {
 
-					var
-					// error msg
-					errorMsg;
+					if (CHECK_FILE_EXISTS({
+						path : path,
+						isSync : true
+					}) !== true) {
 
-					try {
+						let folderPath = Path.dirname(path);
 
 						if (CHECK_FILE_EXISTS({
-							path : path,
+							path : folderPath,
 							isSync : true
-						}) !== true) {
+						}) === true) {
+							FS.mkdirSync(path);
+						} else {
 
-							folderPath = _path.dirname(path);
-
-							if (CHECK_FILE_EXISTS({
+							CREATE_FOLDER({
 								path : folderPath,
 								isSync : true
-							}) === true) {
-								fs.mkdirSync(path);
-							} else {
+							});
 
-								CREATE_FOLDER({
-									path : folderPath,
-									isSync : true
-								});
-
-								// retry.
-								CREATE_FOLDER({
-									path : path,
-									isSync : true
-								});
-							}
-						}
-
-					} catch(error) {
-
-						if (error !== TO_DELETE) {
-
-							errorMsg = error.toString();
-
-							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
-							} else {
-								SHOW_ERROR('CREATE_FOLDER', errorMsg);
-							}
+							// retry.
+							CREATE_FOLDER({
+								path : path,
+								isSync : true
+							});
 						}
 					}
 
-					if (callback !== undefined) {
-						callback();
+				} catch(error) {
+
+					if (error !== TO_DELETE) {
+
+						let errorMsg = error.toString();
+
+						if (errorHandler !== undefined) {
+							errorHandler(errorMsg);
+						} else {
+							SHOW_ERROR('CREATE_FOLDER', errorMsg);
+						}
 					}
-				});
+				}
+
+				if (callback !== undefined) {
+					callback();
+				}
 			}
 		}
 	};
@@ -5192,19 +4805,13 @@ global.CREATE_FOLDER = METHOD(function() {
 /**
  * 지정된 경로에 위치한 파일들의 이름 목록을 불러옵니다.
  */
-global.FIND_FILE_NAMES = METHOD(function() {
-	'use strict';
+global.FIND_FILE_NAMES = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs'),
-
-	//IMPORT: path
-	_path = require('path');
-
+	let FS = require('fs');
+	
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	파일들이 위치한 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -5213,24 +4820,14 @@ global.FIND_FILE_NAMES = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// not exists handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback,
-
-			// file names
-			fileNames = [];
+			let path;
+			let isSync;
+			
+			let notExistsHandler
+			let errorHandler;
+			let callback;
+			
+			let fileNames = [];
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -5253,19 +4850,15 @@ global.FIND_FILE_NAMES = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
-						fs.readdir(path, function(error, names) {
-
-							var
-							// error msg
-							errorMsg;
+						FS.readdir(path, (error, names) => {
 
 							if (error !== TO_DELETE) {
 
-								errorMsg = error.toString();
+								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
@@ -5276,19 +4869,15 @@ global.FIND_FILE_NAMES = METHOD(function() {
 							} else if (callback !== undefined) {
 
 								PARALLEL(names, [
-								function(name, done) {
+								(name, done) => {
 
 									if (name[0] !== '.') {
 
-										fs.stat(path + '/' + name, function(error, stats) {
-
-											var
-											// error msg
-											errorMsg;
+										FS.stat(path + '/' + name, (error, stats) => {
 
 											if (error !== TO_DELETE) {
 
-												errorMsg = error.toString();
+												let errorMsg = error.toString();
 
 												if (errorHandler !== undefined) {
 													errorHandler(errorMsg);
@@ -5311,7 +4900,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 									}
 								},
 
-								function() {
+								() => {
 									if (callback !== undefined) {
 										callback(fileNames);
 									}
@@ -5335,14 +4924,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 			// when sync mode
 			else {
 
-				return RUN(function() {
-
-					var
-					// names
-					names,
-
-					// error msg
-					errorMsg;
+				return RUN(() => {
 
 					try {
 
@@ -5351,10 +4933,10 @@ global.FIND_FILE_NAMES = METHOD(function() {
 							isSync : true
 						}) === true) {
 
-							names = fs.readdirSync(path);
+							let names = FS.readdirSync(path);
 
-							EACH(names, function(name) {
-								if (name[0] !== '.' && fs.statSync(path + '/' + name).isDirectory() !== true) {
+							EACH(names, (name) => {
+								if (name[0] !== '.' && FS.statSync(path + '/' + name).isDirectory() !== true) {
 									fileNames.push(name);
 								}
 							});
@@ -5369,7 +4951,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 								});
 							}
 
-							// do not run callback.
+							// return undefined.
 							return;
 						}
 
@@ -5377,7 +4959,7 @@ global.FIND_FILE_NAMES = METHOD(function() {
 
 						if (error !== TO_DELETE) {
 
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -5401,19 +4983,13 @@ global.FIND_FILE_NAMES = METHOD(function() {
 /**
  * 지정된 경로에 위치한 폴더들의 이름 목록을 불러옵니다.
  */
-global.FIND_FOLDER_NAMES = METHOD(function() {
-	'use strict';
+global.FIND_FOLDER_NAMES = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs'),
-
-	//IMPORT: path
-	_path = require('path');
-
+	let FS = require('fs');
+	
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	폴더들이 위치한 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -5422,24 +4998,14 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
+			let path;
+			let isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
-			// is sync
-			isSync,
-
-			// not exists handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback,
-
-			// file names
-			folderNames = [];
+			let folderNames = [];
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -5462,19 +5028,15 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
-						fs.readdir(path, function(error, names) {
-
-							var
-							// error msg
-							errorMsg;
+						FS.readdir(path, (error, names) => {
 
 							if (error !== TO_DELETE) {
 
-								errorMsg = error.toString();
+								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
@@ -5485,19 +5047,15 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 							} else if (callback !== undefined) {
 
 								PARALLEL(names, [
-								function(name, done) {
+								(name, done) => {
 
 									if (name[0] !== '.') {
 
-										fs.stat(path + '/' + name, function(error, stats) {
-
-											var
-											// error msg
-											errorMsg;
+										FS.stat(path + '/' + name, (error, stats) => {
 
 											if (error !== TO_DELETE) {
 
-												errorMsg = error.toString();
+												let errorMsg = error.toString();
 
 												if (errorHandler !== undefined) {
 													errorHandler(errorMsg);
@@ -5520,7 +5078,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 									}
 								},
 
-								function() {
+								() => {
 									if (callback !== undefined) {
 										callback(folderNames);
 									}
@@ -5544,15 +5102,8 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 			// when sync mode
 			else {
 
-				return RUN(function() {
-
-					var
-					// names
-					names,
-
-					// error msg
-					errorMsg;
-
+				return RUN(() => {
+					
 					try {
 
 						if (CHECK_FILE_EXISTS({
@@ -5560,10 +5111,10 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 							isSync : true
 						}) === true) {
 
-							names = fs.readdirSync(path);
+							let names = FS.readdirSync(path);
 
-							EACH(names, function(name) {
-								if (name[0] !== '.' && fs.statSync(path + '/' + name).isDirectory() === true) {
+							EACH(names, (name) => {
+								if (name[0] !== '.' && FS.statSync(path + '/' + name).isDirectory() === true) {
 									folderNames.push(name);
 								}
 							});
@@ -5578,7 +5129,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 								});
 							}
 
-							// do not run callback.
+							// return undefined.
 							return;
 						}
 
@@ -5586,7 +5137,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 
 						if (error !== TO_DELETE) {
 
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -5612,16 +5163,13 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
  * 
  * 파일의 크기(size), 생성 시간(createTime), 최종 수정 시간(lastUpdateTime)을 불러옵니다.
  */
-global.GET_FILE_INFO = METHOD(function() {
-	'use strict';
-
-	var
-	//IMPORT: fs
-	fs = require('fs');
+global.GET_FILE_INFO = METHOD(() => {
+	
+	let FS = require('fs');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	불러올 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -5630,21 +5178,12 @@ global.GET_FILE_INFO = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// not eixsts handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path;
+			let isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -5667,19 +5206,15 @@ global.GET_FILE_INFO = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
-						fs.stat(path, function(error, stat) {
-
-							var
-							// error msg
-							errorMsg;
+						FS.stat(path, (error, stat) => {
 
 							if (error !== TO_DELETE) {
 
-								errorMsg = error.toString();
+								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
@@ -5722,14 +5257,7 @@ global.GET_FILE_INFO = METHOD(function() {
 			// when sync mode
 			else {
 
-				return RUN(function() {
-
-					var
-					// error msg
-					errorMsg,
-
-					// stat
-					stat;
+				return RUN(() => {
 
 					try {
 
@@ -5738,7 +5266,7 @@ global.GET_FILE_INFO = METHOD(function() {
 							isSync : true
 						}) === true) {
 							
-							stat = fs.statSync(path);
+							let stat = FS.statSync(path);
 
 							if (stat.isDirectory() === true) {
 
@@ -5782,7 +5310,7 @@ global.GET_FILE_INFO = METHOD(function() {
 
 						if (error !== TO_DELETE) {
 
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -5792,7 +5320,7 @@ global.GET_FILE_INFO = METHOD(function() {
 						}
 					}
 
-					// do not run callback.
+					// return undefined.
 					return;
 				});
 			}
@@ -5805,8 +5333,7 @@ global.GET_FILE_INFO = METHOD(function() {
  */
 global.MOVE_FILE = METHOD({
 
-	run : function(params, callbackOrHandlers) {
-		'use strict';
+	run : (params, callbackOrHandlers) => {
 		//REQUIRED: params
 		//REQUIRED: params.from		파일의 원래 위치
 		//REQUIRED: params.to		파일을 옮길 위치
@@ -5816,21 +5343,12 @@ global.MOVE_FILE = METHOD({
 		//OPTIONAL: callbackOrHandlers.error
 		//REQUIRED: callbackOrHandlers.success
 
-		var
-		// from
-		from = params.from,
-
-		// is sync
-		isSync = params.isSync,
-
-		// not exists handler.
-		notExistsHandler,
-
-		// error handler.
-		errorHandler,
-
-		// callback.
-		callback;
+		let from = params.from;
+		let isSync = params.isSync;
+		
+		let notExistsHandler;
+		let errorHandler;
+		let callback;
 
 		if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 			callback = callbackOrHandlers;
@@ -5843,7 +5361,7 @@ global.MOVE_FILE = METHOD({
 		COPY_FILE(params, {
 			error : errorHandler,
 			notExists : notExistsHandler,
-			success : function() {
+			success : () => {
 
 				REMOVE_FILE({
 					path : from,
@@ -5863,16 +5381,13 @@ global.MOVE_FILE = METHOD({
  * 
  * 내용을 Buffer형으로 불러오기 때문에, 내용을 문자열로 불러오려면 toString 함수를 이용하시기 바랍니다.
  */
-global.READ_FILE = METHOD(function() {
-	'use strict';
-
-	var
-	//IMPORT: fs
-	fs = require('fs');
+global.READ_FILE = METHOD(() => {
+	
+	let FS = require('fs');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	불러올 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -5881,21 +5396,12 @@ global.READ_FILE = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// not eixsts handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path;
+			let isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -5918,19 +5424,15 @@ global.READ_FILE = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
-						fs.stat(path, function(error, stat) {
-
-							var
-							// error msg
-							errorMsg;
-
+						FS.stat(path, (error, stat) => {
+							
 							if (error !== TO_DELETE) {
 
-								errorMsg = error.toString();
+								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
@@ -5950,15 +5452,11 @@ global.READ_FILE = METHOD(function() {
 
 							} else {
 
-								fs.readFile(path, function(error, buffer) {
-
-									var
-									// error msg
-									errorMsg;
+								FS.readFile(path, (error, buffer) => {
 
 									if (error !== TO_DELETE) {
 
-										errorMsg = error.toString();
+										let errorMsg = error.toString();
 
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
@@ -5989,14 +5487,7 @@ global.READ_FILE = METHOD(function() {
 			// when sync mode
 			else {
 
-				return RUN(function() {
-
-					var
-					// error msg
-					errorMsg,
-
-					// buffer
-					buffer;
+				return RUN(() => {
 
 					try {
 
@@ -6005,7 +5496,7 @@ global.READ_FILE = METHOD(function() {
 							isSync : true
 						}) === true) {
 
-							if (fs.statSync(path).isDirectory() === true) {
+							if (FS.statSync(path).isDirectory() === true) {
 
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
@@ -6017,7 +5508,7 @@ global.READ_FILE = METHOD(function() {
 								
 							} else {
 								
-								buffer = fs.readFileSync(path);
+								let buffer = FS.readFileSync(path);
 			
 								if (callback !== undefined) {
 									callback(buffer);
@@ -6041,7 +5532,7 @@ global.READ_FILE = METHOD(function() {
 
 						if (error !== TO_DELETE) {
 
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -6051,7 +5542,7 @@ global.READ_FILE = METHOD(function() {
 						}
 					}
 
-					// do not run callback.
+					// return undefined.
 					return;
 				});
 			}
@@ -6062,16 +5553,13 @@ global.READ_FILE = METHOD(function() {
 /**
  * 파일을 삭제합니다.
  */
-global.REMOVE_FILE = METHOD(function() {
-	'use strict';
+global.REMOVE_FILE = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs');
+	let FS = require('fs');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	삭제할 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -6080,21 +5568,12 @@ global.REMOVE_FILE = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//REQUIRED: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// not eixsts handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path;
+			let isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -6115,19 +5594,15 @@ global.REMOVE_FILE = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
-						fs.unlink(path, function(error) {
-
-							var
-							// error msg
-							errorMsg;
+						FS.unlink(path, (error) => {
 
 							if (error !== TO_DELETE) {
 
-								errorMsg = error.toString();
+								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
@@ -6159,11 +5634,7 @@ global.REMOVE_FILE = METHOD(function() {
 			// when sync mode
 			else {
 
-				RUN(function() {
-
-					var
-					// error msg
-					errorMsg;
+				RUN(() => {
 
 					try {
 
@@ -6172,7 +5643,7 @@ global.REMOVE_FILE = METHOD(function() {
 							isSync : true
 						}) === true) {
 
-							fs.unlinkSync(path);
+							FS.unlinkSync(path);
 
 						} else {
 
@@ -6192,7 +5663,7 @@ global.REMOVE_FILE = METHOD(function() {
 
 						if (error !== TO_DELETE) {
 
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -6216,16 +5687,13 @@ global.REMOVE_FILE = METHOD(function() {
  * 
  * 폴더 내의 모든 파일 및 폴더를 삭제하므로, 주의해서 사용해야 합니다.
  */
-global.REMOVE_FOLDER = METHOD(function() {
-	'use strict';
+global.REMOVE_FOLDER = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs');
+	let FS = require('fs');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	삭제할 폴더의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -6234,21 +5702,12 @@ global.REMOVE_FOLDER = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//REQUIRED: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// not eixsts handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path;
+			let isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -6269,55 +5728,51 @@ global.REMOVE_FOLDER = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 						
 						NEXT([
-						function(next) {
+						(next) => {
 							
-							FIND_FILE_NAMES(path, function(fileNames) {
+							FIND_FILE_NAMES(path, (fileNames) => {
 								
 								PARALLEL(fileNames, [
-								function(fileName, done) {
+								(fileName, done) => {
 									REMOVE_FILE(path + '/' + fileName, done);
 								},
 								
-								function() {
+								() => {
 									next();
 								}]);
 							});
 						},
 						
-						function(next) {
-							return function() {
+						(next) => {
+							return () => {
 								
-								FIND_FOLDER_NAMES(path, function(folderNames) {
+								FIND_FOLDER_NAMES(path, (folderNames) => {
 									
 									PARALLEL(folderNames, [
-									function(folderName, done) {
+									(folderName, done) => {
 										REMOVE_FOLDER(path + '/' + folderName, done);
 									},
 									
-									function() {
+									() => {
 										next();
 									}]);
 								});
 							};
 						},
 						
-						function(next) {
-							return function() {
+						(next) => {
+							return () => {
 								
-								fs.rmdir(path, function(error) {
-									
-									var
-									// error msg
-									errorMsg;
+								FS.rmdir(path, (error) => {
 									
 									if (error !== TO_DELETE) {
 										
-										errorMsg = error.toString();
+										let errorMsg = error.toString();
 										
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
@@ -6351,11 +5806,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 			// when sync mode
 			else {
 
-				RUN(function() {
-
-					var
-					// error msg
-					errorMsg;
+				RUN(() => {
 
 					try {
 
@@ -6367,7 +5818,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 							FIND_FILE_NAMES({
 								path : path,
 								isSync : true
-							}, EACH(function(fileName) {
+							}, EACH((fileName) => {
 								
 								REMOVE_FILE({
 									path : path + '/' + fileName,
@@ -6378,7 +5829,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 							FIND_FOLDER_NAMES({
 								path : path,
 								isSync : true
-							}, EACH(function(folderName) {
+							}, EACH((folderName) => {
 								
 								REMOVE_FOLDER({
 									path : path + '/' + folderName,
@@ -6386,7 +5837,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 								});
 							}));
 							
-							fs.rmdirSync(path);
+							FS.rmdirSync(path);
 
 						} else {
 
@@ -6406,7 +5857,7 @@ global.REMOVE_FOLDER = METHOD(function() {
 						
 						if (error !== TO_DELETE) {
 							
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 	
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -6430,19 +5881,14 @@ global.REMOVE_FOLDER = METHOD(function() {
  * 
  * 파일이 없으면 파일을 생성하고, 파일이 이미 있으면 내용을 덮어씁니다.
  */
-global.WRITE_FILE = METHOD(function() {
-	'use strict';
+global.WRITE_FILE = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs'),
-
-	//IMPORT: path
-	_path = require('path');
+	let FS = require('fs');
+	let Path = require('path');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params
 			//REQUIRED: params.path		작성할 파일의 경로
 			//OPTIONAL: params.content	파일에 작성할 내용 (문자열)
@@ -6452,24 +5898,13 @@ global.WRITE_FILE = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path = params.path,
-
-			// content
-			content = params.content,
-
-			// buffer
-			buffer = params.buffer,
-
-			// is sync
-			isSync = params.isSync,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path = params.path;
+			let content = params.content;
+			let buffer = params.buffer;
+			let isSync = params.isSync;
+			
+			let errorHandler;
+			let callback;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -6481,22 +5916,18 @@ global.WRITE_FILE = METHOD(function() {
 			}
 
 			CREATE_FOLDER({
-				path : _path.dirname(path),
+				path : Path.dirname(path),
 				isSync : isSync
-			}, function() {
+			}, () => {
 
 				// when normal mode
 				if (isSync !== true) {
 
-					fs.writeFile(path, buffer !== undefined ? buffer : content, function(error) {
-						
-						var
-						// error msg
-						errorMsg;
+					FS.writeFile(path, buffer !== undefined ? buffer : content, (error) => {
 						
 						if (error !== TO_DELETE) {
 							
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -6512,35 +5943,28 @@ global.WRITE_FILE = METHOD(function() {
 
 				// when sync mode
 				else {
+					
+					try {
 
-					RUN(function() {
+						FS.writeFileSync(path, buffer !== undefined ? buffer : content);
 
-						var
-						// error msg
-						errorMsg;
-
-						try {
-
-							fs.writeFileSync(path, buffer !== undefined ? buffer : content);
-
-						} catch(error) {
+					} catch(error) {
+						
+						if (error !== TO_DELETE) {
 							
-							if (error !== TO_DELETE) {
+							let errorMsg = error.toString();
 								
-								errorMsg = error.toString();
-									
-								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
-								} else {
-									SHOW_ERROR('WRITE_FILE', errorMsg);
-								}
+							if (errorHandler !== undefined) {
+								errorHandler(errorMsg);
+							} else {
+								SHOW_ERROR('WRITE_FILE', errorMsg);
 							}
 						}
+					}
 
-						if (callback !== undefined) {
-							callback();
-						}
-					});
+					if (callback !== undefined) {
+						callback();
+					}
 				}
 			});
 		}
@@ -6550,25 +5974,18 @@ global.WRITE_FILE = METHOD(function() {
 /**
  * ImageMagick의 convert 기능을 사용합니다.
  */
-global.IMAGEMAGICK_CONVERT = METHOD(function() {
-	'use strict';
+global.IMAGEMAGICK_CONVERT = METHOD(() => {
 
-	var
-	//IMPORT: imagemagick
-	imagemagick = require('hanul-imagemagick');
+	let ImageMagick = require('hanul-imagemagick');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params
 			//OPTIONAL: callbackOrHandlers
 
-			var
-			// callback.
-			callback,
-
-			// error handler.
-			errorHandler;
+			let callback;
+			let errorHandler;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -6579,15 +5996,11 @@ global.IMAGEMAGICK_CONVERT = METHOD(function() {
 				}
 			}
 			
-			imagemagick.convert(params, function(error) {
-
-				var
-				// error msg
-				errorMsg;
+			ImageMagick.convert(params, (error) => {
 
 				if (error !== TO_DELETE) {
 
-					errorMsg = error.toString();
+					let errorMsg = error.toString();
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
@@ -6609,25 +6022,18 @@ global.IMAGEMAGICK_CONVERT = METHOD(function() {
 /**
  * ImageMagick의 identify 기능을 사용합니다.
  */
-global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
-	'use strict';
+global.IMAGEMAGICK_IDENTIFY = METHOD(() => {
 
-	var
-	//IMPORT: imagemagick
-	imagemagick = require('hanul-imagemagick');
+	let ImageMagick = require('hanul-imagemagick');
 
 	return {
 
-		run : function(path, callbackOrHandlers) {
+		run : (path, callbackOrHandlers) => {
 			//REQUIRED: path
 			//REQUIRED: callbackOrHandlers
 
-			var
-			// callback.
-			callback,
-
-			// error handler.
-			errorHandler;
+			let callback;
+			let errorHandler;
 
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
@@ -6636,15 +6042,11 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 				errorHandler = callbackOrHandlers.error;
 			}
 			
-			imagemagick.identify(path, function(error, features) {
-
-				var
-				// error msg
-				errorMsg;
+			ImageMagick.identify(path, (error, features) => {
 
 				if (error !== TO_DELETE) {
 
-					errorMsg = error.toString();
+					let errorMsg = error.toString();
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
@@ -6663,25 +6065,18 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(function() {
 /**
  * ImageMagick을 이용해 이미지의 메타데이터를 반한홥니다.
  */
-global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
-	'use strict';
+global.IMAGEMAGICK_READ_METADATA = METHOD(() => {
 
-	var
-	//IMPORT: imagemagick
-	imagemagick = require('hanul-imagemagick');
+	let ImageMagick = require('hanul-imagemagick');
 
 	return {
 
-		run : function(path, callbackOrHandlers) {
+		run : (path, callbackOrHandlers) => {
 			//REQUIRED: path
 			//REQUIRED: callbackOrHandlers
 
-			var
-			// callback.
-			callback,
-
-			// error handler.
-			errorHandler;
+			let callback;
+			let errorHandler;
 
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
@@ -6690,15 +6085,11 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 				errorHandler = callbackOrHandlers.error;
 			}
 			
-			imagemagick.readMetadata(path, function(error, metadata) {
-
-				var
-				// error msg
-				errorMsg;
+			ImageMagick.readMetadata(path, (error, metadata) => {
 
 				if (error !== TO_DELETE) {
 
-					errorMsg = error.toString();
+					let errorMsg = error.toString();
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
@@ -6717,40 +6108,26 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(function() {
 /**
  * ImageMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
  */
-global.IMAGEMAGICK_RESIZE = METHOD(function() {
-	'use strict';
+global.IMAGEMAGICK_RESIZE = METHOD(() => {
 
-	var
-	//IMPORT: path
-	_path = require('path');
+	let Path = require('path');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params.srcPath
 			//REQUIRED: params.distPath
 			//OPTIONAL: params.width
 			//OPTIONAL: params.height
 			//OPTIONAL: callbackOrHandlers
 
-			var
-			// src path
-			srcPath = params.srcPath,
-
-			// dist path
-			distPath = params.distPath,
-
-			// width
-			width = params.width,
-
-			// height
-			height = params.height,
-
-			// callback.
-			callback,
-
-			// error handler.
-			errorHandler;
+			let srcPath = params.srcPath;
+			let distPath = params.distPath;
+			let width = params.width;
+			let height = params.height;
+			
+			let callback;
+			let errorHandler;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -6761,13 +6138,13 @@ global.IMAGEMAGICK_RESIZE = METHOD(function() {
 				}
 			}
 
-			CREATE_FOLDER(_path.dirname(distPath), {
+			CREATE_FOLDER(Path.dirname(distPath), {
 				error : errorHandler,
-				success : function() {
+				success : () => {
 
 					IMAGEMAGICK_IDENTIFY(srcPath, {
 						error : errorHandler,
-						success : function(features) {
+						success : (features) => {
 
 							if (width === undefined) {
 								width = height / features.height * features.width;
@@ -6789,19 +6166,16 @@ global.IMAGEMAGICK_RESIZE = METHOD(function() {
 /**
  * CSS 코드를 압축합니다.
  */
-global.MINIFY_CSS = METHOD(function() {
-	'use strict';
+global.MINIFY_CSS = METHOD(() => {
 
-	var
-	// sqwish
-	sqwish = require('sqwish');
+	let Sqwish = require('sqwish');
 
 	return {
 
-		run : function(code) {
+		run : (code) => {
 			//REQUIRED: code
 
-			return sqwish.minify(code.toString());
+			return Sqwish.minify(code.toString());
 		}
 	};
 });
@@ -6809,23 +6183,20 @@ global.MINIFY_CSS = METHOD(function() {
 /**
  * JavaScript 코드를 압축합니다.
  */
-global.MINIFY_JS = METHOD(function() {
-	'use strict';
+global.MINIFY_JS = METHOD(() => {
 
-	var
-	// uglify-js
-	uglifyJS = require('hanul-uglify-js');
+	let UglifyJS = require('hanul-uglify-js');
 
 	return {
 
-		run : function(code) {
+		run : (code) => {
 			//REQUIRED: code
 			
 			code = code.toString();
 			
 			try {
 
-    			return uglifyJS.minify(code, {
+    			return UglifyJS.minify(code, {
     				fromString : true,
     				mangle : true,
     				output : {
@@ -6850,8 +6221,7 @@ global.MINIFY_JS = METHOD(function() {
  */
 global.DELETE = METHOD({
 
-	run : function(urlOrParams, responseListenerOrListeners) {
-		'use strict';
+	run : (urlOrParams, responseListenerOrListeners) => {
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
 		//OPTIONAL: urlOrParams.host
@@ -6881,25 +6251,16 @@ global.DELETE = METHOD({
 /**
  * HTTP 리소스를 다운로드합니다.
  */
-global.DOWNLOAD = METHOD(function() {
-	'use strict';
+global.DOWNLOAD = METHOD(() => {
 
-	var
-	//IMPORT: HTTP
-	HTTP = require('http'),
-
-	//IMPORT: HTTPS
-	HTTPS = require('https'),
-	
-	//IMPORT: URL
-	URL = require('url'),
-	
-	//IMPORT: Querystring
-	Querystring = require('querystring');
+	let HTTP = require('http');
+	let HTTPS = require('https');
+	let URL = require('url');
+	let Querystring = require('querystring');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params
 			//REQUIRED: params.method
 			//OPTIONAL: params.isSecure	HTTPS 프로토콜인지 여부
@@ -6916,51 +6277,23 @@ global.DOWNLOAD = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.success
 			//OPTIONAL: callbackOrHandlers.error
 
-			var
-			// method
-			method = params.method,
+			let method = params.method;
+			let isSecure = params.isSecure;
+			let host = params.host;
+			let port = params.port;
+			let uri = params.uri;
+			let url = params.url;
+			let paramStr = params.paramStr;
+			let _params = params.params;
+			let data = params.data;
+			let headers = params.headers;
+			let path = params.path;
 			
-			// is secure
-			isSecure = params.isSecure,
+			let errorHandler;
+			let callback;
 			
-			// host
-			host = params.host,
-
-			// port
-			port = params.port,
-
-			// uri
-			uri = params.uri,
-			
-			// url
-			url = params.url,
-
-			// param str
-			paramStr = params.paramStr,
-
-			// params
-			_params = params.params,
-
-			// data
-			data = params.data,
-			
-			// headers
-			headers = params.headers,
-			
-			// path
-			path = params.path,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback,
-			
-			// url data
-			urlData,
-
-			// http request
-			req;
+			let urlData;
+			let req;
 			
 			if (url !== undefined) {
 				urlData = URL.parse(url);
@@ -7005,11 +6338,7 @@ global.DOWNLOAD = METHOD(function() {
 				port : port,
 				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
 				headers : headers
-			}, function(httpResponse) {
-				
-				var
-				// data
-				data;
+			}, (httpResponse) => {
 				
 				// redirect.
 				if (httpResponse.statusCode === 301 || httpResponse.statusCode === 302) {
@@ -7026,12 +6355,12 @@ global.DOWNLOAD = METHOD(function() {
 					
 				} else {
 				
-					data = [];
+					let data = [];
 	
-					httpResponse.on('data', function(chunk) {
+					httpResponse.on('data', (chunk) => {
 						data.push(chunk);
 					});
-					httpResponse.on('end', function() {
+					httpResponse.on('end', () => {
 						
 						WRITE_FILE({
 							path : path,
@@ -7044,11 +6373,9 @@ global.DOWNLOAD = METHOD(function() {
 				}
 			});
 
-			req.on('error', function(error) {
+			req.on('error', (error) => {
 
-				var
-				// error msg
-				errorMsg = error.toString();
+				let errorMsg = error.toString();
 
 				if (errorHandler !== undefined) {
 					errorHandler(errorMsg);
@@ -7065,8 +6392,7 @@ global.DOWNLOAD = METHOD(function() {
  */
 global.GET = METHOD({
 	
-	run : function(urlOrParams, responseListenerOrListeners) {
-		'use strict';
+	run : (urlOrParams, responseListenerOrListeners) => {
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
 		//OPTIONAL: urlOrParams.host
@@ -7098,8 +6424,7 @@ global.GET = METHOD({
  */
 global.POST = METHOD({
 
-	run : function(urlOrParams, responseListenerOrListeners) {
-		'use strict';
+	run : (urlOrParams, responseListenerOrListeners) => {
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
 		//OPTIONAL: urlOrParams.host
@@ -7131,8 +6456,7 @@ global.POST = METHOD({
  */
 global.PUT = METHOD({
 
-	run : function(urlOrParams, responseListenerOrListeners) {
-		'use strict';
+	run : (urlOrParams, responseListenerOrListeners) => {
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
 		//OPTIONAL: urlOrParams.host
@@ -7162,25 +6486,16 @@ global.PUT = METHOD({
 /**
  * HTTP 요청을 보냅니다.
  */
-global.REQUEST = METHOD(function(m) {
-	'use strict';
+global.REQUEST = METHOD((m) => {
 
-	var
-	//IMPORT: HTTP
-	HTTP = require('http'),
-
-	//IMPORT: HTTPS
-	HTTPS = require('https'),
-	
-	//IMPORT: URL
-	URL = require('url'),
-	
-	//IMPORT: Querystring
-	Querystring = require('querystring');
+	let HTTP = require('http');
+	let HTTPS = require('https');
+	let URL = require('url');
+	let Querystring = require('querystring');
 
 	return {
 
-		run : function(params, responseListenerOrListeners) {
+		run : (params, responseListenerOrListeners) => {
 			//REQUIRED: params
 			//REQUIRED: params.method	요청 메소드. GET, POST, PUT, DELETE를 설정할 수 있습니다.
 			//OPTIONAL: params.isSecure	HTTPS 프로토콜인지 여부
@@ -7196,48 +6511,22 @@ global.REQUEST = METHOD(function(m) {
 			//OPTIONAL: responseListenerOrListeners.error
 			//OPTIONAL: responseListenerOrListeners.success
 
-			var
-			// method
-			method = params.method,
+			let method = params.method;
+			let isSecure = params.isSecure;
+			let host = params.host;
+			let port = params.port;
+			let uri = params.uri;
+			let url = params.url;
+			let paramStr = params.paramStr;
+			let _params = params.params;
+			let data = params.data;
+			let headers = params.headers;
 			
-			// is secure
-			isSecure = params.isSecure,
+			let errorListener;
+			let responseListener;
 			
-			// host
-			host = params.host,
-
-			// port
-			port = params.port,
-
-			// uri
-			uri = params.uri,
-			
-			// url
-			url = params.url,
-
-			// param str
-			paramStr = params.paramStr,
-
-			// params
-			_params = params.params,
-
-			// data
-			data = params.data,
-			
-			// headers
-			headers = params.headers,
-
-			// error listener.
-			errorListener,
-
-			// response listener.
-			responseListener,
-			
-			// url data
-			urlData,
-
-			// http request
-			req;
+			let urlData;
+			let req;
 
 			method = method.toUpperCase();
 			
@@ -7289,11 +6578,7 @@ global.REQUEST = METHOD(function(m) {
 					port : port,
 					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
 					headers : headers
-				}, function(httpResponse) {
-
-					var
-					// content
-					content;
+				}, (httpResponse) => {
 					
 					// redirect.
 					if (httpResponse.statusCode === 301 || httpResponse.statusCode === 302) {
@@ -7307,13 +6592,13 @@ global.REQUEST = METHOD(function(m) {
 						
 					} else {
 						
-						content = '';
+						let content = '';
 
 						httpResponse.setEncoding('utf-8');
-						httpResponse.on('data', function(str) {
+						httpResponse.on('data', (str) => {
 							content += str;
 						});
-						httpResponse.on('end', function() {
+						httpResponse.on('end', () => {
 							if (responseListener !== undefined) {
 								responseListener(content, httpResponse.headers);
 							}
@@ -7331,17 +6616,15 @@ global.REQUEST = METHOD(function(m) {
 					path : '/' + (uri === undefined ? '' : uri) + (method === 'DELETE' ? '?' + paramStr : ''),
 					method : method,
 					headers : headers
-				}, function(httpResponse) {
+				}, (httpResponse) => {
 
-					var
-					// content
-					content = '';
+					let content = '';
 
 					httpResponse.setEncoding('utf-8');
-					httpResponse.on('data', function(str) {
+					httpResponse.on('data', (str) => {
 						content += str;
 					});
-					httpResponse.on('end', function() {
+					httpResponse.on('end', () => {
 						if (responseListener !== undefined) {
 							responseListener(content, httpResponse.headers);
 						}
@@ -7354,11 +6637,9 @@ global.REQUEST = METHOD(function(m) {
 				req.end();
 			}
 
-			req.on('error', function(error) {
+			req.on('error', (error) => {
 
-				var
-				// error msg
-				errorMsg = error.toString();
+				let errorMsg = error.toString();
 
 				if (errorListener !== undefined) {
 					errorListener(errorMsg);
@@ -7375,8 +6656,7 @@ global.REQUEST = METHOD(function(m) {
  */
 global.CONNECT_TO_SOCKET_SERVER = METHOD({
 
-	run : function(params, connectionListenerOrListeners) {
-		'use strict';
+	run : (params, connectionListenerOrListeners) => {
 		//REQUIRED: params
 		//REQUIRED: params.host
 		//REQUIRED: params.port
@@ -7384,48 +6664,24 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 		//REQUIRED: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
 
-		var
-		// host
-		host = params.host,
+		let host = params.host;
+		let port = params.port;
 
-		// port
-		port = params.port,
+		let connectionListener;
+		let errorListener;
 
-		// connection listener
-		connectionListener,
+		let Net = require('net');
+		
+		let isConnected;
+		
+		let methodMap = {};
+		let sendKey = 0;
+		
+		let receivedStr = '';
 
-		// error listener
-		errorListener,
-
-		// net
-		net = require('net'),
-
-		// connection
-		conn,
-
-		// is connected
-		isConnected,
-
-		// method map
-		methodMap = {},
-
-		// send key
-		sendKey = 0,
-
-		// received string
-		receivedStr = '',
-
-		// on.
-		on,
-
-		// off.
-		off,
-
-		// send.
-		send,
-
-		// run methods.
-		runMethods;
+		let on;
+		let off;
+		let send;
 
 		if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
 			connectionListener = connectionListenerOrListeners;
@@ -7434,21 +6690,19 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			errorListener = connectionListenerOrListeners.error;
 		}
 
-		runMethods = function(methodName, data, sendKey) {
+		let runMethods = (methodName, data, sendKey) => {
 
-			var
-			// methods
-			methods = methodMap[methodName];
+			let methods = methodMap[methodName];
 
 			if (methods !== undefined) {
 
-				EACH(methods, function(method) {
+				EACH(methods, (method) => {
 
 					// run method.
 					method(data,
 
 					// ret.
-					function(retData) {
+					(retData) => {
 
 						if (send !== undefined && sendKey !== undefined) {
 
@@ -7462,23 +6716,21 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			}
 		};
 
-		conn = net.connect({
+		let conn = Net.connect({
 			host : host,
 			port : port
-		}, function() {
+		}, () => {
 
 			isConnected = true;
 
 			connectionListener(
 
 			// on.
-			on = function(methodName, method) {
+			on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -7488,13 +6740,11 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			},
 
 			// off.
-			off = function(methodName, method) {
+			off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -7512,21 +6762,14 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			},
 
 			// send to server.
-			send = function(methodNameOrParams, callback) {
+			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//REQUIRED: methodNameOrParams.methodName
 				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: callback
 				
-				var
-				// method name
-				methodName,
-				
-				// data
-				data,
-				
-				// callback name
-				callbackName;
+				let methodName;
+				let data;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -7545,10 +6788,10 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 	
 					if (callback !== undefined) {
 						
-						callbackName = '__CALLBACK_' + sendKey;
+						let callbackName = '__CALLBACK_' + sendKey;
 	
 						// on callback.
-						on(callbackName, function(data) {
+						on(callbackName, (data) => {
 	
 							// run callback.
 							callback(data);
@@ -7563,7 +6806,7 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			},
 
 			// disconnect.
-			function() {
+			() => {
 				if (conn !== undefined) {
 					conn.end();
 					conn = undefined;
@@ -7572,25 +6815,15 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 		});
 
 		// when receive data
-		conn.on('data', function(content) {
+		conn.on('data', (content) => {
 
-			var
-			// str
-			str,
-
-			// index
-			index,
-
-			// params
-			params;
+			let index;
 
 			receivedStr += content.toString();
 
-			while (( index = receivedStr.indexOf('\r\n')) !== -1) {
-
-				str = receivedStr.substring(0, index);
-
-				params = PARSE_STR(str);
+			while ((index = receivedStr.indexOf('\r\n')) !== -1) {
+				
+				let params = PARSE_STR(receivedStr.substring(0, index));
 
 				if (params !== undefined) {
 					runMethods(params.methodName, params.data, params.sendKey);
@@ -7601,16 +6834,14 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 		});
 
 		// when disconnected
-		conn.on('close', function() {
+		conn.on('close', () => {
 			runMethods('__DISCONNECTED');
 		});
 
 		// when error
-		conn.on('error', function(error) {
+		conn.on('error', (error) => {
 
-			var
-			// error msg
-			errorMsg = error.toString();
+			let errorMsg = error.toString();
 
 			if (isConnected !== true) {
 
@@ -7632,19 +6863,14 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
  */
 global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
 
-	init : function(inner, self, params, connectionListener) {
-		'use strict';
+	init : (inner, self, params, connectionListener) => {
 		//REQUIRED: params
 		//OPTIONAL: params.socketServerPort
 		//OPTIONAL: params.webServer
 		//REQUIRED: connectionListener
 
-		var
-		// socket server port
-		socketServerPort = params.socketServerPort,
-		
-		// web server
-		webServer = params.webServer;
+		let socketServerPort = params.socketServerPort;
+		let webServer = params.webServer;
 
 		if (socketServerPort !== undefined) {
 
@@ -7665,60 +6891,40 @@ global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
  */
 global.SOCKET_SERVER = METHOD({
 
-	run : function(port, connectionListener) {
-		'use strict';
+	run : (port, connectionListener) => {
 		//REQUIRED: port
 		//REQUIRED: connectionListener
 
-		var
-		// net
-		net = require('net'),
-
-		// server
-		server = net.createServer(function(conn) {
-
-			var
-			// method map
-			methodMap = {},
-
-			// send key
-			sendKey = 0,
-
-			// received string
-			receivedStr = '',
+		let Net = require('net');
+		
+		let server = Net.createServer((conn) => {
 			
-			// client info
-			clientInfo,
+			let methodMap = {};
+			let sendKey = 0;
+			
+			let receivedStr = '';
+			
+			let clientInfo;
 
-			// on.
-			on,
-
-			// off.
-			off,
-
-			// send.
-			send,
-
-			// run methods.
-			runMethods = function(methodName, data, sendKey) {
-
-				var
-				// methods
-				methods;
+			let on;
+			let off;
+			let send;
+			
+			let runMethods = (methodName, data, sendKey) => {
 				
 				try {
 					
-					methods = methodMap[methodName];
+					let methods = methodMap[methodName];
 
 					if (methods !== undefined) {
 	
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 	
 							// run method.
 							method(data,
 	
 							// ret.
-							function(retData) {
+							(retData) => {
 	
 								if (sendKey !== undefined) {
 	
@@ -7743,25 +6949,15 @@ global.SOCKET_SERVER = METHOD({
 			};
 
 			// when receive data
-			conn.on('data', function(content) {
+			conn.on('data', (content) => {
 
-				var
-				// str
-				str,
-
-				// index
-				index,
-
-				// params
-				params;
+				let index;
 
 				receivedStr += content.toString();
 
-				while (( index = receivedStr.indexOf('\r\n')) !== -1) {
-
-					str = receivedStr.substring(0, index);
-
-					params = PARSE_STR(str);
+				while ((index = receivedStr.indexOf('\r\n')) !== -1) {
+					
+					let params = PARSE_STR(receivedStr.substring(0, index));
 
 					if (params !== undefined) {
 						runMethods(params.methodName, params.data, params.sendKey);
@@ -7774,7 +6970,7 @@ global.SOCKET_SERVER = METHOD({
 			});
 
 			// when disconnected
-			conn.on('close', function() {
+			conn.on('close', () => {
 				
 				runMethods('__DISCONNECTED');
 				
@@ -7783,15 +6979,11 @@ global.SOCKET_SERVER = METHOD({
 			});
 
 			// when error
-			conn.on('error', function(error) {
-
-				var
-				// error msg
-				errorMsg;
+			conn.on('error', (error) => {
 				
 				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE' && error.code !== 'ETIMEDOUT' && error.code !== 'ENETUNREACH' && error.code !== 'EHOSTUNREACH' && error.code !== 'ECONNREFUSED' && error.code !== 'EINVAL') {
 					
-					errorMsg = error.toString();
+					let errorMsg = error.toString();
 					
 					SHOW_ERROR('SOCKET_SERVER', errorMsg);
 					
@@ -7810,13 +7002,11 @@ global.SOCKET_SERVER = METHOD({
 			},
 
 			// on.
-			on = function(methodName, method) {
+			on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -7826,13 +7016,11 @@ global.SOCKET_SERVER = METHOD({
 			},
 
 			// off.
-			off = function(methodName, method) {
+			off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -7850,21 +7038,14 @@ global.SOCKET_SERVER = METHOD({
 			},
 
 			// send to client.
-			send = function(methodNameOrParams, callback) {
+			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//REQUIRED: methodNameOrParams.methodName	클라이언트에 on 함수로 설정된 메소드 이름
 				//REQUIRED: methodNameOrParams.data			전송할 데이터
 				//OPTIONAL: callback
 
-				var
-				// method name
-				methodName,
-				
-				// data
-				data,
-				
-				// callback name
-				callbackName;
+				let methodName;
+				let data;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -7885,10 +7066,10 @@ global.SOCKET_SERVER = METHOD({
 					
 					else {
 						
-						callbackName = '__CALLBACK_' + sendKey;
+						let callbackName = '__CALLBACK_' + sendKey;
 	
 						// on callback.
-						on(callbackName, function(data) {
+						on(callbackName, (data) => {
 	
 							// run callback.
 							callback(data);
@@ -7911,7 +7092,7 @@ global.SOCKET_SERVER = METHOD({
 			},
 
 			// disconnect.
-			function() {
+			() => {
 				if (conn !== undefined) {
 					conn.end();
 					conn = undefined;
@@ -7931,42 +7112,28 @@ global.SOCKET_SERVER = METHOD({
  */
 global.UDP_SERVER = CLASS({
 
-	init : function(inner, self, port, requestListener) {
-		'use strict';
+	init : (inner, self, port, requestListener) => {
 		//REQUIRED: port
 		//REQUIRED: requestListener
 
-		var
-		//IMPORT: dgram
-		dgram = require('dgram'),
+		let dgram = require('dgram');
+		let server = dgram.createSocket('udp6');
 		
-		// server
-		server = dgram.createSocket('udp6'),
-		
-		// send.
-		send;
-		
-		self.send = send = function(params) {
+		let send = self.send = (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.ip
 			//REQUIRED: params.port
 			//REQUIRED: params.content
 			
-			var
-			// message
-			message = new Buffer(params.content);
+			let message = new Buffer(params.content);
 			
 			server.send(message, 0, message.length, params.port, params.ip);
 		};
 		
-		server.on('message', function(message, nativeRequestInfo) {
+		server.on('message', (message, nativeRequestInfo) => {
 			
-			var
-			// ip
-			ip = nativeRequestInfo.address,
-			
-			// port
-			port = nativeRequestInfo.port;
+			let ip = nativeRequestInfo.address;
+			let port = nativeRequestInfo.port;
 			
 			requestListener(
 			
@@ -7981,7 +7148,7 @@ global.UDP_SERVER = CLASS({
 			message.toString(),
 			
 			// response.
-			function(content) {
+			(content) => {
 				
 				send({
 					ip : ip,
@@ -7991,7 +7158,7 @@ global.UDP_SERVER = CLASS({
 			});
 		});
 		
-		server.on('listening', function() {
+		server.on('listening', () => {
 			console.log('[UDP_SERVER] UDP 서버가 실행중입니다. (포트:' + port + ')');
 		});
 		
@@ -8002,36 +7169,19 @@ global.UDP_SERVER = CLASS({
 /**
  * 웹 서버를 생성하는 클래스
  */
-global.WEB_SERVER = CLASS(function(cls) {
-	'use strict';
+global.WEB_SERVER = CLASS((cls) => {
 
-	var
-	// DEFAULT_MAX_UPLOAD_FILE_MB
-	DEFAULT_MAX_UPLOAD_FILE_MB = 10,
+	let DEFAULT_MAX_UPLOAD_FILE_MB = 10;
 	
-	//IMPORT: http
-	http = require('http'),
-	
-	//IMPORT: https
-	https = require('https'),
-	
-	//IMPORT: fs
-	fs = require('fs'),
-	
-	//IMPORT: path
-	path = require('path'),
+	let HTTP = require('http');
+	let HTTPS = require('https');
+	let FS = require('fs');
+	let Path = require('path');
+	let Querystring = require('querystring');
+	let ZLib = require('zlib');
+	let IncomingForm = require('formidable').IncomingForm;
 
-	//IMPORT: querystring
-	querystring = require('querystring'),
-
-	//IMPORT: zlib
-	zlib = require('zlib'),
-	
-	//IMPORT: IncomingForm
-	IncomingForm = require('formidable').IncomingForm,
-
-	// get content type from extension.
-	getContentTypeFromExtension = function(extension) {
+	let getContentTypeFromExtension = (extension) => {
 		
 		// png image
 		if (extension === 'png') {
@@ -8114,10 +7264,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 		}
 
 		return 'application/octet-stream';
-	},
+	};
 
-	// get encoding from content type.
-	getEncodingFromContentType = function(contentType) {
+	let getEncodingFromContentType = (contentType) => {
 
 		if (contentType === 'application/javascript') {
 			return 'utf-8';
@@ -8180,16 +7329,13 @@ global.WEB_SERVER = CLASS(function(cls) {
 		}
 
 		return 'binary';
-	},
+	};
 	
-	// create cookie str array.
-	createCookieStrArray = function(data) {
+	let createCookieStrArray = (data) => {
 		
-		var
-		// strs
-		strs = [];
+		let strs = [];
 
-		EACH(data, function(value, name) {
+		EACH(data, (value, name) => {
 			if (CHECK_IS_DATA(value) === true) {
 				strs.push(name + '=' + encodeURIComponent(value.value)
 					+ (value.expireSeconds === undefined ? '' : '; expires=' + new Date(Date.now() + value.expireSeconds * 1000).toGMTString())
@@ -8201,27 +7347,19 @@ global.WEB_SERVER = CLASS(function(cls) {
 		});
 
 		return strs;
-	},
+	};
 	
-	// parse cookie str.
-	parseCookieStr = function(cookieStr) {
+	let parseCookieStr = (cookieStr) => {
 		
-		var
-		// splits
-		splits,
-
-		// data
-		data = {};
+		let data = {};
 
 		if (cookieStr !== undefined) {
 
-			splits = cookieStr.split(';');
+			let splits = cookieStr.split(';');
 
-			EACH(splits, function(cookie) {
+			EACH(splits, (cookie) => {
 
-				var
-				// parts
-				parts = cookie.split('=');
+				let parts = cookie.split('=');
 
 				data[parts[0].trim()] = decodeURIComponent(parts[1]);
 			});
@@ -8232,7 +7370,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 	
 	return {
 
-		init : function(inner, self, portOrParams, requestListenerOrHandlers) {
+		init : (inner, self, portOrParams, requestListenerOrHandlers) => {
 			//REQUIRED: portOrParams
 			//OPTIONAL: portOrParams.port					HTTP 서버 포트
 			//OPTIONAL: portOrParams.securedPort			HTTPS 서버 포트
@@ -8252,69 +7390,26 @@ global.WEB_SERVER = CLASS(function(cls) {
 			//OPTIONAL: requestListenerOrHandlers.uploadOverFileSize	업로드 하는 파일의 크기가 maxUploadFileMB보다 클 경우
 			//OPTIONAL: requestListenerOrHandlers.uploadSuccess			업로드가 정상적으로 완료된 경우
 
-			var
-			// port
-			port,
-
-			// secured port
-			securedPort,
-
-			// secured key file path
-			securedKeyFilePath,
-
-			// secured cert file path
-			securedCertFilePath,
+			let port;
+			let securedPort;
+			let securedKeyFilePath;
+			let securedCertFilePath;
+			let originRootPath;
+			let version;
+			let preprocessors;
+			let uploadURI;
+			let uploadPath;
+			let maxUploadFileMB;
 			
-			// origin root path
-			originRootPath,
-
-			// version
-			version,
+			let notExistsResourceHandler;
+			let errorHandler;
+			let requestListener;
+			let uploadProgressHandler;
+			let uploadOverFileSizeHandler;
+			let uploadSuccessHandler;
 			
-			// preprocessors
-			preprocessors,
-			
-			// upload uri
-			uploadURI,
-			
-			// upload path
-			uploadPath,
-			
-			// max upload file mb
-			maxUploadFileMB,
-
-			// not exists resource handler.
-			notExistsResourceHandler,
-			
-			// error handler.
-			errorHandler,
-			
-			// request listener.
-			requestListener,
-			
-			// upload progress handler.
-			uploadProgressHandler,
-			
-			// upload over file size handler.
-			uploadOverFileSizeHandler,
-			
-			// upload success handler.
-			uploadSuccessHandler,
-
-			// resource caches
-			resourceCaches = {},
-			
-			// native server
-			nativeServer,
-
-			// serve.
-			serve,
-			
-			// get native server.
-			getNativeServer,
-			
-			// add preprocessor.
-			addPreprocessor;
+			let resourceCaches = {};
+			let nativeServer;
 
 			// init params.
 			if (CHECK_IS_DATA(portOrParams) !== true) {
@@ -8353,29 +7448,16 @@ global.WEB_SERVER = CLASS(function(cls) {
 				}
 			}
 
-			serve = function(nativeReq, nativeRes, isSecure) {
+			let serve = (nativeReq, nativeRes, isSecure) => {
 
-				var
-				// headers
-				headers = nativeReq.headers,
-
-				// uri
-				uri = nativeReq.url,
+				let headers = nativeReq.headers;
+				let uri = nativeReq.url;
+				let method = nativeReq.method.toUpperCase();
+				let ip = headers['x-forwarded-for'];
+				let acceptEncoding = headers['accept-encoding'];
 				
-				// is upload uri
-				isUploadURI,
-
-				// method
-				method = nativeReq.method.toUpperCase(),
-
-				// ip
-				ip = headers['x-forwarded-for'],
-
-				// accept encoding
-				acceptEncoding = headers['accept-encoding'],
-
-				// param str
-				paramStr;
+				let paramStr;
+				let isUploadURI;
 				
 				if (ip === undefined) {
 					ip = nativeReq.connection.remoteAddress;
@@ -8398,17 +7480,15 @@ global.WEB_SERVER = CLASS(function(cls) {
 				}) === true : uploadURI === uri;
 
 				NEXT([
-				function(next) {
-					
-					var
-					// is appended param string
-					isAppendedParamStr;
+				(next) => {
 					
 					if (method === 'GET' || isUploadURI === true) {
 						next();
 					} else {
 						
-						nativeReq.on('data', function(data) {
+						let isAppendedParamStr;
+						
+						nativeReq.on('data', (data) => {
 							
 							if (isAppendedParamStr !== true) {
 								if (paramStr === undefined) {
@@ -8422,44 +7502,24 @@ global.WEB_SERVER = CLASS(function(cls) {
 							paramStr += data;
 						});
 
-						nativeReq.on('end', function() {
+						nativeReq.on('end', () => {
 							next();
 						});
 					}
 				},
 
-				function() {
-					return function() {
+				() => {
+					return () => {
 						
-						var
-						// params
-						params = querystring.parse(paramStr),
+						let params = Querystring.parse(paramStr);
+						let data;
+						let requestInfo;
+						let rootPath = originRootPath;
+						let isGoingOn;
+						let originalURI = uri;
+						let overrideResponseInfo = {};
 						
-						// data
-						data,
-						
-						// request info
-						requestInfo,
-						
-						// root path
-						rootPath = originRootPath,
-						
-						// is going on
-						isGoingOn,
-						
-						// original uri
-						originalURI = uri,
-						
-						// overriding response info
-						overrideResponseInfo = {},
-						
-						// response.
-						response,
-						
-						// response error.
-						responseError;
-						
-						EACH(params, function(param, name) {
+						EACH(params, (param, name) => {
 							if (CHECK_IS_ARRAY(param) === true) {
 								params[name] = param[param.length - 1];
 							}
@@ -8483,7 +7543,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 							ip : ip
 						};
 						
-						response = function(contentOrParams) {
+						let response = (contentOrParams) => {
 							//REQUIRED: contentOrParams
 							//OPTIONAL: contentOrParams.statusCode		HTTP 응답 상태
 							//OPTIONAL: contentOrParams.headers			응답 헤더
@@ -8491,53 +7551,27 @@ global.WEB_SERVER = CLASS(function(cls) {
 							//OPTIONAL: contentOrParams.contentType		응답하는 컨텐츠의 종류
 							//OPTIONAL: contentOrParams.buffer			응답 내용을 Buffer형으로 전달
 							//OPTIONAL: contentOrParams.content			응답 내용을 문자열로 전달
-							//OPTIONAL: contentOrParams.stream			fs.createReadStream와 같은 함수로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
+							//OPTIONAL: contentOrParams.stream			FS.createReadStream와 같은 함수로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
 							//OPTIONAL: contentOrParams.totalSize		stream으로 응답을 전달하는 경우 스트림의 전체 길이
 							//OPTIONAL: contentOrParams.startPosition	stream으로 응답을 전달하는 경우 전달할 시작 위치
 							//OPTIONAL: contentOrParams.endPosition		stream으로 응답을 전달하는 경우 전달할 끝 위치
 							//OPTIONAL: contentOrParams.encoding		응답 인코딩
 							//OPTIONAL: contentOrParams.version			지정된 버전으로 웹 브라우저에 리소스를 캐싱합니다.
 							//OPTIONAL: contentOrParams.isFinal			리소스가 결코 변경되지 않는 경우 true로 지정합니다. 그러면 version과 상관 없이 캐싱을 수행합니다.
-
-							var
-							// status code
-							statusCode,
-
-							// cookies
-							cookies,
-
-							// headers
-							headers,
-
-							// content type
-							contentType,
-
-							// content
-							content,
-
-							// buffer
-							buffer,
 							
-							// stream
-							stream,
-							
-							// total size
-							totalSize,
-							
-							// start position
-							startPosition,
-							
-							// end position
-							endPosition,
-
-							// encoding
-							encoding,
-
-							// version
-							version,
-
-							// is final
-							isFinal;
+							let statusCode;
+							let cookies;
+							let headers;
+							let contentType;
+							let content;
+							let buffer;
+							let stream;
+							let totalSize;
+							let startPosition;
+							let endPosition;
+							let encoding;
+							let version;
+							let isFinal;
 
 							if (requestInfo.isResponsed !== true) {
 
@@ -8612,8 +7646,8 @@ global.WEB_SERVER = CLASS(function(cls) {
 									if (acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
 	
 										headers['Content-Encoding'] = 'gzip';
-	
-										zlib.gzip(buffer !== undefined ? buffer : String(content), function(error, buffer) {
+
+										ZLib.gzip(buffer !== undefined ? buffer : String(content), (error, buffer) => {
 											nativeRes.writeHead(statusCode, headers);
 											nativeRes.end(buffer, encoding);
 										});
@@ -8630,7 +7664,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 							}
 						};
 						
-						responseError = function(errorMsg) {
+						let responseError = (errorMsg) => {
 							
 							if (errorHandler !== undefined) {
 								isGoingOn = errorHandler(errorMsg, requestInfo, response);
@@ -8652,34 +7686,28 @@ global.WEB_SERVER = CLASS(function(cls) {
 						// when upload request
 						if (isUploadURI === true) {
 							
-							CREATE_FOLDER(uploadPath, function() {
-				
-								var
-								// form
-								form,
-				
-								// file data set
-								fileDataSet;
-				
+							CREATE_FOLDER(uploadPath, () => {
+								
 								// serve upload.
 								if (method === 'POST') {
 				
-									form = new IncomingForm();
-									fileDataSet = [];
+									let form = new IncomingForm();
+									
+									let fileDataSet = [];
 									
 									form.uploadDir = uploadPath;
 									
-									form.on('progress', function(bytesRecieved, bytesExpected) {
+									form.on('progress', (bytesRecieved, bytesExpected) => {
 										
 										if (uploadProgressHandler !== undefined) {
 											uploadProgressHandler(params, bytesRecieved, bytesExpected, requestInfo);
 										}
 										
-									}).on('field', function(name, value) {
+									}).on('field', (name, value) => {
 				
 										params[name] = value;
 				
-									}).on('file', function(name, fileInfo) {
+									}).on('file', (name, fileInfo) => {
 				
 										fileDataSet.push({
 											path : fileInfo.path,
@@ -8689,32 +7717,26 @@ global.WEB_SERVER = CLASS(function(cls) {
 											lastModifiedTime : fileInfo.lastModifiedDate
 										});
 				
-									}).on('end', function() {
+									}).on('end', () => {
 										
 										NEXT(fileDataSet, [
-										function(fileData, next) {
+										(fileData, next) => {
 											
-											var
-											// path
-											path = fileData.path,
-											
-											// file size
-											fileSize = fileData.size,
-											
-											// file type
-											fileType = fileData.type;
+											let path = fileData.path;
+											let fileSize = fileData.size;
+											let fileType = fileData.type;
 											
 											fileData.ip = ip;
 											
 											if (fileSize > maxUploadFileMB * 1024 * 1024) {
 				
 												NEXT(fileDataSet, [
-												function(fileData, next) {
+												(fileData, next) => {
 													REMOVE_FILE(fileData.path, next);
 												},
 				
-												function() {
-													return function() {
+												() => {
+													return () => {
 														if (uploadOverFileSizeHandler !== undefined) {
 															uploadOverFileSizeHandler(params, maxUploadFileMB, requestInfo, response);
 														}
@@ -8727,10 +7749,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 											if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
 				
 												IMAGEMAGICK_READ_METADATA(path, {
-													error : function() {
+													error : () => {
 														next(fileData);
 													},
-													success : function(metadata) {
+													success : (metadata) => {
 				
 														if (metadata.exif !== undefined) {
 				
@@ -8752,13 +7774,13 @@ global.WEB_SERVER = CLASS(function(cls) {
 											}
 										},
 				
-										function() {
-											return function() {
+										() => {
+											return () => {
 												uploadSuccessHandler(params, fileDataSet, requestInfo, response);
 											};
 										}]);
 										
-									}).on('error', function(error) {
+									}).on('error', (error) => {
 										responseError(error.toString());
 									});
 				
@@ -8771,13 +7793,13 @@ global.WEB_SERVER = CLASS(function(cls) {
 						else {
 							
 							NEXT([
-							function(next) {
+							(next) => {
 			
 								if (requestListener !== undefined) {
 									
-									isGoingOn = requestListener(requestInfo, response, function(newRootPath) {
+									isGoingOn = requestListener(requestInfo, response, (newRootPath) => {
 										rootPath = newRootPath;
-									}, function(_overrideResponseInfo) {
+									}, (_overrideResponseInfo) => {
 			
 										if (_overrideResponseInfo !== undefined) {
 											overrideResponseInfo = _overrideResponseInfo;
@@ -8798,15 +7820,15 @@ global.WEB_SERVER = CLASS(function(cls) {
 								}
 							},
 			
-							function() {
-								return function() {
+							() => {
+								return () => {
 									
 									// stream audio or video.
 									if (headers.range !== undefined) {
 										
 										GET_FILE_INFO(rootPath + '/' + uri, {
 											
-											notExists : function() {
+											notExists : () => {
 											
 												response(EXTEND({
 													origin : {
@@ -8816,30 +7838,21 @@ global.WEB_SERVER = CLASS(function(cls) {
 												}));
 											},
 											
-											success : function(fileInfo) {
+											success : (fileInfo) => {
 												
-												var
-												// positions
-												positions = headers.range.replace(/bytes=/, '').split('-'),
+												let positions = headers.range.replace(/bytes=/, '').split('-');
+												let totalSize = fileInfo.size;
+												let startPosition = INTEGER(positions[0]);
+												let endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]);
 												
-												// total size
-												totalSize = fileInfo.size,
-												
-												// start position
-												startPosition = INTEGER(positions[0]),
-												
-												// end position
-												endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]),
-												
-												// stream
-												stream = fs.createReadStream(rootPath + '/' + uri, {
+												let stream = FS.createReadStream(rootPath + '/' + uri, {
 													start : startPosition,
 													end : endPosition
-												}).on('open', function() {
+												}).on('open', () => {
 													
 													response(EXTEND({
 														origin : {
-															contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+															contentType : getContentTypeFromExtension(Path.extname(uri).substring(1)),
 															totalSize : totalSize,
 															startPosition : startPosition,
 															endPosition : endPosition,
@@ -8848,11 +7861,11 @@ global.WEB_SERVER = CLASS(function(cls) {
 														extend : overrideResponseInfo
 													}));
 													
-												}).on('error', function(error) {
+												}).on('error', (error) => {
 													
 													response(EXTEND({
 														origin : {
-															contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+															contentType : getContentTypeFromExtension(Path.extname(uri).substring(1)),
 															totalSize : totalSize,
 															startPosition : startPosition,
 															endPosition : endPosition,
@@ -8890,7 +7903,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 											origin : {
 												statusCode : 302,
 												headers : {
-													'Location' : '/' + originalURI + '?' + querystring.stringify(COMBINE([params, {
+													'Location' : '/' + originalURI + '?' + Querystring.stringify(COMBINE([params, {
 														version : version
 													}]))
 												}
@@ -8903,11 +7916,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 									else if (rootPath !== undefined && method === 'GET') {
 										
 										NEXT([
-										function(next) {
+										(next) => {
 			
-											var
-											// resource cache
-											resourceCache = resourceCaches[originalURI];
+											let resourceCache = resourceCaches[originalURI];
 			
 											if (resourceCache !== undefined) {
 												next(resourceCache.buffer, resourceCache.contentType);
@@ -8915,13 +7926,13 @@ global.WEB_SERVER = CLASS(function(cls) {
 												
 												// serve file.
 												READ_FILE(rootPath + '/' + uri, {
-			
-													notExists : function() {
+													
+													notExists : () => {
 			
 														// not found file, so serve index.
 														READ_FILE(rootPath + (uri === '' ? '' : ('/' + uri)) + '/index.html', {
 			
-															notExists : function() {
+															notExists : () => {
 																
 																if (notExistsResourceHandler !== undefined) {
 																	isGoingOn = notExistsResourceHandler(rootPath + '/' + uri, requestInfo, response);
@@ -8939,7 +7950,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 															},
 															
 															error : responseError,
-															success : function(buffer) {
+															success : (buffer) => {
 																next(buffer, 'text/html');
 															}
 														});
@@ -8951,12 +7962,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 											}
 										},
 			
-										function() {
-											return function(buffer, contentType) {
+										() => {
+											return (buffer, contentType) => {
 												
-												var
-												// extension
-												extension = path.extname(uri).substring(1);
+												let extension = Path.extname(uri).substring(1);
 												
 												if (preprocessors !== undefined && preprocessors[extension] !== undefined) {
 													preprocessors[extension](buffer.toString(), response);
@@ -9002,36 +8011,32 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 			// init sever.
 			if (port !== undefined) {
-				nativeServer = http.createServer(function(nativeReq, nativeRes) {
+				nativeServer = HTTP.createServer((nativeReq, nativeRes) => {
 					serve(nativeReq, nativeRes, false);
 				}).listen(port);
 			}
 
 			// init secured sever.
 			if (securedPort !== undefined) {
-				nativeServer = https.createServer({
-					key : fs.readFileSync(securedKeyFilePath),
-					cert : fs.readFileSync(securedCertFilePath)
-				}, function(nativeReq, nativeRes) {
+				nativeServer = HTTPS.createServer({
+					key : FS.readFileSync(securedKeyFilePath),
+					cert : FS.readFileSync(securedCertFilePath)
+				}, (nativeReq, nativeRes) => {
 					serve(nativeReq, nativeRes, true);
 				}).listen(securedPort);
 			}
 			
-			self.getNativeServer = getNativeServer = function() {
+			let getNativeServer = self.getNativeServer = () => {
 				return nativeServer;
 			};
 			
-			self.addPreprocessor = addPreprocessor = function(params) {
+			let addPreprocessor = self.addPreprocessor = (params) => {
 				//REQUIRED: params
 				//REQUIRED: params.extension
 				//REQUIRED: params.preprocessor
 				
-				var
-				// extension
-				extension = params.extension,
-				
-				// preprocessor
-				preprocessor = params.preprocessor;
+				let extension = params.extension;
+				let preprocessor = params.preprocessor;
 				
 				if (preprocessors === undefined) {
 					preprocessors = {};
@@ -9050,66 +8055,42 @@ global.WEB_SERVER = CLASS(function(cls) {
  */
 global.WEB_SOCKET_SERVER = METHOD({
 
-	run : function(webServer, connectionListener) {
-		'use strict';
+	run : (webServer, connectionListener) => {
 		//REQUIRED: webServer
 		//REQUIRED: connectionListener
 
-		var
-		//IMPORT: WebSocket
-		WebSocket = require('ws'),
+		let WebSocket = require('ws');
+		let WebSocketServer = WebSocket.Server;
 		
-		//IMPORT: WebSocketServer
-		WebSocketServer = WebSocket.Server,
-		
-		// native connection listener.
-		nativeConnectionListener = function(conn) {
+		let nativeConnectionListener = (conn) => {
 
-			var
-			// headers
-			headers = conn.upgradeReq.headers,
+			let headers = conn.upgradeReq.headers;
 
-			// method map
-			methodMap = {},
-
-			// send key
-			sendKey = 0,
+			let methodMap = {};
+			let sendKey = 0;
 			
-			// client info
-			clientInfo,
-
-			// ip
-			ip,
+			let clientInfo;
+			let ip;
 			
-			// on.
-			on,
+			let on;
+			let off;
+			let send;
 
-			// off.
-			off,
-
-			// send.
-			send,
-
-			// run methods.
-			runMethods = function(methodName, data, sendKey) {
-
-				var
-				// methods
-				methods;
+			let runMethods = (methodName, data, sendKey) => {
 				
 				try {
 					
-					methods = methodMap[methodName];
+					let methods = methodMap[methodName];
 	
 					if (methods !== undefined) {
 	
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 	
 							// run method.
 							method(data,
 	
 							// ret.
-							function(retData) {
+							(retData) => {
 	
 								if (sendKey !== undefined) {
 	
@@ -9130,11 +8111,9 @@ global.WEB_SOCKET_SERVER = METHOD({
 			};
 
 			// when receive data
-			conn.on('message', function(str) {
+			conn.on('message', (str) => {
 
-				var
-				// params
-				params = PARSE_STR(str);
+				let params = PARSE_STR(str);
 
 				if (params !== undefined) {
 					runMethods(params.methodName, params.data, params.sendKey);
@@ -9144,7 +8123,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 			});
 
 			// when disconnected
-			conn.on('close', function() {
+			conn.on('close', () => {
 
 				runMethods('__DISCONNECTED');
 
@@ -9153,11 +8132,9 @@ global.WEB_SOCKET_SERVER = METHOD({
 			});
 
 			// when error
-			conn.on('error', function(error) {
+			conn.on('error', (error) => {
 
-				var
-				// error msg
-				errorMsg = error.toString();
+				let errorMsg = error.toString();
 
 				SHOW_ERROR('WEB_SOCKET_SERVER', errorMsg);
 
@@ -9181,7 +8158,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// on.
-			on = function(methodName, method) {
+			on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
@@ -9197,13 +8174,11 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// off.
-			off = function(methodName, method) {
+			off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -9221,21 +8196,14 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// send to client.
-			send = function(methodNameOrParams, callback) {
+			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//OPTIONAL: methodNameOrParams.methodName
 				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: callback
 				
-				var
-				// method name
-				methodName,
-				
-				// data
-				data,
-				
-				// callback name
-				callbackName;
+				let methodName;
+				let data;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -9258,10 +8226,10 @@ global.WEB_SOCKET_SERVER = METHOD({
 	
 						else {
 							
-							callbackName = '__CALLBACK_' + sendKey;
+							let callbackName = '__CALLBACK_' + sendKey;
 		
 							// on callback.
-							on(callbackName, function(data) {
+							on(callbackName, (data) => {
 		
 								// run callback.
 								callback(data);
@@ -9288,7 +8256,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// disconnect.
-			function() {
+			() => {
 				if (conn !== undefined) {
 					conn.close();
 					conn = undefined;
@@ -9307,34 +8275,24 @@ global.WEB_SOCKET_SERVER = METHOD({
 /**
  * CPU 각 코어 당 사용률을 반환합니다.
  */
-global.CPU_USAGES = METHOD(function(m) {
-	'use strict';
+global.CPU_USAGES = METHOD((m) => {
 	
-	var
-	//IMPORT: os
-	os = require('os');
+	let os = require('os');
 	
 	return {
 		
-		run : function() {
+		run : () => {
 			
-			var
-			// cpu infos
-			cpuInfos = os.cpus(),
+			let cpuInfos = os.cpus();
+			let usages = [];
 			
-			// usages
-			usages = [];
-			
-			EACH(cpuInfos, function(cpuInfo) {
+			EACH(cpuInfos, (cpuInfo) => {
 				
-				var
-				// total
-				total = 0,
+				let total = 0;
 				
-				// idle time
-				idleTime;
+				let idleTime;
 				
-				EACH(cpuInfo.times, function(time, type) {
+				EACH(cpuInfo.times, (time, type) => {
 					total += time;
 					if (type === 'idle') {
 						idleTime = time;
@@ -9352,27 +8310,20 @@ global.CPU_USAGES = METHOD(function(m) {
 /**
  * 디스크 사용률을 반환합니다.
  */
-global.DISK_USAGE = METHOD(function() {
-	'use strict';
+global.DISK_USAGE = METHOD(() => {
 
-	var
-	//IMPORT: diskspace
-	diskspace = require('diskspace');
+	let diskspace = require('diskspace');
 
 	return {
 
-		run : function(drive, callbackOrHandlers) {
+		run : (drive, callbackOrHandlers) => {
 			//OPTIONAL: drive	확인할 디스크 드라이브
 			//REQUIRED: callbackOrHandlers
 			//OPTIONAL: callbackOrHandlers.error
 			//REQUIRED: callbackOrHandlers.success
-
-			var
-			// error handler.
-			errorHandler,
 			
-			// callback.
-			callback;
+			let errorHandler;
+			let callback;
 
 			if (callbackOrHandlers === undefined) {
 				callbackOrHandlers = drive;
@@ -9394,7 +8345,7 @@ global.DISK_USAGE = METHOD(function() {
 				}
 			}
 			
-			diskspace.check(drive, function(err, total, free, status) {
+			diskspace.check(drive, (err, total, free, status) => {
 				if (status === 'READY') {
 					callback((1 - free / total) * 100);
 				} else if (errorHandler !== undefined) {
@@ -9410,23 +8361,17 @@ global.DISK_USAGE = METHOD(function() {
 /**
  * 메모리 사용률을 반환합니다.
  */
-global.MEMORY_USAGE = METHOD(function(m) {
-	'use strict';
+global.MEMORY_USAGE = METHOD((m) => {
 	
-	var
-	//IMPORT: os
-	os = require('os'),
+	let os = require('os');
 	
-	// total memory
-	totalMemory = os.totalmem();
+	let totalMemory = os.totalmem();
 	
 	return {
 		
-		run : function() {
+		run : () => {
 			
-			var
-			// free memory
-			freeMemory = os.freemem();
+			let freeMemory = os.freemem();
 			
 			return (1 - freeMemory / totalMemory) * 100;
 		}
@@ -9436,31 +8381,26 @@ global.MEMORY_USAGE = METHOD(function(m) {
 /**
  * 매일 정해진 시간마다 주어진 터미널 명령어들을 실행하는 데몬을 구동합니다.
  */
-global.RUN_SCHEDULE_DAEMON = METHOD(function(m) {
-	'use strict';
+global.RUN_SCHEDULE_DAEMON = METHOD((m) => {
 	
-	var
-	//IMPORT: exec
-	exec = require('child_process').exec;
+	let exec = require('child_process').exec;
 	
 	return {
 		
-		run : function(schedules) {
+		run : (schedules) => {
 			//REQUIRED: schedules
 			
-			INTERVAL(60, RAR(function() {
+			INTERVAL(60, RAR(() => {
 				
-				var
-				// now cal
-				nowCal = CALENDAR();
+				let nowCal = CALENDAR();
 				
-				EACH(schedules, function(schedule) {
+				EACH(schedules, (schedule) => {
 					
 					if (nowCal.getHour() === schedule.hour && nowCal.getMinute() === (schedule.minute === undefined ? 0 : schedule.minute)) {
 						
-						EACH(schedule.commands, function(command) {
+						EACH(schedule.commands, (command) => {
 							
-							exec(command, function(error) {
+							exec(command, (error) => {
 								if (error !== TO_DELETE) {
 									SHOW_ERROR('RUN_SCHEDULE_DAEMON', error.toString());
 								}

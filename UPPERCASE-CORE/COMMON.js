@@ -894,7 +894,7 @@ global.URI_MATCHER = CLASS({
 				let isMatched;
 				let uriParams = {};
 
-				let find = function(format) {
+				let find = (format) => {
 
 					let formatParts = format.split('/');
 

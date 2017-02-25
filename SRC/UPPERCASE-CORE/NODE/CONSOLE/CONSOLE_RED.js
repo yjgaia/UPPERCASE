@@ -3,8 +3,7 @@
  */
 global.CONSOLE_RED = METHOD({
 
-	run : function(text) {
-		'use strict';
+	run : (text) => {
 		//REQUIRED: text
 
 		return '[31m' + text + '[0m';

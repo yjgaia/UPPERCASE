@@ -1,66 +1,36 @@
 /*
  * 서버 간 클러스터링을 수행합니다.
  */
-global.SERVER_CLUSTERING = METHOD(function(m) {
-	'use strict';
+global.SERVER_CLUSTERING = METHOD((m) => {
 
 	return {
 
-		run : function(params, work) {
+		run : (params, work) => {
 			//REQUIRED: params
 			//REQUIRED: params.hosts
 			//REQUIRED: params.thisServerName
 			//REQUIRED: params.port
 			//OPTIONAL: work
 
-			var
-			// hosts
-			hosts = params.hosts,
-
-			// this server name
-			thisServerName = params.thisServerName,
-
-			// port
-			port = params.port,
-
-			// method map
-			methodMap = {},
-
-			// is connectings
-			isConnectings = {},
+			let hosts = params.hosts;
+			let thisServerName = params.thisServerName;
+			let port = params.port;
 			
-			// waiting send info map
-			waitingSendInfoMap = {},
-
-			// server sends
-			serverSends = {},
-
-			// socket server ons
-			socketServeOns = [],
-
-			// connect to clustering server.
-			connectToClusteringServer,
+			let methodMap = {};
+			let isConnectings = {};
+			let waitingSendInfoMap = {};
+			let serverSends = {};
+			let socketServeOns = [];
 			
-			// get hosts.
-			getHosts,
-			
-			// get this server name.
-			getThisServerName,
+			let runMethods = (methodName, data, callback) => {
 
-			// run methods.
-			runMethods = function(methodName, data, callback) {
-
-				var
-				// methods
-				methods;
-				
 				try {
 					
-					methods = methodMap[methodName];
+					let methods = methodMap[methodName];
 
 					if (methods !== undefined) {
 	
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 	
 							// run method.
 							method(data,
@@ -79,21 +49,9 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						data : data
 					});
 				}
-			},
+			};
 
-			// on.
-			on,
-
-			// off.
-			off,
-			
-			// send.
-			send,
-
-			// broadcast.
-			broadcast;
-
-			connectToClusteringServer = function(serverName) {
+			let connectToClusteringServer = (serverName) => {
 
 				if (isConnectings[serverName] !== true) {
 					isConnectings[serverName] = true;
@@ -106,28 +64,24 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 						host : hosts[serverName],
 						port : port
 					}, {
-						error : function() {
+						error : () => {
 							delete isConnectings[serverName];
 						},
 
-						success : function(on, off, send) {
+						success : (on, off, send) => {
 
 							send({
 								methodName : '__BOOTED',
 								data : thisServerName
 							});
 
-							serverSends[serverName] = function(params, callback) {
+							serverSends[serverName] = (params, callback) => {
 								//REQUIRED: params
 								//REQUIRED: params.methodName
 								//REQUIRED: params.data
 
-								var
-								// method name
-								methodName = params.methodName,
-
-								// data
-								data = params.data;
+								let methodName = params.methodName;
+								let data = params.data;
 								
 								send({
 									methodName : 'SERVER_CLUSTERING.' + methodName,
@@ -135,7 +89,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 								}, callback);
 							};
 
-							on('__DISCONNECTED', function() {
+							on('__DISCONNECTED', () => {
 								delete serverSends[serverName];
 								delete isConnectings[serverName];
 								
@@ -152,7 +106,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 								});
 							}
 							
-							EACH(waitingSendInfoMap[serverName], function(info) {
+							EACH(waitingSendInfoMap[serverName], (info) => {
 								serverSends[serverName]({
 									methodName : info.methodName,
 									data : info.data
@@ -170,34 +124,32 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			}
 
 			// try connect to all clustering hosts.
-			EACH(hosts, function(host, serverName) {
+			EACH(hosts, (host, serverName) => {
 				if (serverName !== thisServerName) {
 					connectToClusteringServer(serverName);
 				}
 			});
 
-			SOCKET_SERVER(port, function(clientInfo, socketServeOn) {
+			SOCKET_SERVER(port, (clientInfo, socketServeOn) => {
 				
-				var
-				// server name
-				serverName;
+				let serverName;
 
 				socketServeOns.push(socketServeOn);
 
-				socketServeOn('__BOOTED', function(_serverName) {
+				socketServeOn('__BOOTED', (_serverName) => {
 					
 					serverName = _serverName;
 					
 					connectToClusteringServer(serverName);
 				});
 
-				EACH(methodMap, function(methods, methodName) {
-					EACH(methods, function(method) {
+				EACH(methodMap, (methods, methodName) => {
+					EACH(methods, (method) => {
 						socketServeOn('SERVER_CLUSTERING.' + methodName, method);
 					});
 				});
 
-				socketServeOn('__DISCONNECTED', function() {
+				socketServeOn('__DISCONNECTED', () => {
 					
 					REMOVE({
 						array : socketServeOns,
@@ -208,19 +160,17 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				});
 			});
 
-			m.getHosts = getHosts = function() {
+			let getHosts = m.getHosts = () => {
 				return hosts;
 			};
 			
-			m.getThisServerName = getThisServerName = function() {
+			let getThisServerName = m.getThisServerName = () => {
 				return thisServerName;
 			};
 			
-			m.on = on = function(methodName, method) {
+			let on = m.on = (methodName, method) => {
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -228,13 +178,13 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 
 				methods.push(method);
 
-				EACH(socketServeOns, function(socketServeOn) {
+				EACH(socketServeOns, (socketServeOn) => {
 					socketServeOn('SERVER_CLUSTERING.' + methodName, method);
 				});
 			};
 
 			// save shared data.
-			on('__SHARED_STORE_SAVE', function(params, ret) {
+			on('__SHARED_STORE_SAVE', (params, ret) => {
 				
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -251,7 +201,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 			
 			// update shared data.
-			on('__SHARED_STORE_UPDATE', function(params, ret) {
+			on('__SHARED_STORE_UPDATE', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -268,7 +218,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 			
 			// get shared data.
-			on('__SHARED_STORE_GET', function(params, ret) {
+			on('__SHARED_STORE_GET', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -285,7 +235,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// remove shared data.
-			on('__SHARED_STORE_REMOVE', function(params, ret) {
+			on('__SHARED_STORE_REMOVE', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -302,7 +252,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// get all shared data.
-			on('__SHARED_STORE_ALL', function(storeName, ret) {
+			on('__SHARED_STORE_ALL', (storeName, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -319,7 +269,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// count shared data.
-			on('__SHARED_STORE_COUNT', function(storeName, ret) {
+			on('__SHARED_STORE_COUNT', (storeName, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -336,7 +286,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// check is exists shared data.
-			on('__SHARED_STORE_CHECK_IS_EXISTS', function(params, ret) {
+			on('__SHARED_STORE_CHECK_IS_EXISTS', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -353,7 +303,7 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 			});
 
 			// clear shared store.
-			on('__SHARED_STORE_CLEAR', function(storeName, ret) {
+			on('__SHARED_STORE_CLEAR', (storeName, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
@@ -369,26 +319,20 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				}
 			});
 
-			m.off = off = function(methodName) {
+			let off = m.off = (methodName) => {
 				delete methodMap[methodName];
 			};
 
-			m.send = send = function(params, callback) {
+			let send = m.send = (params, callback) => {
 				//REQUIRED: params
 				//REQUIRED: params.serverName
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
 				//OPTIONAL: callback
 				
-				var
-				// server name
-				serverName = params.serverName,
-				
-				// method name
-				methodName = params.methodName,
-				
-				// data
-				data = params.data;
+				let serverName = params.serverName;
+				let methodName = params.methodName;
+				let data = params.data;
 				
 				if (callback === undefined) {
 					
@@ -442,12 +386,12 @@ global.SERVER_CLUSTERING = METHOD(function(m) {
 				}
 			};
 
-			m.broadcast = broadcast = function(params) {
+			let broadcast = m.broadcast = (params) => {
 				//REQUIRED: params
 				//REQUIRED: params.methodName
 				//REQUIRED: params.data
 
-				EACH(serverSends, function(serverSend) {
+				EACH(serverSends, (serverSend) => {
 					serverSend(params);
 				});
 			};

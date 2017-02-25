@@ -3,8 +3,7 @@
  */
 global.MOVE_FILE = METHOD({
 
-	run : function(params, callbackOrHandlers) {
-		'use strict';
+	run : (params, callbackOrHandlers) => {
 		//REQUIRED: params
 		//REQUIRED: params.from		파일의 원래 위치
 		//REQUIRED: params.to		파일을 옮길 위치
@@ -14,21 +13,12 @@ global.MOVE_FILE = METHOD({
 		//OPTIONAL: callbackOrHandlers.error
 		//REQUIRED: callbackOrHandlers.success
 
-		var
-		// from
-		from = params.from,
-
-		// is sync
-		isSync = params.isSync,
-
-		// not exists handler.
-		notExistsHandler,
-
-		// error handler.
-		errorHandler,
-
-		// callback.
-		callback;
+		let from = params.from;
+		let isSync = params.isSync;
+		
+		let notExistsHandler;
+		let errorHandler;
+		let callback;
 
 		if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 			callback = callbackOrHandlers;
@@ -41,7 +31,7 @@ global.MOVE_FILE = METHOD({
 		COPY_FILE(params, {
 			error : errorHandler,
 			notExists : notExistsHandler,
-			success : function() {
+			success : () => {
 
 				REMOVE_FILE({
 					path : from,
