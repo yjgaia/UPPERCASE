@@ -3,20 +3,18 @@
  */
 global.GO_NEW_WIN = METHOD({
 
-	run : function(uri) {
-		'use strict';
+	run : (uri) => {
 		//REQUIRED: uri
 
 		global.open(HREF(uri));
 	}
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.GO_NEW_WIN = METHOD({
 
-		run : function(uri) {
+		run : (uri) => {
 			//REQUIRED: uri
 
 			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);

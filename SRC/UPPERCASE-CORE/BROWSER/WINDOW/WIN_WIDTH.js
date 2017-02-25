@@ -3,8 +3,7 @@
  */
 global.WIN_WIDTH = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 
 		return document.documentElement.clientWidth;
 	}

@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 
 Welcome to UPPERCASE-CORE! (http://uppercase.io)

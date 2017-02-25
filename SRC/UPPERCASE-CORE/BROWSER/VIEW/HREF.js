@@ -3,20 +3,18 @@
  */
 global.HREF = METHOD({
 
-	run : function(uri) {
-		'use strict';
+	run : (uri) => {
 		//REQUIRED: uri
 
 		return '/' + uri;
 	}
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.HREF = METHOD({
 
-		run : function(uri) {
+		run : (uri) => {
 			//OPTIONAL: uri
 
 			return HREF((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));

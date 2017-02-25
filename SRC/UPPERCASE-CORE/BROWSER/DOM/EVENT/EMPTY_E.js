@@ -3,60 +3,37 @@
  */
 global.EMPTY_E = CLASS({
 
-	init : function(inner, self) {
-		'use strict';
+	init : (inner, self) => {
 
-		var
-		// stop default.
-		stopDefault,
-
-		// stop bubbling.
-		stopBubbling,
-
-		// stop default and bubbling.
-		stop,
-
-		// get left.
-		getLeft,
-
-		// get top.
-		getTop,
-
-		// get key.
-		getKey,
-		
-		// get detail.
-		getWheelDelta;
-
-		self.stopDefault = stopDefault = function() {
+		let stopDefault = self.stopDefault = () => {
 			// ignore.
 		};
 
-		self.stopBubbling = stopBubbling = function() {
+		let stopBubbling = self.stopBubbling = () => {
 			// ignore.
 		};
 
-		self.stop = stop = function() {
+		let stop = self.stop = () => {
 			// ignore.
 		};
 
-		self.getLeft = getLeft = function() {
+		let getLeft = self.getLeft = () => {
 			
 			// on heaven!
 			return -999999;
 		};
 
-		self.getTop = getTop = function() {
+		let getTop = self.getTop = () => {
 			
 			// on heaven!
 			return -999999;
 		};
 
-		self.getKey = function() {
+		let getKey = self.getKey = () => {
 			return '';
 		};
 		
-		self.getWheelDelta = getWheelDelta = function() {
+		let getWheelDelta = self.getWheelDelta = () => {
 			return 0;
 		};
 	}

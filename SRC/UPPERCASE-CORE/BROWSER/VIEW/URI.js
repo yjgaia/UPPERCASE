@@ -3,8 +3,7 @@
  */
 global.URI = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 		
 		return decodeURIComponent(location.pathname.substring(1));
 	}

@@ -1,45 +1,23 @@
 /**
  * 노드의 이벤트 처리를 담당하는 EVENT 클래스
  */
-global.EVENT = CLASS(function(cls) {
-	'use strict';
+global.EVENT = CLASS((cls) => {
 
-	var
-	// event map
-	eventMaps = {},
+	let eventMaps = {};
 	
-	// fire all.
-	fireAll,
-
-	// remove all.
-	removeAll,
-
-	// remove.
-	remove;
-	
-	cls.fireAll = fireAll = function(nameOrParams) {
+	let fireAll = cls.fireAll = (nameOrParams) => {
 		//REQUIRED: nameOrParams
 		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
 		//REQUIRED: nameOrParams.name	이벤트 이름
 
-		var
-		// node
-		node,
+		let node;
+		let name;
+		
+		let nodeId;
+		
+		let eventMap;
 
-		// name
-		name,
-
-		// node id
-		nodeId,
-
-		// event map
-		eventMap,
-
-		// events
-		events,
-
-		// ret
-		ret;
+		let ret;
 
 		// init params.
 		if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -59,11 +37,11 @@ global.EVENT = CLASS(function(cls) {
 
 		if (eventMap !== undefined) {
 
-			events = eventMap[name];
+			let events = eventMap[name];
 
 			if (events !== undefined) {
 
-				EACH(events, function(evt) {
+				EACH(events, (evt) => {
 
 					if (evt.fire() === false) {
 						
@@ -76,26 +54,17 @@ global.EVENT = CLASS(function(cls) {
 		return ret;
 	};
 
-	cls.removeAll = removeAll = function(nameOrParams) {
+	let removeAll = cls.removeAll = (nameOrParams) => {
 		//OPTIONAL: nameOrParams
 		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
 		//OPTIONAL: nameOrParams.name	이벤트 이름
-
-		var
-		// node
-		node,
-
-		// name
-		name,
-
-		// node id
-		nodeId,
-
-		// event map
-		eventMap,
-
-		// events
-		events;
+		
+		let node;
+		let name;
+		
+		let nodeId;
+		
+		let eventMap;
 
 		// init params.
 		if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -117,19 +86,19 @@ global.EVENT = CLASS(function(cls) {
 
 			if (name !== undefined) {
 
-				events = eventMap[name];
+				let events = eventMap[name];
 
 				if (events !== undefined) {
 
-					EACH(events, function(evt) {
+					EACH(events, (evt) => {
 						evt.remove();
 					});
 				}
 
 			} else {
 
-				EACH(eventMap, function(events) {
-					EACH(events, function(evt) {
+				EACH(eventMap, (events) => {
+					EACH(events, (evt) => {
 						evt.remove();
 					});
 				});
@@ -137,27 +106,18 @@ global.EVENT = CLASS(function(cls) {
 		}
 	};
 
-	cls.remove = remove = function(nameOrParams, eventHandler) {
+	let remove = cls.remove = (nameOrParams, eventHandler) => {
 		//REQUIRED: nameOrParams
 		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
 		//REQUIRED: nameOrParams.name	이벤트 이름
 		//REQUIRED: eventHandler
+		
+		let node;
+		let name;
 
-		var
-		// node
-		node,
-
-		// name
-		name,
-
-		// node id
-		nodeId,
-
-		// event map
-		eventMap,
-
-		// events
-		events;
+		let nodeId;
+		
+		let eventMap;
 		
 		// init params.
 		if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -177,11 +137,11 @@ global.EVENT = CLASS(function(cls) {
 
 		if (eventMap !== undefined) {
 
-			events = eventMap[name];
+			let events = eventMap[name];
 
 			if (events !== undefined) {
 
-				EACH(events, function(evt) {
+				EACH(events, (evt) => {
 					if (evt.getEventHandler() === eventHandler) {
 						evt.remove();
 					}
@@ -192,46 +152,24 @@ global.EVENT = CLASS(function(cls) {
 
 	return {
 
-		init : function(inner, self, nameOrParams, eventHandler) {
+		init : (inner, self, nameOrParams, eventHandler) => {
 			//REQUIRED: nameOrParams
 			//OPTIONAL: nameOrParams.node		이벤트를 등록 및 적용할 노드
 			//OPTIONAL: nameOrParams.lowNode	이벤트 '등록'은 node 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
 			//REQUIRED: nameOrParams.name		이벤트 이름
 			//REQUIRED: eventHandler
-
-			var
-			// node
-			node,
-
-			// low node
-			lowNode,
-
-			// name
-			name,
-
-			// node id
-			nodeId,
-
-			// event lows
-			eventLows = [],
-
-			// sub event
-			subEvent,
-
-			// last tap time
-			lastTapTime,
-
-			// remove from map.
-			removeFromMap,
-
-			// remove.
-			remove,
-
-			// fire.
-			fire,
 			
-			// get event handler.
-			getEventHandler;
+			let node;
+			let lowNode;
+			let name;
+			
+			let nodeId;
+			
+			let eventLows = [];
+			
+			let subEvent;
+			
+			let lastTapTime;
 
 			// init params.
 			if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -264,7 +202,7 @@ global.EVENT = CLASS(function(cls) {
 
 			eventMaps[nodeId][name].push(self);
 
-			removeFromMap = function() {
+			let removeFromMap = () => {
 
 				REMOVE({
 					array : eventMaps[nodeId][name],
@@ -296,7 +234,7 @@ global.EVENT = CLASS(function(cls) {
 				subEvent = EVENT({
 					node : node,
 					name : 'tap'
-				}, function(e) {
+				}, (e) => {
 
 					if (lastTapTime === undefined) {
 						lastTapTime = Date.now();
@@ -322,7 +260,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'touchstart'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() === true) {
 						eventHandler(e, node);
 					}
@@ -333,7 +271,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'mousedown'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() !== true) {
 						eventHandler(e, node);
 					}
@@ -348,7 +286,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'touchmove'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() === true) {
 						eventHandler(e, node);
 					}
@@ -359,7 +297,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'mousemove'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() !== true) {
 						eventHandler(e, node);
 					}
@@ -374,7 +312,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'touchend'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() === true) {
 						eventHandler(e, node);
 					}
@@ -385,7 +323,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'mouseup'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() !== true) {
 						eventHandler(e, node);
 					}
@@ -400,7 +338,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'touchstart'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() === true) {
 						eventHandler(e, node);
 					}
@@ -411,7 +349,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'mouseover'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() !== true) {
 						eventHandler(e, node);
 					}
@@ -423,9 +361,9 @@ global.EVENT = CLASS(function(cls) {
 				eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
 			}
 			
-			self.remove = remove = function() {
+			let remove = self.remove = () => {
 
-				EACH(eventLows, function(eventLow) {
+				EACH(eventLows, (eventLow) => {
 					eventLow.remove();
 				});
 					
@@ -436,13 +374,13 @@ global.EVENT = CLASS(function(cls) {
 				removeFromMap();
 			};
 
-			self.fire = fire = function() {
+			let fire = self.fire = () => {
 
 				// pass empty e object.
 				return eventHandler(EMPTY_E(), node);
 			};
 
-			self.getEventHandler = getEventHandler = function() {
+			let getEventHandler = self.getEventHandler = () => {
 				return eventHandler;
 			};
 		}

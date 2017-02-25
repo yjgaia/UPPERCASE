@@ -3,32 +3,20 @@
  */
 global.EVENT_LOW = CLASS({
 
-	init : function(inner, self, nameOrParams, eventHandler) {
-		'use strict';
+	init : (inner, self, nameOrParams, eventHandler) => {
 		//REQUIRED: nameOrParams
 		//OPTIONAL: nameOrParams.node		이벤트를 등록 및 적용할 노드
 		//OPTIONAL: nameOrParams.lowNode	이벤트 '등록'은 node 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
 		//REQUIRED: nameOrParams.name		이벤트 이름
 		//REQUIRED: eventHandler
-
-		var
-		// node
-		node,
-
-		// low node
-		lowNode,
-
-		// name
-		name,
-
-		// el
-		el,
-
-		// inner handler.
-		innerHandler,
-
-		// remove.
-		remove;
+		
+		let node;
+		let lowNode;
+		let name;
+		
+		let el;
+		
+		let innerHandler;
 
 		// init params.
 		if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -42,7 +30,7 @@ global.EVENT_LOW = CLASS({
 				lowNode = node;
 			}
 		}
-
+		
 		if (lowNode !== undefined) {
 			el = lowNode.getWrapperEl();
 		} else if (global['on' + name] === undefined) {
@@ -51,11 +39,9 @@ global.EVENT_LOW = CLASS({
 			el = global;
 		}
 		
-		el.addEventListener(name, innerHandler = function(e) {
+		el.addEventListener(name, innerHandler = (e) => {
 			
-			var
-			// result
-			result = eventHandler(E({
+			let result = eventHandler(E({
 				e : e,
 				el : el
 			}), node);
@@ -68,7 +54,7 @@ global.EVENT_LOW = CLASS({
 			
 		}, false);
 
-		self.remove = remove = function() {
+		let remove = self.remove = () => {
 			el.removeEventListener(name, innerHandler, false);
 		};
 	}

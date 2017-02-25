@@ -1,30 +1,22 @@
 /**
  * 뷰를 새로 불러옵니다.
  */
-global.REFRESH = METHOD(function(m) {
-	'use strict';
+global.REFRESH = METHOD((m) => {
 	
-	var
-	// refreshing uri
-	refreshingURI = '__REFRESHING',
+	let REFRESHING_URI = '__REFRESHING';
 	
-	// get refreshing uri.
-	getRefreshingURI;
-	
-	m.getRefreshingURI = getRefreshingURI = function() {
-		return refreshingURI;
+	let getRefreshingURI = m.getRefreshingURI = () => {
+		return REFRESHING_URI;
 	};
 	
 	return {
 
-		run : function(uri) {
+		run : (uri) => {
 			//OPTIONAL: uri
 	
-			var
-			// saved uri
-			savedURI = uri !== undefined ? uri : location.pathname.substring(1);
+			let savedURI = uri !== undefined ? uri : location.pathname.substring(1);
 	
-			history.pushState(undefined, undefined, '/' + refreshingURI);
+			history.pushState(undefined, undefined, '/' + REFRESHING_URI);
 			MATCH_VIEW.checkAll();
 			
 			history.replaceState(undefined, undefined, '/' + savedURI);
@@ -33,12 +25,11 @@ global.REFRESH = METHOD(function(m) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.REFRESH = METHOD({
 
-		run : function(uri) {
+		run : (uri) => {
 			//OPTIONAL: uri
 			
 			REFRESH((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));

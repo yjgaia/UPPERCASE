@@ -3,22 +3,17 @@
  */
 global.OPTION = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'option'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -26,27 +21,19 @@ global.OPTION = CLASS({
 		//OPTIONAL: params.value
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// get value.
-		getValue,
-
-		// set value.
-		setValue;
-
-		self.getValue = getValue = function() {
+		
+		let getValue = self.getValue = () => {
 			return self.getEl().value;
 		};
 
-		self.setValue = setValue = function(value) {
+		let setValue = self.setValue = (value) => {
 			//REQUIRED: value
 
 			self.getEl().value = value;
 		};
 	},
 
-	afterInit : function(inner, self, params) {
-		'use strict';
+	afterInit : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -54,13 +41,9 @@ global.OPTION = CLASS({
 		//OPTIONAL: params.value
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// value
-		value,
 		
-		// children
-		children;
+		let value;
+		let children;
 
 		// init params.
 		if (params !== undefined) {

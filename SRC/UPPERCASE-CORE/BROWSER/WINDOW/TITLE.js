@@ -3,8 +3,7 @@
  */
 global.TITLE = METHOD({
 
-	run : function(title) {
-		'use strict';
+	run : (title) => {
 		//OPTIONAL: title
 
 		if (title === undefined) {

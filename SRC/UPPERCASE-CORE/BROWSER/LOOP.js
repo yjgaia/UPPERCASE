@@ -1,62 +1,35 @@
-OVERRIDE(LOOP, function(origin) {
+OVERRIDE(LOOP, (origin) => {
 	
 	/**
 	 * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
 	 */
-	global.LOOP = CLASS(function(cls) {
-		'use strict';
+	global.LOOP = CLASS((cls) => {
 		
-		var
-		// before time
-		beforeTime,
+		let beforeTime;
+		let animationInterval;
 		
-		// animation interval
-		animationInterval,
+		let loopInfos = [];
+		let runs = [];
 		
-		// loop infos
-		loopInfos = [],
-		
-		// runs
-		runs = [],
-		
-		// fire.
-		fire = function() {
+		let fire = () => {
 			
-			var
-			// step.
-			step;
-	
 			if (animationInterval === undefined) {
+				
+				let step;
 	
 				beforeTime = Date.now();
+				
+				animationInterval = requestAnimationFrame(step = () => {
 	
-				animationInterval = requestAnimationFrame(step = function() {
-	
-					var
-					// time
-					time = Date.now(),
-	
-					// delta time
-					deltaTime = time - beforeTime,
-	
-					// loop info
-					loopInfo,
-	
-					// count
-					count,
-	
-					// interval
-					interval,
-	
-					// i, j
-					i, j;
-	
+					let time = Date.now();
+					let deltaTime = time - beforeTime;
+					
 					if (deltaTime > 0) {
-	
-						for (i = 0; i < loopInfos.length; i += 1) {
-	
-							loopInfo = loopInfos[i];
-	
+						
+						for (let i = 0; i < loopInfos.length; i += 1) {
+							
+							let loopInfo = loopInfos[i];
+							
 							if (loopInfo.fps !== undefined && loopInfo.fps > 0) {
 	
 								if (loopInfo.timeSigma === undefined) {
@@ -65,7 +38,7 @@ OVERRIDE(LOOP, function(origin) {
 								}
 	
 								// calculate count.
-								count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
+								let count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
 	
 								// start.
 								if (loopInfo.start !== undefined) {
@@ -73,8 +46,9 @@ OVERRIDE(LOOP, function(origin) {
 								}
 	
 								// run interval.
-								interval = loopInfo.interval;
-								for (j = 0; j < count; j += 1) {
+								let interval = loopInfo.interval;
+								
+								for (let j = 0; j < count; j += 1) {
 									interval(loopInfo.fps);
 								}
 	
@@ -93,7 +67,7 @@ OVERRIDE(LOOP, function(origin) {
 						}
 	
 						// run runs.
-						for (i = 0; i < runs.length; i += 1) {
+						for (let i = 0; i < runs.length; i += 1) {
 							runs[i](deltaTime);
 						}
 	
@@ -103,11 +77,10 @@ OVERRIDE(LOOP, function(origin) {
 					animationInterval = requestAnimationFrame(step);
 				});
 			}
-		},
-	
-		// stop.
-		stop = function() {
-	
+		};
+		
+		let stop = () => {
+			
 			if (loopInfos.length <= 0 && runs.length <= 0) {
 	
 				cancelAnimationFrame(animationInterval);
@@ -116,44 +89,26 @@ OVERRIDE(LOOP, function(origin) {
 		};
 	
 		return {
-	
-			init : function(inner, self, fpsOrRun, intervalOrFuncs) {
+			
+			init : (inner, self, fpsOrRun, intervalOrFuncs) => {
 				//OPTIONAL: fpsOrRun
 				//OPTIONAL: intervalOrFuncs
 				//OPTIONAL: intervalOrFuncs.start
 				//REQUIRED: intervalOrFuncs.interval
 				//OPTIONAL: intervalOrFuncs.end
-	
-				var
-				// run.
-				run,
-	
-				// start.
-				start,
-	
-				// interval.
-				interval,
-	
-				// end.
-				end,
-	
-				// info
-				info,
 				
-				// resume.
-				resume,
-				
-				// pause.
-				pause,
-	
-				// change fps.
-				changeFPS,
-	
-				// remove.
-				remove;
+				let resume;
+				let pause;
+				let changeFPS;
+				let remove;
 	
 				if (intervalOrFuncs !== undefined) {
-	
+					
+					let start;
+					let interval;
+					let end;
+					let info;
+					
 					// init intervalOrFuncs.
 					if (CHECK_IS_DATA(intervalOrFuncs) !== true) {
 						interval = intervalOrFuncs;
@@ -163,9 +118,9 @@ OVERRIDE(LOOP, function(origin) {
 						end = intervalOrFuncs.end;
 					}
 				
-					self.resume = resume = RAR(function() {
+					resume = self.resume = RAR(() => {
 						
-						loopInfos.push( info = {
+						loopInfos.push(info = {
 							fps : fpsOrRun,
 							start : start,
 							interval : interval,
@@ -175,7 +130,7 @@ OVERRIDE(LOOP, function(origin) {
 						fire();
 					});
 	
-					self.pause = pause = function() {
+					pause = self.pause = () => {
 	
 						REMOVE({
 							array : loopInfos,
@@ -185,13 +140,13 @@ OVERRIDE(LOOP, function(origin) {
 						stop();
 					};
 	
-					self.changeFPS = changeFPS = function(fps) {
+					changeFPS = self.changeFPS = (fps) => {
 						//REQUIRED: fps
 	
 						info.fps = fps;
 					};
 	
-					self.remove = remove = function() {
+					remove = self.remove = () => {
 						pause();
 					};
 				}
@@ -199,14 +154,16 @@ OVERRIDE(LOOP, function(origin) {
 				// when fpsOrRun is run
 				else {
 					
-					self.resume = resume = RAR(function() {
+					let run;
+					
+					resume = self.resume = RAR(() => {
 						
 						runs.push(run = fpsOrRun);
 						
 						fire();
 					});
 	
-					self.pause = pause = function() {
+					pause = self.pause = () => {
 	
 						REMOVE({
 							array : runs,
@@ -216,7 +173,7 @@ OVERRIDE(LOOP, function(origin) {
 						stop();
 					};
 	
-					self.remove = remove = function() {
+					remove = self.remove = () => {
 						pause();
 					};
 				}

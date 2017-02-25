@@ -3,22 +3,17 @@
  */
 global.VIDEO = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'video'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.id			id 속성
 		//OPTIONAL: params.cls			class 속성
@@ -33,36 +28,13 @@ global.VIDEO = CLASS({
 		//OPTIONAL: params.c			자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on			이벤트
 
-		var
-		// webm
-		webm = params.webm,
-
-		// ogg
-		ogg = params.ogg,
-		
-		// mp4
-		mp4 = params.mp4,
-		
-		// poster
-		poster = params.poster,
-		
-		// isNoControls
-		isNoControls = params.isNoControls,
-		
-		// is loop
-		isLoop = params.isLoop,
-		
-		// is muted
-		isMuted = params.isMuted,
-		
-		// play.
-		play,
-		
-		// pause.
-		pause,
-		
-		// stop.
-		stop;
+		let webm = params.webm;
+		let ogg = params.ogg;
+		let mp4 = params.mp4;
+		let poster = params.poster;
+		let isNoControls = params.isNoControls;
+		let isLoop = params.isLoop;
+		let isMuted = params.isMuted;
 		
 		if (webm !== undefined && self.getEl().canPlayType('video/webm') !== '') {
 			self.getEl().src = webm;
@@ -93,15 +65,15 @@ global.VIDEO = CLASS({
 			});
 		}
 		
-		self.play = play = function() {
+		let play = self.play = () => {
 			self.getEl().play();
 		};
 		
-		self.pause = pause = function() {
+		let pause = self.pause = () => {
 			self.getEl().pause();
 		};
 		
-		self.stop = stop = function() {
+		let stop = self.stop = () => {
 			self.getEl().pause();
 			self.getEl().currentTime = 0;
 		};

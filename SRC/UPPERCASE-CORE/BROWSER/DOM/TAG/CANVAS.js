@@ -3,22 +3,17 @@
  */
 global.CANVAS = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'canvas'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -27,28 +22,9 @@ global.CANVAS = CLASS({
 		//OPTIONAL: params.height
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// wdith
-		width,
-
-		// height
-		height,
-
-		// get context.
-		getContext,
-
-		// set size.
-		setSize,
-
-		// get width.
-		getWidth,
-
-		// get height.
-		getHeight,
-
-		// get data url.
-		getDataURL;
+		
+		let width;
+		let height;
 
 		// init params.
 		if (params !== undefined) {
@@ -56,20 +32,18 @@ global.CANVAS = CLASS({
 			height = params.height;
 		}
 
-		self.getContext = getContext = function(contextType) {
+		let getContext = self.getContext = (contextType) => {
 			//REQUIRED: contextType
 			
 			return self.getEl().getContext(contextType);
 		};
 
-		self.setSize = setSize = function(size) {
+		let setSize = self.setSize = (size) => {
 			//REQUIRED: size
 			//OPTIONAL: size.width
 			//OPTIONAL: size.height
 
-			var
-			// el
-			el = self.getEl();
+			let el = self.getEl();
 
 			if (size.width !== undefined) {
 				width = size.width;
@@ -93,15 +67,15 @@ global.CANVAS = CLASS({
 			height : height
 		});
 
-		self.getWidth = getWidth = function() {
+		let getWidth = self.getWidth = () => {
 			return width;
 		};
 
-		self.getHeight = getHeight = function() {
+		let getHeight = self.getHeight = () => {
 			return height;
 		};
 
-		self.getDataURL = getDataURL = function() {
+		let getDataURL = self.getDataURL = () => {
 			return self.getEl().toDataURL();
 		};
 	}

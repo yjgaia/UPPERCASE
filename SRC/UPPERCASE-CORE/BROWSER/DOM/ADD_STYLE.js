@@ -3,36 +3,25 @@
  */
 global.ADD_STYLE = METHOD({
 	
-	run : function(params) {
-		'use strict';
+	run : (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.node		스타일을 지정할 노드
 		//REQUIRED: params.style	스타일 데이터
 
-		var
-		// node
-		node = params.node,
+		let node = params.node;
+		let style = params.style;
+		let el = node.getWrapperEl();
 
-		// style
-		style = params.style,
-
-		// el
-		el = node.getWrapperEl();
-
-		EACH(style, function(value, name) {
-
-			var
-			// resize event
-			resizeEvent;
+		EACH(style, (value, name) => {
 			
 			if (value !== undefined) {
 
 				// on display resize
 				if (name === 'onDisplayResize') {
 
-					resizeEvent = EVENT({
+					let resizeEvent = EVENT({
 						name : 'resize'
-					}, RAR(function() {
+					}, RAR(() => {
 
 						// when this, value is function.
 						ADD_STYLE({
@@ -42,7 +31,7 @@ global.ADD_STYLE = METHOD({
 					}));
 
 					// remove resize event when remove node.
-					node.on('remove', function() {
+					node.on('remove', () => {
 						resizeEvent.remove();
 					});
 

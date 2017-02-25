@@ -3,22 +3,17 @@
  */
 global.FORM = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'form'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -29,28 +24,14 @@ global.FORM = CLASS({
 		//OPTIONAL: params.enctype	폼을 전송할때 사용할 인코딩 방법. 업로드 기능 구현에 사용됩니다.
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
+		
+		let action;
+		let target;
+		let method;
+		let enctype;
 
-		var
-		// action
-		action,
-
-		// target
-		target,
-
-		// method
-		method,
-
-		// enctype
-		enctype,
-
-		// get data.
-		getData,
-
-		// set data.
-		setData,
-
-		// submit.
-		submit;
+		let getData;
+		let setData;
 
 		// init params.
 		if (params !== undefined) {
@@ -72,7 +53,7 @@ global.FORM = CLASS({
 			EVENT({
 				node : self,
 				name : 'submit'
-			}, function(e) {
+			}, (e) => {
 				e.stop();
 			});
 		}
@@ -98,19 +79,16 @@ global.FORM = CLASS({
 			});
 		}
 
-		OVERRIDE(self.setData, function(origin) {
+		OVERRIDE(self.setData, (origin) => {
 			
-			self.getData = getData = function() {
+			getData = self.getData = () => {
 	
-				var
-				// data
-				data = origin(),
+				let data = origin();
 	
-				// f.
-				f = function(node) {
+				let f = (node) => {
 					//REQUIRED: node
 	
-					EACH(node.getChildren(), function(child) {
+					EACH(node.getChildren(), (child) => {
 	
 						if (child.getValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
 							data[child.getName()] = child.getValue();
@@ -130,21 +108,17 @@ global.FORM = CLASS({
 			};
 		});
 
-		OVERRIDE(self.setData, function(origin) {
+		OVERRIDE(self.setData, (origin) => {
 			
-			self.setData = setData = function(data) {
+			setData = self.setData = (data) => {
 				//REQUIRED: data
 				
-				var
-				// f.
-				f = function(node) {
+				let f = (node) => {
 					//REQUIRED: node
 	
-					EACH(node.getChildren(), function(child) {
+					EACH(node.getChildren(), (child) => {
 	
-						var
-						// value
-						value;
+						let value;
 	
 						if (child.setValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
 							value = data[child.getName()];
@@ -161,7 +135,7 @@ global.FORM = CLASS({
 			};
 		});
 
-		self.submit = submit = function() {
+		let submit = self.submit = () => {
 			
 			EVENT.fireAll({
 				node : self,

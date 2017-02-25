@@ -3,9 +3,8 @@
  */
 global.SCROLL_LEFT = METHOD({
 
-	run : function() {
-		'use strict';
-
+	run : () => {
+		
 		return global.pageXOffset;
 	}
 });

@@ -5,18 +5,15 @@
  */
 global.MSG = METHOD({
 
-	run : function(msgs) {
-		'use strict';
+	run : (msgs) => {
 		//REQUIRED: msgs
 
-		var
-		// msg
-		msg = msgs[INFO.getLang()];
+		let msg = msgs[INFO.getLang()];
 
 		if (msg === undefined) {
 
 			// get first msg.
-			EACH(msgs, function(_msg) {
+			EACH(msgs, (_msg) => {
 				msg = _msg;
 				return false;
 			});
@@ -25,4 +22,3 @@ global.MSG = METHOD({
 		return msg;
 	}
 });
-

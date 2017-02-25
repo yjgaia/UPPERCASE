@@ -3,8 +3,7 @@
  */
 global.CLEAR_BOTH = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 
 		return DIV({
 			style : {

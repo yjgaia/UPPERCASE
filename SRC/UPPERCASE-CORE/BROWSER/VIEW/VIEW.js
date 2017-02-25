@@ -3,44 +3,17 @@
  */
 global.VIEW = CLASS({
 
-	init : function(inner, self) {
-		'use strict';
+	init : (inner, self) => {
 
-		var
-		// is closed
-		isClosed = false,
-
-		// params change handlers
-		paramsChangeHandlers = [],
+		let isClosed = false;
+		let paramsChangeHandlers = [];
+		let uriChangeHandlers = [];
+		let closeHandlers = [];
 		
-		// uri change handlers
-		uriChangeHandlers = [],
+		let nowParams;
+		let nowURI;
 
-		// close handlers
-		closeHandlers = [],
-		
-		// now params
-		nowParams,
-		
-		// now uri
-		nowURI,
-
-		// on.
-		on,
-
-		// change params.
-		changeParams,
-		
-		// run uri change handlers.
-		runURIChangeHandlers,
-
-		// close.
-		close,
-
-		// check is closed.
-		checkIsClosed;
-
-		inner.on = on = function(eventName, eventHandler) {
+		let on = inner.on = (eventName, eventHandler) => {
 			//REQUIRED: eventName
 			//REQUIRED: eventHandler
 
@@ -66,34 +39,34 @@ global.VIEW = CLASS({
 			}
 		};
 
-		self.changeParams = changeParams = function(params) {
+		let changeParams = self.changeParams = (params) => {
 			
 			nowParams = params;
 
-			EACH(paramsChangeHandlers, function(handler) {
+			EACH(paramsChangeHandlers, (handler) => {
 				handler(params);
 			});
 		};
 		
-		self.runURIChangeHandlers = runURIChangeHandlers = function(uri) {
+		let runURIChangeHandlers = self.runURIChangeHandlers = (uri) => {
 			
 			nowURI = uri;
 			
-			EACH(uriChangeHandlers, function(handler) {
+			EACH(uriChangeHandlers, (handler) => {
 				handler(uri);
 			});
 		};
 
-		self.close = close = function() {
+		let close = self.close = () => {
 
-			EACH(closeHandlers, function(handler) {
+			EACH(closeHandlers, (handler) => {
 				handler();
 			});
 
 			isClosed = true;
 		};
 
-		inner.checkIsClosed = checkIsClosed = function() {
+		let checkIsClosed = inner.checkIsClosed = () => {
 			return isClosed;
 		};
 		

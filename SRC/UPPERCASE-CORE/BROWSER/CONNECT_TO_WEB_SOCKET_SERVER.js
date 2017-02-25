@@ -3,8 +3,7 @@
  */
 global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
-	run : function(portOrParams, connectionListenerOrListeners) {
-		'use strict';
+	run : (portOrParams, connectionListenerOrListeners) => {
 		//REQUIRED: portOrParams
 		//OPTIONAL: portOrParams.isSecure
 		//OPTIONAL: portOrParams.host
@@ -13,45 +12,21 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		//REQUIRED: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
 
-		var
-		// is secure
-		isSecure,
+		let isSecure;
+		let host;
+		let port;
+
+		let connectionListener;
+		let errorListener;
 		
-		// host
-		host,
+		let isConnected,
 
-		// port
-		port,
-
-		// connection listener
-		connectionListener,
-
-		// error listener
-		errorListener,
-
-		// connection
-		conn,
-
-		// is connected
-		isConnected,
-
-		// method map
-		methodMap = {},
-
-		// send key
-		sendKey = 0,
-
-		// on.
-		on,
-
-		// off.
-		off,
-
-		// send.
-		send,
-
-		// run methods.
-		runMethods;
+		let methodMap = {};
+		let sendKey = 0;
+		
+		let on;
+		let off;
+		let send;
 
 		if (CHECK_IS_DATA(portOrParams) !== true) {
 			port = portOrParams;
@@ -76,21 +51,19 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			errorListener = connectionListenerOrListeners.error;
 		}
 
-		runMethods = function(methodName, data, sendKey) {
+		let runMethods = (methodName, data, sendKey) => {
 
-			var
-			// methods
-			methods = methodMap[methodName];
+			let methods = methodMap[methodName];
 
 			if (methods !== undefined) {
 
-				EACH(methods, function(method) {
+				EACH(methods, (method) => {
 
 					// run method.
 					method(data,
 
 					// ret.
-					function(retData) {
+					(retData) => {
 
 						if (send !== undefined && sendKey !== undefined) {
 
@@ -104,22 +77,20 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			}
 		};
 
-		conn = new WebSocket((isSecure === true ? 'wss://': 'ws://') + host + ':' + port);
+		let conn = new WebSocket((isSecure === true ? 'wss://': 'ws://') + host + ':' + port);
 
-		conn.onopen = function() {
+		conn.onopen = () => {
 
 			isConnected = true;
 
 			connectionListener(
 
 			// on.
-			on = function(methodName, method) {
+			on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -129,13 +100,11 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// off.
-			off = function(methodName, method) {
+			off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -153,21 +122,15 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// send to server.
-			send = function(methodNameOrParams, callback) {
+			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//REQUIRED: methodNameOrParams.methodName
 				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: callback
 				
-				var
-				// method name
-				methodName,
-				
-				// data
-				data,
-				
-				// callback name
-				callbackName;
+				let methodName;
+				let data;
+				let callbackName;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -189,7 +152,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 						callbackName = '__CALLBACK_' + sendKey;
 	
 						// on callback.
-						on(callbackName, function(data) {
+						on(callbackName, (data) => {
 	
 							// run callback.
 							callback(data);
@@ -204,7 +167,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// disconnect.
-			function() {
+			() => {
 				if (conn !== undefined) {
 					conn.close();
 					conn = undefined;
@@ -213,11 +176,9 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		};
 
 		// receive data.
-		conn.onmessage = function(e) {
+		conn.onmessage = (e) => {
 
-			var
-			// params
-			params = PARSE_STR(e.data);
+			let params = PARSE_STR(e.data);
 
 			if (params !== undefined) {
 				runMethods(params.methodName, params.data, params.sendKey);
@@ -225,16 +186,14 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		};
 
 		// when disconnected
-		conn.onclose = function() {
+		conn.onclose = () => {
 			runMethods('__DISCONNECTED');
 		};
 
 		// when error
-		conn.onerror = function(error) {
+		conn.onerror = (error) => {
 
-			var
-			// error msg
-			errorMsg = error.toString();
+			let errorMsg = error.toString();
 
 			if (isConnected !== true) {
 
