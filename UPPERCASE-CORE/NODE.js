@@ -6821,9 +6821,11 @@ global.MINIFY_JS = METHOD(function() {
 		run : function(code) {
 			//REQUIRED: code
 			
+			code = code.toString();
+			
 			try {
 
-    			return uglifyJS.minify(code.toString(), {
+    			return uglifyJS.minify(code, {
     				fromString : true,
     				mangle : true,
     				output : {

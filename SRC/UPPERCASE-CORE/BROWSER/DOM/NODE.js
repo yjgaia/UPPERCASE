@@ -583,26 +583,6 @@ global.NODE = CLASS({
 			}
 		};
 		
-		let scrollTo = self.scrollTo = (params) => {
-			//REQUIRED: params
-			//OPTIONAL: params.left
-			//OPTIONAL: params.top
-			
-			let left = params.left;
-			let top = params.top;
-			
-			if (contentEl !== undefined) {
-			
-				if (left !== undefined) {
-					contentEl.scrollLeft = left;
-				}
-				
-				if (top !== undefined) {
-					contentEl.scrollTop = top;
-				}
-			}
-		};
-		
 		let getScrollLeft = self.getScrollLeft = () => {
 			if (contentEl !== undefined) {
 				return contentEl.scrollLeft;

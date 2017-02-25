@@ -19,7 +19,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		let connectionListener;
 		let errorListener;
 		
-		let isConnected,
+		let isConnected;
 
 		let methodMap = {};
 		let sendKey = 0;

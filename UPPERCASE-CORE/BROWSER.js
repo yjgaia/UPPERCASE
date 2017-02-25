@@ -7,7 +7,7 @@ Welcome to UPPERCASE-CORE! (http://uppercase.io)
 */
 
 // 웹 브라우저 환경에서는 window가 global 객체 입니다.
-global = window;
+let global = window;
 
 /**
  * 기본 설정
@@ -2790,7 +2790,7 @@ global.REVERSE_EACH = METHOD({
 	}
 });
 
-global.ADD_FOND = METHOD({
+global.ADD_FONT = METHOD({
 
 	run : (params) => {
 		//REQUIRED: params
@@ -2902,7 +2902,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		let connectionListener;
 		let errorListener;
 		
-		let isConnected,
+		let isConnected;
 
 		let methodMap = {};
 		let sendKey = 0;
@@ -4373,26 +4373,6 @@ global.NODE = CLASS({
 				return true;
 			} else {
 				return parentNode !== undefined && parentNode.checkIsShowing() === true && getStyle('display') !== 'none';
-			}
-		};
-		
-		let scrollTo = self.scrollTo = (params) => {
-			//REQUIRED: params
-			//OPTIONAL: params.left
-			//OPTIONAL: params.top
-			
-			let left = params.left;
-			let top = params.top;
-			
-			if (contentEl !== undefined) {
-			
-				if (left !== undefined) {
-					contentEl.scrollLeft = left;
-				}
-				
-				if (top !== undefined) {
-					contentEl.scrollTop = top;
-				}
 			}
 		};
 		
@@ -6905,11 +6885,11 @@ global.VIDEO = CLASS({
  * MIT License | (c) Dustin Diaz 2015
  */
 
-!function (name, definition) {
+!function (root, name, definition) {
   if (typeof module != 'undefined' && module.exports) module.exports = definition()
   else if (typeof define == 'function' && define.amd) define(name, definition)
-  else this[name] = definition()
-}('bowser', function () {
+  else root[name] = definition()
+}(this, 'bowser', function () {
   /**
     * See useragents.js for examples of navigator.userAgent
     */
@@ -7222,9 +7202,9 @@ global.VIDEO = CLASS({
     }
 
     // set OS flags for platforms that have multiple browsers
-    if (!result.msedge && (android || result.silk)) {
+    if (!result.windowsphone && !result.msedge && (android || result.silk)) {
       result.android = t
-    } else if (iosdevice) {
+    } else if (!result.windowsphone && !result.msedge && iosdevice) {
       result[iosdevice] = t
       result.ios = t
     } else if (mac) {
@@ -7441,6 +7421,10 @@ global.VIDEO = CLASS({
     for (var browser in minVersions) {
       if (minVersions.hasOwnProperty(browser)) {
         if (_bowser[browser]) {
+          if (typeof minVersions[browser] !== 'string') {
+            throw new Error('Browser version in the minVersion map should be a string: ' + browser + ': ' + String(minVersions));
+          }
+
           // browser version and min supported version.
           return compareVersions([version, minVersions[browser]]) < 0;
         }
@@ -7475,7 +7459,6 @@ global.VIDEO = CLASS({
 
   return bowser
 });
-
 /*!
 audiocontext-polyfill.js v0.1.1
 (c) 2013 - 2014 Shinnosuke Watanabe

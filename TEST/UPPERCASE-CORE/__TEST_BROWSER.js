@@ -9,7 +9,7 @@ RUN(function() {
 		document.body.appendChild(script);
 	};
 	
-	// COMMON 테스트
+	/*// COMMON 테스트
 	require('./COMMON/TO_DELETE.js');
 	require('./COMMON/METHOD.js');
 	
@@ -139,5 +139,7 @@ RUN(function() {
 	require('./BROWSER/CONSOLE/SHOW_WARNING.js');
 	
 	// SOUND
-	require('./BROWSER/SOUND.js');
+	require('./BROWSER/SOUND.js');*/
+	
+	require('./BROWSER/ADD_FONT.js');
 });

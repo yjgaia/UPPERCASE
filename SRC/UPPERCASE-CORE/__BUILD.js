@@ -64,7 +64,7 @@ RUN(() => {
 				
 				if (path === 'BROWSER') {
 					content += '// 웹 브라우저 환경에서는 window가 global 객체 입니다.\n';
-					content += 'global = window;\n\n';
+					content += 'let global = window;\n\n';
 				}
 				
 			} else {

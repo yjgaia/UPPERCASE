@@ -17,6 +17,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [`STORE`](#store)
 * [`MSG({ko:, en:, ...})`](#msg)
 * [`SOUND`](#sound)
+* [`ADD_FONT`](#add_font)
 
 ## 사용방법
 `UPPERCASE-CORE` 폴더를 복사하여 사용합니다.
@@ -1577,4 +1578,36 @@ sound.pause();
 
 // 정지 및 처음으로 돌아가기
 sound.stop();
+```
+
+## `ADD_FONT`
+웹 폰트를 사용할 수 있도록 불러옵니다. 아래와 같은 파라미터들을 사용할 수 있습니다.
+
+- `name` 폰트 명
+- `style` 폰트 스타일
+- `weight` 폰트 굵기
+- `woff2` WOFF2 폰트 파일 경로
+- `woff` WOFF 폰트 파일 경로
+- `otf` OTF 폰트 파일 경로
+- `ttf` TTF 폰트 파일 경로
+
+WOFF2, WOFF, OTF, TTF 파일 중 브라우저가 지원하는 포맷의 폰트 파일을 불러옵니다.
+
+```javascript
+ADD_FONT({
+	name : 'Noto Sans KR',
+	style : 'normal',
+	weight : 400,
+	woff2 : '//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2',
+	woff : '//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff',
+	opentype : '//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf'
+});
+
+DIV({
+	style : {
+		fontFamily : 'Noto Sans KR',
+		fontSize : 30
+	},
+	c : '웹 폰트가 적용되었습니다.'
+}).appendTo(BODY);
 ```

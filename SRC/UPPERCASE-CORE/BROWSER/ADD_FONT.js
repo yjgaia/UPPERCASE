@@ -1,4 +1,7 @@
-global.ADD_FOND = METHOD({
+/**
+ * 웹 폰트를 사용할 수 있도록 불러옵니다.
+ */
+global.ADD_FONT = METHOD({
 
 	run : (params) => {
 		//REQUIRED: params
