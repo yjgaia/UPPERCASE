@@ -2,7 +2,7 @@ RUN(function() {
 	'use strict';
 	
 	// COMMON 테스트
-	require('./COMMON/TO_DELETE.js');
+	/*require('./COMMON/TO_DELETE.js');
 	require('./COMMON/METHOD.js');
 	
 	// 객체지향 관련 기능
@@ -57,7 +57,7 @@ RUN(function() {
 	// 기타 기능
 	require('./COMMON/UTIL/OVERRIDE.js');
 	require('./COMMON/UTIL/RANDOM_STR.js');
-	require('./COMMON/UTIL/URI_MATCHER.js');
+	require('./COMMON/UTIL/URI_MATCHER.js');*/
 	
 	// NODE 테스트
 	// 파일 처리 기능
@@ -93,8 +93,8 @@ RUN(function() {
 	//require('./NODE/SERVER/SOCKET_SERVER.js');
 	//require('./NODE/SERVER/CONNECT_TO_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/WEB_SOCKET_SERVER.js');
-	require('./NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js');
-	require('./NODE/SERVER/UDP_SERVER.js');
+	//require('./NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js');
+	//require('./NODE/SERVER/UDP_SERVER.js');
 	
 	// 손쉬운 클러스터링 (이 테스트를 수행하려면 서버 관련 기능을 모두 제거해야 합니다. 그렇지 않을 경우 중복 포트 사용 오류가 발생합니다.)
 	//require('./NODE/CLUSTERING/CPU_CLUSTERING.js');
@@ -102,7 +102,7 @@ RUN(function() {
 	//require('./NODE/CLUSTERING/SHARED_STORE.js');
 	
 	// 시스템 관련 기능
-	require('./NODE/SYSTEM/CPU_USAGES.js');
+	/*require('./NODE/SYSTEM/CPU_USAGES.js');
 	require('./NODE/SYSTEM/MEMORY_USAGE.js');
 	require('./NODE/SYSTEM/DISK_USAGE.js');
 	
@@ -114,7 +114,7 @@ RUN(function() {
 	// 문자열 암호화 기능
 	require('./NODE/ENCRYPTION/SHA1.js');
 	require('./NODE/ENCRYPTION/SHA256.js');
-	require('./NODE/ENCRYPTION/SHA512.js');
+	require('./NODE/ENCRYPTION/SHA512.js');*/
 	
 	// 코드 압축 기능
 	require('./NODE/MINIFY/MINIFY_JS.js');

@@ -28,7 +28,7 @@ RUN(function() {
 	/*require('./UPPERCASE-MODEL/__TEST_NODE.js');
 	require('./UPPERCASE-BOOT/__TEST_NODE.js');*/
 	
-	WEB_SERVER({
+	/*WEB_SERVER({
 		port : PORT,
 		rootPath : __dirname
 	}, function(requestInfo, response, replaceRootPath, next) {
@@ -72,5 +72,5 @@ RUN(function() {
 		}
 	});
 	
-	console.log(CONSOLE_GREEN('UPPERCASE 테스트 콘솔을 실행하였습니다. 웹 브라우저에서 [http://localhost:' + PORT + ']로 접속해주시기 바랍니다.'));
+	console.log(CONSOLE_GREEN('UPPERCASE 테스트 콘솔을 실행하였습니다. 웹 브라우저에서 [http://localhost:' + PORT + ']로 접속해주시기 바랍니다.'));*/
 });
