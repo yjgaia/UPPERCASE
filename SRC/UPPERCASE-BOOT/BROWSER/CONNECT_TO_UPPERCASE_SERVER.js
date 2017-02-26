@@ -1,10 +1,9 @@
 /*
- * connect to UPPERCASE server.
+ * UPPERCASE 서버에 접속합니다.
  */
 global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 
-	run : function(params, connectionListenerOrListeners) {
-		'use strict';
+	run : (params, connectionListenerOrListeners) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.roomServerName
 		//OPTIONAL: params.webServerHost
@@ -14,24 +13,13 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 		//OPTIONAL: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
 
-		var
-		// room server name
-		roomServerName,
+		let roomServerName;
+		let webServerHost;
+		let webServerPort;
+		let isSecure;
 		
-		// web server host
-		webServerHost,
-		
-		// web server port
-		webServerPort,
-		
-		// is secure
-		isSecure,
-		
-		// connection listener
-		connectionListener,
-
-		// error listener
-		errorListener;
+		let connectionListener;
+		let errorListener;
 		
 		if (connectionListenerOrListeners === undefined) {
 			
@@ -87,24 +75,24 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 			paramStr : 'defaultHost=' + webServerHost
 		}, {
 			error : errorListener,
-			success : function(host) {
+			success : (host) => {
 
 				CONNECT_TO_ROOM_SERVER({
 					name : roomServerName,
 					isSecure : isSecure,
 					host : host,
 					port : webServerPort
-				}, function(on, off, send) {
+				}, (on, off, send) => {
 					
-					FOR_BOX(function(box) {
-						EACH(box.MODEL.getOnNewInfos(), function(onNewInfo) {
+					FOR_BOX((box) => {
+						EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
 							onNewInfo.findMissingDataSet();
 						});
 					});
 					
-					on('__DISCONNECTED', function() {
-						FOR_BOX(function(box) {
-							EACH(box.MODEL.getOnNewInfos(), function(onNewInfo) {
+					on('__DISCONNECTED', () => {
+						FOR_BOX((box) => {
+							EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
 								onNewInfo.lastCreateTime = SERVER_TIME(new Date());
 							});
 						});

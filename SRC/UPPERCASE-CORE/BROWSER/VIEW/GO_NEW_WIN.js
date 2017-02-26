@@ -1,4 +1,4 @@
-/**
+/*
  * 새 창에서 URI에 해당하는 뷰를 띄웁니다.
  */
 global.GO_NEW_WIN = METHOD({

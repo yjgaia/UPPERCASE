@@ -1,20 +1,19 @@
-/**
+/*
  * Check still alive object
  */
 global.CHECK_STILL_ALIVE = OBJECT({
 
-	init : function() {
-		'use strict';
+	init : () => {
 
-		UPPERCASE.ROOM('checkStillAliveRoom', function(clientInfo, on, off, send) {
+		UPPERCASE.ROOM('checkStillAliveRoom', (clientInfo, on, off, send) => {
 			
 			// I'm still alive!!
-			on('check', function(notUsing, ret) {
+			on('check', (notUsing, ret) => {
 				ret('__ALIVE');
 			});
 			
 			// I'm still alive!! (string mode)
-			on('checkStr', function(notUsing, ret) {
+			on('checkStr', (notUsing, ret) => {
 				send({
 					str : '__ALIVE'
 				});

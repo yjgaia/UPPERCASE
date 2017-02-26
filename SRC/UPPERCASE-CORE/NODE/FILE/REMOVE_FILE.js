@@ -1,4 +1,4 @@
-/**
+/*
  * 파일을 삭제합니다.
  */
 global.REMOVE_FILE = METHOD(() => {

@@ -1,4 +1,4 @@
-/**
+/*
  * 폴더를 생성합니다.
  */
 global.CREATE_FOLDER = METHOD(() => {

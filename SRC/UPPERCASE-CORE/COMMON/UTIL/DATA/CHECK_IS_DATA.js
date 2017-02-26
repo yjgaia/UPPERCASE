@@ -1,4 +1,4 @@
-/**
+/*
  * target이 데이터인지 확인합니다.
  */
 global.CHECK_IS_DATA = METHOD({

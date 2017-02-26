@@ -1,4 +1,4 @@
-/**
+/*
  * Date형 값을 생성합니다.
  */
 global.CREATE_DATE = METHOD({

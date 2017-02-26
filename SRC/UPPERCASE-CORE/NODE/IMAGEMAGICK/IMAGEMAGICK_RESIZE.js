@@ -1,4 +1,4 @@
-/**
+/*
  * ImageMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
  */
 global.IMAGEMAGICK_RESIZE = METHOD(() => {

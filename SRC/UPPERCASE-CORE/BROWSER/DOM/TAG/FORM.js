@@ -1,4 +1,4 @@
-/**
+/*
  * Form class
  */
 global.FORM = CLASS({

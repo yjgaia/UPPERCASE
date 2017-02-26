@@ -1,4 +1,4 @@
-/**
+/*
  * 클래스를 생성합니다.
  */
 global.CLASS = METHOD((m) => {

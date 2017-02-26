@@ -1,4 +1,4 @@
-/**
+/*
  * 클러스터링 공유 저장소를 생성하는 클래스
  */
 global.SHARED_STORE = CLASS((cls) => {
@@ -710,7 +710,7 @@ FOR_BOX((box) => {
 			
 			let count = self.count = sharedStore.count;
 			
-			le tcheckIsExists = self.checkIsExists = sharedStore.checkIsExists;
+			let checkIsExists = self.checkIsExists = sharedStore.checkIsExists;
 			
 			let clear = self.clear = sharedStore.clear;
 		}

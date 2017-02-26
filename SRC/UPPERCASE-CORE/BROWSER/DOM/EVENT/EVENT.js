@@ -1,4 +1,4 @@
-/**
+/*
  * 노드의 이벤트 처리를 담당하는 EVENT 클래스
  */
 global.EVENT = CLASS((cls) => {

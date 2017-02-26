@@ -1,4 +1,4 @@
-/**
+/*
  * 임의의 정수를 생성합니다.
  */
 global.RANDOM = METHOD({

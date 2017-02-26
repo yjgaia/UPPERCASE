@@ -9,7 +9,7 @@ Welcome to UPPERCASE-CORE! (http://uppercase.io)
 // 웹 브라우저 환경에서는 window가 global 객체 입니다.
 let global = window;
 
-/**
+/*
  * 기본 설정
  */
 global.CONFIG = {
@@ -18,7 +18,7 @@ global.CONFIG = {
 	isDevMode : false
 };
 
-/**
+/*
  * 메소드를 생성합니다.
  */
 global.METHOD = (define) => {
@@ -56,7 +56,7 @@ global.METHOD = (define) => {
 	return m;
 };
 
-/**
+/*
  * DB의 update 기능을 사용할 때, 데이터의 특정 값에 TO_DELETE를 지정하게 되면 해당 값이 삭제됩니다.
  * 자세한 것은 DB의 update 예제를 살펴보시기 바랍니다.
  *
@@ -65,7 +65,7 @@ global.METHOD = (define) => {
  */
 global.TO_DELETE = null;
 
-/**
+/*
  * BOX를 생성합니다.
  */
 global.BOX = METHOD((m) => {
@@ -128,7 +128,7 @@ global.BOX = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * 모든 박스를 대상으로 하는 메소드와 클래스, 싱글톤 객체를 선언할 때 사용합니다.
  */
 global.FOR_BOX = METHOD((m) => {
@@ -185,7 +185,7 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 		console.warn(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
-/**
+/*
  * 클래스를 생성합니다.
  */
 global.CLASS = METHOD((m) => {
@@ -366,7 +366,7 @@ global.CLASS = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * 모든 정의된 싱글톤 객체의 초기화를 수행합니다.
  */
 global.INIT_OBJECTS = METHOD({
@@ -377,7 +377,7 @@ global.INIT_OBJECTS = METHOD({
 	}
 });
 
-/**
+/*
  * 실글톤 객체를 생성합니다.
  */
 global.OBJECT = METHOD((m) => {
@@ -464,7 +464,7 @@ global.OBJECT = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * target이 JavaScript arguments인지 확인합니다.
  */
 global.CHECK_IS_ARGUMENTS = METHOD({
@@ -490,7 +490,7 @@ global.CHECK_IS_ARGUMENTS = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 비동기 함수들을 순서대로 실행합니다.
  */
 global.NEXT = METHOD({
@@ -610,7 +610,7 @@ global.NEXT = METHOD({
 	}
 });
 
-/**
+/*
  * 오버라이딩을 수행합니다.
  */
 global.OVERRIDE = METHOD({
@@ -630,7 +630,7 @@ global.OVERRIDE = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 비동기 함수들을 병렬로 실행합니다.
  */
 global.PARALLEL = METHOD({
@@ -732,7 +732,7 @@ global.PARALLEL = METHOD({
 	}
 });
 
-/**
+/*
  * JSON 문자열을 원래 데이터나 배열, 값으로 변환합니다.
  */
 global.PARSE_STR = METHOD({
@@ -771,7 +771,7 @@ global.PARSE_STR = METHOD({
 	}
 });
 
-/**
+/*
  * 알파벳 대, 소문자와 숫자로 이루어진 임의의 문자열을 생성합니다.
  */
 global.RANDOM_STR = METHOD(() => {
@@ -798,7 +798,7 @@ global.RANDOM_STR = METHOD(() => {
 	};
 });
 
-/**
+/*
  * 데이터나 배열, 값을 JSON 문자열로 변환합니다.
  */
 global.STRINGIFY = METHOD({
@@ -827,7 +827,7 @@ global.STRINGIFY = METHOD({
 	}
 });
 
-/**
+/*
  * 테스트용 메소드입니다.
  * 
  * 테스트에 성공하거나 실패하면 콘솔에 메시지를 출력합니다.
@@ -877,7 +877,7 @@ global.TEST = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * URI가 주어진 포맷에 맞는지 확인하는 URI_MATCHER 클래스
  * 
  * 포맷에 파라미터 구간을 지정할 수 있어 URI로부터 파라미터 값을 가져올 수 있습니다.
@@ -952,7 +952,7 @@ global.URI_MATCHER = CLASS({
 	}
 });
 
-/**
+/*
  * 데이터를 검증하고, 어떤 부분이 잘못되었는지 오류를 확인할 수 있는 VALID 클래스
  */
 global.VALID = CLASS((cls) => {
@@ -1486,7 +1486,7 @@ global.VALID = CLASS((cls) => {
 	};
 });
 
-/**
+/*
  * 배열 안의 모든 요소들이 동일한지 확인합니다.
  */
 global.CHECK_ARE_SAME = METHOD({
@@ -1543,7 +1543,7 @@ global.CHECK_ARE_SAME = METHOD({
 	}
 });
 
-/**
+/*
  * target이 배열인지 확인합니다.
  */
 global.CHECK_IS_ARRAY = METHOD({
@@ -1563,7 +1563,7 @@ global.CHECK_IS_ARRAY = METHOD({
 	}
 });
 
-/**
+/*
  * target이 데이터인지 확인합니다.
  */
 global.CHECK_IS_DATA = METHOD({
@@ -1586,7 +1586,7 @@ global.CHECK_IS_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터가 아무런 값이 없는 빈 데이터({})인지 확인합니다.
  */
 global.CHECK_IS_EMPTY_DATA = METHOD({
@@ -1598,7 +1598,7 @@ global.CHECK_IS_EMPTY_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터 내 값들의 개수를 반환합니다.
  */
 global.COUNT_PROPERTIES = METHOD({
@@ -1616,7 +1616,7 @@ global.COUNT_PROPERTIES = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 데이터의 값들 중 Date형은 정수형태로, RegExp형은 문자열 형태로 변환한 데이터를 반환합니다.
  */
 global.PACK_DATA = METHOD({
@@ -1666,7 +1666,7 @@ global.PACK_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * PACK_DATA가 적용된 데이터의 값들 중 정수형태로 변환된 Date형과 문자열 형태로 변환된 RegExp형을 원래대로 되돌린 데이터를 반환합니다.
  */
 global.UNPACK_DATA = METHOD({
@@ -1731,7 +1731,7 @@ global.UNPACK_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * 특정 값이 데이터나 배열에 존재하는지 확인합니다.
  */
 global.CHECK_IS_IN = METHOD({
@@ -1764,7 +1764,7 @@ global.CHECK_IS_IN = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터들이나 배열들을 하나의 데이터나 배열로 합칩니다.
  */
 global.COMBINE = METHOD({
@@ -1807,7 +1807,7 @@ global.COMBINE = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열을 복제합니다.
  */
 global.COPY = METHOD({
@@ -1841,7 +1841,7 @@ global.COPY = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열을 덧붙혀 확장합니다.
  */
 global.EXTEND = METHOD({
@@ -1926,7 +1926,7 @@ global.EXTEND = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열의 특정 값을 찾아, 데이터인 경우 그 값에 해당하는 이름을, 배열인 경우 그 값에 해당하는 키(index)를 반환합니다.
  */
 global.FIND = METHOD({
@@ -1999,7 +1999,7 @@ global.FIND = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열의 특정 값을 삭제합니다.
  */
 global.REMOVE = METHOD({
@@ -2097,7 +2097,7 @@ global.REMOVE = METHOD({
 	}
 });
 
-/**
+/*
  * 날짜를 처리할 때 Date형을 좀 더 쓰기 편하도록 개선한 CALENDAR 클래스
  */
 global.CALENDAR = CLASS({
@@ -2179,7 +2179,7 @@ global.CALENDAR = CLASS({
 	}
 });
 
-/**
+/*
  * Date형 값을 생성합니다.
  */
 global.CREATE_DATE = METHOD({
@@ -2230,7 +2230,7 @@ global.CREATE_DATE = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 초가 흐른 뒤에 함수를 실행하는 DELAY 클래스
  */
 global.DELAY = CLASS({
@@ -2276,7 +2276,7 @@ global.DELAY = CLASS({
 	}
 });
 
-/**
+/*
  * 주어진 초 마다 함수를 반복해서 실행하는 INTERVAL 클래스
  */
 global.INTERVAL = CLASS({
@@ -2328,7 +2328,7 @@ global.INTERVAL = CLASS({
 	}
 });
 
-/**
+/*
  * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
  */
 global.LOOP = CLASS((cls) => {
@@ -2497,7 +2497,7 @@ global.LOOP = CLASS((cls) => {
 	};
 });
 
-/**
+/*
  * 주어진 함수를 즉시 실행하고, 함수를 반환합니다.
  * 
  * 선언과 동시에 실행되어야 하는 함수를 선언할 때 유용합니다.
@@ -2520,7 +2520,7 @@ global.RAR = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 함수를 즉시 실행합니다.
  */
 global.RUN = METHOD({
@@ -2536,7 +2536,7 @@ global.RUN = METHOD({
 	}
 });
 
-/**
+/*
  * 정수 문자열을 정수 값으로 변환합니다.
  */
 global.INTEGER = METHOD({
@@ -2548,7 +2548,7 @@ global.INTEGER = METHOD({
 	}
 });
 
-/**
+/*
  * 임의의 정수를 생성합니다.
  */
 global.RANDOM = METHOD({
@@ -2584,7 +2584,7 @@ global.RANDOM = METHOD({
 	}
 });
 
-/**
+/*
  * 실수 문자열을 실수 값으로 변환합니다.
  */
 global.REAL = METHOD({
@@ -2596,7 +2596,7 @@ global.REAL = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열, 문자열의 각 요소를 순서대로 대입하여 주어진 함수를 실행합니다.
  */
 global.EACH = METHOD({
@@ -2658,7 +2658,7 @@ global.EACH = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 함수를 주어진 횟수만큼 반복해서 실행합니다.
  */
 global.REPEAT = METHOD({
@@ -2744,7 +2744,7 @@ global.REPEAT = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열, 문자열의 각 요소를 역순으로 대입하여 주어진 함수를 실행합니다.
  */
 global.REVERSE_EACH = METHOD({
@@ -2790,7 +2790,7 @@ global.REVERSE_EACH = METHOD({
 	}
 });
 
-/**
+/*
  * 웹 폰트를 사용할 수 있도록 불러옵니다.
  */
 global.ADD_FONT = METHOD({
@@ -2850,7 +2850,7 @@ global.ADD_FONT = METHOD({
 
 OVERRIDE(BOX, (origin) => {
 	
-	/**
+	/*
 	 * BOX를 생성합니다.
 	 */
 	global.BOX = METHOD((m) => {
@@ -2872,7 +2872,7 @@ OVERRIDE(BOX, (origin) => {
 	});
 });
 
-/**
+/*
  * 웹 브라우저 환경에서의 기본 설정
  */
 global.BROWSER_CONFIG = {
@@ -3096,7 +3096,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 	}
 });
 
-/**
+/*
  * 웹 브라우저 정보를 담고 있는 객체
  */
 global.INFO = OBJECT({
@@ -3168,7 +3168,7 @@ global.INFO = OBJECT({
 
 OVERRIDE(LOOP, (origin) => {
 	
-	/**
+	/*
 	 * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
 	 */
 	global.LOOP = CLASS((cls) => {
@@ -3350,7 +3350,7 @@ OVERRIDE(LOOP, (origin) => {
 	});
 });
 
-/**
+/*
  * INFO의 웹 애플리케이션 언어 설정 코드에 해당하는 문자열을 반환합니다.
  * 
  * 만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
@@ -3375,7 +3375,7 @@ global.MSG = METHOD({
 	}
 });
 
-/**
+/*
  * 사운드 파일을 재생하는 SOUND 클래스
  */
 global.SOUND = CLASS((cls) => {
@@ -3475,7 +3475,7 @@ global.SOUND = CLASS((cls) => {
 	};
 });
 
-/**
+/*
  * 저장소 클래스
  * 
  * 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
@@ -3565,7 +3565,7 @@ FOR_BOX((box) => {
 		}
 	});
 });
-/**
+/*
  * 노드에 스타일을 지정합니다.
  */
 global.ADD_STYLE = METHOD({
@@ -3629,7 +3629,7 @@ global.ADD_STYLE = METHOD({
 	}
 });
 
-/**
+/*
  * 노드에 애니메이션을 지정합니다.
  */
 global.ANIMATE = METHOD((m) => {
@@ -3712,7 +3712,7 @@ global.ANIMATE = METHOD((m) => {
 });
 
 
-/**
+/*
  * clear : 'both' 스타일이 지정된 div를 생성합니다.
  */
 global.CLEAR_BOTH = METHOD({
@@ -3727,7 +3727,7 @@ global.CLEAR_BOTH = METHOD({
 	}
 });
 
-/**
+/*
  * DOM 객체를 생성하고 다루는 클래스
  */
 global.DOM = CLASS({
@@ -3814,7 +3814,7 @@ global.DOM = CLASS({
 	}
 });
 
-/**
+/*
  * DOM 트리 구조를 정의하기 위한 NODE 클래스
  */
 global.NODE = CLASS({
@@ -4477,7 +4477,7 @@ global.NODE = CLASS({
 	}
 });
 
-/**
+/*
  * 이벤트 정보를 제공하는 객체를 생성하는 E 클래스
  */
 global.E = CLASS({
@@ -4631,7 +4631,7 @@ global.E = CLASS({
 	}
 });
 
-/**
+/*
  * 빈 이벤트 정보를 제공하는 객체를 생성하는 EMPTY_E 클래스
  */
 global.EMPTY_E = CLASS({
@@ -4672,7 +4672,7 @@ global.EMPTY_E = CLASS({
 	}
 });
 
-/**
+/*
  * 노드의 이벤트 처리를 담당하는 EVENT 클래스
  */
 global.EVENT = CLASS((cls) => {
@@ -5060,7 +5060,7 @@ global.EVENT = CLASS((cls) => {
 		}
 	};
 });
-/**
+/*
  * 내부적으로 이벤트를 처리하기 위해 사용되는 EVENT_LOW 클래스
  */
 global.EVENT_LOW = CLASS({
@@ -5122,7 +5122,7 @@ global.EVENT_LOW = CLASS({
 	}
 });
 
-/**
+/*
  * 이벤트가 한번 발생하면 자동으로 제거되는 EVENT_ONCE 클래스
  */
 global.EVENT_ONCE = CLASS({
@@ -5149,7 +5149,7 @@ global.EVENT_ONCE = CLASS({
 	}
 });
 
-/**
+/*
  * A class
  */
 global.A = CLASS({
@@ -5274,7 +5274,7 @@ global.A = CLASS({
 	}
 });
 
-/**
+/*
  * HTML audio 태그와 대응되는 클래스
  */
 global.AUDIO = CLASS({
@@ -5337,7 +5337,7 @@ global.AUDIO = CLASS({
 	}
 });
 
-/**
+/*
  * HTML body 태그와 대응되는 객체
  */
 global.BODY = OBJECT({
@@ -5353,7 +5353,7 @@ global.BODY = OBJECT({
 	}
 });
 
-/**
+/*
  * HTML br 태그와 대응되는 클래스
  */
 global.BR = CLASS({
@@ -5369,7 +5369,7 @@ global.BR = CLASS({
 	}
 });
 
-/**
+/*
  * HTML canvas 태그와 대응되는 클래스
  */
 global.CANVAS = CLASS({
@@ -5452,7 +5452,7 @@ global.CANVAS = CLASS({
 	}
 });
 
-/**
+/*
  * HTML div 태그와 대응되는 클래스
  */
 global.DIV = CLASS({
@@ -5468,7 +5468,7 @@ global.DIV = CLASS({
 	}
 });
 
-/**
+/*
  * Form class
  */
 global.FORM = CLASS({
@@ -5619,7 +5619,7 @@ global.FORM = CLASS({
 	}
 });
 
-/**
+/*
  * HTML h1 태그와 대응되는 클래스
  */
 global.H1 = CLASS({
@@ -5635,7 +5635,7 @@ global.H1 = CLASS({
 	}
 });
 
-/**
+/*
  * HTML h2 태그와 대응되는 클래스
  */
 global.H2 = CLASS({
@@ -5651,7 +5651,7 @@ global.H2 = CLASS({
 	}
 });
 
-/**
+/*
  * HTML h3 태그와 대응되는 클래스
  */
 global.H3 = CLASS({
@@ -5667,7 +5667,7 @@ global.H3 = CLASS({
 	}
 });
 
-/**
+/*
  * HTML h4 태그와 대응되는 클래스
  */
 global.H4 = CLASS({
@@ -5683,7 +5683,7 @@ global.H4 = CLASS({
 	}
 });
 
-/**
+/*
  * HTML h5 태그와 대응되는 클래스
  */
 global.H5 = CLASS({
@@ -5699,7 +5699,7 @@ global.H5 = CLASS({
 	}
 });
 
-/**
+/*
  * HTML h6 태그와 대응되는 클래스
  */
 global.H6 = CLASS({
@@ -5715,7 +5715,7 @@ global.H6 = CLASS({
 	}
 });
 
-/**
+/*
  * HTML iframe 태그와 대응되는 클래스
  */
 global.IFRAME = CLASS({
@@ -5781,7 +5781,7 @@ global.IFRAME = CLASS({
 	}
 });
 
-/**
+/*
  * HTML img 태그와 대응되는 클래스
  */
 global.IMG = CLASS({
@@ -5856,7 +5856,7 @@ global.IMG = CLASS({
 	}
 });
 
-/**
+/*
  * HTML input 태그와 대응되는 클래스
  */
 global.INPUT = CLASS((cls) => {
@@ -6193,7 +6193,7 @@ global.INPUT = CLASS((cls) => {
 	};
 });
 
-/**
+/*
  * HTML li 태그와 대응되는 클래스
  */
 global.LI = CLASS({
@@ -6209,7 +6209,7 @@ global.LI = CLASS({
 	}
 });
 
-/**
+/*
  * HTML optgroup 태그와 대응되는 클래스
  */
 global.OPTGROUP = CLASS({
@@ -6242,7 +6242,7 @@ global.OPTGROUP = CLASS({
 	}
 });
 
-/**
+/*
  * HTML option 태그와 대응되는 클래스
  */
 global.OPTION = CLASS({
@@ -6307,7 +6307,7 @@ global.OPTION = CLASS({
 	}
 });
 
-/**
+/*
  * HTML p 태그와 대응되는 클래스
  */
 global.P = CLASS({
@@ -6323,7 +6323,7 @@ global.P = CLASS({
 	}
 });
 
-/**
+/*
  * HTML select 태그와 대응되는 클래스
  */
 global.SELECT = CLASS({
@@ -6475,7 +6475,7 @@ global.SELECT = CLASS({
 	}
 });
 
-/**
+/*
  * HTML span 태그와 대응되는 클래스
  */
 global.SPAN = CLASS({
@@ -6491,7 +6491,7 @@ global.SPAN = CLASS({
 	}
 });
 
-/**
+/*
  * HTML table 태그와 대응되는 클래스
  */
 global.TABLE = CLASS({
@@ -6507,7 +6507,7 @@ global.TABLE = CLASS({
 	}
 });
 
-/**
+/*
  * HTML td 태그와 대응되는 클래스
  */
 global.TD = CLASS({
@@ -6557,7 +6557,7 @@ global.TD = CLASS({
 	}
 });
 
-/**
+/*
  * Textarea class
  */
 global.TEXTAREA = CLASS({
@@ -6718,7 +6718,7 @@ global.TEXTAREA = CLASS({
 	}
 });
 
-/**
+/*
  * HTML th 태그와 대응되는 클래스
  */
 global.TH = CLASS({
@@ -6768,7 +6768,7 @@ global.TH = CLASS({
 	}
 });
 
-/**
+/*
  * HTML tr 태그와 대응되는 클래스
  */
 global.TR = CLASS({
@@ -6784,7 +6784,7 @@ global.TR = CLASS({
 	}
 });
 
-/**
+/*
  * HTML ul 태그와 대응되는 클래스
  */
 global.UL = CLASS({
@@ -6800,7 +6800,7 @@ global.UL = CLASS({
 	}
 });
 
-/**
+/*
  * HTML video 태그와 대응되는 클래스
  */
 global.VIDEO = CLASS({
@@ -8024,7 +8024,7 @@ Licensed under the MIT license
   self.fetch.polyfill = true
 })(typeof self !== 'undefined' ? self : this);
 
-/**
+/*
  * HTTP DELETE 요청을 보냅니다.
  */
 global.DELETE = METHOD({
@@ -8051,7 +8051,7 @@ global.DELETE = METHOD({
 		}]), responseListenerOrListeners);
 	}
 });
-/**
+/*
  * HTTP GET 요청을 보냅니다.
  */
 global.GET = METHOD({
@@ -8078,7 +8078,7 @@ global.GET = METHOD({
 		}]), responseListenerOrListeners);
 	}
 });
-/**
+/*
  * HTTP POST 요청을 보냅니다.
  */
 global.POST = METHOD({
@@ -8105,7 +8105,7 @@ global.POST = METHOD({
 		}]), responseListenerOrListeners);
 	}
 });
-/**
+/*
  * HTTP PUT 요청을 보냅니다.
  */
 global.PUT = METHOD({
@@ -8132,7 +8132,7 @@ global.PUT = METHOD({
 		}]), responseListenerOrListeners);
 	}
 });
-/**
+/*
  * HTTP 요청을 보냅니다.
  */
 global.REQUEST = METHOD({
@@ -8240,7 +8240,7 @@ global.REQUEST = METHOD({
 		});
 	}
 });
-/**
+/*
  * URI를 변경하여 다른 뷰로 이동합니다.
  */
 global.GO = METHOD((m) => {
@@ -8297,7 +8297,7 @@ FOR_BOX((box) => {
 	});
 });
 
-/**
+/*
  * 새 창에서 URI에 해당하는 뷰를 띄웁니다.
  */
 global.GO_NEW_WIN = METHOD({
@@ -8321,7 +8321,7 @@ FOR_BOX((box) => {
 	});
 });
 
-/**
+/*
  * URI로부터 주소를 생성하여 반환합니다.
  */
 global.HREF = METHOD({
@@ -8345,7 +8345,7 @@ FOR_BOX((box) => {
 	});
 });
 
-/**
+/*
  * 특정 URI와 뷰를 연결합니다.
  */
 global.MATCH_VIEW = METHOD((m) => {
@@ -8488,12 +8488,12 @@ FOR_BOX((box) => {
 	});
 });
 
-/**
+/*
  * 뷰를 새로 불러옵니다.
  */
 global.REFRESH = METHOD((m) => {
 	
-	let REFRESHING_URI = '__REFRESHING';
+	const REFRESHING_URI = '__REFRESHING';
 	
 	let getRefreshingURI = m.getRefreshingURI = () => {
 		return REFRESHING_URI;
@@ -8527,7 +8527,7 @@ FOR_BOX((box) => {
 	});
 });
 
-/**
+/*
  * 현재 브라우저의 URI를 가져옵니다.
  */
 global.URI = METHOD({
@@ -8538,7 +8538,7 @@ global.URI = METHOD({
 	}
 });
 
-/**
+/*
  * 뷰를 정의하기 위한 VIEW 클래스
  */
 global.VIEW = CLASS({
@@ -8614,7 +8614,7 @@ global.VIEW = CLASS({
 	}
 });
 
-/**
+/*
  * 가로 스크롤의 현재 위치를 픽셀 단위로 가져옵니다.
  */
 global.SCROLL_LEFT = METHOD({
@@ -8625,7 +8625,7 @@ global.SCROLL_LEFT = METHOD({
 	}
 });
 
-/**
+/*
  * 세로 스크롤의 현재 위치를 픽셀 단위로 가져옵니다.
  */
 global.SCROLL_TOP = METHOD({
@@ -8636,7 +8636,7 @@ global.SCROLL_TOP = METHOD({
 	}
 });
 
-/**
+/*
  * 브라우저 창에 표시되는 문서의 제목을 가져오거나 변경합니다.
  */
 global.TITLE = METHOD({
@@ -8652,7 +8652,7 @@ global.TITLE = METHOD({
 	}
 });
 
-/**
+/*
  * 브라우저 창의 세로 길이를 픽셀 단위로 반환합니다.
  */
 global.WIN_HEIGHT = METHOD({
@@ -8663,7 +8663,7 @@ global.WIN_HEIGHT = METHOD({
 	}
 });
 
-/**
+/*
  * 브라우저 창의 가로 길이를 픽셀 단위로 반환합니다.
  */
 global.WIN_WIDTH = METHOD({

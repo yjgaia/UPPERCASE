@@ -1,46 +1,21 @@
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * 룸 서버와 통신을 주고받는 CLIENT_ROOM 클래스
 	 */
 	box.CLIENT_ROOM = CLASS({
 
-		init : function(inner, self, nameOrParams) {
+		init : (inner, self, nameOrParams) => {
 			//REQUIRED: nameOrParams
 			//OPTIONAL: nameOrParams.roomServerName
 			//REQUIRED: nameOrParams.name
 
-			var
-			// room server name
-			roomServerName,
-			
-			// room name
-			roomName,
+			let roomServerName;
+			let roomName;
 
-			// method map
-			methodMap = {},
+			let methodMap = {};
 
-			// is exited
-			isExited,
-
-			// get room name.
-			getRoomName,
-
-			// check is exited.
-			checkIsExited,
-
-			// on.
-			on,
-
-			// off.
-			off,
-
-			// send.
-			send,
-
-			// exit.
-			exit;
+			let isExited;
 			
 			if (CHECK_IS_DATA(nameOrParams) !== true) {
 				roomName = box.boxName + '/' + nameOrParams;
@@ -54,21 +29,19 @@ FOR_BOX(function(box) {
 				roomName : roomName
 			});
 
-			inner.getRoomName = getRoomName = function() {
+			let getRoomName = inner.getRoomName = () => {
 				return roomName;
 			};
 
-			inner.checkIsExited = checkIsExited = function() {
+			let checkIsExited = inner.checkIsExited = () => {
 				return isExited;
 			};
 
-			self.on = on = function(methodName, method) {
+			let on = self.on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				CONNECT_TO_ROOM_SERVER.on({
 					roomServerName : roomServerName,
@@ -82,13 +55,11 @@ FOR_BOX(function(box) {
 				methods.push(method);
 			};
 
-			self.off = off = function(methodName, method) {
+			let off = self.off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -110,29 +81,26 @@ FOR_BOX(function(box) {
 
 					} else {
 
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 							CONNECT_TO_ROOM_SERVER.off({
 								roomServerName : roomServerName,
 								methodName : roomName + '/' + methodName
 							}, method);
 						});
+						
 						delete methodMap[methodName];
 					}
 				}
 			};
 
-			self.send = send = function(methodNameOrParams, callback) {
+			let send = self.send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//REQUIRED: methodNameOrParams.methodName
 				//REQUIRED: methodNameOrParams.data
 				//OPTIONAL: callback
 				
-				var
-				// method name
-				methodName,
-				
-				// data
-				data;
+				let methodName;
+				let data;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -154,7 +122,7 @@ FOR_BOX(function(box) {
 				}
 			};
 
-			self.exit = exit = function() {
+			let exit = self.exit = () => {
 
 				if (isExited !== true) {
 
@@ -163,7 +131,7 @@ FOR_BOX(function(box) {
 						roomName : roomName
 					});
 
-					EACH(methodMap, function(methods, methodName) {
+					EACH(methodMap, (methods, methodName) => {
 						off(methodName);
 					});
 

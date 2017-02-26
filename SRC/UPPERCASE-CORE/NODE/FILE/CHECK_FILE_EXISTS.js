@@ -1,4 +1,4 @@
-/**
+/*
  * 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
  */
 global.CHECK_FILE_EXISTS = METHOD(() => {

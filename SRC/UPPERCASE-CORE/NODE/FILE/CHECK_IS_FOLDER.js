@@ -1,4 +1,4 @@
-/**
+/*
  * 지정된 경로가 (파일이 아닌) 폴더인지 확인합니다.
  */
 global.CHECK_IS_FOLDER = METHOD(() => {

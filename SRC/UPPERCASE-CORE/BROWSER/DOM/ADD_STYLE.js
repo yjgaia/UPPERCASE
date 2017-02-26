@@ -1,4 +1,4 @@
-/**
+/*
  * 노드에 스타일을 지정합니다.
  */
 global.ADD_STYLE = METHOD({

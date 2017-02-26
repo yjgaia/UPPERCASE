@@ -1,9 +1,9 @@
-/**
+/*
  * 웹 서버를 생성하는 클래스
  */
 global.WEB_SERVER = CLASS((cls) => {
 
-	let DEFAULT_MAX_UPLOAD_FILE_MB = 10;
+	const DEFAULT_MAX_UPLOAD_FILE_MB = 10;
 	
 	let HTTP = require('http');
 	let HTTPS = require('https');

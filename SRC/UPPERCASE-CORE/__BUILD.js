@@ -1,4 +1,4 @@
-// load UPPERCASE-CORE
+// load UPPERCASE-CORE.
 require('../../UPPERCASE-CORE/NODE.js');
 
 /*
@@ -7,10 +7,7 @@ require('../../UPPERCASE-CORE/NODE.js');
 RUN(() => {
 	
 	const TITLE = 'UPPERCASE-CORE';	
-	
 	const BASE_CONTENT = '\'use strict\';\n\n/*\n\nWelcome to ' + TITLE + '! (http://uppercase.io)\n\n*/\n\n';
-	
-	let path = require('path');
 	
 	let log = (msg) => {
 		console.log(TITLE + ' BUILD: ' + msg);

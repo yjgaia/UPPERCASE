@@ -1,4 +1,4 @@
-/**
+/*
  * HTTP DELETE 요청을 보냅니다.
  */
 global.DELETE = METHOD({

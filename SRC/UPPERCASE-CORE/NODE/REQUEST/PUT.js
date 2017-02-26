@@ -1,4 +1,4 @@
-/**
+/*
  * HTTP PUT 요청을 보냅니다.
  */
 global.PUT = METHOD({

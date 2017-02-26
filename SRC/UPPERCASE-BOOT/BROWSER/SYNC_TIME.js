@@ -1,24 +1,18 @@
-/**
+/*
  * Sync time. (Client-side)
  */
 global.SYNC_TIME = METHOD({
 
-	run : function() {
-		'use strict';
-
-		var
-		// time sync room
-		timeSyncRoom = UPPERCASE.ROOM('timeSyncRoom'),
-
-		// now time
-		now = new Date();
-
+	run : () => {
+		
+		let timeSyncRoom = UPPERCASE.ROOM('timeSyncRoom');
+		
 		timeSyncRoom.send({
 			methodName : 'sync',
-			data : now
+			data : new Date()
 		},
 
-		function(diff) {
+		(diff) => {
 			
 			// The local time = The server time + diff (diff: client time - server time)
 			TIME.setDiff(diff);

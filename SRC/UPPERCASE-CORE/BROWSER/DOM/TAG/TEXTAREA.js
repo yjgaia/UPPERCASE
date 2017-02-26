@@ -1,4 +1,4 @@
-/**
+/*
  * Textarea class
  */
 global.TEXTAREA = CLASS({

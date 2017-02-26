@@ -1,4 +1,4 @@
-/**
+/*
  * 지정된 경로에 위치한 파일들의 이름 목록을 불러옵니다.
  */
 global.FIND_FILE_NAMES = METHOD(() => {

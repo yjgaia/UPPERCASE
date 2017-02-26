@@ -1,36 +1,32 @@
-// load UPPERCASE-CORE
+// load UPPERCASE-CORE.
 require('../UPPERCASE-CORE/NODE.js');
 
 /*
  * distribute UPPERCASE.
  */
-RUN(function() {
-	'use strict';
+RUN(() => {
 	
-	var
-	// exec
-	exec = require('child_process').exec,
+	let exec = require('child_process').exec;
 	
-	// build.
-	build = function(moduleName, next) {
+	let build = (moduleName, next) => {
 		exec('node __BUILD.js', {
 			cwd : __dirname + '/' + moduleName
 		}, next);
-	},
+	};
 	
-	log = function(msg) {
+	let log = (msg) => {
 		console.log('UPPERCASE BUILD: ' + msg);
 	};
 	
 	log('START.');
 	
 	PARALLEL([
-	function(done) {	build('UPPERCASE-CORE', done);		},
-	function(done) {	build('UPPERCASE-ROOM', done);		},
-	function(done) {	build('UPPERCASE-DB', done);		},
-	function(done) {	build('UPPERCASE-MODEL', done);		},
-	function(done) {	build('UPPERCASE-BOOT', done);		},
-	function() {
+	(done) => {	build('UPPERCASE-CORE', done);	},
+	(done) => {	build('UPPERCASE-ROOM', done);	},
+	(done) => {	build('UPPERCASE-DB', done);	},
+	(done) => {	build('UPPERCASE-MODEL', done);	},
+	(done) => {	build('UPPERCASE-BOOT', done);	},
+	() => {
 		log('DONE.');
 	}]);
 });

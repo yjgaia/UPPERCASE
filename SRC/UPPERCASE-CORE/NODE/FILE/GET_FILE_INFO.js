@@ -1,4 +1,4 @@
-/**
+/*
  * 파일의 정보를 불러옵니다.
  * 
  * 파일의 크기(size), 생성 시간(createTime), 최종 수정 시간(lastUpdateTime)을 불러옵니다.

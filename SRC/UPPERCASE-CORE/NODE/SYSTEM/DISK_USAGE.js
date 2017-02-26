@@ -1,4 +1,4 @@
-/**
+/*
  * 디스크 사용률을 반환합니다.
  */
 global.DISK_USAGE = METHOD(() => {

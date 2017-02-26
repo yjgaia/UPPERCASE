@@ -1,4 +1,4 @@
-/**
+/*
  * 특정 URI와 뷰를 연결합니다.
  */
 global.MATCH_VIEW = METHOD((m) => {

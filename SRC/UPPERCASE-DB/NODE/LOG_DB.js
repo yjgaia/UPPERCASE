@@ -1,33 +1,27 @@
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * 로그를 저장하는 기능을 제공하는 LOG_DB 클래스
 	 */
-	box.LOG_DB = CLASS(function(cls) {
+	box.LOG_DB = CLASS((cls) => {
 		
-		var
-		// generate _id.
-		gen_id = function(id) {
+		let gen_id = (id) => {
 			//REQUIRED: id
 			
 			return VALID.mongoId(id) === true ? new ObjectID(id) : -1;
-		},
+		};
 		
-		// make up filter.
-		makeUpFilter = function(filter) {
+		let makeUpFilter = (filter) => {
 
-			var
-			// f.
-			f = function(filter) {
+			let f = (filter) => {
 
 				if (filter.id !== undefined) {
 
 					if (CHECK_IS_DATA(filter.id) === true) {
 
-						EACH(filter.id, function(values, i) {
+						EACH(filter.id, (values, i) => {
 							if (CHECK_IS_DATA(values) === true || CHECK_IS_ARRAY(values) === true) {
-								EACH(values, function(value, j) {
+								EACH(values, (value, j) => {
 									values[j] = gen_id(value);
 								});
 							} else {
@@ -43,7 +37,7 @@ FOR_BOX(function(box) {
 					delete filter.id;
 				}
 
-				EACH(filter, function(value, name) {
+				EACH(filter, (value, name) => {
 					if (value === undefined) {
 						delete filter[name];
 					}
@@ -52,13 +46,13 @@ FOR_BOX(function(box) {
 
 			if (filter.$and !== undefined) {
 
-				EACH(filter.$and, function(filter) {
+				EACH(filter.$and, (filter) => {
 					f(filter);
 				});
 
 			} else if (filter.$or !== undefined) {
 
-				EACH(filter.$or, function(filter) {
+				EACH(filter.$or, (filter) => {
 					f(filter);
 				});
 
@@ -69,29 +63,16 @@ FOR_BOX(function(box) {
 
 		return {
 		
-			init : function(inner, self, nameOrParams) {
+			init : (inner, self, nameOrParams) => {
 				//REQUIRED: nameOrParams
 				//OPTIONAL: nameOrParams.dbServerName
 				//REQUIRED: nameOrParams.name
 	
-				var
-				// name
-				name,
+				let dbServerName;
+				let name;
 				
-				// db server name
-				dbServerName,
-				
-				// waiting log data set
-				waitingLogDataSet = [],
-				
-				// waiting find infos
-				waitingFindInfos = [],
-	
-				// log.
-				log,
-				
-				// find.
-				find;
+				let waitingLogDataSet = [];
+				let waitingFindInfos = [];
 				
 				if (CHECK_IS_DATA(nameOrParams) !== true) {
 					name = nameOrParams;
@@ -100,13 +81,13 @@ FOR_BOX(function(box) {
 					name = nameOrParams.name;
 				}
 	
-				self.log = log = function(data) {
+				let log = self.log = (data) => {
 					//REQUIRED: data
 	
 					waitingLogDataSet.push(data);
 				};
 				
-				self.find = find = function(params, callbackOrHandlers) {
+				let find = self.find = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.sort
@@ -123,13 +104,11 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, function(nativeDB) {
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB) => {
 	
-					var
-					// MongoDB collection
-					collection = nativeDB.collection(box.boxName + '.' + name);
+					let collection = nativeDB.collection(box.boxName + '.' + name);
 	
-					self.log = log = function(data) {
+					log = self.log = (data) => {
 						//REQUIRED: data
 	
 						// now
@@ -140,7 +119,7 @@ FOR_BOX(function(box) {
 						collection.insertOne(data);
 					};
 					
-					self.find = find = function(params, callbackOrHandlers) {
+					find = self.find = (params, callbackOrHandlers) => {
 						//OPTIONAL: params
 						//OPTIONAL: params.filter
 						//OPTIONAL: params.sort
@@ -151,40 +130,18 @@ FOR_BOX(function(box) {
 						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 		
-						var
-						// filter
-						filter,
-	
-						// sort
-						sort,
-	
-						// start
-						start,
-	
-						// count
-						count,
-	
-						// is find all
-						isFindAll,
+						let filter;
+						let sort;
+						let start;
+						let count;
+						let isFindAll;
 						
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler,
-	
-						// error message
-						errorMsg,
+						let callback;
+						let errorHandler;
+						let errorMsg;
+						let cleanedFilter;
+						let cachedInfo;
 						
-						// cleaned filter
-						cleanedFilter,
-						
-						// cached info
-						cachedInfo,
-	
-						// proc.
-						proc;
-	
 						try {
 	
 							if (callbackOrHandlers === undefined) {
@@ -240,12 +197,12 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 	
-							proc = function(error, savedDataSet) {
+							let proc = (error, savedDataSet) => {
 	
 								if (error === TO_DELETE) {
 									
 									// clean saved data before callback.
-									EACH(savedDataSet, function(savedData, i) {
+									EACH(savedDataSet, (savedData, i) => {
 										
 										// convert _id (object) to id (string).
 										if (savedData._id !== undefined) {
@@ -298,13 +255,13 @@ FOR_BOX(function(box) {
 						}
 					};
 	
-					EACH(waitingLogDataSet, function(data) {
+					EACH(waitingLogDataSet, (data) => {
 						log(data);
 					});
 	
 					waitingLogDataSet = undefined;
 					
-					EACH(waitingFindInfos, function(info) {
+					EACH(waitingFindInfos, (info) => {
 						find(info.params, info.callbackOrHandlers);
 					});
 	

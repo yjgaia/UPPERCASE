@@ -1,4 +1,4 @@
-/**
+/*
  * target이 JavaScript arguments인지 확인합니다.
  */
 global.CHECK_IS_ARGUMENTS = METHOD({

@@ -4,24 +4,19 @@ Welcome to UPPERCASE-MODEL! (http://uppercase.io)
 
 */
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * MODEL 클래스
 	 */
 	box.MODEL = CLASS({
 
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 			//REQUIRED: params
 			//REQUIRED: params.name
 			//OPTIONAL: params.config
 			
-			var
-			// get box name.
-			getBoxName;
-			
-			self.getBoxName = getBoxName = function() {
+			let getBoxName = self.getBoxName = () => {
 				return box.boxName;
 			};
 

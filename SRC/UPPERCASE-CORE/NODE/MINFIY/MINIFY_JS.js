@@ -1,4 +1,4 @@
-/**
+/*
  * JavaScript 코드를 압축합니다.
  */
 global.MINIFY_JS = METHOD(() => {

@@ -1,4 +1,4 @@
-/**
+/*
  * 사운드 파일을 재생하는 SOUND 클래스
  */
 global.SOUND = CLASS((cls) => {

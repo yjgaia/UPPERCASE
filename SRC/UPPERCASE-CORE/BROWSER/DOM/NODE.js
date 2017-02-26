@@ -1,4 +1,4 @@
-/**
+/*
  * DOM 트리 구조를 정의하기 위한 NODE 클래스
  */
 global.NODE = CLASS({

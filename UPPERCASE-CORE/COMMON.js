@@ -6,7 +6,7 @@ Welcome to UPPERCASE-CORE! (http://uppercase.io)
 
 */
 
-/**
+/*
  * 기본 설정
  */
 global.CONFIG = {
@@ -15,7 +15,7 @@ global.CONFIG = {
 	isDevMode : false
 };
 
-/**
+/*
  * 메소드를 생성합니다.
  */
 global.METHOD = (define) => {
@@ -53,7 +53,7 @@ global.METHOD = (define) => {
 	return m;
 };
 
-/**
+/*
  * DB의 update 기능을 사용할 때, 데이터의 특정 값에 TO_DELETE를 지정하게 되면 해당 값이 삭제됩니다.
  * 자세한 것은 DB의 update 예제를 살펴보시기 바랍니다.
  *
@@ -62,7 +62,7 @@ global.METHOD = (define) => {
  */
 global.TO_DELETE = null;
 
-/**
+/*
  * BOX를 생성합니다.
  */
 global.BOX = METHOD((m) => {
@@ -125,7 +125,7 @@ global.BOX = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * 모든 박스를 대상으로 하는 메소드와 클래스, 싱글톤 객체를 선언할 때 사용합니다.
  */
 global.FOR_BOX = METHOD((m) => {
@@ -182,7 +182,7 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 		console.warn(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
-/**
+/*
  * 클래스를 생성합니다.
  */
 global.CLASS = METHOD((m) => {
@@ -363,7 +363,7 @@ global.CLASS = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * 모든 정의된 싱글톤 객체의 초기화를 수행합니다.
  */
 global.INIT_OBJECTS = METHOD({
@@ -374,7 +374,7 @@ global.INIT_OBJECTS = METHOD({
 	}
 });
 
-/**
+/*
  * 실글톤 객체를 생성합니다.
  */
 global.OBJECT = METHOD((m) => {
@@ -461,7 +461,7 @@ global.OBJECT = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * target이 JavaScript arguments인지 확인합니다.
  */
 global.CHECK_IS_ARGUMENTS = METHOD({
@@ -487,7 +487,7 @@ global.CHECK_IS_ARGUMENTS = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 비동기 함수들을 순서대로 실행합니다.
  */
 global.NEXT = METHOD({
@@ -607,7 +607,7 @@ global.NEXT = METHOD({
 	}
 });
 
-/**
+/*
  * 오버라이딩을 수행합니다.
  */
 global.OVERRIDE = METHOD({
@@ -627,7 +627,7 @@ global.OVERRIDE = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 비동기 함수들을 병렬로 실행합니다.
  */
 global.PARALLEL = METHOD({
@@ -729,7 +729,7 @@ global.PARALLEL = METHOD({
 	}
 });
 
-/**
+/*
  * JSON 문자열을 원래 데이터나 배열, 값으로 변환합니다.
  */
 global.PARSE_STR = METHOD({
@@ -768,7 +768,7 @@ global.PARSE_STR = METHOD({
 	}
 });
 
-/**
+/*
  * 알파벳 대, 소문자와 숫자로 이루어진 임의의 문자열을 생성합니다.
  */
 global.RANDOM_STR = METHOD(() => {
@@ -795,7 +795,7 @@ global.RANDOM_STR = METHOD(() => {
 	};
 });
 
-/**
+/*
  * 데이터나 배열, 값을 JSON 문자열로 변환합니다.
  */
 global.STRINGIFY = METHOD({
@@ -824,7 +824,7 @@ global.STRINGIFY = METHOD({
 	}
 });
 
-/**
+/*
  * 테스트용 메소드입니다.
  * 
  * 테스트에 성공하거나 실패하면 콘솔에 메시지를 출력합니다.
@@ -874,7 +874,7 @@ global.TEST = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * URI가 주어진 포맷에 맞는지 확인하는 URI_MATCHER 클래스
  * 
  * 포맷에 파라미터 구간을 지정할 수 있어 URI로부터 파라미터 값을 가져올 수 있습니다.
@@ -949,7 +949,7 @@ global.URI_MATCHER = CLASS({
 	}
 });
 
-/**
+/*
  * 데이터를 검증하고, 어떤 부분이 잘못되었는지 오류를 확인할 수 있는 VALID 클래스
  */
 global.VALID = CLASS((cls) => {
@@ -1483,7 +1483,7 @@ global.VALID = CLASS((cls) => {
 	};
 });
 
-/**
+/*
  * 배열 안의 모든 요소들이 동일한지 확인합니다.
  */
 global.CHECK_ARE_SAME = METHOD({
@@ -1540,7 +1540,7 @@ global.CHECK_ARE_SAME = METHOD({
 	}
 });
 
-/**
+/*
  * target이 배열인지 확인합니다.
  */
 global.CHECK_IS_ARRAY = METHOD({
@@ -1560,7 +1560,7 @@ global.CHECK_IS_ARRAY = METHOD({
 	}
 });
 
-/**
+/*
  * target이 데이터인지 확인합니다.
  */
 global.CHECK_IS_DATA = METHOD({
@@ -1583,7 +1583,7 @@ global.CHECK_IS_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터가 아무런 값이 없는 빈 데이터({})인지 확인합니다.
  */
 global.CHECK_IS_EMPTY_DATA = METHOD({
@@ -1595,7 +1595,7 @@ global.CHECK_IS_EMPTY_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터 내 값들의 개수를 반환합니다.
  */
 global.COUNT_PROPERTIES = METHOD({
@@ -1613,7 +1613,7 @@ global.COUNT_PROPERTIES = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 데이터의 값들 중 Date형은 정수형태로, RegExp형은 문자열 형태로 변환한 데이터를 반환합니다.
  */
 global.PACK_DATA = METHOD({
@@ -1663,7 +1663,7 @@ global.PACK_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * PACK_DATA가 적용된 데이터의 값들 중 정수형태로 변환된 Date형과 문자열 형태로 변환된 RegExp형을 원래대로 되돌린 데이터를 반환합니다.
  */
 global.UNPACK_DATA = METHOD({
@@ -1728,7 +1728,7 @@ global.UNPACK_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * 특정 값이 데이터나 배열에 존재하는지 확인합니다.
  */
 global.CHECK_IS_IN = METHOD({
@@ -1761,7 +1761,7 @@ global.CHECK_IS_IN = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터들이나 배열들을 하나의 데이터나 배열로 합칩니다.
  */
 global.COMBINE = METHOD({
@@ -1804,7 +1804,7 @@ global.COMBINE = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열을 복제합니다.
  */
 global.COPY = METHOD({
@@ -1838,7 +1838,7 @@ global.COPY = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열을 덧붙혀 확장합니다.
  */
 global.EXTEND = METHOD({
@@ -1923,7 +1923,7 @@ global.EXTEND = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열의 특정 값을 찾아, 데이터인 경우 그 값에 해당하는 이름을, 배열인 경우 그 값에 해당하는 키(index)를 반환합니다.
  */
 global.FIND = METHOD({
@@ -1996,7 +1996,7 @@ global.FIND = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열의 특정 값을 삭제합니다.
  */
 global.REMOVE = METHOD({
@@ -2094,7 +2094,7 @@ global.REMOVE = METHOD({
 	}
 });
 
-/**
+/*
  * 날짜를 처리할 때 Date형을 좀 더 쓰기 편하도록 개선한 CALENDAR 클래스
  */
 global.CALENDAR = CLASS({
@@ -2176,7 +2176,7 @@ global.CALENDAR = CLASS({
 	}
 });
 
-/**
+/*
  * Date형 값을 생성합니다.
  */
 global.CREATE_DATE = METHOD({
@@ -2227,7 +2227,7 @@ global.CREATE_DATE = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 초가 흐른 뒤에 함수를 실행하는 DELAY 클래스
  */
 global.DELAY = CLASS({
@@ -2273,7 +2273,7 @@ global.DELAY = CLASS({
 	}
 });
 
-/**
+/*
  * 주어진 초 마다 함수를 반복해서 실행하는 INTERVAL 클래스
  */
 global.INTERVAL = CLASS({
@@ -2325,7 +2325,7 @@ global.INTERVAL = CLASS({
 	}
 });
 
-/**
+/*
  * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
  */
 global.LOOP = CLASS((cls) => {
@@ -2494,7 +2494,7 @@ global.LOOP = CLASS((cls) => {
 	};
 });
 
-/**
+/*
  * 주어진 함수를 즉시 실행하고, 함수를 반환합니다.
  * 
  * 선언과 동시에 실행되어야 하는 함수를 선언할 때 유용합니다.
@@ -2517,7 +2517,7 @@ global.RAR = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 함수를 즉시 실행합니다.
  */
 global.RUN = METHOD({
@@ -2533,7 +2533,7 @@ global.RUN = METHOD({
 	}
 });
 
-/**
+/*
  * 정수 문자열을 정수 값으로 변환합니다.
  */
 global.INTEGER = METHOD({
@@ -2545,7 +2545,7 @@ global.INTEGER = METHOD({
 	}
 });
 
-/**
+/*
  * 임의의 정수를 생성합니다.
  */
 global.RANDOM = METHOD({
@@ -2581,7 +2581,7 @@ global.RANDOM = METHOD({
 	}
 });
 
-/**
+/*
  * 실수 문자열을 실수 값으로 변환합니다.
  */
 global.REAL = METHOD({
@@ -2593,7 +2593,7 @@ global.REAL = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열, 문자열의 각 요소를 순서대로 대입하여 주어진 함수를 실행합니다.
  */
 global.EACH = METHOD({
@@ -2655,7 +2655,7 @@ global.EACH = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 함수를 주어진 횟수만큼 반복해서 실행합니다.
  */
 global.REPEAT = METHOD({
@@ -2741,7 +2741,7 @@ global.REPEAT = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열, 문자열의 각 요소를 역순으로 대입하여 주어진 함수를 실행합니다.
  */
 global.REVERSE_EACH = METHOD({

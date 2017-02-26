@@ -1,4 +1,4 @@
-/**
+/*
  * 실글톤 객체를 생성합니다.
  */
 global.OBJECT = METHOD((m) => {

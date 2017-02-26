@@ -1,26 +1,19 @@
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
+FOR_BOX((box) => {
+	
+	/*
 	 * 주어진 이름을 가진 모든 룸에 데이터를 전송합니다.
 	 */
 	box.BROADCAST = METHOD({
 
-		run : function(params) {
+		run : (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.roomName
 			//OPTIONAL: params.methodName
 			//OPTIONAL: params.data
 
-			var
-			// room name
-			roomName = box.boxName + '/' + params.roomName,
-
-			// method name
-			methodName = params.methodName,
-
-			// data
-			data = params.data;
+			let roomName = box.boxName + '/' + params.roomName;
+			let methodName = params.methodName;
+			let data = params.data;
 			
 			LAUNCH_ROOM_SERVER.broadcast({
 				roomName : roomName,

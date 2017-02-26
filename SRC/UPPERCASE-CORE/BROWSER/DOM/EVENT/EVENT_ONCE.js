@@ -1,4 +1,4 @@
-/**
+/*
  * 이벤트가 한번 발생하면 자동으로 제거되는 EVENT_ONCE 클래스
  */
 global.EVENT_ONCE = CLASS({

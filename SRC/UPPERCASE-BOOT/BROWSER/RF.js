@@ -1,12 +1,11 @@
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * get final resource's real path.
 	 */
 	box.RF = METHOD({
 
-		run : function(path) {
+		run : (path) => {
 			//REQUIRED: path
 			
 			return '/__RF/' + box.boxName + '/' + path;

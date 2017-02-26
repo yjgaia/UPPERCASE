@@ -1,4 +1,4 @@
-/**
+/*
  * 파일의 위치를 이동시킵니다.
  */
 global.MOVE_FILE = METHOD({

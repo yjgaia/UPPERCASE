@@ -1,4 +1,4 @@
-/**
+/*
  * HTTP 리소스를 다운로드합니다.
  */
 global.DOWNLOAD = METHOD(() => {

@@ -1,9 +1,9 @@
-/**
+/*
  * 뷰를 새로 불러옵니다.
  */
 global.REFRESH = METHOD((m) => {
 	
-	let REFRESHING_URI = '__REFRESHING';
+	const REFRESHING_URI = '__REFRESHING';
 	
 	let getRefreshingURI = m.getRefreshingURI = () => {
 		return REFRESHING_URI;

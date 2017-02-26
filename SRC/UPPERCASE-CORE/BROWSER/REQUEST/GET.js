@@ -1,4 +1,4 @@
-/**
+/*
  * HTTP GET 요청을 보냅니다.
  */
 global.GET = METHOD({

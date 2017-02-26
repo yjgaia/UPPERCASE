@@ -1,4 +1,4 @@
-/**
+/*
  * 파일을 복사합니다.
  */
 global.COPY_FILE = METHOD(() => {

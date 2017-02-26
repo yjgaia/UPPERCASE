@@ -1,8 +1,7 @@
-/**
+/*
  * Configuration
  */
-OVERRIDE(CONFIG, function(origin) {
-	'use strict';
+OVERRIDE(CONFIG, (origin) => {
 
 	global.CONFIG = COMBINE([{
 		

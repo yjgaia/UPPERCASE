@@ -1,4 +1,4 @@
-/**
+/*
  * 노드에 애니메이션을 지정합니다.
  */
 global.ANIMATE = METHOD((m) => {

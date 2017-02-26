@@ -1,4 +1,4 @@
-/**
+/*
  * A class
  */
 global.A = CLASS({

@@ -1,14 +1,15 @@
+'use strict';
+
 /*
 
 Welcome to UPPERCASE-BOOT! (http://uppercase.io)
 
 */
 
-/**
+/*
  * Configuration
  */
-OVERRIDE(CONFIG, function(origin) {
-	'use strict';
+OVERRIDE(CONFIG, (origin) => {
 
 	global.CONFIG = COMBINE([{
 		
