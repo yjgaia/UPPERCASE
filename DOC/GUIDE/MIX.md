@@ -17,16 +17,13 @@ NSP.js 파일을 분석하여 UPPERCASE에 쉽게 삽입할 수 있습니다.
 ```javascript
 NSPSample.MAIN = METHOD({
 
-	run : function(addRequestListener) {
-		'use strict';
+	run : (addRequestListener) => {
 		
-		var
-		// nsp core
-		nspCore = NSP({
+		let nspCore = NSP({
 			rootPath : './NSPSample/view'
 		});
 		
-		addRequestListener(function(requestInfo, response, onDisconnected, replaceRootPath, next) {
+		addRequestListener((requestInfo, response, onDisconnected, replaceRootPath, next) => {
 			return nspCore.requestListener(requestInfo, response, onDisconnected, replaceRootPath, next);
 		});
 		// or addRequestListener(nspCore.requestListener);
@@ -52,18 +49,15 @@ npm install less
 ```javascript
 Sample.MAIN = METHOD({
 
-	run : function(addRequestListener) {
-		'use strict';
+	run : (addRequestListener) => {
 		
-		var
-		//IMPORT: Less
-		Less = require('less');
+		let Less = require('less');
 		
 		RESOURCE_SERVER.addPreprocessor({
 			extension : 'less',
-			preprocessor : function(content, response) {
+			preprocessor : (content, response) => {
 				
-				Less.render(content, function(error, output) {
+				Less.render(content, (error, output) => {
 					response({
 						content : output.css,
 						contentType : 'text/css',

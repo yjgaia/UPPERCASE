@@ -86,8 +86,8 @@ http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝�
     // MAIN 메소드를 생성합니다.
     Sample.MAIN = METHOD({
     
-    	run : function() {
-    		'use strict';
+    	run : () => {
+    	
     		// ''로 접속하면 Home 뷰를 생성합니다.
     		Sample.MATCH_VIEW({
     			uri : '',
@@ -102,22 +102,17 @@ http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝�
     ```javascript
     Sample.Home = CLASS({
     
-    	preset : function() {
-    		'use strict';
-    
+    	preset : () => {
     		return VIEW;
     	},
     
-    	init : function(inner, self) {
-    		'use strict';
+    	init : (inner, self) => {
     
-    		var
-    		// div
-    		div = DIV({
+    		let div = DIV({
     			c : 'Hello, UPPERCASE!'
     		}).appendTo(BODY);
     		
-    		inner.on('close', function() {
+    		inner.on('close', () => {
     			div.remove();
     		});
     	}
@@ -136,17 +131,13 @@ http://localhost:8888 으로 접속하여 까만 화면이 뜬다면 프로젝�
 ```javascript
 Sample.MAIN = METHOD({
 	
-	run : function(addRequestListener) {
-		'use strict';
+	run : (addRequestListener) => {
 		
-		addRequestListener(function(requestInfo, response) {
+		addRequestListener((requestInfo, response) => {
 
-			var
-			// uri
-			uri = requestInfo.uri,
+			let uri = requestInfo.uri;
 			
-			// user agent
-			userAgent = requestInfo.headers['user-agent'];
+			let userAgent = requestInfo.headers['user-agent'];
 			
 			...
 		});

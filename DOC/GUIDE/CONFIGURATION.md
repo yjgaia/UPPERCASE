@@ -6,20 +6,15 @@
 ```html
 <!-- UJS-BROWSER.js를 불러옵니다. -->
 <script src="/UJS-BROWSER.js"></script>
-<!-- 구버젼 브라우저에 대한 지원과, 각종 브라우저들이 갖고있는 버그를 고쳐주는 BROWSER-FIX를 불러옵니다. -->
-<script>
-	// UJS-BROWSER-FIX 폴더 지정
-    BROWSER_CONFIG.fixScriptsFolderPath = '/UJS-BROWSER-FIX';
-    // FIX.js를 불러옵니다.
-    LOAD('/UJS-BROWSER-FIX/FIX.js');
-</script>
 <!-- UJS의 작동방식을 설정합니다. -->
 <script>
-// 개발 모드
-CONFIG.isDevMode = true;
-
-// 기본 포트를 변경합니다.
-BROWSER_CONFIG.port = 8010;
+	'use strict';
+	
+	// 개발 모드
+	CONFIG.isDevMode = true;
+	
+	// 기본 포트를 변경합니다.
+	BROWSER_CONFIG.port = 8010;
 </script>
 ```
 

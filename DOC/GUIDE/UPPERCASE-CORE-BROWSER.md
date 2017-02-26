@@ -105,10 +105,9 @@ HTML 코드와 JavaScript 코드가 분리되어 있는 기존 웹 개발 방식
     <body>
         <p id="hello">안녕하세요.</p>
         <script>
-        
-            var
-            // hello
-            hello = document.getElementById('hello');
+            'use strict';
+            
+            let hello = document.getElementById('hello');
             
             // 빨간색인 글자 색을 파란색으로 변경
             hello.style.color = 'blue';
@@ -122,9 +121,7 @@ HTML 코드와 JavaScript 코드가 분리되어 있는 기존 웹 개발 방식
 위와 같이 HTML 요소를 JavaScript에서 일일히 찾는 방식은 **웹 애플리케이션**을 개발하는데에는 적합하지 않습니다. 그렇다면, JavaScript에서 DOM 객체를 직접 생성하여 다루면 어떨까요? 그러면 DOM 객체를 찾는 과정이 없어지기 때문에 좀 더 쉽게 DOM 객체를 다룰 수 있습니다. 그러나 이 방법은 JavaScript 코드가 복잡해진다는 단점이 있습니다.
 
 ```javascript
-var
-// hello
-hello = document.createElement('p');
+let hello = document.createElement('p');
 hello.style.color = 'red';
 hello.appendChild(document.createTextNode('안녕하세요.'));
 document.body.appendChild(hello);
@@ -137,9 +134,7 @@ hello.style.color = 'blue';
 UPPERCASE의 DOM 객체 생성 기능을 사용하면, JavaScript에서의 DOM 객체 생성을 명료하게 표현할 수 있어 보다 이해하기 쉬운 코드를 만들어 냅니다.
 
 ```javascript
-var
-// hello
-hello = P({
+let hello = P({
     style : {
         color : 'red'
     },
@@ -161,29 +156,20 @@ hello.addStyle({
 // 이미지와 텍스트를 동시에 보여주는 NODE 요소
 ImageAndText = CLASS({
 
-	preset : function() {
+	preset : () => {
 		return NODE;
 	},
 
-	init : function(inner, self, params) {
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//REQUIRED: params.img
 		//REQUIRED: params.text
 
-		var
-		// img
-		img = params.img,
-
-		// text
-		text = params.text,
-
-		// wrapper
-		wrapper,
+		let img = params.img;
+		let text = params.text;
 		
-		// content
-		content;
-		
-		wrapper = DIV({
+		let content;
+		let wrapper = DIV({
 		    c : content = P({
     			c : [img, BR(), text]
     		})
@@ -211,9 +197,7 @@ ImageAndText = CLASS({
 
 ### 트리 구조 관련
 ```javascript
-var
-// div
-div = DIV().appendTo(BODY);
+let div = DIV().appendTo(BODY);
 
 div.append(P({
     c : '동해물과 백두산이 마르고 닳도록'
@@ -243,13 +227,11 @@ div.prepend(H1({
 
 ### 이벤트 관련
 ```javascript
-var
-// button
-button = DIV({
+let button = DIV({
     c : '저를 눌러주세요.'
 }).appendTo(BODY);
 
-button.on('tap', function() {
+button.on('tap', () => {
     alert('아야! 너무 세게 누르셨어요!');
 });
 ```
@@ -259,9 +241,7 @@ button.on('tap', function() {
 
 ### 스타일 관련
 ```javascript
-var
-// red box
-redBox = DIV({
+let redBox = DIV({
     c : '빨간 박스'
 }).appendTo(BODY);
 
@@ -286,9 +266,7 @@ redBox.addStyle({
 
 #### 스크롤 관련
 ```javascript
-var
-// div
-div = DIV({
+let div = DIV({
     style : {
         overflow : 'scoll',
         width : 100,
@@ -310,9 +288,7 @@ div.scrollTo({
 
 ### 데이터 관련
 ```javascript
-var
-// div
-div = DIV({
+let div = DIV({
     c : '나는 누구?'
 }).appendTo(BODY);
 
@@ -346,7 +322,7 @@ DIV({
         c : '하느님이 보우하사 우리 나라 만세'
     })],
     on : {
-        tap : function() {
+        tap : () => {
             alert('무궁화 삼천리 화려강산, 대한 사람 대한으로 길이 보전하세');
         }
     }
@@ -554,9 +530,7 @@ HTML `form` 태그와 대응되는 클래스. 아래와 같은 파라미터들�
 - `enctype` 폼 데이터를 전송할때 사용할 인코딩 방법. 업로드 기능 구현에 사용됩니다.
 
 ```javascript
-var
-// form
-form = FORM({
+let form = FORM({
     action : 'account/create',
     method : 'POST',
     c : [INPUT({
@@ -612,9 +586,7 @@ HTML `input` 태그와 대응되는 클래스. 아래와 같은 파라미터들�
 - `isOffAutocomplete` `true`인 경우 브라우저가 제공하는 자동 완성 기능을 사용하지 않음
 
 ```javascript
-var
-// input
-input;
+let input;
 
 FORM({
     action : 'upload',
@@ -665,9 +637,7 @@ HTML `textarea` 태그와 대응되는 클래스. `name`과 `placeholder`, `valu
 HTML `select` 태그와 대응되는 클래스. `name`과 `placeholder`, `value` 파라미터를 추가로 사용할 수 있습니다.
 
 ```javascript
-var
-// select
-select = SELECT({
+let select = SELECT({
     name : 'sex',
     placeholder : '성별',
     c : [OPTION({
@@ -740,18 +710,15 @@ HTML `option` 태그와 대응되는 클래스. `value` 파라미터를 추가�
 HTML `canvas` 태그와 대응되는 클래스. `width`와 `height` 파라미터를 추가로 사용할 수 있습니다.
 
 ```javascript
-var
-// canvas
-canvas = CANVAS({
+let canvas = CANVAS({
 	width : 300,
 	height : 200,
 	style : {
 		border : '1px solid #999'
 	}
-}).appendTo(BODY),
+}).appendTo(BODY);
 
-// context
-context = canvas.getContext('2d');
+let context = canvas.getContext('2d');
 
 // 원을 그린다.
 context.strokeStyle = '#ffffff';
@@ -786,9 +753,7 @@ HTML `audio` 태그와 대응되는 클래스. 아래와 같은 파라미터들�
 OGG 파일과 MP3 파일 중 브라우저가 지원하는 포맷의 사운드 파일을 재생합니다. [`SOUND`](#sound)와 다른 점은, 조작 메뉴를 제공한다는 점입니다.
 
 ```javascript
-var
-// audio
-audio = AUDIO({
+let audio = AUDIO({
 	ogg : 'sound.ogg',
 	mp3 : 'sound.mp3',
 	isLoop : true
@@ -818,9 +783,7 @@ HTML `video` 태그와 대응되는 클래스. 아래와 같은 파라미터들�
 WebM 파일과 OGG 파일, MP4 파일 중 브라우저가 지원하는 포맷의 동영상 파일을 재생합니다.
 
 ```javascript
-var
-// video
-video = VIDEO({
+let video = VIDEO({
 	webm : 'video.webm',
 	ogg : 'video.ogg',
 	mp4 : 'video.mp4',
@@ -881,16 +844,14 @@ DIV({
 
 ### `EVENT`를 사용하여 이벤트 등록/해제
 ```javascript
-var
-// div
-div = DIV({
+let div = DIV({
     c : 'TOUCH ME!'
 }).appendTo(BODY);
 
 EVENT({
     node : div,
     name : 'tap'
-}, function(e) {
+}, (e) => {
     alert('WOW!');
 });
 ```
@@ -899,13 +860,11 @@ EVENT({
 `NODE`를 상속한 클래스로 생성한 객체의 함수인 `on`과 `off`를 사용하여 이벤트를 등록하거나 해제할 수 있습니다. 두 함수는 내부적으로 `EVENT`를 통해 구현되어 있습니다.
 
 ```javascript
-var
-// div
-div = DIV({
+let div = DIV({
     c : 'TOUCH ME!'
 }).appendTo(BODY);
 
-div.on('tab', function(e) {
+div.on('tab', (e) => {
     alert('WOW!');
 });
 ```
@@ -916,7 +875,7 @@ div.on('tab', function(e) {
 DIV({
     c : 'TOUCH ME!',
     on : {
-        tab : function(e) {
+        tab : (e) => {
             alert('WOW!');
         }
     }
@@ -930,7 +889,7 @@ DIV({
 EVENT({
     node : div,
     name : 'tap'
-}, function(e) {
+}, (e) => {
     alert('WOW!');
 });
 ```
@@ -960,7 +919,7 @@ EVENT({
 EVENT({
     node : div,
     name : 'tap'
-}, function(e) {
+}, (e) => {
     
     console.log('이벤트가 발생한 화면 왼쪽으로부터의 위치: ' + e.getLeft());
     console.log('이벤트가 발생한 화면 위쪽으로부터의 위치: ' + e.getTop());
@@ -985,7 +944,7 @@ EVENT({
 EVENT_ONCE({
     node : div,
     name : 'tap'
-}, function(e) {
+}, (e) => {
     alert('WOW!');
     // 더 이상 이벤트가 처리되지 않습니다.
 });
@@ -996,9 +955,7 @@ EVENT_ONCE({
 
 ### `ADD_STYLE`를 사용하여 이벤트 등록/해제
 ```javascript
-var
-// div
-div = DIV({
+let div = DIV({
     c : '안녕하세요!'
 }).appendTo(BODY);
 
@@ -1016,9 +973,7 @@ ADD_STYLE({
 `NODE`를 상속한 클래스로 생성한 객체의 함수인 `addStyle`을 사용하여 스타일을 지정할 수 있습니다. `addStyle`은 내부적으로 `ADD_STYLE`를 통해 구현되어 있습니다.
 
 ```javascript
-var
-// div
-div = DIV({
+let div = DIV({
     c : '안녕하세요!'
 }).appendTo(BODY);
 
@@ -1073,7 +1028,7 @@ ADD_STYLE({
         width : 200,
         height : 200,
         // 창의 크기가 변경될 때 마다 위치를 가운데로 변경합니다.
-        onDisplayResize : function(width, height) {
+        onDisplayResize : (width, height) => {
             return {
                 left : width / 2 - 100,
                 top : height / 2 - 100
@@ -1087,9 +1042,7 @@ ADD_STYLE({
 노드에 애니메이션을 지정하는 방법에 대해 살펴보겠습니다.
 
 ```javascript
-var
-// div
-div = DIV({
+let div = DIV({
     style : {
 		position : 'fixed',
 		left : 50,
@@ -1114,7 +1067,7 @@ ANIMATE({
 	},
 	duration : 3,
 	timingFunction : 'linear'
-}, function() {
+}, () => {
 
 	console.log('애니메이션 끝!');
 
@@ -1169,19 +1122,17 @@ MATCH_VIEW({
 	uri : 'hello/{name}',
 	target : CLASS({
 	
-		preset : function() {
+		preset : () => {
 			return VIEW;
 		},
 		
-		init : function(inner, self) {
+		init : (inner, self) => {
 
-			var
-			// page
-			page = DIV({
+			let page = DIV({
 			    c : 'Hello!'
 			}).appendTo(BODY);
 			
-			inner.on('paramsChange', function(params) {
+			inner.on('paramsChange', (params) => {
 			
 				page.empty();
 				page.append('Hello, ' + params.name + '!');
@@ -1189,14 +1140,14 @@ MATCH_VIEW({
 				page.append(A({
 				    c : '메인 페이지',
 				    on : {
-				        tap : function() {
+				        tap : () => {
 				            GO('main');
 				        }
 				    }
 				}));
 			});
 			
-			inner.on('close', function() {
+			inner.on('close', () => {
 			    page.remove();
 			});
 		}
@@ -1208,23 +1159,19 @@ MATCH_VIEW({
 뷰를 정의하기 위한 VIEW 클래스
 
 ```javascript
-var
-// Hello View
-HelloView = CLASS({
+let HelloView = CLASS({
 
-	preset : function() {
+	preset : () => {
 		return VIEW;
 	},
 	
-	init : function(inner, self) {
+	init : (inner, self) => {
 
-		var
-		// page
-		page = DIV({
+		let page = DIV({
 		    c : 'Hello!'
 		}).appendTo(BODY);
 		
-		inner.on('paramsChange', function(params) {
+		inner.on('paramsChange', (params) => {
 		
 			page.empty();
 			page.append('Hello, ' + params.name + '!');
@@ -1232,14 +1179,14 @@ HelloView = CLASS({
 			page.append(A({
 			    c : '메인 페이지',
 			    on : {
-			        tap : function() {
+			        tap : () => {
 			            GO('main');
 			        }
 			    }
 			}));
 		});
 		
-		inner.on('close', function() {
+		inner.on('close', () => {
 		    page.remove();
 		});
 	}
@@ -1325,7 +1272,7 @@ REFRESH('hello/DS');
 HTTP 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `REQUEST({파라미터들}, function(content, headers) {})`
+* `REQUEST({파라미터들}, (content, headers) => {})`
 * `REQUEST({파라미터들}, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -1346,7 +1293,7 @@ REQUEST({
 	host : 'localhost',
 	port : 8810,
 	uri : 'request_test'
-}, function(content) {
+}, (content) => {
 	...
 });
 ```
@@ -1354,7 +1301,7 @@ REQUEST({
 REQUEST({
 	method : 'GET',
 	url : 'http://localhost:8810/request_test'
-}, function(content) {
+}, (content) => {
 	...
 });
 ```
@@ -1363,9 +1310,9 @@ REQUEST({
 HTTP GET 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `GET({파라미터들}, function(content, headers) {})`
+* `GET({파라미터들}, (content, headers) => {})`
 * `GET({파라미터들}, {error:, success:})`
-* `GET(url, function(content, headers) {})`
+* `GET(url, (content, headers) => {})`
 * `GET(url, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -1384,12 +1331,12 @@ GET({
 	host : 'localhost',
 	port : 8810,
 	uri : 'request_test'
-}, function(content) {
+}, (content) => {
 	...
 });
 ```
 ```javascript
-GET('http://localhost:8810/request_test', function(content) {
+GET('http://localhost:8810/request_test', (content) => {
 	...
 });
 ```
@@ -1398,9 +1345,9 @@ GET('http://localhost:8810/request_test', function(content) {
 HTTP POST 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `POST({파라미터들}, function(content, headers) {})`
+* `POST({파라미터들}, (content, headers) => {})`
 * `POST({파라미터들}, {error:, success:})`
-* `POST(url, function(content, headers) {})`
+* `POST(url, (content, headers) => {})`
 * `POST(url, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -1418,9 +1365,9 @@ HTTP POST 요청을 보냅니다.
 HTTP POST 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `PUT({파라미터들}, function(content, headers) {})`
+* `PUT({파라미터들}, (content, headers) => {})`
 * `PUT({파라미터들}, {error:, success:})`
-* `PUT(url, function(content, headers) {})`
+* `PUT(url, (content, headers) => {})`
 * `PUT(url, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -1438,9 +1385,9 @@ HTTP POST 요청을 보냅니다.
 HTTP POST 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `DELETE({파라미터들}, function(content, headers) {})`
+* `DELETE({파라미터들}, (content, headers) => {})`
 * `DELETE({파라미터들}, {error:, success:})`
-* `DELETE(url, function(content, headers) {})`
+* `DELETE(url, (content, headers) => {})`
 * `DELETE(url, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -1462,10 +1409,10 @@ HTTP POST 요청을 보냅니다.
 
 ```javascript
 CONNECT_TO_WEB_SOCKET_SERVER(8125, {
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function(on, off, send, disconnect) {
+	success : (on, off, send, disconnect) => {
         // on           메소드를 생성합니다.
         // off          메소드를 제거합니다.
         // send         서버의 메소드에 데이터를 전송합니다.
@@ -1476,11 +1423,11 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 			data : {
 				name : 'YJ Sim'
 			}
-		}, function(retMsg) {
+		}, (retMsg) => {
 		    console.log('서버로부터의 메시지:' + retMsg);
 		});
 		
-		on('__DISCONNECTED', function() {
+		on('__DISCONNECTED', () => {
 			console.log('연결이 끊어졌습니다.');
 		});
 	}
@@ -1511,9 +1458,7 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
 
 ```javascript
-var
-// store
-store = STORE('testStore');
+let store = STORE('testStore');
 
 store.save({
     name : 'name',
@@ -1563,9 +1508,7 @@ MSG({
 OGG 파일과 MP3 파일 중 브라우저가 지원하는 포맷의 사운드 파일을 재생합니다. [`AUDIO`](#audio)와 다른 점은, 조작 메뉴를 제공하지 않는다는 점입니다. 게임 사운드 등을 재생할 때 유용합니다.
 
 ```javascript
-var
-// audio
-sound = SOUND({
+let sound = SOUND({
 	ogg : 'AMemoryAway.ogg',
 	mp3 : 'AMemoryAway.mp3'
 });

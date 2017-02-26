@@ -110,11 +110,11 @@ UPPERCASE는 웹 브라우저에 상관 없이 같은 모양이 출력되게 하
 UPPERCASE의 설정은 [Configuration](CONFIG.md) 문서를 참고해 주시기 바랍니다.
 
 ## BROWSER API
-* `CONNECT_TO_IO_SERVER(function(on, off, send) {...})` `CONNECT_TO_IO_SERVER({error:, success:})` UPPERCASE 서버에 접속합니다.
+* `CONNECT_TO_IO_SERVER((on, off, send) => {...})` `CONNECT_TO_IO_SERVER({error:, success:})` UPPERCASE 서버에 접속합니다.
 
 ### 리소스 경로 관련
 클라이언트에서 사용 가능한 리소스 경로 관련 API입니다.
-* `SampleBox.R(path)` `SampleBox.R(path, function(content) {...})` 리소스의 실제 경로를 반환하거나, 리소스의 내용을 가져옵니다. [예제보기](../EXAMPLES/IO/CLIENT/R.js)
+* `SampleBox.R(path)` `SampleBox.R(path, (content) => {...})` 리소스의 실제 경로를 반환하거나, 리소스의 내용을 가져옵니다. [예제보기](../EXAMPLES/IO/CLIENT/R.js)
 * `SampleBox.RF(path)` 불변 리소스의 실제 경로를 반환합니다. [예제보기](../EXAMPLES/IO/CLIENT/RF.js)
 
 ### 서버 시간 관련

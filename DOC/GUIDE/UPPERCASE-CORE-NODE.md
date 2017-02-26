@@ -39,7 +39,7 @@ UPPERCASE 기반 프로젝트에서 Node.js 환경 전용 설정값들을 저장
 
 ```javascript
 // 일반적인 경우
-READ_FILE('some.txt', function(buffer) {
+READ_FILE('some.txt', (buffer) => {
 	console.log('파일의 내용: ' + buffer.toString());
 });
 
@@ -54,9 +54,9 @@ console.log('파일의 내용: ' + READ_FILE({
 파일을 작성합니다. 파일이 없으면 파일을 생성하고, 파일이 이미 있으면 내용을 덮어씁니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `WRITE_FILE({path:, content:}, function() {})`
+* `WRITE_FILE({path:, content:}, () => {})`
 * `WRITE_FILE({path:, content:}, {error:, success:})`
-* `WRITE_FILE({path:, buffer:}, function() {})`
+* `WRITE_FILE({path:, buffer:}, () => {})`
 * `WRITE_FILE({path:, buffer:}, {error:, success:})`
 * `WRITE_FILE({path:, content:, isSync: true})`
 * `WRITE_FILE({path:, buffer:, isSync: true})`
@@ -66,10 +66,10 @@ WRITE_FILE({
 	path : 'some.txt',
 	content : '이것은 텍스트 파일입니다.'
 }, {
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function() {
+	success : () => {
 		console.log('파일 작성에 성공하였습니다.');
 	}
 });
@@ -79,7 +79,7 @@ WRITE_FILE({
 파일의 내용을 불러옵니다. 내용을 `Buffer`형으로 불러오기 때문에, 내용을 문자열로 불러오려면 `toString` 함수를 이용하시기 바랍니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `READ_FILE(path, function(buffer) {})`
+* `READ_FILE(path, (buffer) => {})`
 * `READ_FILE(path, {notExists:, success:})`
 * `READ_FILE(path, {error:, success:})`
 * `READ_FILE(path, {notExists:, error:, success:})`
@@ -87,13 +87,13 @@ WRITE_FILE({
 
 ```javascript
 READ_FILE('some.txt', {
-	notExists : function() {
+	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function(buffer) {
+	success : (buffer) => {
 		console.log('파일의 내용: ' + buffer.toString());
 	}
 });
@@ -103,7 +103,7 @@ READ_FILE('some.txt', {
 파일의 정보를 불러옵니다. 파일의 크기(`size`), 생성 시간(`createTime`), 최종 수정 시간(`lastUpdateTime`)을 불러옵니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `GET_FILE_INFO(path, function(info) {})`
+* `GET_FILE_INFO(path, (info) => {})`
 * `GET_FILE_INFO(path, {notExists:, success:})`
 * `GET_FILE_INFO(path, {error:, success:})`
 * `GET_FILE_INFO(path, {notExists:, error:, success:})`
@@ -111,13 +111,13 @@ READ_FILE('some.txt', {
 
 ```javascript
 GET_FILE_INFO('some.txt', {
-	notExists : function() {
+	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function(info) {
+	success : (info) => {
 		console.log('파일의 크기: ' + info.size + ' 바이트');
 		console.log('파일의 생성 시간: ' + info.createTime);
 		console.log('파일의 최종 수정 시간: ' + info.lastUpdateTime);
@@ -129,7 +129,7 @@ GET_FILE_INFO('some.txt', {
 파일을 복사합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `COPY_FILE({from:, to:}, function() {})`
+* `COPY_FILE({from:, to:}, () => {})`
 * `COPY_FILE({from:, to:}, {notExists:, success:})`
 * `COPY_FILE({from:, to:}, {error:, success:})`
 * `COPY_FILE({from:, to:}, {notExists:, error:, success:})`
@@ -140,13 +140,13 @@ COPY_FILE({
 	from : 'from.txt',
 	to : 'to.txt'
 }, {
-	notExists : function() {
+	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function() {
+	success : () => {
 		console.log('파일을 복사했습니다.');
 	}
 });
@@ -156,7 +156,7 @@ COPY_FILE({
 파일의 위치를 이동시킵니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `MOVE_FILE({from:, to:}, function() {})`
+* `MOVE_FILE({from:, to:}, () => {})`
 * `MOVE_FILE({from:, to:}, {notExists:, success:})`
 * `MOVE_FILE({from:, to:}, {error:, success:})`
 * `MOVE_FILE({from:, to:}, {notExists:, error:, success:})`
@@ -167,13 +167,13 @@ MOVE_FILE({
 	from : 'from.txt',
 	to : 'to.txt'
 }, {
-	notExists : function() {
+	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function() {
+	success : () => {
 		console.log('파일을 옮겼습니다.');
 	}
 });
@@ -183,7 +183,7 @@ MOVE_FILE({
 파일을 삭제합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `REMOVE_FILE(path, function() {})`
+* `REMOVE_FILE(path, () => {})`
 * `REMOVE_FILE(path, {notExists:, success:})`
 * `REMOVE_FILE(path, {error:, success:})`
 * `REMOVE_FILE(path, {notExists:, error:, success:})`
@@ -191,13 +191,13 @@ MOVE_FILE({
 
 ```javascript
 REMOVE_FILE('some.txt', {
-	notExists : function() {
+	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function() {
+	success : () => {
 		console.log('파일을 삭제했습니다.');
 	}
 });
@@ -207,11 +207,11 @@ REMOVE_FILE('some.txt', {
 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `CHECK_FILE_EXISTS(path, function(isExists) {})`
+* `CHECK_FILE_EXISTS(path, (isExists) => {})`
 * `CHECK_FILE_EXISTS({path:, isSync: true})`
 
 ```javascript
-CHECK_FILE_EXISTS('some.txt', function(isExists) {
+CHECK_FILE_EXISTS('some.txt', (isExists) => {
 	if (isExists === true) {
 		console.log('파일이 존재합니다.');
 	} else {
@@ -224,16 +224,16 @@ CHECK_FILE_EXISTS('some.txt', function(isExists) {
 폴더를 생성합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `CREATE_FOLDER(path, function() {})`
+* `CREATE_FOLDER(path, () => {})`
 * `CREATE_FOLDER(path, {error:, success:})`
 * `CREATE_FOLDER({path:, isSync: true})`
 
 ```javascript
 CREATE_FOLDER('SomeFolder', {
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function() {
+	success : () => {
 		console.log('폴더를 생성했습니다.');
 	}
 });
@@ -243,7 +243,7 @@ CREATE_FOLDER('SomeFolder', {
 폴더를 삭제합니다. 폴더 내의 모든 파일 및 폴더를 삭제하므로, 주의해서 사용해야 합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `REMOVE_FOLDER(path, function() {})`
+* `REMOVE_FOLDER(path, () => {})`
 * `REMOVE_FOLDER(path, {notExists:, success:})`
 * `REMOVE_FOLDER(path, {error:, success:})`
 * `REMOVE_FOLDER(path, {notExists:, error:, success:})`
@@ -251,13 +251,13 @@ CREATE_FOLDER('SomeFolder', {
 
 ```javascript
 REMOVE_FOLDER('SomeFolder', {
-	notExists : function() {
+	notExists : () => {
 		console.log('폴더가 존재하지 않습니다.');
 	},
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function() {
+	success : () => {
 		console.log('폴더를 삭제했습니다.');
 	}
 });
@@ -267,11 +267,11 @@ REMOVE_FOLDER('SomeFolder', {
 지정된 경로가 (파일이 아닌) 폴더인지 확인합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `CHECK_IS_FOLDER(path, function(isFolder) {})`
+* `CHECK_IS_FOLDER(path, (isFolder) => {})`
 * `CHECK_IS_FOLDER({path:, isSync: true})`
 
 ```javascript
-CHECK_IS_FOLDER('SomeFolder', function(isFolder) {
+CHECK_IS_FOLDER('SomeFolder', (isFolder) => {
 	if (isFolder === true) {
 		console.log('폴더입니다.');
 	} else {
@@ -284,7 +284,7 @@ CHECK_IS_FOLDER('SomeFolder', function(isFolder) {
 지정된 경로에 위치한 파일들의 이름 목록을 불러옵니다. (폴더는 제외합니다.)
 
 사용 가능한 형태들은 다음과 같습니다.
-* `FIND_FILE_NAMES(path, function(fileNames) {})`
+* `FIND_FILE_NAMES(path, (fileNames) => {})`
 * `FIND_FILE_NAMES(path, {notExists:, success:})`
 * `FIND_FILE_NAMES(path, {error:, success:})`
 * `FIND_FILE_NAMES(path, {notExists:, error:, success:})`
@@ -292,13 +292,13 @@ CHECK_IS_FOLDER('SomeFolder', function(isFolder) {
 
 ```javascript
 FIND_FILE_NAMES('SomeFolder', {
-	notExists : function() {
+	notExists : () => {
 		console.log('폴더가 존재하지 않습니다.');
 	},
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function(fileNames) {
+	success : (fileNames) => {
 		console.log('이 폴더에 존재하는 파일들은 다음과 같습니다. 파일 목록: ' + fileNames);
 	}
 });
@@ -308,7 +308,7 @@ FIND_FILE_NAMES('SomeFolder', {
 지정된 경로에 위치한 폴더들의 이름 목록을 불러옵니다. (파일은 제외합니다.)
 
 사용 가능한 형태들은 다음과 같습니다.
-* `FIND_FOLDER_NAMES(path, function(folderNames) {})`
+* `FIND_FOLDER_NAMES(path, (folderNames) => {})`
 * `FIND_FOLDER_NAMES(path, {notExists:, success:})`
 * `FIND_FOLDER_NAMES(path, {error:, success:})`
 * `FIND_FOLDER_NAMES(path, {notExists:, error:, success:})`
@@ -316,13 +316,13 @@ FIND_FILE_NAMES('SomeFolder', {
 
 ```javascript
 FIND_FOLDER_NAMES('SomeFolder', {
-	notExists : function() {
+	notExists : () => {
 		console.log('폴더가 존재하지 않습니다.');
 	},
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function(folderNames) {
+	success : (folderNames) => {
 		console.log('이 폴더에 존재하는 폴더들은 다음과 같습니다. 폴더 목록: ' + folderNames);
 	}
 });
@@ -336,23 +336,23 @@ ImageMagick의 `convert` 기능을 사용합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
 * `IMAGEMAGICK_CONVERT(params)`
-* `IMAGEMAGICK_CONVERT(params, function() {})`
+* `IMAGEMAGICK_CONVERT(params, () => {})`
 * `IMAGEMAGICK_CONVERT(params, {error:, success:})`
 
 ```javascript
 IMAGEMAGICK_CONVERT(['sample.png', '-resize', '100x100\!', 'sample-square.png']);
 ```
 ```javascript
-IMAGEMAGICK_CONVERT(['sample.png', '-resize', '200x200\!', 'sample-square.png'], function() {
+IMAGEMAGICK_CONVERT(['sample.png', '-resize', '200x200\!', 'sample-square.png'], () => {
 	console.log('이미지 크기를 변경하였습니다.');
 });
 ```
 ```javascript
 IMAGEMAGICK_CONVERT(['sample.png', '-resize', '300x300\!', 'sample-square.png'], {
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function() {
+	success : () => {
 		console.log('이미지 크기를 변경하였습니다.');
 	}
 });
@@ -362,21 +362,21 @@ IMAGEMAGICK_CONVERT(['sample.png', '-resize', '300x300\!', 'sample-square.png'],
 ImageMagick의 `identify` 기능을 사용합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `IMAGEMAGICK_IDENTIFY(path, function() {})`
+* `IMAGEMAGICK_IDENTIFY(path, () => {})`
 * `IMAGEMAGICK_IDENTIFY(path, {error:, success:})`
 
 ```javascript
-IMAGEMAGICK_IDENTIFY('image.png', function(features) {
+IMAGEMAGICK_IDENTIFY('image.png', (features) => {
 	console.log('이미지 정보: ' + STRINGIFY(features));
 	console.log('이미지 크기: ' + features.width + 'x' + features.height);
 });
 ```
 ```javascript
 IMAGEMAGICK_IDENTIFY('image.png', {
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function(metadata) {
+	success : (metadata) => {
 		console.log('이미지 정보: ' + STRINGIFY(features));
 		console.log('이미지 크기: ' + features.width + 'x' + features.height);
 	}
@@ -387,20 +387,20 @@ IMAGEMAGICK_IDENTIFY('image.png', {
 ImageMagick을 이용해 이미지의 메타데이터를 반한홥니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `IMAGEMAGICK_READ_METADATA(path, function() {})`
+* `IMAGEMAGICK_READ_METADATA(path, () => {})`
 * `IMAGEMAGICK_READ_METADATA(path, {error:, success:})`
 
 ```javascript
-IMAGEMAGICK_READ_METADATA('image.png', function(metadata) {
+IMAGEMAGICK_READ_METADATA('image.png', (metadata) => {
 	console.log('이미지의 메타 데이터: ' + STRINGIFY(metadata));
 });
 ```
 ```javascript
 IMAGEMAGICK_READ_METADATA('image.png', {
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function(metadata) {
+	success : (metadata) => {
 		console.log('이미지의 메타 데이터: ' + STRINGIFY(metadata));
 	}
 });
@@ -410,9 +410,9 @@ IMAGEMAGICK_READ_METADATA('image.png', {
 ImageMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:}, function() {})`
-* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, height:}, function() {})`
-* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, function() {})`
+* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:}, () => {})`
+* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, height:}, () => {})`
+* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, () => {})`
 * `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:}, {error:, success:})`
 * `IMAGEMAGICK_RESIZE({srcPath:, distPath:, height:}, {error:, success:})`
 * `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, {error:, success:})`
@@ -429,7 +429,7 @@ IMAGEMAGICK_RESIZE({
 	srcPath : 'image.png',
 	distPath : 'image-height-100.png',
 	height : 100
-}, function() {
+}, () => {
 	console.log('이미지 크기를 변경하였습니다.');
 });
 ```
@@ -440,10 +440,10 @@ IMAGEMAGICK_RESIZE({
 	width : 100,
 	height : 100
 }, {
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function() {
+	success : () => {
 		console.log('이미지 크기를 변경하였습니다.');
 	}
 });
@@ -454,7 +454,7 @@ IMAGEMAGICK_RESIZE({
 HTTP 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `REQUEST({파라미터들}, function(content, headers) {})`
+* `REQUEST({파라미터들}, (content, headers) => {})`
 * `REQUEST({파라미터들}, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -475,7 +475,7 @@ REQUEST({
 	isSecure : true,
 	host : 'github.com',
 	uri : 'Hanul/UPPERCASE'
-}, function(content) {
+}, (content) => {
 	...
 });
 ```
@@ -483,7 +483,7 @@ REQUEST({
 REQUEST({
 	method : 'GET',
 	url : 'https://github.com/Hanul/UPPERCASE'
-}, function(content) {
+}, (content) => {
 	...
 });
 ```
@@ -492,9 +492,9 @@ REQUEST({
 HTTP GET 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `GET({파라미터들}, function(content, headers) {})`
+* `GET({파라미터들}, (content, headers) => {})`
 * `GET({파라미터들}, {error:, success:})`
-* `GET(url, function(content, headers) {})`
+* `GET(url, (content, headers) => {})`
 * `GET(url, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -513,12 +513,12 @@ GET({
 	isSecure : true,
 	host : 'github.com',
 	uri : 'Hanul/UPPERCASE'
-}, function(content) {
+}, (content) => {
 	...
 });
 ```
 ```javascript
-GET('https://github.com/Hanul/UPPERCASE', function(content) {
+GET('https://github.com/Hanul/UPPERCASE', (content) => {
 	...
 });
 ```
@@ -527,9 +527,9 @@ GET('https://github.com/Hanul/UPPERCASE', function(content) {
 HTTP POST 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `POST({파라미터들}, function(content, headers) {})`
+* `POST({파라미터들}, (content, headers) => {})`
 * `POST({파라미터들}, {error:, success:})`
-* `POST(url, function(content, headers) {})`
+* `POST(url, (content, headers) => {})`
 * `POST(url, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -547,9 +547,9 @@ HTTP POST 요청을 보냅니다.
 HTTP POST 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `PUT({파라미터들}, function(content, headers) {})`
+* `PUT({파라미터들}, (content, headers) => {})`
 * `PUT({파라미터들}, {error:, success:})`
-* `PUT(url, function(content, headers) {})`
+* `PUT(url, (content, headers) => {})`
 * `PUT(url, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -567,9 +567,9 @@ HTTP POST 요청을 보냅니다.
 HTTP POST 요청을 보냅니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `DELETE({파라미터들}, function(content, headers) {})`
+* `DELETE({파라미터들}, (content, headers) => {})`
 * `DELETE({파라미터들}, {error:, success:})`
-* `DELETE(url, function(content, headers) {})`
+* `DELETE(url, (content, headers) => {})`
 * `DELETE(url, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -587,7 +587,7 @@ HTTP POST 요청을 보냅니다.
 HTTP 리소스를 다운로드합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `DOWNLOAD({파라미터들}, function(content, headers) {})`
+* `DOWNLOAD({파라미터들}, (content, headers) => {})`
 * `DOWNLOAD({파라미터들}, {error:, success:})`
 
 사용 가능한 파라미터 목록은 다음과 같습니다.
@@ -631,7 +631,7 @@ UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽�
 
 아래 코드를 실행하면 [http://localhost:8123/main](http://localhost:8123/main)로 접속하면 `Welcome!` 이라는 메시지를 보여주는 간단한 웹 서버를 생성합니다.
 ```javascript
-WEB_SERVER(8123, function(requestInfo, response) {
+WEB_SERVER(8123, (requestInfo, response) => {
 	// requestInfo			요청 정보
 	// requestInfo.headers  요청 헤더
 	// requestInfo.cookies  클라이언트에서 넘어온 HTTP 쿠키
@@ -693,7 +693,7 @@ WEB_SERVER({
 WEB_SERVER({
 	port : 8123,
 	rootPath : __dirname + '/R'
-}, function(requestInfo, response, replaceRootPath, next) {
+}, (requestInfo, response, replaceRootPath, next) => {
 	// requestInfo		요청 정보
 	// response			응답 함수
 	// replaceRootPath	이 요청에 한해 rootPath를 임시로 변경합니다.
@@ -709,7 +709,7 @@ WEB_SERVER({
 	if (requestInfo.uri === 'pause.txt') {
 		
 		// 1초 뒤 응답을 재개합니다.
-		DELAY(1, function() {
+		DELAY(1, () => {
 		
 			// 응답을 재개합니다. 또한 응답 파라미터를 추가합니다.
 			next({
@@ -751,10 +751,10 @@ WEB_SERVER({
 	uploadURI : '__UPLOAD',
 	uploadPath : __dirname + '/UPLOAD_FILES'
 }, {
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	uploadProgress : function(uriParams, bytesRecieved, bytesExpected, requestInfo) {
+	uploadProgress : (uriParams, bytesRecieved, bytesExpected, requestInfo) => {
 		// uriParams		아직 폼 데이터의 전송이 끊나지 않은 상태이므로, URI 주소에 지정된 파라미터(예를들어 uri?name=yj&age=23 등)만 가져올 수 있습니다.
 		// bytesRecieved	이미 업로드 된 용량 (바이트 단위)
 		// bytesExpected	전체 업로드 될 용량 (바이트 단위)
@@ -762,7 +762,7 @@ WEB_SERVER({
 		
 		console.log('업로드 중... (' + bytesRecieved + '/' + bytesExpected + ')');
 	},
-	uploadOverFileSize : function(params, maxUploadFileMB, requestInfo, response) {
+	uploadOverFileSize : (params, maxUploadFileMB, requestInfo, response) => {
 		// params			파라미터
 		// maxUploadFileMB	최대 업로드 가능 용량 (메가바이트 단위)
 		// requestInfo		요청 정보
@@ -770,7 +770,7 @@ WEB_SERVER({
 		
 		response('업로드 가능한 용량은 최대 ' + maxUploadFileMB + 'MB 입니다.');
 	},
-	uploadSuccess : function(params, fileDataSet, requestInfo, response) {
+	uploadSuccess : (params, fileDataSet, requestInfo, response) => {
 		// params		파라미터
 		// fileDataSet	업로드 파일 데이터 목록
 		// requestInfo	요청 정보
@@ -807,7 +807,7 @@ WEB_SERVER({
 TCP 소켓 서버를 생성합니다.
 
 ```javascript
-SOCKET_SERVER(8124, function(clientInfo, on, off, send, disconnect) {
+SOCKET_SERVER(8124, (clientInfo, on, off, send, disconnect) => {
 	// clientInfo				클라이언트 정보
 	// clientInfo.ip			클라이언트의 IP
 	// clientInfo.connectTime	접속 시작 시간
@@ -816,13 +816,13 @@ SOCKET_SERVER(8124, function(clientInfo, on, off, send, disconnect) {
 	// send						클라이언트의 메소드에 데이터를 전송합니다.
 	// disconnect				클라이언트와의 연결을 끊습니다.
 	
-	on('message', function(data, ret) {
+	on('message', (data, ret) => {
 		if (data !== undefined) {
 			ret('Thanks, ' + data.name + '!');
 		}
 	});
 	
-	on('__DISCONNECTED', function() {
+	on('__DISCONNECTED', () => {
 		console.log('연결이 끊어졌습니다.');
 	});
 });
@@ -854,10 +854,10 @@ CONNECT_TO_SOCKET_SERVER({
 	host : 'localhost',
 	port : 8124
 }, {
-	error : function(errorMsg) {
+	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
-	success : function(on, off, send, disconnect) {
+	success : (on, off, send, disconnect) => {
 		// on			메소드를 생성합니다.
 		// off			메소드를 제거합니다.
 		// send			서버의 메소드에 데이터를 전송합니다.
@@ -868,11 +868,11 @@ CONNECT_TO_SOCKET_SERVER({
 			data : {
 				name : 'YJ Sim'
 			}
-		}, function(retMsg) {
+		}, (retMsg) => {
 			console.log('서버로부터의 메시지:' + retMsg);
 		});
 		
-		on('__DISCONNECTED', function() {
+		on('__DISCONNECTED', () => {
 			console.log('연결이 끊어졌습니다.');
 		});
 	}
@@ -901,7 +901,7 @@ CONNECT_TO_SOCKET_SERVER({
 웹 소켓 서버를 생성합니다. 이렇게 생성된 웹 소켓 서버에 접속하는 방법은 [UPPERCASE-COMMON-BROWSER의 `CONNECT_TO_WEB_SOCKET_SERVER`](UPPERCASE-COMMON-CORE.md#connect_to_web_socket_server)를 참고하시기 바랍니다.
 
 ```javascript
-WEB_SOCKET_SERVER(WEB_SERVER(8125), function(clientInfo, on, off, send, disconnect) {
+WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
 	// clientInfo				클라이언트 정보
 	// clientInfo.ip			클라이언트의 IP
 	// clientInfo.connectTime	접속 시작 시간
@@ -910,13 +910,13 @@ WEB_SOCKET_SERVER(WEB_SERVER(8125), function(clientInfo, on, off, send, disconne
 	// send						클라이언트의 메소드에 데이터를 전송합니다.
 	// disconnect				클라이언트와의 연결을 끊습니다.
 	
-	on('message', function(data, ret) {
+	on('message', (data, ret) => {
 		if (data !== undefined) {
 			ret('Thanks, ' + data.name + '!');
 		}
 	});
 	
-	on('__DISCONNECTED', function() {
+	on('__DISCONNECTED', () => {
 		console.log('연결이 끊어졌습니다.');
 	});
 });
@@ -947,7 +947,7 @@ TCP 소켓 및 웹 소켓 서버를 통합하여 생성합니다.
 MULTI_PROTOCOL_SOCKET_SERVER({
 	socketServerPort : 8124,
 	webServer : WEB_SERVER(8125)
-}, function(clientInfo, on, off, send, disconnect) {
+}, (clientInfo, on, off, send, disconnect) => {
 	// clientInfo				클라이언트 정보
 	// clientInfo.ip			클라이언트의 IP
 	// clientInfo.connectTime	접속 시작 시간
@@ -956,13 +956,13 @@ MULTI_PROTOCOL_SOCKET_SERVER({
 	// send						클라이언트의 메소드에 데이터를 전송합니다.
 	// disconnect				클라이언트와의 연결을 끊습니다.
 	
-	on('message', function(data, ret) {
+	on('message', (data, ret) => {
 		if (data !== undefined) {
 			ret('Thanks, ' + data.name + '!');
 		}
 	});
 	
-	on('__DISCONNECTED', function() {
+	on('__DISCONNECTED', () => {
 		console.log('연결이 끊어졌습니다.');
 	});
 });
@@ -990,9 +990,7 @@ MULTI_PROTOCOL_SOCKET_SERVER({
 UDP 소켓 서버를 생성합니다.
 
 ```javascript
-var
-// server
-server = UDP_SERVER(8126, function(requestInfo, content, response) {
+let server = UDP_SERVER(8126, (requestInfo, content, response) => {
 	// requestInfo		요청 정보
 	// requestInfo.ip	요청자의 IP
 	// requestInfo.port	요청자의 포트
@@ -1019,7 +1017,7 @@ CPU 코어 간 클러스터링을 수행합니다.
 멀티코어 CPU 시스템에서, Node.js 기반 프로세스는 1개의 코어만 사용하기 때문에 성능을 100% 사용하기 힘듭니다. 이에 [Node.js의 `Cluster` 모듈](https://nodejs.org/api/cluster.html)을 사용하여 CPU 클러스터링 기능을 구현하면 성능을 최대한 사용할 수 있으나, 구현 방식이 복잡하고 어렵습니다. `CPU_CLUSTERING`를 사용하면 손쉽게 CPU 클러스터링을 적용할 수 있습니다.
 
 ```javascript
-CPU_CLUSTERING(function() {
+CPU_CLUSTERING(() => {
 
 	// 모든 CPU 코어에서 수행할 내용
 	...
@@ -1053,7 +1051,7 @@ SERVER_CLUSTERING({
 	// 클러스터링을 위한 포트 번호 지정
 	port : 8125
 	
-}, function() {
+}, () => {
 
 	// 모든 서버에서 수행할 내용
 	...
@@ -1066,7 +1064,7 @@ SERVER_CLUSTERING({
 위 `CPU_CLUSTERING`과 `SERVER_CLUSTERING`을 사용하여 병렬 처리 시스템을 구현할 때, 공유 정보를 저장하기 위해 사용됩니다.
 
 ```javascript
-CPU_CLUSTERING(function() {
+CPU_CLUSTERING(() => {
 
 	SERVER_CLUSTERING({
 		hosts : {
@@ -1075,11 +1073,9 @@ CPU_CLUSTERING(function() {
 		},
 		thisServerName : 'serverA',
 		port : 8125
-	}, function() {
+	}, () => {
 
-		var
-		// sample store
-		sampleStore = TestBox.SHARED_STORE('sampleStore');
+		let sampleStore = TestBox.SHARED_STORE('sampleStore');
 
 		// 워커 ID가 1인 경우에만 저장
 		if (CPU_CLUSTERING.getWorkerId() === 1) {
@@ -1100,10 +1096,10 @@ CPU_CLUSTERING(function() {
 		}
 		
 		// 1초 뒤
-		DELAY(1, function() {
+		DELAY(1, () => {
 			
 			// 데이터를 가져옵니다.
-			sampleStore.get('1234', function() {
+			sampleStore.get('1234', () => {
 			
 				// 데이터를 삭제합니다.
 				sampleStore.remove('1234');
@@ -1116,8 +1112,8 @@ CPU_CLUSTERING(function() {
 `SHARED_STORE`로 생성한 객체의 함수들은 다음과 같습니다.
 
 #### `save`
-* `save({id:, data:}, function(savedData) {})`
-* `save({id:, data:, removeAfterSeconds:}, function(savedData) {})`
+* `save({id:, data:}, (savedData) => {})`
+* `save({id:, data:, removeAfterSeconds:}, (savedData) => {})`
 
 특정 `id`에 `data`를 저장합니다. `removeAfterSeconds` 파라미터를 지정하면 특정 시간 이후 데이터가 자동으로 지워집니다.
 
@@ -1135,15 +1131,15 @@ sampleStore.save({
 	// 2초 뒤 데이터 삭제
 	removeAfterSeconds : 2
 	
-}, function(savedData) {
+}, (savedData) => {
 	console.log('데이터 저장 완료', savedData);
 });
 ```
 
 #### `update`
-* `update({id:, data:}, function(savedData) {})`
+* `update({id:, data:}, (savedData) => {})`
 * `update({id:, data:}, {notExists:, success:})`
-* `update({id:, data:, removeAfterSeconds:}, function(savedData) {})`
+* `update({id:, data:, removeAfterSeconds:}, (savedData) => {})`
 * `update({id:, data:, removeAfterSeconds:}, {notExists:, success:})`
 
 `id`에 해당하는 `data`를 수정합니다. `removeAfterSeconds` 파라미터를 지정하면 특정 시간 이후 데이터가 자동으로 지워집니다.
@@ -1159,10 +1155,10 @@ sampleStore.update({
 		number : 1
 	}
 }, {
-	notExists : function() {
+	notExists : () => {
 		console.log('데이터가 존재하지 않습니다.');
 	},
-	success : function(savedData) {
+	success : (savedData) => {
 		console.log('데이터 수정 완료', savedData);
 	}
 });
@@ -1248,68 +1244,68 @@ sampleStore.update({
 ```
 
 #### `get`
-* `get(id, function(savedData) {})`
+* `get(id, (savedData) => {})`
 * `get(id, {notExists:, success:})`
 
 `id`에 해당하는 데이터를 가져옵니다.
 
 ```javascript
 sampleStore.get('1234', {
-	notExists : function() {
+	notExists : () => {
 		console.log('데이터가 존재하지 않습니다.');
 	},
-	success : function(savedData) {
+	success : (savedData) => {
 		console.log('데이터:', savedData);
 	}
 });
 ```
 
 #### `remove`
-* `remove(id, function(originData) {})`
+* `remove(id, (originData) => {})`
 * `remove(id, {notExists:, success:})`
 
 `id`에 해당하는 데이터를 지웁니다.
 
 ```javascript
 sampleStore.remove('1234', {
-	notExists : function() {
+	notExists : () => {
 		console.log('데이터가 존재하지 않습니다.');
 	},
-	success : function(originData) {
+	success : (originData) => {
 		console.log('삭제된 데이터:', originData);
 	}
 });
 ```
 
 #### `all`
-* `all(function(savedDataSet) {})`
+* `all((savedDataSet) => {})`
 
 저장소의 모든 데이터를 가져옵니다.
 
 ```javascript
-sampleStore.all(function(savedDataSet) {
+sampleStore.all((savedDataSet) => {
 	console.log('저장소의 모든 데이터:', savedDataSet);
 });
 ```
 
 #### `count`
-* `count(function(count) {})`
+* `count((count) => {})`
 
 저장소의 모든 데이터의 개수를 가져옵니다.
 
 ```javascript
-sampleStore.count(function(count) {
+sampleStore.count((count) => {
 	console.log('저장소의 모든 데이터의 개수:', count);
 });
 ```
 
 #### `checkIsExists`
-* `checkIsExists(id, function(isExists) {})`
+* `checkIsExists(id, (isExists) => {})`
 
 `id`에 해당하는 데이터가 존재하는지 확인합니다.
 
 ```javascript
-sampleStore.checkIsExists('1234', function(isExists) {
+sampleStore.checkIsExists('1234', (isExists) => {
 	if (isExists === true) {
 		console.log('데이터가 존재합니다.');
 	} else {
@@ -1319,12 +1315,12 @@ sampleStore.checkIsExists('1234', function(isExists) {
 ```
 
 #### `clear`
-* `clear(function() {})`
+* `clear(() => {})`
 
 저장소의 모든 데이터를 삭제합니다.
 
 ```javascript
-sampleStore.clear(function() {
+sampleStore.clear(() => {
 	console.log('저장소의 모든 데이터를 삭제하였습니다.');
 });
 ```
@@ -1340,13 +1336,13 @@ CPU 각 코어 당 사용률을 반환합니다.
 디스크 사용률을 반환합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `DISK_USAGE({function(usage) {}})`
+* `DISK_USAGE({(usage) => {}})`
 * `DISK_USAGE({error:, success:})`
-* `DISK_USAGE(drive, {function(usage) {}})`
+* `DISK_USAGE(drive, {(usage) => {}})`
 * `DISK_USAGE(drive, {error:, success:})`
 
 ```javascript
-DISK_USAGE('c:', function(usage) {
+DISK_USAGE('c:', (usage) => {
 	console.log(usage);
 });
 ```

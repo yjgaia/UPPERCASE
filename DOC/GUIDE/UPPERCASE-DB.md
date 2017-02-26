@@ -38,7 +38,7 @@ CONNECT_TO_DB_SERVER({
 	host : '127.0.0.1',
 	port : 27017,
 	name : 'Test'
-}, function() {
+}, () => {
 	console.log('MongoDB 서버에 접속되었습니다.');
 });
 ```
@@ -50,7 +50,7 @@ CONNECT_TO_DB_SERVER({
 	host : '111.111.111.111',
 	port : 27017,
 	name : 'Test'
-}, function() {
+}, () => {
 	console.log('첫번째 MongoDB 서버에 접속되었습니다.');
 });
 
@@ -59,7 +59,7 @@ CONNECT_TO_DB_SERVER({
 	host : '222.222.222.222',
 	port : 27017,
 	name : 'Test'
-}, function() {
+}, () => {
 	console.log('두번째 MongoDB 서버에 접속되었습니다.');
 });
 ```
@@ -78,30 +78,25 @@ MongoDB 컬렉션을 다루는 `DB` 클래스
 MongoDB를 기반으로 [CRUD](https://ko.wikipedia.org/wiki/CRUD) 기능을 구현한 모듈입니다.
 
 ```javascript
-var
-// db
-db = TestBox.DB('Test');
+let db = TestBox.DB('Test');
 
 // 데이터를 생성합니다.
 db.create({
 	msg : 'Hello, DB!',
 	number : 12
-}, function(savedData) {
+}, (savedData) => {
     console.log('데이터가 생성되었습니다.', savedData);
 });
 ```
 
 여러 MongoDB 서버에 접속하는 경우
 ```javascript
-var
-// db1
-db1 = TestBox.DB({
+let db1 = TestBox.DB({
     dbServerName : 'DB_SERVER_1',
     name : 'Test'
-}),
+});
 
-// db2
-db2 = TestBox.DB({
+let db2 = TestBox.DB({
     dbServerName : 'DB_SERVER_2',
     name : 'Test'
 });
@@ -109,14 +104,14 @@ db2 = TestBox.DB({
 db1.create({
 	msg : 'Hello, DB!',
 	number : 12
-}, function(savedData) {
+}, (savedData) => {
     console.log('데이터가 생성되었습니다.', savedData);
 });
 
 db2.create({
 	msg : 'Hello, DB!',
 	number : 12
-}, function(savedData) {
+}, (savedData) => {
     console.log('데이터가 생성되었습니다.', savedData);
 });
 ```
@@ -182,40 +177,40 @@ find 명령시 filter의 모든 property가 `undefined`로만 이루어진 경�
 db = TestBox.DB('test');
 
 // 데이터를 저장합니다.
-db.create(data, function(savedData) {...})
+db.create(data, (savedData) => {...})
 db.create(data, {error:, success:})
 
 // 데이터를 가져옵니다.
-db.get(id, function(savedData) {...})
+db.get(id, (savedData) => {...})
 db.get(id, {success:, notExists:, error:})
 db.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
 
 // 데이터를 수정합니다.
-db.update(data, function(savedData, originData) {...})
+db.update(data, (savedData, originData) => {...})
 db.update(data, {success:, notExists:, error:})
-db.updateNoHistory(data, function() {...}) // 변경 내역을 남기지 않습니다.
+db.updateNoHistory(data, () => {...}) // 변경 내역을 남기지 않습니다.
 db.updateNoHistory(data, {success:, notExists:, error:}) // 변경 내역을 남기지 않습니다.
-db.updateNoRecord(data, function() {...}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
+db.updateNoRecord(data, () => {...}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
 db.updateNoRecord(data, {success:, notExists:, error:}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
 
 // 데이터를 삭제합니다.
-db.remove(id, function(originData) {...})
+db.remove(id, (originData) => {...})
 db.remove(id, {success:, notExists:, error:})
 
 // 데이터를 찾아 목록으로 가져옵니다.
-db.find({filter:, sort:, start:, count:}, function(savedDataSet) {...})
+db.find({filter:, sort:, start:, count:}, (savedDataSet) => {...})
 db.find({filter:, sort:, start:, count:}, {error:, success:})
 
 // 데이터의 개수를 가져옵니다.
-db.count({filter:}, function(count) {...})
+db.count({filter:}, (count) => {...})
 db.count({filter:}, {error:, success:})
 
 // 데이터가 존재하는지 확인합니다.
-db.checkIsExists({filter:}, function(isExists) {...})
+db.checkIsExists({filter:}, (isExists) => {...})
 db.checkIsExists({filter:}, {error:, success:})
 
 // MongoDB의 Aggregation 기능을 이용해, 데이터를 가공해서 가져옵니다. 자세한 내용은 MongoDB의 Aggregation 기능을 참고하시기 바랍니다.
-db.aggregate(params, function(dataSet) {...})
+db.aggregate(params, (dataSet) => {...})
 db.aggregate(params, {error:, success:})
 ```
 * `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](../EXAMPLES/DB/NODE/LOG_DB.js)
@@ -362,11 +357,9 @@ SampleModel.update({
 ## 특정 문서의 수정 내역을 가져오는 방법
 특정 문서의 수정 내역은 문서가 저장된 데이터베이스 이름 뒤에 `__HISTORY`를 붙혀 `DB` 오브젝트를 만들고, `find`로 가져올 수 있습니다. 
 ```javascript
-var
-// history db
-historyDB = TestBox.DB('test__HISTORY');
+let historyDB = TestBox.DB('test__HISTORY');
 
-db.find({filter:}, function(historyDataSet) {...})
+db.find({filter:}, (historyDataSet) => {...})
 ```
 
 ## UPPERCASE-DB 단독 사용
@@ -386,11 +379,9 @@ require('../../../UPPERCASE-DB/NODE.js');
 
 CONNECT_TO_DB_SERVER({
 	name : 'test'
-}, function() {
+}, () => {
 
-	var
-	// db
-	db = TestBox.DB('test');
+	let db = TestBox.DB('test');
 	...
 });
 ```
