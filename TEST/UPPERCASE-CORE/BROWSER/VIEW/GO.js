@@ -1,36 +1,24 @@
-TEST('GO', function(check) {
-	'use strict';
+TEST('GO', (check) => {
 
-	var
-	// test view
-	TestView = CLASS({
+	let TestView = CLASS({
 
-		preset : function() {
-			'use strict';
+		preset : () => {
 			return VIEW;
 		},
 
-		init : function(inner, self) {
-			'use strict';
-
-			var
-			// change params.
-			changeParams,
-
-			// close.
-			close;
-
+		init : (inner, self) => {
+			
 			// on view.
 			console.log('View Opened!');
 
-			self.changeParams = changeParams = function(params) {
+			let changeParams = self.changeParams = (params) => {
 
 				// when change params.
 				check(params.id === '1');
 			};
 
 			//OVERRIDE: self.close
-			self.close = close = function() {
+			let close = self.close = () => {
 				// when close.
 				console.log('View Closed!');
 			};

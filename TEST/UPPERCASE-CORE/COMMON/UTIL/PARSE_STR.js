@@ -1,26 +1,15 @@
-TEST('PARSE_STR', function(check) {
-	'use strict';
+TEST('PARSE_STR', (check) => {
 
-	var
-	// data
-	data,
-
-	// data str
-	dataStr,
-
-	// parsed data
-	parsedData;
-
-	data = {
+	let data = {
 		name : 'Yong Jae Sim',
 		age : 27,
 		country : 'Korea',
 		now : new Date()
 	};
 
-	dataStr = STRINGIFY(data);
+	let dataStr = STRINGIFY(data);
 
-	parsedData = PARSE_STR(dataStr);
+	let parsedData = PARSE_STR(dataStr);
 
 	check(CHECK_ARE_SAME([data, parsedData]) === true);
 });

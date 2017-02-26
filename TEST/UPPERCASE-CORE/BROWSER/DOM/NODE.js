@@ -1,28 +1,20 @@
-TEST('NODE', function(check) {
-	'use strict';
+TEST('NODE', (check) => {
 
-	var
-	// new node type
-	ImageAndText = CLASS({
+	let ImageAndText = CLASS({
 
-		preset : function() {
+		preset : () => {
 			return NODE;
 		},
 
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 			//REQUIRED: params
 			//REQUIRED: params.img
 			//REQUIRED: params.text
 
-			var
-			// img
-			img = params.img,
-
-			// text
-			text = params.text,
-
-			// div
-			div = DIV({
+			let img = params.img;
+			let text = params.text;
+			
+			let div = DIV({
 				style : {
 					backgroundImage : 'UPPERCASE-CORE/image.png',
 					position : 'fixed',

@@ -1,15 +1,7 @@
-TEST('CANVAS', function(check) {
-	'use strict';
+TEST('CANVAS', (check) => {
 	
-	var
-	// canvas
-	canvas,
-
-	// context
-	context,
-
-	// test div
-	div = DIV({
+	let canvas;
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,
@@ -25,12 +17,9 @@ TEST('CANVAS', function(check) {
 				border : '1px solid #999'
 			}
 		})
-	}).appendTo(BODY),
+	}).appendTo(BODY);
 	
-	// gl
-	gl;
-
-	/*context = canvas.getContext('2d');
+	/*let context = canvas.getContext('2d');
 
 	// draw circle.
 	context.strokeStyle = '#ffffff';
@@ -46,7 +35,7 @@ TEST('CANVAS', function(check) {
 	context.strokeStyle = '#00ff00';
 	context.stroke();*/
 	
-	gl = canvas.getContext('webgl');
+	let gl = canvas.getContext('webgl');
 	
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);

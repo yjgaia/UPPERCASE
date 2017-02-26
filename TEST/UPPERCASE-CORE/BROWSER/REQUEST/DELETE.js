@@ -1,10 +1,9 @@
-TEST('DELETE', function(check) {
-	'use strict';
+TEST('DELETE', (check) => {
 
 	// test DELETE request.
 	DELETE({
 		uri : 'request_test'
-	}, function(content) {
+	}, (content) => {
 		check(content === 'Request DONE!');
 	});
 
@@ -12,7 +11,7 @@ TEST('DELETE', function(check) {
 	DELETE({
 		uri : 'request_test',
 		paramStr : 'thisis=parameter'
-	}, function(content) {
+	}, (content) => {
 		check(content === 'Request DONE!');
 	});
 
@@ -22,14 +21,14 @@ TEST('DELETE', function(check) {
 		data : {
 			thisis : 'data'
 		}
-	}, function(content) {
+	}, (content) => {
 		check(content === 'Request DONE!');
 	});
 
 	// test DELETE request.
 	DELETE({
 		uri : 'request_test_json'
-	}, function(content) {
+	}, (content) => {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
@@ -39,7 +38,7 @@ TEST('DELETE', function(check) {
 	DELETE({
 		uri : 'request_test_json',
 		paramStr : 'thisis=parameter'
-	}, function(content) {
+	}, (content) => {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
@@ -51,7 +50,7 @@ TEST('DELETE', function(check) {
 		data : {
 			thisis : 'data'
 		}
-	}, function(content) {
+	}, (content) => {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));

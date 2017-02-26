@@ -1,9 +1,6 @@
-TEST('INFO', function(check) {
-	'use strict';
+TEST('INFO', (check) => {
 
-	var
-	// now lang
-	nowLang = INFO.getLang();
+	let nowLang = INFO.getLang();
 
 	// get browser language.
 	console.log(nowLang);

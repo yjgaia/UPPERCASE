@@ -1,15 +1,11 @@
-TEST('AUDIO', function(check) {
-	'use strict';
+TEST('AUDIO', (check) => {
 	
-	var
-	// audio
-	/*audio = AUDIO({
+	/*let audio = AUDIO({
 		ogg : 'UPPERCASE-CORE/AMemoryAway.ogg',
 		mp3 : 'UPPERCASE-CORE/AMemoryAway.mp3'
-	}).appendTo(BODY),*/
+	}).appendTo(BODY)*/
 	
-	// audio2
-	audio2 = AUDIO({
+	let audio2 = AUDIO({
 		ogg : 'UPPERCASE-CORE/sound.ogg',
 		mp3 : 'UPPERCASE-CORE/sound.mp3',
 		isLoop : true
@@ -17,11 +13,11 @@ TEST('AUDIO', function(check) {
 	
 	/*audio.play();
 	
-	DELAY(3, function() {
+	DELAY(3, () => {
 		audio.pause();
 	});
 	
-	DELAY(5, function() {
+	DELAY(5, () => {
 		audio.stop();
 	});*/
 });

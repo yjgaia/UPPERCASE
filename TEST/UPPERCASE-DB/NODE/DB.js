@@ -1,25 +1,22 @@
-TEST('DB', function(ok) {
-	'use strict';
+TEST('DB', (ok) => {
 	
-	var
-	// db
-	db = TestBox.DB('Test');
+	let db = TestBox.DB('Test');
 	
 	// create data test
 	db.create({
 		msg : 'Hello, DB!',
 		number : 12
-	}, function(savedData) {
+	}, (savedData) => {
 
 		console.log('데이터가 생성되었습니다.', savedData);
 /*
 		// get data test
-		db.get(savedData.id, function(savedData) {
+		db.get(savedData.id, (savedData) => {
 			console.log('Get data successed!', savedData);
 		});
 
 		// check is exists data test
-		db.checkIsExists(savedData.id, function(isExists) {
+		db.checkIsExists(savedData.id, (isExists) => {
 			console.log('Check is exists success!', isExists);
 		});
 
@@ -28,16 +25,16 @@ TEST('DB', function(ok) {
 			filter : {
 				msg : 'test'
 			}
-		}, function(savedData) {
+		}, (savedData) => {
 			console.log('Get data using filter successed!', savedData);
 		});
 
-		REPEAT(5, function() {
+		REPEAT(5, () => {
 
 			// get random data test
 			db.get({
 				isRandom : true
-			}, function(savedData) {
+			}, (savedData) => {
 				console.log('Get random data successed!', savedData);
 			});
 		});
@@ -51,16 +48,16 @@ TEST('DB', function(ok) {
 			$inc : {
 				count : 1
 			}
-		}, function(savedData) {
+		}, (savedData) => {
 
 			console.log('Update data successed!', savedData);
 
 			// remove data test
-			db.remove(savedData.id, function(savedData) {
+			db.remove(savedData.id, (savedData) => {
 				console.log('Remove data successed!', savedData);
 
 				// get data again.
-				db.get(savedData.id, function(savedData) {
+				db.get(savedData.id, (savedData) => {
 					console.log('Get data again successed!', savedData);
 				});
 			});
@@ -77,21 +74,21 @@ TEST('DB', function(ok) {
 		},
 		start : 10,
 		count : 10 // max count is NODE_CONFIG.maxDataCount
-	}, function(savedDataSet) {
+	}, (savedDataSet) => {
 		console.log('Find data set success!', savedDataSet);
 	});
 
 	// count data set test
 	db.count({
 		msg : 'test'
-	}, function(count) {
+	}, (count) => {
 		console.log('Count data set success!', count);
 	});
 
 	// check is exists test
 	db.checkIsExists({
 		msg : 'test'
-	}, function(isExists) {
+	}, (isExists) => {
 		console.log('Check is exists success!', isExists);
 	});
 
@@ -107,7 +104,7 @@ TEST('DB', function(ok) {
 				$first : '$count'
 			}
 		}
-	}], function(result) {
+	}], (result) => {
 		console.log('Aggregate success!', result);
 	});*/
 });

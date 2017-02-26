@@ -273,7 +273,8 @@ INIT_OBJECTS();
 <script src="UPPERCASE-ROOM/BROWSER.js"></script>
 
 <script>
-	'use strict';
+'use strict';
+RUN(() => {
 	
 	// init all singleton classes.
 	INIT_OBJECTS();
@@ -304,5 +305,6 @@ INIT_OBJECTS();
 			});
 		});
 	});
+});
 </script>
 ```

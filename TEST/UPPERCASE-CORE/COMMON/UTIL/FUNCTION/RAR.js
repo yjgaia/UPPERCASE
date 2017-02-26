@@ -1,9 +1,6 @@
-TEST('RAR', function(check) {
-	'use strict';
+TEST('RAR', (check) => {
 
-	var
-	// function
-	func = RAR(function() {
+	let func = RAR(() => {
 		console.log('just run!');
 	});
 

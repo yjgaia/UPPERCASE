@@ -1,12 +1,11 @@
-TEST('CONNECT_TO_SOCKET_SERVER', function(check) {
-	'use strict';
+TEST('CONNECT_TO_SOCKET_SERVER', (check) => {
 	
 	// if you not want error listener.
 	//
 	//	CONNECT_TO_SOCKET_SERVER({
 	//		host : 'localhost',
 	//		port : 8124
-	//	}, function(on, off, send) {
+	//	}, (on, off, send) => {
 	//		...
 	//	});
 
@@ -14,12 +13,12 @@ TEST('CONNECT_TO_SOCKET_SERVER', function(check) {
 		host : 'localhost',
 		port : 8124
 	}, {
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
-		success : function(on, off, send, disconnect) {
+		success : (on, off, send, disconnect) => {
 
-			on('message', function(data, ret) {
+			on('message', (data, ret) => {
 
 				check(CHECK_ARE_SAME([data, {
 					msg : 'message from server.'
@@ -33,7 +32,7 @@ TEST('CONNECT_TO_SOCKET_SERVER', function(check) {
 				data : {
 					msg : 'message from client.'
 				}
-			}, function(retMsg) {
+			}, (retMsg) => {
 				check(retMsg === 'Thanks!');
 			});
 
@@ -52,7 +51,7 @@ TEST('CONNECT_TO_SOCKET_SERVER', function(check) {
 				}
 			});
 
-			DELAY(1, function() {
+			DELAY(1, () => {
 
 				send({
 					methodName : 'checkRole',
@@ -61,7 +60,7 @@ TEST('CONNECT_TO_SOCKET_SERVER', function(check) {
 			});
 
 			// when disconnected
-			on('__DISCONNECTED', function() {
+			on('__DISCONNECTED', () => {
 				console.log('DISCONNECTED!');
 			});
 			

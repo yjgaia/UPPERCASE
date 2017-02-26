@@ -1,7 +1,6 @@
-TEST('MEMORY_USAGE', function(check) {
-	'use strict';
+TEST('MEMORY_USAGE', (check) => {
 
-	INTERVAL(1, RAR(function() {
+	INTERVAL(1, RAR(() => {
 		console.log(MEMORY_USAGE());
 	}));
 });

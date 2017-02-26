@@ -1,23 +1,18 @@
-TEST('DELAY', function(check) {
-	'use strict';
+TEST('DELAY', (check) => {
 
-	var
-	// delay
-	delay;
-
-	DELAY(function() {
+	DELAY(() => {
 		console.log('just delay!');
 	});
 
-	DELAY(2, function() {
+	DELAY(2, () => {
 		console.log('delay 2 seconds!');
 	});
 
-	delay = DELAY(3, function(delay) {
+	let delay = DELAY(3, (delay) => {
 		console.log('delay 3 seconds!');
 	});
 
-	DELAY(2, function() {
+	DELAY(2, () => {
 		delay.remove();
 	});
 });

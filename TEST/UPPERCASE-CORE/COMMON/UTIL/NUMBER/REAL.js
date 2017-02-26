@@ -1,5 +1,4 @@
-TEST('REAL', function(check) {
-	'use strict';
+TEST('REAL', (check) => {
 
 	check(REAL('1.1') === 1.1);
 });

@@ -1,9 +1,6 @@
-TEST('EVENT', function(check) {
-	'use strict';
+TEST('EVENT', (check) => {
 
-	var
-	// div
-	div = DIV({
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 50,
@@ -17,7 +14,7 @@ TEST('EVENT', function(check) {
 		c : SPAN({
 			c : 'Tap(click) or Touch this!',
 			on : {
-				show : function() {
+				show : () => {
 					console.log('child showed!');
 				}
 			}
@@ -28,7 +25,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'attach'
-	}, function(e) {
+	}, (e) => {
 		console.log('attached!');
 	});
 
@@ -36,7 +33,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'show'
-	}, function(e) {
+	}, (e) => {
 		console.log('showed!');
 	});
 
@@ -47,7 +44,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'tap'
-	}, function(e, div) {
+	}, (e, div) => {
 
 		console.log('tap:', e.getLeft(), e.getTop());
 
@@ -61,7 +58,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'touchstart'
-	}, function(e) {
+	}, (e) => {
 		console.log('touchstart:', e.getLeft(), e.getTop());
 	});
 
@@ -69,7 +66,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'touchmove'
-	}, function(e) {
+	}, (e) => {
 
 		console.log('touchmove:', e.getLeft(), e.getTop());
 
@@ -81,7 +78,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'touchend'
-	}, function(e) {
+	}, (e) => {
 		console.log('touchend:', e.getLeft(), e.getTop());
 	});
 
@@ -89,7 +86,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'mouseover'
-	}, function(e) {
+	}, (e) => {
 		console.log('mouseover:', e.getLeft(), e.getTop());
 	});
 
@@ -97,7 +94,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'mouseout'
-	}, function(e) {
+	}, (e) => {
 		console.log('mouseout:', e.getLeft(), e.getTop());
 	});
 
@@ -105,7 +102,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'mouseout'
-	}, function(e) {
+	}, (e) => {
 		console.log('mouseout:', e.getLeft(), e.getTop());
 	});
 
@@ -113,7 +110,7 @@ TEST('EVENT', function(check) {
 	EVENT({
 		node : div,
 		name : 'remove'
-	}, function(e) {
+	}, (e) => {
 		console.log('removed!');
 	});
 });

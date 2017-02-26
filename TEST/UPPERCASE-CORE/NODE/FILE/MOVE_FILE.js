@@ -1,5 +1,4 @@
-TEST('MOVE_FILE', function(check) {
-	'use strict';
+TEST('MOVE_FILE', (check) => {
 
 	MOVE_FILE({
 		from : 'UPPERCASE-CORE/test2.txt',
@@ -7,11 +6,11 @@ TEST('MOVE_FILE', function(check) {
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		}
 	});
@@ -27,15 +26,15 @@ TEST('MOVE_FILE', function(check) {
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		},
 
-		success : function() {
+		success : () => {
 			check(READ_FILE({
 				path : 'UPPERCASE-CORE/testFolder/test3.txt',
 				isSync : true

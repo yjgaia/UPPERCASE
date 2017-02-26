@@ -1,15 +1,9 @@
-TEST('FORM', function(check) {
-	'use strict';
+TEST('FORM', (check) => {
 
-	var
-	// form
-	form,
-
-	// input
-	input,
-
-	// test div
-	div = DIV({
+	let form;
+	let input;
+	
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,
@@ -77,7 +71,7 @@ TEST('FORM', function(check) {
 			}), A({
 				c : 'Clear Name',
 				on : {
-					tap : function() {
+					tap : () => {
 						input.setValue('');
 					}
 				}

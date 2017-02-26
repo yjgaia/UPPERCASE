@@ -1,9 +1,6 @@
-TEST('FILE_ALL', function(check) {
-	'use strict';
+TEST('FILE_ALL', (check) => {
 
-	var
-	// div
-	div = DIV({
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 50,
@@ -20,7 +17,7 @@ TEST('FILE_ALL', function(check) {
 	EVENT({
 		node : div,
 		name : 'tap'
-	}, function(e, div) {
+	}, (e, div) => {
 
 		console.log('tapped!');
 
@@ -32,7 +29,7 @@ TEST('FILE_ALL', function(check) {
 	EVENT({
 		node : div,
 		name : 'mouseover'
-	}, function(e) {
+	}, (e) => {
 
 		// fire tap event.
 		EVENT.fireAll({

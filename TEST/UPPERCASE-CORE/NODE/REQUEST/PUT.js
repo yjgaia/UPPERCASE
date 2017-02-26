@@ -1,12 +1,11 @@
-TEST('PUT', function(check) {
-	'use strict';
+TEST('PUT', (check) => {
 
 	// test PUT request.
 	PUT({
 		host : 'localhost',
 		port : 8810,
 		uri : 'request_test'
-	}, function(content) {
+	}, (content) => {
 		check(content === 'Request DONE!');
 	});
 
@@ -16,7 +15,7 @@ TEST('PUT', function(check) {
 		port : 8810,
 		uri : 'request_test',
 		paramStr : 'thisis=parameter'
-	}, function(content) {
+	}, (content) => {
 		check(content === 'Request DONE!');
 	});
 
@@ -28,7 +27,7 @@ TEST('PUT', function(check) {
 		data : {
 			thisis : 'data'
 		}
-	}, function(content) {
+	}, (content) => {
 		check(content === 'Request DONE!');
 	});
 
@@ -37,7 +36,7 @@ TEST('PUT', function(check) {
 		host : 'localhost',
 		port : 8810,
 		uri : 'request_test_json'
-	}, function(content) {
+	}, (content) => {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
@@ -49,7 +48,7 @@ TEST('PUT', function(check) {
 		port : 8810,
 		uri : 'request_test_json',
 		paramStr : 'thisis=parameter'
-	}, function(content) {
+	}, (content) => {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);
@@ -63,7 +62,7 @@ TEST('PUT', function(check) {
 		data : {
 			thisis : 'data'
 		}
-	}, function(content) {
+	}, (content) => {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]) === true);

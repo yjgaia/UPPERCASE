@@ -1,24 +1,21 @@
-TEST('SOUND', function(check) {
-	'use strict';
+TEST('SOUND', (check) => {
 	
-	var
-	// sound
-	sound = SOUND({
+	let sound = SOUND({
 		ogg : 'UPPERCASE-CORE/AMemoryAway.ogg',
 		mp3 : 'UPPERCASE-CORE/AMemoryAway.mp3'
 	});
 	
 	sound.play();
 	
-	DELAY(3, function() {
+	DELAY(3, () => {
 		sound.pause();
 	});
 	
-	DELAY(4, function() {
+	DELAY(4, () => {
 		sound.play();
 	});
 	
-	DELAY(5, function() {
+	DELAY(5, () => {
 		sound.stop();
 	});
 });

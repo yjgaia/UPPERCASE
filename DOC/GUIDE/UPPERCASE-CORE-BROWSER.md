@@ -105,13 +105,14 @@ HTML 코드와 JavaScript 코드가 분리되어 있는 기존 웹 개발 방식
     <body>
         <p id="hello">안녕하세요.</p>
         <script>
-            'use strict';
+        'use strict';
+        RUN(() => {
             
             let hello = document.getElementById('hello');
             
             // 빨간색인 글자 색을 파란색으로 변경
             hello.style.color = 'blue';
-        
+        });
         </script>
     </body>
 </html>

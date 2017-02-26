@@ -1,12 +1,6 @@
-TEST('LOOP', function(check) {
-	'use strict';
+TEST('LOOP', (check) => {
 
-	var
-	// loop
-	loop,
-
-	// div
-	div = DIV({
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 100,
@@ -14,29 +8,28 @@ TEST('LOOP', function(check) {
 			width : 100,
 			backgroundColor : 'red'
 		}
-	}).appendTo(BODY),
+	}).appendTo(BODY);
 
-	// height
-	height = 0;
+	let height = 0;
 
-	loop = LOOP(100, {
+	let loop = LOOP(100, {
 
-		start : function() {
+		start : () => {
 			// when start one cycle.
 		},
 
-		interval : function() {
+		interval : () => {
 			div.addStyle({
 				height : height += 1
 			});
 		},
 
-		end : function() {
+		end : () => {
 			// when end one cycle.
 		}
 	});
 
-	DELAY(3, function() {
+	DELAY(3, () => {
 
 		loop.remove();
 

@@ -1,16 +1,15 @@
-TEST('CREATE_FOLDER', function(check) {
-	'use strict';
+TEST('CREATE_FOLDER', (check) => {
 
 	CREATE_FOLDER({
 		path : 'UPPERCASE-CORE/test',
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		success : function() {
+		success : () => {
 			console.log('good!');
 		}
 	});
@@ -20,11 +19,11 @@ TEST('CREATE_FOLDER', function(check) {
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		success : function() {
+		success : () => {
 			console.log('good!');
 		}
 	});

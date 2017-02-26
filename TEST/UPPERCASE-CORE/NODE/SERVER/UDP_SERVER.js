@@ -1,9 +1,6 @@
-TEST('UDP_SERVER', function(check) {
-	'use strict';
+TEST('UDP_SERVER', (check) => {
 
-	var
-	// server
-	server = UDP_SERVER(8126, function(requestInfo, content, response) {
+	let server = UDP_SERVER(8126, (requestInfo, content, response) => {
 		console.log('IP: ' + requestInfo.ip + ', Port: ' + requestInfo.port + ', Content: ' + content);
 	});
 	

@@ -1,9 +1,6 @@
-TEST('DOM', function(check) {
-	'use strict';
+TEST('DOM', (check) => {
 
-	var
-	// new dom
-	dom = DOM({
+	let dom = DOM({
 
 		// tag name
 		tag : 'div',
@@ -23,7 +20,7 @@ TEST('DOM', function(check) {
 		on : {
 
 			// mouse click or mobile touch
-			tap : function() {
+			tap : () => {
 				console.log('tapped new dom!');
 			}
 		}
@@ -51,7 +48,7 @@ TEST('DOM', function(check) {
 	}));
 
 	// add attach handler.
-	dom.on('attach', function() {
+	dom.on('attach', () => {
 		console.log('I\'m comming!');
 	});
 
@@ -85,7 +82,7 @@ TEST('DOM', function(check) {
 	console.log(dom.getLeft(), dom.getTop());
 
 	// blink dom.
-	blinkInterval = INTERVAL(1, function() {
+	blinkInterval = INTERVAL(1, () => {
 
 		if (dom.checkIsShowing() === true) {
 			dom.hide();
@@ -95,7 +92,7 @@ TEST('DOM', function(check) {
 	});
 
 	// add remove handler.
-	dom.on('remove', function() {
+	dom.on('remove', () => {
 
 		console.log('Bye!');
 

@@ -1,15 +1,14 @@
-TEST('IMAGEMAGICK_IDENTIFY', function(check) {
-	'use strict';
+TEST('IMAGEMAGICK_IDENTIFY', (check) => {
 
-	IMAGEMAGICK_IDENTIFY('UPPERCASE-CORE/sample.png', function(features) {
+	IMAGEMAGICK_IDENTIFY('UPPERCASE-CORE/sample.png', (features) => {
 		console.log(features);
 	});
 
 	IMAGEMAGICK_IDENTIFY('UPPERCASE-CORE/sample.png', {
-		error : function() {
+		error : () => {
 			console.log('ERROR!');
 		},
-		success : function(features) {
+		success : (features) => {
 			console.log(features);
 		}
 	});

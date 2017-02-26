@@ -1,5 +1,4 @@
-TEST('SHOW_WARNING', function(check) {
-	'use strict';
+TEST('SHOW_WARNING', (check) => {
 
 	SHOW_WARNING('샘플 경고', '당신에게 경고합니다!');
 	

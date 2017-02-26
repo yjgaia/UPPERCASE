@@ -1,17 +1,6 @@
-TEST('UNPACK_DATA', function(check) {
-	'use strict';
+TEST('UNPACK_DATA', (check) => {
 
-	var
-	// data
-	data,
-
-	// packed data
-	packedData,
-
-	// unpacked data
-	unpackedData;
-
-	data = {
+	let data = {
 		now : new Date(),
 		o : {
 			d : new Date()
@@ -19,9 +8,9 @@ TEST('UNPACK_DATA', function(check) {
 		r : new RegExp('test', 'g')
 	};
 
-	packedData = PACK_DATA(data);
+	let packedData = PACK_DATA(data);
 
-	unpackedData = UNPACK_DATA(packedData);
+	let unpackedData = UNPACK_DATA(packedData);
 
 	check(CHECK_ARE_SAME([data, unpackedData]) === true);
 });

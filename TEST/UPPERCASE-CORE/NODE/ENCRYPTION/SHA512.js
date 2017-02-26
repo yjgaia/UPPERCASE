@@ -1,5 +1,4 @@
-TEST('SHA512', function(check) {
-	'use strict';
+TEST('SHA512', (check) => {
 
 	// generate SHA-512 hash.
 	check(SHA512({

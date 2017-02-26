@@ -1,11 +1,6 @@
-TEST('RUN', function(check) {
-	'use strict';
+TEST('RUN', (check) => {
 
-	var
-	// result
-	result;
-
-	result = RUN(function() {
+	let result = RUN(() => {
 
 		console.log('just run!');
 

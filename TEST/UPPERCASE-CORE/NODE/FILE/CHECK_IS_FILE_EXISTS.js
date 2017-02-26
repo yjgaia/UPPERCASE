@@ -1,5 +1,4 @@
-TEST('CHECK_IS_FILE_EXISTS', function(check) {
-	'use strict';
+TEST('CHECK_IS_FILE_EXISTS', (check) => {
 
 	check(CHECK_IS_FILE_EXISTS({
 		path : 'UPPERCASE-CORE/test.txt',

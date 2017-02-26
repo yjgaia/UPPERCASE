@@ -1,11 +1,8 @@
-TEST('OBJECT', function(check) {
-	'use strict';
+TEST('OBJECT', (check) => {
 
-	var
-	// parent object
-	ParentObject = OBJECT({
+	let ParentObject = OBJECT({
 
-		init : function(inner, self) {
+		init : (inner, self) => {
 
 			console.log('this is singleton object. object id: ' + self.id);
 
@@ -16,11 +13,11 @@ TEST('OBJECT', function(check) {
 	// child object
 	ChildObject = OBJECT({
 
-		preset : function() {
+		preset : () => {
 			return ParentObject;
 		},
 
-		init : function(inner, self) {
+		init : (inner, self) => {
 			console.log('this is child object.');
 		}
 	});

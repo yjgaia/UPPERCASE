@@ -1,10 +1,7 @@
-RUN(function() {
-	'use strict';
+RUN(() => {
 	
-	var
-	// require.
-	require = function(path) {
-		var script = document.createElement('script');
+	let require = (path) => {
+		let script = document.createElement('script');
 		script.src = 'UPPERCASE-CORE/' + path;
 		document.body.appendChild(script);
 	};

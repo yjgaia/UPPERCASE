@@ -1,9 +1,6 @@
-TEST('VALID', function(check) {
-	'use strict';
+TEST('VALID', (check) => {
 
-	var
-	// data
-	data = {
+	let data = {
 		test : 1,
 		parentId : 'test',
 		factorCount : 1.2,
@@ -16,10 +13,9 @@ TEST('VALID', function(check) {
 		mans : [{
 			name : 'test'
 		}]
-	},
+	};
 
-	// valid data
-	validData = {
+	let validData = {
 		parentId : {
 			id : true
 		},
@@ -66,10 +62,9 @@ TEST('VALID', function(check) {
 				}
 			}
 		}
-	},
+	};
 
-	// valid result
-	validResult = VALID(validData).checkAndWash(data);
+	let validResult = VALID(validData).checkAndWash(data);
 
 	check(CHECK_ARE_SAME([data, {
 		parentId : 'test',

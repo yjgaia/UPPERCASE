@@ -1,79 +1,78 @@
-TEST('NEXT', function(check) {
-	'use strict';
+TEST('NEXT', (check) => {
 
 	NEXT([
-	function(next) {
+	(next) => {
 
-		DELAY(1, function() {
+		DELAY(1, () => {
 			next(1);
 		});
 
 		NEXT(5, [
-		function(i, next) {
+		(i, next) => {
 
 			console.log('5 times, ' + i);
 
-			DELAY(0.1, function() {
+			DELAY(0.1, () => {
 				next(i + 1);
 			});
 		},
 
-		function() {
-			return function(i) {
+		() => {
+			return (i) => {
 				check(i === 5);
 			};
 		}]);
 	},
 
-	function(next) {
-		return function(i) {
+	(next) => {
+		return (i) => {
 
-			DELAY(1, function() {
+			DELAY(1, () => {
 				next(i + 1);
 			});
 
 			NEXT(['a', 'b', 'c', 'd', 'e'], [
-			function(alphabet, next) {
+			(alphabet, next) => {
 
 				console.log('5 alphabets, ' + alphabet);
 
-				DELAY(0.1, function() {
+				DELAY(0.1, () => {
 					next(alphabet);
 				});
 			},
 
-			function() {
-				return function(alphabet) {
+			() => {
+				return (alphabet) => {
 					check(alphabet === 'e');
 				};
 			}]);
 		};
 	},
 
-	function() {
-		return function(i) {
+	() => {
+		return (i) => {
 
 			NEXT([
-			function(next) {
+			(next) => {
 
-				DELAY(1, function() {
+				DELAY(1, () => {
 
 					// to sixth.
 					next.next(i + 1);
 				});
 			},
 
-			function(next) {
-				return function(i) {
+			(next) => {
+				return (i) => {
 
-					DELAY(1, function() {
+					DELAY(1, () => {
 						next(i + 1);
 					});
 				};
 			},
 
-			function() {
-				return function(i) {
+			() => {
+				return (i) => {
 					check(i === 3);
 				};
 			}]);

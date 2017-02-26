@@ -1,9 +1,6 @@
-TEST('CALENDAR', function(check) {
-	'use strict';
+TEST('CALENDAR', (check) => {
 
-	var
-	// today calendar
-	cal = CALENDAR(new Date());
+	let cal = CALENDAR(new Date());
 
 	console.log(cal.getYear());
 	console.log(cal.getMonth());

@@ -1,29 +1,23 @@
-TEST('CHECK_ARE_SAME', function(check) {
-	'use strict';
+TEST('CHECK_ARE_SAME', (check) => {
 
-	var
-	// data1
-	data1 = {
+	let data1 = {
+		a : 1,
+		b : 2,
+		c : [1, 2, 3]
+	};
+	
+	let data2 = {
 		a : 1,
 		b : 2,
 		c : [1, 2, 3]
 	},
-
-	// data2
-	data2 = {
-		a : 1,
-		b : 2,
-		c : [1, 2, 3]
-	},
-
-	// array1
-	array1 = [1, 2, 3, 4, {
+	
+	let array1 = [1, 2, 3, 4, {
 		a : 1,
 		b : 2
-	}, [5, 6]],
-
-	// array2
-	array2 = [1, 2, 3, 4, {
+	}, [5, 6]];
+	
+	let array2 = [1, 2, 3, 4, {
 		a : 1,
 		b : 2
 	}, [5, 6]];

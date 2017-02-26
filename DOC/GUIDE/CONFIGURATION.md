@@ -8,13 +8,15 @@
 <script src="/UJS-BROWSER.js"></script>
 <!-- UJS의 작동방식을 설정합니다. -->
 <script>
-	'use strict';
+'use strict';
+RUN(() => {
 	
 	// 개발 모드
 	CONFIG.isDevMode = true;
 	
 	// 기본 포트를 변경합니다.
 	BROWSER_CONFIG.port = 8010;
+});
 </script>
 ```
 

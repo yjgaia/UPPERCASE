@@ -1,20 +1,19 @@
-TEST('READ_FILE', function(check) {
-	'use strict';
+TEST('READ_FILE', (check) => {
 
-	var buffer = READ_FILE({
+	let buffer = READ_FILE({
 		path : 'UPPERCASE-CORE/test.txt',
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		},
 
-		success : function(buffer) {
+		success : (buffer) => {
 			check(buffer.toString() === 'this is test file.');
 		}
 	});
@@ -26,15 +25,15 @@ TEST('READ_FILE', function(check) {
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		},
 
-		success : function(buffer) {
+		success : (buffer) => {
 			check(buffer.toString() === 'this is test file.');
 		}
 	});

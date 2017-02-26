@@ -175,12 +175,14 @@ UJS 및 각종 JavaScript 파일들을 불러오고, 프로젝트를 초기화�
 		<script src="/MAIN.js"></script>
 		<script src="/Home.js"></script>
 		<script>
-			'use strict';
+		'use strict';
+		RUN(() => {
 			
 			// OBJECT 초기화 부분
 			INIT_OBJECTS();
 			
 			MAIN();
+		});
 		</script>
 	</body>
 </html>

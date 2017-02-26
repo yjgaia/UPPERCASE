@@ -1,24 +1,13 @@
-TEST('INPUT', function(check) {
-	'use strict';
+TEST('INPUT', (check) => {
 
-	var
-	// form
-	form,
+	let form;
+	let input;
+	let select;
+	let manOption;
+	let womanOption;
+	let textarea;
 
-	// input
-	input,
-
-	// select
-	select,
-
-	// options
-	manOption, womanOption,
-
-	// textarea
-	textarea,
-
-	// test div
-	div = DIV({
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,

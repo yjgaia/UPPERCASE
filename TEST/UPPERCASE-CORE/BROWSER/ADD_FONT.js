@@ -1,4 +1,4 @@
-TEST('ADD_FONT', function(check) {
+TEST('ADD_FONT', (check) => {
 	
 	ADD_FONT({
 		name : 'Noto Sans KR',

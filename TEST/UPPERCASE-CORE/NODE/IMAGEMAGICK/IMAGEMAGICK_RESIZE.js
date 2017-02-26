@@ -1,5 +1,4 @@
-TEST('IMAGEMAGICK_RESIZE', function(check) {
-	'use strict';
+TEST('IMAGEMAGICK_RESIZE', (check) => {
 
 	IMAGEMAGICK_RESIZE({
 		srcPath : 'UPPERCASE-CORE/sample.png',
@@ -11,7 +10,7 @@ TEST('IMAGEMAGICK_RESIZE', function(check) {
 		srcPath : 'UPPERCASE-CORE/sample.png',
 		distPath : 'UPPERCASE-CORE/sample-height-100.png',
 		height : 100
-	}, function() {
+	}, () => {
 		console.log('DONE.');
 	});
 
@@ -21,10 +20,10 @@ TEST('IMAGEMAGICK_RESIZE', function(check) {
 		width : 100,
 		height : 100
 	}, {
-		error : function() {
+		error : () => {
 			console.log('ERROR!');
 		},
-		success : function() {
+		success : () => {
 			console.log('DONE.');
 		}
 	});
