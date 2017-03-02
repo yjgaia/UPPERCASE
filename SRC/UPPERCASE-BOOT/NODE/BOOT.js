@@ -22,7 +22,7 @@ global.BOOT = (params) => {
 	let _404PageContent;
 	let indexPageContent;
 	
-	let boxNamesInBOXFolder = [],
+	let boxNamesInBOXFolder = [];
 
 	let loadForNode = (path) => {
 		require(path);
@@ -297,7 +297,7 @@ global.BOOT = (params) => {
 		FIND_FOLDER_NAMES({
 			path : rootPath,
 			isSync : true
-		}, (folderNames => {
+		}, (folderNames) => {
 
 			EACH(folderNames, (folderName) => {
 
@@ -396,7 +396,7 @@ global.BOOT = (params) => {
 			_404PageContent += '<html>';
 			_404PageContent += '<head>';
 			_404PageContent += '<meta charset="utf-8">';
-			_404PageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' + (CONFIG.isMobileFullScreen === true ? ', minimal-ui' : '') + '">';
+			_404PageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">';
 			
 			_404PageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
 			
@@ -460,11 +460,7 @@ global.BOOT = (params) => {
 			indexPageContent += '<html>';
 			indexPageContent += '<head>';
 			indexPageContent += '<meta charset="utf-8">';
-			indexPageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' + (CONFIG.isMobileFullScreen === true ? ', minimal-ui' : '') + '">';
-			
-			if (NODE_CONFIG.isUsingHTMLSnapshot === true) {
-				indexPageContent += '<meta name="fragment" content="!">';
-			}
+			indexPageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">';
 			
 			if (CONFIG.description !== undefined) {
 				indexPageContent += '<meta name="description" content="' + CONFIG.description + '">';
@@ -988,26 +984,6 @@ global.BOOT = (params) => {
 						}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/R/favicon.ico' : CONFIG.defaultBoxName + '/R/favicon.ico';
 					}
 					
-					// serve HTML snapshot.
-					else if (NODE_CONFIG.isUsingHTMLSnapshot === true && params._escaped_fragment_ !== undefined) {
-						
-						let content = '';
-						
-						let phantom = require('child_process').spawn('phantomjs', [__dirname + '/PRINT_HTML_SNAPSHOT.js', (CONFIG.webServerPort === undefined ? CONFIG.securedWebServerPort : CONFIG.webServerPort), uri === '' ? params._escaped_fragment_ : decodeURIComponent(uri)]);
-					    
-					    phantom.stdout.setEncoding('utf8');
-					    
-					    phantom.stdout.on('data', (data) => {
-					        content += data.toString();
-					    });
-					    
-					    phantom.on('exit', (code) => {
-							response(content);
-					    });
-					    
-					    return false;
-					}
-
 					// serve others.
 					else {
 

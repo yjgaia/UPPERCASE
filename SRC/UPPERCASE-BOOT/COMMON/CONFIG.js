@@ -10,14 +10,11 @@ OVERRIDE(CONFIG, (origin) => {
 		title : 'UPPERCASE PROJECT',
 		
 		baseBackgroundColor : '#000',
-		baseColor : '#fff',
+		baseColor : '#fff'
 		
 		// maxThumbWidth
 		// or
 		// maxThumbHeight
-		
-		isMobileFullScreen : false,
-		isUsingHTMLSnapshot : false
 		
 	}, origin]);
 });

@@ -57,7 +57,7 @@ Node.js 환경에서 MongoDB 기반 데이터베이스를 쉽게 다룰 수 있�
 UPPERCASE 기반 프로젝트는 자연스럽게 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8-%EB%B7%B0-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC)을 따르게 됩니다. UPPERCASE는 자체적으로 MVC 패턴에서의 Model에 대한 여러가지 기능들을 제공하고, Model에 복잡한 Business Logic을 추가하여 확장시킬 수 있습니다.
 * [UPPERCASE-MODEL 문서](DOC/GUIDE/UPPERCASE-MODEL.md) 참고
 
-UPPERCASE는 이 외에도 업로드 기능이라던지, 각종 유틸리티 기능, 기본 스타일 등을 제공하고 있습니다. 자세한 내용은 아래 문서들을 참고하시기 바랍니다.
+UPPERCASE는 이 외에도 업로드 기능, 각종 유틸리티 기능, 모든 브라우저 통합 기본 스타일 등을 제공하고 있습니다. 자세한 내용은 아래 문서들을 참고하시기 바랍니다.
 
 ## 문서
 * [설치하기](DOC/INSTALL.md)
@@ -68,23 +68,17 @@ UPPERCASE는 이 외에도 업로드 기능이라던지, 각종 유틸리티 기
 
 ## 클라이언트
 UPPERCASE가 공식 지원하는 클라이언트 목록은 다음과 같습니다.
-* 웹 브라우저 - UPPERCASE는 자체적으로 웹 브라우저용 클라이언트를 지원하고 있습니다. 테스트가 완료된 웹 브라우저의 종류는 다음과 같습니다.
-	- Chrome PC 버전
-	- Firefox
-	- Edge
-	- Safari Mac 버전
-	- Chrome Android 버전
-	- Safari iOS 버전
-* Android - https://github.com/Hanul/Unicorn-Android
-* iOS - https://github.com/Hanul/Unicorn-iOS
+* 웹 브라우저 - UPPERCASE는 기본적으로 웹 브라우저에서 구동됩니다.
+* [Android 클라이언트](https://github.com/Hanul/Unicorn-Android)
+* [iOS 클라이언트](https://github.com/Hanul/Unicorn-iOS)
 
-곧 지원할 예정인 클라이언트 목록은 다음과 같습니다.
-* Unity
-* Unreal
-* Xamarin
+곧 지원 예정인 클라이언트 목록은 다음과 같습니다.
+* Unity 클라이언트
+* Unreal 클라이언트
+* Xamarin 클라이언트
 
 비공식 클라이언트 목록은 다음과 같습니다.
-* GameMaker: Studio - https://github.com/Hanul/UPPERCASE-GMS-Client
+* [GameMaker: Studio 클라이언트](https://github.com/Hanul/UPPERCASE-GMS-Client)
 
 기타 클라이언트 라이브러리를 지원받고 싶은 플랫폼이 있으면, [GitHub Issues](https://github.com/Hanul/UPPERCASE/issues)에 글을 남겨주시기 바랍니다.
 

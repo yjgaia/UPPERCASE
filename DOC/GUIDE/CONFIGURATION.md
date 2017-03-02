@@ -62,8 +62,6 @@ Node.js 환경에서 사용될 수 있는 설정들 입니다.
 * `socketServerPort` 소켓 서버의 포트를 설정합니다.
 * `defaultBoxName` 기본 BOX의 이름을 설정합니다. 기본값은 `'UPPERCASE'` 입니다.
 * `title` 프로젝트 제목을 입력합니다. 기본값은 `'UPPERCASE PROJECT'` 입니다.
-* `isMobileFullScreen` 모바일 브라우저에서 full screen으로 화면을 표시할지를 결정합니다. 기본값은 `false`입니다.
-* `isUsingHTMLSnapshot` 검색엔진의 크롤러들이 Single Page 웹 애플리케이션을 방문할 때 HTML 스냅샷을 제공할 지 여부를 설정합니다. 기본값은 `false`입니다. 이 기능을 사용하려면 [PhantomJS](http://phantomjs.org)가 서버에 설치되어 있어야 합니다.
 
 ### 개발 모드
 개발 모드일 때는 다음과 같은 기능들이 작동합니다.
@@ -124,7 +122,6 @@ NODE_CONFIG : {
 ```
 
 ### 기타 설정
-* `isUsingHTMLSnapshot` HTML Snapshot을 생성할지 여부를 설정합니다. 기본은 `false`입니다.
 * `isNotUsingCPUClustering` 기본적으로 UPPERCASE는 멀티코어 CPU의 개수만큼 프로세서가 실행되어, 멀티코어 CPU에서 최상의 성능을 낼 수 있도록 합니다. 그러나 마이크로 서비스 등을 제작할 때에는 이러한 기능이 불필요할 수 있습니다. 이 때 `true`로 지정하면 프로세스를 하나만 만듭니다. 기본은 `false`입니다.
 
 ## BROWSER_CONFIG

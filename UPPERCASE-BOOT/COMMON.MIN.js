@@ -1,1 +1,1 @@
-OVERRIDE(CONFIG,o=>{global.CONFIG=COMBINE([{defaultBoxName:"UPPERCASE",title:"UPPERCASE PROJECT",baseBackgroundColor:"#000",baseColor:"#fff",isMobileFullScreen:!1,isUsingHTMLSnapshot:!1},o])});
+OVERRIDE(CONFIG,o=>{global.CONFIG=COMBINE([{defaultBoxName:"UPPERCASE",title:"UPPERCASE PROJECT",baseBackgroundColor:"#000",baseColor:"#fff"},o])});
