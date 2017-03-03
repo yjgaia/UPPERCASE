@@ -1,0 +1,9 @@
+{
+	"name": "uppercase-model",
+	"version": "0.0.0-beta",
+	"dependencies": {
+		"uppercase-room": "latest",
+		"uppercase-db": "latest"
+	},
+	"main": "NODE.js"
+}
