@@ -10,13 +10,11 @@
 		<script src="UPPERCASE/UPPERCASE-CORE/BROWSER.js"></script>
 		<!-- 테스트 시작 -->
 		<script>
-		RUN(function() {
-			'use strict';
+		'use strict';
+		RUN(() => {
 			
-			var
-			// require.
-			require = function(path) {
-				var script = document.createElement('script');
+			let require = (path) => {
+				let script = document.createElement('script');
 				script.src = path;
 				document.body.appendChild(script);
 			};
@@ -31,8 +29,8 @@
 		});
 		</script>
 		<script>
-		RUN(function() {
-			'use strict';
+		'use strict';
+		RUN(() => {
 			
 			DIV({
 				c : H1({

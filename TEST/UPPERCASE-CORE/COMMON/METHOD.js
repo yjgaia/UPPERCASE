@@ -1,26 +1,18 @@
-TEST('METHOD', function(check) {
-	'use strict';
+TEST('METHOD', (check) => {
 
 	// test with one parameter method.
-	RUN(function() {
+	RUN(() => {
 
-		var
-		// Method
-		Method = METHOD(function(m) {
+		let Method = METHOD((m) => {
 
-			var
-			// static value
-			staticText = 'static text.',
+			let staticText = 'static text.';
 
-			// get static text.
-			getStaticText;
-
-			m.getStaticText = getStaticText = function() {
+			let getStaticText = m.getStaticText = () => {
 				return staticText;
 			};
 
 			return {
-				run : function(value) {
+				run : (value) => {
 					check(value === 'this is value.');
 				}
 			};
@@ -37,12 +29,10 @@ TEST('METHOD', function(check) {
 	});
 
 	// test with multiple parameters method.
-	RUN(function() {
+	RUN(() => {
 
-		var
-		// Method
-		Method = METHOD({
-			run : function(params) {
+		let Method = METHOD({
+			run : (params) => {
 				check(params.name === 'Hanul');
 				check(params.age === 27);
 			}
@@ -56,29 +46,25 @@ TEST('METHOD', function(check) {
 	});
 
 	// test with one function method.
-	RUN(function() {
+	RUN(() => {
 
-		var
-		// Method
-		Method = METHOD({
-			run : function(func) {
+		let Method = METHOD({
+			run : (func) => {
 				func('ok');
 			}
 		});
 
 		// run!
-		Method(function(msg) {
+		Method((msg) => {
 			check(msg === 'ok');
 		});
 	});
 
 	// test with multiple functions method.
-	RUN(function() {
+	RUN(() => {
 
-		var
-		// Method
-		Method = METHOD({
-			run : function(funcs) {
+		let Method = METHOD({
+			run : (funcs) => {
 				funcs.f1('ok');
 				funcs.f2('ok');
 			}
@@ -86,22 +72,20 @@ TEST('METHOD', function(check) {
 
 		// run.
 		Method({
-			f1 : function(msg) {
+			f1 : (msg) => {
 				check(msg === 'ok');
 			},
-			f2 : function(msg) {
+			f2 : (msg) => {
 				check(msg === 'ok');
 			}
 		});
 	});
 
 	// test with complex method.
-	RUN(function() {
+	RUN(() => {
 
-		var
-		// Method
-		Method = METHOD({
-			run : function(params, funcs) {
+		let Method = METHOD({
+			run : (params, funcs) => {
 				funcs.f1(params.age);
 			}
 		});
@@ -111,10 +95,10 @@ TEST('METHOD', function(check) {
 			name : 'Hanul',
 			age : 27
 		}, {
-			f1 : function(msg) {
+			f1 : (msg) => {
 				check(msg === 27);
 			},
-			f2 : function(msg) {
+			f2 : (msg) => {
 				check(msg === 27);
 			}
 		});

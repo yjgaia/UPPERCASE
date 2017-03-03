@@ -1,9 +1,6 @@
-TEST('STORE', function(check) {
-	'use strict';
+TEST('STORE', (check) => {
 
-	var
-	// store
-	store = STORE('TestStore');
+	let store = STORE('TestStore');
 
 	check(store.get('msg') === undefined);
 

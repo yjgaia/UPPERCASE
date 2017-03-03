@@ -1,6 +1,4 @@
-var
-// PORT
-PORT = 8810;
+const PORT = 8810;
 
 // 모듈 로드
 require('../UPPERCASE-CORE/NODE.js');
@@ -9,8 +7,7 @@ require('../UPPERCASE-DB/NODE.js');
 require('../UPPERCASE-MODEL/NODE.js');
 require('../UPPERCASE-BOOT/NODE.js');
 
-RUN(function() {
-	'use strict';
+RUN(() => {
 	
 	// 리소스 캐싱을 수행하지 않습니다.
 	CONFIG.isDevMode = true;
@@ -28,20 +25,14 @@ RUN(function() {
 	/*require('./UPPERCASE-MODEL/__TEST_NODE.js');
 	require('./UPPERCASE-BOOT/__TEST_NODE.js');*/
 	
-	/*WEB_SERVER({
+	WEB_SERVER({
 		port : PORT,
 		rootPath : __dirname
-	}, function(requestInfo, response, replaceRootPath, next) {
+	}, (requestInfo, response, replaceRootPath, next) => {
 		
-		var
-		// uri
-		uri = requestInfo.uri,
-
-		// method
-		method = requestInfo.method,
-
-		// params
-		params = requestInfo.params;
+		let uri = requestInfo.uri;
+		let method = requestInfo.method;
+		let params = requestInfo.params;
 		
 		if (uri.substring(0, 10) === 'UPPERCASE/') {
 			requestInfo.uri = uri.substring(10);
@@ -72,5 +63,5 @@ RUN(function() {
 		}
 	});
 	
-	console.log(CONSOLE_GREEN('UPPERCASE 테스트 콘솔을 실행하였습니다. 웹 브라우저에서 [http://localhost:' + PORT + ']로 접속해주시기 바랍니다.'));*/
+	console.log(CONSOLE_GREEN('UPPERCASE 테스트 콘솔을 실행하였습니다. 웹 브라우저에서 [http://localhost:' + PORT + ']로 접속해주시기 바랍니다.'));
 });

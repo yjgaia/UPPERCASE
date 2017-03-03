@@ -1,19 +1,14 @@
-/**
+/*
  * 파일을 복사합니다.
  */
-global.COPY_FILE = METHOD(function() {
-	'use strict';
+global.COPY_FILE = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs'),
-
-	//IMPORT: path
-	_path = require('path');
+	let FS = require('fs');
+	let Path = require('path');
 
 	return {
 
-		run : function(params, callbackOrHandlers) {
+		run : (params, callbackOrHandlers) => {
 			//REQUIRED: params
 			//REQUIRED: params.from		복사할 파일의 위치
 			//REQUIRED: params.to		파일을 복사할 위치
@@ -23,24 +18,13 @@ global.COPY_FILE = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// from
-			from = params.from,
-
-			// to
-			to = params.to,
-
-			// is sync
-			isSync = params.isSync,
-
-			// not exists handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let from = params.from;
+			let to = params.to;
+			let isSync = params.isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
 			if (callbackOrHandlers !== undefined) {
 				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -53,34 +37,28 @@ global.COPY_FILE = METHOD(function() {
 			}
 
 			CREATE_FOLDER({
-				path : _path.dirname(to),
+				path : Path.dirname(to),
 				isSync : isSync
 			}, {
 
 				error : errorHandler,
 
-				success : function() {
+				success : () => {
 
 					// when normal mode
 					if (isSync !== true) {
 
-						CHECK_FILE_EXISTS(from, function(isExists) {
-
-							var
-							// reader
-							reader;
+						CHECK_FILE_EXISTS(from, (isExists) => {
 
 							if (isExists === true) {
 
-								reader = fs.createReadStream(from);
+								let reader = FS.createReadStream(from);
 
-								reader.pipe(fs.createWriteStream(to));
+								reader.pipe(FS.createWriteStream(to));
 
-								reader.on('error', function(error) {
+								reader.on('error', (error) => {
 
-									var
-									// error msg
-									errorMsg = error.toString();
+									let errorMsg = error.toString();
 
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
@@ -89,7 +67,7 @@ global.COPY_FILE = METHOD(function() {
 									}
 								});
 
-								reader.on('end', function() {
+								reader.on('end', () => {
 									if (callback !== undefined) {
 										callback();
 									}
@@ -111,11 +89,7 @@ global.COPY_FILE = METHOD(function() {
 					// when sync mode
 					else {
 
-						RUN(function() {
-
-							var
-							// error msg
-							errorMsg;
+						RUN(() => {
 
 							try {
 
@@ -124,7 +98,7 @@ global.COPY_FILE = METHOD(function() {
 									isSync : true
 								}) === true) {
 
-									fs.writeFileSync(to, fs.readFileSync(from));
+									FS.writeFileSync(to, FS.readFileSync(from));
 
 								} else {
 
@@ -144,7 +118,7 @@ global.COPY_FILE = METHOD(function() {
 
 								if (error !== TO_DELETE) {
 
-									errorMsg = error.toString();
+									let errorMsg = error.toString();
 
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);

@@ -1,11 +1,8 @@
-TEST('MINIFY_CSS', function(check) {
-	'use strict';
+TEST('MINIFY_CSS', (check) => {
 
-	READ_FILE('UPPERCASE-CORE/NODE/MINIFY/sample.css', function(content) {
+	READ_FILE('UPPERCASE-CORE/NODE/MINIFY/sample.css', (content) => {
 
-		var
-		// css code
-		cssCode = content.toString();
+		let cssCode = content.toString();
 
 		console.log(MINIFY_CSS(cssCode));
 	});

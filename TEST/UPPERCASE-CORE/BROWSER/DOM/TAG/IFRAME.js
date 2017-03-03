@@ -1,9 +1,6 @@
-TEST('IFRAME', function(check) {
-	'use strict';
-
-	var
-	// test div
-	div = DIV({
+TEST('IFRAME', (check) => {
+	
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,

@@ -1,12 +1,7 @@
-TEST('E', function(check) {
-	'use strict';
+TEST('E', (check) => {
 
-	var
-	// input
-	input,
-
-	// div
-	div = DIV({
+	let input;
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 50,
@@ -22,7 +17,7 @@ TEST('E', function(check) {
 	EVENT({
 		node : div,
 		name : 'tap'
-	}, function(e) {
+	}, (e) => {
 
 		// get event position.
 		console.log('tap:', e.getLeft(), e.getTop());
@@ -34,7 +29,7 @@ TEST('E', function(check) {
 	EVENT({
 		node : input,
 		name : 'tap'
-	}, function(e) {
+	}, (e) => {
 
 		// stop bubbling.
 		e.stopBubbling();
@@ -44,7 +39,7 @@ TEST('E', function(check) {
 	EVENT({
 		node : input,
 		name : 'keydown'
-	}, function(e) {
+	}, (e) => {
 
 		// stop browser default behavior.
 		e.stopDefault();
@@ -54,7 +49,7 @@ TEST('E', function(check) {
 	EVENT({
 		node : input,
 		name : 'keydown'
-	}, function(e) {
+	}, (e) => {
 
 		// e.stop() = e.stopBubbling() + e.stopDefault()
 		e.stop();
@@ -64,7 +59,7 @@ TEST('E', function(check) {
 	EVENT({
 		node : input,
 		name : 'keydown'
-	}, function(e) {
+	}, (e) => {
 
 		// get key code.
 		console.log('Key Code:', e.getKeyCode());

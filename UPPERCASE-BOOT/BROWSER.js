@@ -1,14 +1,18 @@
+'use strict';
+
 /*
 
 Welcome to UPPERCASE-BOOT! (http://uppercase.io)
 
 */
 
-/**
+// 웹 브라우저 환경에서는 window가 global 객체 입니다.
+let global = window;
+
+/*
  * Configuration
  */
-OVERRIDE(CONFIG, function(origin) {
-	'use strict';
+OVERRIDE(CONFIG, (origin) => {
 
 	global.CONFIG = COMBINE([{
 		
@@ -17,25 +21,21 @@ OVERRIDE(CONFIG, function(origin) {
 		title : 'UPPERCASE PROJECT',
 		
 		baseBackgroundColor : '#000',
-		baseColor : '#fff',
+		baseColor : '#fff'
 		
 		// maxThumbWidth
 		// or
 		// maxThumbHeight
 		
-		isMobileFullScreen : false,
-		isUsingHTMLSnapshot : false
-		
 	}, origin]);
 });
 
 /*
- * connect to UPPERCASE server.
+ * UPPERCASE 서버에 접속합니다.
  */
 global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 
-	run : function(params, connectionListenerOrListeners) {
-		'use strict';
+	run : (params, connectionListenerOrListeners) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.roomServerName
 		//OPTIONAL: params.webServerHost
@@ -45,24 +45,13 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 		//OPTIONAL: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
 
-		var
-		// room server name
-		roomServerName,
+		let roomServerName;
+		let webServerHost;
+		let webServerPort;
+		let isSecure;
 		
-		// web server host
-		webServerHost,
-		
-		// web server port
-		webServerPort,
-		
-		// is secure
-		isSecure,
-		
-		// connection listener
-		connectionListener,
-
-		// error listener
-		errorListener;
+		let connectionListener;
+		let errorListener;
 		
 		if (connectionListenerOrListeners === undefined) {
 			
@@ -118,24 +107,24 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 			paramStr : 'defaultHost=' + webServerHost
 		}, {
 			error : errorListener,
-			success : function(host) {
+			success : (host) => {
 
 				CONNECT_TO_ROOM_SERVER({
 					name : roomServerName,
 					isSecure : isSecure,
 					host : host,
 					port : webServerPort
-				}, function(on, off, send) {
+				}, (on, off, send) => {
 					
-					FOR_BOX(function(box) {
-						EACH(box.MODEL.getOnNewInfos(), function(onNewInfo) {
+					FOR_BOX((box) => {
+						EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
 							onNewInfo.findMissingDataSet();
 						});
 					});
 					
-					on('__DISCONNECTED', function() {
-						FOR_BOX(function(box) {
-							EACH(box.MODEL.getOnNewInfos(), function(onNewInfo) {
+					on('__DISCONNECTED', () => {
+						FOR_BOX((box) => {
+							EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
 								onNewInfo.lastCreateTime = SERVER_TIME(new Date());
 							});
 						});
@@ -150,34 +139,26 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 	}
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * get resource's real path with version.
 	 */
-	box.R = METHOD(function(m) {
+	box.R = METHOD((m) => {
 		
-		var
-		// base path
-		basePath,
+		let basePath;
 		
-		// set base path.
-		setBasePath;
-		
-		m.setBasePath = setBasePath = function(_basePath) {
+		let setBasePath = m.setBasePath = (_basePath) => {
 			basePath = _basePath;
 		};
 		
 		return {
 
-			run : function(path, callback) {
+			run : (path, callback) => {
 				//REQUIRED: path
 				//OPTIONAL: callback
 	
-				var
-				// uri
-				uri = box.boxName + '/R/' + path;
+				let uri = box.boxName + '/R/' + path;
 	
 				if (CONFIG.version !== undefined) {
 					uri += '?version=' + CONFIG.version;
@@ -201,15 +182,14 @@ FOR_BOX(function(box) {
 	});
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * get final resource's real path.
 	 */
 	box.RF = METHOD({
 
-		run : function(path) {
+		run : (path) => {
 			//REQUIRED: path
 			
 			return '/__RF/' + box.boxName + '/' + path;
@@ -217,26 +197,20 @@ FOR_BOX(function(box) {
 	});
 });
 
-/**
+/*
  * Get server time.
  */
-global.SERVER_TIME = METHOD(function(m) {
-	'use strict';
+global.SERVER_TIME = METHOD((m) => {
 
-	var
-	// diff
-	diff = 0,
+	let diff = 0;
 
-	// set diff.
-	setDiff;
-
-	m.setDiff = setDiff = function(_diff) {
+	let setDiff = m.setDiff = (_diff) => {
 		diff = _diff;
 	};
 
 	return {
 
-		run : function(date) {
+		run : (date) => {
 			//REQUIRED: date
 
 			return new Date(date.getTime() - diff);
@@ -244,27 +218,21 @@ global.SERVER_TIME = METHOD(function(m) {
 	};
 });
 
-/**
+/*
  * Sync time. (Client-side)
  */
 global.SYNC_TIME = METHOD({
 
-	run : function() {
-		'use strict';
-
-		var
-		// time sync room
-		timeSyncRoom = UPPERCASE.ROOM('timeSyncRoom'),
-
-		// now time
-		now = new Date();
-
+	run : () => {
+		
+		let timeSyncRoom = UPPERCASE.ROOM('timeSyncRoom');
+		
 		timeSyncRoom.send({
 			methodName : 'sync',
-			data : now
+			data : new Date()
 		},
 
-		function(diff) {
+		(diff) => {
 			
 			// The local time = The server time + diff (diff: client time - server time)
 			TIME.setDiff(diff);
@@ -275,26 +243,20 @@ global.SYNC_TIME = METHOD({
 	}
 });
 
-/**
+/*
  * Get time.
  */
-global.TIME = METHOD(function(m) {
-	'use strict';
+global.TIME = METHOD((m) => {
 
-	var
-	// diff
-	diff = 0,
-
-	// set diff.
-	setDiff;
-
-	m.setDiff = setDiff = function(_diff) {
+	let diff = 0;
+	
+	let setDiff = m.setDiff = (_diff) => {
 		diff = _diff;
 	};
 
 	return {
 
-		run : function(date) {
+		run : (date) => {
 			//REQUIRED: date
 
 			return new Date(date.getTime() + diff);

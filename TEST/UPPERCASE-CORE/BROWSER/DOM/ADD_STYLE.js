@@ -1,9 +1,6 @@
-TEST('ADD_STYLE', function(check) {
-	'use strict';
+TEST('ADD_STYLE', (check) => {
 
-	var
-	// test dom
-	dom = DOM({
+	let dom = DOM({
 		tag : 'div',
 		c : 'This is test dom.'
 	}).appendTo(BODY);
@@ -28,7 +25,7 @@ TEST('ADD_STYLE', function(check) {
 			top : 40,
 
 			// on display resize
-			onDisplayResize : function(width, height) {
+			onDisplayResize : (width, height) => {
 
 				// log on display resize.
 				console.log(width, height);

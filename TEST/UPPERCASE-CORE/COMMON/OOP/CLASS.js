@@ -1,215 +1,159 @@
-TEST('CLASS', function(check) {
-	'use strict';
+TEST('CLASS', (check) => {
 
-	// test with classes.
-	RUN(function() {
+	let Animal = CLASS((cls) => {
 
-		var
-		// Animal
-		Animal,
+		let staticText = 'Creature';
+		
+		let getStaticText = cls.getStaticText = () => {
+			return staticText;
+		};
 
-		// Horse
-		Horse,
+		return {
 
-		// Snake
-		Snake,
-
-		// Singleton
-		Singleton,
-
-		// sam
-		sam,
-
-		// tom
-		tom;
-
-		Animal = CLASS(function(cls) {
-
-			var
-			// static property
-			staticText = 'Creature',
-
-			// get static text.
-			getStaticText;
-
-			cls.getStaticText = getStaticText = function() {
-				return staticText;
-			};
-
-			return {
-
-				init : function(inner, self, params) {
-					//REQUIRED: params
-					//REQUIRED: params.name
-					//REQUIRED: params.color
-
-					var
-					// name
-					name = params.name,
-
-					// color
-					color = params.color,
-
-					// move. (public method)
-					move,
-
-					// eat. (protected method)
-					eat;
-
-					self.move = move = function(meters) {
-						console.log(name + ' moved ' + meters + 'm.');
-					};
-
-					inner.eat = eat = function() {
-						console.log('delicious.');
-					};
-				},
-
-				afterInit : function(inner) {
-					inner.eat();
-				}
-			};
-		});
-
-		Snake = CLASS({
-
-			preset : function() {
-				return Animal;
-			},
-
-			init : function(inner, self, params) {
+			init : (inner, self, params) => {
 				//REQUIRED: params
 				//REQUIRED: params.name
 				//REQUIRED: params.color
 
-				var
-				// name
-				name = params.name,
+				let name = params.name;
+				let color = params.color;
 
-				// color
-				color = params.color,
+				// public method
+				let move = self.move = (meters) => {
+					console.log(name + ' moved ' + meters + 'm.');
+				};
 
-				// move.
-				move;
+				// protected method
+				let eat = inner.eat = () => {
+					console.log('delicious.');
+				};
+			},
 
-				OVERRIDE(self.move, function(origin) {
-
-					self.move = move = function(meters) {
-						console.log('Slithering...');
-						origin(5);
-					};
-				});
-
-				// run protected method.
+			afterInit : (inner) => {
 				inner.eat();
 			}
-		});
+		};
+	});
 
-		Horse = CLASS({
+	let Snake = CLASS({
 
-			preset : function(params) {
+		preset : () => {
+			return Animal;
+		},
 
-				// preset parameters.
-				params.color = 'brown';
+		init : (inner, self, params) => {
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//REQUIRED: params.color
 
-				return Animal;
-			},
+			let name = params.name;
+			let color = params.color;
+			
+			let move;
 
-			init : function(inner, self, params) {
-				//REQUIRED: params
-				//REQUIRED: params.name
-				//REQUIRED: params.color
+			OVERRIDE(self.move, (origin) => {
 
-				var
-				// name
-				name = params.name,
+				move = self.move = (meters) => {
+					console.log('Slithering...');
+					origin(5);
+				};
+			});
 
-				// color
-				color = params.color,
+			// run protected method.
+			inner.eat();
+		}
+	});
 
-				// move.
-				move,
+	let Horse = CLASS({
 
-				// run. (private method)
-				run;
+		preset : (params) => {
 
-				OVERRIDE(self.move, function(origin) {
+			// preset parameters.
+			params.color = 'brown';
 
-					self.move = move = function(meters) {
-						console.log('Galloping...');
-						origin(45);
-					};
-				});
+			return Animal;
+		},
 
-				run = function() {
-					console.log('CLOP! CLOP!');
+		init : (inner, self, params) => {
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//REQUIRED: params.color
+
+			let name = params.name;
+			let color = params.color;
+			
+			let move;
+
+			OVERRIDE(self.move, (origin) => {
+
+				move = self.move = (meters) => {
+					console.log('Galloping...');
+					origin(45);
+				};
+			});
+
+			// private method
+			let run = () => {
+				console.log('CLOP! CLOP!');
+			};
+		}
+	});
+
+	let sam = Snake({
+		name : 'Sammy the Python',
+		color : 'red'
+	});
+
+	let tom = Horse({
+		name : 'Tommy the Palomino'
+	});
+
+	sam.move();
+	tom.move();
+
+	// protected method, private method -> undefined, undefined
+	check(sam.eat === undefined);
+	check(tom.run === undefined);
+
+	// static text
+	check(Animal.getStaticText() === 'Creature');
+	check(Horse.mom.getStaticText() === 'Creature');
+
+	// check is instance of
+	check(sam.type === Snake);
+	check(sam.type !== Animal);
+	check(sam.checkIsInstanceOf(Snake) === true);
+	check(sam.checkIsInstanceOf(Animal) === true);
+
+	// singleton class
+	let Singleton = CLASS((cls) => {
+
+		let singleton;
+
+		let getInstance = cls.getInstance = () => {
+			if (singleton === undefined) {
+				singleton = Singleton();
+			}
+			return singleton;
+		};
+
+		return {
+
+			init : (inner, self) => {
+
+				let num = 0;
+
+				let getNum = self.getNum = () => {
+
+					num += 1;
+
+					return num;
 				};
 			}
-		});
-
-		sam = Snake({
-			name : 'Sammy the Python',
-			color : 'red'
-		});
-
-		tom = Horse({
-			name : 'Tommy the Palomino'
-		});
-
-		sam.move();
-		tom.move();
-
-		// protected method, private method -> undefined, undefined
-		check(sam.eat === undefined);
-		check(tom.run === undefined);
-
-		// static text
-		check(Animal.getStaticText() === 'Creature');
-		check(Horse.mom.getStaticText() === 'Creature');
-
-		// check is instance of
-		check(sam.type === Snake);
-		check(sam.type !== Animal);
-		check(sam.checkIsInstanceOf(Snake) === true);
-		check(sam.checkIsInstanceOf(Animal) === true);
-
-		// singleton class
-		Singleton = CLASS(function(cls) {
-
-			var
-			// singleton class
-			singleton;
-
-			cls.getInstance = function() {
-				if (singleton === undefined) {
-					singleton = Singleton();
-				}
-				return singleton;
-			};
-
-			return {
-
-				init : function(inner, self) {
-
-					var
-					// num
-					num = 0,
-
-					// get num.
-					getNum;
-
-					self.getNum = getNum = function() {
-
-						num += 1;
-
-						return num;
-					};
-				}
-			};
-		});
-
-		check(Singleton.getInstance().getNum() === 1);
-		check(Singleton.getInstance().getNum() === 2);
-		check(Singleton.getInstance().getNum() === 3);
+		};
 	});
+
+	check(Singleton.getInstance().getNum() === 1);
+	check(Singleton.getInstance().getNum() === 2);
+	check(Singleton.getInstance().getNum() === 3);
 });

@@ -1,25 +1,16 @@
-/**
+/*
  * HTTP 요청을 보냅니다.
  */
-global.REQUEST = METHOD(function(m) {
-	'use strict';
+global.REQUEST = METHOD((m) => {
 
-	var
-	//IMPORT: HTTP
-	HTTP = require('http'),
-
-	//IMPORT: HTTPS
-	HTTPS = require('https'),
-	
-	//IMPORT: URL
-	URL = require('url'),
-	
-	//IMPORT: Querystring
-	Querystring = require('querystring');
+	let HTTP = require('http');
+	let HTTPS = require('https');
+	let URL = require('url');
+	let Querystring = require('querystring');
 
 	return {
 
-		run : function(params, responseListenerOrListeners) {
+		run : (params, responseListenerOrListeners) => {
 			//REQUIRED: params
 			//REQUIRED: params.method	요청 메소드. GET, POST, PUT, DELETE를 설정할 수 있습니다.
 			//OPTIONAL: params.isSecure	HTTPS 프로토콜인지 여부
@@ -35,48 +26,22 @@ global.REQUEST = METHOD(function(m) {
 			//OPTIONAL: responseListenerOrListeners.error
 			//OPTIONAL: responseListenerOrListeners.success
 
-			var
-			// method
-			method = params.method,
+			let method = params.method;
+			let isSecure = params.isSecure;
+			let host = params.host;
+			let port = params.port;
+			let uri = params.uri;
+			let url = params.url;
+			let paramStr = params.paramStr;
+			let _params = params.params;
+			let data = params.data;
+			let headers = params.headers;
 			
-			// is secure
-			isSecure = params.isSecure,
+			let errorListener;
+			let responseListener;
 			
-			// host
-			host = params.host,
-
-			// port
-			port = params.port,
-
-			// uri
-			uri = params.uri,
-			
-			// url
-			url = params.url,
-
-			// param str
-			paramStr = params.paramStr,
-
-			// params
-			_params = params.params,
-
-			// data
-			data = params.data,
-			
-			// headers
-			headers = params.headers,
-
-			// error listener.
-			errorListener,
-
-			// response listener.
-			responseListener,
-			
-			// url data
-			urlData,
-
-			// http request
-			req;
+			let urlData;
+			let req;
 
 			method = method.toUpperCase();
 			
@@ -128,11 +93,7 @@ global.REQUEST = METHOD(function(m) {
 					port : port,
 					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
 					headers : headers
-				}, function(httpResponse) {
-
-					var
-					// content
-					content;
+				}, (httpResponse) => {
 					
 					// redirect.
 					if (httpResponse.statusCode === 301 || httpResponse.statusCode === 302) {
@@ -146,13 +107,13 @@ global.REQUEST = METHOD(function(m) {
 						
 					} else {
 						
-						content = '';
+						let content = '';
 
 						httpResponse.setEncoding('utf-8');
-						httpResponse.on('data', function(str) {
+						httpResponse.on('data', (str) => {
 							content += str;
 						});
-						httpResponse.on('end', function() {
+						httpResponse.on('end', () => {
 							if (responseListener !== undefined) {
 								responseListener(content, httpResponse.headers);
 							}
@@ -170,17 +131,15 @@ global.REQUEST = METHOD(function(m) {
 					path : '/' + (uri === undefined ? '' : uri) + (method === 'DELETE' ? '?' + paramStr : ''),
 					method : method,
 					headers : headers
-				}, function(httpResponse) {
+				}, (httpResponse) => {
 
-					var
-					// content
-					content = '';
+					let content = '';
 
 					httpResponse.setEncoding('utf-8');
-					httpResponse.on('data', function(str) {
+					httpResponse.on('data', (str) => {
 						content += str;
 					});
-					httpResponse.on('end', function() {
+					httpResponse.on('end', () => {
 						if (responseListener !== undefined) {
 							responseListener(content, httpResponse.headers);
 						}
@@ -193,11 +152,9 @@ global.REQUEST = METHOD(function(m) {
 				req.end();
 			}
 
-			req.on('error', function(error) {
+			req.on('error', (error) => {
 
-				var
-				// error msg
-				errorMsg = error.toString();
+				let errorMsg = error.toString();
 
 				if (errorListener !== undefined) {
 					errorListener(errorMsg);

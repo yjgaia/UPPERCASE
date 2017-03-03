@@ -1,33 +1,27 @@
-/**
+/*
  * HTML input 태그와 대응되는 클래스
  */
-global.INPUT = CLASS(function(cls) {
-	'use strict';
+global.INPUT = CLASS((cls) => {
 
-	var
-	// focusing input ids
-	focusingInputIds = [],
+	let focusingInputIds = [];
 
-	// get focusing input ids.
-	getFocusingInputIds;
-
-	cls.getFocusingInputIds = getFocusingInputIds = function(id) {
+	let getFocusingInputIds = cls.getFocusingInputIds = (id) => {
 		return focusingInputIds;
 	};
 
 	return {
 
-		preset : function() {
+		preset : () => {
 			return DOM;
 		},
 
-		params : function() {
+		params : () => {
 			return {
 				tag : 'input'
 			};
 		},
 
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 			//OPTIONAL: params
 			//OPTIONAL: params.id		id 속성
 			//OPTIONAL: params.cls		class 속성
@@ -41,49 +35,23 @@ global.INPUT = CLASS(function(cls) {
 			//OPTIONAL: params.isOffAutocomplete
 			//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 			//OPTIONAL: params.on		이벤트
-
-			var
-			// name
-			name,
-
-			// type
-			type,
-
-			// placeholder
-			placeholder,
 			
-			// accept
-			accept,
+			let name;
+			let type;
+			let placeholder;
+			let accept;
+			let isMultiple;
+			let isOffAutocomplete;
 
-			// is multiple
-			isMultiple,
+			let getName;
+			let getValue;
+			let setValue;
+			let select;
+			let focus;
+			let blur;
 			
-			// is off autocomplete
-			isOffAutocomplete,
-
-			// get name.
-			getName,
-
-			// get value.
-			getValue,
-
-			// set value.
-			setValue,
-
-			// select.
-			select,
-
-			// focus.
-			focus,
-
-			// blur.
-			blur,
-
-			// toggle check.
-			toggleCheck,
-
-			// check is checked.
-			checkIsChecked;
+			let toggleCheck;
+			let checkIsChecked;
 
 			// init params.
 			if (params !== undefined) {
@@ -139,18 +107,18 @@ global.INPUT = CLASS(function(cls) {
 					});
 				}
 				
-				self.getName = getName = function() {
+				getName = self.getName = () => {
 					return name;
 				};
 
-				self.getValue = getValue = function() {
+				getValue = self.getValue = () => {
 					if (type === 'checkbox' || type === 'radio') {
 						return self.getEl().checked;
 					}
 					return self.getEl().value;
 				};
 
-				self.select = select = function() {
+				select = self.select = () => {
 					if (type === 'file') {
 						self.getEl().click();
 					} else {
@@ -158,17 +126,17 @@ global.INPUT = CLASS(function(cls) {
 					}
 				};
 
-				self.focus = focus = function() {
+				focus = self.focus = () => {
 					self.getEl().focus();
 				};
 
-				self.blur = blur = function() {
+				blur = self.blur = () => {
 					self.getEl().blur();
 				};
 
 				if (type === 'checkbox' || type === 'radio') {
 
-					self.toggleCheck = toggleCheck = function(e) {
+					toggleCheck = self.toggleCheck = (e) => {
 
 						if (self.getEl().checked === true) {
 							self.getEl().checked = false;
@@ -184,16 +152,19 @@ global.INPUT = CLASS(function(cls) {
 						return self.getEl().checked;
 					};
 
-					self.checkIsChecked = checkIsChecked = function() {
+					checkIsChecked = self.checkIsChecked = () => {
 						return self.getEl().checked;
 					};
 
 					EVENT({
 						node : self,
 						name : 'keyup'
-					}, function(e) {
+					}, (e) => {
+						
 						if (e !== undefined && e.getKey() === 'Enter') {
-							DELAY(function() {
+							
+							DELAY(() => {
+								
 								EVENT.fireAll({
 									node : self,
 									name : 'change'
@@ -204,7 +175,7 @@ global.INPUT = CLASS(function(cls) {
 				}
 			}
 
-			self.setValue = setValue = function(value) {
+			self.setValue = setValue = (value) => {
 				//REQUIRED: value
 
 				if (type === 'checkbox' || type === 'radio') {
@@ -260,14 +231,14 @@ global.INPUT = CLASS(function(cls) {
 			EVENT({
 				node : self,
 				name : 'focus'
-			}, function() {
+			}, () => {
 				getFocusingInputIds().push(self.id);
 			});
 
 			EVENT({
 				node : self,
 				name : 'blur'
-			}, function() {
+			}, () => {
 
 				REMOVE({
 					array : getFocusingInputIds(),
@@ -275,7 +246,7 @@ global.INPUT = CLASS(function(cls) {
 				});
 			});
 
-			self.on('remove', function() {
+			self.on('remove', () => {
 
 				REMOVE({
 					array : getFocusingInputIds(),
@@ -289,15 +260,15 @@ global.INPUT = CLASS(function(cls) {
 				EVENT({
 					node : self,
 					name : 'touchstart'
-				}, function() {
+				}, () => {
 					
 					if (checkIsChecked() === true) {
 						
 						EVENT_ONCE({
 							node : self,
 							name : 'touchend'
-						}, function() {
-							DELAY(function() {
+						}, () => {
+							DELAY(() => {
 								setValue(false);
 							});
 						});
@@ -306,7 +277,7 @@ global.INPUT = CLASS(function(cls) {
 			}
 		},
 
-		afterInit : function(inner, self, params) {
+		afterInit : (inner, self, params) => {
 			//OPTIONAL: params
 			//OPTIONAL: params.id		id 속성
 			//OPTIONAL: params.cls		class 속성
@@ -320,13 +291,9 @@ global.INPUT = CLASS(function(cls) {
 			//OPTIONAL: params.isOffAutocomplete
 			//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 			//OPTIONAL: params.on		이벤트
-
-			var
-			// type
-			type,
-
-			// value
-			value;
+			
+			let type;
+			let value;
 
 			// init params.
 			if (params !== undefined) {

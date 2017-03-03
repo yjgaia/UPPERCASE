@@ -3,60 +3,40 @@
  */
 global.SOCKET_SERVER = METHOD({
 
-	run : function(port, connectionListener) {
-		'use strict';
+	run : (port, connectionListener) => {
 		//REQUIRED: port
 		//REQUIRED: connectionListener
 
-		var
-		// net
-		net = require('net'),
-
-		// server
-		server = net.createServer(function(conn) {
-
-			var
-			// method map
-			methodMap = {},
-
-			// send key
-			sendKey = 0,
-
-			// received string
-			receivedStr = '',
+		let Net = require('net');
+		
+		let server = Net.createServer((conn) => {
 			
-			// client info
-			clientInfo,
+			let methodMap = {};
+			let sendKey = 0;
+			
+			let receivedStr = '';
+			
+			let clientInfo;
 
-			// on.
-			on,
-
-			// off.
-			off,
-
-			// send.
-			send,
-
-			// run methods.
-			runMethods = function(methodName, data, sendKey) {
-
-				var
-				// methods
-				methods;
+			let on;
+			let off;
+			let send;
+			
+			let runMethods = (methodName, data, sendKey) => {
 				
 				try {
 					
-					methods = methodMap[methodName];
+					let methods = methodMap[methodName];
 
 					if (methods !== undefined) {
 	
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 	
 							// run method.
 							method(data,
 	
 							// ret.
-							function(retData) {
+							(retData) => {
 	
 								if (sendKey !== undefined) {
 	
@@ -81,25 +61,15 @@ global.SOCKET_SERVER = METHOD({
 			};
 
 			// when receive data
-			conn.on('data', function(content) {
+			conn.on('data', (content) => {
 
-				var
-				// str
-				str,
-
-				// index
-				index,
-
-				// params
-				params;
+				let index;
 
 				receivedStr += content.toString();
 
-				while (( index = receivedStr.indexOf('\r\n')) !== -1) {
-
-					str = receivedStr.substring(0, index);
-
-					params = PARSE_STR(str);
+				while ((index = receivedStr.indexOf('\r\n')) !== -1) {
+					
+					let params = PARSE_STR(receivedStr.substring(0, index));
 
 					if (params !== undefined) {
 						runMethods(params.methodName, params.data, params.sendKey);
@@ -112,7 +82,7 @@ global.SOCKET_SERVER = METHOD({
 			});
 
 			// when disconnected
-			conn.on('close', function() {
+			conn.on('close', () => {
 				
 				runMethods('__DISCONNECTED');
 				
@@ -121,15 +91,11 @@ global.SOCKET_SERVER = METHOD({
 			});
 
 			// when error
-			conn.on('error', function(error) {
-
-				var
-				// error msg
-				errorMsg;
+			conn.on('error', (error) => {
 				
 				if (error.code !== 'ECONNRESET' && error.code !== 'EPIPE' && error.code !== 'ETIMEDOUT' && error.code !== 'ENETUNREACH' && error.code !== 'EHOSTUNREACH' && error.code !== 'ECONNREFUSED' && error.code !== 'EINVAL') {
 					
-					errorMsg = error.toString();
+					let errorMsg = error.toString();
 					
 					SHOW_ERROR('SOCKET_SERVER', errorMsg);
 					
@@ -148,13 +114,11 @@ global.SOCKET_SERVER = METHOD({
 			},
 
 			// on.
-			on = function(methodName, method) {
+			on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -164,13 +128,11 @@ global.SOCKET_SERVER = METHOD({
 			},
 
 			// off.
-			off = function(methodName, method) {
+			off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -188,21 +150,14 @@ global.SOCKET_SERVER = METHOD({
 			},
 
 			// send to client.
-			send = function(methodNameOrParams, callback) {
+			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//REQUIRED: methodNameOrParams.methodName	클라이언트에 on 함수로 설정된 메소드 이름
 				//REQUIRED: methodNameOrParams.data			전송할 데이터
 				//OPTIONAL: callback
 
-				var
-				// method name
-				methodName,
-				
-				// data
-				data,
-				
-				// callback name
-				callbackName;
+				let methodName;
+				let data;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -223,10 +178,10 @@ global.SOCKET_SERVER = METHOD({
 					
 					else {
 						
-						callbackName = '__CALLBACK_' + sendKey;
+						let callbackName = '__CALLBACK_' + sendKey;
 	
 						// on callback.
-						on(callbackName, function(data) {
+						on(callbackName, (data) => {
 	
 							// run callback.
 							callback(data);
@@ -249,7 +204,7 @@ global.SOCKET_SERVER = METHOD({
 			},
 
 			// disconnect.
-			function() {
+			() => {
 				if (conn !== undefined) {
 					conn.end();
 					conn = undefined;

@@ -1,14 +1,15 @@
+'use strict';
+
 /*
 
 Welcome to UPPERCASE-BOOT! (http://uppercase.io)
 
 */
 
-/**
+/*
  * Configuration
  */
-OVERRIDE(CONFIG, function(origin) {
-	'use strict';
+OVERRIDE(CONFIG, (origin) => {
 
 	global.CONFIG = COMBINE([{
 		
@@ -17,82 +18,53 @@ OVERRIDE(CONFIG, function(origin) {
 		title : 'UPPERCASE PROJECT',
 		
 		baseBackgroundColor : '#000',
-		baseColor : '#fff',
+		baseColor : '#fff'
 		
 		// maxThumbWidth
 		// or
 		// maxThumbHeight
 		
-		isMobileFullScreen : false,
-		isUsingHTMLSnapshot : false
-		
 	}, origin]);
 });
 
-/**
+/*
  * UPPERCASE를 실행합니다.
  */
-global.BOOT = function(params) {
-	'use strict';
+global.BOOT = (params) => {
 	//OPTIONAL: params
 	//OPTIONAL: params.CONFIG
 	//OPTIONAL: params.NODE_CONFIG
 	//OPTIONAL: params.BROWSER_CONFIG
 	
-	var
-	// UPPERCASE_PATH
-	UPPERCASE_PATH = __dirname + '/..',
+	const UPPERCASE_PATH = __dirname + '/..';
+	const BOX_SITE_URL = 'http://box.uppercase.io';
 	
-	// BOX_SITE_URL
-	BOX_SITE_URL = 'http://box.uppercase.io',
+	let Path = require('path');
+
+	let version = 'V' + Date.now();
+	let rootPath = process.cwd();
 	
-	//IMPORT: path
-	path = require('path'),
-
-	//IMPORT: cluster
-	cluster = require('cluster'),
-
-	// version
-	version = 'V' + Date.now(),
-
-	// root path
-	rootPath = process.cwd(),
-
-	// browser script contents
-	browserScriptContents = [],
-
-	// browser script
-	browserScript = 'global=window;',
+	let browserScriptContents = [];
+	let browserScript = '';
+	let boxBrowserScripts = {};
 	
-	// box browser scripts
-	boxBrowserScripts = {},
+	let _404PageContent;
+	let indexPageContent;
 	
-	// 404 page content
-	_404PageContent,
+	let boxNamesInBOXFolder = [];
 
-	// index page content
-	indexPageContent,
-	
-	// box names in BOX folder
-	boxNamesInBOXFolder = [],
-
-	// load for node.
-	loadForNode = function(path) {
+	let loadForNode = (path) => {
 		require(path);
-	},
+	};
 
-	// add content to browser script.
-	addContentToBrowserScript = function(content) {
+	let addContentToBrowserScript = (content) => {
 		browserScript += content;
 		browserScriptContents.push(content);
-	},
+	};
 
-	// load for browser.
-	loadForBrowser = function(path, boxName) {
+	let loadForBrowser = (path, boxName) => {
 		
-		var
-		// content
-		content = READ_FILE({
+		let content = READ_FILE({
 			path : path,
 			isSync : true
 		}).toString();
@@ -111,10 +83,9 @@ global.BOOT = function(params) {
 		}
 		
 		return content;
-	},
+	};
 	
-	// check is allowed folder name.
-	checkIsAllowedFolderName = function(name) {
+	let checkIsAllowedFolderName = (name) => {
 
 		return (
 
@@ -133,34 +104,28 @@ global.BOOT = function(params) {
 			// _ folder
 			name[0] !== '_'
 		);
-	},
+	};
 	
-	// scan all box folders.
-	scanAllBoxFolders = function(folderName, funcForJS) {
+	let scanAllBoxFolders = (folderName, funcForJS) => {
 
-		var
-		// scan folder
-		scanFolder = function(folderPath, boxName) {
+		let scanFolder = (folderPath, boxName) => {
 
 			FIND_FILE_NAMES({
 				path : folderPath,
 				isSync : true
 			}, {
 
-				notExists : function() {
+				notExists : () => {
 					// ignore.
 				},
 
-				success : function(fileNames) {
+				success : (fileNames) => {
 
-					EACH(fileNames, function(fileName) {
+					EACH(fileNames, (fileName) => {
 
-						var
-						// full path
-						fullPath = folderPath + '/' + fileName,
-
-						// extname
-						extname = path.extname(fileName).toLowerCase();
+						let fullPath = folderPath + '/' + fileName;
+						
+						let extname = Path.extname(fileName).toLowerCase();
 
 						if (extname === '.js') {
 							funcForJS(fullPath, boxName);
@@ -174,13 +139,13 @@ global.BOOT = function(params) {
 				isSync : true
 			}, {
 
-				notExists : function() {
+				notExists : () => {
 					// ignore.
 				},
 
-				success : function(folderNames) {
+				success : (folderNames) => {
 
-					EACH(folderNames, function(folderName) {
+					EACH(folderNames, (folderName) => {
 						if (checkIsAllowedFolderName(folderName) === true) {
 							scanFolder(folderPath + '/' + folderName, boxName);
 						}
@@ -189,27 +154,22 @@ global.BOOT = function(params) {
 			});
 		};
 
-		FOR_BOX(function(box) {
+		FOR_BOX((box) => {
 
-			var
-			// box root path
-			boxRootPath = CHECK_IS_IN({
+			let boxRootPath = CHECK_IS_IN({
 				array : boxNamesInBOXFolder,
 				value : box.boxName
 			}) === true ? rootPath + '/BOX' : rootPath;
 
 			scanFolder(boxRootPath + '/' + box.boxName + '/' + folderName, box.boxName);
 		});
-	},
+	};
 	
-	// scan all box js.
-	scanAllBoxJS = function(folderName, funcForJS) {
+	let scanAllBoxJS = (folderName, funcForJS) => {
 
-		FOR_BOX(function(box) {
+		FOR_BOX((box) => {
 			
-			var
-			// box root path
-			boxRootPath = CHECK_IS_IN({
+			let boxRootPath = CHECK_IS_IN({
 				array : boxNamesInBOXFolder,
 				value : box.boxName
 			}) === true ? rootPath + '/BOX' : rootPath;
@@ -219,20 +179,17 @@ global.BOOT = function(params) {
 				isSync : true
 			}, {
 
-				notExists : function() {
+				notExists : () => {
 					// ignore.
 				},
 
-				success : function(fileNames) {
+				success : (fileNames) => {
 
-					EACH(fileNames, function(fileName) {
+					EACH(fileNames, (fileName) => {
 
-						var
-						// full path
-						fullPath = boxRootPath + '/' + box.boxName + '/' + fileName,
-
-						// extname
-						extname = path.extname(fileName).toLowerCase();
+						let fullPath = boxRootPath + '/' + box.boxName + '/' + fileName;
+						
+						let extname = Path.extname(fileName).toLowerCase();
 
 						if (fileName === folderName + extname) {
 							if (extname === '.js') {
@@ -243,14 +200,11 @@ global.BOOT = function(params) {
 				}
 			});
 		});
-	},
+	};
 	
-	// load BROWSER_INIT.
-	loadBrowserInit = function() {
+	let loadBrowserInit = () => {
 		
-		var
-		// content
-		content = READ_FILE({
+		let content = READ_FILE({
 			path : UPPERCASE_PATH + '/UPPERCASE-BOOT/BROWSER_INIT' + (CONFIG.isDevMode === true ? '' : '.MIN') + '.js',
 			isSync : true
 		}).toString();
@@ -258,15 +212,14 @@ global.BOOT = function(params) {
 		browserScript += content;
 		
 		return content;
-	},
+	};
+	
+	let reloadBrowserScript = () => {
 
-	// reload browser script.
-	reloadBrowserScript = function() {
-
-		browserScript = 'global=window;';
+		browserScript = '';
 		boxBrowserScripts = {};
 
-		EACH(browserScriptContents, function(browserScriptContent) {
+		EACH(browserScriptContents, (browserScriptContent) => {
 			browserScript += browserScriptContent;
 		});
 		
@@ -276,50 +229,22 @@ global.BOOT = function(params) {
 		scanAllBoxJS('BROWSER', loadForBrowser);
 		
 		loadBrowserInit();
-	},
+	};
 	
-	// configuration.
-	configuration,
+	let configuration = () => {
 
-	// init boxes.
-	initBoxes,
+		let _CONFIG;
+		let _NODE_CONFIG;
+		let _BROWSER_CONFIG;
 
-	// clustering cpus and servers.
-	clustering,
+		let stringifyJSONWithFunction = (data) => {
 
-	// connect to database.
-	connectToDatabase,
-	
-	// generate 404 page.
-	generate404Page,
-
-	// generate index page.
-	generateIndexPage,
-
-	// run.
-	run;
-	
-	configuration = function() {
-
-		var
-		// _CONFIG
-		_CONFIG,
-
-		// _NODE_CONFIG
-		_NODE_CONFIG,
-
-		// _BROWSER_CONFIG
-		_BROWSER_CONFIG,
-
-		// stringify JSON with function.
-		stringifyJSONWithFunction = function(data) {
-
-			return JSON.stringify(data, function(key, value) {
-				if ( typeof value === 'function') {
+			return JSON.stringify(data, (key, value) => {
+				if (typeof value === 'function') {
 					return '__FUNCTION_START__' + value.toString() + '__FUNCTION_END__';
 				}
 				return value;
-			}, '\t').replace(/("__FUNCTION_START__(.*)__FUNCTION_END__")/g, function(match, content) {
+			}, '\t').replace(/("__FUNCTION_START__(.*)__FUNCTION_END__")/g, (match, content) => {
 				return eval('(' + eval('"' + content.substring('"__FUNCTION_START__'.length, content.length - '__FUNCTION_END__"'.length) + '"') + ')').toString();
 			});
 		};
@@ -353,11 +278,11 @@ global.BOOT = function(params) {
 				isSync : true
 			}, {
 				
-				notExists : function() {
+				notExists : () => {
 					SHOW_ERROR('BOOT', 'VERSION 파일이 존재하지 않습니다.');
 				},
 				
-				success : function(buffer) {
+				success : (buffer) => {
 					version = buffer.toString();
 				}
 			});
@@ -389,7 +314,7 @@ global.BOOT = function(params) {
 		}
 	};
 
-	initBoxes = function(next) {
+	let initBoxes = (next) => {
 
 		// create UPPERCASE box.
 		BOX('UPPERCASE');
@@ -401,9 +326,9 @@ global.BOOT = function(params) {
 		FIND_FOLDER_NAMES({
 			path : rootPath,
 			isSync : true
-		}, function(folderNames) {
+		}, (folderNames) => {
 
-			EACH(folderNames, function(folderName) {
+			EACH(folderNames, (folderName) => {
 
 				if (checkIsAllowedFolderName(folderName) === true) {
 
@@ -425,9 +350,9 @@ global.BOOT = function(params) {
 			FIND_FOLDER_NAMES({
 				path : rootPath + '/BOX',
 				isSync : true
-			}, function(folderNames) {
+			}, (folderNames) => {
 
-				EACH(folderNames, function(folderName) {
+				EACH(folderNames, (folderName) => {
 
 					if (checkIsAllowedFolderName(folderName) === true) {
 
@@ -445,9 +370,9 @@ global.BOOT = function(params) {
 		}
 	};
 
-	clustering = function(work) {
+	let clustering = (work) => {
 
-		(NODE_CONFIG.isNotUsingCPUClustering !== true ? CPU_CLUSTERING : RUN)(function() {
+		(NODE_CONFIG.isNotUsingCPUClustering !== true ? CPU_CLUSTERING : RUN)(() => {
 
 			if (NODE_CONFIG.clusteringServerHosts !== undefined && NODE_CONFIG.thisServerName !== undefined && NODE_CONFIG.clusteringPort !== undefined) {
 
@@ -463,7 +388,7 @@ global.BOOT = function(params) {
 		});
 	};
 
-	connectToDatabase = function() {
+	let connectToDatabase = () => {
 		
 		if (NODE_CONFIG.dbName !== undefined) {
 
@@ -477,11 +402,9 @@ global.BOOT = function(params) {
 		}
 	};
 	
-	generate404Page = function() {
+	let generate404Page = () => {
 		
-		var
-		// custom 404 path
-		custom404Path = rootPath + '/' + CHECK_IS_IN({
+		let custom404Path = rootPath + '/' + CHECK_IS_IN({
 			array : boxNamesInBOXFolder,
 			value : CONFIG.defaultBoxName
 		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/404.html' : CONFIG.defaultBoxName + '/404.html';
@@ -502,7 +425,7 @@ global.BOOT = function(params) {
 			_404PageContent += '<html>';
 			_404PageContent += '<head>';
 			_404PageContent += '<meta charset="utf-8">';
-			_404PageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' + (CONFIG.isMobileFullScreen === true ? ', minimal-ui' : '') + '">';
+			_404PageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">';
 			
 			_404PageContent += '<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">';
 			
@@ -543,11 +466,9 @@ global.BOOT = function(params) {
 		}
 	};
 
-	generateIndexPage = function() {
+	let generateIndexPage = () => {
 		
-		var
-		// custom index path
-		customIndexPath = rootPath + '/' + CHECK_IS_IN({
+		let customIndexPath = rootPath + '/' + CHECK_IS_IN({
 			array : boxNamesInBOXFolder,
 			value : CONFIG.defaultBoxName
 		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/index.html' : CONFIG.defaultBoxName + '/index.html';
@@ -568,11 +489,7 @@ global.BOOT = function(params) {
 			indexPageContent += '<html>';
 			indexPageContent += '<head>';
 			indexPageContent += '<meta charset="utf-8">';
-			indexPageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' + (CONFIG.isMobileFullScreen === true ? ', minimal-ui' : '') + '">';
-			
-			if (NODE_CONFIG.isUsingHTMLSnapshot === true) {
-				indexPageContent += '<meta name="fragment" content="!">';
-			}
+			indexPageContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">';
 			
 			if (CONFIG.description !== undefined) {
 				indexPageContent += '<meta name="description" content="' + CONFIG.description + '">';
@@ -614,48 +531,27 @@ global.BOOT = function(params) {
 		}
 	};
 
-	run = function() {
+	let run = () => {
 
-		var
-		// upload server hosts
-		uploadServerHosts,
-
-		// socket server hosts
-		socketServerHosts,
-
-		// web socket server hosts
-		webSocketServerHosts,
-
-		// next upload server host index
-		nextUploadServerHostIndex,
-
-		// next socket server host index
-		nextSocketServerHostIndex,
-
-		// next web socket server host index
-		nextWebSocketServerHostIndex,
-
-		// box request listeners
-		boxRequestListeners = {},
+		let uploadServerHosts;
+		let socketServerHosts;
+		let webSocketServerHosts;
 		
-		// box preprocessors
-		boxPreprocessors = {},
-
-		// is going on
-		isGoingOn,
-
-		// web server
-		webServer,
-
-		// cal
-		cal = CALENDAR();
+		let nextUploadServerHostIndex;
+		let nextSocketServerHostIndex;
+		let nextWebSocketServerHostIndex;
+		
+		let boxRequestListeners = {};
+		let boxPreprocessors = {};
+		
+		let webServer;
 
 		if (NODE_CONFIG.uploadServerHosts !== undefined) {
 
 			uploadServerHosts = [];
 			nextUploadServerHostIndex = 0;
 
-			EACH(NODE_CONFIG.uploadServerHosts, function(host) {
+			EACH(NODE_CONFIG.uploadServerHosts, (host) => {
 				uploadServerHosts.push(host);
 			});
 		}
@@ -665,7 +561,7 @@ global.BOOT = function(params) {
 			socketServerHosts = [];
 			nextSocketServerHostIndex = 0;
 
-			EACH(NODE_CONFIG.socketServerHosts, function(host) {
+			EACH(NODE_CONFIG.socketServerHosts, (host) => {
 				socketServerHosts.push(host);
 			});
 		}
@@ -675,12 +571,12 @@ global.BOOT = function(params) {
 			webSocketServerHosts = [];
 			nextWebSocketServerHostIndex = 0;
 
-			EACH(NODE_CONFIG.webSocketServerHosts, function(host) {
+			EACH(NODE_CONFIG.webSocketServerHosts, (host) => {
 				webSocketServerHosts.push(host);
 			});
 		}
 		
-		FOR_BOX(function(box) {
+		FOR_BOX((box) => {
 			if (box.OVERRIDE !== undefined) {
 				box.OVERRIDE();
 			}
@@ -708,20 +604,13 @@ global.BOOT = function(params) {
 				version : version
 			}, {
 				
-				uploadProgress : function(uriParams, bytesRecieved, bytesExpected, requestInfo) {
-					
-					var
-					// box name
-					boxName,
-					
-					// box
-					box;
+				uploadProgress : (uriParams, bytesRecieved, bytesExpected, requestInfo) => {
 					
 					// broadcast.
 					if (uriParams.uploadKey !== undefined) {
 						
-						boxName = uriParams.boxName;
-						box = BOX.getAllBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName];
+						let boxName = uriParams.boxName;
+						let box = BOX.getAllBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName];
 						
 						box.BROADCAST({
 							roomName : 'uploadProgressRoom/' + uriParams.uploadKey,
@@ -734,7 +623,7 @@ global.BOOT = function(params) {
 					}
 				},
 				
-				uploadOverFileSize : function(params, maxUploadFileMB, requestInfo, response) {
+				uploadOverFileSize : (params, maxUploadFileMB, requestInfo, response) => {
 					
 					response({
 						statusCode : 302,
@@ -744,28 +633,19 @@ global.BOOT = function(params) {
 					});
 				},
 				
-				uploadSuccess : function(params, fileDataSet, requestInfo, response) {
+				uploadSuccess : (params, fileDataSet, requestInfo, response) => {
 					
-					var
-					// upload file database
-					uploadFileDB,
-					
-					// box name
-					boxName = params.boxName,
-					
-					// box
-					box = BOX.getAllBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName];
+					let boxName = params.boxName;
+					let box = BOX.getAllBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName];
 
 					if (box !== undefined) {
 
-						uploadFileDB = box.DB('__UPLOAD_FILE');
+						let uploadFileDB = box.DB('__UPLOAD_FILE');
 
 						NEXT(fileDataSet, [
-						function(fileData, next) {
+						(fileData, next) => {
 
-							var
-							// path
-							tempPath = fileData.path;
+							let tempPath = fileData.path;
 
 							// delete temp path.
 							delete fileData.path;
@@ -773,20 +653,14 @@ global.BOOT = function(params) {
 							fileData.serverName = NODE_CONFIG.thisServerName;
 							fileData.downloadCount = 0;
 
-							uploadFileDB.create(fileData, function(savedData) {
+							uploadFileDB.create(fileData, (savedData) => {
 								
-								var
-								// to path
-								toPath = rootPath + '/__RF/' + boxName + '/' + savedData.id;
+								let toPath = rootPath + '/__RF/' + boxName + '/' + savedData.id;
 
 								MOVE_FILE({
 									from : tempPath,
 									to : toPath
-								}, function() {
-									
-									var
-									// dist path
-									distPath;
+								}, () => {
 									
 									// create thumbnail.
 									if (
@@ -795,23 +669,19 @@ global.BOOT = function(params) {
 									// check config exists
 									(CONFIG.maxThumbWidth !== undefined || CONFIG.maxThumbHeight !== undefined)) {
 										
-										distPath = rootPath + '/__RF/' + boxName + '/THUMB/' + savedData.id;
+										let distPath = rootPath + '/__RF/' + boxName + '/THUMB/' + savedData.id;
 										
 										IMAGEMAGICK_IDENTIFY(toPath, {
 											
 											// when error, just copy.
-											error : function() {
+											error : () => {
 												COPY_FILE({
 													from : toPath,
 													to : distPath
 												}, next);
 											},
 											
-											success : function(features) {
-					
-												var
-												// frs
-												frs;
+											success : (features) => {
 												
 												if (CONFIG.maxThumbWidth !== undefined && features.width !== undefined && features.width > CONFIG.maxThumbWidth) {
 					
@@ -846,12 +716,10 @@ global.BOOT = function(params) {
 							});
 						},
 
-						function() {
-							return function() {
+						() => {
+							return () => {
 
-								var
-								// file data set str
-								fileDataSetStr = STRINGIFY(fileDataSet);
+								let fileDataSetStr = STRINGIFY(fileDataSet);
 
 								response(params.callbackURL === undefined ? fileDataSetStr : {
 									statusCode : 302,
@@ -864,7 +732,7 @@ global.BOOT = function(params) {
 					}
 				},
 				
-				notExistsResource : function(resourcePath, requestInfo, response) {
+				notExistsResource : (resourcePath, requestInfo, response) => {
 					
 					// when dev mode, re-generate 404 page.
 					if (CONFIG.isDevMode === true) {
@@ -877,35 +745,15 @@ global.BOOT = function(params) {
 					});
 				},
 
-				requestListener : function(requestInfo, response, replaceRootPath, next) {
+				requestListener : (requestInfo, response, replaceRootPath, next) => {
 
-					var
-					// is secure
-					isSecure = requestInfo.isSecure,
-					
-					// uri
-					uri = requestInfo.uri,
+					let isSecure = requestInfo.isSecure;
+					let uri = requestInfo.uri;
+					let method = requestInfo.method;
+					let headers = requestInfo.headers;
+					let params = requestInfo.params;
 
-					// method
-					method = requestInfo.method,
-
-					// headers
-					headers = requestInfo.headers,
-
-					// params
-					params = requestInfo.params,
-
-					// box name
-					boxName,
-
-					// upload file database
-					uploadFileDB,
-
-					// index
-					i,
-
-					// wrap callback.
-					wrapCallback = function(str) {
+					let wrapCallback = (str) => {
 						return params.callback !== undefined ? params.callback + '(\'' + str + '\')' : str;
 					};
 					
@@ -937,7 +785,7 @@ global.BOOT = function(params) {
 					// serve browser script.
 					else if (uri === '__SCRIPT') {
 						
-						boxName = params.boxName;
+						let boxName = params.boxName;
 
 						if (CONFIG.isDevMode === true) {
 
@@ -1026,11 +874,11 @@ global.BOOT = function(params) {
 
 						uri = uri.substring(5);
 
-						i = uri.indexOf('/');
+						let i = uri.indexOf('/');
 
 						if (i !== -1) {
 
-							boxName = uri.substring(0, i);
+							let boxName = uri.substring(0, i);
 
 							if (boxName === 'UPPERCASE' || BOX.getAllBoxes()[boxName] !== undefined) {
 								uri = uri.substring(i + 1);
@@ -1038,25 +886,25 @@ global.BOOT = function(params) {
 								boxName = CONFIG.defaultBoxName;
 							}
 
-							uploadFileDB = BOX.getAllBoxes()[boxName].DB('__UPLOAD_FILE');
+							let uploadFileDB = BOX.getAllBoxes()[boxName].DB('__UPLOAD_FILE');
 
 							uploadFileDB.get(uri.lastIndexOf('/') === -1 ? uri : uri.substring(uri.lastIndexOf('/') + 1), {
 
-								error : function() {
+								error : () => {
 
 									next({
 										isFinal : true
 									});
 								},
 
-								notExists : function() {
+								notExists : () => {
 
 									next({
 										isFinal : true
 									});
 								},
 
-								success : function(savedData) {
+								success : (savedData) => {
 
 									if (savedData.serverName === NODE_CONFIG.thisServerName) {
 
@@ -1165,36 +1013,12 @@ global.BOOT = function(params) {
 						}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/R/favicon.ico' : CONFIG.defaultBoxName + '/R/favicon.ico';
 					}
 					
-					// serve HTML snapshot.
-					else if (NODE_CONFIG.isUsingHTMLSnapshot === true && params._escaped_fragment_ !== undefined) {
-						
-						RUN(function() {
-							
-							var
-							// content
-							content = '',
-							
-							// phantom
-						    phantom = require('child_process').spawn('phantomjs', [__dirname + '/PRINT_HTML_SNAPSHOT.js', (CONFIG.webServerPort === undefined ? CONFIG.securedWebServerPort : CONFIG.webServerPort), uri === '' ? params._escaped_fragment_ : decodeURIComponent(uri)]);
-						    
-						    phantom.stdout.setEncoding('utf8');
-						    
-						    phantom.stdout.on('data', function(data) {
-						        content += data.toString();
-						    });
-						    
-						    phantom.on('exit', function(code) {
-								response(content);
-						    });
-					    });
-					    
-					    return false;
-					}
-
 					// serve others.
 					else {
 
-						i = uri.indexOf('/');
+						let i = uri.indexOf('/');
+						
+						let boxName;
 
 						if (i === -1) {
 							boxName = CONFIG.defaultBoxName;
@@ -1219,6 +1043,8 @@ global.BOOT = function(params) {
 						
 						// response index page.
 						else {
+							
+							let isGoingOn;
 
 							if (boxRequestListeners[boxName] !== undefined) {
 								isGoingOn = boxRequestListeners[boxName](requestInfo, response, replaceRootPath, next);
@@ -1250,27 +1076,27 @@ global.BOOT = function(params) {
 		});
 		
 		// run all MAINs.
-		FOR_BOX(function(box) {
+		FOR_BOX((box) => {
 			if (box.MAIN !== undefined) {
-				box.MAIN(function(requestListener) {
+				box.MAIN((requestListener) => {
 					boxRequestListeners[box.boxName] = requestListener;
-				}, function(params) {
+				}, (params) => {
 					if (webServer !== undefined) {
 						webServer.addPreprocessor(params);
 					}
 				});
 			}
 		});
-
+		
+		let cal = CALENDAR();
+		
 		console.log(CONSOLE_GREEN('[BOOT] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> [' + CONFIG.title + '] 부팅 완료' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '') + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort))));
 	};
 	
 	// load all UPPERCASE modules for browser.
-	EACH(['CORE', 'ROOM', 'MODEL', 'BOOT'], function(name) {
+	EACH(['CORE', 'ROOM', 'MODEL', 'BOOT'], (name) => {
 		
-		var
-		// is dev mode
-		isDevMode = (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true));
+		let isDevMode = (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true));
 		
 		if (isDevMode === true) {
 			addContentToBrowserScript('\n\n');
@@ -1286,7 +1112,7 @@ global.BOOT = function(params) {
 	initBoxes();
 
 	// clustering cpus and servers.
-	clustering(function() {
+	clustering(() => {
 		
 		console.log('[BOOT] 부팅중...' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : ''));
 
@@ -1321,27 +1147,20 @@ global.BOOT = function(params) {
 		
 		READ_FILE(rootPath + '/DEPENDENCY', {
 			
-			notExists : function() {
+			notExists : () => {
 				// ignore.
 			},
 			
-			success : function(content) {
+			success : (content) => {
 				
-				EACH(content.toString().split('\n'), function(box) {
-					
-					var
-					// username
-					username,
-					
-					// box name
-					boxName;
+				EACH(content.toString().split('\n'), (box) => {
 					
 					box = box.trim();
 					
 					if (box !== '' && box.indexOf('/') !== -1) {
 						
-						username = box.substring(0, box.indexOf('/'));
-						boxName = box.substring(box.indexOf('/') + 1);
+						let username = box.substring(0, box.indexOf('/'));
+						let boxName = box.substring(box.indexOf('/') + 1);
 						
 						GET({
 							url : BOX_SITE_URL + '/_/info',
@@ -1349,35 +1168,26 @@ global.BOOT = function(params) {
 								username : username,
 								boxName : boxName
 							}
-						}, function(result) {
-							
-							var
-							// valid errors
-							validErrors,
-							
-							// box data
-							boxData;
+						}, (result) => {
 							
 							result = PARSE_STR(result);
 							
 							if (result.boxData !== undefined) {
 								
-								boxData = result.boxData;
+								let boxData = result.boxData;
 								
 								NEXT([
-								function(next) {
+								(next) => {
 									
 									READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
 										
-										notExists : function() {
+										notExists : () => {
 											next(boxData.version);
 										},
 										
-										success : function(versionContent) {
+										success : (versionContent) => {
 											
-											var
-											// now version
-											nowVersion = versionContent.toString();
+											let nowVersion = versionContent.toString();
 											
 											if (boxData.version !== nowVersion) {
 												next(boxData.version, nowVersion);
@@ -1386,8 +1196,8 @@ global.BOOT = function(params) {
 									});
 								},
 								
-								function() {
-									return function(version, nowVersion) {
+								() => {
+									return (version, nowVersion) => {
 										SHOW_WARNING('BOOT', '[' + boxName + '] BOX의 새 버전이 존재합니다. 현재 버전: ' + nowVersion + ', 새 버전: ' + version);
 									};
 								}]);
@@ -1400,23 +1210,22 @@ global.BOOT = function(params) {
 	}
 };
 
-/**
+/*
  * Check still alive object
  */
 global.CHECK_STILL_ALIVE = OBJECT({
 
-	init : function() {
-		'use strict';
+	init : () => {
 
-		UPPERCASE.ROOM('checkStillAliveRoom', function(clientInfo, on, off, send) {
+		UPPERCASE.ROOM('checkStillAliveRoom', (clientInfo, on, off, send) => {
 			
 			// I'm still alive!!
-			on('check', function(notUsing, ret) {
+			on('check', (notUsing, ret) => {
 				ret('__ALIVE');
 			});
 			
 			// I'm still alive!! (string mode)
-			on('checkStr', function(notUsing, ret) {
+			on('checkStr', (notUsing, ret) => {
 				send({
 					str : '__ALIVE'
 				});
@@ -1425,29 +1234,27 @@ global.CHECK_STILL_ALIVE = OBJECT({
 	}
 });
 
-/**
+/*
  * Node-side Configuration
  */
-OVERRIDE(NODE_CONFIG, function(origin) {
+OVERRIDE(NODE_CONFIG, (origin) => {
 
 	global.NODE_CONFIG = COMBINE([{
-		isUsingHTMLSnapshot : false,
 		isNotUsingCPUClustering : false
 	}, origin]);
 });
 
-/**
+/*
  * Sync time object (Server-side)
  */
 global.SYNC_TIME = OBJECT({
 
-	init : function() {
-		'use strict';
-
-		UPPERCASE.ROOM('timeSyncRoom', function(clientInfo, on) {
+	init : () => {
+		
+		UPPERCASE.ROOM('timeSyncRoom', (clientInfo, on) => {
 
 			// return diff. (diff: client time - server time)
-			on('sync', function(clientNow, ret) {
+			on('sync', (clientNow, ret) => {
 				ret(clientNow - new Date());
 			});
 		});

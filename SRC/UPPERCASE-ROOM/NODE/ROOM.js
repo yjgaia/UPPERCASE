@@ -1,12 +1,11 @@
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * 룸을 생성합니다.
 	 */
 	box.ROOM = METHOD({
 
-		run : function(name, connectionListener) {
+		run : (name, connectionListener) => {
 			//REQUIRED: name
 			//REQUIRED: connectionListener
 

@@ -16,12 +16,11 @@
 ```javascript
 Sample.OVERRIDE = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 		
-		OVERRIDE(SP.SomeModel, function(origin) {
+		OVERRIDE(SP.SomeModel, (origin) => {
 			SP.SomeModel = OBJECT({
-				preset : function(params) {
+				preset : (params) => {
 					params.roomServerName = 'SP_ROOM_SERVER';
 					return origin;
 				}
@@ -35,35 +34,26 @@ Sample.OVERRIDE = METHOD({
 이제 `SP_ROOM_SERVER`로 연결하는 코드를 작성해 보겠습니다. 아래와 같은 코드를 `NODE/MAIN.js`에 추가합니다. 아래 코드는 [UPPERCASE 모듈](UPPERCASE.md)의 [BROWSER_INIT.js](../../UPPERCASE/BROWSER_INIT.js)을 참고한 것입니다.
 
 ```javascript
-var
-// sp web server host
-spWebServerHost = 'sp.com',
+let spWebServerHost = 'sp.com';
+let spWebServerPort = 8888;
 
-// sp web server port
-spWebServerPort = 8888,
-
-// connect to sp server.
-connectToSpServer;
-
-connectToSpServer = RAR(function() {
+let connectToSpServer = RAR(() => {
 	
 	CONNECT_TO_IO_SERVER({
 		roomServerName : 'SP_ROOM_SERVER',
 		webServerHost : spWebServerHost,
 		webServerPort : spWebServerPort
-	}, function(on) {
+	}, (on) => {
 
-		on('__DISCONNECTED', function() {
+		on('__DISCONNECTED', () => {
 
-			var
-			// reload interval
-			reloadInterval = INTERVAL(1, RAR(function() {
+			let reloadInterval = INTERVAL(1, RAR(() => {
 
 				GET({
 					host : spWebServerHost,
 					port : spWebServerPort,
 					uri : '__VERSION'
-				}, function(version) {
+				}, (version) => {
 					
 					if (reloadInterval !== undefined) {
 						reloadInterval.remove();

@@ -9,11 +9,11 @@
 UJS에서는 `CPU_CLUSTERING`를 통해 멀티코어 CPU 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다.
 
 ```javascript
-CPU_CLUSTERING(function() {
+CPU_CLUSTERING(() => {
 
 	console.log('WORK, WORKER!: ', CPU_CLUSTERING.getWorkerId());
 
-	CPU_CLUSTERING.on('receive', function(data) {
+	CPU_CLUSTERING.on('receive', (data) => {
 		ok(CHECK_ARE_SAME([data, {
 			msg : 'Hey!'
 		}]));
@@ -43,15 +43,15 @@ SERVER_CLUSTERING({
 	},
 	thisServerName : 'serverA',
 	port : 8125
-}, function() {
+}, () => {
 
-	SERVER_CLUSTERING.on('receive', function(data) {
+	SERVER_CLUSTERING.on('receive', (data) => {
 		ok(CHECK_ARE_SAME([data, {
 			msg : 'Hey!'
 		}]));
 	});
 
-	DELAY(1, function() {
+	DELAY(1, () => {
 
 		SERVER_CLUSTERING.broadcast({
 			methodName : 'receive',
@@ -69,12 +69,8 @@ UJS에는 프로세스 간 데이터를 공유하기 위한 기능들이 있습�
 간단한 값을 저장하기 위해서는 `SHARED_STORE`를, 데이터를 저장하기 위해서는 `SHARED_DB`를 사용합니다.
 
 ```javascript
-var
-// shared store
-sharedStore = SHARED_STORE('sharedStore'),
-
-// shared db
-sharedDB = SHARED_STORE('sharedDB');
+let sharedStore = SHARED_STORE('sharedStore');
+let sharedDB = SHARED_STORE('sharedDB');
 
 sharedStore.save({
 	name : 'msg',

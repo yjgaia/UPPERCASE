@@ -1,16 +1,12 @@
-TEST('FIND', function(check) {
-	'use strict';
+TEST('FIND', (check) => {
 
-	var
-	// data
-	data = {
+	let data = {
 		a : 1,
 		b : 2,
 		c : 3
-	},
-
-	// array
-	array = [3, 2, 1];
+	};
+	
+	let array = [3, 2, 1];
 
 	check(FIND({
 		data : data,

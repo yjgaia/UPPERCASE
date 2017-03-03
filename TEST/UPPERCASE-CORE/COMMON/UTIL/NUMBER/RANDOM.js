@@ -1,5 +1,4 @@
-TEST('RANDOM', function(check) {
-	'use strict';
+TEST('RANDOM', (check) => {
 
 	// random number between 1 ~ 3.
 	console.log(RANDOM({

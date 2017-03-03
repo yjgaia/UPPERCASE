@@ -4,26 +4,17 @@ Welcome to UPPERCASE-DB! (http://uppercase.io)
 
 */
 
-/**
+/*
  * MongoDB 서버에 연결합니다.
  */
-global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
-	'use strict';
+global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 
-	var
-	// DEFAULT_DB_SERVER_NAME
-	DEFAULT_DB_SERVER_NAME = '__',
+	const DEFAULT_DB_SERVER_NAME = '__';
 	
-	// native dbs
-	nativeDBs = {},
+	let nativeDBs = {};
+	let initDBFuncMap = {};
 
-	// init db func map
-	initDBFuncMap = {},
-
-	// add init db func.
-	addInitDBFunc;
-
-	m.addInitDBFunc = addInitDBFunc = function(dbServerName, initDBFunc) {
+	let addInitDBFunc = m.addInitDBFunc = (dbServerName, initDBFunc) => {
 		//OPTIONAL: dbServerName
 		//REQUIRED: initDBFunc
 		
@@ -51,7 +42,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 	return {
 
-		run : function(params, callback) {
+		run : (params, callback) => {
 			//REQUIRED: params
 			//OPTIONAL: params.dbServerName
 			//OPTIONAL: params.host
@@ -61,26 +52,22 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 			//OPTIONAL: params.password
 			//OPTIONAL: callback
 
-			var
-			// db server name
-			dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName,
+			let dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName;
+			let host = params.host === undefined ? '127.0.0.1' : params.host;
+			let port = params.port === undefined ? 27017 : params.port;
+			let name = params.name;
+			let username = params.username;
+			let password = params.password;
 
-			// host
-			host = params.host === undefined ? '127.0.0.1' : params.host,
-
-			// port
-			port = params.port === undefined ? 27017 : params.port,
-
-			// name
-			name = params.name,
-			
-			// username
-			username = params.username,
-
-			// password
-			password = params.password;
-
-			require('mongodb').MongoClient.connect('mongodb://' + (username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') + host + ':' + port + '/' + name, function(error, nativeDB) {
+			require('mongodb').MongoClient.connect(
+				
+				'mongodb://' +
+				(username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') +
+				host + ':' +
+				port + '/' +
+				name,
+				
+				(error, nativeDB) => {
 
 				if (error !== TO_DELETE) {
 
@@ -92,7 +79,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 					if (initDBFuncMap[dbServerName] !== undefined) {
 						
-						EACH(initDBFuncMap[dbServerName], function(initDBFunc) {
+						EACH(initDBFuncMap[dbServerName], (initDBFunc) => {
 							initDBFunc(nativeDB);
 						});
 						
@@ -108,26 +95,19 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	var
-	//IMPORT: MongoDB ObjectID
-	ObjectID = require('mongodb').ObjectID;
+	let ObjectID = require('mongodb').ObjectID;
 	
-	/**
+	/*
 	 * MongoDB 컬렉션을 다루는 DB 클래스
 	 */
-	box.DB = CLASS(function(cls) {
+	box.DB = CLASS((cls) => {
 		
-		var
-		// remove empty values.
-		removeEmptyValues;
-		
-		cls.removeEmptyValues = removeEmptyValues = function(data) {
+		let removeEmptyValues = cls.removeEmptyValues = (data) => {
 			//REQUIRED: data
 
-			EACH(data, function(value, name) {
+			EACH(data, (value, name) => {
 
 				if (value === undefined || value === TO_DELETE) {
 
@@ -145,61 +125,31 @@ FOR_BOX(function(box) {
 		
 		return {
 
-			init : function(inner, self, nameOrParams) {
+			init : (inner, self, nameOrParams) => {
 				//REQUIRED: nameOrParams
 				//OPTIONAL: nameOrParams.dbServerName
 				//REQUIRED: nameOrParams.name
 				//OPTIONAL: nameOrParams.isNotUsingObjectId
 				//OPTIONAL: nameOrParams.isNotUsingHistory
 	
-				var
-				// name
-				name,
+				let dbServerName;
+				let name;
+				let isNotUsingObjectId;
+				let isNotUsingHistory;
 				
-				// db server name
-				dbServerName,
+				let waitingCreateInfos = [];
+				let waitingGetInfos = [];
+				let waitingUpdateInfos = [];
+				let waitingRemoveInfos = [];
+				let waitingFindInfos = [];
+				let waitingCountInfos = [];
+				let waitingCheckIsExistsInfos = [];
+				let waitingAggregateInfos = [];
+				let waitingCreateIndexInfos = [];
+				let waitingRemoveIndexInfos = [];
+				let waitingFindAllIndexesInfos = [];
 				
-				// is not using object id
-				isNotUsingObjectId,
-				
-				// is not using history
-				isNotUsingHistory,
-	
-				// waiting create infos
-				waitingCreateInfos = [],
-	
-				// waiting get infos
-				waitingGetInfos = [],
-	
-				// waiting update infos
-				waitingUpdateInfos = [],
-	
-				// waiting remove infos
-				waitingRemoveInfos = [],
-	
-				// waiting find infos
-				waitingFindInfos = [],
-	
-				// waiting count infos
-				waitingCountInfos = [],
-	
-				// waiting check is exists infos
-				waitingCheckIsExistsInfos = [],
-	
-				// waiting aggregate infos
-				waitingAggregateInfos = [],
-	
-				// waiting create index infos
-				waitingCreateIndexInfos = [],
-	
-				// waiting remove index infos
-				waitingRemoveIndexInfos = [],
-				
-				// waiting find all indexes infos
-				waitingFindAllIndexesInfos = [],
-	
-				// generate _id.
-				gen_id = function(id) {
+				let gen_id = (id) => {
 					//REQUIRED: id
 					
 					if (isNotUsingObjectId === true) {
@@ -207,10 +157,9 @@ FOR_BOX(function(box) {
 					} else {
 						return VALID.mongoId(id) === true ? new ObjectID(id) : -1;
 					}
-				},
-	
-				// clean data.
-				cleanData = function(data) {
+				};
+				
+				let cleanData = (data) => {
 					//REQUIRED: data
 	
 					// convert _id (object) to id (string).
@@ -223,22 +172,19 @@ FOR_BOX(function(box) {
 	
 					// delete __RANDOM_KEY.
 					delete data.__RANDOM_KEY;
-				},
+				};
+				
+				let makeUpFilter = (filter) => {
 	
-				// make up filter.
-				makeUpFilter = function(filter) {
-	
-					var
-					// f.
-					f = function(filter) {
+					let f = (filter) => {
 	
 						if (filter.id !== undefined) {
 	
 							if (CHECK_IS_DATA(filter.id) === true) {
 	
-								EACH(filter.id, function(values, i) {
+								EACH(filter.id, (values, i) => {
 									if (CHECK_IS_DATA(values) === true || CHECK_IS_ARRAY(values) === true) {
-										EACH(values, function(value, j) {
+										EACH(values, (value, j) => {
 											values[j] = gen_id(value);
 										});
 									} else {
@@ -254,7 +200,7 @@ FOR_BOX(function(box) {
 							delete filter.id;
 						}
 	
-						EACH(filter, function(value, name) {
+						EACH(filter, (value, name) => {
 							if (value === undefined) {
 								delete filter[name];
 							}
@@ -263,82 +209,20 @@ FOR_BOX(function(box) {
 	
 					if (filter.$and !== undefined) {
 	
-						EACH(filter.$and, function(filter) {
+						EACH(filter.$and, (filter) => {
 							f(filter);
 						});
 	
 					} else if (filter.$or !== undefined) {
 	
-						EACH(filter.$or, function(filter) {
+						EACH(filter.$or, (filter) => {
 							f(filter);
 						});
 	
 					} else {
 						f(filter);
 					}
-				},
-	
-				// create data.
-				// if success, callback saved data.
-				// if error, run error handler.
-				create,
-	
-				// get data.
-				// if success, callback saved data.
-				// if not exists, callback undefined.
-				// if error, run error handler.
-				get,
-	
-				// update data.
-				// if success, callback saved data.
-				// if not exists, callback undefined.
-				// if error, run error handler.
-				update,
-				
-				// update data, but not save history
-				// if success, callback saved data.
-				// if not exists, callback undefined.
-				// if error, run error handler.
-				updateNoHistory,
-				
-				// update data, but not save record
-				// if success, callback saved data.
-				// if not exists, callback undefined.
-				// if error, run error handler.
-				updateNoRecord,
-	
-				// remove data.
-				// if success, callback saved data.
-				// if not exists, callback undefined.
-				// if error, run error handler.
-				remove,
-	
-				// find data set.
-				// if success, callback saved data set.
-				// if error, run error handler.
-				find,
-	
-				// count data set.
-				// if success, callback count.
-				// if error, run error handler.
-				count,
-	
-				// check is exists.
-				// if success, callback true or false.
-				// if error, run error handler.
-				checkIsExists,
-	
-				// aggregate.
-				aggregate,
-				
-				// create index.
-				createIndex,
-				
-				// remove index.
-				removeIndex,
-				
-				// find all indexes
-				findAllIndexes;
+				};
 	
 				if (CHECK_IS_DATA(nameOrParams) !== true) {
 					name = nameOrParams;
@@ -349,7 +233,7 @@ FOR_BOX(function(box) {
 					isNotUsingHistory = nameOrParams.isNotUsingHistory;
 				}
 	
-				self.create = create = function(data, callbackOrHandlers) {
+				let create = self.create = (data, callbackOrHandlers) => {
 					//REQUIRED: data
 					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.success
@@ -361,7 +245,7 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				self.get = get = function(idOrParams, callbackOrHandlers) {
+				let get = self.get = (idOrParams, callbackOrHandlers) => {
 					//OPTIONAL: idOrParams
 					//OPTIONAL: idOrParams.id
 					//OPTIONAL: idOrParams.filter
@@ -378,7 +262,7 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				self.update = update = function(data, callbackOrHandlers) {
+				let update = self.update = (data, callbackOrHandlers) => {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
@@ -396,10 +280,13 @@ FOR_BOX(function(box) {
 					});
 				};
 				
-				self.updateNoHistory = updateNoHistory = function(data, callbackOrHandlers) {
+				let updateNoHistory = self.updateNoHistory = (data, callbackOrHandlers) => {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: data.$inc
+					//OPTIONAL: data.$push
+					//OPTIONAL: data.$addToSet
+					//OPTIONAL: data.$pull
 					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists
@@ -412,7 +299,27 @@ FOR_BOX(function(box) {
 					});
 				};
 				
-				self.remove = remove = function(id, callbackOrHandlers) {
+				let updateNoRecord = self.updateNoRecord = (data, callbackOrHandlers) => {
+					//REQUIRED: data
+					//REQUIRED: data.id
+					//OPTIONAL: data.$inc
+					//OPTIONAL: data.$push
+					//OPTIONAL: data.$addToSet
+					//OPTIONAL: data.$pull
+					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.error
+	
+					waitingUpdateInfos.push({
+						data : data,
+						callbackOrHandlers : callbackOrHandlers,
+						isNotToSaveHistory : true,
+						isNotToUpdateLastUpdateTime : true
+					});
+				};
+				
+				let remove = self.remove = (id, callbackOrHandlers) => {
 					//REQUIRED: id
 					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.success
@@ -425,7 +332,7 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				self.find = find = function(params, callbackOrHandlers) {
+				let find = self.find = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.sort
@@ -442,7 +349,7 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				self.count = count = function(params, callbackOrHandlers) {
+				let count = self.count = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//REQUIRED: callbackOrHandlers
@@ -455,7 +362,7 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+				let checkIsExists = self.checkIsExists = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//REQUIRED: callbackOrHandlers
@@ -468,7 +375,7 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				self.aggregate = aggregate = function(params, callbackOrHandlers) {
+				let aggregate = self.aggregate = (params, callbackOrHandlers) => {
 					//REQUIRED: params
 					//REQUIRED: callbackOrHandlers
 					//REQUIRED: callbackOrHandlers.success
@@ -480,7 +387,7 @@ FOR_BOX(function(box) {
 					});
 				};
 				
-				self.createIndex = createIndex = function(keys, callbackOrHandlers) {
+				let createIndex = self.createIndex = (keys, callbackOrHandlers) => {
 					//REQUIRED: keys
 					//REQUIRED: callbackOrHandlers
 					//REQUIRED: callbackOrHandlers.success
@@ -492,7 +399,7 @@ FOR_BOX(function(box) {
 					});
 				};
 				
-				self.removeIndex = removeIndex = function(index, callbackOrHandlers) {
+				let removeIndex = self.removeIndex = (index, callbackOrHandlers) => {
 					//REQUIRED: index
 					//REQUIRED: callbackOrHandlers
 					//REQUIRED: callbackOrHandlers.success
@@ -504,7 +411,7 @@ FOR_BOX(function(box) {
 					});
 				};
 				
-				self.findAllIndexes = findAllIndexes = function(callbackOrHandlers) {
+				let findAllIndexes = self.findAllIndexes = (callbackOrHandlers) => {
 					//REQUIRED: callbackOrHandlers
 					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
@@ -514,28 +421,19 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, function(nativeDB) {
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB) => {
 					
-					var
-					// MongoDB collection
-					collection = nativeDB.collection(box.boxName + '.' + name),
-	
-					// MongoDB collection for history
-					historyCollection,
-	
-					// MongoDB collection for error log
-					errorLogCollection,
+					let collection = nativeDB.collection(box.boxName + '.' + name);
+					let historyCollection;
+					let errorLogCollection;
 					
-					// add history.
-					addHistory = function(method, id, change, time) {
+					let addHistory = (method, id, change, time) => {
 						//REQUIRED: method
 						//REQUIRED: id
 						//OPTIONAL: change
 						//REQUIRED: time
 						
-						var
-						// history data
-						historyData = {
+						let historyData = {
 							docId : id,
 							method : method,
 							time : time
@@ -565,10 +463,9 @@ FOR_BOX(function(box) {
 								console.log('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` DATA(' + id + ') SAVED:', change);
 							}
 						}
-					},
-	
-					// log error.
-					logError = function(errorInfo, errorHandler) {
+					};
+					
+					let logError = (errorInfo, errorHandler) => {
 						//REQUIRED: errorInfo
 						//REQUIRED: errorInfo.errorMsg
 						//OPTIONAL: errorHandler
@@ -597,33 +494,18 @@ FOR_BOX(function(box) {
 								name : name
 							});
 						}
-					},
-					
-					// inner get.
-					innerGet,
+					};
 	
-					// inner update.
-					innerUpdate;
-	
-					self.create = create = function(data, callbackOrHandlers) {
+					create = self.create = (data, callbackOrHandlers) => {
 						//REQUIRED: data
 						//OPTIONAL: callbackOrHandlers
 						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 	
-						var
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler,
-	
-						// error message
-						errorMsg,
-	
-						// f.
-						f;
-	
+						let callback;
+						let errorHandler;
+						let errorMsg;
+							
 						try {
 	
 							removeEmptyValues(data);
@@ -655,15 +537,11 @@ FOR_BOX(function(box) {
 	
 							collection.insertOne(data, {
 								w : 1
-							}, function(error, result) {
-	
-								var
-								// saved data
-								savedData;
-	
+							}, (error, result) => {
+								
 								if (error === TO_DELETE && result.ops.length > 0) {
 	
-									savedData = result.ops[0];
+									let savedData = result.ops[0];
 	
 									// clean saved data before callback.
 									cleanData(savedData);
@@ -700,7 +578,7 @@ FOR_BOX(function(box) {
 						}
 					};
 	
-					innerGet = function(params, callbackOrHandlers) {
+					let innerGet = (params, callbackOrHandlers) => {
 						//REQUIRED: params
 						//REQUIRED: params.filter
 						//REQUIRED: params.sort
@@ -709,24 +587,12 @@ FOR_BOX(function(box) {
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
 	
-						var
-						// filter
-						filter = params.filter,
-	
-						// sort
-						sort = params.sort,
+						let filter = params.filter;
+						let sort = params.sort;
 						
-						// callback
-						callback,
-	
-						// not exists handler
-						notExistsHandler,
-	
-						// error handler
-						errorHandler,
-	
-						// error message
-						errorMsg;
+						let callback;
+						let notExistsHandler;
+						let errorHandler;
 						
 						try {
 	
@@ -740,17 +606,13 @@ FOR_BOX(function(box) {
 								errorHandler = callbackOrHandlers.error;
 							}
 							
-							collection.find(filter).sort(sort).limit(1).toArray(function(error, savedDataSet) {
-	
-								var
-								// saved data
-								savedData;
-	
+							collection.find(filter).sort(sort).limit(1).toArray((error, savedDataSet) => {
+								
 								if (error === TO_DELETE) {
 										
 									if (savedDataSet.length > 0) {
 	
-										savedData = savedDataSet[0];
+										let savedData = savedDataSet[0];
 	
 										// clean saved data before callback.
 										cleanData(savedData);
@@ -792,7 +654,7 @@ FOR_BOX(function(box) {
 						}
 					};
 	
-					self.get = get = function(idOrParams, callbackOrHandlers) {
+					get = self.get = (idOrParams, callbackOrHandlers) => {
 						//OPTIONAL: idOrParams
 						//OPTIONAL: idOrParams.id
 						//OPTIONAL: idOrParams.filter
@@ -803,33 +665,14 @@ FOR_BOX(function(box) {
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
 	
-						var
-						// id
-						id,
-	
-						// filter
-						filter,
-	
-						// sort
-						sort,
-	
-						// is random
-						isRandom,
+						let id;
+						let filter;
+						let sort;
+						let isRandom;
 						
-						// callback
-						callback,
-	
-						// not exists handler
-						notExistsHandler,
-	
-						// error handler
-						errorHandler,
-	
-						// random key
-						randomKey,
-	
-						// error message
-						errorMsg;
+						let callback;
+						let notExistsHandler;
+						let errorHandler;
 	
 						try {
 							
@@ -864,6 +707,8 @@ FOR_BOX(function(box) {
 								if (filter === undefined) {
 									filter = {};
 								}
+								
+								let randomKey;
 	
 								filter.__RANDOM_KEY = {
 									$gte : randomKey = Math.random()
@@ -878,7 +723,7 @@ FOR_BOX(function(box) {
 									sort : sort
 								}, {
 									error : errorHandler,
-									notExists : function() {
+									notExists : () => {
 	
 										filter.__RANDOM_KEY = {
 											$lte : randomKey
@@ -946,7 +791,7 @@ FOR_BOX(function(box) {
 						}
 					};
 	
-					innerUpdate = function(data, callbackOrHandlers, isNotToSaveHistory, isNotToUpdateLastUpdateTime) {
+					let innerUpdate = (data, callbackOrHandlers, isNotToSaveHistory, isNotToUpdateLastUpdateTime) => {
 						//REQUIRED: data
 						//REQUIRED: data.id
 						//OPTIONAL: data.$inc
@@ -960,46 +805,19 @@ FOR_BOX(function(box) {
 						//OPTIONAL: isNotToSaveHistory
 						//OPTIONAL: isNotToUpdateLastUpdateTime
 						
-						var
-						// id
-						id = data.id,
-	
-						// $inc
-						$inc = data.$inc,
-	
-						// $push
-						$push = data.$push,
-	
-						// $addToSet
-						$addToSet = data.$addToSet,
-	
-						// $pull
-						$pull = data.$pull,
-	
-						// filter
-						filter,
-	
-						// callback
-						callback,
-	
-						// not exists handler
-						notExistsHandler,
-	
-						// error handler
-						errorHandler,
-	
-						// $unset
-						$unset,
-	
-						// update data
-						updateData,
-	
-						// error message
-						errorMsg;
+						let id = data.id;
+						let $inc = data.$inc;
+						let $push = data.$push;
+						let $addToSet = data.$addToSet;
+						let $pull = data.$pull;
+						
+						let callback;
+						let notExistsHandler;
+						let errorHandler;
 	
 						try {
 	
-							filter = {
+							let filter = {
 								_id : gen_id(id)
 							};
 	
@@ -1012,8 +830,10 @@ FOR_BOX(function(box) {
 									errorHandler = callbackOrHandlers.error;
 								}
 							}
+							
+							let $unset;
 	
-							EACH(data, function(value, name) {
+							EACH(data, (value, name) => {
 								if (name === 'id' || name === '_id' || name === 'createTime' || name[0] === '$') {
 									delete data[name];
 								} else if (value === TO_DELETE) {
@@ -1032,7 +852,7 @@ FOR_BOX(function(box) {
 								data.lastUpdateTime = new Date();
 							}
 							
-							updateData = {};
+							let updateData = {};
 							
 							if (CHECK_IS_EMPTY_DATA(data) !== true) {
 								updateData.$set = data;
@@ -1068,7 +888,7 @@ FOR_BOX(function(box) {
 								filter : filter
 							}, {
 	
-								error : function(errorMsg) {
+								error : (errorMsg) => {
 	
 									logError({
 										method : 'update',
@@ -1077,7 +897,7 @@ FOR_BOX(function(box) {
 									}, errorHandler);
 								},
 	
-								notExists : function() {
+								notExists : () => {
 	
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
@@ -1086,7 +906,7 @@ FOR_BOX(function(box) {
 									}
 								},
 	
-								success : function(originData) {
+								success : (originData) => {
 									
 									//!! if update data is empty, data to be empty.
 									if (CHECK_IS_EMPTY_DATA(updateData) === true) {
@@ -1099,7 +919,7 @@ FOR_BOX(function(box) {
 	
 										collection.updateOne(filter, updateData, {
 											w : 1
-										}, function(error, result) {
+										}, (error, result) => {
 	
 											if (error !== TO_DELETE) {
 				
@@ -1125,7 +945,7 @@ FOR_BOX(function(box) {
 													filter : filter
 												}, {
 				
-													error : function(errorMsg) {
+													error : (errorMsg) => {
 				
 														logError({
 															method : 'update',
@@ -1134,7 +954,7 @@ FOR_BOX(function(box) {
 														}, errorHandler);
 													},
 				
-													notExists : function() {
+													notExists : () => {
 				
 														if (notExistsHandler !== undefined) {
 															notExistsHandler();
@@ -1143,53 +963,49 @@ FOR_BOX(function(box) {
 														}
 													},
 				
-													success : function(savedData) {
+													success : (savedData) => {
 				
-														var
-														// update data
-														updateData = {};
+														let updateData = {};
 		
-														EACH(data, function(value, name) {
+														EACH(data, (value, name) => {
 															updateData[name] = value;
 														});
 			
 														if ($unset !== undefined) {
-															EACH($unset, function(value, name) {
+															EACH($unset, (value, name) => {
 																updateData[name] = TO_DELETE;
 															});
 														}
 														
 														if ($inc !== undefined) {
-															EACH($inc, function(notUsing, name) {
+															EACH($inc, (notUsing, name) => {
 																updateData[name] = savedData[name];
 															});
 														}
 														
 														if ($push !== undefined) {
-															EACH($push, function(notUsing, name) {
+															EACH($push, (notUsing, name) => {
 																updateData[name] = savedData[name];
 															});
 														}
 														
 														if ($addToSet !== undefined) {
-															EACH($addToSet, function(notUsing, name) {
+															EACH($addToSet, (notUsing, name) => {
 																updateData[name] = savedData[name];
 															});
 														}
 														
 														if ($pull !== undefined) {
-															EACH($pull, function(notUsing, name) {
+															EACH($pull, (notUsing, name) => {
 																updateData[name] = savedData[name];
 															});
 														}
 														
-														if (isNotUsingHistory !== true && isNotToSaveHistory !== true && RUN(function() {
+														if (isNotUsingHistory !== true && isNotToSaveHistory !== true && RUN(() => {
 															
-															var
-															// is same
-															isSame = true;
+															let isSame = true;
 															
-															EACH(updateData, function(value, name) {
+															EACH(updateData, (value, name) => {
 																if (name !== 'lastUpdateTime' && originData[name] !== value) {
 																	isSame = false;
 																	return false;
@@ -1225,7 +1041,7 @@ FOR_BOX(function(box) {
 						}
 					};
 					
-					self.update = update = function(data, callbackOrHandlers) {
+					update = self.update = (data, callbackOrHandlers) => {
 						//REQUIRED: data
 						//REQUIRED: data.id
 						//OPTIONAL: data.$inc
@@ -1240,7 +1056,7 @@ FOR_BOX(function(box) {
 						innerUpdate(data, callbackOrHandlers);
 					};
 					
-					self.updateNoHistory = updateNoHistory = function(data, callbackOrHandlers) {
+					updateNoHistory = self.updateNoHistory = (data, callbackOrHandlers) => {
 						//REQUIRED: data
 						//REQUIRED: data.id
 						//OPTIONAL: data.$inc
@@ -1255,7 +1071,7 @@ FOR_BOX(function(box) {
 						innerUpdate(data, callbackOrHandlers, true);
 					};
 					
-					self.updateNoRecord = updateNoRecord = function(data, callbackOrHandlers) {
+					updateNoRecord = self.updateNoRecord = (data, callbackOrHandlers) => {
 						//REQUIRED: data
 						//REQUIRED: data.id
 						//OPTIONAL: data.$inc
@@ -1270,32 +1086,20 @@ FOR_BOX(function(box) {
 						innerUpdate(data, callbackOrHandlers, true, true);
 					};
 					
-					self.remove = remove = function(id, callbackOrHandlers) {
+					remove = self.remove = (id, callbackOrHandlers) => {
 						//REQUIRED: id
 						//OPTIONAL: callbackOrHandlers
 						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
-	
-						var
-						// filter
-						filter,
-	
-						// callback
-						callback,
-	
-						// not exists handler
-						notExistsHandler,
-	
-						// error handler
-						errorHandler,
-	
-						// error message
-						errorMsg;
+						
+						let callback;
+						let notExistsHandler;
+						let errorHandler;
 	
 						try {
 	
-							filter = {
+							let filter = {
 								_id : gen_id(id)
 							};
 	
@@ -1313,7 +1117,7 @@ FOR_BOX(function(box) {
 								filter : filter
 							}, {
 	
-								error : function(errorMsg) {
+								error : (errorMsg) => {
 	
 									logError({
 										method : 'remove',
@@ -1322,7 +1126,7 @@ FOR_BOX(function(box) {
 									}, errorHandler);
 								},
 	
-								notExists : function() {
+								notExists : () => {
 	
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
@@ -1331,11 +1135,11 @@ FOR_BOX(function(box) {
 									}
 								},
 	
-								success : function(originData) {
+								success : (originData) => {
 	
 									collection.deleteOne(filter, {
 										w : 1
-									}, function(error, result) {
+									}, (error, result) => {
 										
 										if (error !== TO_DELETE) {
 	
@@ -1381,7 +1185,7 @@ FOR_BOX(function(box) {
 						}
 					};
 					
-					self.find = find = function(params, callbackOrHandlers) {
+					find = self.find = (params, callbackOrHandlers) => {
 						//OPTIONAL: params
 						//OPTIONAL: params.filter
 						//OPTIONAL: params.sort
@@ -1392,33 +1196,14 @@ FOR_BOX(function(box) {
 						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 	
-						var
-						// filter
-						filter,
-	
-						// sort
-						sort,
-	
-						// start
-						start,
-	
-						// count
-						count,
-	
-						// is find all
-						isFindAll,
+						let filter;
+						let sort;
+						let start;
+						let count;
+						let isFindAll;
 						
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler,
-	
-						// error message
-						errorMsg,
-						
-						// proc.
-						proc;
+						let callback;
+						let errorHandler;
 	
 						try {
 	
@@ -1475,12 +1260,12 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 							
-							proc = function(error, savedDataSet) {
+							let proc = (error, savedDataSet) => {
 	
 								if (error === TO_DELETE) {
 									
 									// clean saved data before callback.
-									EACH(savedDataSet, function(savedData, i) {
+									EACH(savedDataSet, (savedData, i) => {
 										cleanData(savedData);
 									});
 									
@@ -1505,7 +1290,7 @@ FOR_BOX(function(box) {
 	
 							} else {
 	
-								collection.find(filter).sort(sort).skip(start).limit(count).toArray(function(error, savedDataSet) {
+								collection.find(filter).sort(sort).skip(start).limit(count).toArray((error, savedDataSet) => {
 									
 									if (error === TO_DELETE && savedDataSet.length === NODE_CONFIG.maxDataCount) {
 										SHOW_WARNING(box.boxName + '.' + name + 'DB.find', '데이터의 개수가 ' + NODE_CONFIG.maxDataCount + '개 이상입니다. 최대 가져올 수 있는 데이터의 개수는 ' + NODE_CONFIG.maxDataCount + '개 입니다.');
@@ -1527,25 +1312,17 @@ FOR_BOX(function(box) {
 						}
 					};
 	
-					self.count = count = function(params, callbackOrHandlers) {
+					count = self.count = (params, callbackOrHandlers) => {
 						//OPTIONAL: params
 						//OPTIONAL: params.filter
 						//REQUIRED: callbackOrHandlers
 						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 	
-						var
-						// filter
-						filter,
+						let filter;
 						
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler,
-	
-						// error message
-						errorMsg;
+						let callback;
+						let errorHandler;
 	
 						try {
 	
@@ -1576,7 +1353,7 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 							
-							collection.find(filter).count(function(error, count) {
+							collection.find(filter).count((error, count) => {
 	
 								if (error === TO_DELETE) {
 									callback(count);
@@ -1605,25 +1382,17 @@ FOR_BOX(function(box) {
 						}
 					};
 	
-					self.checkIsExists = checkIsExists = function(params, callbackOrHandlers) {
+					checkIsExists = self.checkIsExists = (params, callbackOrHandlers) => {
 						//OPTIONAL: params
 						//OPTIONAL: params.filter
 						//REQUIRED: callbackOrHandlers
 						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 	
-						var
-						// filter
-						filter,
+						let filter;
 						
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler,
-	
-						// error message
-						errorMsg;
+						let callback;
+						let errorHandler;
 						
 						try {
 	
@@ -1663,7 +1432,7 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 							
-							collection.find(filter).count(function(error, count) {
+							collection.find(filter).count((error, count) => {
 	
 								if (error === TO_DELETE) {
 									callback(count !== undefined && count > 0);
@@ -1692,18 +1461,14 @@ FOR_BOX(function(box) {
 						}
 					};
 	
-					self.aggregate = aggregate = function(params, callbackOrHandlers) {
+					aggregate = self.aggregate = (params, callbackOrHandlers) => {
 						//REQUIRED: params
 						//REQUIRED: callbackOrHandlers
 						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 	
-						var
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler;
+						let callback;
+						let errorHandler;
 	
 						try {
 	
@@ -1714,7 +1479,7 @@ FOR_BOX(function(box) {
 								errorHandler = callbackOrHandlers.error;
 							}
 	
-							collection.aggregate(params).toArray(function(error, result) {
+							collection.aggregate(params).toArray((error, result) => {
 	
 								if (error === TO_DELETE) {
 	
@@ -1744,18 +1509,14 @@ FOR_BOX(function(box) {
 						}
 					};
 					
-					self.createIndex = createIndex = function(keys, callbackOrHandlers) {
+					let createIndex = self.createIndex = (keys, callbackOrHandlers) => {
 						//REQUIRED: keys
 						//OPTIONAL: callbackOrHandlers
 						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 						
-						var
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler;
+						let callback;
+						let errorHandler;
 						
 						try {
 							
@@ -1770,7 +1531,7 @@ FOR_BOX(function(box) {
 							
 							collection.createIndex(keys, {
 								w : 1
-							}, function(error) {
+							}, (error) => {
 		
 								if (error === TO_DELETE) {
 		
@@ -1807,18 +1568,14 @@ FOR_BOX(function(box) {
 						createTime : 1
 					});
 					
-					self.removeIndex = removeIndex = function(index, callbackOrHandlers) {
+					let removeIndex = self.removeIndex = (index, callbackOrHandlers) => {
 						//REQUIRED: index
 						//OPTIONAL: callbackOrHandlers
 						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 						
-						var
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler;
+						let callback;
+						let errorHandler;
 						
 						try {
 						
@@ -1833,7 +1590,7 @@ FOR_BOX(function(box) {
 							
 							collection.dropIndex(index, {
 								w : 1
-							}, function(error) {
+							}, (error) => {
 		
 								if (error === TO_DELETE) {
 		
@@ -1865,17 +1622,13 @@ FOR_BOX(function(box) {
 						}
 					};
 					
-					self.findAllIndexes = findAllIndexes = function(callbackOrHandlers) {
+					findAllIndexes = self.findAllIndexes = (callbackOrHandlers) => {
 						//REQUIRED: callbackOrHandlers
 						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 	
-						var
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler;
+						let callback;
+						let errorHandler;
 						
 						try {
 	
@@ -1886,23 +1639,19 @@ FOR_BOX(function(box) {
 								errorHandler = callbackOrHandlers.error;
 							}
 	
-							collection.indexInformation(function(error, indexInfo) {
+							collection.indexInformation((error, indexInfo) => {
 								
-								var
-								// key map
-								keyMap;
-	
 								if (error === TO_DELETE) {
 									
-									keyMap = [];
+									let keyMap = [];
 									
-									EACH(indexInfo, function(pairs) {
+									EACH(indexInfo, (pairs) => {
 											
 										var
 										// keys
 										keys = {};
 										
-										EACH(pairs, function(pair) {
+										EACH(pairs, (pair) => {
 											keys[pair[0]] = pair[1];
 										});
 										
@@ -1935,67 +1684,67 @@ FOR_BOX(function(box) {
 	
 					// run waiting infos.
 	
-					EACH(waitingCreateInfos, function(info) {
+					EACH(waitingCreateInfos, (info) => {
 						create(info.data, info.callbackOrHandlers);
 					});
 	
 					waitingCreateInfos = undefined;
 	
-					EACH(waitingGetInfos, function(info) {
+					EACH(waitingGetInfos, (info) => {
 						get(info.idOrParams, info.callbackOrHandlers);
 					});
 	
 					waitingGetInfos = undefined;
 	
-					EACH(waitingUpdateInfos, function(info) {
-						innerUpdate(info.data, info.callbackOrHandlers, info.isNotToSaveHistory);
+					EACH(waitingUpdateInfos, (info) => {
+						innerUpdate(info.data, info.callbackOrHandlers, info.isNotToSaveHistory, info.isNotToUpdateLastUpdateTime);
 					});
 	
 					waitingUpdateInfos = undefined;
 	
-					EACH(waitingRemoveInfos, function(info) {
+					EACH(waitingRemoveInfos, (info) => {
 						remove(info.id, info.callbackOrHandlers);
 					});
 	
 					waitingRemoveInfos = undefined;
 	
-					EACH(waitingFindInfos, function(info) {
+					EACH(waitingFindInfos, (info) => {
 						find(info.params, info.callbackOrHandlers);
 					});
 	
 					waitingFindInfos = undefined;
 	
-					EACH(waitingCountInfos, function(info) {
+					EACH(waitingCountInfos, (info) => {
 						count(info.params, info.callbackOrHandlers);
 					});
 	
 					waitingCountInfos = undefined;
 	
-					EACH(waitingCheckIsExistsInfos, function(info) {
+					EACH(waitingCheckIsExistsInfos, (info) => {
 						checkIsExists(info.params, info.callbackOrHandlers);
 					});
 	
 					waitingCheckIsExistsInfos = undefined;
 	
-					EACH(waitingAggregateInfos, function(info) {
+					EACH(waitingAggregateInfos, (info) => {
 						aggregate(info.params, info.callbackOrHandlers);
 					});
 	
 					waitingAggregateInfos = undefined;
 					
-					EACH(waitingCreateIndexInfos, function(info) {
+					EACH(waitingCreateIndexInfos, (info) => {
 						createIndex(info.keys, info.callbackOrHandlers);
 					});
 	
 					waitingCreateIndexInfos = undefined;
 					
-					EACH(waitingRemoveIndexInfos, function(info) {
+					EACH(waitingRemoveIndexInfos, (info) => {
 						removeIndex(info.index, info.callbackOrHandlers);
 					});
 	
 					waitingRemoveIndexInfos = undefined;
 					
-					EACH(waitingFindAllIndexesInfos, function(info) {
+					EACH(waitingFindAllIndexesInfos, (info) => {
 						findAllIndexes(info.callbackOrHandlers);
 					});
 	
@@ -2006,36 +1755,30 @@ FOR_BOX(function(box) {
 	});
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * 로그를 저장하는 기능을 제공하는 LOG_DB 클래스
 	 */
-	box.LOG_DB = CLASS(function(cls) {
+	box.LOG_DB = CLASS((cls) => {
 		
-		var
-		// generate _id.
-		gen_id = function(id) {
+		let gen_id = (id) => {
 			//REQUIRED: id
 			
 			return VALID.mongoId(id) === true ? new ObjectID(id) : -1;
-		},
+		};
 		
-		// make up filter.
-		makeUpFilter = function(filter) {
+		let makeUpFilter = (filter) => {
 
-			var
-			// f.
-			f = function(filter) {
+			let f = (filter) => {
 
 				if (filter.id !== undefined) {
 
 					if (CHECK_IS_DATA(filter.id) === true) {
 
-						EACH(filter.id, function(values, i) {
+						EACH(filter.id, (values, i) => {
 							if (CHECK_IS_DATA(values) === true || CHECK_IS_ARRAY(values) === true) {
-								EACH(values, function(value, j) {
+								EACH(values, (value, j) => {
 									values[j] = gen_id(value);
 								});
 							} else {
@@ -2051,7 +1794,7 @@ FOR_BOX(function(box) {
 					delete filter.id;
 				}
 
-				EACH(filter, function(value, name) {
+				EACH(filter, (value, name) => {
 					if (value === undefined) {
 						delete filter[name];
 					}
@@ -2060,13 +1803,13 @@ FOR_BOX(function(box) {
 
 			if (filter.$and !== undefined) {
 
-				EACH(filter.$and, function(filter) {
+				EACH(filter.$and, (filter) => {
 					f(filter);
 				});
 
 			} else if (filter.$or !== undefined) {
 
-				EACH(filter.$or, function(filter) {
+				EACH(filter.$or, (filter) => {
 					f(filter);
 				});
 
@@ -2077,29 +1820,16 @@ FOR_BOX(function(box) {
 
 		return {
 		
-			init : function(inner, self, nameOrParams) {
+			init : (inner, self, nameOrParams) => {
 				//REQUIRED: nameOrParams
 				//OPTIONAL: nameOrParams.dbServerName
 				//REQUIRED: nameOrParams.name
 	
-				var
-				// name
-				name,
+				let dbServerName;
+				let name;
 				
-				// db server name
-				dbServerName,
-				
-				// waiting log data set
-				waitingLogDataSet = [],
-				
-				// waiting find infos
-				waitingFindInfos = [],
-	
-				// log.
-				log,
-				
-				// find.
-				find;
+				let waitingLogDataSet = [];
+				let waitingFindInfos = [];
 				
 				if (CHECK_IS_DATA(nameOrParams) !== true) {
 					name = nameOrParams;
@@ -2108,13 +1838,13 @@ FOR_BOX(function(box) {
 					name = nameOrParams.name;
 				}
 	
-				self.log = log = function(data) {
+				let log = self.log = (data) => {
 					//REQUIRED: data
 	
 					waitingLogDataSet.push(data);
 				};
 				
-				self.find = find = function(params, callbackOrHandlers) {
+				let find = self.find = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.sort
@@ -2131,13 +1861,11 @@ FOR_BOX(function(box) {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, function(nativeDB) {
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB) => {
 	
-					var
-					// MongoDB collection
-					collection = nativeDB.collection(box.boxName + '.' + name);
+					let collection = nativeDB.collection(box.boxName + '.' + name);
 	
-					self.log = log = function(data) {
+					log = self.log = (data) => {
 						//REQUIRED: data
 	
 						// now
@@ -2148,7 +1876,7 @@ FOR_BOX(function(box) {
 						collection.insertOne(data);
 					};
 					
-					self.find = find = function(params, callbackOrHandlers) {
+					find = self.find = (params, callbackOrHandlers) => {
 						//OPTIONAL: params
 						//OPTIONAL: params.filter
 						//OPTIONAL: params.sort
@@ -2159,40 +1887,18 @@ FOR_BOX(function(box) {
 						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
 		
-						var
-						// filter
-						filter,
-	
-						// sort
-						sort,
-	
-						// start
-						start,
-	
-						// count
-						count,
-	
-						// is find all
-						isFindAll,
+						let filter;
+						let sort;
+						let start;
+						let count;
+						let isFindAll;
 						
-						// callback
-						callback,
-	
-						// error handler
-						errorHandler,
-	
-						// error message
-						errorMsg,
+						let callback;
+						let errorHandler;
+						let errorMsg;
+						let cleanedFilter;
+						let cachedInfo;
 						
-						// cleaned filter
-						cleanedFilter,
-						
-						// cached info
-						cachedInfo,
-	
-						// proc.
-						proc;
-	
 						try {
 	
 							if (callbackOrHandlers === undefined) {
@@ -2248,12 +1954,12 @@ FOR_BOX(function(box) {
 	
 							makeUpFilter(filter);
 	
-							proc = function(error, savedDataSet) {
+							let proc = (error, savedDataSet) => {
 	
 								if (error === TO_DELETE) {
 									
 									// clean saved data before callback.
-									EACH(savedDataSet, function(savedData, i) {
+									EACH(savedDataSet, (savedData, i) => {
 										
 										// convert _id (object) to id (string).
 										if (savedData._id !== undefined) {
@@ -2306,13 +2012,13 @@ FOR_BOX(function(box) {
 						}
 					};
 	
-					EACH(waitingLogDataSet, function(data) {
+					EACH(waitingLogDataSet, (data) => {
 						log(data);
 					});
 	
 					waitingLogDataSet = undefined;
 					
-					EACH(waitingFindInfos, function(info) {
+					EACH(waitingFindInfos, (info) => {
 						find(info.params, info.callbackOrHandlers);
 					});
 	
@@ -2323,9 +2029,9 @@ FOR_BOX(function(box) {
 	});
 });
 
-OVERRIDE(NODE_CONFIG, function(origin) {
+OVERRIDE(NODE_CONFIG, (origin) => {
 	
-	/**
+	/*
 	 * Node.js 환경에서의 기본 설정
 	 */
 	global.NODE_CONFIG = COMBINE([{

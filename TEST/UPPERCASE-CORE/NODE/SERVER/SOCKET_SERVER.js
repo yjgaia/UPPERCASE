@@ -1,13 +1,10 @@
-TEST('SOCKET_SERVER', function(check) {
-	'use strict';
+TEST('SOCKET_SERVER', (check) => {
 
-	SOCKET_SERVER(8124, function(clientInfo, on, off, send, disconnect) {
+	SOCKET_SERVER(8124, (clientInfo, on, off, send, disconnect) => {
 
-		var
-		// roles
-		roles = [];
+		let roles = [];
 
-		on('message', function(data, ret) {
+		on('message', (data, ret) => {
 
 			check(CHECK_ARE_SAME([data, {
 				msg : 'message from client.'
@@ -21,7 +18,7 @@ TEST('SOCKET_SERVER', function(check) {
 			data : {
 				msg : 'message from server.'
 			}
-		}, function(retMsg) {
+		}, (retMsg) => {
 			check(retMsg === 'Thanks!');
 		});
 
@@ -32,13 +29,13 @@ TEST('SOCKET_SERVER', function(check) {
 			}
 		});
 
-		on('login', function(data) {
+		on('login', (data) => {
 			if (data !== undefined && data.username === 'test' && data.password === '1234') {
 				roles.push('USER');
 			}
 		});
 
-		on('checkRole', function(role) {
+		on('checkRole', (role) => {
 
 			if (role !== undefined && CHECK_IS_IN({
 				data : roles,
@@ -49,7 +46,7 @@ TEST('SOCKET_SERVER', function(check) {
 		});
 
 		// when disconnected
-		on('__DISCONNECTED', function() {
+		on('__DISCONNECTED', () => {
 			console.log('DISCONNECTED!');
 		});
 	});

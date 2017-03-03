@@ -1,14 +1,8 @@
-RUN(function() {
-	'use strict';
+RUN(() => {
 	
-	var
-	// is connecting
-	isConnecting = false,
+	let isConnecting = false;
 	
-	// connect.
-	connect;
-	
-	FOR_BOX(function(box) {
+	FOR_BOX((box) => {
 		if (box.OVERRIDE !== undefined) {
 			box.OVERRIDE();
 		}
@@ -19,32 +13,28 @@ RUN(function() {
 	
 	SYNC_TIME();
 
-	FOR_BOX(function(box) {
+	FOR_BOX((box) => {
 		if (box.MAIN !== undefined) {
 			box.MAIN();
 		}
 	});
 
-	connect = RAR(function() {
+	let connect = RAR(() => {
 		
 		if (isConnecting !== true) {
 			isConnecting = true;
 			
-			CONNECT_TO_UPPERCASE_SERVER(function(on) {
+			CONNECT_TO_UPPERCASE_SERVER((on) => {
 				
-				FOR_BOX(function(box) {
+				FOR_BOX((box) => {
 					if (box.CONNECTED !== undefined) {
 						box.CONNECTED();
 					}
 				});
 			
-				on('__DISCONNECTED', function() {
+				on('__DISCONNECTED', () => {
 					
-					var
-					// reload interval
-					reloadInterval;
-					
-					FOR_BOX(function(box) {
+					FOR_BOX((box) => {
 						if (box.DISCONNECTED !== undefined) {
 							box.DISCONNECTED();
 						}
@@ -52,12 +42,12 @@ RUN(function() {
 					
 					isConnecting = false;
 					
-					reloadInterval = INTERVAL(1, RAR(function() {
+					let reloadInterval = INTERVAL(1, RAR(() => {
 		
 						GET({
 							port : CONFIG.webServerPort,
 							uri : '__VERSION'
-						}, function(version) {
+						}, (version) => {
 							
 							if (reloadInterval !== undefined) {
 								reloadInterval.remove();

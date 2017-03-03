@@ -1,5 +1,4 @@
-RUN(function() {
-	'use strict';
+RUN(() => {
 	
 	// COMMON 테스트
 	/*require('./COMMON/TO_DELETE.js');

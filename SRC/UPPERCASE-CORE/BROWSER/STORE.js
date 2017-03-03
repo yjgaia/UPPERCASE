@@ -1,55 +1,35 @@
-/**
+/*
  * 저장소 클래스
  * 
  * 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
  */
 global.STORE = CLASS({
 
-	init : function(inner, self, storeName) {
-		'use strict';
+	init : (inner, self, storeName) => {
 		//REQUIRED: storeName
-
-		var
-		// save.
-		save,
-
-		// get.
-		get,
-		
-		// all.
-		all,
-
-		// remove.
-		remove,
 		
 		// gen full name.
-		genFullName = function(name) {
+		let genFullName = (name) => {
 			//REQUIRED: name
 
 			return storeName + '.' + name;
 		};
 
-		self.save = save = function(params) {
+		let save = self.save = (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.name
 			//REQUIRED: params.value
 
-			var
-			// name
-			name = params.name,
-			
-			// value
-			value = params.value;
+			let name = params.name;
+			let value = params.value;
 
 			localStorage.setItem(genFullName(name), STRINGIFY(value));
 		};
 
-		self.get = get = function(name) {
+		let get = self.get = (name) => {
 			//REQUIRED: name
 
-			var
-			// value
-			value = PARSE_STR(localStorage.getItem(genFullName(name)));
+			let value = PARSE_STR(localStorage.getItem(genFullName(name)));
 
 			if (value === TO_DELETE) {
 				value = undefined;
@@ -58,7 +38,7 @@ global.STORE = CLASS({
 			return value;
 		};
 
-		self.remove = remove = function(name) {
+		let remove = self.remove = (name) => {
 			//REQUIRED: name
 			
 			localStorage.removeItem(genFullName(name));
@@ -66,32 +46,18 @@ global.STORE = CLASS({
 	}
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.STORE = CLASS({
 
-		init : function(inner, self, storeName) {
+		init : (inner, self, storeName) => {
 			//REQUIRED: storeName
 
-			var
-			// store
-			store = STORE(box.boxName + '.' + storeName),
+			let store = STORE(box.boxName + '.' + storeName);
 
-			// save.
-			save,
-
-			// get.
-			get,
-			
-			// remove.
-			remove;
-
-			self.save = save = store.save;
-
-			self.get = get = store.get;
-			
-			self.remove = remove = store.remove;
+			let save = self.save = store.save;
+			let get = self.get = store.get;
+			let remove = self.remove = store.remove;
 		}
 	});
 });

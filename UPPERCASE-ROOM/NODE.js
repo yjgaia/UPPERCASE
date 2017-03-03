@@ -4,29 +4,22 @@ Welcome to UPPERCASE-ROOM! (http://uppercase.io)
 
 */
 
-FOR_BOX(function(box) {
-	'use strict';
-
-	/**
+FOR_BOX((box) => {
+	
+	/*
 	 * 주어진 이름을 가진 모든 룸에 데이터를 전송합니다.
 	 */
 	box.BROADCAST = METHOD({
 
-		run : function(params) {
+		run : (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.roomName
 			//OPTIONAL: params.methodName
 			//OPTIONAL: params.data
 
-			var
-			// room name
-			roomName = box.boxName + '/' + params.roomName,
-
-			// method name
-			methodName = params.methodName,
-
-			// data
-			data = params.data;
+			let roomName = box.boxName + '/' + params.roomName;
+			let methodName = params.methodName;
+			let data = params.data;
 			
 			LAUNCH_ROOM_SERVER.broadcast({
 				roomName : roomName,
@@ -61,49 +54,24 @@ FOR_BOX(function(box) {
 	});
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * 룸 서버와 통신을 주고받는 CLIENT_ROOM 클래스
 	 */
 	box.CLIENT_ROOM = CLASS({
 
-		init : function(inner, self, nameOrParams) {
+		init : (inner, self, nameOrParams) => {
 			//REQUIRED: nameOrParams
 			//OPTIONAL: nameOrParams.roomServerName
 			//REQUIRED: nameOrParams.name
 
-			var
-			// room server name
-			roomServerName,
-			
-			// room name
-			roomName,
+			let roomServerName;
+			let roomName;
 
-			// method map
-			methodMap = {},
+			let methodMap = {};
 
-			// is exited
-			isExited,
-
-			// get room name.
-			getRoomName,
-
-			// check is exited.
-			checkIsExited,
-
-			// on.
-			on,
-
-			// off.
-			off,
-
-			// send.
-			send,
-
-			// exit.
-			exit;
+			let isExited;
 			
 			if (CHECK_IS_DATA(nameOrParams) !== true) {
 				roomName = box.boxName + '/' + nameOrParams;
@@ -117,21 +85,19 @@ FOR_BOX(function(box) {
 				roomName : roomName
 			});
 
-			inner.getRoomName = getRoomName = function() {
+			let getRoomName = inner.getRoomName = () => {
 				return roomName;
 			};
 
-			inner.checkIsExited = checkIsExited = function() {
+			let checkIsExited = inner.checkIsExited = () => {
 				return isExited;
 			};
 
-			self.on = on = function(methodName, method) {
+			let on = self.on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				CONNECT_TO_ROOM_SERVER.on({
 					roomServerName : roomServerName,
@@ -145,13 +111,11 @@ FOR_BOX(function(box) {
 				methods.push(method);
 			};
 
-			self.off = off = function(methodName, method) {
+			let off = self.off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -173,29 +137,26 @@ FOR_BOX(function(box) {
 
 					} else {
 
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 							CONNECT_TO_ROOM_SERVER.off({
 								roomServerName : roomServerName,
 								methodName : roomName + '/' + methodName
 							}, method);
 						});
+						
 						delete methodMap[methodName];
 					}
 				}
 			};
 
-			self.send = send = function(methodNameOrParams, callback) {
+			let send = self.send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//REQUIRED: methodNameOrParams.methodName
 				//REQUIRED: methodNameOrParams.data
 				//OPTIONAL: callback
 				
-				var
-				// method name
-				methodName,
-				
-				// data
-				data;
+				let methodName;
+				let data;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -217,7 +178,7 @@ FOR_BOX(function(box) {
 				}
 			};
 
-			self.exit = exit = function() {
+			let exit = self.exit = () => {
 
 				if (isExited !== true) {
 
@@ -226,7 +187,7 @@ FOR_BOX(function(box) {
 						roomName : roomName
 					});
 
-					EACH(methodMap, function(methods, methodName) {
+					EACH(methodMap, (methods, methodName) => {
 						off(methodName);
 					});
 
@@ -243,53 +204,19 @@ FOR_BOX(function(box) {
 /*
  * 룸 서버에 접속합니다.
  */
-global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
-	'use strict';
+global.CONNECT_TO_ROOM_SERVER = METHOD((m) => {
 
-	var
-	// DEFAULT_ROOM_SERVER_NAME
-	DEFAULT_ROOM_SERVER_NAME = '__',
+	const DEFAULT_ROOM_SERVER_NAME = '__';
 	
-	// enter room name map
-	enterRoomNameMap = {},
-
-	// on info map
-	onInfoMap = {},
-
-	// waiting send info map
-	waitingSendInfoMap = {},
-
-	// is connecteds
-	isConnecteds = {},
-
-	// inner ons
-	innerOns = {},
-
-	// inner offs
-	innerOffs = {},
-
-	// inner sends
-	innerSends = {},
+	let enterRoomNameMap = {};
+	let onInfoMap = {};
+	let waitingSendInfoMap = {};
+	let isConnecteds = {};
+	let innerOns = {};
+	let innerOffs = {};
+	let innerSends = {};
 	
-	// check is connected.
-	checkIsConnected,
-
-	// enter room.
-	enterRoom,
-
-	// on.
-	on,
-
-	// off.
-	off,
-
-	// send.
-	send,
-
-	// exit room.
-	exitRoom;
-	
-	m.checkIsConnected = checkIsConnected = function(roomServerName) {
+	let checkIsConnected = m.checkIsConnected = (roomServerName) => {
 		//OPTIONAL: roomServerName
 		
 		if (roomServerName === undefined) {
@@ -303,26 +230,19 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		return isConnecteds[roomServerName];
 	};
 
-	m.enterRoom = enterRoom = function(params) {
+	let enterRoom = m.enterRoom = (params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.roomServerName
 		//REQUIRED: params.roomName
 		
-		var
-		// room server name
-		roomServerName = params.roomServerName,
-		
-		// room name
-		roomName = params.roomName,
-		
-		// enter room names
-		enterRoomNames;
+		let roomServerName = params.roomServerName;
+		let roomName = params.roomName;
 		
 		if (roomServerName === undefined) {
 			roomServerName = DEFAULT_ROOM_SERVER_NAME;
 		}
 		
-		enterRoomNames = enterRoomNameMap[roomServerName];
+		let enterRoomNames = enterRoomNameMap[roomServerName];
 		
 		if (enterRoomNames === undefined) {
 			enterRoomNames = enterRoomNameMap[roomServerName] = [];
@@ -338,27 +258,20 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		}
 	};
 
-	m.on = on = function(params, method) {
+	let on = m.on = (params, method) => {
 		//REQUIRED: params
 		//OPTIONAL: params.roomServerName
 		//REQUIRED: params.methodName
 		//REQUIRED: method
 		
-		var
-		// room server name
-		roomServerName = params.roomServerName,
-		
-		// method name
-		methodName = params.methodName,
-		
-		// on infos
-		onInfos;
+		let roomServerName = params.roomServerName;
+		let methodName = params.methodName;
 		
 		if (roomServerName === undefined) {
 			roomServerName = DEFAULT_ROOM_SERVER_NAME;
 		}
 		
-		onInfos = onInfoMap[roomServerName];
+		let onInfos = onInfoMap[roomServerName];
 		
 		if (onInfos === undefined) {
 			onInfos = onInfoMap[roomServerName] = [];
@@ -374,27 +287,20 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		}
 	};
 
-	m.off = off = function(params, method) {
+	let off = m.off = (params, method) => {
 		//REQUIRED: params
 		//OPTIONAL: params.roomServerName
 		//REQUIRED: params.methodName
 		//OPTIONAL: method
 		
-		var
-		// room server name
-		roomServerName = params.roomServerName,
-		
-		// method name
-		methodName = params.methodName,
-		
-		// on infos
-		onInfos;
+		let roomServerName = params.roomServerName;
+		let methodName = params.methodName;
 		
 		if (roomServerName === undefined) {
 			roomServerName = DEFAULT_ROOM_SERVER_NAME;
 		}
 		
-		onInfos = onInfoMap[roomServerName];
+		let onInfos = onInfoMap[roomServerName];
 		
 		if (innerOffs[roomServerName] !== undefined) {
 			innerOffs[roomServerName](methodName, method);
@@ -404,13 +310,13 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 			if (method !== undefined) {
 	
-				REMOVE(onInfos, function(onInfo) {
+				REMOVE(onInfos, (onInfo) => {
 					return onInfo.methodName === methodName && onInfo.method === method;
 				});
 	
 			} else {
 	
-				REMOVE(onInfos, function(onInfo) {
+				REMOVE(onInfos, (onInfo) => {
 					return onInfo.methodName === methodName;
 				});
 			}
@@ -421,25 +327,16 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		}
 	};
 
-	m.send = send = function(params, callback) {
+	let send = m.send = (params, callback) => {
 		//REQUIRED: params
 		//OPTIONAL: params.roomServerName
 		//REQUIRED: params.methodName
 		//REQUIRED: params.data
 		//OPTIONAL: callback
 		
-		var
-		// room server name
-		roomServerName = params.roomServerName,
-		
-		// method name
-		methodName = params.methodName,
-		
-		// data
-		data = params.data,
-		
-		// waiting send infos
-		waitingSendInfos;
+		let roomServerName = params.roomServerName;
+		let methodName = params.methodName;
+		let data = params.data;
 		
 		if (roomServerName === undefined) {
 			roomServerName = DEFAULT_ROOM_SERVER_NAME;
@@ -447,7 +344,7 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 		if (innerSends[roomServerName] === undefined) {
 			
-			waitingSendInfos = waitingSendInfoMap[roomServerName];
+			let waitingSendInfos = waitingSendInfoMap[roomServerName];
 		
 			if (waitingSendInfos === undefined) {
 				waitingSendInfos = waitingSendInfoMap[roomServerName] = [];
@@ -470,26 +367,19 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 		}
 	};
 
-	m.exitRoom = exitRoom = function(params) {
+	let exitRoom = m.exitRoom = (params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.roomServerName
 		//REQUIRED: params.roomName
 		
-		var
-		// room server name
-		roomServerName = params.roomServerName,
-		
-		// room name
-		roomName = params.roomName,
-		
-		// enter room names
-		enterRoomNames;
+		let roomServerName = params.roomServerName;
+		let roomName = params.roomName;
 		
 		if (roomServerName === undefined) {
 			roomServerName = DEFAULT_ROOM_SERVER_NAME;
 		}
 		
-		enterRoomNames = enterRoomNameMap[roomServerName];
+		let enterRoomNames = enterRoomNameMap[roomServerName];
 		
 		if (enterRoomNames === undefined) {
 			enterRoomNames = enterRoomNameMap[roomServerName] = [];
@@ -502,7 +392,7 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 			});
 		}
 		
-		EACH(enterRoomNames, function(enterRoomName, key) {
+		EACH(enterRoomNames, (enterRoomName, key) => {
 
 			if (enterRoomName === roomName) {
 
@@ -518,7 +408,7 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 	return {
 
-		run : function(params, connectionListenerOrListeners) {
+		run : (params, connectionListenerOrListeners) => {
 			//REQUIRED: params
 			//OPTIONAL: params.name
 			//REQUIRED: params.host
@@ -527,15 +417,10 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 			//OPTIONAL: connectionListenerOrListeners.success
 			//OPTIONAL: connectionListenerOrListeners.error
 
-			var
-			// name
-			name = params.name,
+			let name = params.name;
 			
-			// connection listener
-			connectionListener,
-
-			// error listener
-			errorListener;
+			let connectionListener;
+			let errorListener;
 			
 			if (name === undefined) {
 				name = DEFAULT_ROOM_SERVER_NAME;
@@ -557,24 +442,18 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 
 				error : errorListener,
 
-				success : function(on, off, send) {
+				success : (on, off, send) => {
 					
-					var
-					// enter room names
-					enterRoomNames = enterRoomNameMap[name],
-					
-					// on infos
-					onInfos = onInfoMap[name],
-					
-					// waiting send infos
-					waitingSendInfos = waitingSendInfoMap[name];
+					let enterRoomNames = enterRoomNameMap[name];
+					let onInfos = onInfoMap[name];
+					let waitingSendInfos = waitingSendInfoMap[name];
 
 					innerOns[name] = on;
 					innerOffs[name] = off;
 					innerSends[name] = send;
 
 					if (enterRoomNames !== undefined) {
-						EACH(enterRoomNames, function(roomName) {
+						EACH(enterRoomNames, (roomName) => {
 							send({
 								methodName : '__ENTER_ROOM',
 								data : roomName
@@ -583,13 +462,13 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 					}
 
 					if (onInfos !== undefined) {
-						EACH(onInfos, function(onInfo) {
+						EACH(onInfos, (onInfo) => {
 							on(onInfo.methodName, onInfo.method);
 						});
 					}
 					
 					if (waitingSendInfos !== undefined) {
-						EACH(waitingSendInfos, function(sendInfo) {
+						EACH(waitingSendInfos, (sendInfo) => {
 							send(sendInfo.params, sendInfo.callback);
 						});
 					}
@@ -602,7 +481,7 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 					isConnecteds[name] = true;
 
 					// when disconnected, rewait.
-					on('__DISCONNECTED', function() {
+					on('__DISCONNECTED', () => {
 
 						delete innerOns[name];
 						delete innerOffs[name];
@@ -619,23 +498,12 @@ global.CONNECT_TO_ROOM_SERVER = METHOD(function(m) {
 /*
  * 룸 서버를 생성하는 클래스
  */
-global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
-	'use strict';
+global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 
-	var
-	// init room func map
-	initRoomFuncMap = {},
-
-	// send map
-	sendMap = {},
-
-	// add init room func.
-	addInitRoomFunc,
-
-	// broadcast.
-	broadcast;
-
-	cls.addInitRoomFunc = addInitRoomFunc = function(roomName, initRoomFunc) {
+	let initRoomFuncMap = {};
+	let sendMap = {};
+	
+	let addInitRoomFunc = cls.addInitRoomFunc = (roomName, initRoomFunc) => {
 		//REQUIRED: roomName
 		//REQUIRED: initRoomFunc
 
@@ -646,23 +514,20 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 		initRoomFuncMap[roomName].push(initRoomFunc);
 	};
 
-	cls.broadcast = broadcast = function(params, _send) {
+	let broadcast = cls.broadcast = (params, _send) => {
 		//REQUIRED: params
 		//REQUIRED: params.roomName
 		//OPTIONAL: params.methodName
 		//OPTIONAL: params.data
 		//OPTIONAL: _send
 
-		var
-		// room name
-		roomName = params.roomName,
+		let roomName = params.roomName;
 
-		// sends
-		sends = sendMap[roomName];
+		let sends = sendMap[roomName];
 
 		if (sends !== undefined) {
 
-			EACH(sends, function(send) {
+			EACH(sends, (send) => {
 				
 				if (send !== _send) {
 					
@@ -677,7 +542,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 
 	return {
 
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 			//REQUIRED: params
 			//OPTIONAL: params.socketServerPort
 			//OPTIONAL: params.webSocketServerPort
@@ -690,7 +555,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 
 			if (SERVER_CLUSTERING.on !== undefined) {
 
-				SERVER_CLUSTERING.on('__LAUNCH_ROOM_SERVER__MESSAGE', function(params) {
+				SERVER_CLUSTERING.on('__LAUNCH_ROOM_SERVER__MESSAGE', (params) => {
 
 					broadcast(params);
 
@@ -704,48 +569,35 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 				});
 			}
 
-			MULTI_PROTOCOL_SOCKET_SERVER(params, function(clientInfo, on, off, send, disconnect) {
+			MULTI_PROTOCOL_SOCKET_SERVER(params, (clientInfo, on, off, send, disconnect) => {
 
-				var
-				// room counts
-				roomCounts = {},
-				
-				// method maps
-				methodMaps = {};
+				let roomCounts = {};
+				let methodMaps = {};
 
-				on('__ENTER_ROOM', function(roomName) {
+				on('__ENTER_ROOM', (roomName) => {
 
-					var
-					// init room funcs
-					initRoomFuncs = initRoomFuncMap[roomName],
-					
-					// sends
-					sends = sendMap[roomName],
-					
-					// method map
-					methodMap;
+					let initRoomFuncs = initRoomFuncMap[roomName];
+					let sends = sendMap[roomName];
 					
 					if (roomCounts[roomName] === undefined) {
 						roomCounts[roomName] = 1;
 						
-						methodMap = methodMaps[roomName] = {};
+						let methodMap = methodMaps[roomName] = {};
 
 						if (initRoomFuncs !== undefined) {
 
-							EACH(initRoomFuncs, function(initRoomFunc) {
+							EACH(initRoomFuncs, (initRoomFunc) => {
+								
 								initRoomFunc(clientInfo,
 
 								// on.
-								function(methodName, method) {
+								(methodName, method) => {
 									//REQUIRED: methodName
 									//REQUIRED: method
 									
-									var
-									// real method name
-									realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName,
+									let realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName;
 									
-									// methods
-									methods = methodMap[realMethodName];
+									let methods = methodMap[realMethodName];
 					
 									if (methods === undefined) {
 										methods = methodMap[realMethodName] = [];
@@ -757,16 +609,13 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 								},
 
 								// off.
-								function(methodName, method) {
+								(methodName, method) => {
 									//REQUIRED: methodName
 									//OPTIONAL: method
 									
-									var
-									// real method name
-									realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName,
+									let realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName;
 									
-									// methods
-									methods = methodMap[realMethodName];
+									let methods = methodMap[realMethodName];
 					
 									if (methods !== undefined) {
 					
@@ -786,18 +635,14 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 								},
 
 								// send.
-								function(params, callback) {
+								(params, callback) => {
 									//REQUIRED: params
 									//OPTIONAL: params.methodName
 									//OPTIONAL: params.data
 									//OPTIONAL: callback
 									
-									var
-									// method name
-									methodName = params.methodName,
-									
-									// data
-									data = params.data;
+									let methodName = params.methodName;
+									let data = params.data;
 									
 									send({
 										methodName : roomName + '/' + methodName,
@@ -805,18 +650,14 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 									}, callback);
 								},
 								
-								// broadcast except me
-								function(params) {
+								// broadcast except me.
+								(params) => {
 									//REQUIRED: params
 									//OPTIONAL: params.methodName
 									//OPTIONAL: params.data
 									
-									var
-									// method name
-									methodName = params.methodName,
-									
-									// data
-									data = params.data;
+									let methodName = params.methodName;
+									let data = params.data;
 									
 									LAUNCH_ROOM_SERVER.broadcast({
 										roomName : roomName,
@@ -864,7 +705,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 					}
 				});
 
-				on('__EXIT_ROOM', function(roomName) {
+				on('__EXIT_ROOM', (roomName) => {
 					
 					if (roomCounts[roomName] !== undefined) {
 						roomCounts[roomName] -= 1;
@@ -882,8 +723,8 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 							delete roomCounts[roomName];
 							
 							// off all room's methods.
-							EACH(methodMaps[roomName], function(methods, methodName) {
-								EACH(methods, function(method) {
+							EACH(methodMaps[roomName], (methods, methodName) => {
+								EACH(methods, (method) => {
 									
 									if (methodName === '__DISCONNECTED') {
 										method();
@@ -896,9 +737,9 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 					}
 				});
 
-				on('__DISCONNECTED', function() {
+				on('__DISCONNECTED', () => {
 
-					EACH(roomCounts, function(roomCount, roomName) {
+					EACH(roomCounts, (roomCount, roomName) => {
 
 						REMOVE({
 							array : sendMap[roomName],
@@ -919,15 +760,14 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * 룸을 생성합니다.
 	 */
 	box.ROOM = METHOD({
 
-		run : function(name, connectionListener) {
+		run : (name, connectionListener) => {
 			//REQUIRED: name
 			//REQUIRED: connectionListener
 

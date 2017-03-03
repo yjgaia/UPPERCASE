@@ -1,50 +1,19 @@
-/**
+/*
  * 이벤트 정보를 제공하는 객체를 생성하는 E 클래스
  */
 global.E = CLASS({
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//REQUIRED: params.e
 		//REQUIRED: params.el
-
-		var
-		// e
-		e = params.e,
-
-		// el
-		el = params.el,
-
-		// check is descendant.
-		checkIsDescendant,
-
-		// stop default.
-		stopDefault,
-
-		// stop bubbling.
-		stopBubbling,
-
-		// stop default and bubbling.
-		stop,
-
-		// get left.
-		getLeft,
-
-		// get top.
-		getTop,
-
-		// get key.
-		getKey,
 		
-		// get wheel delta.
-		getWheelDelta;
+		let e = params.e;
+		let el = params.el;
 
-		checkIsDescendant = function(parent, child) {
+		let checkIsDescendant = (parent, child) => {
 
-			var
-			// node
-			node = child.parentNode;
+			let node = child.parentNode;
 
 			while (node !== TO_DELETE) {
 
@@ -58,33 +27,31 @@ global.E = CLASS({
 			return false;
 		};
 
-		self.stopDefault = stopDefault = function() {
+		let stopDefault = self.stopDefault = () => {
 			e.preventDefault();
 		};
 
-		self.stopBubbling = stopBubbling = function() {
+		let stopBubbling = self.stopBubbling = () => {
 			e.stopPropagation();
 		};
 
-		self.stop = stop = function() {
+		let stop = self.stop = () => {
 			stopDefault();
 			stopBubbling();
 		};
 
-		self.getLeft = getLeft = function() {
-
-			var
-			// touch page x
-			touchPageX;
-
+		let getLeft = self.getLeft = () => {
+			
 			// if is touch mode
 			if (INFO.checkIsTouchMode() === true) {
+				
+				let touchPageX;
 
 				if (e.touches !== undefined && e.touches[0] !== undefined) {
 
 					// first touch position.
 
-					EACH(e.touches, function(touch) {
+					EACH(e.touches, (touch) => {
 						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
 							touchPageX = touch.pageX;
 							return false;
@@ -104,7 +71,7 @@ global.E = CLASS({
 
 					// first touch position.
 
-					EACH(e.changedTouches, function(touch) {
+					EACH(e.changedTouches, (touch) => {
 						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
 							touchPageX = touch.pageX;
 							return false;
@@ -124,20 +91,18 @@ global.E = CLASS({
 			return e.pageX;
 		};
 
-		self.getTop = getTop = function() {
-
-			var
-			// touch page y
-			touchPageY;
+		let getTop = self.getTop = () => {
 
 			// if is touch mode
 			if (INFO.checkIsTouchMode() === true) {
+				
+				let touchPageY;
 
 				if (e.touches !== undefined && e.touches[0] !== undefined) {
 
 					// first touch position.
 
-					EACH(e.touches, function(touch) {
+					EACH(e.touches, (touch) => {
 						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
 							touchPageY = touch.pageY;
 							return false;
@@ -157,7 +122,7 @@ global.E = CLASS({
 
 					// first touch position.
 
-					EACH(e.changedTouches, function(touch) {
+					EACH(e.changedTouches, (touch) => {
 						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
 							touchPageY = touch.pageY;
 							return false;
@@ -177,11 +142,11 @@ global.E = CLASS({
 			return e.pageY;
 		};
 
-		self.getKey = getKey = function() {
+		let getKey = self.getKey = () => {
 			return e.key;
 		};
 		
-		self.getWheelDelta = getWheelDelta = function() {
+		let getWheelDelta = self.getWheelDelta = () => {
 			return e.deltaY;
 		};
 	}

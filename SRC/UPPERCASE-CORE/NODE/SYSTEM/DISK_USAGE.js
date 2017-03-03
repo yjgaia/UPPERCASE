@@ -1,27 +1,20 @@
-/**
+/*
  * 디스크 사용률을 반환합니다.
  */
-global.DISK_USAGE = METHOD(function() {
-	'use strict';
+global.DISK_USAGE = METHOD(() => {
 
-	var
-	//IMPORT: diskspace
-	diskspace = require('diskspace');
+	let diskspace = require('diskspace');
 
 	return {
 
-		run : function(drive, callbackOrHandlers) {
+		run : (drive, callbackOrHandlers) => {
 			//OPTIONAL: drive	확인할 디스크 드라이브
 			//REQUIRED: callbackOrHandlers
 			//OPTIONAL: callbackOrHandlers.error
 			//REQUIRED: callbackOrHandlers.success
-
-			var
-			// error handler.
-			errorHandler,
 			
-			// callback.
-			callback;
+			let errorHandler;
+			let callback;
 
 			if (callbackOrHandlers === undefined) {
 				callbackOrHandlers = drive;
@@ -43,7 +36,7 @@ global.DISK_USAGE = METHOD(function() {
 				}
 			}
 			
-			diskspace.check(drive, function(err, total, free, status) {
+			diskspace.check(drive, (err, total, free, status) => {
 				if (status === 'READY') {
 					callback((1 - free / total) * 100);
 				} else if (errorHandler !== undefined) {

@@ -1,23 +1,12 @@
 /*
  * 룸 서버를 생성하는 클래스
  */
-global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
-	'use strict';
+global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 
-	var
-	// init room func map
-	initRoomFuncMap = {},
-
-	// send map
-	sendMap = {},
-
-	// add init room func.
-	addInitRoomFunc,
-
-	// broadcast.
-	broadcast;
-
-	cls.addInitRoomFunc = addInitRoomFunc = function(roomName, initRoomFunc) {
+	let initRoomFuncMap = {};
+	let sendMap = {};
+	
+	let addInitRoomFunc = cls.addInitRoomFunc = (roomName, initRoomFunc) => {
 		//REQUIRED: roomName
 		//REQUIRED: initRoomFunc
 
@@ -28,23 +17,20 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 		initRoomFuncMap[roomName].push(initRoomFunc);
 	};
 
-	cls.broadcast = broadcast = function(params, _send) {
+	let broadcast = cls.broadcast = (params, _send) => {
 		//REQUIRED: params
 		//REQUIRED: params.roomName
 		//OPTIONAL: params.methodName
 		//OPTIONAL: params.data
 		//OPTIONAL: _send
 
-		var
-		// room name
-		roomName = params.roomName,
+		let roomName = params.roomName;
 
-		// sends
-		sends = sendMap[roomName];
+		let sends = sendMap[roomName];
 
 		if (sends !== undefined) {
 
-			EACH(sends, function(send) {
+			EACH(sends, (send) => {
 				
 				if (send !== _send) {
 					
@@ -59,7 +45,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 
 	return {
 
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 			//REQUIRED: params
 			//OPTIONAL: params.socketServerPort
 			//OPTIONAL: params.webSocketServerPort
@@ -72,7 +58,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 
 			if (SERVER_CLUSTERING.on !== undefined) {
 
-				SERVER_CLUSTERING.on('__LAUNCH_ROOM_SERVER__MESSAGE', function(params) {
+				SERVER_CLUSTERING.on('__LAUNCH_ROOM_SERVER__MESSAGE', (params) => {
 
 					broadcast(params);
 
@@ -86,48 +72,35 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 				});
 			}
 
-			MULTI_PROTOCOL_SOCKET_SERVER(params, function(clientInfo, on, off, send, disconnect) {
+			MULTI_PROTOCOL_SOCKET_SERVER(params, (clientInfo, on, off, send, disconnect) => {
 
-				var
-				// room counts
-				roomCounts = {},
-				
-				// method maps
-				methodMaps = {};
+				let roomCounts = {};
+				let methodMaps = {};
 
-				on('__ENTER_ROOM', function(roomName) {
+				on('__ENTER_ROOM', (roomName) => {
 
-					var
-					// init room funcs
-					initRoomFuncs = initRoomFuncMap[roomName],
-					
-					// sends
-					sends = sendMap[roomName],
-					
-					// method map
-					methodMap;
+					let initRoomFuncs = initRoomFuncMap[roomName];
+					let sends = sendMap[roomName];
 					
 					if (roomCounts[roomName] === undefined) {
 						roomCounts[roomName] = 1;
 						
-						methodMap = methodMaps[roomName] = {};
+						let methodMap = methodMaps[roomName] = {};
 
 						if (initRoomFuncs !== undefined) {
 
-							EACH(initRoomFuncs, function(initRoomFunc) {
+							EACH(initRoomFuncs, (initRoomFunc) => {
+								
 								initRoomFunc(clientInfo,
 
 								// on.
-								function(methodName, method) {
+								(methodName, method) => {
 									//REQUIRED: methodName
 									//REQUIRED: method
 									
-									var
-									// real method name
-									realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName,
+									let realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName;
 									
-									// methods
-									methods = methodMap[realMethodName];
+									let methods = methodMap[realMethodName];
 					
 									if (methods === undefined) {
 										methods = methodMap[realMethodName] = [];
@@ -139,16 +112,13 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 								},
 
 								// off.
-								function(methodName, method) {
+								(methodName, method) => {
 									//REQUIRED: methodName
 									//OPTIONAL: method
 									
-									var
-									// real method name
-									realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName,
+									let realMethodName = methodName === '__DISCONNECTED' ? methodName : roomName + '/' + methodName;
 									
-									// methods
-									methods = methodMap[realMethodName];
+									let methods = methodMap[realMethodName];
 					
 									if (methods !== undefined) {
 					
@@ -168,18 +138,14 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 								},
 
 								// send.
-								function(params, callback) {
+								(params, callback) => {
 									//REQUIRED: params
 									//OPTIONAL: params.methodName
 									//OPTIONAL: params.data
 									//OPTIONAL: callback
 									
-									var
-									// method name
-									methodName = params.methodName,
-									
-									// data
-									data = params.data;
+									let methodName = params.methodName;
+									let data = params.data;
 									
 									send({
 										methodName : roomName + '/' + methodName,
@@ -187,18 +153,14 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 									}, callback);
 								},
 								
-								// broadcast except me
-								function(params) {
+								// broadcast except me.
+								(params) => {
 									//REQUIRED: params
 									//OPTIONAL: params.methodName
 									//OPTIONAL: params.data
 									
-									var
-									// method name
-									methodName = params.methodName,
-									
-									// data
-									data = params.data;
+									let methodName = params.methodName;
+									let data = params.data;
 									
 									LAUNCH_ROOM_SERVER.broadcast({
 										roomName : roomName,
@@ -246,7 +208,7 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 					}
 				});
 
-				on('__EXIT_ROOM', function(roomName) {
+				on('__EXIT_ROOM', (roomName) => {
 					
 					if (roomCounts[roomName] !== undefined) {
 						roomCounts[roomName] -= 1;
@@ -264,8 +226,8 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 							delete roomCounts[roomName];
 							
 							// off all room's methods.
-							EACH(methodMaps[roomName], function(methods, methodName) {
-								EACH(methods, function(method) {
+							EACH(methodMaps[roomName], (methods, methodName) => {
+								EACH(methods, (method) => {
 									
 									if (methodName === '__DISCONNECTED') {
 										method();
@@ -278,9 +240,9 @@ global.LAUNCH_ROOM_SERVER = CLASS(function(cls) {
 					}
 				});
 
-				on('__DISCONNECTED', function() {
+				on('__DISCONNECTED', () => {
 
-					EACH(roomCounts, function(roomCount, roomName) {
+					EACH(roomCounts, (roomCount, roomName) => {
 
 						REMOVE({
 							array : sendMap[roomName],

@@ -1,49 +1,40 @@
-TEST('EACH', function(check) {
-	'use strict';
+TEST('EACH', (check) => {
 
-	var
-	// just value
-	value = 1,
-
-	// data
-	data = {
+	let value = 1;
+	
+	let data = {
 		a : 1,
 		b : 2,
 		c : 3
-	},
+	};
+	
+	let array = [1, 2, 3];
+	
+	let sum = 0;
 
-	// array
-	array = [1, 2, 3],
-
-	// sum
-	sum = 0,
-
-	// function
-	func;
-
-	EACH(value, function(value, i) {
+	EACH(value, (value, i) => {
 		console.log('value each - ' + i + ': ' + value);
 		sum += value;
 	});
 
 	check(sum === 0);
 
-	EACH(data, function(value, name) {
+	EACH(data, (value, name) => {
 		console.log('data each - ' + name + ': ' + value);
 		sum += value;
 	});
 
 	check(sum === 6);
 
-	EACH(array, function(value, i) {
+	EACH(array, (value, i) => {
 		console.log('array each - ' + i + ': ' + value);
 		sum += value;
 	});
 
 	check(sum === 12);
 
-	func = function() {
-		EACH(arguments, function(value, i) {
+	let func = () => {
+		EACH(arguments, (value, i) => {
 			console.log('arguments each - ' + i + ': ' + value);
 			sum += value;
 		});

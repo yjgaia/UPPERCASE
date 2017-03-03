@@ -1,5 +1,4 @@
-TEST('WEB_SERVER', function(check) {
-	'use strict';
+TEST('WEB_SERVER', (check) => {
 	
 	// 리소스를 캐싱하지 않으려면 dev mode가 true여야함
 	CONFIG.isDevMode = true;
@@ -11,24 +10,17 @@ TEST('WEB_SERVER', function(check) {
 	
 	/*
 
-	CPU_CLUSTERING(function(workerData, on, off, broadcast) {
+	CPU_CLUSTERING((workerData, on, off, broadcast) => {
 		
-		var
-		// session store
-		sessionStore = SHARED_STORE('sessionStore');
+		let sessionStore = SHARED_STORE('sessionStore');
 
-		WEB_SERVER(8123, function(requestInfo, response) {
+		WEB_SERVER(8123, (requestInfo, response) => {
 
-			var
-			// session key
-			sessionKey = requestInfo.cookies.__SESSION_KEY,
-
-			// session
-			session;
+			let sessionKey = requestInfo.cookies.__SESSION_KEY;
 
 			if (sessionKey !== undefined) {
 
-				session = sessionStore.get(sessionKey);
+				let session = sessionStore.get(sessionKey);
 
 				if (session === undefined) {
 

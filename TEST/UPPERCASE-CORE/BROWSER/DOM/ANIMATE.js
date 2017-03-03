@@ -1,9 +1,6 @@
-TEST('ANIMATE', function(check) {
-	'use strict';
+TEST('ANIMATE', (check) => {
 
-	var
-	// animating div
-	animatingDiv = DIV({
+	let animatingDiv = DIV({
 		style : {
 			position : 'fixed',
 			left : 50,
@@ -44,7 +41,7 @@ TEST('ANIMATE', function(check) {
 		duration : 3,
 		timingFunction : 'linear'
 
-	}, function() {
+	}, () => {
 
 		console.log('done!');
 
@@ -75,7 +72,7 @@ TEST('ANIMATE', function(check) {
 
 		duration : 3
 
-	}, function() {
+	}, () => {
 
 		console.log('done!');
 

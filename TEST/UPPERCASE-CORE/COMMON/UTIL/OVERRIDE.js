@@ -1,15 +1,12 @@
-TEST('OVERRIDE', function(check) {
-	'use strict';
+TEST('OVERRIDE', (check) => {
 
-	var
-	// function
-	func = function() {
+	let func = () => {
 		console.log('a');
 	};
 
-	OVERRIDE(func, function(origin) {
+	OVERRIDE(func, (origin) => {
 
-		func = function() {
+		func = () => {
 			origin();
 			console.log('b');
 		};

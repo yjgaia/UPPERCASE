@@ -1,8 +1,8 @@
-FOR_BOX(function(box) {
+FOR_BOX((box) => {
 
 	box.SHOW_WARNING = METHOD({
 
-		run : function(tag, warningMsg, params) {
+		run : (tag, warningMsg, params) => {
 			//REQUIRED: tag
 			//REQUIRED: warningMsg
 			//OPTIONAL: params

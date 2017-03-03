@@ -1,5 +1,4 @@
-TEST('SCROLL_LEFT', function(check) {
-	'use strict';
+TEST('SCROLL_LEFT', (check) => {
 
 	// get scroll left.
 	console.log(SCROLL_LEFT());

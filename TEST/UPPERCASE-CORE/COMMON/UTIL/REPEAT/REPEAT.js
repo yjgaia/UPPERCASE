@@ -1,11 +1,8 @@
-TEST('REPEAT', function(check) {
-	'use strict';
+TEST('REPEAT', (check) => {
 
-	var
-	// count
-	count = 0;
+	let count = 0;
 
-	REPEAT(10, function(i) {
+	REPEAT(10, (i) => {
 
 		check(i === count);
 
@@ -17,7 +14,7 @@ TEST('REPEAT', function(check) {
 	REPEAT({
 		start : 5,
 		end : 10
-	}, function(i) {
+	}, (i) => {
 
 		check(i === count);
 
@@ -29,9 +26,9 @@ TEST('REPEAT', function(check) {
 	REPEAT({
 		start : 1,
 		limit : 5
-	}, function(i) {
+	}, (i) => {
 
-		TEST('REPEAT', function(check) {
+		TEST('REPEAT', (check) => {
 			check(i === count);
 		});
 
@@ -43,7 +40,7 @@ TEST('REPEAT', function(check) {
 	REPEAT({
 		start : 3,
 		end : 1
-	}, function(i) {
+	}, (i) => {
 
 		check(i === count);
 

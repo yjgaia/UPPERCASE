@@ -1,5 +1,4 @@
-TEST('TITLE', function(check) {
-	'use strict';
+TEST('TITLE', (check) => {
 
 	// change browser's title.
 	TITLE('Title Changed.');

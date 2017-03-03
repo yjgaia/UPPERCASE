@@ -1,18 +1,16 @@
-OVERRIDE(BOX, function(origin) {
+OVERRIDE(BOX, (origin) => {
 	
-	/**
+	/*
 	 * BOX를 생성합니다.
 	 */
-	global.BOX = METHOD(function(m) {
-		'use strict';
+	global.BOX = METHOD((m) => {
 		
 		m.getAllBoxes = origin.getAllBoxes;
 		
 		return {
 			
-			run : function(boxName) {
+			run : (boxName) => {
 				//REQUIRED: boxName
-				'use strict';
 				
 				if (NODE_CONFIG[boxName] === undefined) {
 					NODE_CONFIG[boxName] = {};

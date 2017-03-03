@@ -1,17 +1,13 @@
-/**
+/*
  * HTML body 태그와 대응되는 객체
  */
 global.BODY = OBJECT({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'body'
 		};

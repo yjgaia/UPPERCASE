@@ -1,9 +1,6 @@
-TEST('VIDEO', function(check) {
-	'use strict';
+TEST('VIDEO', (check) => {
 	
-	var
-	// video
-	video = VIDEO({
+	let video = VIDEO({
 		webm : 'UPPERCASE-CORE/video.webm',
 		ogg : 'UPPERCASE-CORE/video.ogg',
 		mp4 : 'UPPERCASE-CORE/video.mp4',
@@ -14,11 +11,11 @@ TEST('VIDEO', function(check) {
 	
 	video.play();
 	
-	/*DELAY(3, function() {
+	/*DELAY(3, () => {
 		video.pause();
 	});
 	
-	DELAY(5, function() {
+	DELAY(5, () => {
 		video.stop();
 	});*/
 });

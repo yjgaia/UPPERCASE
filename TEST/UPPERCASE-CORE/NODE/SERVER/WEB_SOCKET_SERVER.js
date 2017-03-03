@@ -1,15 +1,12 @@
-TEST('WEB_SOCKET_SERVER', function(check) {
-	'use strict';
+TEST('WEB_SOCKET_SERVER', (check) => {
 	
-	WEB_SOCKET_SERVER(WEB_SERVER(8125), function(clientInfo, on, off, send, disconnect) {
+	WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
 
-		var
-		// roles
-		roles = [];
+		let roles = [];
 
 		console.log('CONNECTED!', clientInfo);
 
-		on('message', function(data, ret) {
+		on('message', (data, ret) => {
 
 			console.log('SERVER!', data, CPU_CLUSTERING.getWorkerId());
 
@@ -21,18 +18,18 @@ TEST('WEB_SOCKET_SERVER', function(check) {
 			data : {
 				msg : 'message from server. ' + CPU_CLUSTERING.getWorkerId()
 			}
-		}, function(retMsg) {
+		}, (retMsg) => {
 
 			console.log('RETURN MESSAGE:', retMsg);
 		});
 
-		on('login', function(data) {
+		on('login', (data) => {
 			if (data.username === 'test' && data.password === '1234') {
 				roles.push('USER');
 			}
 		});
 
-		on('checkRole', function(role) {
+		on('checkRole', (role) => {
 
 			if (CHECK_IS_IN({
 				array : roles,
@@ -44,7 +41,7 @@ TEST('WEB_SOCKET_SERVER', function(check) {
 		});
 
 		// when disconnected
-		on('__DISCONNECTED', function() {
+		on('__DISCONNECTED', () => {
 			console.log('DISCONNECTED!', CPU_CLUSTERING.getWorkerId());
 		});
 	});

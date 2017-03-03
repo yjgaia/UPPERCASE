@@ -1,15 +1,12 @@
-RUN(function() {
-	'use strict';
+RUN(() => {
 	
-	var
-	// require.
-	require = function(path) {
-		var script = document.createElement('script');
+	let require = (path) => {
+		let script = document.createElement('script');
 		script.src = 'UPPERCASE-CORE/' + path;
 		document.body.appendChild(script);
 	};
 	
-	// COMMON 테스트
+	/*// COMMON 테스트
 	require('./COMMON/TO_DELETE.js');
 	require('./COMMON/METHOD.js');
 	
@@ -139,5 +136,7 @@ RUN(function() {
 	require('./BROWSER/CONSOLE/SHOW_WARNING.js');
 	
 	// SOUND
-	require('./BROWSER/SOUND.js');
+	require('./BROWSER/SOUND.js');*/
+	
+	require('./BROWSER/ADD_FONT.js');
 });

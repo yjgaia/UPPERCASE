@@ -1,18 +1,15 @@
-/**
+/*
  * 파일의 내용을 불러옵니다.
  * 
  * 내용을 Buffer형으로 불러오기 때문에, 내용을 문자열로 불러오려면 toString 함수를 이용하시기 바랍니다.
  */
-global.READ_FILE = METHOD(function() {
-	'use strict';
-
-	var
-	//IMPORT: fs
-	fs = require('fs');
+global.READ_FILE = METHOD(() => {
+	
+	let FS = require('fs');
 
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	불러올 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -21,21 +18,12 @@ global.READ_FILE = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
-
-			// is sync
-			isSync,
-
-			// not eixsts handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback;
+			let path;
+			let isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -58,19 +46,15 @@ global.READ_FILE = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
-						fs.stat(path, function(error, stat) {
-
-							var
-							// error msg
-							errorMsg;
-
+						FS.stat(path, (error, stat) => {
+							
 							if (error !== TO_DELETE) {
 
-								errorMsg = error.toString();
+								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
@@ -90,15 +74,11 @@ global.READ_FILE = METHOD(function() {
 
 							} else {
 
-								fs.readFile(path, function(error, buffer) {
-
-									var
-									// error msg
-									errorMsg;
+								FS.readFile(path, (error, buffer) => {
 
 									if (error !== TO_DELETE) {
 
-										errorMsg = error.toString();
+										let errorMsg = error.toString();
 
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
@@ -129,14 +109,7 @@ global.READ_FILE = METHOD(function() {
 			// when sync mode
 			else {
 
-				return RUN(function() {
-
-					var
-					// error msg
-					errorMsg,
-
-					// buffer
-					buffer;
+				return RUN(() => {
 
 					try {
 
@@ -145,7 +118,7 @@ global.READ_FILE = METHOD(function() {
 							isSync : true
 						}) === true) {
 
-							if (fs.statSync(path).isDirectory() === true) {
+							if (FS.statSync(path).isDirectory() === true) {
 
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
@@ -157,7 +130,7 @@ global.READ_FILE = METHOD(function() {
 								
 							} else {
 								
-								buffer = fs.readFileSync(path);
+								let buffer = FS.readFileSync(path);
 			
 								if (callback !== undefined) {
 									callback(buffer);
@@ -181,7 +154,7 @@ global.READ_FILE = METHOD(function() {
 
 						if (error !== TO_DELETE) {
 
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
@@ -191,7 +164,7 @@ global.READ_FILE = METHOD(function() {
 						}
 					}
 
-					// do not run callback.
+					// return undefined.
 					return;
 				});
 			}

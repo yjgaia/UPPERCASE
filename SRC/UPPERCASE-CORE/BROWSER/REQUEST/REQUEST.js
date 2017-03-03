@@ -1,10 +1,9 @@
-/**
+/*
  * HTTP 요청을 보냅니다.
  */
 global.REQUEST = METHOD({
 
-	run : function(params, responseListenerOrListeners) {
-		'use strict';
+	run : (params, responseListenerOrListeners) => {
 		//REQUIRED: params
 		//REQUIRED: params.method	요청 메소드. GET, POST, PUT, DELETE를 설정할 수 있습니다.
 		//OPTIONAL: params.isSecure	HTTPS 프로토콜인지 여부
@@ -20,48 +19,19 @@ global.REQUEST = METHOD({
 		//OPTIONAL: responseListenerOrListeners.error
 		//OPTIONAL: responseListenerOrListeners.success
 
-		var
-		// method
-		method = params.method,
+		let method = params.method;
+		let isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure;
+		let host = params.host === undefined ? BROWSER_CONFIG.host : params.host;
+		let port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port;
+		let uri = params.uri;
+		let url = params.url;
+		let paramStr = params.paramStr;
+		let _params = params.params;
+		let data = params.data;
+		let headers = params.headers;
 		
-		// is secure
-		isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure,
-		
-		// host
-		host = params.host === undefined ? BROWSER_CONFIG.host : params.host,
-
-		// port
-		port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port,
-
-		// uri
-		uri = params.uri,
-		
-		// url
-		url = params.url,
-
-		// param str
-		paramStr = params.paramStr,
-
-		// params
-		_params = params.params,
-
-		// data
-		data = params.data,
-		
-		// headers
-		headers = params.headers,
-
-		// response listener
-		responseListener,
-
-		// error listener
-		errorListener,
-
-		// url
-		url,
-
-		// http request
-		req;
+		let responseListener;
+		let errorListener;
 
 		method = method.toUpperCase();
 		
@@ -82,7 +52,7 @@ global.REQUEST = METHOD({
 		
 		if (_params !== undefined) {
 			
-			EACH(_params, function(value, name) {
+			EACH(_params, (value, name) => {
 				
 				if (paramStr === undefined) {
 					paramStr = '';
@@ -120,15 +90,13 @@ global.REQUEST = METHOD({
 			body : paramStr,
 			credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : headers === undefined ? undefined : new Headers(headers)
-		})).then(function(response) {
+		})).then((response) => {
 			return response.text();
-		}).then(function(responseText) {
+		}).then((responseText) => {
 			responseListener(responseText);
-		}).catch(function(error) {
+		}).catch((error) => {
 			
-			var
-			// error msg
-			errorMsg = error.toString();
+			let errorMsg = error.toString();
 
 			if (errorListener !== undefined) {
 				errorListener(errorMsg);

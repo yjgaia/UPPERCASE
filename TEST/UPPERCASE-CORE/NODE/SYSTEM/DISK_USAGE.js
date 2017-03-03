@@ -1,19 +1,18 @@
-TEST('DISK_USAGE', function(check) {
-	'use strict';
+TEST('DISK_USAGE', (check) => {
 	
-	DISK_USAGE(function(usage) {
+	DISK_USAGE((usage) => {
 		console.log(usage);
 	});
 	
-	DISK_USAGE('c:', function(usage) {
+	DISK_USAGE('c:', (usage) => {
 		console.log(usage);
 	});
 	
 	DISK_USAGE('/', {
-		error : function() {
+		error : () => {
 			console.log('리눅스나 유닉스 기반의 운영체제가 아닙니다.');
 		},
-		success : function(usage) {
+		success : (usage) => {
 			console.log(usage);
 		}
 	});

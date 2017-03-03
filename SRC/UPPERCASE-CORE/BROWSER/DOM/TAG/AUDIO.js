@@ -1,24 +1,19 @@
-/**
+/*
  * HTML audio 태그와 대응되는 클래스
  */
 global.AUDIO = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'audio'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -29,24 +24,9 @@ global.AUDIO = CLASS({
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// mp3
-		mp3 = params.mp3,
-
-		// ogg
-		ogg = params.ogg,
-		
-		// is loop
-		isLoop = params.isLoop,
-		
-		// play.
-		play,
-		
-		// pause.
-		pause,
-		
-		// stop.
-		stop;
+		let mp3 = params.mp3;
+		let ogg = params.ogg;
+		let isLoop = params.isLoop;
 		
 		if (ogg !== undefined && self.getEl().canPlayType('audio/ogg') !== '') {
 			self.getEl().src = ogg;
@@ -66,15 +46,15 @@ global.AUDIO = CLASS({
 			});
 		}
 		
-		self.play = play = function() {
+		let play = self.play = () => {
 			self.getEl().play();
 		};
 		
-		self.pause = pause = function() {
+		let pause = self.pause = () => {
 			self.getEl().pause();
 		};
 		
-		self.stop = stop = function() {
+		let stop = self.stop = () => {
 			self.getEl().pause();
 			self.getEl().currentTime = 0;
 		};

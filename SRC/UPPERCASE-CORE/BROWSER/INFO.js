@@ -1,38 +1,16 @@
-/**
+/*
  * 웹 브라우저 정보를 담고 있는 객체
  */
 global.INFO = OBJECT({
 
-	init : function(inner, self) {
-		'use strict';
+	init : (inner, self) => {
 
-		var
-		// is touch mode
-		isTouchMode = global.ontouchstart !== undefined,
-		
-		// is touching
-		isTouching,
-		
-		// browser info
-		browserInfo,
+		let isTouchMode = global.ontouchstart !== undefined;
+		let isTouching;
 
-		// get lang.
-		getLang,
+		let getLang = self.getLang = () => {
 
-		// change lang.
-		changeLang,
-
-		// check is touch mode.
-		checkIsTouchMode,
-
-		// get browser info.
-		getBrowserInfo;
-
-		self.getLang = getLang = function() {
-
-			var
-			// language
-			lang = STORE('__INFO').get('lang');
+			let lang = STORE('__INFO').get('lang');
 
 			if (lang === undefined) {
 
@@ -48,7 +26,7 @@ global.INFO = OBJECT({
 			return lang;
 		};
 
-		self.changeLang = changeLang = function(lang) {
+		let changeLang = self.changeLang = (lang) => {
 			//REQUIRED: lang
 
 			STORE('__INFO').save({
@@ -59,11 +37,11 @@ global.INFO = OBJECT({
 			location.reload();
 		};
 
-		self.checkIsTouchMode = checkIsTouchMode = function() {
+		let checkIsTouchMode = self.checkIsTouchMode = () => {
 			return isTouchMode;
 		};
 
-		self.getBrowserInfo = getBrowserInfo = function() {
+		let getBrowserInfo = self.getBrowserInfo = () => {
 			// using bowser. (https://github.com/ded/bowser)
 			return {
 				name : bowser.name,
@@ -71,19 +49,19 @@ global.INFO = OBJECT({
 			};
 		};
 		
-		EVENT_LOW('mousemove', function() {
+		EVENT_LOW('mousemove', () => {
 			if (isTouching !== true) {
 				isTouchMode = false;
 			}
 		});
 		
-		EVENT_LOW('touchstart', function() {
+		EVENT_LOW('touchstart', () => {
 			isTouchMode = true;
 			isTouching = true;
 		});
 		
-		EVENT_LOW('touchend', function() {
-			DELAY(function() {
+		EVENT_LOW('touchend', () => {
+			DELAY(() => {
 				isTouching = false;
 			});
 		});

@@ -1,9 +1,6 @@
-TEST('TO_DELETE', function(check) {
-	'use strict';
+TEST('TO_DELETE', (check) => {
 
-	var
-	// data
-	data = {
+	let data = {
 		a : 1,
 		b : 2,
 		c : 3

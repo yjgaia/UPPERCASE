@@ -1,9 +1,6 @@
-TEST('CHECK_IS_EMPTY_DATA', function(check) {
-	'use strict';
+TEST('CHECK_IS_EMPTY_DATA', (check) => {
 
-	var
-	// empty data
-	data = {};
+	let data = {};
 
 	check(CHECK_IS_EMPTY_DATA(data) === true);
 });

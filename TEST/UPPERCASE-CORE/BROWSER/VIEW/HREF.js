@@ -1,5 +1,4 @@
-TEST('HREF', function(check) {
-	'use strict';
+TEST('HREF', (check) => {
 	
 	if (history.pushState !== undefined) {
 		

@@ -1,5 +1,4 @@
-TEST('DOWNLOAD', function(check) {
-	'use strict';
+TEST('DOWNLOAD', (check) => {
 
 	DOWNLOAD({
 		url : 'https://github.com/Hanul/UPPERCASE/archive/master.zip',

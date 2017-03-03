@@ -1,30 +1,22 @@
-TEST('COMBINE', function(check) {
-	'use strict';
+TEST('COMBINE', (check) => {
 
-	var
-	// data1
-	data1 = {
+	let data1 = {
 		a : 1,
 		b : 2,
 		c : 3
-	},
-
-	// data2
-	data2 = COMBINE([data1]),
-
-	// data3
-	data3 = COMBINE([data1, {
+	};
+	
+	let data2 = COMBINE([data1]);
+	
+	let data3 = COMBINE([data1, {
 		d : 4
-	}]),
-
-	// array1
-	array1 = [1, 2, 3],
-
-	// array2
-	array2 = COMBINE([array1]),
-
-	// array3
-	array3 = COMBINE([array1, [5, 6]]);
+	}]);
+	
+	let array1 = [1, 2, 3];
+	
+	let array2 = COMBINE([array1]);
+	
+	let array3 = COMBINE([array1, [5, 6]]);
 
 	data2.b = 4;
 

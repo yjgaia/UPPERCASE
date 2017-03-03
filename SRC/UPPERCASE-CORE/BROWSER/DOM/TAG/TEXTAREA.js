@@ -1,24 +1,19 @@
-/**
+/*
  * Textarea class
  */
 global.TEXTAREA = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'textarea'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id			id 속성
 		//OPTIONAL: params.cls			class 속성
@@ -29,33 +24,10 @@ global.TEXTAREA = CLASS({
 		//OPTIONAL: params.c			자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on			이벤트
 
-		var
-		// name
-		name,
-
-		// placeholder
-		placeholder,
-
-		// is ctrl down
-		isCtrlDown = false,
-
-		// get name.
-		getName,
-
-		// get value.
-		getValue,
-
-		// set value.
-		setValue,
-
-		// select.
-		select,
-
-		// focus.
-		focus,
-
-		// blur.
-		blur;
+		let name;
+		let placeholder;
+		
+		let isCtrlDown = false;
 
 		// init params.
 		if (params !== undefined) {
@@ -77,15 +49,15 @@ global.TEXTAREA = CLASS({
 			});
 		}
 
-		self.getName = getName = function() {
+		let getName = self.getName = () => {
 			return name;
 		};
 
-		self.getValue = getValue = function() {
+		let getValue = self.getValue = () => {
 			return self.getEl().value;
 		};
 
-		self.setValue = setValue = function(value) {
+		let setValue = self.setValue = (value) => {
 			//REQUIRED: value
 
 			if (self.getEl().value !== value) {
@@ -102,22 +74,22 @@ global.TEXTAREA = CLASS({
 			}
 		};
 
-		self.select = select = function() {
+		let select = self.select = () => {
 			self.getEl().select();
 		};
 
-		self.focus = focus = function() {
+		let focus = self.focus = () => {
 			self.getEl().focus();
 		};
 
-		self.blur = blur = function() {
+		let blur = self.blur = () => {
 			self.getEl().blur();
 		};
 
 		EVENT({
 			node : self,
 			name : 'keydown'
-		}, function(e) {
+		}, (e) => {
 
 			if (e.getKey() === 'Control') {
 				isCtrlDown = true;
@@ -129,7 +101,7 @@ global.TEXTAREA = CLASS({
 		EVENT({
 			node : self,
 			name : 'keyup'
-		}, function(e) {
+		}, (e) => {
 
 			if (e.getKey() === 'Control') {
 				isCtrlDown = false;
@@ -139,14 +111,14 @@ global.TEXTAREA = CLASS({
 		EVENT({
 			node : self,
 			name : 'focus'
-		}, function() {
+		}, () => {
 			INPUT.getFocusingInputIds().push(self.id);
 		});
 
 		EVENT({
 			node : self,
 			name : 'blur'
-		}, function() {
+		}, () => {
 
 			REMOVE({
 				array : INPUT.getFocusingInputIds(),
@@ -154,7 +126,7 @@ global.TEXTAREA = CLASS({
 			});
 		});
 
-		self.on('remove', function() {
+		self.on('remove', () => {
 
 			REMOVE({
 				array : INPUT.getFocusingInputIds(),
@@ -163,8 +135,7 @@ global.TEXTAREA = CLASS({
 		});
 	},
 
-	afterInit : function(inner, self, params) {
-		'use strict';
+	afterInit : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id			id 속성
 		//OPTIONAL: params.cls			class 속성
@@ -175,9 +146,7 @@ global.TEXTAREA = CLASS({
 		//OPTIONAL: params.c			자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on			이벤트
 
-		var
-		// value
-		value;
+		let value;
 
 		// init params.
 		if (params !== undefined) {

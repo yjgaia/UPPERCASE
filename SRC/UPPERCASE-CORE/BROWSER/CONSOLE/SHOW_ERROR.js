@@ -1,8 +1,8 @@
-FOR_BOX(function(box) {
+FOR_BOX((box) => {
 
 	box.SHOW_ERROR = METHOD({
 
-		run : function(tag, errorMsg, params) {
+		run : (tag, errorMsg, params) => {
 			//REQUIRED: tag
 			//REQUIRED: errorMsg
 			//OPTIONAL: params

@@ -1,170 +1,30 @@
-/**
+/*
  * DOM 트리 구조를 정의하기 위한 NODE 클래스
  */
 global.NODE = CLASS({
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// wrapper dom
-		wrapperDom,
-
-		// content dom
-		contentDom,
-
-		// wrapper el
-		wrapperEl,
-
-		// content el
-		contentEl,
-
-		// waiting after nodes
-		waitingAfterNodes,
-
-		// waiting before nodes
-		waitingBeforeNodes,
-
-		// parent node
-		parentNode,
-
-		// child nodes
-		childNodes = [],
-
-		// origin display
-		originDisplay,
+		let wrapperDom;
+		let contentDom;
 		
-		// data
-		data,
-
-		// set wrapper dom.
-		setWrapperDom,
-
-		// set content dom.
-		setContentDom,
-
-		// set dom.
-		setDom,
-
-		// get wrapper dom.
-		getWrapperDom,
-
-		// get content dom.
-		getContentDom,
-
-		// get wrapper el.
-		getWrapperEl,
-
-		// get content el.
-		getContentEl,
-
-		// attach.
-		attach,
-
-		// append.
-		append,
-
-		// append to.
-		appendTo,
-
-		// prepend.
-		prepend,
-
-		// prepend to.
-		prependTo,
-
-		// after.
-		after,
-
-		// insert after.
-		insertAfter,
-
-		// before.
-		before,
-
-		// insert before.
-		insertBefore,
-
-		// get children.
-		getChildren,
-
-		// set parent.
-		setParent,
-
-		// get parent.
-		getParent,
-
-		// empty.
-		empty,
-
-		// remove.
-		remove,
-
-		// on.
-		on,
-
-		// off.
-		off,
-
-		// add style.
-		addStyle,
-
-		// get style.
-		getStyle,
-
-		// get width.
-		getWidth,
-
-		// get inner width.
-		getInnerWidth,
-
-		// get height.
-		getHeight,
-
-		// get inner height.
-		getInnerHeight,
-
-		// get left.
-		getLeft,
-
-		// get top.
-		getTop,
-
-		// hide.
-		hide,
-
-		// show.
-		show,
-
-		// check is showing.
-		checkIsShowing,
+		let wrapperEl;
+		let contentEl;
 		
-		// scroll to.
-		scrollTo,
+		let waitingAfterNodes;
+		let waitingBeforeNodes;
 		
-		// get scroll left.
-		getScrollLeft,
+		let parentNode;
+		let childNodes = [];
 		
-		// get scroll top.
-		getScrollTop,
-		
-		// get scroll width.
-		getScrollWidth,
-		
-		// get scroll height.
-		getScrollHeight,
-		
-		// set data.
-		setData,
-		
-		// get data.
-		getData;
+		let originDisplay;
+		let data;
 
-		inner.setWrapperDom = setWrapperDom = function(dom) {
+		let setWrapperDom = inner.setWrapperDom = (dom) => {
 			//REQUIRED: dom
 
 			wrapperDom = dom;
@@ -172,9 +32,9 @@ global.NODE = CLASS({
 
 			originDisplay = getStyle('display');
 
-			on('show', function() {
+			on('show', () => {
 
-				EACH(childNodes, function(childNode) {
+				EACH(childNodes, (childNode) => {
 
 					if (childNode.checkIsShowing() === true) {
 
@@ -192,37 +52,37 @@ global.NODE = CLASS({
 			});
 		};
 
-		inner.setContentDom = setContentDom = function(dom) {
+		let setContentDom = inner.setContentDom = (dom) => {
 			//REQUIRED: dom
 
 			contentDom = dom;
 			contentEl = dom.getEl();
 		};
 
-		inner.setDom = setDom = function(dom) {
+		let setDom = inner.setDom = (dom) => {
 			//REQUIRED: dom
 
 			setWrapperDom(dom);
 			setContentDom(dom);
 		};
 
-		self.getWrapperDom = getWrapperDom = function() {
+		let getWrapperDom = self.getWrapperDom = () => {
 			return wrapperDom;
 		};
 
-		self.getContentDom = getContentDom = function() {
+		let getContentDom = self.getContentDom = () => {
 			return contentDom;
 		};
 
-		self.getWrapperEl = getWrapperEl = function() {
+		let getWrapperEl = self.getWrapperEl = () => {
 			return wrapperEl;
 		};
 
-		self.getContentEl = getContentEl = function() {
+		let getContentEl = self.getContentEl = () => {
 			return contentEl;
 		};
 
-		attach = function(node, index) {
+		let attach = (node, index) => {
 			//REQUIRED: node
 			//OPTIOANL: index
 
@@ -254,26 +114,22 @@ global.NODE = CLASS({
 
 			// run after wating after nodes.
 			if (waitingAfterNodes !== undefined) {
-				EACH(waitingAfterNodes, function(node) {
+				EACH(waitingAfterNodes, (node) => {
 					after(node);
 				});
 			}
 
 			// run before wating before nodes.
 			if (waitingBeforeNodes !== undefined) {
-				EACH(waitingBeforeNodes, function(node) {
+				EACH(waitingBeforeNodes, (node) => {
 					before(node);
 				});
 			}
 		};
 
-		self.append = append = function(node) {
+		let append = self.append = (node) => {
 			//REQUIRED: node
-
-			var
-			// splits
-			splits;
-
+			
 			// append child.
 			if (CHECK_IS_DATA(node) === true) {
 				node.appendTo(self);
@@ -291,9 +147,9 @@ global.NODE = CLASS({
 			// append string.
 			else {
 
-				splits = String(node === undefined ? '' : node).split('\n');
+				let splits = String(node === undefined ? '' : node).split('\n');
 
-				EACH(splits, function(text, i) {
+				EACH(splits, (text, i) => {
 
 					append(DOM({
 						tag : '__STRING',
@@ -307,12 +163,10 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.appendTo = appendTo = function(node) {
+		let appendTo = self.appendTo = (node) => {
 			//REQUIRED: node
 			
-			var
-			// parent el
-			parentEl = node.getContentEl();
+			let parentEl = node.getContentEl();
 
 			if (parentEl !== undefined) {
 				
@@ -324,12 +178,8 @@ global.NODE = CLASS({
 			return self;
 		};
 
-		self.prepend = prepend = function(node) {
+		let prepend = self.prepend = (node) => {
 			//REQUIRED: node
-
-			var
-			// splits
-			splits;
 
 			// prepend child.
 			if (CHECK_IS_DATA(node) === true) {
@@ -348,12 +198,12 @@ global.NODE = CLASS({
 			// prepend string.
 			else {
 
-				splits = String(node === undefined ? '' : node).split('\n');
+				let splits = String(node === undefined ? '' : node).split('\n');
 
 				REPEAT({
 					start : splits.length - 1,
 					end : 0
-				}, function(i) {
+				}, (i) => {
 
 					prepend(DOM({
 						tag : '__STRING',
@@ -367,12 +217,10 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.prependTo = prependTo = function(node) {
+		let prependTo = self.prependTo = (node) => {
 			//REQUIRED: node
 
-			var
-			// parent el
-			parentEl = node.getContentEl();
+			let parentEl = node.getContentEl();
 
 			if (parentEl !== undefined) {
 				
@@ -388,13 +236,9 @@ global.NODE = CLASS({
 			return self;
 		};
 
-		self.after = after = function(node) {
+		let after = self.after = (node) => {
 			//REQUIRED: node
 
-			var
-			// splits
-			splits;
-			
 			if (wrapperEl !== undefined) {
 	
 				// wait after node.
@@ -418,12 +262,12 @@ global.NODE = CLASS({
 					// after string.
 					else {
 	
-						splits = String(node === undefined ? '' : node).split('\n');
+						let splits = String(node === undefined ? '' : node).split('\n');
 	
 						REPEAT({
 							start : splits.length - 1,
 							end : 0
-						}, function(i) {
+						}, (i) => {
 	
 							after(DOM({
 								tag : '__STRING',
@@ -439,29 +283,21 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.insertAfter = insertAfter = function(node) {
+		let insertAfter = self.insertAfter = (node) => {
 			//REQUIRED: node
 
-			var
-			// before el
-			beforeEl = node.getWrapperEl(),
-			
-			// now index
-			nowIndex,
-			
-			// to index
-			toIndex;
+			let beforeEl = node.getWrapperEl();
 			
 			if (beforeEl !== undefined) {
 				
 				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
 				
-				nowIndex = FIND({
+				let nowIndex = FIND({
 					array : node.getParent().getChildren(),
 					value : self
 				});
 				
-				toIndex = FIND({
+				let toIndex = FIND({
 					array : node.getParent().getChildren(),
 					value : node
 				}) + 1;
@@ -472,12 +308,8 @@ global.NODE = CLASS({
 			return self;
 		};
 
-		self.before = before = function(node) {
+		let before = self.before = (node) => {
 			//REQUIRED: node
-
-			var
-			// splits
-			splits;
 			
 			if (wrapperEl !== undefined) {
 	
@@ -502,9 +334,9 @@ global.NODE = CLASS({
 					// before string.
 					else {
 	
-						splits = String(node === undefined ? '' : node).split('\n');
+						let splits = String(node === undefined ? '' : node).split('\n');
 	
-						EACH(splits, function(text, i) {
+						EACH(splits, (text, i) => {
 	
 							before(DOM({
 								tag : '__STRING',
@@ -520,12 +352,10 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.insertBefore = insertBefore = function(node) {
+		let insertBefore = self.insertBefore = (node) => {
 			//REQUIRED: node
 
-			var
-			// after el
-			afterEl = node.getWrapperEl();
+			let afterEl = node.getWrapperEl();
 
 			if (afterEl !== undefined) {
 				
@@ -540,11 +370,11 @@ global.NODE = CLASS({
 			return self;
 		};
 
-		self.getChildren = getChildren = function() {
+		let getChildren = self.getChildren = () => {
 			return childNodes;
 		};
 
-		setParent = function(node) {
+		let setParent = (node) => {
 			//OPTIONAL: node
 			
 			if (parentNode !== undefined) {
@@ -557,17 +387,17 @@ global.NODE = CLASS({
 			parentNode = node;
 		};
 		
-		self.getParent = getParent = function() {
+		let getParent = self.getParent = () => {
 			return parentNode;
 		};
 
-		self.empty = empty = function() {
-			EACH(childNodes, function(child) {
+		let empty = self.empty = () => {
+			EACH(childNodes, (child) => {
 				child.remove();
 			});
 		};
 
-		self.remove = remove = function() {
+		let remove = self.remove = () => {
 
 			if (wrapperEl !== undefined && wrapperEl.parentNode !== TO_DELETE) {
 
@@ -598,7 +428,7 @@ global.NODE = CLASS({
 			data = undefined;
 		};
 
-		self.on = on = function(eventName, eventHandler) {
+		let on = self.on = (eventName, eventHandler) => {
 			//REQUIRED: eventName
 			//REQUIRED: eventHandler
 
@@ -608,7 +438,7 @@ global.NODE = CLASS({
 			}, eventHandler);
 		};
 
-		self.off = off = function(eventName, eventHandler) {
+		let off = self.off = (eventName, eventHandler) => {
 			//REQUIRED: eventName
 			//OPTIONAL: eventHandler
 
@@ -628,7 +458,7 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.addStyle = addStyle = function(style) {
+		let addStyle = self.addStyle = (style) => {
 			//REQUIRED: style
 
 			ADD_STYLE({
@@ -637,53 +467,43 @@ global.NODE = CLASS({
 			});
 		};
 
-		self.getStyle = getStyle = function(name) {
+		let getStyle = self.getStyle = (name) => {
 			//REQUIRED: name
-
-			var
-			// styles
-			styles,
-
-			// style
-			style;
-
+			
 			if (wrapperEl !== undefined) {
 
-				styles = wrapperEl.style;
+				let styles = wrapperEl.style;
 
 				if (styles !== undefined) {
 
-					style = styles[name];
+					let style = styles[name];
 
 					return style === '' ? undefined : (style.substring(style.length - 2) === 'px' ? REAL(style) : style);
 				}
 			}
 		};
 
-		self.getWidth = getWidth = function() {
+		let getWidth = self.getWidth = () => {
 			return wrapperEl.offsetWidth;
 		};
 
-		self.getInnerWidth = getInnerWidth = function() {
+		let getInnerWidth = self.getInnerWidth = () => {
 			return wrapperEl.clientWidth;
 		};
 
-		self.getHeight = getHeight = function() {
+		let getHeight = self.getHeight = () => {
 			return wrapperEl.offsetHeight;
 		};
 
-		self.getInnerHeight = getInnerHeight = function() {
+		let getInnerHeight = self.getInnerHeight = () => {
 			return wrapperEl.clientHeight;
 		};
 
-		self.getLeft = getLeft = function() {
+		let getLeft = self.getLeft = () => {
 
-			var
-			// left
-			left = 0,
-
-			// parent el
-			parentEl = wrapperEl;
+			let left = 0;
+			
+			let parentEl = wrapperEl;
 
 			do {
 				left += parentEl.offsetLeft - (parentEl === document.body ? 0 : parentEl.scrollLeft);
@@ -693,14 +513,11 @@ global.NODE = CLASS({
 			return left;
 		};
 
-		self.getTop = getTop = function() {
+		let getTop = self.getTop = () => {
 
-			var
-			// top
-			top = 0,
-
-			// parent el
-			parentEl = wrapperEl;
+			let top = 0;
+			
+			let parentEl = wrapperEl;
 
 			do {
 				top += parentEl.offsetTop - (parentEl === document.body ? 0 : parentEl.scrollTop);
@@ -710,14 +527,14 @@ global.NODE = CLASS({
 			return top;
 		};
 
-		self.hide = hide = function() {
+		let hide = self.hide = () => {
 
 			addStyle({
 				display : 'none'
 			});
 		};
 
-		self.show = show = function() {
+		let show = self.show = () => {
 
 			addStyle({
 				display : originDisplay === undefined ? '' : originDisplay
@@ -737,7 +554,7 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.checkIsShowing = checkIsShowing = function() {
+		let checkIsShowing = self.checkIsShowing = () => {
 
 			if (wrapperEl === document.body) {
 				return true;
@@ -746,17 +563,13 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.scrollTo = scrollTo = function(params) {
+		let scrollTo = self.scrollTo = (params) => {
 			//REQUIRED: params
 			//OPTIONAL: params.left
 			//OPTIONAL: params.top
 			
-			var
-			// left
-			left = params.left,
-			
-			// top
-			top = params.top;
+			let left = params.left;
+			let top = params.top;
 			
 			if (contentEl !== undefined) {
 			
@@ -770,31 +583,7 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.scrollTo = scrollTo = function(params) {
-			//REQUIRED: params
-			//OPTIONAL: params.left
-			//OPTIONAL: params.top
-			
-			var
-			// left
-			left = params.left,
-			
-			// top
-			top = params.top;
-			
-			if (contentEl !== undefined) {
-			
-				if (left !== undefined) {
-					contentEl.scrollLeft = left;
-				}
-				
-				if (top !== undefined) {
-					contentEl.scrollTop = top;
-				}
-			}
-		};
-		
-		self.getScrollLeft = getScrollLeft = function() {
+		let getScrollLeft = self.getScrollLeft = () => {
 			if (contentEl !== undefined) {
 				return contentEl.scrollLeft;
 			} else {
@@ -802,7 +591,7 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.getScrollTop = getScrollTop = function() {
+		let getScrollTop = self.getScrollTop = () => {
 			if (contentEl !== undefined) {
 				return contentEl.scrollTop;
 			} else {
@@ -810,7 +599,7 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.getScrollWidth = getScrollWidth = function() {
+		let getScrollWidth = self.getScrollWidth = () => {
 			if (contentEl !== undefined) {
 				return contentEl.scrollWidth;
 			} else {
@@ -818,7 +607,7 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.getScrollHeight = getScrollHeight = function() {
+		let getScrollHeight = self.getScrollHeight = () => {
 			if (contentEl !== undefined) {
 				return contentEl.scrollHeight;
 			} else {
@@ -826,33 +615,26 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.setData = setData = function(_data) {
+		let setData = self.setData = (_data) => {
 			//REQUIRED: _data
 			
 			data = _data;
 		};
 		
-		self.getData = getData = function() {
+		let getData = self.getData = () => {
 			return data;
 		};
 	},
 
-	afterInit : function(inner, self, params) {
-		'use strict';
+	afterInit : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// style
-		style,
-
-		// children
-		children,
-
-		// on
-		on;
+		let style;
+		let children;
+		let on;
 
 		// init params.
 		if (params !== undefined) {
@@ -866,13 +648,13 @@ global.NODE = CLASS({
 		}
 
 		if (on !== undefined) {
-			EACH(on, function(handler, name) {
+			EACH(on, (handler, name) => {
 				self.on(name, handler);
 			});
 		}
 
 		if (children !== undefined) {
-			EACH(children, function(child, i) {
+			EACH(children, (child, i) => {
 				self.append(child);
 			});
 		}

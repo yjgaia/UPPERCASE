@@ -1,5 +1,4 @@
-TEST('SHA256', function(check) {
-	'use strict';
+TEST('SHA256', (check) => {
 
 	// generate SHA-256 hash.
 	check(SHA256({

@@ -1,7 +1,6 @@
-TEST('SHARED_STORE', function(check) {
-	'use strict';
+TEST('SHARED_STORE', (check) => {
 	
-	CPU_CLUSTERING(function() {
+	CPU_CLUSTERING(() => {
 		
 		SERVER_CLUSTERING({
 			hosts : {
@@ -10,11 +9,9 @@ TEST('SHARED_STORE', function(check) {
 			},
 			thisServerName : 'serverA',
 			port : 8125
-		}, function() {
+		}, () => {
 			
-			var
-			// shared store
-			sharedStore = TestBox.SHARED_STORE('test');
+			let sharedStore = TestBox.SHARED_STORE('test');
 	
 			if (CPU_CLUSTERING.getWorkerId() === 1) {
 	
@@ -23,17 +20,17 @@ TEST('SHARED_STORE', function(check) {
 					data : {
 						msg : 'Hello World!'
 					}
-				}, function(savedData) {
+				}, (savedData) => {
 					console.log('데이터 저장 완료', savedData);
 				});
 		
-				DELAY(1, function() {
+				DELAY(1, () => {
 					
-					sharedStore.get('1234', function(savedData) {
+					sharedStore.get('1234', (savedData) => {
 						check(savedData.msg === 'Hello World!');
 					});
 					
-					sharedStore.all(function(savedDataSet) {
+					sharedStore.all((savedDataSet) => {
 						check(CHECK_ARE_SAME([savedDataSet, {
 							'1234' : {
 								msg : 'Hello World!'
@@ -43,25 +40,25 @@ TEST('SHARED_STORE', function(check) {
 				});
 				
 				// update.
-				DELAY(2, function() {
+				DELAY(2, () => {
 					
 					sharedStore.update({
 						id : '1234',
 						data : {
 							number : 1
 						}
-					}, function(savedData) {
+					}, (savedData) => {
 						console.log('데이터 수정 완료', savedData);
 					});
 				});
 				
-				DELAY(3, function() {
+				DELAY(3, () => {
 					
-					sharedStore.get('1234', function(savedData) {
+					sharedStore.get('1234', (savedData) => {
 						check(savedData.msg === 'Hello World!' && savedData.number === 1);
 					});
 					
-					sharedStore.all(function(savedDataSet) {
+					sharedStore.all((savedDataSet) => {
 						check(CHECK_ARE_SAME([savedDataSet, {
 							'1234' : {
 								msg : 'Hello World!',
@@ -72,7 +69,7 @@ TEST('SHARED_STORE', function(check) {
 				});
 				
 				// $inc
-				DELAY(4, function() {
+				DELAY(4, () => {
 					
 					sharedStore.update({
 						id : '1234',
@@ -82,18 +79,18 @@ TEST('SHARED_STORE', function(check) {
 								number : 3
 							}
 						}
-					}, function(savedData) {
+					}, (savedData) => {
 						console.log('데이터 수정 완료', savedData);
 					});
 				});
 				
-				DELAY(5, function() {
+				DELAY(5, () => {
 					
-					sharedStore.get('1234', function(savedData) {
+					sharedStore.get('1234', (savedData) => {
 						check(savedData.msg === 'Hello World!' && savedData.number === 4);
 					});
 					
-					sharedStore.all(function(savedDataSet) {
+					sharedStore.all((savedDataSet) => {
 						check(CHECK_ARE_SAME([savedDataSet, {
 							'1234' : {
 								msg : 'Hello World!',
@@ -105,7 +102,7 @@ TEST('SHARED_STORE', function(check) {
 				});
 				
 				// $push
-				DELAY(6, function() {
+				DELAY(6, () => {
 					
 					sharedStore.update({
 						id : '1234',
@@ -114,14 +111,14 @@ TEST('SHARED_STORE', function(check) {
 								array : 2
 							}
 						}
-					}, function(savedData) {
+					}, (savedData) => {
 						console.log('데이터 수정 완료', savedData);
 					});
 				});
 				
-				DELAY(7, function() {
+				DELAY(7, () => {
 					
-					sharedStore.all(function(savedDataSet) {
+					sharedStore.all((savedDataSet) => {
 						check(CHECK_ARE_SAME([savedDataSet, {
 							'1234' : {
 								msg : 'Hello World!',
@@ -133,7 +130,7 @@ TEST('SHARED_STORE', function(check) {
 				});
 				
 				// $addToSet
-				DELAY(8, function() {
+				DELAY(8, () => {
 					
 					sharedStore.update({
 						id : '1234',
@@ -142,14 +139,14 @@ TEST('SHARED_STORE', function(check) {
 								array : 1
 							}
 						}
-					}, function(savedData) {
+					}, (savedData) => {
 						console.log('데이터 수정 완료', savedData);
 					});
 				});
 				
-				DELAY(9, function() {
+				DELAY(9, () => {
 					
-					sharedStore.all(function(savedDataSet) {
+					sharedStore.all((savedDataSet) => {
 						check(CHECK_ARE_SAME([savedDataSet, {
 							'1234' : {
 								msg : 'Hello World!',
@@ -161,7 +158,7 @@ TEST('SHARED_STORE', function(check) {
 				});
 				
 				// $pull
-				DELAY(10, function() {
+				DELAY(10, () => {
 					
 					sharedStore.update({
 						id : '1234',
@@ -170,14 +167,14 @@ TEST('SHARED_STORE', function(check) {
 								array : 1
 							}
 						}
-					}, function(savedData) {
+					}, (savedData) => {
 						console.log('데이터 수정 완료', savedData);
 					});
 				});
 				
-				DELAY(11, function() {
+				DELAY(11, () => {
 					
-					sharedStore.all(function(savedDataSet) {
+					sharedStore.all((savedDataSet) => {
 						check(CHECK_ARE_SAME([savedDataSet, {
 							'1234' : {
 								msg : 'Hello World!',

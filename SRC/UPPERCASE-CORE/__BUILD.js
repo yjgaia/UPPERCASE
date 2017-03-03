@@ -1,29 +1,19 @@
-// load UPPERCASE-CORE
+// load UPPERCASE-CORE.
 require('../../UPPERCASE-CORE/NODE.js');
 
 /*
  * distribute UPPERCASE.
  */
-RUN(function() {
-	'use strict';
-
-	var
-	// TITLE
-	TITLE = 'UPPERCASE-CORE',
+RUN(() => {
 	
-	// BASE_CONTENT
-	BASE_CONTENT = '/*\n\nWelcome to ' + TITLE + '! (http://uppercase.io)\n\n*/\n\n',
+	const TITLE = 'UPPERCASE-CORE';	
+	const BASE_CONTENT = '\'use strict\';\n\n/*\n\nWelcome to ' + TITLE + '! (http://uppercase.io)\n\n*/\n\n';
 	
-	//IMPORT: path
-	path = require('path'),
-
-	// log.
-	log = function(msg) {
+	let log = (msg) => {
 		console.log(TITLE + ' BUILD: ' + msg);
-	},
+	};
 
-	// scan folder.
-	scanFolder = function(scripts, path) {
+	let scanFolder = (scripts, path) => {
 		//REQUIRED: scripts
 		//REQUIRED: path
 
@@ -32,12 +22,12 @@ RUN(function() {
 			isSync : true
 		}, {
 
-			notExists : function() {
+			notExists : () => {
 				// ignore.
 			},
 
-			success : function(fileNames) {
-				EACH(fileNames, function(fileName) {
+			success : (fileNames) => {
+				EACH(fileNames, (fileName) => {
 					scripts.push(path + '/' + fileName);
 				});
 			}
@@ -48,36 +38,30 @@ RUN(function() {
 			isSync : true
 		}, {
 
-			notExists : function() {
+			notExists : () => {
 				// ignore.
 			},
 
-			success : function(folderNames) {
-				EACH(folderNames, function(folderName) {
+			success : (folderNames) => {
+				EACH(folderNames, (folderName) => {
 					scanFolder(scripts, path + '/' + folderName);
 				});
 			}
 		});
-	},
+	};
 
-	// save.
-	save = function(scriptPaths, path, isToSaveMin) {
+	let save = (scriptPaths, path, isToSaveMin) => {
 		
-		var
-		// content
-		content,
+		let content;
 		
-		// minify result
-		minifyResult;
-		
-		EACH(scriptPaths, function(scriptPath) {
+		EACH(scriptPaths, (scriptPath) => {
 			
 			if (content === undefined) {
 				content = BASE_CONTENT;
 				
 				if (path === 'BROWSER') {
 					content += '// 웹 브라우저 환경에서는 window가 global 객체 입니다.\n';
-					content += 'global = window;\n\n';
+					content += 'let global = window;\n\n';
 				}
 				
 			} else {
@@ -100,7 +84,7 @@ RUN(function() {
 			
 			content = '';
 		
-			EACH(scriptPaths, function(scriptPath) {
+			EACH(scriptPaths, (scriptPath) => {
 				content += MINIFY_JS(READ_FILE({
 					path : scriptPath,
 					isSync : true
@@ -115,26 +99,23 @@ RUN(function() {
 		}
 		
 		return content;
-	},
+	};
 
-	// copy folder.
-	copyFolder = function(from, to) {
+	let copyFolder = (from, to) => {
 
-		var
-		// real to
-		realTo = '../../' + TITLE + '/' + to;
+		let realTo = '../../' + TITLE + '/' + to;
 
 		FIND_FILE_NAMES({
 			path : from,
 			isSync : true
 		}, {
 
-			notExists : function() {
+			notExists : () => {
 				// ignore.
 			},
 
-			success : function(fileNames) {
-				EACH(fileNames, function(fileName) {
+			success : (fileNames) => {
+				EACH(fileNames, (fileName) => {
 					COPY_FILE({
 						from : from + '/' + fileName,
 						to : realTo + '/' + fileName,
@@ -149,24 +130,21 @@ RUN(function() {
 			isSync : true
 		}, {
 
-			notExists : function() {
+			notExists : () => {
 				// ignore.
 			},
 
-			success : function(folderNames) {
-				EACH(folderNames, function(folderName) {
+			success : (folderNames) => {
+				EACH(folderNames, (folderName) => {
 					copyFolder(from + '/' + folderName, to + '/' + folderName, folderName);
 				});
 			}
 		});
-	},
+	};
+	
+	let distFolder = (preScripts, name, isToSaveMin) => {
 
-	// dist folder.
-	distFolder = function(preScripts, name, isToSaveMin) {
-
-		var
-		// scripts
-		scripts = [];
+		let scripts = [];
 
 		scanFolder(scripts, name);
 
@@ -175,18 +153,13 @@ RUN(function() {
 		}
 		
 		return scripts;
-	},
-
-	// dist module.
-	distModule = function() {
-
-		var
-		// common scripts
-		commonScripts;
+	};
+	
+	let distModule = () => {
 		
 		log('START.');
 
-		commonScripts = distFolder([], 'COMMON', true);
+		let commonScripts = distFolder([], 'COMMON', true);
 		distFolder(commonScripts, 'BROWSER', true);
 		distFolder(commonScripts, 'NODE');
 		copyFolder('R', 'R');

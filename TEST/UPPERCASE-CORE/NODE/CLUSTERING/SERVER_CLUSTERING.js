@@ -1,5 +1,4 @@
-TEST('SERVER_CLUSTERING', function(check) {
-	'use strict';
+TEST('SERVER_CLUSTERING', (check) => {
 
 	SERVER_CLUSTERING({
 		hosts : {
@@ -8,15 +7,15 @@ TEST('SERVER_CLUSTERING', function(check) {
 		},
 		thisServerName : 'serverA',
 		port : 8125
-	}, function() {
+	}, () => {
 
-		SERVER_CLUSTERING.on('receive', function(data) {
+		SERVER_CLUSTERING.on('receive', (data) => {
 			check(CHECK_ARE_SAME([data, {
 				msg : 'Hey!'
 			}]));
 		});
 
-		DELAY(1, function() {
+		DELAY(1, () => {
 
 			SERVER_CLUSTERING.broadcast({
 				methodName : 'receive',

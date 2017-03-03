@@ -1,12 +1,11 @@
-TEST('WRITE_FILE', function(check) {
-	'use strict';
-
+TEST('WRITE_FILE', (check) => {
+	
 	WRITE_FILE({
 		path : 'UPPERCASE-CORE/test.txt',
 		content : 'this is test file.',
 		isSync : true
 	}, {
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		}
 	});
@@ -21,7 +20,7 @@ TEST('WRITE_FILE', function(check) {
 		content : 'test!!!',
 		isSync : true
 	}, {
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		}
 	});
@@ -37,15 +36,15 @@ TEST('WRITE_FILE', function(check) {
 		content : 'test!!!'
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		success : function() {
+		success : () => {
 			READ_FILE({
 				path : 'UPPERCASE-CORE/testFolder/subFolder2/subFolder2/test2',
 				isSync : true
-			}, function(buffer) {
+			}, (buffer) => {
 				check(buffer.toString() === 'test!!!');
 			});
 		}

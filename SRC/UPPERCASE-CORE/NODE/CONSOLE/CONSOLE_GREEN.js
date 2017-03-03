@@ -3,8 +3,7 @@
  */
 global.CONSOLE_GREEN = METHOD({
 
-	run : function(text) {
-		'use strict';
+	run : (text) => {
 		//REQUIRED: text
 
 		return '[32m' + text + '[0m';

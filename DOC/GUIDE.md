@@ -1,3 +1,5 @@
+작성중
+
 # UPPERCASE 이용 가이드
 UPPERCASE를 어떻게 이용해야 할지 알아봅시다.
 
@@ -77,7 +79,6 @@ UPPERCASE로 웹 사이트도 개발할 수 있지만, 웹 페이지 형식이 �
 
 ## 고급 기능
 * [분산 처리](GUIDE/CLUSTERING.md)
-* [검색 엔진 최적화](GUIDE/SEO.md)
 * [여러 프로젝트 연동하기](GUIDE/MIX_PROJECT.md)
 * [UPPERCASE 자체를 수정하기](GUIDE/MODIFY_UPPERCASE.md)
 

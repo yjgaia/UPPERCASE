@@ -1,10 +1,12 @@
 CONNECT_TO_WEB_SOCKET_SERVER(8125, {
-	error : function(error) {
+	
+	error : (error) => {
 		console.log('ERROR!');
 	},
-	success : function(on, off, send, disconnect) {
+	
+	success : (on, off, send, disconnect) => {
 
-		on('message', function(data, ret) {
+		on('message', (data, ret) => {
 
 			console.log('CLIENT!', data);
 
@@ -16,7 +18,7 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 			data : {
 				msg : 'message from client.'
 			}
-		}, function(retMsg) {
+		}, (retMsg) => {
 
 			console.log('RETURN MESSAGE:', retMsg);
 		});
@@ -29,7 +31,7 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 			}
 		});
 
-		DELAY(1, function() {
+		DELAY(1, () => {
 
 			send({
 				methodName : 'checkRole',
@@ -38,7 +40,7 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 		});
 
 		// when disconnected
-		on('__DISCONNECTED', function() {
+		on('__DISCONNECTED', () => {
 			console.log('DISCONNECTED!');
 		});
 	}

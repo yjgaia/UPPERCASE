@@ -1,10 +1,9 @@
-/**
+/*
  * HTTP PUT 요청을 보냅니다.
  */
 global.PUT = METHOD({
 
-	run : function(urlOrParams, responseListenerOrListeners) {
-		'use strict';
+	run : (urlOrParams, responseListenerOrListeners) => {
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
 		//OPTIONAL: urlOrParams.host

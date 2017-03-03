@@ -1,4 +1,4 @@
-/**
+/*
  * 메소드를 생성합니다.
  */
 global.METHOD = (define) => {

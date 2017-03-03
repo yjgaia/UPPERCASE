@@ -3,8 +3,7 @@
  */
 global.CONSOLE_YELLOW = METHOD({
 
-	run : function(text) {
-		'use strict';
+	run : (text) => {
 		//REQUIRED: text
 
 		return '[33m' + text + '[0m';

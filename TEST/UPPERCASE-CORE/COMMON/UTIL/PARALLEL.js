@@ -1,22 +1,17 @@
-TEST('PARALLEL', function(check) {
-	'use strict';
+TEST('PARALLEL', (check) => {
 
-	var
-	// data
-	data = {},
-
-	// count
-	count = 0,
+	let data = {};
 	
-	// sum
-	sum = 0;
+	let count = 0;
+	
+	let sum = 0;
 
 	PARALLEL([
 
 	// func1
-	function(done) {
+	(done) => {
 
-		setTimeout(function() {
+		setTimeout(() => {
 
 			data.a = 1;
 
@@ -25,9 +20,9 @@ TEST('PARALLEL', function(check) {
 	},
 
 	// func2
-	function(done) {
+	(done) => {
 
-		setTimeout(function() {
+		setTimeout(() => {
 
 			data.b = 2;
 
@@ -36,9 +31,9 @@ TEST('PARALLEL', function(check) {
 	},
 
 	// func3
-	function(done) {
+	(done) => {
 
-		setTimeout(function() {
+		setTimeout(() => {
 
 			data.c = 3;
 
@@ -47,7 +42,7 @@ TEST('PARALLEL', function(check) {
 	},
 
 	// done
-	function() {
+	() => {
 		check(CHECK_ARE_SAME([data, {
 			a : 1,
 			b : 2,
@@ -58,9 +53,9 @@ TEST('PARALLEL', function(check) {
 	PARALLEL(3, [
 
 	// func1
-	function(i, done) {
+	(i, done) => {
 
-		setTimeout(function() {
+		setTimeout(() => {
 
 			count += 1;
 
@@ -68,16 +63,16 @@ TEST('PARALLEL', function(check) {
 		}, 100);
 	},
 
-	function() {
+	() => {
 		check(count === 3);
 	}]);
 	
 	PARALLEL([1, 2, 3], [
 
 	// func1
-	function(value, done) {
+	(value, done) => {
 
-		setTimeout(function() {
+		setTimeout(() => {
 
 			sum += value;
 
@@ -85,7 +80,7 @@ TEST('PARALLEL', function(check) {
 		}, 100);
 	},
 
-	function() {
+	() => {
 		check(sum === 6);
 	}]);
 });

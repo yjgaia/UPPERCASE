@@ -1,9 +1,6 @@
-TEST('SPAN', function(check) {
-	'use strict';
+TEST('SPAN', (check) => {
 
-	var
-	// test div
-	div = DIV({
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,

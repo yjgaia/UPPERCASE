@@ -1,4 +1,4 @@
-/**
+/*
  * 오버라이딩을 수행합니다.
  */
 global.OVERRIDE = METHOD({

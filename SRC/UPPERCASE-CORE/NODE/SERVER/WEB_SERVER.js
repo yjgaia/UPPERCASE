@@ -1,36 +1,19 @@
-/**
+/*
  * 웹 서버를 생성하는 클래스
  */
-global.WEB_SERVER = CLASS(function(cls) {
-	'use strict';
+global.WEB_SERVER = CLASS((cls) => {
 
-	var
-	// DEFAULT_MAX_UPLOAD_FILE_MB
-	DEFAULT_MAX_UPLOAD_FILE_MB = 10,
+	const DEFAULT_MAX_UPLOAD_FILE_MB = 10;
 	
-	//IMPORT: http
-	http = require('http'),
-	
-	//IMPORT: https
-	https = require('https'),
-	
-	//IMPORT: fs
-	fs = require('fs'),
-	
-	//IMPORT: path
-	path = require('path'),
+	let HTTP = require('http');
+	let HTTPS = require('https');
+	let FS = require('fs');
+	let Path = require('path');
+	let Querystring = require('querystring');
+	let ZLib = require('zlib');
+	let IncomingForm = require('formidable').IncomingForm;
 
-	//IMPORT: querystring
-	querystring = require('querystring'),
-
-	//IMPORT: zlib
-	zlib = require('zlib'),
-	
-	//IMPORT: IncomingForm
-	IncomingForm = require('formidable').IncomingForm,
-
-	// get content type from extension.
-	getContentTypeFromExtension = function(extension) {
+	let getContentTypeFromExtension = (extension) => {
 		
 		// png image
 		if (extension === 'png') {
@@ -113,10 +96,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 		}
 
 		return 'application/octet-stream';
-	},
+	};
 
-	// get encoding from content type.
-	getEncodingFromContentType = function(contentType) {
+	let getEncodingFromContentType = (contentType) => {
 
 		if (contentType === 'application/javascript') {
 			return 'utf-8';
@@ -179,16 +161,13 @@ global.WEB_SERVER = CLASS(function(cls) {
 		}
 
 		return 'binary';
-	},
+	};
 	
-	// create cookie str array.
-	createCookieStrArray = function(data) {
+	let createCookieStrArray = (data) => {
 		
-		var
-		// strs
-		strs = [];
+		let strs = [];
 
-		EACH(data, function(value, name) {
+		EACH(data, (value, name) => {
 			if (CHECK_IS_DATA(value) === true) {
 				strs.push(name + '=' + encodeURIComponent(value.value)
 					+ (value.expireSeconds === undefined ? '' : '; expires=' + new Date(Date.now() + value.expireSeconds * 1000).toGMTString())
@@ -200,27 +179,19 @@ global.WEB_SERVER = CLASS(function(cls) {
 		});
 
 		return strs;
-	},
+	};
 	
-	// parse cookie str.
-	parseCookieStr = function(cookieStr) {
+	let parseCookieStr = (cookieStr) => {
 		
-		var
-		// splits
-		splits,
-
-		// data
-		data = {};
+		let data = {};
 
 		if (cookieStr !== undefined) {
 
-			splits = cookieStr.split(';');
+			let splits = cookieStr.split(';');
 
-			EACH(splits, function(cookie) {
+			EACH(splits, (cookie) => {
 
-				var
-				// parts
-				parts = cookie.split('=');
+				let parts = cookie.split('=');
 
 				data[parts[0].trim()] = decodeURIComponent(parts[1]);
 			});
@@ -231,7 +202,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 	
 	return {
 
-		init : function(inner, self, portOrParams, requestListenerOrHandlers) {
+		init : (inner, self, portOrParams, requestListenerOrHandlers) => {
 			//REQUIRED: portOrParams
 			//OPTIONAL: portOrParams.port					HTTP 서버 포트
 			//OPTIONAL: portOrParams.securedPort			HTTPS 서버 포트
@@ -251,69 +222,26 @@ global.WEB_SERVER = CLASS(function(cls) {
 			//OPTIONAL: requestListenerOrHandlers.uploadOverFileSize	업로드 하는 파일의 크기가 maxUploadFileMB보다 클 경우
 			//OPTIONAL: requestListenerOrHandlers.uploadSuccess			업로드가 정상적으로 완료된 경우
 
-			var
-			// port
-			port,
-
-			// secured port
-			securedPort,
-
-			// secured key file path
-			securedKeyFilePath,
-
-			// secured cert file path
-			securedCertFilePath,
+			let port;
+			let securedPort;
+			let securedKeyFilePath;
+			let securedCertFilePath;
+			let originRootPath;
+			let version;
+			let preprocessors;
+			let uploadURI;
+			let uploadPath;
+			let maxUploadFileMB;
 			
-			// origin root path
-			originRootPath,
-
-			// version
-			version,
+			let notExistsResourceHandler;
+			let errorHandler;
+			let requestListener;
+			let uploadProgressHandler;
+			let uploadOverFileSizeHandler;
+			let uploadSuccessHandler;
 			
-			// preprocessors
-			preprocessors,
-			
-			// upload uri
-			uploadURI,
-			
-			// upload path
-			uploadPath,
-			
-			// max upload file mb
-			maxUploadFileMB,
-
-			// not exists resource handler.
-			notExistsResourceHandler,
-			
-			// error handler.
-			errorHandler,
-			
-			// request listener.
-			requestListener,
-			
-			// upload progress handler.
-			uploadProgressHandler,
-			
-			// upload over file size handler.
-			uploadOverFileSizeHandler,
-			
-			// upload success handler.
-			uploadSuccessHandler,
-
-			// resource caches
-			resourceCaches = {},
-			
-			// native server
-			nativeServer,
-
-			// serve.
-			serve,
-			
-			// get native server.
-			getNativeServer,
-			
-			// add preprocessor.
-			addPreprocessor;
+			let resourceCaches = {};
+			let nativeServer;
 
 			// init params.
 			if (CHECK_IS_DATA(portOrParams) !== true) {
@@ -352,29 +280,16 @@ global.WEB_SERVER = CLASS(function(cls) {
 				}
 			}
 
-			serve = function(nativeReq, nativeRes, isSecure) {
+			let serve = (nativeReq, nativeRes, isSecure) => {
 
-				var
-				// headers
-				headers = nativeReq.headers,
-
-				// uri
-				uri = nativeReq.url,
+				let headers = nativeReq.headers;
+				let uri = nativeReq.url;
+				let method = nativeReq.method.toUpperCase();
+				let ip = headers['x-forwarded-for'];
+				let acceptEncoding = headers['accept-encoding'];
 				
-				// is upload uri
-				isUploadURI,
-
-				// method
-				method = nativeReq.method.toUpperCase(),
-
-				// ip
-				ip = headers['x-forwarded-for'],
-
-				// accept encoding
-				acceptEncoding = headers['accept-encoding'],
-
-				// param str
-				paramStr;
+				let paramStr;
+				let isUploadURI;
 				
 				if (ip === undefined) {
 					ip = nativeReq.connection.remoteAddress;
@@ -397,17 +312,15 @@ global.WEB_SERVER = CLASS(function(cls) {
 				}) === true : uploadURI === uri;
 
 				NEXT([
-				function(next) {
-					
-					var
-					// is appended param string
-					isAppendedParamStr;
+				(next) => {
 					
 					if (method === 'GET' || isUploadURI === true) {
 						next();
 					} else {
 						
-						nativeReq.on('data', function(data) {
+						let isAppendedParamStr;
+						
+						nativeReq.on('data', (data) => {
 							
 							if (isAppendedParamStr !== true) {
 								if (paramStr === undefined) {
@@ -421,44 +334,24 @@ global.WEB_SERVER = CLASS(function(cls) {
 							paramStr += data;
 						});
 
-						nativeReq.on('end', function() {
+						nativeReq.on('end', () => {
 							next();
 						});
 					}
 				},
 
-				function() {
-					return function() {
+				() => {
+					return () => {
 						
-						var
-						// params
-						params = querystring.parse(paramStr),
+						let params = Querystring.parse(paramStr);
+						let data;
+						let requestInfo;
+						let rootPath = originRootPath;
+						let isGoingOn;
+						let originalURI = uri;
+						let overrideResponseInfo = {};
 						
-						// data
-						data,
-						
-						// request info
-						requestInfo,
-						
-						// root path
-						rootPath = originRootPath,
-						
-						// is going on
-						isGoingOn,
-						
-						// original uri
-						originalURI = uri,
-						
-						// overriding response info
-						overrideResponseInfo = {},
-						
-						// response.
-						response,
-						
-						// response error.
-						responseError;
-						
-						EACH(params, function(param, name) {
+						EACH(params, (param, name) => {
 							if (CHECK_IS_ARRAY(param) === true) {
 								params[name] = param[param.length - 1];
 							}
@@ -482,7 +375,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 							ip : ip
 						};
 						
-						response = function(contentOrParams) {
+						let response = (contentOrParams) => {
 							//REQUIRED: contentOrParams
 							//OPTIONAL: contentOrParams.statusCode		HTTP 응답 상태
 							//OPTIONAL: contentOrParams.headers			응답 헤더
@@ -490,53 +383,27 @@ global.WEB_SERVER = CLASS(function(cls) {
 							//OPTIONAL: contentOrParams.contentType		응답하는 컨텐츠의 종류
 							//OPTIONAL: contentOrParams.buffer			응답 내용을 Buffer형으로 전달
 							//OPTIONAL: contentOrParams.content			응답 내용을 문자열로 전달
-							//OPTIONAL: contentOrParams.stream			fs.createReadStream와 같은 함수로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
+							//OPTIONAL: contentOrParams.stream			FS.createReadStream와 같은 함수로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
 							//OPTIONAL: contentOrParams.totalSize		stream으로 응답을 전달하는 경우 스트림의 전체 길이
 							//OPTIONAL: contentOrParams.startPosition	stream으로 응답을 전달하는 경우 전달할 시작 위치
 							//OPTIONAL: contentOrParams.endPosition		stream으로 응답을 전달하는 경우 전달할 끝 위치
 							//OPTIONAL: contentOrParams.encoding		응답 인코딩
 							//OPTIONAL: contentOrParams.version			지정된 버전으로 웹 브라우저에 리소스를 캐싱합니다.
 							//OPTIONAL: contentOrParams.isFinal			리소스가 결코 변경되지 않는 경우 true로 지정합니다. 그러면 version과 상관 없이 캐싱을 수행합니다.
-
-							var
-							// status code
-							statusCode,
-
-							// cookies
-							cookies,
-
-							// headers
-							headers,
-
-							// content type
-							contentType,
-
-							// content
-							content,
-
-							// buffer
-							buffer,
 							
-							// stream
-							stream,
-							
-							// total size
-							totalSize,
-							
-							// start position
-							startPosition,
-							
-							// end position
-							endPosition,
-
-							// encoding
-							encoding,
-
-							// version
-							version,
-
-							// is final
-							isFinal;
+							let statusCode;
+							let cookies;
+							let headers;
+							let contentType;
+							let content;
+							let buffer;
+							let stream;
+							let totalSize;
+							let startPosition;
+							let endPosition;
+							let encoding;
+							let version;
+							let isFinal;
 
 							if (requestInfo.isResponsed !== true) {
 
@@ -611,8 +478,8 @@ global.WEB_SERVER = CLASS(function(cls) {
 									if (acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
 	
 										headers['Content-Encoding'] = 'gzip';
-	
-										zlib.gzip(buffer !== undefined ? buffer : String(content), function(error, buffer) {
+
+										ZLib.gzip(buffer !== undefined ? buffer : String(content), (error, buffer) => {
 											nativeRes.writeHead(statusCode, headers);
 											nativeRes.end(buffer, encoding);
 										});
@@ -629,7 +496,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 							}
 						};
 						
-						responseError = function(errorMsg) {
+						let responseError = (errorMsg) => {
 							
 							if (errorHandler !== undefined) {
 								isGoingOn = errorHandler(errorMsg, requestInfo, response);
@@ -651,34 +518,28 @@ global.WEB_SERVER = CLASS(function(cls) {
 						// when upload request
 						if (isUploadURI === true) {
 							
-							CREATE_FOLDER(uploadPath, function() {
-				
-								var
-								// form
-								form,
-				
-								// file data set
-								fileDataSet;
-				
+							CREATE_FOLDER(uploadPath, () => {
+								
 								// serve upload.
 								if (method === 'POST') {
 				
-									form = new IncomingForm();
-									fileDataSet = [];
+									let form = new IncomingForm();
+									
+									let fileDataSet = [];
 									
 									form.uploadDir = uploadPath;
 									
-									form.on('progress', function(bytesRecieved, bytesExpected) {
+									form.on('progress', (bytesRecieved, bytesExpected) => {
 										
 										if (uploadProgressHandler !== undefined) {
 											uploadProgressHandler(params, bytesRecieved, bytesExpected, requestInfo);
 										}
 										
-									}).on('field', function(name, value) {
+									}).on('field', (name, value) => {
 				
 										params[name] = value;
 				
-									}).on('file', function(name, fileInfo) {
+									}).on('file', (name, fileInfo) => {
 				
 										fileDataSet.push({
 											path : fileInfo.path,
@@ -688,32 +549,26 @@ global.WEB_SERVER = CLASS(function(cls) {
 											lastModifiedTime : fileInfo.lastModifiedDate
 										});
 				
-									}).on('end', function() {
+									}).on('end', () => {
 										
 										NEXT(fileDataSet, [
-										function(fileData, next) {
+										(fileData, next) => {
 											
-											var
-											// path
-											path = fileData.path,
-											
-											// file size
-											fileSize = fileData.size,
-											
-											// file type
-											fileType = fileData.type;
+											let path = fileData.path;
+											let fileSize = fileData.size;
+											let fileType = fileData.type;
 											
 											fileData.ip = ip;
 											
 											if (fileSize > maxUploadFileMB * 1024 * 1024) {
 				
 												NEXT(fileDataSet, [
-												function(fileData, next) {
+												(fileData, next) => {
 													REMOVE_FILE(fileData.path, next);
 												},
 				
-												function() {
-													return function() {
+												() => {
+													return () => {
 														if (uploadOverFileSizeHandler !== undefined) {
 															uploadOverFileSizeHandler(params, maxUploadFileMB, requestInfo, response);
 														}
@@ -726,10 +581,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 											if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
 				
 												IMAGEMAGICK_READ_METADATA(path, {
-													error : function() {
+													error : () => {
 														next(fileData);
 													},
-													success : function(metadata) {
+													success : (metadata) => {
 				
 														if (metadata.exif !== undefined) {
 				
@@ -751,13 +606,13 @@ global.WEB_SERVER = CLASS(function(cls) {
 											}
 										},
 				
-										function() {
-											return function() {
+										() => {
+											return () => {
 												uploadSuccessHandler(params, fileDataSet, requestInfo, response);
 											};
 										}]);
 										
-									}).on('error', function(error) {
+									}).on('error', (error) => {
 										responseError(error.toString());
 									});
 				
@@ -770,13 +625,13 @@ global.WEB_SERVER = CLASS(function(cls) {
 						else {
 							
 							NEXT([
-							function(next) {
+							(next) => {
 			
 								if (requestListener !== undefined) {
 									
-									isGoingOn = requestListener(requestInfo, response, function(newRootPath) {
+									isGoingOn = requestListener(requestInfo, response, (newRootPath) => {
 										rootPath = newRootPath;
-									}, function(_overrideResponseInfo) {
+									}, (_overrideResponseInfo) => {
 			
 										if (_overrideResponseInfo !== undefined) {
 											overrideResponseInfo = _overrideResponseInfo;
@@ -797,15 +652,15 @@ global.WEB_SERVER = CLASS(function(cls) {
 								}
 							},
 			
-							function() {
-								return function() {
+							() => {
+								return () => {
 									
 									// stream audio or video.
 									if (headers.range !== undefined) {
 										
 										GET_FILE_INFO(rootPath + '/' + uri, {
 											
-											notExists : function() {
+											notExists : () => {
 											
 												response(EXTEND({
 													origin : {
@@ -815,30 +670,21 @@ global.WEB_SERVER = CLASS(function(cls) {
 												}));
 											},
 											
-											success : function(fileInfo) {
+											success : (fileInfo) => {
 												
-												var
-												// positions
-												positions = headers.range.replace(/bytes=/, '').split('-'),
+												let positions = headers.range.replace(/bytes=/, '').split('-');
+												let totalSize = fileInfo.size;
+												let startPosition = INTEGER(positions[0]);
+												let endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]);
 												
-												// total size
-												totalSize = fileInfo.size,
-												
-												// start position
-												startPosition = INTEGER(positions[0]),
-												
-												// end position
-												endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]),
-												
-												// stream
-												stream = fs.createReadStream(rootPath + '/' + uri, {
+												let stream = FS.createReadStream(rootPath + '/' + uri, {
 													start : startPosition,
 													end : endPosition
-												}).on('open', function() {
+												}).on('open', () => {
 													
 													response(EXTEND({
 														origin : {
-															contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+															contentType : getContentTypeFromExtension(Path.extname(uri).substring(1)),
 															totalSize : totalSize,
 															startPosition : startPosition,
 															endPosition : endPosition,
@@ -847,11 +693,11 @@ global.WEB_SERVER = CLASS(function(cls) {
 														extend : overrideResponseInfo
 													}));
 													
-												}).on('error', function(error) {
+												}).on('error', (error) => {
 													
 													response(EXTEND({
 														origin : {
-															contentType : getContentTypeFromExtension(path.extname(uri).substring(1)),
+															contentType : getContentTypeFromExtension(Path.extname(uri).substring(1)),
 															totalSize : totalSize,
 															startPosition : startPosition,
 															endPosition : endPosition,
@@ -889,7 +735,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 											origin : {
 												statusCode : 302,
 												headers : {
-													'Location' : '/' + originalURI + '?' + querystring.stringify(COMBINE([params, {
+													'Location' : '/' + originalURI + '?' + Querystring.stringify(COMBINE([params, {
 														version : version
 													}]))
 												}
@@ -902,11 +748,9 @@ global.WEB_SERVER = CLASS(function(cls) {
 									else if (rootPath !== undefined && method === 'GET') {
 										
 										NEXT([
-										function(next) {
+										(next) => {
 			
-											var
-											// resource cache
-											resourceCache = resourceCaches[originalURI];
+											let resourceCache = resourceCaches[originalURI];
 			
 											if (resourceCache !== undefined) {
 												next(resourceCache.buffer, resourceCache.contentType);
@@ -914,13 +758,13 @@ global.WEB_SERVER = CLASS(function(cls) {
 												
 												// serve file.
 												READ_FILE(rootPath + '/' + uri, {
-			
-													notExists : function() {
+													
+													notExists : () => {
 			
 														// not found file, so serve index.
 														READ_FILE(rootPath + (uri === '' ? '' : ('/' + uri)) + '/index.html', {
 			
-															notExists : function() {
+															notExists : () => {
 																
 																if (notExistsResourceHandler !== undefined) {
 																	isGoingOn = notExistsResourceHandler(rootPath + '/' + uri, requestInfo, response);
@@ -938,7 +782,7 @@ global.WEB_SERVER = CLASS(function(cls) {
 															},
 															
 															error : responseError,
-															success : function(buffer) {
+															success : (buffer) => {
 																next(buffer, 'text/html');
 															}
 														});
@@ -950,12 +794,10 @@ global.WEB_SERVER = CLASS(function(cls) {
 											}
 										},
 			
-										function() {
-											return function(buffer, contentType) {
+										() => {
+											return (buffer, contentType) => {
 												
-												var
-												// extension
-												extension = path.extname(uri).substring(1);
+												let extension = Path.extname(uri).substring(1);
 												
 												if (preprocessors !== undefined && preprocessors[extension] !== undefined) {
 													preprocessors[extension](buffer.toString(), response);
@@ -1001,36 +843,32 @@ global.WEB_SERVER = CLASS(function(cls) {
 
 			// init sever.
 			if (port !== undefined) {
-				nativeServer = http.createServer(function(nativeReq, nativeRes) {
+				nativeServer = HTTP.createServer((nativeReq, nativeRes) => {
 					serve(nativeReq, nativeRes, false);
 				}).listen(port);
 			}
 
 			// init secured sever.
 			if (securedPort !== undefined) {
-				nativeServer = https.createServer({
-					key : fs.readFileSync(securedKeyFilePath),
-					cert : fs.readFileSync(securedCertFilePath)
-				}, function(nativeReq, nativeRes) {
+				nativeServer = HTTPS.createServer({
+					key : FS.readFileSync(securedKeyFilePath),
+					cert : FS.readFileSync(securedCertFilePath)
+				}, (nativeReq, nativeRes) => {
 					serve(nativeReq, nativeRes, true);
 				}).listen(securedPort);
 			}
 			
-			self.getNativeServer = getNativeServer = function() {
+			let getNativeServer = self.getNativeServer = () => {
 				return nativeServer;
 			};
 			
-			self.addPreprocessor = addPreprocessor = function(params) {
+			let addPreprocessor = self.addPreprocessor = (params) => {
 				//REQUIRED: params
 				//REQUIRED: params.extension
 				//REQUIRED: params.preprocessor
 				
-				var
-				// extension
-				extension = params.extension,
-				
-				// preprocessor
-				preprocessor = params.preprocessor;
+				let extension = params.extension;
+				let preprocessor = params.preprocessor;
 				
 				if (preprocessors === undefined) {
 					preprocessors = {};

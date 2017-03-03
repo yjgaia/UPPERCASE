@@ -1,16 +1,15 @@
-TEST('REMOVE_FILE', function(check) {
-	'use strict';
+TEST('REMOVE_FILE', (check) => {
 
 	REMOVE_FILE({
 		path : 'UPPERCASE-CORE/testFolder/test2.txt',
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		success : function() {
+		success : () => {
 			console.log('good!');
 		}
 	});
@@ -20,22 +19,22 @@ TEST('REMOVE_FILE', function(check) {
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		success : function() {
+		success : () => {
 			console.log('good!');
 		}
 	});
 	
 	REMOVE_FILE('UPPERCASE-CORE/test.txt', {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		success : function() {
+		success : () => {
 			console.log('good!');
 		}
 	});

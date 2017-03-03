@@ -1,14 +1,15 @@
+'use strict';
+
 /*
 
 Welcome to UPPERCASE-BOOT! (http://uppercase.io)
 
 */
 
-/**
+/*
  * Configuration
  */
-OVERRIDE(CONFIG, function(origin) {
-	'use strict';
+OVERRIDE(CONFIG, (origin) => {
 
 	global.CONFIG = COMBINE([{
 		
@@ -17,14 +18,11 @@ OVERRIDE(CONFIG, function(origin) {
 		title : 'UPPERCASE PROJECT',
 		
 		baseBackgroundColor : '#000',
-		baseColor : '#fff',
+		baseColor : '#fff'
 		
 		// maxThumbWidth
 		// or
 		// maxThumbHeight
-		
-		isMobileFullScreen : false,
-		isUsingHTMLSnapshot : false
 		
 	}, origin]);
 });

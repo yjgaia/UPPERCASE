@@ -1,5 +1,4 @@
-TEST('COPY_FILE', function(check) {
-	'use strict';
+TEST('COPY_FILE', (check) => {
 
 	COPY_FILE({
 		from : 'UPPERCASE-CORE/test.txt',
@@ -7,11 +6,11 @@ TEST('COPY_FILE', function(check) {
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		}
 	});
@@ -27,15 +26,15 @@ TEST('COPY_FILE', function(check) {
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		},
 
-		success : function() {
+		success : () => {
 			check(READ_FILE({
 				path : 'UPPERCASE-CORE/test3.txt',
 				isSync : true

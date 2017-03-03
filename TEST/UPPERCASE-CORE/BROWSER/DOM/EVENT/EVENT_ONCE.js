@@ -1,9 +1,6 @@
-TEST('EVENT_ONCE', function(check) {
-	'use strict';
+TEST('EVENT_ONCE', (check) => {
 
-	var
-	// div
-	div = DIV({
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 50,
@@ -20,7 +17,7 @@ TEST('EVENT_ONCE', function(check) {
 	EVENT_ONCE({
 		node : div,
 		name : 'tap'
-	}, function(e, div) {
+	}, (e, div) => {
 		console.log('tap:', e.getLeft(), e.getTop());
 	});
 
@@ -28,7 +25,7 @@ TEST('EVENT_ONCE', function(check) {
 	EVENT_ONCE({
 		node : div,
 		name : 'touchstart'
-	}, function(e) {
+	}, (e) => {
 		console.log('touchstart:', e.getLeft(), e.getTop());
 	});
 
@@ -36,7 +33,7 @@ TEST('EVENT_ONCE', function(check) {
 	EVENT_ONCE({
 		node : div,
 		name : 'touchmove'
-	}, function(e) {
+	}, (e) => {
 
 		console.log('touchmove:', e.getLeft(), e.getTop());
 
@@ -48,7 +45,7 @@ TEST('EVENT_ONCE', function(check) {
 	EVENT_ONCE({
 		node : div,
 		name : 'touchend'
-	}, function(e) {
+	}, (e) => {
 		console.log('touchend:', e.getLeft(), e.getTop());
 	});
 
@@ -56,7 +53,7 @@ TEST('EVENT_ONCE', function(check) {
 	EVENT_ONCE({
 		node : div,
 		name : 'mouseover'
-	}, function(e) {
+	}, (e) => {
 		console.log('mouseover:', e.getLeft(), e.getTop());
 	});
 
@@ -64,7 +61,7 @@ TEST('EVENT_ONCE', function(check) {
 	EVENT_ONCE({
 		node : div,
 		name : 'mouseout'
-	}, function(e) {
+	}, (e) => {
 		console.log('mouseout:', e.getLeft(), e.getTop());
 	});
 });

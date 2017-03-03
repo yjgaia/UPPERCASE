@@ -1,20 +1,19 @@
-TEST('GET_FILE_INFO', function(check) {
-	'use strict';
+TEST('GET_FILE_INFO', (check) => {
 
-	var info = GET_FILE_INFO({
+	let info = GET_FILE_INFO({
 		path : 'UPPERCASE-CORE/test.txt',
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		},
 
-		success : function(info) {
+		success : (info) => {
 			check(info.size === 18);
 		}
 	});
@@ -26,15 +25,15 @@ TEST('GET_FILE_INFO', function(check) {
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		},
 
-		success : function(info) {
+		success : (info) => {
 			check(info.size === 18);
 		}
 	});

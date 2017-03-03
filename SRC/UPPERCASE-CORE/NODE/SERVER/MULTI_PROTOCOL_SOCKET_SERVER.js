@@ -3,19 +3,14 @@
  */
 global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
 
-	init : function(inner, self, params, connectionListener) {
-		'use strict';
+	init : (inner, self, params, connectionListener) => {
 		//REQUIRED: params
 		//OPTIONAL: params.socketServerPort
 		//OPTIONAL: params.webServer
 		//REQUIRED: connectionListener
 
-		var
-		// socket server port
-		socketServerPort = params.socketServerPort,
-		
-		// web server
-		webServer = params.webServer;
+		let socketServerPort = params.socketServerPort;
+		let webServer = params.webServer;
 
 		if (socketServerPort !== undefined) {
 

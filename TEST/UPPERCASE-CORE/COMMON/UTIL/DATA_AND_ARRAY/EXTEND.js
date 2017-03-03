@@ -1,28 +1,22 @@
-TEST('EXTEND', function(check) {
-	'use strict';
+TEST('EXTEND', (check) => {
 
-	var
-	// data1
-	data1 = {
+	let data1 = {
 		a : 1,
 		b : 2,
 		c : 3,
 		d : ['a', 'b', 'c']
-	},
-
-	// data2
-	data2 = {
+	};
+	
+	let data2 = {
 		d : ['d', 'e'],
 		e : {
 			k : 1
 		}
-	},
-
-	// array1
-	array1 = [1, 2, 3],
-
-	// array2
-	array2 = [4, 5, [7, 8]];
+	};
+	
+	let array1 = [1, 2, 3];
+	
+	let array2 = [4, 5, [7, 8]];
 
 	EXTEND({
 		origin : data1,

@@ -1,5 +1,4 @@
-TEST('CONSOLE_COLOR', function(check) {
-	'use strict';
+TEST('CONSOLE_COLOR', (check) => {
 
 	console.log(CONSOLE_RED('red'));
 	console.log(CONSOLE_GREEN('green'));

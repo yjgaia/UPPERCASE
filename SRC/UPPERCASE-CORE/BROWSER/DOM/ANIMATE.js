@@ -1,16 +1,13 @@
-/**
+/*
  * 노드에 애니메이션을 지정합니다.
  */
-global.ANIMATE = METHOD(function(m) {
-	'use strict';
+global.ANIMATE = METHOD((m) => {
 	
-	var
-	// keyframes count
-	keyframesCount = 0;
+	let keyframesCount = 0;
 	
 	return {
 		
-		run : function(params, animationEndHandler) {
+		run : (params, animationEndHandler) => {
 			//REQUIRED: params
 			//REQUIRED: params.node				애니메이션을 지정할 노드
 			//REQUIRED: params.keyframes		애니메이션 키 프레임
@@ -21,50 +18,27 @@ global.ANIMATE = METHOD(function(m) {
 			//OPTIONAL: params.direction		애니메이션의 방향 (입력하지 않으면 'normal', 'reverse', 'alternate', 'alternate-reverse' 사용 가능)
 			//OPTIONAL: animationEndHandler		애니메이션이 끝날 때 호출될 핸들러
 			
-			var
-			// node
-			node = params.node,
-	
-			// keyframes
-			keyframes = params.keyframes,
+			let node = params.node;
+			let keyframes = params.keyframes;
+			let duration = params.duration === undefined ? 0.5 : params.duration;
+			let timingFunction = params.timingFunction === undefined ? 'ease' : params.timingFunction;
+			let delay = params.delay === undefined ? 0 : params.delay;
+			let iterationCount = params.iterationCount === undefined ? 1 : params.iterationCount;
+			let direction = params.direction === undefined ? 'normal' : params.direction;
 			
-			// duration
-			duration = params.duration === undefined ? 0.5 : params.duration,
+			let keyframesName = '__KEYFRAMES_' + keyframesCount;
+			let keyframesStr = '';
 			
-			// timing function
-			timingFunction = params.timingFunction === undefined ? 'ease' : params.timingFunction,
-			
-			// delay
-			delay = params.delay === undefined ? 0 : params.delay,
-			
-			// iteration count
-			iterationCount = params.iterationCount === undefined ? 1 : params.iterationCount,
-			
-			// direction
-			direction = params.direction === undefined ? 'normal' : params.direction,
-			
-			// keyframes name
-			keyframesName = '__KEYFRAMES_' + keyframesCount,
-			
-			// keyframes str
-			keyframesStr = '',
-			
-			// keyframes start style
-			keyframesStartStyle,
-			
-			// keyframes final style
-			keyframesFinalStyle,
-			
-			// keyframes style el
-			keyframesStyleEl;
+			let keyframesStartStyle;
+			let keyframesFinalStyle;
 			
 			keyframesCount += 1;
 			
-			EACH(keyframes, function(style, key) {
+			EACH(keyframes, (style, key) => {
 				
 				keyframesStr += key + '{';
 	
-				EACH(style, function(value, name) {
+				EACH(style, (value, name) => {
 	
 					if (typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
 						value = value + 'px';
@@ -83,7 +57,7 @@ global.ANIMATE = METHOD(function(m) {
 			});
 			
 			// create keyframes style element.
-			keyframesStyleEl = document.createElement('style');
+			let keyframesStyleEl = document.createElement('style');
 			keyframesStyleEl.type = 'text/css';
 			keyframesStyleEl.appendChild(document.createTextNode('@keyframes ' + keyframesName + '{' + keyframesStr + '}'));
 			document.getElementsByTagName('head')[0].appendChild(keyframesStyleEl);
@@ -98,7 +72,7 @@ global.ANIMATE = METHOD(function(m) {
 	
 			if (animationEndHandler !== undefined && iterationCount === 1) {
 	
-				DELAY(duration, function() {
+				DELAY(duration, () => {
 					animationEndHandler(node);
 				});
 			}

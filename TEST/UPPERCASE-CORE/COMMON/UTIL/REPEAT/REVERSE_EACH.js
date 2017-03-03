@@ -1,35 +1,27 @@
-TEST('REVERSE_EACH', function(check) {
-	'use strict';
+TEST('REVERSE_EACH', (check) => {
 
-	var
-	// just value
-	value = 1,
+	let value = 1;
+	
+	let array = [1, 2, 3];
+	
+	let sum = 0;
 
-	// array
-	array = [1, 2, 3],
-
-	// sum
-	sum = 0,
-
-	// function
-	func;
-
-	REVERSE_EACH(value, function(value, i) {
+	REVERSE_EACH(value, (value, i) => {
 		console.log('value each - ' + i + ': ' + value);
 		sum += value;
 	});
 
 	check(sum === 0);
 
-	REVERSE_EACH(array, function(value, i) {
+	REVERSE_EACH(array, (value, i) => {
 		console.log('array each - ' + i + ': ' + value);
 		sum += value;
 	});
 
 	check(sum === 6);
 
-	func = function() {
-		REVERSE_EACH(arguments, function(value, i) {
+	let func = () => {
+		REVERSE_EACH(arguments, (value, i) => {
 			console.log('arguments each - ' + i + ': ' + value);
 			sum += value;
 		});

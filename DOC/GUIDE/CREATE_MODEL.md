@@ -46,19 +46,15 @@ BOOT({
 ```javascript
 Sample.SomeModel = OBJECT({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
+	
 		// 모델은 각 BOX에 할당되어 있는 MODEL을 상속하여 만듭니다.
 		return Sample.MODEL;
 	},
 
-	params : function() {
-		'use strict';
+	params : () => {
 
-		var
-		// valid data set
-		validDataSet = {
+		let validDataSet = {
 			
 			// 종류
 			kind : {
@@ -104,20 +100,19 @@ Sample.SomeModel = OBJECT({
 ```javascript
 Sample.MAIN = METHOD({
 
-	run : function() {
-		'use strict';
-		
+	run : () => {
+	
 		// 멀티 코어 CPU에서 하나의 코어에서만 아래 내용 실행
 		if (CPU_CLUSTERING.getWorkerId() === 1) {
 			
 			// 부팅 후 1초 후에 실행
-			DELAY(1, function() {
+			DELAY(1, () => {
 				
 				// 모델 생성
 				Sample.SomeModel.create({
 					name : 'Maru',
 					kind : 'dog'
-				}, function(savedData) {
+				}, (savedData) => {
 					console.log(savedData);
 				});
 				

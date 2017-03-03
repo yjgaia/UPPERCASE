@@ -1,15 +1,14 @@
-TEST('FIND_FILE_NAMES', function(check) {
-	'use strict';
+TEST('FIND_FILE_NAMES', (check) => {
 
 	check(CHECK_ARE_SAME([FIND_FILE_NAMES({
 		path : 'UPPERCASE-CORE/testFolder/subFolder1/subFolder1',
 		isSync : true
 	}, {
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		}
 	}), ['test1']]));
@@ -19,15 +18,15 @@ TEST('FIND_FILE_NAMES', function(check) {
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		notExists : function() {
+		notExists : () => {
 			console.log('NOT EXISTS!');
 		},
 
-		success : function(fileNames) {
+		success : (fileNames) => {
 			check(CHECK_ARE_SAME([fileNames, ['test2']]));
 		}
 	});

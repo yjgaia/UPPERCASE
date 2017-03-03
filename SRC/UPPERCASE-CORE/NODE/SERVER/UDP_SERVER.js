@@ -3,42 +3,28 @@
  */
 global.UDP_SERVER = CLASS({
 
-	init : function(inner, self, port, requestListener) {
-		'use strict';
+	init : (inner, self, port, requestListener) => {
 		//REQUIRED: port
 		//REQUIRED: requestListener
 
-		var
-		//IMPORT: dgram
-		dgram = require('dgram'),
+		let dgram = require('dgram');
+		let server = dgram.createSocket('udp6');
 		
-		// server
-		server = dgram.createSocket('udp6'),
-		
-		// send.
-		send;
-		
-		self.send = send = function(params) {
+		let send = self.send = (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.ip
 			//REQUIRED: params.port
 			//REQUIRED: params.content
 			
-			var
-			// message
-			message = new Buffer(params.content);
+			let message = new Buffer(params.content);
 			
 			server.send(message, 0, message.length, params.port, params.ip);
 		};
 		
-		server.on('message', function(message, nativeRequestInfo) {
+		server.on('message', (message, nativeRequestInfo) => {
 			
-			var
-			// ip
-			ip = nativeRequestInfo.address,
-			
-			// port
-			port = nativeRequestInfo.port;
+			let ip = nativeRequestInfo.address;
+			let port = nativeRequestInfo.port;
 			
 			requestListener(
 			
@@ -53,7 +39,7 @@ global.UDP_SERVER = CLASS({
 			message.toString(),
 			
 			// response.
-			function(content) {
+			(content) => {
 				
 				send({
 					ip : ip,
@@ -63,7 +49,7 @@ global.UDP_SERVER = CLASS({
 			});
 		});
 		
-		server.on('listening', function() {
+		server.on('listening', () => {
 			console.log('[UDP_SERVER] UDP 서버가 실행중입니다. (포트:' + port + ')');
 		});
 		

@@ -1,16 +1,13 @@
-/**
+/*
  * DOM 객체를 생성하고 다루는 클래스
  */
 global.DOM = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return NODE;
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.tag		생설할 DOM 객체에 해당하는 태그 지정
 		//OPTIONAL: params.el		태그를 지정하지 않고 HTML element를 직접 지정
@@ -21,30 +18,11 @@ global.DOM = CLASS({
 		//OPTIONAL: params.on		이벤트
 		//OPTIONAL: params.__TEXT	UPPERCASE가 문자열 DOM 객체를 생성하기 위해 내부적으로 사용하는 파라미터
 
-		var
-		// tag
-		tag = params.tag,
-
-		// HTML Element
-		el = params.el,
-		
-		// id
-		id = params.id,
-		
-		// cls
-		cls = params.cls,
-
-		// __TEXT
-		__TEXT = params.__TEXT,
-
-		// get el.
-		getEl,
-
-		// set el.
-		setEl,
-
-		// set attr.
-		setAttr;
+		let tag = params.tag;
+		let el = params.el;
+		let id = params.id;
+		let cls = params.cls;
+		let __TEXT = params.__TEXT;
 
 		// when tag is not undefined
 		if (tag !== undefined) {
@@ -66,11 +44,11 @@ global.DOM = CLASS({
 			}));
 		}
 
-		self.getEl = getEl = function() {
+		let getEl = self.getEl = () => {
 			return el;
 		};
 
-		inner.setEl = setEl = function(_el) {
+		let setEl = inner.setEl = (_el) => {
 			//REQUIRED: _el
 
 			el = _el;
@@ -80,17 +58,13 @@ global.DOM = CLASS({
 
 		setEl(el);
 
-		inner.setAttr = setAttr = function(params) {
+		let setAttr = inner.setAttr = (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.name
 			//REQUIRED: params.value
 
-			var
-			// name
-			name = params.name,
-
-			// value
-			value = params.value;
+			let name = params.name;
+			let value = params.value;
 
 			el.setAttribute(name, value);
 		};

@@ -1,19 +1,15 @@
-TEST('INTERVAL', function(check) {
-	'use strict';
+TEST('INTERVAL', (check) => {
 
-	var
-	// count
-	count = 0,
+	let count = 0;
 
-	// interval
-	interval = INTERVAL(3, function(interval) {
+	let interval = INTERVAL(3, (interval) => {
 
 		count += 1;
 
 		console.log('interval per 3 seconds, count:', count);
 	});
 
-	DELAY(10, function() {
+	DELAY(10, () => {
 		interval.remove();
 	});
 });

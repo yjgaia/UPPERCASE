@@ -1,23 +1,14 @@
-/**
+/*
  * MongoDB 서버에 연결합니다.
  */
-global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
-	'use strict';
+global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 
-	var
-	// DEFAULT_DB_SERVER_NAME
-	DEFAULT_DB_SERVER_NAME = '__',
+	const DEFAULT_DB_SERVER_NAME = '__';
 	
-	// native dbs
-	nativeDBs = {},
+	let nativeDBs = {};
+	let initDBFuncMap = {};
 
-	// init db func map
-	initDBFuncMap = {},
-
-	// add init db func.
-	addInitDBFunc;
-
-	m.addInitDBFunc = addInitDBFunc = function(dbServerName, initDBFunc) {
+	let addInitDBFunc = m.addInitDBFunc = (dbServerName, initDBFunc) => {
 		//OPTIONAL: dbServerName
 		//REQUIRED: initDBFunc
 		
@@ -45,7 +36,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 	return {
 
-		run : function(params, callback) {
+		run : (params, callback) => {
 			//REQUIRED: params
 			//OPTIONAL: params.dbServerName
 			//OPTIONAL: params.host
@@ -55,26 +46,22 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 			//OPTIONAL: params.password
 			//OPTIONAL: callback
 
-			var
-			// db server name
-			dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName,
+			let dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName;
+			let host = params.host === undefined ? '127.0.0.1' : params.host;
+			let port = params.port === undefined ? 27017 : params.port;
+			let name = params.name;
+			let username = params.username;
+			let password = params.password;
 
-			// host
-			host = params.host === undefined ? '127.0.0.1' : params.host,
-
-			// port
-			port = params.port === undefined ? 27017 : params.port,
-
-			// name
-			name = params.name,
-			
-			// username
-			username = params.username,
-
-			// password
-			password = params.password;
-
-			require('mongodb').MongoClient.connect('mongodb://' + (username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') + host + ':' + port + '/' + name, function(error, nativeDB) {
+			require('mongodb').MongoClient.connect(
+				
+				'mongodb://' +
+				(username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') +
+				host + ':' +
+				port + '/' +
+				name,
+				
+				(error, nativeDB) => {
 
 				if (error !== TO_DELETE) {
 
@@ -86,7 +73,7 @@ global.CONNECT_TO_DB_SERVER = METHOD(function(m) {
 
 					if (initDBFuncMap[dbServerName] !== undefined) {
 						
-						EACH(initDBFuncMap[dbServerName], function(initDBFunc) {
+						EACH(initDBFuncMap[dbServerName], (initDBFunc) => {
 							initDBFunc(nativeDB);
 						});
 						

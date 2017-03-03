@@ -1,5 +1,4 @@
-TEST('MSG', function(check) {
-	'use strict';
+TEST('MSG', (check) => {
 
 	// if you want to change language, use INFO.changeLang('ko').
 

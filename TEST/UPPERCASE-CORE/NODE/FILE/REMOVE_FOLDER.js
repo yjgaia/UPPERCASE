@@ -1,38 +1,37 @@
-TEST('REMOVE_FOLDER', function(check) {
-	'use strict';
+TEST('REMOVE_FOLDER', (check) => {
 
 	REMOVE_FOLDER({
 		path : 'UPPERCASE-CORE/testFolder',
 		isSync : true
 	}, {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		success : function() {
+		success : () => {
 			console.log('good!');
 		}
 	});
 
 	REMOVE_FOLDER('UPPERCASE-CORE/test', {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		success : function() {
+		success : () => {
 			console.log('good!');
 		}
 	});
 
 	REMOVE_FOLDER('UPPERCASE-CORE/test2', {
 
-		error : function(errorMsg) {
+		error : (errorMsg) => {
 			console.log('ERROR!', errorMsg);
 		},
 
-		success : function() {
+		success : () => {
 			console.log('good!');
 		}
 	});

@@ -1,11 +1,8 @@
-TEST('MINIFY_JS', function(check) {
-    'use strict';
+TEST('MINIFY_JS', (check) => {
 
-    READ_FILE('UPPERCASE-CORE/NODE/MINIFY/sample.js', function(content) {
+    READ_FILE('UPPERCASE-CORE/NODE/MINIFY/sample.js', (content) => {
 
-        var
-        // js code
-        jsCode = content.toString();
+        let jsCode = content.toString();
 
         console.log(MINIFY_JS(jsCode));
     });

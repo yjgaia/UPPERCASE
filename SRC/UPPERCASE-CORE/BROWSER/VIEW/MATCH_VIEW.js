@@ -1,69 +1,46 @@
-/**
+/*
  * 특정 URI와 뷰를 연결합니다.
  */
-global.MATCH_VIEW = METHOD(function(m) {
-	'use strict';
+global.MATCH_VIEW = METHOD((m) => {
 	
-	var
-	// change uri handlers
-	changeURIHandlers = [],
+	let changeURIHandlers = [];
 	
-	// check all.
-	checkAll;
-	
-	m.checkAll = checkAll = function() {
-		EACH(changeURIHandlers, function(changeURIHandler) {
+	let checkAll = m.checkAll = () => {
+		EACH(changeURIHandlers, (changeURIHandler) => {
 			changeURIHandler();
 		});
 	};
 	
 	return {
 
-		run : function(params) {
+		run : (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.uri
 			//OPTIONAL: params.excludeURI
 			//REQUIRED: params.target
-	
-			var
-			// uri
-			uri = params.uri,
+
+			let uri = params.uri;
+			let excludeURI = params.excludeURI;
+			let target = params.target;
 			
-			// exclude uri
-			excludeURI = params.excludeURI,
+			let uriMatcher = URI_MATCHER(uri);
+			let excludeURIMatcher = excludeURI === undefined ? undefined : URI_MATCHER(excludeURI);
 	
-			// target
-			target = params.target,
-	
-			// uri matcher
-			uriMatcher = URI_MATCHER(uri),
-	
-			// exclude uri matcher
-			excludeURIMatcher = excludeURI === undefined ? undefined : URI_MATCHER(excludeURI),
-	
-			// view
-			view,
-	
-			// pre params
-			preParams,
+			let view;
+			let preParams;
 			
-			// change uri handler.
-			changeURIHandler = function() {
+			let changeURIHandler = () => {
 	
-				var
-				// uri
-				uri = URI(),
-	
-				// result
-				result,
-	
-				// uri parmas
-				uriParams;
+				let uri = URI();
+				let result;
 	
 				// when view founded
-				if (uri !== REFRESH.getRefreshingURI() && (result = uriMatcher.check(uri)).checkIsMatched() === true && (excludeURI === undefined || excludeURIMatcher.check(uri).checkIsMatched() !== true)) {
-	
-					uriParams = result.getURIParams();
+				if (
+				uri !== REFRESH.getRefreshingURI() &&
+				(result = uriMatcher.check(uri)).checkIsMatched() === true &&
+				(excludeURI === undefined || excludeURIMatcher.check(uri).checkIsMatched() !== true)) {
+
+					let uriParams = result.getURIParams();
 	
 					// when before view not exists, create view.
 					if (view === undefined) {
@@ -97,7 +74,7 @@ global.MATCH_VIEW = METHOD(function(m) {
 			
 			changeURIHandlers.push(changeURIHandler);
 	
-			EVENT('popstate', function() {
+			EVENT('popstate', () => {
 				changeURIHandler();
 			});
 			
@@ -106,45 +83,33 @@ global.MATCH_VIEW = METHOD(function(m) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.MATCH_VIEW = METHOD({
 
-		run : function(params) {
+		run : (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.uri
 			//OPTIONAL: params.excludeURI
 			//REQUIRED: params.target
 
-			var
-			// uri
-			uri = params.uri,
-			
-			// exclude uri
-			excludeURI = params.excludeURI,
+			let uri = params.uri;
+			let excludeURI = params.excludeURI;
+			let target = params.target;
 
-			// target
-			target = params.target,
+			let newURIs = [];
+			let newExcludeURIs = [];
 
-			// new uris
-			newURIs = [],
-			
-			// new exclude uris
-			newExcludeURIs = [],
-
-			// push uri.
-			pushURI = function(uri) {
+			let pushURI = (uri) => {
 
 				if (box.boxName === CONFIG.defaultBoxName) {
 					newURIs.push(uri);
 				}
 
 				newURIs.push(box.boxName + '/' + uri);
-			},
+			};
 
-			// push exclude uri.
-			pushExcludeURI = function(uri) {
+			let pushExcludeURI = (uri) => {
 
 				if (box.boxName === CONFIG.defaultBoxName) {
 					newExcludeURIs.push(uri);

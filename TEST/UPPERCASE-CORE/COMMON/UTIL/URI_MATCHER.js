@@ -1,12 +1,8 @@
-TEST('URI_MATCHER', function(check) {
-	'use strict';
+TEST('URI_MATCHER', (check) => {
 
-	var
-	// uri matcher
-	uriMatcher = URI_MATCHER('test/{id}'),
-
-	// result
-	result = uriMatcher.check('test/1234');
+	let uriMatcher = URI_MATCHER('test/{id}');
+	
+	let result = uriMatcher.check('test/1234');
 
 	check(result.checkIsMatched() === true);
 

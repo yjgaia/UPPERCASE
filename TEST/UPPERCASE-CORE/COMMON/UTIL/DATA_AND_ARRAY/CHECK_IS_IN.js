@@ -1,18 +1,14 @@
-TEST('CHECK_IS_IN', function(check) {
-	'use strict';
+TEST('CHECK_IS_IN', (check) => {
 
-	var
-	// data
-	data = {
+	let data = {
 		a : 1,
 		b : ['a', 'b', 'c'],
 		c : {
 			d : 1
 		}
-	},
-
-	// array
-	array = [1, ['a', 'b', 'c'], {
+	};
+	
+	let array = [1, ['a', 'b', 'c'], {
 		d : 1
 	}];
 

@@ -3,8 +3,7 @@
  */
 global.CONNECT_TO_SOCKET_SERVER = METHOD({
 
-	run : function(params, connectionListenerOrListeners) {
-		'use strict';
+	run : (params, connectionListenerOrListeners) => {
 		//REQUIRED: params
 		//REQUIRED: params.host
 		//REQUIRED: params.port
@@ -12,48 +11,24 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 		//REQUIRED: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
 
-		var
-		// host
-		host = params.host,
+		let host = params.host;
+		let port = params.port;
 
-		// port
-		port = params.port,
+		let connectionListener;
+		let errorListener;
 
-		// connection listener
-		connectionListener,
+		let Net = require('net');
+		
+		let isConnected;
+		
+		let methodMap = {};
+		let sendKey = 0;
+		
+		let receivedStr = '';
 
-		// error listener
-		errorListener,
-
-		// net
-		net = require('net'),
-
-		// connection
-		conn,
-
-		// is connected
-		isConnected,
-
-		// method map
-		methodMap = {},
-
-		// send key
-		sendKey = 0,
-
-		// received string
-		receivedStr = '',
-
-		// on.
-		on,
-
-		// off.
-		off,
-
-		// send.
-		send,
-
-		// run methods.
-		runMethods;
+		let on;
+		let off;
+		let send;
 
 		if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
 			connectionListener = connectionListenerOrListeners;
@@ -62,21 +37,19 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			errorListener = connectionListenerOrListeners.error;
 		}
 
-		runMethods = function(methodName, data, sendKey) {
+		let runMethods = (methodName, data, sendKey) => {
 
-			var
-			// methods
-			methods = methodMap[methodName];
+			let methods = methodMap[methodName];
 
 			if (methods !== undefined) {
 
-				EACH(methods, function(method) {
+				EACH(methods, (method) => {
 
 					// run method.
 					method(data,
 
 					// ret.
-					function(retData) {
+					(retData) => {
 
 						if (send !== undefined && sendKey !== undefined) {
 
@@ -90,23 +63,21 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			}
 		};
 
-		conn = net.connect({
+		let conn = Net.connect({
 			host : host,
 			port : port
-		}, function() {
+		}, () => {
 
 			isConnected = true;
 
 			connectionListener(
 
 			// on.
-			on = function(methodName, method) {
+			on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -116,13 +87,11 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			},
 
 			// off.
-			off = function(methodName, method) {
+			off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -140,21 +109,14 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			},
 
 			// send to server.
-			send = function(methodNameOrParams, callback) {
+			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//REQUIRED: methodNameOrParams.methodName
 				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: callback
 				
-				var
-				// method name
-				methodName,
-				
-				// data
-				data,
-				
-				// callback name
-				callbackName;
+				let methodName;
+				let data;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -173,10 +135,10 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 	
 					if (callback !== undefined) {
 						
-						callbackName = '__CALLBACK_' + sendKey;
+						let callbackName = '__CALLBACK_' + sendKey;
 	
 						// on callback.
-						on(callbackName, function(data) {
+						on(callbackName, (data) => {
 	
 							// run callback.
 							callback(data);
@@ -191,7 +153,7 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 			},
 
 			// disconnect.
-			function() {
+			() => {
 				if (conn !== undefined) {
 					conn.end();
 					conn = undefined;
@@ -200,25 +162,15 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 		});
 
 		// when receive data
-		conn.on('data', function(content) {
+		conn.on('data', (content) => {
 
-			var
-			// str
-			str,
-
-			// index
-			index,
-
-			// params
-			params;
+			let index;
 
 			receivedStr += content.toString();
 
-			while (( index = receivedStr.indexOf('\r\n')) !== -1) {
-
-				str = receivedStr.substring(0, index);
-
-				params = PARSE_STR(str);
+			while ((index = receivedStr.indexOf('\r\n')) !== -1) {
+				
+				let params = PARSE_STR(receivedStr.substring(0, index));
 
 				if (params !== undefined) {
 					runMethods(params.methodName, params.data, params.sendKey);
@@ -229,16 +181,14 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 		});
 
 		// when disconnected
-		conn.on('close', function() {
+		conn.on('close', () => {
 			runMethods('__DISCONNECTED');
 		});
 
 		// when error
-		conn.on('error', function(error) {
+		conn.on('error', (error) => {
 
-			var
-			// error msg
-			errorMsg = error.toString();
+			let errorMsg = error.toString();
 
 			if (isConnected !== true) {
 

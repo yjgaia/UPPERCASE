@@ -1,24 +1,19 @@
-/**
+/*
  * A class
  */
 global.A = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'a'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -27,23 +22,11 @@ global.A = CLASS({
 		//OPTIONAL: params.target	이동할 타겟
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// style
-		style,
 		
-		// href
-		href,
+		let style;
+		let href;
+		let target;
 		
-		// target
-		target,
-		
-		// set href.
-		setHref, 
-
-		// tap.
-		tap;
-
 		// init params.
 		if (params !== undefined) {
 			style = params.style;
@@ -51,7 +34,7 @@ global.A = CLASS({
 			target = params.target;
 		}
 
-		self.setHref = setHref = function(href) {
+		let setHref = self.setHref = (href) => {
 			inner.setAttr({
 				name : 'href',
 				value : href
@@ -69,8 +52,8 @@ global.A = CLASS({
 			});
 		}
 		
-		self.tap = tap = function() {
-
+		let tap = self.tap = () => {
+			
 			EVENT.fireAll({
 				node : self,
 				name : 'tap'
@@ -78,8 +61,7 @@ global.A = CLASS({
 		};
 	},
 
-	afterInit : function(inner, self, params) {
-		'use strict';
+	afterInit : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -89,22 +71,14 @@ global.A = CLASS({
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// children
-		children,
+		let children;
+		let href;
 		
-		// href
-		href,
+		let isHrefContent = false;
 		
-		// is href content
-		isHrefContent = false,
+		let append;
+		let prepend;
 		
-		// append.
-		append,
-		
-		// prepend.
-		prepend;
-
 		// init params.
 		if (params !== undefined) {
 			children = params.c;
@@ -118,8 +92,9 @@ global.A = CLASS({
 			
 			isHrefContent = true;
 			
-			OVERRIDE(self.append, function(origin) {
-				self.append = append = function(node) {
+			OVERRIDE(self.append, (origin) => {
+				
+				append = self.append = (node) => {
 					//REQUIRED: node
 					
 					if (isHrefContent === true) {
@@ -131,8 +106,9 @@ global.A = CLASS({
 				};
 			});
 			
-			OVERRIDE(self.prepend, function(origin) {
-				self.prepend = prepend = function(node) {
+			OVERRIDE(self.prepend, (origin) => {
+				
+				prepend = self.prepend = (node) => {
 					//REQUIRED: node
 					
 					if (isHrefContent === true) {

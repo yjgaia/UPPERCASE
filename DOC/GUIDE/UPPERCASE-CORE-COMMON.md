@@ -55,22 +55,15 @@ UPPERCASE 기반 메소드를 생성합니다.
 ```javascript
 SomeMethod = METHOD({
 
-	run : function(params) {
-	    'use strict';
+	run : (params) => {
 	    //REQUIRED: params
 	    //REQUIRED: params.name
 	    //REQUIRED: params.age
 	    //OPTIONAL: params.city
 	
-	    var
-		// name
-		name = params.name,
-		
-		// age
-		age = params.age,
-		
-		// city
-		city = params.city;
+	    let name = params.name;
+	    let age = params.age;
+	    let city = params.city;
 	    
 	    if (city === undefined) {
 		    console.log(name + '은(는) ' + age + '살입니다.');
@@ -98,37 +91,25 @@ SomeMethod({
 또한 다음과 같이 메소드에 `static` 변수와 함수를 선언할 수 있습니다.
 
 ```javascript
-SomeMethod = METHOD(function(m) {
-	'use strict';
+SomeMethod = METHOD((m) => {
 	
-	var
-	// call count
-	callCount = 0,
+	let callCount = 0;
 	
-	// get call count.
-	getCallCount;
-	
-	m.getCallCount = getCallCount = function() {
+	let getCallCount = m.getCallCount = () => {
 		return callCount;
 	};
 	
 	return {
 	
-		run : function(params) {
+		run : (params) => {
 		    //REQUIRED: params
 		    //REQUIRED: params.name
 		    //REQUIRED: params.age
 		    //OPTIONAL: params.city
 		
-		    var
-			// name
-			name = params.name,
-			
-			// age
-			age = params.age,
-			
-			// city
-			city = params.city;
+		    let name = params.name;
+		    let age = params.age;
+		    let city = params.city;
 			
 			// static 변수 변동
 			callCount += 1;
@@ -171,23 +152,15 @@ UPPERCASE 기반 클래스를 생성합니다. 생성된 클래스는 상속이 
 ```javascript
 SomeClass = CLASS({
 	
-	init : function(inner, self, params) {
-	    'use strict';
+	init : (inner, self, params) => {
 	    //REQUIRED: params
 	    //REQUIRED: params.name
 	    //REQUIRED: params.age
 		
-		var
-		// name
-		name = params.name,
+		let name = params.name;
+		let age = params.age;
 		
-		// age
-		age = params.age,
-		
-		// introduce.
-		introduce;
-		
-		self.introduce = introduce = function() {
+		let introduce = self.introduce = () => {
 	        console.log(name + '은(는) ' + age + '살입니다.');
 		};
 	}
@@ -196,9 +169,7 @@ SomeClass = CLASS({
 
 이후 아래와 같이 객체를 생성하고, 객체의 함수를 실행합니다.
 ```javascript
-var
-// some object
-someObject = SomeClass({
+let someObject = SomeClass({
 	name: '하늘',
 	age: 29
 });
@@ -213,7 +184,7 @@ SomeClass = CLASS({
 
 	// 기본 생성자 파라미터를 지정합니다.
 	// 파라미터가 없더라도, 이를 이용해 파라미터를 지정해 객체를 생성할 수 있습니다.
-	params : function() {
+	params : () => {
 	
         // 기본 생성자 파라미터
 		return {
@@ -224,7 +195,7 @@ SomeClass = CLASS({
 	},
 
 	// 생성자 파라미터를 수정하거나, 상속할 부모 클래스를 지정합니다.
-	preset : function(params, funcs) {
+	preset : (params, funcs) => {
 	
 		// 생성자 파라미터 수정
 		params.a = 2;
@@ -234,58 +205,48 @@ SomeClass = CLASS({
 	},
 
 	// 객체를 초기화합니다. (생성자)
-	init : function(inner, self, params, funcs) {
+	init : (inner, self, params, funcs) => {
 	    
 	    // 객체 내 변수 선언
-	    var a // 생성자 내에서만 사용할 수 있습니다. (private)
-		inner.b // 이 클래스를 상속한 자식 클래스에서도 사용할 수 있습니다. (protected)
-		self.c // 클래스 외부에서 사용할 수 있습니다. (public)
+	    let a = 123; // 생성자 내에서만 사용할 수 있습니다. (private)
+	    
+	    // 객체 내 함수 선언
+	    let b = () => {...} // 생성자 내에서만 사용할 수 있습니다. (private)
+		let c = inner.c = () => {...} // 이 클래스를 상속한 자식 클래스에서도 사용할 수 있습니다. (protected)
+		let d = self.d = () => {...} // 클래스 외부에서 사용할 수 있습니다. (public)
 		
 		...
 	},
 
 	// 객체를 초기화 한 이후에 실행됩니다.
-	afterInit : function(inner, self, params, funcs) {...}
+	afterInit : (inner, self, params, funcs) => {...}
 });
 ```
 
 클래스 또한 메소드와 마찬가지로 `static` 함수를 지정할 수 있습니다.
 
 ```javascript
-SomeClass = CLASS(function(cls) {
-	'use strict';
+SomeClass = CLASS((cls) => {
 	
-	var
-	// init count
-	initCount = 0,
+	let initCount = 0;
 	
-	// get init count.
-	getInitCount;
-	
-	m.getInitCount = getInitCount = function() {
+	let getInitCount = m.getInitCount = () => {
 		return initCount;
 	};
 	
 	return {
 		
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 		    //REQUIRED: params
 		    //REQUIRED: params.name
 		    //REQUIRED: params.age
 			
-			var
-			// name
-			name = params.name,
-			
-			// age
-			age = params.age,
-			
-			// introduce.
-			introduce;
+			let name = params.name;
+			let age = params.age;
 			
 			initCount += 1;
 			
-			self.introduce = introduce = function() {
+			let introduce = self.introduce = () => {
 		        console.log(name + '은(는) ' + age + '살입니다.');
 			};
 		}
@@ -295,15 +256,12 @@ SomeClass = CLASS(function(cls) {
 
 선언한 `static` 함수는 다음과 같이 클래스 이름에 `.`을 붙혀 실행합니다.
 ```javascript
-var
-// some object
-someObject = SomeClass({
+let someObject = SomeClass({
 	name: '하늘',
 	age: 29
-}),
+});
 
-// some object2
-someObject2 = SomeClass({
+let someObject2 = SomeClass({
 	name: '다솜',
 	age: 26
 });
@@ -320,14 +278,9 @@ SomeClass.getInitCount(); // 2
 ```javascript
 SomeObject = OBJECT({
 
-	init : function(inner, self) {
-	    'use strict';
-	
-	    var
-	    // hello.
-	    hello;
-	
-		self.hello = hello = function() {
+	init : (inner, self) => {
+	    
+		let hello = self.hello = () => {
 			console.log('안녕하세요?');
 		};
 	}
@@ -367,7 +320,7 @@ SampleBox.SomeClass = CLASS(...
 모든 박스를 대상으로 하는 메소드와 클래스, 싱글톤 객체를 선언할 때 사용합니다.
 아래 코드를 실행하면, 모든 BOX에 `SomeClass`가 생성됩니다.
 ```javascript
-FOR_BOX(function(box) {
+FOR_BOX((box) => {
     box.SomeClass = CLASS(...
 });
 ```
@@ -418,9 +371,9 @@ new Date().getMonth(); // 8
 `CALENDAR` 클래스는 이런 부분을 해결하면서 동시에, `getMonth`, `getDate`, `getHour`, `getMinute`, `getSecond` 함수에 파라미터로 `true`를 지정하면, `'0N'`과 같은 형식의 문자열을 반환합니다. (9월인 경우 `'09'`) 이는 `2016-09-02`과 같은 날짜 형태를 만들 때 유용하게 사용할 수 있습니다.
 
 ```javascript
-var
-// calendar - 2016년 1월 2일 3시 4분 5초인 경우
-cal = CALENDAR();
+// 2016년 1월 2일 3시 4분 5초인 경우
+
+let cal = CALENDAR();
 
 cal.getYear(); // 2016
 
@@ -447,9 +400,7 @@ cal.getSecond(true); // '05'
 Date형 값을 생성합니다.
 
 ```javascript
-var
-// date
-date = CREATE_DATE({
+let date = CREATE_DATE({
     year : 2016,
     month : 11,
     date : 29,
@@ -488,7 +439,7 @@ CHECK_IS_ARRAY([1, 2, 3]);
 ### `CHECK_IS_ARGUMENTS(target)`
 `target`이 JavaScript `arguments`인지 확인합니다.
 ```javascript
-function() {
+() => {
     CHECK_IS_ARGUMENTS(arguments);
 }
 ```
@@ -575,12 +526,12 @@ FIND({
     a : 1,
     b : 2,
     c : 3
-}, function(value, name) {
+}, (value, name) => {
     return value === 2;
 }); // b
 ```
 ```javascript
-FIND([1, 2, 3], function(value, key) {
+FIND([1, 2, 3], (value, key) => {
     return value === 2;
 }); // 1
 ```
@@ -589,9 +540,7 @@ FIND([1, 2, 3], function(value, key) {
 데이터나 배열의 특정 값을 삭제합니다.
 
 ```javascript
-var 
-// data
-data = {
+let data = {
     a : 1,
     b : 2,
     c : 3
@@ -603,9 +552,7 @@ REMOVE({
 }); // { a : 1, b : 2, c : 3 } -> { a : 2, c : 3 }
 ```
 ```javascript
-var
-// array
-array = [1, 2, 3];
+let array = [1, 2, 3];
 
 REMOVE({
     array : array,
@@ -613,9 +560,7 @@ REMOVE({
 }); // [1, 2, 3] -> [1, 3]
 ```
 ```javascript
-var 
-// data
-data = {
+let data = {
     a : 1,
     b : 2,
     c : 3
@@ -627,9 +572,7 @@ REMOVE({
 }); // { a : 1, b : 2, c : 3 } -> { a : 2, c : 3 }
 ```
 ```javascript
-var
-// array
-array = [1, 2, 3];
+let array = [1, 2, 3];
 
 REMOVE({
     array : array,
@@ -637,24 +580,20 @@ REMOVE({
 }); // [1, 2, 3] -> [1, 3]
 ```
 ```javascript
-var 
-// data
-data = {
+let data = {
     a : 1,
     b : 2,
     c : 3
 };
 
-REMOVE(data, function(value, name) {
+REMOVE(data, (value, name) => {
     return value === 2;
 }); // { a : 1, b : 2, c : 3 } -> { a : 2, c : 3 }
 ```
 ```javascript
-var
-// array
-array = [1, 2, 3];
+let array = [1, 2, 3];
 
-REMOVE(array, function(value, key) {
+REMOVE(array, (value, key) => {
     return value === 2;
 }); // [1, 2, 3] -> [1, 3]
 ```
@@ -676,9 +615,7 @@ COPY([1, 2])
 데이터나 배열을 덧붙혀 확장합니다.
 
 ```javascript
-var
-// data
-data = {
+let data = {
     a : 1,
     b : 2
 };
@@ -692,9 +629,7 @@ EXTEND({
 }); // { a : 1, b : 2 } -> { a : 1, b : 2, c : 3, d : 4 }
 ```
 ```javascript
-var
-// array
-array = [1, 2];
+let array = [1, 2];
 
 EXTEND({
     origin : array,
@@ -725,9 +660,7 @@ JSON 양식의 데이터를 전송할때, 일반적으로 사용하는 `JSON.str
 
 예를 들어 다음과 같은 데이터가 있다고 한다면,
 ```javascript
-var
-// data
-data = {
+let data = {
 	number : 123,
 	now : new Date(),
 	o : {
@@ -739,22 +672,16 @@ data = {
 
 데이터를 전달하기 전에 다음과 같이 문자열로 변환합니다.
 ```javascript
-var
-// packed data
-packedData = PACK_DATA(data),
+let packedData = PACK_DATA(data);
 
-// data string
-dataStr = JSON.stringify(packedData);
+let dataStr = JSON.stringify(packedData);
 ```
 
 이후 데이터를 전달 받은 쪽에서 다음과 같은 방법으로 원래의 데이터를 온전히 얻을 수 있습니다.
 ```javascript
-var
-// packed data
-packedData = JSON.parse(dataStr),
+let packedData = JSON.parse(dataStr);
 
-// data
-data = UNPACK_DATA(packedData);
+let data = UNPACK_DATA(packedData);
 ```
 
 ### `STRINGIFY(data)`, `PARSE_STR(dataStr)`
@@ -762,12 +689,9 @@ data = UNPACK_DATA(packedData);
 
 다음과 같은 코드는,
 ```javascript
-var
-// packed data
-packedData = PACK_DATA(data),
+let packedData = PACK_DATA(data);
 
-// data string
-dataStr = JSON.stringify(packedData);
+let dataStr = JSON.stringify(packedData);
 ```
 
 다음과 같이 간단히 변경할 수 있습니다.
@@ -777,12 +701,9 @@ STRINGIFY(data);
 
 마찬가지로 다음과 같은 코드는,
 ```javascript
-var
-// packed data
-packedData = JSON.parse(dataStr),
+let packedData = JSON.parse(dataStr);
 
-// data
-data = UNPACK_DATA(packedData);
+let data = UNPACK_DATA(packedData);
 ```
 
 다음과 같이 간단히 변경할 수 있습니다.
@@ -795,9 +716,7 @@ PARSE_STR(dataStr);
 
 다음과 같이 검증 표현식을 선언합니다.
 ```javascript
-var
-// valid
-valid = VALID({
+let valid = VALID({
 
     // 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
 	name : {
@@ -812,15 +731,12 @@ valid = VALID({
 	age : {
 		integer : true
 	}
-}),
-
-// valid result
-validResult;
+});
 ```
 
 이후 데이터를 검증합니다.
 ```javascript
-validResult = valid.check({
+let validResult = valid.check({
 	name : 'YJ Sim',
 	age : 28
 });
@@ -867,9 +783,7 @@ validResult.getErrors();
 
 또한 데이터를 검증함과 동시에 빈 값(`undefined`, `null`, `''`)과 표현식에 정의되지 않은 값을 삭제하는 `checkAndWash` 함수가 존재합니다.
 ```javascript
-var
-// valid
-valid = VALID({
+let valid = VALID({
 
     // 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
 	name : {
@@ -884,10 +798,9 @@ valid = VALID({
 	age : {
 		integer : true
 	}
-}),
+});
 
-// data
-data = {
+let data = {
     name : '', // 빈 값이므로 삭제 예정
 	age : 28,
 	city : 'Seoul' // 표현식에 정의되지 않은 값이므로 삭제 예정
@@ -900,9 +813,7 @@ console.log(data); // { age : 28 }
 
 추가로, 데이터를 검증함과 동시에 빈 문자열(`''`)을 `TO_DELETE`로 변경하고, 표현식에 정의되지 않은 값은 삭제하는 `checkForUpdate` 함수가 존재합니다. 이를 이용해 [MongoDB](http://www.mongodb.org)와 같은 시스템에서 `update` 명령을 수행할 때, 빈 문자열에 해당되는 값은 삭제하도록 설정할 수 있습니다.
 ```javascript
-var
-// valid
-valid = VALID({
+let valid = VALID({
 
     // 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
 	name : {
@@ -917,10 +828,9 @@ valid = VALID({
 	age : {
 		integer : true
 	}
-}),
+});
 
-// data
-data = {
+let data = {
     name : '', // 빈 값이므로 TO_DELETE로 변경될 예정
 	age : 28,
 	city : 'Seoul' // 표현식에 정의되지 않은 값이므로 삭제 예정
@@ -982,22 +892,22 @@ console.log(data); // { name : TO_DELETE, age : 28 }
 주어진 함수를 주어진 횟수만큼 반복해서 실행합니다. 주어진 함수에서 `false`를 반환하게 되면 도중에 멈춥니다. 주어진 횟수만큼 실행하였다면 `true`를, 도중에 멈추게 되면 `false`를 반환합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `REPEAT(count, function(i) {})`
-* `REPEAT({start:, end:}, function(i) {})`
-* `REPEAT({start:, end:, step:}, function(i) {})`
-* `REPEAT({start:, limit:}, function(i) {})`
-* `REPEAT({start:, limit:, step:}, function(i) {})`
+* `REPEAT(count, (i) => {})`
+* `REPEAT({start:, end:}, (i) => {})`
+* `REPEAT({start:, end:, step:}, (i) => {})`
+* `REPEAT({start:, limit:}, (i) => {})`
+* `REPEAT({start:, limit:, step:}, (i) => {})`
 
 ```javascript
 // 5번 실행합니다. 이 때 i는 0에서 4의 값을 가집니다.
-REPEAT(5, function(i) {...});
+REPEAT(5, (i) => {...});
 ```
 ```javascript
 // 5번 실행합니다. 이 때 i는 1에서 5의 값을 가집니다.
 REPEAT({
     start : 1,
     end : 5
-}, function(i) {...});
+}, (i) => {...});
 ```
 ```javascript
 // 3번 실행합니다. 이 때 i는 1, 3, 5의 값을 가집니다.
@@ -1005,23 +915,23 @@ REPEAT({
     start : 1,
     end : 5,
     step : 2
-}, function(i) {...});
+}, (i) => {...});
 ```
 ```javascript
 // 4번 실행합니다. 이 때 i는 1에서 4의 값을 가집니다.
 REPEAT({
     start : 1,
     limit : 5
-}, function(i) {...});
+}, (i) => {...});
 ```
 
 ### `EACH`
 데이터나 배열, 문자열의 각 요소를 순서대로 대입하여 주어진 함수를 실행합니다. 주어진 함수에서 `false`를 반환하게 되면 도중에 멈춥니다. 모든 요소들을 처리하였다면 `true`를, 도중에 멈추게 되면 `false`를 반환합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `EACH(data, function(value, name) {})`
-* `EACH(array, function(value, key) {})`
-* `EACH(function(value) {})(array)`
+* `EACH(data, (value, name) => {})`
+* `EACH(array, (value, key) => {})`
+* `EACH((value) => {})(array)`
 
 ```javascript
 // 1
@@ -1029,7 +939,7 @@ REPEAT({
 EACH({
     a : 1,
     b : 2
-}, function(value) {
+}, (value) => {
     console.log(value);
 });
 ```
@@ -1040,7 +950,7 @@ EACH({
     a : 1,
     b : 2,
     c : 3
-}, function(value, name) {
+}, (value, name) => {
     
     console.log(name + ' is ' + value + '.');
     
@@ -1053,14 +963,14 @@ EACH({
 ```javascript
 // 1
 // 2
-EACH([1, 2], function(value) {
+EACH([1, 2], (value) => {
     console.log(value);
 });
 ```
 ```javascript
 // array[0] is 1.
 // array[1] is 2.
-EACH([1, 2, 3], function(value, key) {
+EACH([1, 2, 3], (value, key) => {
     
     console.log('array[' + key + '] is ' + value + '.');
     
@@ -1073,7 +983,7 @@ EACH([1, 2, 3], function(value, key) {
 ```javascript
 // array[0] is 1.
 // array[1] is 2.
-EACH(function(value, key) {
+EACH((value, key) => {
     
     console.log('array[' + key + '] is ' + value + '.');
     
@@ -1088,20 +998,20 @@ EACH(function(value, key) {
 데이터나 배열, 문자열의 각 요소를 역순으로 대입하여 주어진 함수를 실행합니다. 주어진 함수에서 `false`를 반환하게 되면 도중에 멈춥니다. 모든 요소들을 처리하였다면 `true`를, 도중에 멈추게 되면 `false`를 반환합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `REVERSE_EACH(array, function(value, key) {})`
-* `REVERSE_EACH(function(value) {})(array)`
+* `REVERSE_EACH(array, (value, key) => {})`
+* `REVERSE_EACH((value) => {})(array)`
 
 ```javascript
 // 2
 // 1
-REVERSE_EACH([1, 2], function(value) {
+REVERSE_EACH([1, 2], (value) => {
     console.log(value);
 });
 ```
 ```javascript
 // array[2] is 3.
 // array[1] is 2.
-REVERSE_EACH([1, 2, 3], function(value, key) {
+REVERSE_EACH([1, 2, 3], (value, key) => {
     
     console.log('array[' + key + '] is ' + value + '.');
     
@@ -1114,7 +1024,7 @@ REVERSE_EACH([1, 2, 3], function(value, key) {
 ```javascript
 // array[2] is 3.
 // array[1] is 2.
-REVERSE_EACH(function(value, key) {
+REVERSE_EACH((value, key) => {
     
     console.log('array[' + key + '] is ' + value + '.');
     
@@ -1126,14 +1036,12 @@ REVERSE_EACH(function(value, key) {
 ```
 
 ## 시간 지연 관련 기능
-### `DELAY(seconds, function() {})`
+### `DELAY(seconds, () => {})`
 주어진 초가 흐른 뒤에 함수를 실행하는 `DELAY` 클래스
 
 아래와 같이 코드를 작성하게 되면, 함수가 3초 뒤에 실행됩니다.
 ```javascript
-var
-// delay
-delay = DELAY(3, function() {
+let delay = DELAY(3, () => {
     // 3초 뒤에 실행됩니다.
 });
 ```
@@ -1153,14 +1061,12 @@ delay.pause();
 delay.resume();
 ```
 
-### `INTERVAL(seconds, function(interval) {})`
+### `INTERVAL(seconds, (interval) => {})`
 주어진 초 마다 함수를 반복해서 실행하는 `INTERVAL` 클래스
 
 아래와 같이 코드를 작성하게 되면, 함수가 3초마다 실행됩니다.
 ```javascript
-var
-// interval
-interval = DELAY(3, function(interval) {
+let interval = DELAY(3, (interval) => {
     // 3초마다 실행됩니다.
 });
 ```
@@ -1186,7 +1092,7 @@ interval.resume();
 사용 가능한 형태들은 다음과 같습니다.
 #### 로직만 존재하는 경우
 ```javascript
-LOOP(function(milliseconds) {
+LOOP((milliseconds) => {
     ...
 });
 ```
@@ -1194,7 +1100,7 @@ LOOP(function(milliseconds) {
 
 #### FPS(Frames Per Second)가 제공되는 경우
 ```javascript
-LOOP(fps, function(fps) {
+LOOP(fps, (fps) => {
     ...
 });
 ```
@@ -1204,16 +1110,16 @@ LOOP(fps, function(fps) {
 ```javascript
 LOOP(fps, {
 
-    start : function() {
+    start : () => {
         // 동시에 어려번 실행되기 전
         ...
     },
     
-    interval : function(fps) {
+    interval : (fps) => {
         ...
     },
     
-    end : function(times) {
+    end : (times) => {
         // 동시에 여러번 실행된 후
         ...
     }
@@ -1224,19 +1130,16 @@ CPU의 한계로 인해, 지정된 `fps`마다 함수가 실행되지 않을 수
 `end` 함수에서 시간 간격을 알 수 있으므로, `fps`가 설정된 경우에 이전에 수행된 시간과 방금 수행된 시간의 차이를 알기 위해서 사용되기도 합니다.
 
 ## 즉시 실행 함수 기능
-### `RUN(function() {})`
+### `RUN(() => {})`
 주어진 함수를 즉시 실행합니다.
 
 예를 들면 다음과 같이, 배열의 모든 내용을 출력하는 코드를
 ```javascript
-var
-// array
-array = [1, 2, 3, 4, 5],
+let array = [1, 2, 3, 4, 5];
 
-// str
-str = '배열의 값은 ';
+let str = '배열의 값은 ';
 
-EACH(array, function(value, i) {
+EACH(array, (value, i) => {
     if (i > 0) {
         str += ', ';
     }
@@ -1250,17 +1153,13 @@ print(str);
 
 다음과 같이 작성할 수 있습니다.
 ```javascript
-var
-// array
-array = [1, 2, 3, 4, 5];
+let array = [1, 2, 3, 4, 5];
 
-print('배열의 값은 ' + RUN(function() {
+print('배열의 값은 ' + RUN(() => {
 
-    var
-    // str
-    str = '';
+    let str = '';
 
-    EACH(array, function(value, i) {
+    EACH(array, (value, i) => {
         if (i > 0) {
             str += ', ';
         }
@@ -1272,33 +1171,25 @@ print('배열의 값은 ' + RUN(function() {
 }) + '입니다.');
 ```
 
-### `RAR(function() {})` `RAR(params, function(params) {})`
+### `RAR(() => {})` `RAR(params, (params) => {})`
 주어진 함수를 즉시 실행하고, 함수를 반환합니다. 선언과 동시에 실행되어야 하는 함수를 선언할 때 유용합니다.
 
 아래 선언된 함수는 선언과 동시에 실행됩니다.
 ```javascript
-var
-// func.
-func = RAR(function() {
+let func = RAR(() => {
     console.log('함수 실행!');
 });
 ```
 
 아래와 같이 파라미터를 설정할 수도 있습니다.
 ```javascript
-var
-// show age.
-showAge = RAR({
+let showAge = RAR({
     name : '철수',
     age : 20
-}, function(params) {
+}, (params) => {
 
-    var
-    // name
-    name = params.name,
-    
-    // age
-    age = params.age;
+    let name = params.name;
+    let age = params.age;
     
     console.log(name + '은(는)' + age + '살 입니다.');
 });
@@ -1319,18 +1210,18 @@ JavaScript로 개발을 하다보면 수많은 Callback 함수들이 중첩되�
 #### 중첩된 비동기 함수들을 차례대로 실행
 ```javascript
 NEXT([
-function(next) {
+(next) => {
     ...
 },
 
-function(next) {
-    return function() {
+(next) => {
+    return () => {
         ...
     };
 },
 
-function(next) {
-    return function() {
+(next) => {
+    return () => {
         ...
     };
 },
@@ -1341,12 +1232,12 @@ function(next) {
 #### 주어진 `count`만큼 함수를 실행하고, 맨 마지막에 `next` 함수를 실행
 ```javascript
 NEXT(count, [
-function(i, next) {
+(i, next) => {
     ...
 },
 
-function() {
-    return function() {
+() => {
+    return () => {
         ...
     };
 }]);
@@ -1355,12 +1246,12 @@ function() {
 #### 주어진 배열의 요소 개수만큼 함수를 실행하고, 맨 마지막에 `next` 함수를 실행
 ```javascript
 NEXT(array, [
-function(element, next) {
+(element, next) => {
     ...
 },
 
-function() {
-    return function() {
+() => {
+    return () => {
         ...
     };
 }]);
@@ -1368,22 +1259,22 @@ function() {
 
 예를 들어 다음과 같은 Callback 함수가 중첩되어 있는 복잡한 코드가 있을 경우, (출처: http://callbackhell.com)
 ```javascript
-fs.readdir(source, function(err, files) {
+fs.readdir(source, (err, files) => {
 	if (err) {
 		console.log('Error finding files: ' + err);
 	} else {
-		files.forEach(function(filename, fileIndex) {
+		files.forEach((filename, fileIndex) => {
 		    console.log(filename);
-			gm(source + filename).size(function(err, values) {
+			gm(source + filename).size((err, values) => {
 				if (err) {
 					console.log('Error identifying file size: ' + err);
 				} else {
 					console.log(filename + ' : ' + values);
 					aspect = (values.width / values.height);
-					widths.forEach(function(width, widthIndex) {
+					widths.forEach((width, widthIndex) => {
 						height = Math.round(width / aspect);
 						console.log('resizing ' + filename + 'to ' + height + 'x' + height);
-						this.resize(width, height).write(dest + 'w' + width + '_' + filename, function(err) {
+						this.resize(width, height).write(dest + 'w' + width + '_' + filename, (err) => {
 							if (err) {
 						        console.log('Error writing file: ' + err);
 						    }
@@ -1399,12 +1290,12 @@ fs.readdir(source, function(err, files) {
 다음과 같이 역할별로 깔끔하게 정리할 수 있습니다.
 ```javascript
 NEXT([
-function(next) {
+(next) => {
     fs.readdir(source, next);
 },
 
-function(next) {
-    return function(err, files) {
+(next) => {
+    return (err, files) => {
         if (err) {
     		console.log('Error finding files: ' + err);
     	} else {
@@ -1413,15 +1304,15 @@ function(next) {
     };
 },
 
-function(next) {
-    return function(filename, fileIndex) {
+(next) => {
+    return (filename, fileIndex) => {
         console.log(filename);
         gm(source + filename).size(next);
     };
 },
 
-function(next) {
-    return function(err, values) {
+(next) => {
+    return (err, values) => {
         if (err) {
 			console.log('Error identifying file size: ' + err);
 		} else {
@@ -1432,11 +1323,11 @@ function(next) {
     };
 },
 
-function(next) {
-    return function(width, widthIndex) {
+(next) => {
+    return (width, widthIndex) => {
 		height = Math.round(width / aspect);
 		console.log('resizing ' + filename + 'to ' + height + 'x' + height);
-		this.resize(width, height).write(dest + 'w' + width + '_' + filename, function(err) {
+		this.resize(width, height).write(dest + 'w' + width + '_' + filename, (err) => {
 			if (err) {
 		        console.log('Error writing file: ' + err);
 		    }
@@ -1452,18 +1343,18 @@ function(next) {
 #### 중첩된 비동기 함수들을 병렬로 실행하고, 맨 마지막에 최종적으로 실행될 함수를 실행
 ```javascript
 PARALLEL([
-function(done) {
+(done) => {
     ...
 },
 
-function(done) {
+(done) => {
     ...
 },
 
 ...,
 
 // 최종적으로 실행될 함수
-function() {
+() => {
     ...
 }]);
 ```
@@ -1471,12 +1362,12 @@ function() {
 #### 주어진 `count`만큼 함수를 실행하고, 맨 마지막에 최종적으로 실행될 함수를 실행
 ```javascript
 PARALLEL(count, [
-function(done) {
+(done) => {
     ...
 },
 
 // 최종적으로 실행될 함수
-function() {
+() => {
     ...
 }]);
 ```
@@ -1484,25 +1375,21 @@ function() {
 #### 주어진 배열의 요소 개수만큼 함수를 실행하고, 맨 마지막에 최종적으로 실행될 함수를 실행
 ```javascript
 PARALLEL(array, [
-function(value, done) {
+(value, done) => {
     ...
 },
 
 // 최종적으로 실행될 함수
-function() {
+() => {
     ...
 }]);
 ```
 
 예를 들어 5개의 HTTP 요청을 보낸 뒤, 모든 요청에 답변이 온 이후에 추가적인 로직을 구성한다고 한다면, 일반적으로 다음과 같이 작성하게 됩니다.
 ```javascript
+let successCount = 0;
 
-var
-// success count
-successCount = 0,
-
-// success all.
-successAll = function() {
+let successAll = () => {
     if (successCount < 5) {
         successCount += 1;
     } else {
@@ -1510,27 +1397,27 @@ successAll = function() {
     }
 };
 
-request('http://abc.com/1', function(result) {
+request('http://abc.com/1', (result) => {
     ...
     successAll();
 });
 
-request('http://abc.com/2', function(result) {
+request('http://abc.com/2', (result) => {
     ...
     successAll();
 });
 
-request('http://abc.com/3', function(result) {
+request('http://abc.com/3', (result) => {
     ...
     successAll();
 });
 
-request('http://abc.com/4', function(result) {
+request('http://abc.com/4', (result) => {
     ...
     successAll();
 });
 
-request('http://abc.com/5', function(result) {
+request('http://abc.com/5', (result) => {
     ...
     successAll();
 });
@@ -1539,36 +1426,36 @@ request('http://abc.com/5', function(result) {
 위와 같은 코드를 다음과 같이 깔끔하게 정리할 수 있습니다.
 ```javascript
 PARALLEL([
-function(done) {
-    request('http://abc.com/1', function(result) {
+(done) => {
+    request('http://abc.com/1', (result) => {
         ...
         done();
     });
 },
 
-function(done) {
-    request('http://abc.com/2', function(result) {
+(done) => {
+    request('http://abc.com/2', (result) => {
         ...
         done();
     });
 },
 
-function(done) {
-    request('http://abc.com/3', function(result) {
+(done) => {
+    request('http://abc.com/3', (result) => {
         ...
         done();
     });
 },
 
-function(done) {
-    request('http://abc.com/4', function(result) {
+(done) => {
+    request('http://abc.com/4', (result) => {
         ...
         done();
     });
 },
 
-function(done) {
-    request('http://abc.com/5', function(result) {
+(done) => {
+    request('http://abc.com/5', (result) => {
         ...
         done();
     });
@@ -1577,7 +1464,7 @@ function(done) {
 ...,
 
 // 최종적으로 실행될 함수
-function() {
+() => {
     console.log('모든 요청이 성공적으로 완료되었습니다.');
 }]);
 ```
@@ -1627,14 +1514,12 @@ SHOW_WARNING('샘플 경고', '당신에게 경고합니다!');
 ```
 
 ## 기타 기능
-### `OVERRIDE(origin, function(origin) {})`
+### `OVERRIDE(origin, (origin) => {})`
 [오버라이딩](https://ko.wikipedia.org/wiki/%EB%A9%94%EC%86%8C%EB%93%9C_%EC%98%A4%EB%B2%84%EB%9D%BC%EC%9D%B4%EB%94%A9)을 수행합니다. 클래스나 함수 등을 재지정 할 때 유용합니다.
 
 예를 들어 주어진 두 수를 더하는 `calculate`라는 함수가 있습니다.
 ```javascript
-var
-// calculate.
-calculate = function(a, b) {
+let calculate = (a, b) => {
     return a + b;
 };
 
@@ -1643,8 +1528,8 @@ calculate(2, 3); // 5
 
 이를 주어진 두 수를 더해서, 그 결과를 다시 한번 더하는 함수로 만드려면 다음과 같이 재지정합니다.
 ```javascript
-OVERRIDE(calculate, function(origin) {
-    calculate = function(a, b) {
+OVERRIDE(calculate, (origin) => {
+    calculate = (a, b) => {
         return origin(a, b) + origin(a, b);
     };
 });
@@ -1663,17 +1548,12 @@ URI가 주어진 포맷에 맞는지 확인하는 `URI_MATCHER` 클래스로, �
 
 예를 들어 다음과 같이 객체를 생성합니다.
 ```javascript
-var
-// matcher
-matcher = URI_MATCHER('book/{name}'),
-
-// match result
-matchResult;
+let matcher = URI_MATCHER('book/{name}')
 ```
 
 이후 원하는 URI를 체크합니다.
 ```javascript
-matchResult = matcher.check('book/TheLittlePrince');
+let matchResult = matcher.check('book/TheLittlePrince');
 ```
 
 `checkIsMatched` 함수로 URI가 포맷에 맞는지 확인합니다.
@@ -1691,7 +1571,7 @@ matchResult.getURIParams(); // { name : 'TheLittlePrince' }
 
 아래 코드는 테스트에 성공합니다.
 ```javascript
-TEST('덧셈', function(check) {
+TEST('덧셈', (check) => {
     check(1 + 2 === 3);
 });
 ```
@@ -1701,7 +1581,7 @@ TEST('덧셈', function(check) {
 
 아래 코드는 테스트에 실패합니다.
 ```javascript
-TEST('덧셈', function(check) {
+TEST('덧셈', (check) => {
     check(1 + 2 === 4);
 });
 ```

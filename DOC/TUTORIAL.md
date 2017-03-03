@@ -21,16 +21,15 @@
     ```javascript
     Hello.MAIN = METHOD({
     
-    	run : function(params) {
-    		'use strict';
+    	run : (params) => {
     
     		Hello.MATCH_VIEW({
     			uri : '',
     			target : CLASS({
-    				preset : function() {
+    				preset : () => {
     					return VIEW;
     				},
-    				init : function(inner, self) {
+    				init : (inner, self) => {
     					P({
     						c : 'Hello, UPPERCASE!'
     					}).appendTo(BODY);

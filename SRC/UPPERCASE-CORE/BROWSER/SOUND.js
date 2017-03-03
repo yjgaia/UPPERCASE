@@ -1,74 +1,44 @@
-/**
+/*
  * 사운드 파일을 재생하는 SOUND 클래스
  */
-global.SOUND = CLASS(function(cls) {
-	'use strict';
+global.SOUND = CLASS((cls) => {
 
-	var
-	// audio context
-	audioContext;
+	let audioContext;
 
 	return {
 
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 			//REQUIRED: params
 			//OPTIONAL: params.ogg
 			//OPTIONAL: params.mp3
 			//OPTIONAL: params.isLoop
 
-			var
-			// ogg
-			ogg = params.ogg,
+			let ogg = params.ogg;
+			let mp3 = params.mp3;
+			let isLoop = params.isLoop;
 			
-			// mp3
-			mp3 = params.mp3,
-
-			// is loop
-			isLoop = params.isLoop,
-
-			// request
-			request,
-
-			// buffer
-			buffer,
-
-			// source
-			source,
+			let buffer;
+			let source;
 			
-			// started at
-			startedAt = 0,
+			let startedAt = 0;
+			let pausedAt = 0;
 			
-			// paused at
-			pausedAt = 0,
-
-			// delayed.
-			delayed,
-
-			// play.
-			play,
-
-			// pause.
-			pause,
-
-			// stop.
-			stop;
+			let delayed;
 			
 			// init audioContext.
 			if (audioContext === undefined) {
 				audioContext = new AudioContext();
 			}
 			
-			request = new XMLHttpRequest();
+			let request = new XMLHttpRequest();
 			request.open('GET', new Audio().canPlayType('audio/ogg') !== '' ? ogg : mp3, true);
 			request.responseType = 'arraybuffer';
 
-			request.onload = function() {
+			request.onload = () => {
 
-				audioContext.decodeAudioData(request.response, function(_buffer) {
+				audioContext.decodeAudioData(request.response, (_buffer) => {
 
-					var
-					// gain
-					gain = audioContext.createGain ? audioContext.createGain() : audioContext.createGainNode();
+					let gain = audioContext.createGain ? audioContext.createGain() : audioContext.createGainNode();
 
 					buffer = _buffer;
 
@@ -84,9 +54,9 @@ global.SOUND = CLASS(function(cls) {
 			};
 			request.send();
 
-			self.play = play = function() {
+			let play = self.play = () => {
 
-				delayed = function() {
+				delayed = () => {
 
 					source = audioContext.createBufferSource();
 					// creates a sound source
@@ -111,14 +81,14 @@ global.SOUND = CLASS(function(cls) {
 				return self;
 			};
 			
-			self.pause = pause = function() {
+			let pause = self.pause = () => {
 				if (source !== undefined) {
 					source.stop(0);
 					pausedAt = Date.now() - startedAt;
 				}
 			};
 
-			self.stop = stop = function() {
+			let stop = self.stop = () => {
 				if (source !== undefined) {
 					source.stop(0);
 					pausedAt = 0;

@@ -1,19 +1,15 @@
-TEST('CREATE_DATE', function(check) {
-	'use strict';
+TEST('CREATE_DATE', (check) => {
 
-	var
-	// date
-	date = CREATE_DATE({
+	let date = CREATE_DATE({
 	    year : 2016,
 	    month : 11,
 	    date : 29,
 	    hour : 18,
 	    minute : 8,
 	    second : 30
-	}),
-
-	// calendar
-	cal = CALENDAR(date);
+	});
+	
+	let cal = CALENDAR(date);
 
 	check(cal.getYear() === 2016);
 	check(cal.getMonth() === 11);

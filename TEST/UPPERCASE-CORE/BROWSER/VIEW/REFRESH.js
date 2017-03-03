@@ -1,39 +1,24 @@
-TEST('REFRESH', function(check) {
-	'use strict';
+TEST('REFRESH', (check) => {
 
-	var
-	// div
-	div,
-	
-	// test view
-	TestView = CLASS({
+	let TestView = CLASS({
 
-		preset : function() {
-			'use strict';
+		preset : () => {
 			return VIEW;
 		},
 
-		init : function(inner, self) {
-			'use strict';
-
-			var
-			// change params.
-			changeParams,
-
-			// close.
-			close;
-
+		init : (inner, self) => {
+			
 			// on view.
 			console.log('View Opened!');
 
-			self.changeParams = changeParams = function(params) {
+			let changeParams = self.changeParams = (params) => {
 			
 				// when change params.
 				console.log(params);
 			};
 
 			//OVERRIDE: self.close
-			self.close = close = function() {
+			let close = self.close = () => {
 				// when close.
 				console.log('View Closed!');
 			};
@@ -49,7 +34,7 @@ TEST('REFRESH', function(check) {
 	// go test view.
 	//GO('refresh/1');
 
-	div = DIV({
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,
@@ -64,7 +49,7 @@ TEST('REFRESH', function(check) {
 			},
 			c : 'Refresh this view.',
 			on : {
-				tap : function() {
+				tap : () => {
 					REFRESH();
 				}
 			}

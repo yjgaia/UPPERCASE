@@ -3,66 +3,42 @@
  */
 global.WEB_SOCKET_SERVER = METHOD({
 
-	run : function(webServer, connectionListener) {
-		'use strict';
+	run : (webServer, connectionListener) => {
 		//REQUIRED: webServer
 		//REQUIRED: connectionListener
 
-		var
-		//IMPORT: WebSocket
-		WebSocket = require('ws'),
+		let WebSocket = require('ws');
+		let WebSocketServer = WebSocket.Server;
 		
-		//IMPORT: WebSocketServer
-		WebSocketServer = WebSocket.Server,
-		
-		// native connection listener.
-		nativeConnectionListener = function(conn) {
+		let nativeConnectionListener = (conn) => {
 
-			var
-			// headers
-			headers = conn.upgradeReq.headers,
+			let headers = conn.upgradeReq.headers;
 
-			// method map
-			methodMap = {},
-
-			// send key
-			sendKey = 0,
+			let methodMap = {};
+			let sendKey = 0;
 			
-			// client info
-			clientInfo,
-
-			// ip
-			ip,
+			let clientInfo;
+			let ip;
 			
-			// on.
-			on,
+			let on;
+			let off;
+			let send;
 
-			// off.
-			off,
-
-			// send.
-			send,
-
-			// run methods.
-			runMethods = function(methodName, data, sendKey) {
-
-				var
-				// methods
-				methods;
+			let runMethods = (methodName, data, sendKey) => {
 				
 				try {
 					
-					methods = methodMap[methodName];
+					let methods = methodMap[methodName];
 	
 					if (methods !== undefined) {
 	
-						EACH(methods, function(method) {
+						EACH(methods, (method) => {
 	
 							// run method.
 							method(data,
 	
 							// ret.
-							function(retData) {
+							(retData) => {
 	
 								if (sendKey !== undefined) {
 	
@@ -83,11 +59,9 @@ global.WEB_SOCKET_SERVER = METHOD({
 			};
 
 			// when receive data
-			conn.on('message', function(str) {
+			conn.on('message', (str) => {
 
-				var
-				// params
-				params = PARSE_STR(str);
+				let params = PARSE_STR(str);
 
 				if (params !== undefined) {
 					runMethods(params.methodName, params.data, params.sendKey);
@@ -97,7 +71,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 			});
 
 			// when disconnected
-			conn.on('close', function() {
+			conn.on('close', () => {
 
 				runMethods('__DISCONNECTED');
 
@@ -106,11 +80,9 @@ global.WEB_SOCKET_SERVER = METHOD({
 			});
 
 			// when error
-			conn.on('error', function(error) {
+			conn.on('error', (error) => {
 
-				var
-				// error msg
-				errorMsg = error.toString();
+				let errorMsg = error.toString();
 
 				SHOW_ERROR('WEB_SOCKET_SERVER', errorMsg);
 
@@ -134,7 +106,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// on.
-			on = function(methodName, method) {
+			on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
@@ -150,13 +122,11 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// off.
-			off = function(methodName, method) {
+			off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -174,21 +144,14 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// send to client.
-			send = function(methodNameOrParams, callback) {
+			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//OPTIONAL: methodNameOrParams.methodName
 				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: callback
 				
-				var
-				// method name
-				methodName,
-				
-				// data
-				data,
-				
-				// callback name
-				callbackName;
+				let methodName;
+				let data;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -211,10 +174,10 @@ global.WEB_SOCKET_SERVER = METHOD({
 	
 						else {
 							
-							callbackName = '__CALLBACK_' + sendKey;
+							let callbackName = '__CALLBACK_' + sendKey;
 		
 							// on callback.
-							on(callbackName, function(data) {
+							on(callbackName, (data) => {
 		
 								// run callback.
 								callback(data);
@@ -241,7 +204,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// disconnect.
-			function() {
+			() => {
 				if (conn !== undefined) {
 					conn.close();
 					conn = undefined;

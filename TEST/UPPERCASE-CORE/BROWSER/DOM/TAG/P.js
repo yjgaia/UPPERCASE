@@ -1,9 +1,6 @@
-TEST('P', function(check) {
-	'use strict';
-
-	var
-	// test div
-	div = DIV({
+TEST('P', (check) => {
+	
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,

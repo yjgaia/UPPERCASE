@@ -1,5 +1,4 @@
-TEST('URI', function(check) {
-	'use strict';
+TEST('URI', (check) => {
 
 	// go test view.
 	GO('go/1');

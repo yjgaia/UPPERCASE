@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 
 Welcome to UPPERCASE-CORE! (http://uppercase.io)
@@ -5,9 +7,9 @@ Welcome to UPPERCASE-CORE! (http://uppercase.io)
 */
 
 // 웹 브라우저 환경에서는 window가 global 객체 입니다.
-global = window;
+let global = window;
 
-/**
+/*
  * 기본 설정
  */
 global.CONFIG = {
@@ -16,7 +18,7 @@ global.CONFIG = {
 	isDevMode : false
 };
 
-/**
+/*
  * 메소드를 생성합니다.
  */
 global.METHOD = (define) => {
@@ -54,7 +56,7 @@ global.METHOD = (define) => {
 	return m;
 };
 
-/**
+/*
  * DB의 update 기능을 사용할 때, 데이터의 특정 값에 TO_DELETE를 지정하게 되면 해당 값이 삭제됩니다.
  * 자세한 것은 DB의 update 예제를 살펴보시기 바랍니다.
  *
@@ -63,7 +65,7 @@ global.METHOD = (define) => {
  */
 global.TO_DELETE = null;
 
-/**
+/*
  * BOX를 생성합니다.
  */
 global.BOX = METHOD((m) => {
@@ -126,7 +128,7 @@ global.BOX = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * 모든 박스를 대상으로 하는 메소드와 클래스, 싱글톤 객체를 선언할 때 사용합니다.
  */
 global.FOR_BOX = METHOD((m) => {
@@ -183,7 +185,7 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 		console.warn(JSON.stringify(params, TO_DELETE, 4));
 	}
 };
-/**
+/*
  * 클래스를 생성합니다.
  */
 global.CLASS = METHOD((m) => {
@@ -364,7 +366,7 @@ global.CLASS = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * 모든 정의된 싱글톤 객체의 초기화를 수행합니다.
  */
 global.INIT_OBJECTS = METHOD({
@@ -375,7 +377,7 @@ global.INIT_OBJECTS = METHOD({
 	}
 });
 
-/**
+/*
  * 실글톤 객체를 생성합니다.
  */
 global.OBJECT = METHOD((m) => {
@@ -462,7 +464,7 @@ global.OBJECT = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * target이 JavaScript arguments인지 확인합니다.
  */
 global.CHECK_IS_ARGUMENTS = METHOD({
@@ -488,7 +490,7 @@ global.CHECK_IS_ARGUMENTS = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 비동기 함수들을 순서대로 실행합니다.
  */
 global.NEXT = METHOD({
@@ -608,7 +610,7 @@ global.NEXT = METHOD({
 	}
 });
 
-/**
+/*
  * 오버라이딩을 수행합니다.
  */
 global.OVERRIDE = METHOD({
@@ -628,7 +630,7 @@ global.OVERRIDE = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 비동기 함수들을 병렬로 실행합니다.
  */
 global.PARALLEL = METHOD({
@@ -730,7 +732,7 @@ global.PARALLEL = METHOD({
 	}
 });
 
-/**
+/*
  * JSON 문자열을 원래 데이터나 배열, 값으로 변환합니다.
  */
 global.PARSE_STR = METHOD({
@@ -769,7 +771,7 @@ global.PARSE_STR = METHOD({
 	}
 });
 
-/**
+/*
  * 알파벳 대, 소문자와 숫자로 이루어진 임의의 문자열을 생성합니다.
  */
 global.RANDOM_STR = METHOD(() => {
@@ -796,7 +798,7 @@ global.RANDOM_STR = METHOD(() => {
 	};
 });
 
-/**
+/*
  * 데이터나 배열, 값을 JSON 문자열로 변환합니다.
  */
 global.STRINGIFY = METHOD({
@@ -825,7 +827,7 @@ global.STRINGIFY = METHOD({
 	}
 });
 
-/**
+/*
  * 테스트용 메소드입니다.
  * 
  * 테스트에 성공하거나 실패하면 콘솔에 메시지를 출력합니다.
@@ -875,7 +877,7 @@ global.TEST = METHOD((m) => {
 	};
 });
 
-/**
+/*
  * URI가 주어진 포맷에 맞는지 확인하는 URI_MATCHER 클래스
  * 
  * 포맷에 파라미터 구간을 지정할 수 있어 URI로부터 파라미터 값을 가져올 수 있습니다.
@@ -895,7 +897,7 @@ global.URI_MATCHER = CLASS({
 				let isMatched;
 				let uriParams = {};
 
-				let find = function(format) {
+				let find = (format) => {
 
 					let formatParts = format.split('/');
 
@@ -950,7 +952,7 @@ global.URI_MATCHER = CLASS({
 	}
 });
 
-/**
+/*
  * 데이터를 검증하고, 어떤 부분이 잘못되었는지 오류를 확인할 수 있는 VALID 클래스
  */
 global.VALID = CLASS((cls) => {
@@ -1484,7 +1486,7 @@ global.VALID = CLASS((cls) => {
 	};
 });
 
-/**
+/*
  * 배열 안의 모든 요소들이 동일한지 확인합니다.
  */
 global.CHECK_ARE_SAME = METHOD({
@@ -1541,7 +1543,7 @@ global.CHECK_ARE_SAME = METHOD({
 	}
 });
 
-/**
+/*
  * target이 배열인지 확인합니다.
  */
 global.CHECK_IS_ARRAY = METHOD({
@@ -1561,7 +1563,7 @@ global.CHECK_IS_ARRAY = METHOD({
 	}
 });
 
-/**
+/*
  * target이 데이터인지 확인합니다.
  */
 global.CHECK_IS_DATA = METHOD({
@@ -1584,7 +1586,7 @@ global.CHECK_IS_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터가 아무런 값이 없는 빈 데이터({})인지 확인합니다.
  */
 global.CHECK_IS_EMPTY_DATA = METHOD({
@@ -1596,7 +1598,7 @@ global.CHECK_IS_EMPTY_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터 내 값들의 개수를 반환합니다.
  */
 global.COUNT_PROPERTIES = METHOD({
@@ -1614,7 +1616,7 @@ global.COUNT_PROPERTIES = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 데이터의 값들 중 Date형은 정수형태로, RegExp형은 문자열 형태로 변환한 데이터를 반환합니다.
  */
 global.PACK_DATA = METHOD({
@@ -1664,7 +1666,7 @@ global.PACK_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * PACK_DATA가 적용된 데이터의 값들 중 정수형태로 변환된 Date형과 문자열 형태로 변환된 RegExp형을 원래대로 되돌린 데이터를 반환합니다.
  */
 global.UNPACK_DATA = METHOD({
@@ -1729,7 +1731,7 @@ global.UNPACK_DATA = METHOD({
 	}
 });
 
-/**
+/*
  * 특정 값이 데이터나 배열에 존재하는지 확인합니다.
  */
 global.CHECK_IS_IN = METHOD({
@@ -1762,7 +1764,7 @@ global.CHECK_IS_IN = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터들이나 배열들을 하나의 데이터나 배열로 합칩니다.
  */
 global.COMBINE = METHOD({
@@ -1805,7 +1807,7 @@ global.COMBINE = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열을 복제합니다.
  */
 global.COPY = METHOD({
@@ -1839,7 +1841,7 @@ global.COPY = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열을 덧붙혀 확장합니다.
  */
 global.EXTEND = METHOD({
@@ -1924,7 +1926,7 @@ global.EXTEND = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열의 특정 값을 찾아, 데이터인 경우 그 값에 해당하는 이름을, 배열인 경우 그 값에 해당하는 키(index)를 반환합니다.
  */
 global.FIND = METHOD({
@@ -1997,7 +1999,7 @@ global.FIND = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열의 특정 값을 삭제합니다.
  */
 global.REMOVE = METHOD({
@@ -2095,7 +2097,7 @@ global.REMOVE = METHOD({
 	}
 });
 
-/**
+/*
  * 날짜를 처리할 때 Date형을 좀 더 쓰기 편하도록 개선한 CALENDAR 클래스
  */
 global.CALENDAR = CLASS({
@@ -2177,7 +2179,7 @@ global.CALENDAR = CLASS({
 	}
 });
 
-/**
+/*
  * Date형 값을 생성합니다.
  */
 global.CREATE_DATE = METHOD({
@@ -2228,7 +2230,7 @@ global.CREATE_DATE = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 초가 흐른 뒤에 함수를 실행하는 DELAY 클래스
  */
 global.DELAY = CLASS({
@@ -2274,7 +2276,7 @@ global.DELAY = CLASS({
 	}
 });
 
-/**
+/*
  * 주어진 초 마다 함수를 반복해서 실행하는 INTERVAL 클래스
  */
 global.INTERVAL = CLASS({
@@ -2326,7 +2328,7 @@ global.INTERVAL = CLASS({
 	}
 });
 
-/**
+/*
  * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
  */
 global.LOOP = CLASS((cls) => {
@@ -2495,7 +2497,7 @@ global.LOOP = CLASS((cls) => {
 	};
 });
 
-/**
+/*
  * 주어진 함수를 즉시 실행하고, 함수를 반환합니다.
  * 
  * 선언과 동시에 실행되어야 하는 함수를 선언할 때 유용합니다.
@@ -2518,7 +2520,7 @@ global.RAR = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 함수를 즉시 실행합니다.
  */
 global.RUN = METHOD({
@@ -2534,7 +2536,7 @@ global.RUN = METHOD({
 	}
 });
 
-/**
+/*
  * 정수 문자열을 정수 값으로 변환합니다.
  */
 global.INTEGER = METHOD({
@@ -2546,7 +2548,7 @@ global.INTEGER = METHOD({
 	}
 });
 
-/**
+/*
  * 임의의 정수를 생성합니다.
  */
 global.RANDOM = METHOD({
@@ -2582,7 +2584,7 @@ global.RANDOM = METHOD({
 	}
 });
 
-/**
+/*
  * 실수 문자열을 실수 값으로 변환합니다.
  */
 global.REAL = METHOD({
@@ -2594,7 +2596,7 @@ global.REAL = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열, 문자열의 각 요소를 순서대로 대입하여 주어진 함수를 실행합니다.
  */
 global.EACH = METHOD({
@@ -2656,7 +2658,7 @@ global.EACH = METHOD({
 	}
 });
 
-/**
+/*
  * 주어진 함수를 주어진 횟수만큼 반복해서 실행합니다.
  */
 global.REPEAT = METHOD({
@@ -2742,7 +2744,7 @@ global.REPEAT = METHOD({
 	}
 });
 
-/**
+/*
  * 데이터나 배열, 문자열의 각 요소를 역순으로 대입하여 주어진 함수를 실행합니다.
  */
 global.REVERSE_EACH = METHOD({
@@ -2788,31 +2790,77 @@ global.REVERSE_EACH = METHOD({
 	}
 });
 
-global.ADD_FOND = METHOD({
+/*
+ * 웹 폰트를 사용할 수 있도록 불러옵니다.
+ */
+global.ADD_FONT = METHOD({
 
-	run : function() {
-		'use strict';
+	run : (params) => {
+		//REQUIRED: params
+		//REQUIRED: params.name
+		//OPTIONAL: params.style
+		//OPTIONAL: params.weight
+		//OPTIONAL: params.woff2
+		//OPTIONAL: params.woff
+		//OPTIONAL: params.otf
+		//OPTIONAL: params.ttf
 		
-		//TODO:
+		let name = params.name;
+		let style = params.style;
+		let weight = params.weight;
+		let woff2 = params.woff2;
+		let woff = params.woff;
+		let otf = params.otf;
+		let ttf = params.ttf;
+		
+		let src = '';
+		if (woff2 !== undefined) {
+			src += 'url(' + woff2 + ') format(\'woff2\'),';
+		}
+		if (woff !== undefined) {
+			src += 'url(' + woff + ') format(\'woff\'),';
+		}
+		if (otf !== undefined) {
+			src += 'url(' + otf + ') format(\'opentype\'),';
+		}
+		if (ttf !== undefined) {
+			src += 'url(' + ttf + ') format(\'truetype\'),';
+		}
+		
+		let content = '@font-face {';
+		content += 'font-family:' + name + ';';
+		
+		if (style !== undefined) {
+			content += 'font-style:' + style + ';';
+		}
+		if (weight !== undefined) {
+			content += 'font-weight:' + weight + ';';
+		}
+		
+		content += 'src:' + src.substring(0, src.length - 1) + ';';
+		content += '}';
+		
+		// create font style element.
+		let fontStyleEl = document.createElement('style');
+		fontStyleEl.type = 'text/css';
+		fontStyleEl.appendChild(document.createTextNode(content));
+		document.getElementsByTagName('head')[0].appendChild(fontStyleEl);
 	}
 });
 
-
-OVERRIDE(BOX, function(origin) {
+OVERRIDE(BOX, (origin) => {
 	
-	/**
+	/*
 	 * BOX를 생성합니다.
 	 */
-	global.BOX = METHOD(function(m) {
-		'use strict';
+	global.BOX = METHOD((m) => {
 		
 		m.getAllBoxes = origin.getAllBoxes;
 		
 		return {
 			
-			run : function(boxName) {
+			run : (boxName) => {
 				//REQUIRED: boxName
-				'use strict';
 				
 				if (BROWSER_CONFIG[boxName] === undefined) {
 					BROWSER_CONFIG[boxName] = {};
@@ -2824,7 +2872,7 @@ OVERRIDE(BOX, function(origin) {
 	});
 });
 
-/**
+/*
  * 웹 브라우저 환경에서의 기본 설정
  */
 global.BROWSER_CONFIG = {
@@ -2841,8 +2889,7 @@ global.BROWSER_CONFIG = {
  */
 global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
-	run : function(portOrParams, connectionListenerOrListeners) {
-		'use strict';
+	run : (portOrParams, connectionListenerOrListeners) => {
 		//REQUIRED: portOrParams
 		//OPTIONAL: portOrParams.isSecure
 		//OPTIONAL: portOrParams.host
@@ -2851,45 +2898,21 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		//REQUIRED: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
 
-		var
-		// is secure
-		isSecure,
+		let isSecure;
+		let host;
+		let port;
+
+		let connectionListener;
+		let errorListener;
 		
-		// host
-		host,
+		let isConnected;
 
-		// port
-		port,
-
-		// connection listener
-		connectionListener,
-
-		// error listener
-		errorListener,
-
-		// connection
-		conn,
-
-		// is connected
-		isConnected,
-
-		// method map
-		methodMap = {},
-
-		// send key
-		sendKey = 0,
-
-		// on.
-		on,
-
-		// off.
-		off,
-
-		// send.
-		send,
-
-		// run methods.
-		runMethods;
+		let methodMap = {};
+		let sendKey = 0;
+		
+		let on;
+		let off;
+		let send;
 
 		if (CHECK_IS_DATA(portOrParams) !== true) {
 			port = portOrParams;
@@ -2914,21 +2937,19 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			errorListener = connectionListenerOrListeners.error;
 		}
 
-		runMethods = function(methodName, data, sendKey) {
+		let runMethods = (methodName, data, sendKey) => {
 
-			var
-			// methods
-			methods = methodMap[methodName];
+			let methods = methodMap[methodName];
 
 			if (methods !== undefined) {
 
-				EACH(methods, function(method) {
+				EACH(methods, (method) => {
 
 					// run method.
 					method(data,
 
 					// ret.
-					function(retData) {
+					(retData) => {
 
 						if (send !== undefined && sendKey !== undefined) {
 
@@ -2942,22 +2963,20 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			}
 		};
 
-		conn = new WebSocket((isSecure === true ? 'wss://': 'ws://') + host + ':' + port);
+		let conn = new WebSocket((isSecure === true ? 'wss://': 'ws://') + host + ':' + port);
 
-		conn.onopen = function() {
+		conn.onopen = () => {
 
 			isConnected = true;
 
 			connectionListener(
 
 			// on.
-			on = function(methodName, method) {
+			on = (methodName, method) => {
 				//REQUIRED: methodName
 				//REQUIRED: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods === undefined) {
 					methods = methodMap[methodName] = [];
@@ -2967,13 +2986,11 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// off.
-			off = function(methodName, method) {
+			off = (methodName, method) => {
 				//REQUIRED: methodName
 				//OPTIONAL: method
 
-				var
-				// methods
-				methods = methodMap[methodName];
+				let methods = methodMap[methodName];
 
 				if (methods !== undefined) {
 
@@ -2991,21 +3008,15 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// send to server.
-			send = function(methodNameOrParams, callback) {
+			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
 				//REQUIRED: methodNameOrParams.methodName
 				//OPTIONAL: methodNameOrParams.data
 				//OPTIONAL: callback
 				
-				var
-				// method name
-				methodName,
-				
-				// data
-				data,
-				
-				// callback name
-				callbackName;
+				let methodName;
+				let data;
+				let callbackName;
 				
 				if (CHECK_IS_DATA(methodNameOrParams) !== true) {
 					methodName = methodNameOrParams;
@@ -3027,7 +3038,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 						callbackName = '__CALLBACK_' + sendKey;
 	
 						// on callback.
-						on(callbackName, function(data) {
+						on(callbackName, (data) => {
 	
 							// run callback.
 							callback(data);
@@ -3042,7 +3053,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 			},
 
 			// disconnect.
-			function() {
+			() => {
 				if (conn !== undefined) {
 					conn.close();
 					conn = undefined;
@@ -3051,11 +3062,9 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		};
 
 		// receive data.
-		conn.onmessage = function(e) {
+		conn.onmessage = (e) => {
 
-			var
-			// params
-			params = PARSE_STR(e.data);
+			let params = PARSE_STR(e.data);
 
 			if (params !== undefined) {
 				runMethods(params.methodName, params.data, params.sendKey);
@@ -3063,16 +3072,14 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		};
 
 		// when disconnected
-		conn.onclose = function() {
+		conn.onclose = () => {
 			runMethods('__DISCONNECTED');
 		};
 
 		// when error
-		conn.onerror = function(error) {
+		conn.onerror = (error) => {
 
-			var
-			// error msg
-			errorMsg = error.toString();
+			let errorMsg = error.toString();
 
 			if (isConnected !== true) {
 
@@ -3089,41 +3096,19 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 	}
 });
 
-/**
+/*
  * 웹 브라우저 정보를 담고 있는 객체
  */
 global.INFO = OBJECT({
 
-	init : function(inner, self) {
-		'use strict';
+	init : (inner, self) => {
 
-		var
-		// is touch mode
-		isTouchMode = global.ontouchstart !== undefined,
-		
-		// is touching
-		isTouching,
-		
-		// browser info
-		browserInfo,
+		let isTouchMode = global.ontouchstart !== undefined;
+		let isTouching;
 
-		// get lang.
-		getLang,
+		let getLang = self.getLang = () => {
 
-		// change lang.
-		changeLang,
-
-		// check is touch mode.
-		checkIsTouchMode,
-
-		// get browser info.
-		getBrowserInfo;
-
-		self.getLang = getLang = function() {
-
-			var
-			// language
-			lang = STORE('__INFO').get('lang');
+			let lang = STORE('__INFO').get('lang');
 
 			if (lang === undefined) {
 
@@ -3139,7 +3124,7 @@ global.INFO = OBJECT({
 			return lang;
 		};
 
-		self.changeLang = changeLang = function(lang) {
+		let changeLang = self.changeLang = (lang) => {
 			//REQUIRED: lang
 
 			STORE('__INFO').save({
@@ -3150,11 +3135,11 @@ global.INFO = OBJECT({
 			location.reload();
 		};
 
-		self.checkIsTouchMode = checkIsTouchMode = function() {
+		let checkIsTouchMode = self.checkIsTouchMode = () => {
 			return isTouchMode;
 		};
 
-		self.getBrowserInfo = getBrowserInfo = function() {
+		let getBrowserInfo = self.getBrowserInfo = () => {
 			// using bowser. (https://github.com/ded/bowser)
 			return {
 				name : bowser.name,
@@ -3162,84 +3147,57 @@ global.INFO = OBJECT({
 			};
 		};
 		
-		EVENT_LOW('mousemove', function() {
+		EVENT_LOW('mousemove', () => {
 			if (isTouching !== true) {
 				isTouchMode = false;
 			}
 		});
 		
-		EVENT_LOW('touchstart', function() {
+		EVENT_LOW('touchstart', () => {
 			isTouchMode = true;
 			isTouching = true;
 		});
 		
-		EVENT_LOW('touchend', function() {
-			DELAY(function() {
+		EVENT_LOW('touchend', () => {
+			DELAY(() => {
 				isTouching = false;
 			});
 		});
 	}
 });
 
-OVERRIDE(LOOP, function(origin) {
+OVERRIDE(LOOP, (origin) => {
 	
-	/**
+	/*
 	 * 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
 	 */
-	global.LOOP = CLASS(function(cls) {
-		'use strict';
+	global.LOOP = CLASS((cls) => {
 		
-		var
-		// before time
-		beforeTime,
+		let beforeTime;
+		let animationInterval;
 		
-		// animation interval
-		animationInterval,
+		let loopInfos = [];
+		let runs = [];
 		
-		// loop infos
-		loopInfos = [],
-		
-		// runs
-		runs = [],
-		
-		// fire.
-		fire = function() {
+		let fire = () => {
 			
-			var
-			// step.
-			step;
-	
 			if (animationInterval === undefined) {
+				
+				let step;
 	
 				beforeTime = Date.now();
+				
+				animationInterval = requestAnimationFrame(step = () => {
 	
-				animationInterval = requestAnimationFrame(step = function() {
-	
-					var
-					// time
-					time = Date.now(),
-	
-					// delta time
-					deltaTime = time - beforeTime,
-	
-					// loop info
-					loopInfo,
-	
-					// count
-					count,
-	
-					// interval
-					interval,
-	
-					// i, j
-					i, j;
-	
+					let time = Date.now();
+					let deltaTime = time - beforeTime;
+					
 					if (deltaTime > 0) {
-	
-						for (i = 0; i < loopInfos.length; i += 1) {
-	
-							loopInfo = loopInfos[i];
-	
+						
+						for (let i = 0; i < loopInfos.length; i += 1) {
+							
+							let loopInfo = loopInfos[i];
+							
 							if (loopInfo.fps !== undefined && loopInfo.fps > 0) {
 	
 								if (loopInfo.timeSigma === undefined) {
@@ -3248,7 +3206,7 @@ OVERRIDE(LOOP, function(origin) {
 								}
 	
 								// calculate count.
-								count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
+								let count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
 	
 								// start.
 								if (loopInfo.start !== undefined) {
@@ -3256,8 +3214,9 @@ OVERRIDE(LOOP, function(origin) {
 								}
 	
 								// run interval.
-								interval = loopInfo.interval;
-								for (j = 0; j < count; j += 1) {
+								let interval = loopInfo.interval;
+								
+								for (let j = 0; j < count; j += 1) {
 									interval(loopInfo.fps);
 								}
 	
@@ -3276,7 +3235,7 @@ OVERRIDE(LOOP, function(origin) {
 						}
 	
 						// run runs.
-						for (i = 0; i < runs.length; i += 1) {
+						for (let i = 0; i < runs.length; i += 1) {
 							runs[i](deltaTime);
 						}
 	
@@ -3286,11 +3245,10 @@ OVERRIDE(LOOP, function(origin) {
 					animationInterval = requestAnimationFrame(step);
 				});
 			}
-		},
-	
-		// stop.
-		stop = function() {
-	
+		};
+		
+		let stop = () => {
+			
 			if (loopInfos.length <= 0 && runs.length <= 0) {
 	
 				cancelAnimationFrame(animationInterval);
@@ -3299,44 +3257,26 @@ OVERRIDE(LOOP, function(origin) {
 		};
 	
 		return {
-	
-			init : function(inner, self, fpsOrRun, intervalOrFuncs) {
+			
+			init : (inner, self, fpsOrRun, intervalOrFuncs) => {
 				//OPTIONAL: fpsOrRun
 				//OPTIONAL: intervalOrFuncs
 				//OPTIONAL: intervalOrFuncs.start
 				//REQUIRED: intervalOrFuncs.interval
 				//OPTIONAL: intervalOrFuncs.end
-	
-				var
-				// run.
-				run,
-	
-				// start.
-				start,
-	
-				// interval.
-				interval,
-	
-				// end.
-				end,
-	
-				// info
-				info,
 				
-				// resume.
-				resume,
-				
-				// pause.
-				pause,
-	
-				// change fps.
-				changeFPS,
-	
-				// remove.
-				remove;
+				let resume;
+				let pause;
+				let changeFPS;
+				let remove;
 	
 				if (intervalOrFuncs !== undefined) {
-	
+					
+					let start;
+					let interval;
+					let end;
+					let info;
+					
 					// init intervalOrFuncs.
 					if (CHECK_IS_DATA(intervalOrFuncs) !== true) {
 						interval = intervalOrFuncs;
@@ -3346,9 +3286,9 @@ OVERRIDE(LOOP, function(origin) {
 						end = intervalOrFuncs.end;
 					}
 				
-					self.resume = resume = RAR(function() {
+					resume = self.resume = RAR(() => {
 						
-						loopInfos.push( info = {
+						loopInfos.push(info = {
 							fps : fpsOrRun,
 							start : start,
 							interval : interval,
@@ -3358,7 +3298,7 @@ OVERRIDE(LOOP, function(origin) {
 						fire();
 					});
 	
-					self.pause = pause = function() {
+					pause = self.pause = () => {
 	
 						REMOVE({
 							array : loopInfos,
@@ -3368,13 +3308,13 @@ OVERRIDE(LOOP, function(origin) {
 						stop();
 					};
 	
-					self.changeFPS = changeFPS = function(fps) {
+					changeFPS = self.changeFPS = (fps) => {
 						//REQUIRED: fps
 	
 						info.fps = fps;
 					};
 	
-					self.remove = remove = function() {
+					remove = self.remove = () => {
 						pause();
 					};
 				}
@@ -3382,14 +3322,16 @@ OVERRIDE(LOOP, function(origin) {
 				// when fpsOrRun is run
 				else {
 					
-					self.resume = resume = RAR(function() {
+					let run;
+					
+					resume = self.resume = RAR(() => {
 						
 						runs.push(run = fpsOrRun);
 						
 						fire();
 					});
 	
-					self.pause = pause = function() {
+					pause = self.pause = () => {
 	
 						REMOVE({
 							array : runs,
@@ -3399,7 +3341,7 @@ OVERRIDE(LOOP, function(origin) {
 						stop();
 					};
 	
-					self.remove = remove = function() {
+					remove = self.remove = () => {
 						pause();
 					};
 				}
@@ -3408,25 +3350,22 @@ OVERRIDE(LOOP, function(origin) {
 	});
 });
 
-/**
+/*
  * INFO의 웹 애플리케이션 언어 설정 코드에 해당하는 문자열을 반환합니다.
  * 
  * 만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
  */
 global.MSG = METHOD({
 
-	run : function(msgs) {
-		'use strict';
+	run : (msgs) => {
 		//REQUIRED: msgs
 
-		var
-		// msg
-		msg = msgs[INFO.getLang()];
+		let msg = msgs[INFO.getLang()];
 
 		if (msg === undefined) {
 
 			// get first msg.
-			EACH(msgs, function(_msg) {
+			EACH(msgs, (_msg) => {
 				msg = _msg;
 				return false;
 			});
@@ -3436,78 +3375,47 @@ global.MSG = METHOD({
 	}
 });
 
-
-/**
+/*
  * 사운드 파일을 재생하는 SOUND 클래스
  */
-global.SOUND = CLASS(function(cls) {
-	'use strict';
+global.SOUND = CLASS((cls) => {
 
-	var
-	// audio context
-	audioContext;
+	let audioContext;
 
 	return {
 
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 			//REQUIRED: params
 			//OPTIONAL: params.ogg
 			//OPTIONAL: params.mp3
 			//OPTIONAL: params.isLoop
 
-			var
-			// ogg
-			ogg = params.ogg,
+			let ogg = params.ogg;
+			let mp3 = params.mp3;
+			let isLoop = params.isLoop;
 			
-			// mp3
-			mp3 = params.mp3,
-
-			// is loop
-			isLoop = params.isLoop,
-
-			// request
-			request,
-
-			// buffer
-			buffer,
-
-			// source
-			source,
+			let buffer;
+			let source;
 			
-			// started at
-			startedAt = 0,
+			let startedAt = 0;
+			let pausedAt = 0;
 			
-			// paused at
-			pausedAt = 0,
-
-			// delayed.
-			delayed,
-
-			// play.
-			play,
-
-			// pause.
-			pause,
-
-			// stop.
-			stop;
+			let delayed;
 			
 			// init audioContext.
 			if (audioContext === undefined) {
 				audioContext = new AudioContext();
 			}
 			
-			request = new XMLHttpRequest();
+			let request = new XMLHttpRequest();
 			request.open('GET', new Audio().canPlayType('audio/ogg') !== '' ? ogg : mp3, true);
 			request.responseType = 'arraybuffer';
 
-			request.onload = function() {
+			request.onload = () => {
 
-				audioContext.decodeAudioData(request.response, function(_buffer) {
+				audioContext.decodeAudioData(request.response, (_buffer) => {
 
-					var
-					// gain
-					gain = audioContext.createGain ? audioContext.createGain() : audioContext.createGainNode();
+					let gain = audioContext.createGain ? audioContext.createGain() : audioContext.createGainNode();
 
 					buffer = _buffer;
 
@@ -3523,9 +3431,9 @@ global.SOUND = CLASS(function(cls) {
 			};
 			request.send();
 
-			self.play = play = function() {
+			let play = self.play = () => {
 
-				delayed = function() {
+				delayed = () => {
 
 					source = audioContext.createBufferSource();
 					// creates a sound source
@@ -3550,14 +3458,14 @@ global.SOUND = CLASS(function(cls) {
 				return self;
 			};
 			
-			self.pause = pause = function() {
+			let pause = self.pause = () => {
 				if (source !== undefined) {
 					source.stop(0);
 					pausedAt = Date.now() - startedAt;
 				}
 			};
 
-			self.stop = stop = function() {
+			let stop = self.stop = () => {
 				if (source !== undefined) {
 					source.stop(0);
 					pausedAt = 0;
@@ -3567,58 +3475,38 @@ global.SOUND = CLASS(function(cls) {
 	};
 });
 
-/**
+/*
  * 저장소 클래스
  * 
  * 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
  */
 global.STORE = CLASS({
 
-	init : function(inner, self, storeName) {
-		'use strict';
+	init : (inner, self, storeName) => {
 		//REQUIRED: storeName
-
-		var
-		// save.
-		save,
-
-		// get.
-		get,
-		
-		// all.
-		all,
-
-		// remove.
-		remove,
 		
 		// gen full name.
-		genFullName = function(name) {
+		let genFullName = (name) => {
 			//REQUIRED: name
 
 			return storeName + '.' + name;
 		};
 
-		self.save = save = function(params) {
+		let save = self.save = (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.name
 			//REQUIRED: params.value
 
-			var
-			// name
-			name = params.name,
-			
-			// value
-			value = params.value;
+			let name = params.name;
+			let value = params.value;
 
 			localStorage.setItem(genFullName(name), STRINGIFY(value));
 		};
 
-		self.get = get = function(name) {
+		let get = self.get = (name) => {
 			//REQUIRED: name
 
-			var
-			// value
-			value = PARSE_STR(localStorage.getItem(genFullName(name)));
+			let value = PARSE_STR(localStorage.getItem(genFullName(name)));
 
 			if (value === TO_DELETE) {
 				value = undefined;
@@ -3627,7 +3515,7 @@ global.STORE = CLASS({
 			return value;
 		};
 
-		self.remove = remove = function(name) {
+		let remove = self.remove = (name) => {
 			//REQUIRED: name
 			
 			localStorage.removeItem(genFullName(name));
@@ -3635,41 +3523,27 @@ global.STORE = CLASS({
 	}
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.STORE = CLASS({
 
-		init : function(inner, self, storeName) {
+		init : (inner, self, storeName) => {
 			//REQUIRED: storeName
 
-			var
-			// store
-			store = STORE(box.boxName + '.' + storeName),
+			let store = STORE(box.boxName + '.' + storeName);
 
-			// save.
-			save,
-
-			// get.
-			get,
-			
-			// remove.
-			remove;
-
-			self.save = save = store.save;
-
-			self.get = get = store.get;
-			
-			self.remove = remove = store.remove;
+			let save = self.save = store.save;
+			let get = self.get = store.get;
+			let remove = self.remove = store.remove;
 		}
 	});
 });
 
-FOR_BOX(function(box) {
+FOR_BOX((box) => {
 
 	box.SHOW_ERROR = METHOD({
 
-		run : function(tag, errorMsg, params) {
+		run : (tag, errorMsg, params) => {
 			//REQUIRED: tag
 			//REQUIRED: errorMsg
 			//OPTIONAL: params
@@ -3678,11 +3552,11 @@ FOR_BOX(function(box) {
 		}
 	});
 });
-FOR_BOX(function(box) {
+FOR_BOX((box) => {
 
 	box.SHOW_WARNING = METHOD({
 
-		run : function(tag, warningMsg, params) {
+		run : (tag, warningMsg, params) => {
 			//REQUIRED: tag
 			//REQUIRED: warningMsg
 			//OPTIONAL: params
@@ -3691,41 +3565,30 @@ FOR_BOX(function(box) {
 		}
 	});
 });
-/**
+/*
  * 노드에 스타일을 지정합니다.
  */
 global.ADD_STYLE = METHOD({
 	
-	run : function(params) {
-		'use strict';
+	run : (params) => {
 		//REQUIRED: params
 		//REQUIRED: params.node		스타일을 지정할 노드
 		//REQUIRED: params.style	스타일 데이터
 
-		var
-		// node
-		node = params.node,
+		let node = params.node;
+		let style = params.style;
+		let el = node.getWrapperEl();
 
-		// style
-		style = params.style,
-
-		// el
-		el = node.getWrapperEl();
-
-		EACH(style, function(value, name) {
-
-			var
-			// resize event
-			resizeEvent;
+		EACH(style, (value, name) => {
 			
 			if (value !== undefined) {
 
 				// on display resize
 				if (name === 'onDisplayResize') {
 
-					resizeEvent = EVENT({
+					let resizeEvent = EVENT({
 						name : 'resize'
-					}, RAR(function() {
+					}, RAR(() => {
 
 						// when this, value is function.
 						ADD_STYLE({
@@ -3735,7 +3598,7 @@ global.ADD_STYLE = METHOD({
 					}));
 
 					// remove resize event when remove node.
-					node.on('remove', function() {
+					node.on('remove', () => {
 						resizeEvent.remove();
 					});
 
@@ -3766,19 +3629,16 @@ global.ADD_STYLE = METHOD({
 	}
 });
 
-/**
+/*
  * 노드에 애니메이션을 지정합니다.
  */
-global.ANIMATE = METHOD(function(m) {
-	'use strict';
+global.ANIMATE = METHOD((m) => {
 	
-	var
-	// keyframes count
-	keyframesCount = 0;
+	let keyframesCount = 0;
 	
 	return {
 		
-		run : function(params, animationEndHandler) {
+		run : (params, animationEndHandler) => {
 			//REQUIRED: params
 			//REQUIRED: params.node				애니메이션을 지정할 노드
 			//REQUIRED: params.keyframes		애니메이션 키 프레임
@@ -3789,50 +3649,27 @@ global.ANIMATE = METHOD(function(m) {
 			//OPTIONAL: params.direction		애니메이션의 방향 (입력하지 않으면 'normal', 'reverse', 'alternate', 'alternate-reverse' 사용 가능)
 			//OPTIONAL: animationEndHandler		애니메이션이 끝날 때 호출될 핸들러
 			
-			var
-			// node
-			node = params.node,
-	
-			// keyframes
-			keyframes = params.keyframes,
+			let node = params.node;
+			let keyframes = params.keyframes;
+			let duration = params.duration === undefined ? 0.5 : params.duration;
+			let timingFunction = params.timingFunction === undefined ? 'ease' : params.timingFunction;
+			let delay = params.delay === undefined ? 0 : params.delay;
+			let iterationCount = params.iterationCount === undefined ? 1 : params.iterationCount;
+			let direction = params.direction === undefined ? 'normal' : params.direction;
 			
-			// duration
-			duration = params.duration === undefined ? 0.5 : params.duration,
+			let keyframesName = '__KEYFRAMES_' + keyframesCount;
+			let keyframesStr = '';
 			
-			// timing function
-			timingFunction = params.timingFunction === undefined ? 'ease' : params.timingFunction,
-			
-			// delay
-			delay = params.delay === undefined ? 0 : params.delay,
-			
-			// iteration count
-			iterationCount = params.iterationCount === undefined ? 1 : params.iterationCount,
-			
-			// direction
-			direction = params.direction === undefined ? 'normal' : params.direction,
-			
-			// keyframes name
-			keyframesName = '__KEYFRAMES_' + keyframesCount,
-			
-			// keyframes str
-			keyframesStr = '',
-			
-			// keyframes start style
-			keyframesStartStyle,
-			
-			// keyframes final style
-			keyframesFinalStyle,
-			
-			// keyframes style el
-			keyframesStyleEl;
+			let keyframesStartStyle;
+			let keyframesFinalStyle;
 			
 			keyframesCount += 1;
 			
-			EACH(keyframes, function(style, key) {
+			EACH(keyframes, (style, key) => {
 				
 				keyframesStr += key + '{';
 	
-				EACH(style, function(value, name) {
+				EACH(style, (value, name) => {
 	
 					if (typeof value === 'number' && name !== 'zIndex' && name !== 'opacity') {
 						value = value + 'px';
@@ -3851,7 +3688,7 @@ global.ANIMATE = METHOD(function(m) {
 			});
 			
 			// create keyframes style element.
-			keyframesStyleEl = document.createElement('style');
+			let keyframesStyleEl = document.createElement('style');
 			keyframesStyleEl.type = 'text/css';
 			keyframesStyleEl.appendChild(document.createTextNode('@keyframes ' + keyframesName + '{' + keyframesStr + '}'));
 			document.getElementsByTagName('head')[0].appendChild(keyframesStyleEl);
@@ -3866,7 +3703,7 @@ global.ANIMATE = METHOD(function(m) {
 	
 			if (animationEndHandler !== undefined && iterationCount === 1) {
 	
-				DELAY(duration, function() {
+				DELAY(duration, () => {
 					animationEndHandler(node);
 				});
 			}
@@ -3875,13 +3712,12 @@ global.ANIMATE = METHOD(function(m) {
 });
 
 
-/**
+/*
  * clear : 'both' 스타일이 지정된 div를 생성합니다.
  */
 global.CLEAR_BOTH = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 
 		return DIV({
 			style : {
@@ -3891,19 +3727,16 @@ global.CLEAR_BOTH = METHOD({
 	}
 });
 
-/**
+/*
  * DOM 객체를 생성하고 다루는 클래스
  */
 global.DOM = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return NODE;
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.tag		생설할 DOM 객체에 해당하는 태그 지정
 		//OPTIONAL: params.el		태그를 지정하지 않고 HTML element를 직접 지정
@@ -3914,30 +3747,11 @@ global.DOM = CLASS({
 		//OPTIONAL: params.on		이벤트
 		//OPTIONAL: params.__TEXT	UPPERCASE가 문자열 DOM 객체를 생성하기 위해 내부적으로 사용하는 파라미터
 
-		var
-		// tag
-		tag = params.tag,
-
-		// HTML Element
-		el = params.el,
-		
-		// id
-		id = params.id,
-		
-		// cls
-		cls = params.cls,
-
-		// __TEXT
-		__TEXT = params.__TEXT,
-
-		// get el.
-		getEl,
-
-		// set el.
-		setEl,
-
-		// set attr.
-		setAttr;
+		let tag = params.tag;
+		let el = params.el;
+		let id = params.id;
+		let cls = params.cls;
+		let __TEXT = params.__TEXT;
 
 		// when tag is not undefined
 		if (tag !== undefined) {
@@ -3959,11 +3773,11 @@ global.DOM = CLASS({
 			}));
 		}
 
-		self.getEl = getEl = function() {
+		let getEl = self.getEl = () => {
 			return el;
 		};
 
-		inner.setEl = setEl = function(_el) {
+		let setEl = inner.setEl = (_el) => {
 			//REQUIRED: _el
 
 			el = _el;
@@ -3973,17 +3787,13 @@ global.DOM = CLASS({
 
 		setEl(el);
 
-		inner.setAttr = setAttr = function(params) {
+		let setAttr = inner.setAttr = (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.name
 			//REQUIRED: params.value
 
-			var
-			// name
-			name = params.name,
-
-			// value
-			value = params.value;
+			let name = params.name;
+			let value = params.value;
 
 			el.setAttribute(name, value);
 		};
@@ -4004,173 +3814,33 @@ global.DOM = CLASS({
 	}
 });
 
-/**
+/*
  * DOM 트리 구조를 정의하기 위한 NODE 클래스
  */
 global.NODE = CLASS({
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// wrapper dom
-		wrapperDom,
-
-		// content dom
-		contentDom,
-
-		// wrapper el
-		wrapperEl,
-
-		// content el
-		contentEl,
-
-		// waiting after nodes
-		waitingAfterNodes,
-
-		// waiting before nodes
-		waitingBeforeNodes,
-
-		// parent node
-		parentNode,
-
-		// child nodes
-		childNodes = [],
-
-		// origin display
-		originDisplay,
+		let wrapperDom;
+		let contentDom;
 		
-		// data
-		data,
-
-		// set wrapper dom.
-		setWrapperDom,
-
-		// set content dom.
-		setContentDom,
-
-		// set dom.
-		setDom,
-
-		// get wrapper dom.
-		getWrapperDom,
-
-		// get content dom.
-		getContentDom,
-
-		// get wrapper el.
-		getWrapperEl,
-
-		// get content el.
-		getContentEl,
-
-		// attach.
-		attach,
-
-		// append.
-		append,
-
-		// append to.
-		appendTo,
-
-		// prepend.
-		prepend,
-
-		// prepend to.
-		prependTo,
-
-		// after.
-		after,
-
-		// insert after.
-		insertAfter,
-
-		// before.
-		before,
-
-		// insert before.
-		insertBefore,
-
-		// get children.
-		getChildren,
-
-		// set parent.
-		setParent,
-
-		// get parent.
-		getParent,
-
-		// empty.
-		empty,
-
-		// remove.
-		remove,
-
-		// on.
-		on,
-
-		// off.
-		off,
-
-		// add style.
-		addStyle,
-
-		// get style.
-		getStyle,
-
-		// get width.
-		getWidth,
-
-		// get inner width.
-		getInnerWidth,
-
-		// get height.
-		getHeight,
-
-		// get inner height.
-		getInnerHeight,
-
-		// get left.
-		getLeft,
-
-		// get top.
-		getTop,
-
-		// hide.
-		hide,
-
-		// show.
-		show,
-
-		// check is showing.
-		checkIsShowing,
+		let wrapperEl;
+		let contentEl;
 		
-		// scroll to.
-		scrollTo,
+		let waitingAfterNodes;
+		let waitingBeforeNodes;
 		
-		// get scroll left.
-		getScrollLeft,
+		let parentNode;
+		let childNodes = [];
 		
-		// get scroll top.
-		getScrollTop,
-		
-		// get scroll width.
-		getScrollWidth,
-		
-		// get scroll height.
-		getScrollHeight,
-		
-		// set data.
-		setData,
-		
-		// get data.
-		getData;
+		let originDisplay;
+		let data;
 
-		inner.setWrapperDom = setWrapperDom = function(dom) {
+		let setWrapperDom = inner.setWrapperDom = (dom) => {
 			//REQUIRED: dom
 
 			wrapperDom = dom;
@@ -4178,9 +3848,9 @@ global.NODE = CLASS({
 
 			originDisplay = getStyle('display');
 
-			on('show', function() {
+			on('show', () => {
 
-				EACH(childNodes, function(childNode) {
+				EACH(childNodes, (childNode) => {
 
 					if (childNode.checkIsShowing() === true) {
 
@@ -4198,37 +3868,37 @@ global.NODE = CLASS({
 			});
 		};
 
-		inner.setContentDom = setContentDom = function(dom) {
+		let setContentDom = inner.setContentDom = (dom) => {
 			//REQUIRED: dom
 
 			contentDom = dom;
 			contentEl = dom.getEl();
 		};
 
-		inner.setDom = setDom = function(dom) {
+		let setDom = inner.setDom = (dom) => {
 			//REQUIRED: dom
 
 			setWrapperDom(dom);
 			setContentDom(dom);
 		};
 
-		self.getWrapperDom = getWrapperDom = function() {
+		let getWrapperDom = self.getWrapperDom = () => {
 			return wrapperDom;
 		};
 
-		self.getContentDom = getContentDom = function() {
+		let getContentDom = self.getContentDom = () => {
 			return contentDom;
 		};
 
-		self.getWrapperEl = getWrapperEl = function() {
+		let getWrapperEl = self.getWrapperEl = () => {
 			return wrapperEl;
 		};
 
-		self.getContentEl = getContentEl = function() {
+		let getContentEl = self.getContentEl = () => {
 			return contentEl;
 		};
 
-		attach = function(node, index) {
+		let attach = (node, index) => {
 			//REQUIRED: node
 			//OPTIOANL: index
 
@@ -4260,26 +3930,22 @@ global.NODE = CLASS({
 
 			// run after wating after nodes.
 			if (waitingAfterNodes !== undefined) {
-				EACH(waitingAfterNodes, function(node) {
+				EACH(waitingAfterNodes, (node) => {
 					after(node);
 				});
 			}
 
 			// run before wating before nodes.
 			if (waitingBeforeNodes !== undefined) {
-				EACH(waitingBeforeNodes, function(node) {
+				EACH(waitingBeforeNodes, (node) => {
 					before(node);
 				});
 			}
 		};
 
-		self.append = append = function(node) {
+		let append = self.append = (node) => {
 			//REQUIRED: node
-
-			var
-			// splits
-			splits;
-
+			
 			// append child.
 			if (CHECK_IS_DATA(node) === true) {
 				node.appendTo(self);
@@ -4297,9 +3963,9 @@ global.NODE = CLASS({
 			// append string.
 			else {
 
-				splits = String(node === undefined ? '' : node).split('\n');
+				let splits = String(node === undefined ? '' : node).split('\n');
 
-				EACH(splits, function(text, i) {
+				EACH(splits, (text, i) => {
 
 					append(DOM({
 						tag : '__STRING',
@@ -4313,12 +3979,10 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.appendTo = appendTo = function(node) {
+		let appendTo = self.appendTo = (node) => {
 			//REQUIRED: node
 			
-			var
-			// parent el
-			parentEl = node.getContentEl();
+			let parentEl = node.getContentEl();
 
 			if (parentEl !== undefined) {
 				
@@ -4330,12 +3994,8 @@ global.NODE = CLASS({
 			return self;
 		};
 
-		self.prepend = prepend = function(node) {
+		let prepend = self.prepend = (node) => {
 			//REQUIRED: node
-
-			var
-			// splits
-			splits;
 
 			// prepend child.
 			if (CHECK_IS_DATA(node) === true) {
@@ -4354,12 +4014,12 @@ global.NODE = CLASS({
 			// prepend string.
 			else {
 
-				splits = String(node === undefined ? '' : node).split('\n');
+				let splits = String(node === undefined ? '' : node).split('\n');
 
 				REPEAT({
 					start : splits.length - 1,
 					end : 0
-				}, function(i) {
+				}, (i) => {
 
 					prepend(DOM({
 						tag : '__STRING',
@@ -4373,12 +4033,10 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.prependTo = prependTo = function(node) {
+		let prependTo = self.prependTo = (node) => {
 			//REQUIRED: node
 
-			var
-			// parent el
-			parentEl = node.getContentEl();
+			let parentEl = node.getContentEl();
 
 			if (parentEl !== undefined) {
 				
@@ -4394,13 +4052,9 @@ global.NODE = CLASS({
 			return self;
 		};
 
-		self.after = after = function(node) {
+		let after = self.after = (node) => {
 			//REQUIRED: node
 
-			var
-			// splits
-			splits;
-			
 			if (wrapperEl !== undefined) {
 	
 				// wait after node.
@@ -4424,12 +4078,12 @@ global.NODE = CLASS({
 					// after string.
 					else {
 	
-						splits = String(node === undefined ? '' : node).split('\n');
+						let splits = String(node === undefined ? '' : node).split('\n');
 	
 						REPEAT({
 							start : splits.length - 1,
 							end : 0
-						}, function(i) {
+						}, (i) => {
 	
 							after(DOM({
 								tag : '__STRING',
@@ -4445,29 +4099,21 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.insertAfter = insertAfter = function(node) {
+		let insertAfter = self.insertAfter = (node) => {
 			//REQUIRED: node
 
-			var
-			// before el
-			beforeEl = node.getWrapperEl(),
-			
-			// now index
-			nowIndex,
-			
-			// to index
-			toIndex;
+			let beforeEl = node.getWrapperEl();
 			
 			if (beforeEl !== undefined) {
 				
 				beforeEl.parentNode.insertBefore(wrapperEl, beforeEl.nextSibling);
 				
-				nowIndex = FIND({
+				let nowIndex = FIND({
 					array : node.getParent().getChildren(),
 					value : self
 				});
 				
-				toIndex = FIND({
+				let toIndex = FIND({
 					array : node.getParent().getChildren(),
 					value : node
 				}) + 1;
@@ -4478,12 +4124,8 @@ global.NODE = CLASS({
 			return self;
 		};
 
-		self.before = before = function(node) {
+		let before = self.before = (node) => {
 			//REQUIRED: node
-
-			var
-			// splits
-			splits;
 			
 			if (wrapperEl !== undefined) {
 	
@@ -4508,9 +4150,9 @@ global.NODE = CLASS({
 					// before string.
 					else {
 	
-						splits = String(node === undefined ? '' : node).split('\n');
+						let splits = String(node === undefined ? '' : node).split('\n');
 	
-						EACH(splits, function(text, i) {
+						EACH(splits, (text, i) => {
 	
 							before(DOM({
 								tag : '__STRING',
@@ -4526,12 +4168,10 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.insertBefore = insertBefore = function(node) {
+		let insertBefore = self.insertBefore = (node) => {
 			//REQUIRED: node
 
-			var
-			// after el
-			afterEl = node.getWrapperEl();
+			let afterEl = node.getWrapperEl();
 
 			if (afterEl !== undefined) {
 				
@@ -4546,11 +4186,11 @@ global.NODE = CLASS({
 			return self;
 		};
 
-		self.getChildren = getChildren = function() {
+		let getChildren = self.getChildren = () => {
 			return childNodes;
 		};
 
-		setParent = function(node) {
+		let setParent = (node) => {
 			//OPTIONAL: node
 			
 			if (parentNode !== undefined) {
@@ -4563,17 +4203,17 @@ global.NODE = CLASS({
 			parentNode = node;
 		};
 		
-		self.getParent = getParent = function() {
+		let getParent = self.getParent = () => {
 			return parentNode;
 		};
 
-		self.empty = empty = function() {
-			EACH(childNodes, function(child) {
+		let empty = self.empty = () => {
+			EACH(childNodes, (child) => {
 				child.remove();
 			});
 		};
 
-		self.remove = remove = function() {
+		let remove = self.remove = () => {
 
 			if (wrapperEl !== undefined && wrapperEl.parentNode !== TO_DELETE) {
 
@@ -4604,7 +4244,7 @@ global.NODE = CLASS({
 			data = undefined;
 		};
 
-		self.on = on = function(eventName, eventHandler) {
+		let on = self.on = (eventName, eventHandler) => {
 			//REQUIRED: eventName
 			//REQUIRED: eventHandler
 
@@ -4614,7 +4254,7 @@ global.NODE = CLASS({
 			}, eventHandler);
 		};
 
-		self.off = off = function(eventName, eventHandler) {
+		let off = self.off = (eventName, eventHandler) => {
 			//REQUIRED: eventName
 			//OPTIONAL: eventHandler
 
@@ -4634,7 +4274,7 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.addStyle = addStyle = function(style) {
+		let addStyle = self.addStyle = (style) => {
 			//REQUIRED: style
 
 			ADD_STYLE({
@@ -4643,53 +4283,43 @@ global.NODE = CLASS({
 			});
 		};
 
-		self.getStyle = getStyle = function(name) {
+		let getStyle = self.getStyle = (name) => {
 			//REQUIRED: name
-
-			var
-			// styles
-			styles,
-
-			// style
-			style;
-
+			
 			if (wrapperEl !== undefined) {
 
-				styles = wrapperEl.style;
+				let styles = wrapperEl.style;
 
 				if (styles !== undefined) {
 
-					style = styles[name];
+					let style = styles[name];
 
 					return style === '' ? undefined : (style.substring(style.length - 2) === 'px' ? REAL(style) : style);
 				}
 			}
 		};
 
-		self.getWidth = getWidth = function() {
+		let getWidth = self.getWidth = () => {
 			return wrapperEl.offsetWidth;
 		};
 
-		self.getInnerWidth = getInnerWidth = function() {
+		let getInnerWidth = self.getInnerWidth = () => {
 			return wrapperEl.clientWidth;
 		};
 
-		self.getHeight = getHeight = function() {
+		let getHeight = self.getHeight = () => {
 			return wrapperEl.offsetHeight;
 		};
 
-		self.getInnerHeight = getInnerHeight = function() {
+		let getInnerHeight = self.getInnerHeight = () => {
 			return wrapperEl.clientHeight;
 		};
 
-		self.getLeft = getLeft = function() {
+		let getLeft = self.getLeft = () => {
 
-			var
-			// left
-			left = 0,
-
-			// parent el
-			parentEl = wrapperEl;
+			let left = 0;
+			
+			let parentEl = wrapperEl;
 
 			do {
 				left += parentEl.offsetLeft - (parentEl === document.body ? 0 : parentEl.scrollLeft);
@@ -4699,14 +4329,11 @@ global.NODE = CLASS({
 			return left;
 		};
 
-		self.getTop = getTop = function() {
+		let getTop = self.getTop = () => {
 
-			var
-			// top
-			top = 0,
-
-			// parent el
-			parentEl = wrapperEl;
+			let top = 0;
+			
+			let parentEl = wrapperEl;
 
 			do {
 				top += parentEl.offsetTop - (parentEl === document.body ? 0 : parentEl.scrollTop);
@@ -4716,14 +4343,14 @@ global.NODE = CLASS({
 			return top;
 		};
 
-		self.hide = hide = function() {
+		let hide = self.hide = () => {
 
 			addStyle({
 				display : 'none'
 			});
 		};
 
-		self.show = show = function() {
+		let show = self.show = () => {
 
 			addStyle({
 				display : originDisplay === undefined ? '' : originDisplay
@@ -4743,7 +4370,7 @@ global.NODE = CLASS({
 			}
 		};
 
-		self.checkIsShowing = checkIsShowing = function() {
+		let checkIsShowing = self.checkIsShowing = () => {
 
 			if (wrapperEl === document.body) {
 				return true;
@@ -4752,17 +4379,13 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.scrollTo = scrollTo = function(params) {
+		let scrollTo = self.scrollTo = (params) => {
 			//REQUIRED: params
 			//OPTIONAL: params.left
 			//OPTIONAL: params.top
 			
-			var
-			// left
-			left = params.left,
-			
-			// top
-			top = params.top;
+			let left = params.left;
+			let top = params.top;
 			
 			if (contentEl !== undefined) {
 			
@@ -4776,31 +4399,7 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.scrollTo = scrollTo = function(params) {
-			//REQUIRED: params
-			//OPTIONAL: params.left
-			//OPTIONAL: params.top
-			
-			var
-			// left
-			left = params.left,
-			
-			// top
-			top = params.top;
-			
-			if (contentEl !== undefined) {
-			
-				if (left !== undefined) {
-					contentEl.scrollLeft = left;
-				}
-				
-				if (top !== undefined) {
-					contentEl.scrollTop = top;
-				}
-			}
-		};
-		
-		self.getScrollLeft = getScrollLeft = function() {
+		let getScrollLeft = self.getScrollLeft = () => {
 			if (contentEl !== undefined) {
 				return contentEl.scrollLeft;
 			} else {
@@ -4808,7 +4407,7 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.getScrollTop = getScrollTop = function() {
+		let getScrollTop = self.getScrollTop = () => {
 			if (contentEl !== undefined) {
 				return contentEl.scrollTop;
 			} else {
@@ -4816,7 +4415,7 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.getScrollWidth = getScrollWidth = function() {
+		let getScrollWidth = self.getScrollWidth = () => {
 			if (contentEl !== undefined) {
 				return contentEl.scrollWidth;
 			} else {
@@ -4824,7 +4423,7 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.getScrollHeight = getScrollHeight = function() {
+		let getScrollHeight = self.getScrollHeight = () => {
 			if (contentEl !== undefined) {
 				return contentEl.scrollHeight;
 			} else {
@@ -4832,33 +4431,26 @@ global.NODE = CLASS({
 			}
 		};
 		
-		self.setData = setData = function(_data) {
+		let setData = self.setData = (_data) => {
 			//REQUIRED: _data
 			
 			data = _data;
 		};
 		
-		self.getData = getData = function() {
+		let getData = self.getData = () => {
 			return data;
 		};
 	},
 
-	afterInit : function(inner, self, params) {
-		'use strict';
+	afterInit : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.style	스타일
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// style
-		style,
-
-		// children
-		children,
-
-		// on
-		on;
+		let style;
+		let children;
+		let on;
 
 		// init params.
 		if (params !== undefined) {
@@ -4872,66 +4464,35 @@ global.NODE = CLASS({
 		}
 
 		if (on !== undefined) {
-			EACH(on, function(handler, name) {
+			EACH(on, (handler, name) => {
 				self.on(name, handler);
 			});
 		}
 
 		if (children !== undefined) {
-			EACH(children, function(child, i) {
+			EACH(children, (child, i) => {
 				self.append(child);
 			});
 		}
 	}
 });
 
-/**
+/*
  * 이벤트 정보를 제공하는 객체를 생성하는 E 클래스
  */
 global.E = CLASS({
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//REQUIRED: params.e
 		//REQUIRED: params.el
-
-		var
-		// e
-		e = params.e,
-
-		// el
-		el = params.el,
-
-		// check is descendant.
-		checkIsDescendant,
-
-		// stop default.
-		stopDefault,
-
-		// stop bubbling.
-		stopBubbling,
-
-		// stop default and bubbling.
-		stop,
-
-		// get left.
-		getLeft,
-
-		// get top.
-		getTop,
-
-		// get key.
-		getKey,
 		
-		// get wheel delta.
-		getWheelDelta;
+		let e = params.e;
+		let el = params.el;
 
-		checkIsDescendant = function(parent, child) {
+		let checkIsDescendant = (parent, child) => {
 
-			var
-			// node
-			node = child.parentNode;
+			let node = child.parentNode;
 
 			while (node !== TO_DELETE) {
 
@@ -4945,33 +4506,31 @@ global.E = CLASS({
 			return false;
 		};
 
-		self.stopDefault = stopDefault = function() {
+		let stopDefault = self.stopDefault = () => {
 			e.preventDefault();
 		};
 
-		self.stopBubbling = stopBubbling = function() {
+		let stopBubbling = self.stopBubbling = () => {
 			e.stopPropagation();
 		};
 
-		self.stop = stop = function() {
+		let stop = self.stop = () => {
 			stopDefault();
 			stopBubbling();
 		};
 
-		self.getLeft = getLeft = function() {
-
-			var
-			// touch page x
-			touchPageX;
-
+		let getLeft = self.getLeft = () => {
+			
 			// if is touch mode
 			if (INFO.checkIsTouchMode() === true) {
+				
+				let touchPageX;
 
 				if (e.touches !== undefined && e.touches[0] !== undefined) {
 
 					// first touch position.
 
-					EACH(e.touches, function(touch) {
+					EACH(e.touches, (touch) => {
 						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
 							touchPageX = touch.pageX;
 							return false;
@@ -4991,7 +4550,7 @@ global.E = CLASS({
 
 					// first touch position.
 
-					EACH(e.changedTouches, function(touch) {
+					EACH(e.changedTouches, (touch) => {
 						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
 							touchPageX = touch.pageX;
 							return false;
@@ -5011,20 +4570,18 @@ global.E = CLASS({
 			return e.pageX;
 		};
 
-		self.getTop = getTop = function() {
-
-			var
-			// touch page y
-			touchPageY;
+		let getTop = self.getTop = () => {
 
 			// if is touch mode
 			if (INFO.checkIsTouchMode() === true) {
+				
+				let touchPageY;
 
 				if (e.touches !== undefined && e.touches[0] !== undefined) {
 
 					// first touch position.
 
-					EACH(e.touches, function(touch) {
+					EACH(e.touches, (touch) => {
 						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
 							touchPageY = touch.pageY;
 							return false;
@@ -5044,7 +4601,7 @@ global.E = CLASS({
 
 					// first touch position.
 
-					EACH(e.changedTouches, function(touch) {
+					EACH(e.changedTouches, (touch) => {
 						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
 							touchPageY = touch.pageY;
 							return false;
@@ -5064,122 +4621,77 @@ global.E = CLASS({
 			return e.pageY;
 		};
 
-		self.getKey = getKey = function() {
+		let getKey = self.getKey = () => {
 			return e.key;
 		};
 		
-		self.getWheelDelta = getWheelDelta = function() {
+		let getWheelDelta = self.getWheelDelta = () => {
 			return e.deltaY;
 		};
 	}
 });
 
-/**
+/*
  * 빈 이벤트 정보를 제공하는 객체를 생성하는 EMPTY_E 클래스
  */
 global.EMPTY_E = CLASS({
 
-	init : function(inner, self) {
-		'use strict';
+	init : (inner, self) => {
 
-		var
-		// stop default.
-		stopDefault,
-
-		// stop bubbling.
-		stopBubbling,
-
-		// stop default and bubbling.
-		stop,
-
-		// get left.
-		getLeft,
-
-		// get top.
-		getTop,
-
-		// get key.
-		getKey,
-		
-		// get detail.
-		getWheelDelta;
-
-		self.stopDefault = stopDefault = function() {
+		let stopDefault = self.stopDefault = () => {
 			// ignore.
 		};
 
-		self.stopBubbling = stopBubbling = function() {
+		let stopBubbling = self.stopBubbling = () => {
 			// ignore.
 		};
 
-		self.stop = stop = function() {
+		let stop = self.stop = () => {
 			// ignore.
 		};
 
-		self.getLeft = getLeft = function() {
+		let getLeft = self.getLeft = () => {
 			
 			// on heaven!
 			return -999999;
 		};
 
-		self.getTop = getTop = function() {
+		let getTop = self.getTop = () => {
 			
 			// on heaven!
 			return -999999;
 		};
 
-		self.getKey = function() {
+		let getKey = self.getKey = () => {
 			return '';
 		};
 		
-		self.getWheelDelta = getWheelDelta = function() {
+		let getWheelDelta = self.getWheelDelta = () => {
 			return 0;
 		};
 	}
 });
 
-/**
+/*
  * 노드의 이벤트 처리를 담당하는 EVENT 클래스
  */
-global.EVENT = CLASS(function(cls) {
-	'use strict';
+global.EVENT = CLASS((cls) => {
 
-	var
-	// event map
-	eventMaps = {},
+	let eventMaps = {};
 	
-	// fire all.
-	fireAll,
-
-	// remove all.
-	removeAll,
-
-	// remove.
-	remove;
-	
-	cls.fireAll = fireAll = function(nameOrParams) {
+	let fireAll = cls.fireAll = (nameOrParams) => {
 		//REQUIRED: nameOrParams
 		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
 		//REQUIRED: nameOrParams.name	이벤트 이름
 
-		var
-		// node
-		node,
+		let node;
+		let name;
+		
+		let nodeId;
+		
+		let eventMap;
 
-		// name
-		name,
-
-		// node id
-		nodeId,
-
-		// event map
-		eventMap,
-
-		// events
-		events,
-
-		// ret
-		ret;
+		let ret;
 
 		// init params.
 		if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -5199,11 +4711,11 @@ global.EVENT = CLASS(function(cls) {
 
 		if (eventMap !== undefined) {
 
-			events = eventMap[name];
+			let events = eventMap[name];
 
 			if (events !== undefined) {
 
-				EACH(events, function(evt) {
+				EACH(events, (evt) => {
 
 					if (evt.fire() === false) {
 						
@@ -5216,26 +4728,17 @@ global.EVENT = CLASS(function(cls) {
 		return ret;
 	};
 
-	cls.removeAll = removeAll = function(nameOrParams) {
+	let removeAll = cls.removeAll = (nameOrParams) => {
 		//OPTIONAL: nameOrParams
 		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
 		//OPTIONAL: nameOrParams.name	이벤트 이름
-
-		var
-		// node
-		node,
-
-		// name
-		name,
-
-		// node id
-		nodeId,
-
-		// event map
-		eventMap,
-
-		// events
-		events;
+		
+		let node;
+		let name;
+		
+		let nodeId;
+		
+		let eventMap;
 
 		// init params.
 		if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -5257,19 +4760,19 @@ global.EVENT = CLASS(function(cls) {
 
 			if (name !== undefined) {
 
-				events = eventMap[name];
+				let events = eventMap[name];
 
 				if (events !== undefined) {
 
-					EACH(events, function(evt) {
+					EACH(events, (evt) => {
 						evt.remove();
 					});
 				}
 
 			} else {
 
-				EACH(eventMap, function(events) {
-					EACH(events, function(evt) {
+				EACH(eventMap, (events) => {
+					EACH(events, (evt) => {
 						evt.remove();
 					});
 				});
@@ -5277,27 +4780,18 @@ global.EVENT = CLASS(function(cls) {
 		}
 	};
 
-	cls.remove = remove = function(nameOrParams, eventHandler) {
+	let remove = cls.remove = (nameOrParams, eventHandler) => {
 		//REQUIRED: nameOrParams
 		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
 		//REQUIRED: nameOrParams.name	이벤트 이름
 		//REQUIRED: eventHandler
+		
+		let node;
+		let name;
 
-		var
-		// node
-		node,
-
-		// name
-		name,
-
-		// node id
-		nodeId,
-
-		// event map
-		eventMap,
-
-		// events
-		events;
+		let nodeId;
+		
+		let eventMap;
 		
 		// init params.
 		if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -5317,11 +4811,11 @@ global.EVENT = CLASS(function(cls) {
 
 		if (eventMap !== undefined) {
 
-			events = eventMap[name];
+			let events = eventMap[name];
 
 			if (events !== undefined) {
 
-				EACH(events, function(evt) {
+				EACH(events, (evt) => {
 					if (evt.getEventHandler() === eventHandler) {
 						evt.remove();
 					}
@@ -5332,46 +4826,24 @@ global.EVENT = CLASS(function(cls) {
 
 	return {
 
-		init : function(inner, self, nameOrParams, eventHandler) {
+		init : (inner, self, nameOrParams, eventHandler) => {
 			//REQUIRED: nameOrParams
 			//OPTIONAL: nameOrParams.node		이벤트를 등록 및 적용할 노드
 			//OPTIONAL: nameOrParams.lowNode	이벤트 '등록'은 node 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
 			//REQUIRED: nameOrParams.name		이벤트 이름
 			//REQUIRED: eventHandler
-
-			var
-			// node
-			node,
-
-			// low node
-			lowNode,
-
-			// name
-			name,
-
-			// node id
-			nodeId,
-
-			// event lows
-			eventLows = [],
-
-			// sub event
-			subEvent,
-
-			// last tap time
-			lastTapTime,
-
-			// remove from map.
-			removeFromMap,
-
-			// remove.
-			remove,
-
-			// fire.
-			fire,
 			
-			// get event handler.
-			getEventHandler;
+			let node;
+			let lowNode;
+			let name;
+			
+			let nodeId;
+			
+			let eventLows = [];
+			
+			let subEvent;
+			
+			let lastTapTime;
 
 			// init params.
 			if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -5404,7 +4876,7 @@ global.EVENT = CLASS(function(cls) {
 
 			eventMaps[nodeId][name].push(self);
 
-			removeFromMap = function() {
+			let removeFromMap = () => {
 
 				REMOVE({
 					array : eventMaps[nodeId][name],
@@ -5436,7 +4908,7 @@ global.EVENT = CLASS(function(cls) {
 				subEvent = EVENT({
 					node : node,
 					name : 'tap'
-				}, function(e) {
+				}, (e) => {
 
 					if (lastTapTime === undefined) {
 						lastTapTime = Date.now();
@@ -5462,7 +4934,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'touchstart'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() === true) {
 						eventHandler(e, node);
 					}
@@ -5473,7 +4945,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'mousedown'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() !== true) {
 						eventHandler(e, node);
 					}
@@ -5488,7 +4960,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'touchmove'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() === true) {
 						eventHandler(e, node);
 					}
@@ -5499,7 +4971,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'mousemove'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() !== true) {
 						eventHandler(e, node);
 					}
@@ -5514,7 +4986,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'touchend'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() === true) {
 						eventHandler(e, node);
 					}
@@ -5525,7 +4997,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'mouseup'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() !== true) {
 						eventHandler(e, node);
 					}
@@ -5540,7 +5012,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'touchstart'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() === true) {
 						eventHandler(e, node);
 					}
@@ -5551,7 +5023,7 @@ global.EVENT = CLASS(function(cls) {
 					node : node,
 					lowNode : lowNode,
 					name : 'mouseover'
-				}, function(e, node) {
+				}, (e, node) => {
 					if (INFO.checkIsTouchMode() !== true) {
 						eventHandler(e, node);
 					}
@@ -5563,9 +5035,9 @@ global.EVENT = CLASS(function(cls) {
 				eventLows.push(EVENT_LOW(nameOrParams, eventHandler));
 			}
 			
-			self.remove = remove = function() {
+			let remove = self.remove = () => {
 
-				EACH(eventLows, function(eventLow) {
+				EACH(eventLows, (eventLow) => {
 					eventLow.remove();
 				});
 					
@@ -5576,49 +5048,37 @@ global.EVENT = CLASS(function(cls) {
 				removeFromMap();
 			};
 
-			self.fire = fire = function() {
+			let fire = self.fire = () => {
 
 				// pass empty e object.
 				return eventHandler(EMPTY_E(), node);
 			};
 
-			self.getEventHandler = getEventHandler = function() {
+			let getEventHandler = self.getEventHandler = () => {
 				return eventHandler;
 			};
 		}
 	};
 });
-/**
+/*
  * 내부적으로 이벤트를 처리하기 위해 사용되는 EVENT_LOW 클래스
  */
 global.EVENT_LOW = CLASS({
 
-	init : function(inner, self, nameOrParams, eventHandler) {
-		'use strict';
+	init : (inner, self, nameOrParams, eventHandler) => {
 		//REQUIRED: nameOrParams
 		//OPTIONAL: nameOrParams.node		이벤트를 등록 및 적용할 노드
 		//OPTIONAL: nameOrParams.lowNode	이벤트 '등록'은 node 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
 		//REQUIRED: nameOrParams.name		이벤트 이름
 		//REQUIRED: eventHandler
-
-		var
-		// node
-		node,
-
-		// low node
-		lowNode,
-
-		// name
-		name,
-
-		// el
-		el,
-
-		// inner handler.
-		innerHandler,
-
-		// remove.
-		remove;
+		
+		let node;
+		let lowNode;
+		let name;
+		
+		let el;
+		
+		let innerHandler;
 
 		// init params.
 		if (CHECK_IS_DATA(nameOrParams) !== true) {
@@ -5632,7 +5092,7 @@ global.EVENT_LOW = CLASS({
 				lowNode = node;
 			}
 		}
-
+		
 		if (lowNode !== undefined) {
 			el = lowNode.getWrapperEl();
 		} else if (global['on' + name] === undefined) {
@@ -5641,11 +5101,9 @@ global.EVENT_LOW = CLASS({
 			el = global;
 		}
 		
-		el.addEventListener(name, innerHandler = function(e) {
+		el.addEventListener(name, innerHandler = (e) => {
 			
-			var
-			// result
-			result = eventHandler(E({
+			let result = eventHandler(E({
 				e : e,
 				el : el
 			}), node);
@@ -5658,69 +5116,55 @@ global.EVENT_LOW = CLASS({
 			
 		}, false);
 
-		self.remove = remove = function() {
+		let remove = self.remove = () => {
 			el.removeEventListener(name, innerHandler, false);
 		};
 	}
 });
 
-/**
+/*
  * 이벤트가 한번 발생하면 자동으로 제거되는 EVENT_ONCE 클래스
  */
 global.EVENT_ONCE = CLASS({
 
-	init : function(inner, self, nameOrParams, eventHandler) {
-		'use strict';
+	init : (inner, self, nameOrParams, eventHandler) => {
 		//REQUIRED: nameOrParams
 		//OPTIONAL: nameOrParams.node		이벤트를 등록 및 적용할 노드
 		//OPTIONAL: nameOrParams.lowNode	이벤트 '등록'은 node 파라미터에 지정된 노드에 하지만, 실제 이벤트의 동작을 '적용'할 노드는 다른 경우 해당 노드
 		//REQUIRED: nameOrParams.name		이벤트 이름
 		//REQUIRED: eventHandler
 
-		var
-		// evt
-		evt = EVENT(nameOrParams, function(e, node) {
+		let evt = EVENT(nameOrParams, (e, node) => {
 			eventHandler(e, node);
 			evt.remove();
-		}),
+		});
 
-		// remove.
-		remove,
-
-		// fire.
-		fire;
-
-		self.remove = remove = function() {
+		let remove = self.remove = () => {
 			evt.remove();
 		};
 
-		self.fire = fire = function() {
+		let fire = self.fire = () => {
 			evt.fire();
 		};
 	}
 });
 
-/**
+/*
  * A class
  */
 global.A = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'a'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -5729,23 +5173,11 @@ global.A = CLASS({
 		//OPTIONAL: params.target	이동할 타겟
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// style
-		style,
 		
-		// href
-		href,
+		let style;
+		let href;
+		let target;
 		
-		// target
-		target,
-		
-		// set href.
-		setHref, 
-
-		// tap.
-		tap;
-
 		// init params.
 		if (params !== undefined) {
 			style = params.style;
@@ -5753,7 +5185,7 @@ global.A = CLASS({
 			target = params.target;
 		}
 
-		self.setHref = setHref = function(href) {
+		let setHref = self.setHref = (href) => {
 			inner.setAttr({
 				name : 'href',
 				value : href
@@ -5771,8 +5203,8 @@ global.A = CLASS({
 			});
 		}
 		
-		self.tap = tap = function() {
-
+		let tap = self.tap = () => {
+			
 			EVENT.fireAll({
 				node : self,
 				name : 'tap'
@@ -5780,8 +5212,7 @@ global.A = CLASS({
 		};
 	},
 
-	afterInit : function(inner, self, params) {
-		'use strict';
+	afterInit : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -5791,22 +5222,14 @@ global.A = CLASS({
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// children
-		children,
+		let children;
+		let href;
 		
-		// href
-		href,
+		let isHrefContent = false;
 		
-		// is href content
-		isHrefContent = false,
+		let append;
+		let prepend;
 		
-		// append.
-		append,
-		
-		// prepend.
-		prepend;
-
 		// init params.
 		if (params !== undefined) {
 			children = params.c;
@@ -5820,8 +5243,9 @@ global.A = CLASS({
 			
 			isHrefContent = true;
 			
-			OVERRIDE(self.append, function(origin) {
-				self.append = append = function(node) {
+			OVERRIDE(self.append, (origin) => {
+				
+				append = self.append = (node) => {
 					//REQUIRED: node
 					
 					if (isHrefContent === true) {
@@ -5833,8 +5257,9 @@ global.A = CLASS({
 				};
 			});
 			
-			OVERRIDE(self.prepend, function(origin) {
-				self.prepend = prepend = function(node) {
+			OVERRIDE(self.prepend, (origin) => {
+				
+				prepend = self.prepend = (node) => {
 					//REQUIRED: node
 					
 					if (isHrefContent === true) {
@@ -5849,27 +5274,22 @@ global.A = CLASS({
 	}
 });
 
-/**
+/*
  * HTML audio 태그와 대응되는 클래스
  */
 global.AUDIO = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'audio'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -5880,24 +5300,9 @@ global.AUDIO = CLASS({
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// mp3
-		mp3 = params.mp3,
-
-		// ogg
-		ogg = params.ogg,
-		
-		// is loop
-		isLoop = params.isLoop,
-		
-		// play.
-		play,
-		
-		// pause.
-		pause,
-		
-		// stop.
-		stop;
+		let mp3 = params.mp3;
+		let ogg = params.ogg;
+		let isLoop = params.isLoop;
 		
 		if (ogg !== undefined && self.getEl().canPlayType('audio/ogg') !== '') {
 			self.getEl().src = ogg;
@@ -5917,82 +5322,69 @@ global.AUDIO = CLASS({
 			});
 		}
 		
-		self.play = play = function() {
+		let play = self.play = () => {
 			self.getEl().play();
 		};
 		
-		self.pause = pause = function() {
+		let pause = self.pause = () => {
 			self.getEl().pause();
 		};
 		
-		self.stop = stop = function() {
+		let stop = self.stop = () => {
 			self.getEl().pause();
 			self.getEl().currentTime = 0;
 		};
 	}
 });
 
-/**
+/*
  * HTML body 태그와 대응되는 객체
  */
 global.BODY = OBJECT({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'body'
 		};
 	}
 });
 
-/**
+/*
  * HTML br 태그와 대응되는 클래스
  */
 global.BR = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'br'
 		};
 	}
 });
 
-/**
+/*
  * HTML canvas 태그와 대응되는 클래스
  */
 global.CANVAS = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'canvas'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -6001,28 +5393,9 @@ global.CANVAS = CLASS({
 		//OPTIONAL: params.height
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// wdith
-		width,
-
-		// height
-		height,
-
-		// get context.
-		getContext,
-
-		// set size.
-		setSize,
-
-		// get width.
-		getWidth,
-
-		// get height.
-		getHeight,
-
-		// get data url.
-		getDataURL;
+		
+		let width;
+		let height;
 
 		// init params.
 		if (params !== undefined) {
@@ -6030,20 +5403,18 @@ global.CANVAS = CLASS({
 			height = params.height;
 		}
 
-		self.getContext = getContext = function(contextType) {
+		let getContext = self.getContext = (contextType) => {
 			//REQUIRED: contextType
 			
 			return self.getEl().getContext(contextType);
 		};
 
-		self.setSize = setSize = function(size) {
+		let setSize = self.setSize = (size) => {
 			//REQUIRED: size
 			//OPTIONAL: size.width
 			//OPTIONAL: size.height
 
-			var
-			// el
-			el = self.getEl();
+			let el = self.getEl();
 
 			if (size.width !== undefined) {
 				width = size.width;
@@ -6067,61 +5438,52 @@ global.CANVAS = CLASS({
 			height : height
 		});
 
-		self.getWidth = getWidth = function() {
+		let getWidth = self.getWidth = () => {
 			return width;
 		};
 
-		self.getHeight = getHeight = function() {
+		let getHeight = self.getHeight = () => {
 			return height;
 		};
 
-		self.getDataURL = getDataURL = function() {
+		let getDataURL = self.getDataURL = () => {
 			return self.getEl().toDataURL();
 		};
 	}
 });
 
-/**
+/*
  * HTML div 태그와 대응되는 클래스
  */
 global.DIV = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'div'
 		};
 	}
 });
 
-/**
+/*
  * Form class
  */
 global.FORM = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'form'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -6132,28 +5494,14 @@ global.FORM = CLASS({
 		//OPTIONAL: params.enctype	폼을 전송할때 사용할 인코딩 방법. 업로드 기능 구현에 사용됩니다.
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
+		
+		let action;
+		let target;
+		let method;
+		let enctype;
 
-		var
-		// action
-		action,
-
-		// target
-		target,
-
-		// method
-		method,
-
-		// enctype
-		enctype,
-
-		// get data.
-		getData,
-
-		// set data.
-		setData,
-
-		// submit.
-		submit;
+		let getData;
+		let setData;
 
 		// init params.
 		if (params !== undefined) {
@@ -6175,7 +5523,7 @@ global.FORM = CLASS({
 			EVENT({
 				node : self,
 				name : 'submit'
-			}, function(e) {
+			}, (e) => {
 				e.stop();
 			});
 		}
@@ -6201,19 +5549,16 @@ global.FORM = CLASS({
 			});
 		}
 
-		OVERRIDE(self.setData, function(origin) {
+		OVERRIDE(self.setData, (origin) => {
 			
-			self.getData = getData = function() {
+			getData = self.getData = () => {
 	
-				var
-				// data
-				data = origin(),
+				let data = origin();
 	
-				// f.
-				f = function(node) {
+				let f = (node) => {
 					//REQUIRED: node
 	
-					EACH(node.getChildren(), function(child) {
+					EACH(node.getChildren(), (child) => {
 	
 						if (child.getValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
 							data[child.getName()] = child.getValue();
@@ -6233,21 +5578,17 @@ global.FORM = CLASS({
 			};
 		});
 
-		OVERRIDE(self.setData, function(origin) {
+		OVERRIDE(self.setData, (origin) => {
 			
-			self.setData = setData = function(data) {
+			setData = self.setData = (data) => {
 				//REQUIRED: data
 				
-				var
-				// f.
-				f = function(node) {
+				let f = (node) => {
 					//REQUIRED: node
 	
-					EACH(node.getChildren(), function(child) {
+					EACH(node.getChildren(), (child) => {
 	
-						var
-						// value
-						value;
+						let value;
 	
 						if (child.setValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
 							value = data[child.getName()];
@@ -6264,7 +5605,7 @@ global.FORM = CLASS({
 			};
 		});
 
-		self.submit = submit = function() {
+		let submit = self.submit = () => {
 			
 			EVENT.fireAll({
 				node : self,
@@ -6278,140 +5619,113 @@ global.FORM = CLASS({
 	}
 });
 
-/**
+/*
  * HTML h1 태그와 대응되는 클래스
  */
 global.H1 = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'h1'
 		};
 	}
 });
 
-/**
+/*
  * HTML h2 태그와 대응되는 클래스
  */
 global.H2 = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'h2'
 		};
 	}
 });
 
-/**
+/*
  * HTML h3 태그와 대응되는 클래스
  */
 global.H3 = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'h3'
 		};
 	}
 });
 
-/**
+/*
  * HTML h4 태그와 대응되는 클래스
  */
 global.H4 = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'h4'
 		};
 	}
 });
 
-/**
+/*
  * HTML h5 태그와 대응되는 클래스
  */
 global.H5 = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'h5'
 		};
 	}
 });
 
-/**
+/*
  * HTML h6 태그와 대응되는 클래스
  */
 global.H6 = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'h6'
 		};
 	}
 });
 
-/**
+/*
  * HTML iframe 태그와 대응되는 클래스
  */
 global.IFRAME = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
+		
 		return {
 			tag : 'iframe',
 			style : {
@@ -6420,8 +5734,7 @@ global.IFRAME = CLASS({
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -6430,19 +5743,9 @@ global.IFRAME = CLASS({
 		//OPTIONAL: params.src
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// name
-		name,
-
-		// src
-		src,
-
-		// set src.
-		setSrc,
-
-		// get src.
-		getSrc;
+		
+		let name;
+		let src;
 
 		// init params.
 		if (params !== undefined) {
@@ -6457,7 +5760,7 @@ global.IFRAME = CLASS({
 			});
 		}
 
-		self.setSrc = setSrc = function(_src) {
+		let setSrc = self.setSrc = (_src) => {
 			//REQUIRED: _src
 
 			src = _src;
@@ -6472,33 +5775,28 @@ global.IFRAME = CLASS({
 			setSrc(src);
 		}
 
-		self.getSrc = getSrc = function() {
+		let getSrc = self.getSrc = () => {
 			return src;
 		};
 	}
 });
 
-/**
+/*
  * HTML img 태그와 대응되는 클래스
  */
 global.IMG = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'img'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -6506,50 +5804,27 @@ global.IMG = CLASS({
 		//REQUIRED: params.src		이미지 경로
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// src
-		src = params.src,
-
-		// el
-		el = self.getEl(),
-
-		// get width.
-		getWidth,
-
-		// get height.
-		getHeight,
-
-		// set size.
-		setSize,
-
-		// get src.
-		getSrc,
-
-		// set src.
-		setSrc;
+		
+		let src = params.src;
+		let el = self.getEl();
 
 		//OVERRIDE: self.getWidth
-		self.getWidth = getWidth = function() {
+		let getWidth = self.getWidth = () => {
 			return el.width;
 		};
 
 		//OVERRIDE: self.getHeight
-		self.getHeight = getHeight = function() {
+		let getHeight = self.getHeight = () => {
 			return el.height;
 		};
 
-		self.setSize = setSize = function(size) {
+		let setSize = self.setSize = (size) => {
 			//REQUIRED: size
 			//OPTIONAL: size.width
 			//OPTIONAL: size.height
 
-			var
-			// width
-			width = size.width,
-
-			// height
-			height = size.height;
+			let width = size.width;
+			let height = size.height;
 
 			if (width !== undefined) {
 				el.width = width;
@@ -6560,11 +5835,11 @@ global.IMG = CLASS({
 			}
 		};
 
-		self.getSrc = getSrc = function() {
+		let getSrc = self.getSrc = () => {
 			return src;
 		};
 
-		self.setSrc = setSrc = function(_src) {
+		let setSrc = self.setSrc = (_src) => {
 			//REQUIRED: _src
 
 			src = _src;
@@ -6581,36 +5856,30 @@ global.IMG = CLASS({
 	}
 });
 
-/**
+/*
  * HTML input 태그와 대응되는 클래스
  */
-global.INPUT = CLASS(function(cls) {
-	'use strict';
+global.INPUT = CLASS((cls) => {
 
-	var
-	// focusing input ids
-	focusingInputIds = [],
+	let focusingInputIds = [];
 
-	// get focusing input ids.
-	getFocusingInputIds;
-
-	cls.getFocusingInputIds = getFocusingInputIds = function(id) {
+	let getFocusingInputIds = cls.getFocusingInputIds = (id) => {
 		return focusingInputIds;
 	};
 
 	return {
 
-		preset : function() {
+		preset : () => {
 			return DOM;
 		},
 
-		params : function() {
+		params : () => {
 			return {
 				tag : 'input'
 			};
 		},
 
-		init : function(inner, self, params) {
+		init : (inner, self, params) => {
 			//OPTIONAL: params
 			//OPTIONAL: params.id		id 속성
 			//OPTIONAL: params.cls		class 속성
@@ -6624,49 +5893,23 @@ global.INPUT = CLASS(function(cls) {
 			//OPTIONAL: params.isOffAutocomplete
 			//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 			//OPTIONAL: params.on		이벤트
-
-			var
-			// name
-			name,
-
-			// type
-			type,
-
-			// placeholder
-			placeholder,
 			
-			// accept
-			accept,
+			let name;
+			let type;
+			let placeholder;
+			let accept;
+			let isMultiple;
+			let isOffAutocomplete;
 
-			// is multiple
-			isMultiple,
+			let getName;
+			let getValue;
+			let setValue;
+			let select;
+			let focus;
+			let blur;
 			
-			// is off autocomplete
-			isOffAutocomplete,
-
-			// get name.
-			getName,
-
-			// get value.
-			getValue,
-
-			// set value.
-			setValue,
-
-			// select.
-			select,
-
-			// focus.
-			focus,
-
-			// blur.
-			blur,
-
-			// toggle check.
-			toggleCheck,
-
-			// check is checked.
-			checkIsChecked;
+			let toggleCheck;
+			let checkIsChecked;
 
 			// init params.
 			if (params !== undefined) {
@@ -6722,18 +5965,18 @@ global.INPUT = CLASS(function(cls) {
 					});
 				}
 				
-				self.getName = getName = function() {
+				getName = self.getName = () => {
 					return name;
 				};
 
-				self.getValue = getValue = function() {
+				getValue = self.getValue = () => {
 					if (type === 'checkbox' || type === 'radio') {
 						return self.getEl().checked;
 					}
 					return self.getEl().value;
 				};
 
-				self.select = select = function() {
+				select = self.select = () => {
 					if (type === 'file') {
 						self.getEl().click();
 					} else {
@@ -6741,17 +5984,17 @@ global.INPUT = CLASS(function(cls) {
 					}
 				};
 
-				self.focus = focus = function() {
+				focus = self.focus = () => {
 					self.getEl().focus();
 				};
 
-				self.blur = blur = function() {
+				blur = self.blur = () => {
 					self.getEl().blur();
 				};
 
 				if (type === 'checkbox' || type === 'radio') {
 
-					self.toggleCheck = toggleCheck = function(e) {
+					toggleCheck = self.toggleCheck = (e) => {
 
 						if (self.getEl().checked === true) {
 							self.getEl().checked = false;
@@ -6767,16 +6010,19 @@ global.INPUT = CLASS(function(cls) {
 						return self.getEl().checked;
 					};
 
-					self.checkIsChecked = checkIsChecked = function() {
+					checkIsChecked = self.checkIsChecked = () => {
 						return self.getEl().checked;
 					};
 
 					EVENT({
 						node : self,
 						name : 'keyup'
-					}, function(e) {
+					}, (e) => {
+						
 						if (e !== undefined && e.getKey() === 'Enter') {
-							DELAY(function() {
+							
+							DELAY(() => {
+								
 								EVENT.fireAll({
 									node : self,
 									name : 'change'
@@ -6787,7 +6033,7 @@ global.INPUT = CLASS(function(cls) {
 				}
 			}
 
-			self.setValue = setValue = function(value) {
+			self.setValue = setValue = (value) => {
 				//REQUIRED: value
 
 				if (type === 'checkbox' || type === 'radio') {
@@ -6843,14 +6089,14 @@ global.INPUT = CLASS(function(cls) {
 			EVENT({
 				node : self,
 				name : 'focus'
-			}, function() {
+			}, () => {
 				getFocusingInputIds().push(self.id);
 			});
 
 			EVENT({
 				node : self,
 				name : 'blur'
-			}, function() {
+			}, () => {
 
 				REMOVE({
 					array : getFocusingInputIds(),
@@ -6858,7 +6104,7 @@ global.INPUT = CLASS(function(cls) {
 				});
 			});
 
-			self.on('remove', function() {
+			self.on('remove', () => {
 
 				REMOVE({
 					array : getFocusingInputIds(),
@@ -6872,15 +6118,15 @@ global.INPUT = CLASS(function(cls) {
 				EVENT({
 					node : self,
 					name : 'touchstart'
-				}, function() {
+				}, () => {
 					
 					if (checkIsChecked() === true) {
 						
 						EVENT_ONCE({
 							node : self,
 							name : 'touchend'
-						}, function() {
-							DELAY(function() {
+						}, () => {
+							DELAY(() => {
 								setValue(false);
 							});
 						});
@@ -6889,7 +6135,7 @@ global.INPUT = CLASS(function(cls) {
 			}
 		},
 
-		afterInit : function(inner, self, params) {
+		afterInit : (inner, self, params) => {
 			//OPTIONAL: params
 			//OPTIONAL: params.id		id 속성
 			//OPTIONAL: params.cls		class 속성
@@ -6903,13 +6149,9 @@ global.INPUT = CLASS(function(cls) {
 			//OPTIONAL: params.isOffAutocomplete
 			//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 			//OPTIONAL: params.on		이벤트
-
-			var
-			// type
-			type,
-
-			// value
-			value;
+			
+			let type;
+			let value;
 
 			// init params.
 			if (params !== undefined) {
@@ -6951,47 +6193,38 @@ global.INPUT = CLASS(function(cls) {
 	};
 });
 
-/**
+/*
  * HTML li 태그와 대응되는 클래스
  */
 global.LI = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'li'
 		};
 	}
 });
 
-/**
+/*
  * HTML optgroup 태그와 대응되는 클래스
  */
 global.OPTGROUP = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'optgroup'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -7000,9 +6233,7 @@ global.OPTGROUP = CLASS({
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// label
-		label = params.label;
+		let label = params.label;
 
 		inner.setAttr({
 			name : 'label',
@@ -7011,27 +6242,22 @@ global.OPTGROUP = CLASS({
 	}
 });
 
-/**
+/*
  * HTML option 태그와 대응되는 클래스
  */
 global.OPTION = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'option'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -7039,27 +6265,19 @@ global.OPTION = CLASS({
 		//OPTIONAL: params.value
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// get value.
-		getValue,
-
-		// set value.
-		setValue;
-
-		self.getValue = getValue = function() {
+		
+		let getValue = self.getValue = () => {
 			return self.getEl().value;
 		};
 
-		self.setValue = setValue = function(value) {
+		let setValue = self.setValue = (value) => {
 			//REQUIRED: value
 
 			self.getEl().value = value;
 		};
 	},
 
-	afterInit : function(inner, self, params) {
-		'use strict';
+	afterInit : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -7067,13 +6285,9 @@ global.OPTION = CLASS({
 		//OPTIONAL: params.value
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// value
-		value,
 		
-		// children
-		children;
+		let value;
+		let children;
 
 		// init params.
 		if (params !== undefined) {
@@ -7093,47 +6307,38 @@ global.OPTION = CLASS({
 	}
 });
 
-/**
+/*
  * HTML p 태그와 대응되는 클래스
  */
 global.P = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'p'
 		};
 	}
 });
 
-/**
+/*
  * HTML select 태그와 대응되는 클래스
  */
 global.SELECT = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'select'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -7143,31 +6348,10 @@ global.SELECT = CLASS({
 		//OPTIONAL: params.value
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// name
-		name,
-
-		// is ctrl down
-		isCtrlDown = false,
-
-		// get name.
-		getName,
-
-		// get value.
-		getValue,
-
-		// set value.
-		setValue,
-
-		// select.
-		select,
-
-		// focus.
-		focus,
-
-		// blur.
-		blur;
+		
+		let name;
+		
+		let isCtrlDown = false;
 
 		// init params.
 		if (params !== undefined) {
@@ -7181,15 +6365,15 @@ global.SELECT = CLASS({
 			});
 		}
 
-		self.getName = getName = function() {
+		let getName = self.getName = () => {
 			return name;
 		};
 
-		self.getValue = getValue = function() {
+		let getValue = self.getValue = () => {
 			return self.getEl().value;
 		};
 
-		self.setValue = setValue = function(value) {
+		let setValue = self.setValue = (value) => {
 			//REQUIRED: value
 
 			if (self.getEl().value !== value) {
@@ -7206,22 +6390,22 @@ global.SELECT = CLASS({
 			}
 		};
 
-		self.select = select = function() {
+		let select = self.select = () => {
 			self.getEl().select();
 		};
 
-		self.focus = focus = function() {
+		let focus = self.focus = () => {
 			self.getEl().focus();
 		};
 
-		self.blur = blur = function() {
+		let blur = self.blur = () => {
 			self.getEl().blur();
 		};
 
 		EVENT({
 			node : self,
 			name : 'keydown'
-		}, function(e) {
+		}, (e) => {
 			
 			if (e.getKey() === 'Control') {
 				isCtrlDown = true;
@@ -7233,7 +6417,7 @@ global.SELECT = CLASS({
 		EVENT({
 			node : self,
 			name : 'keyup'
-		}, function(e) {
+		}, (e) => {
 
 			if (e.getKey() === 'Control') {
 				isCtrlDown = false;
@@ -7243,14 +6427,14 @@ global.SELECT = CLASS({
 		EVENT({
 			node : self,
 			name : 'focus'
-		}, function() {
+		}, () => {
 			INPUT.getFocusingInputIds().push(self.id);
 		});
 
 		EVENT({
 			node : self,
 			name : 'blur'
-		}, function() {
+		}, () => {
 
 			REMOVE({
 				array : INPUT.getFocusingInputIds(),
@@ -7258,7 +6442,7 @@ global.SELECT = CLASS({
 			});
 		});
 
-		self.on('remove', function() {
+		self.on('remove', () => {
 
 			REMOVE({
 				array : INPUT.getFocusingInputIds(),
@@ -7267,8 +6451,7 @@ global.SELECT = CLASS({
 		});
 	},
 
-	afterInit : function(inner, self, params) {
-		'use strict';
+	afterInit : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -7279,9 +6462,7 @@ global.SELECT = CLASS({
 		//OPTIONAL: params.c		자식 노드를 지정합니다. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트를 지정합니다.
 
-		var
-		// value
-		value;
+		let value;
 
 		// init params.
 		if (params !== undefined) {
@@ -7294,67 +6475,54 @@ global.SELECT = CLASS({
 	}
 });
 
-/**
+/*
  * HTML span 태그와 대응되는 클래스
  */
 global.SPAN = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'span'
 		};
 	}
 });
 
-/**
+/*
  * HTML table 태그와 대응되는 클래스
  */
 global.TABLE = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'table'
 		};
 	}
 });
 
-/**
+/*
  * HTML td 태그와 대응되는 클래스
  */
 global.TD = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'td'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -7364,12 +6532,8 @@ global.TD = CLASS({
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 		
-		var
-		// rowspan
-		rowspan,
-
-		// colspan
-		colspan;
+		let rowspan;
+		let colspan;
 
 		// init params.
 		if (params !== undefined) {
@@ -7393,27 +6557,22 @@ global.TD = CLASS({
 	}
 });
 
-/**
+/*
  * Textarea class
  */
 global.TEXTAREA = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'textarea'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id			id 속성
 		//OPTIONAL: params.cls			class 속성
@@ -7424,33 +6583,10 @@ global.TEXTAREA = CLASS({
 		//OPTIONAL: params.c			자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on			이벤트
 
-		var
-		// name
-		name,
-
-		// placeholder
-		placeholder,
-
-		// is ctrl down
-		isCtrlDown = false,
-
-		// get name.
-		getName,
-
-		// get value.
-		getValue,
-
-		// set value.
-		setValue,
-
-		// select.
-		select,
-
-		// focus.
-		focus,
-
-		// blur.
-		blur;
+		let name;
+		let placeholder;
+		
+		let isCtrlDown = false;
 
 		// init params.
 		if (params !== undefined) {
@@ -7472,15 +6608,15 @@ global.TEXTAREA = CLASS({
 			});
 		}
 
-		self.getName = getName = function() {
+		let getName = self.getName = () => {
 			return name;
 		};
 
-		self.getValue = getValue = function() {
+		let getValue = self.getValue = () => {
 			return self.getEl().value;
 		};
 
-		self.setValue = setValue = function(value) {
+		let setValue = self.setValue = (value) => {
 			//REQUIRED: value
 
 			if (self.getEl().value !== value) {
@@ -7497,22 +6633,22 @@ global.TEXTAREA = CLASS({
 			}
 		};
 
-		self.select = select = function() {
+		let select = self.select = () => {
 			self.getEl().select();
 		};
 
-		self.focus = focus = function() {
+		let focus = self.focus = () => {
 			self.getEl().focus();
 		};
 
-		self.blur = blur = function() {
+		let blur = self.blur = () => {
 			self.getEl().blur();
 		};
 
 		EVENT({
 			node : self,
 			name : 'keydown'
-		}, function(e) {
+		}, (e) => {
 
 			if (e.getKey() === 'Control') {
 				isCtrlDown = true;
@@ -7524,7 +6660,7 @@ global.TEXTAREA = CLASS({
 		EVENT({
 			node : self,
 			name : 'keyup'
-		}, function(e) {
+		}, (e) => {
 
 			if (e.getKey() === 'Control') {
 				isCtrlDown = false;
@@ -7534,14 +6670,14 @@ global.TEXTAREA = CLASS({
 		EVENT({
 			node : self,
 			name : 'focus'
-		}, function() {
+		}, () => {
 			INPUT.getFocusingInputIds().push(self.id);
 		});
 
 		EVENT({
 			node : self,
 			name : 'blur'
-		}, function() {
+		}, () => {
 
 			REMOVE({
 				array : INPUT.getFocusingInputIds(),
@@ -7549,7 +6685,7 @@ global.TEXTAREA = CLASS({
 			});
 		});
 
-		self.on('remove', function() {
+		self.on('remove', () => {
 
 			REMOVE({
 				array : INPUT.getFocusingInputIds(),
@@ -7558,8 +6694,7 @@ global.TEXTAREA = CLASS({
 		});
 	},
 
-	afterInit : function(inner, self, params) {
-		'use strict';
+	afterInit : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id			id 속성
 		//OPTIONAL: params.cls			class 속성
@@ -7570,9 +6705,7 @@ global.TEXTAREA = CLASS({
 		//OPTIONAL: params.c			자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on			이벤트
 
-		var
-		// value
-		value;
+		let value;
 
 		// init params.
 		if (params !== undefined) {
@@ -7585,27 +6718,22 @@ global.TEXTAREA = CLASS({
 	}
 });
 
-/**
+/*
  * HTML th 태그와 대응되는 클래스
  */
 global.TH = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'th'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -7615,12 +6743,8 @@ global.TH = CLASS({
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
 
-		var
-		// rowspan
-		rowspan,
-
-		// colspan
-		colspan;
+		let rowspan;
+		let colspan;
 
 		// init params.
 		if (params !== undefined) {
@@ -7644,67 +6768,54 @@ global.TH = CLASS({
 	}
 });
 
-/**
+/*
  * HTML tr 태그와 대응되는 클래스
  */
 global.TR = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'tr'
 		};
 	}
 });
 
-/**
+/*
  * HTML ul 태그와 대응되는 클래스
  */
 global.UL = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'ul'
 		};
 	}
 });
 
-/**
+/*
  * HTML video 태그와 대응되는 클래스
  */
 global.VIDEO = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
 		return {
 			tag : 'video'
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//REQUIRED: params
 		//OPTIONAL: params.id			id 속성
 		//OPTIONAL: params.cls			class 속성
@@ -7719,36 +6830,13 @@ global.VIDEO = CLASS({
 		//OPTIONAL: params.c			자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on			이벤트
 
-		var
-		// webm
-		webm = params.webm,
-
-		// ogg
-		ogg = params.ogg,
-		
-		// mp4
-		mp4 = params.mp4,
-		
-		// poster
-		poster = params.poster,
-		
-		// isNoControls
-		isNoControls = params.isNoControls,
-		
-		// is loop
-		isLoop = params.isLoop,
-		
-		// is muted
-		isMuted = params.isMuted,
-		
-		// play.
-		play,
-		
-		// pause.
-		pause,
-		
-		// stop.
-		stop;
+		let webm = params.webm;
+		let ogg = params.ogg;
+		let mp4 = params.mp4;
+		let poster = params.poster;
+		let isNoControls = params.isNoControls;
+		let isLoop = params.isLoop;
+		let isMuted = params.isMuted;
 		
 		if (webm !== undefined && self.getEl().canPlayType('video/webm') !== '') {
 			self.getEl().src = webm;
@@ -7779,15 +6867,15 @@ global.VIDEO = CLASS({
 			});
 		}
 		
-		self.play = play = function() {
+		let play = self.play = () => {
 			self.getEl().play();
 		};
 		
-		self.pause = pause = function() {
+		let pause = self.pause = () => {
 			self.getEl().pause();
 		};
 		
-		self.stop = stop = function() {
+		let stop = self.stop = () => {
 			self.getEl().pause();
 			self.getEl().currentTime = 0;
 		};
@@ -7800,11 +6888,11 @@ global.VIDEO = CLASS({
  * MIT License | (c) Dustin Diaz 2015
  */
 
-!function (name, definition) {
+!function (root, name, definition) {
   if (typeof module != 'undefined' && module.exports) module.exports = definition()
   else if (typeof define == 'function' && define.amd) define(name, definition)
-  else this[name] = definition()
-}('bowser', function () {
+  else root[name] = definition()
+}(this, 'bowser', function () {
   /**
     * See useragents.js for examples of navigator.userAgent
     */
@@ -8117,9 +7205,9 @@ global.VIDEO = CLASS({
     }
 
     // set OS flags for platforms that have multiple browsers
-    if (!result.msedge && (android || result.silk)) {
+    if (!result.windowsphone && !result.msedge && (android || result.silk)) {
       result.android = t
-    } else if (iosdevice) {
+    } else if (!result.windowsphone && !result.msedge && iosdevice) {
       result[iosdevice] = t
       result.ios = t
     } else if (mac) {
@@ -8336,6 +7424,10 @@ global.VIDEO = CLASS({
     for (var browser in minVersions) {
       if (minVersions.hasOwnProperty(browser)) {
         if (_bowser[browser]) {
+          if (typeof minVersions[browser] !== 'string') {
+            throw new Error('Browser version in the minVersion map should be a string: ' + browser + ': ' + String(minVersions));
+          }
+
           // browser version and min supported version.
           return compareVersions([version, minVersions[browser]]) < 0;
         }
@@ -8370,7 +7462,6 @@ global.VIDEO = CLASS({
 
   return bowser
 });
-
 /*!
 audiocontext-polyfill.js v0.1.1
 (c) 2013 - 2014 Shinnosuke Watanabe
@@ -8933,13 +8024,12 @@ Licensed under the MIT license
   self.fetch.polyfill = true
 })(typeof self !== 'undefined' ? self : this);
 
-/**
+/*
  * HTTP DELETE 요청을 보냅니다.
  */
 global.DELETE = METHOD({
 
-	run : function(urlOrParams, responseListenerOrListeners) {
-		'use strict';
+	run : (urlOrParams, responseListenerOrListeners) => {
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
 		//OPTIONAL: urlOrParams.host
@@ -8961,13 +8051,12 @@ global.DELETE = METHOD({
 		}]), responseListenerOrListeners);
 	}
 });
-/**
+/*
  * HTTP GET 요청을 보냅니다.
  */
 global.GET = METHOD({
 
-	run : function(urlOrParams, responseListenerOrListeners) {
-		'use strict';
+	run : (urlOrParams, responseListenerOrListeners) => {
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
 		//OPTIONAL: urlOrParams.host
@@ -8989,13 +8078,12 @@ global.GET = METHOD({
 		}]), responseListenerOrListeners);
 	}
 });
-/**
+/*
  * HTTP POST 요청을 보냅니다.
  */
 global.POST = METHOD({
 
-	run : function(urlOrParams, responseListenerOrListeners) {
-		'use strict';
+	run : (urlOrParams, responseListenerOrListeners) => {
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
 		//OPTIONAL: urlOrParams.host
@@ -9017,13 +8105,12 @@ global.POST = METHOD({
 		}]), responseListenerOrListeners);
 	}
 });
-/**
+/*
  * HTTP PUT 요청을 보냅니다.
  */
 global.PUT = METHOD({
 
-	run : function(urlOrParams, responseListenerOrListeners) {
-		'use strict';
+	run : (urlOrParams, responseListenerOrListeners) => {
 		//REQUIRED: urlOrParams
 		//OPTIONAL: urlOrParams.isSecure	HTTPS 프로토콜인지 여부
 		//OPTIONAL: urlOrParams.host
@@ -9045,13 +8132,12 @@ global.PUT = METHOD({
 		}]), responseListenerOrListeners);
 	}
 });
-/**
+/*
  * HTTP 요청을 보냅니다.
  */
 global.REQUEST = METHOD({
 
-	run : function(params, responseListenerOrListeners) {
-		'use strict';
+	run : (params, responseListenerOrListeners) => {
 		//REQUIRED: params
 		//REQUIRED: params.method	요청 메소드. GET, POST, PUT, DELETE를 설정할 수 있습니다.
 		//OPTIONAL: params.isSecure	HTTPS 프로토콜인지 여부
@@ -9067,48 +8153,19 @@ global.REQUEST = METHOD({
 		//OPTIONAL: responseListenerOrListeners.error
 		//OPTIONAL: responseListenerOrListeners.success
 
-		var
-		// method
-		method = params.method,
+		let method = params.method;
+		let isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure;
+		let host = params.host === undefined ? BROWSER_CONFIG.host : params.host;
+		let port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port;
+		let uri = params.uri;
+		let url = params.url;
+		let paramStr = params.paramStr;
+		let _params = params.params;
+		let data = params.data;
+		let headers = params.headers;
 		
-		// is secure
-		isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure,
-		
-		// host
-		host = params.host === undefined ? BROWSER_CONFIG.host : params.host,
-
-		// port
-		port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port,
-
-		// uri
-		uri = params.uri,
-		
-		// url
-		url = params.url,
-
-		// param str
-		paramStr = params.paramStr,
-
-		// params
-		_params = params.params,
-
-		// data
-		data = params.data,
-		
-		// headers
-		headers = params.headers,
-
-		// response listener
-		responseListener,
-
-		// error listener
-		errorListener,
-
-		// url
-		url,
-
-		// http request
-		req;
+		let responseListener;
+		let errorListener;
 
 		method = method.toUpperCase();
 		
@@ -9129,7 +8186,7 @@ global.REQUEST = METHOD({
 		
 		if (_params !== undefined) {
 			
-			EACH(_params, function(value, name) {
+			EACH(_params, (value, name) => {
 				
 				if (paramStr === undefined) {
 					paramStr = '';
@@ -9167,15 +8224,13 @@ global.REQUEST = METHOD({
 			body : paramStr,
 			credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : headers === undefined ? undefined : new Headers(headers)
-		})).then(function(response) {
+		})).then((response) => {
 			return response.text();
-		}).then(function(responseText) {
+		}).then((responseText) => {
 			responseListener(responseText);
-		}).catch(function(error) {
+		}).catch((error) => {
 			
-			var
-			// error msg
-			errorMsg = error.toString();
+			let errorMsg = error.toString();
 
 			if (errorListener !== undefined) {
 				errorListener(errorMsg);
@@ -9185,31 +8240,28 @@ global.REQUEST = METHOD({
 		});
 	}
 });
-/**
+/*
  * URI를 변경하여 다른 뷰로 이동합니다.
  */
-global.GO = METHOD(function(m) {
-	'use strict';
+global.GO = METHOD((m) => {
 	
-	var
-	// is ctrl key down
-	isCTRLKeyDown;
+	let isCTRLKeyDown;
 
 	return {
 		
-		run : function(uri) {
+		run : (uri) => {
 			//REQUIRED: uri
 			
 			if (isCTRLKeyDown === undefined) {
 				isCTRLKeyDown = false;
-							
-				EVENT('keydown', function(e) {
+				
+				EVENT('keydown', (e) => {
 					if (e.getKey() === 'Control') {
 						isCTRLKeyDown = true;
 					}
 				});
 				
-				EVENT('keyup', function(e) {
+				EVENT('keyup', (e) => {
 					if (e.getKey() === 'Control') {
 						isCTRLKeyDown = false;
 					}
@@ -9233,12 +8285,11 @@ global.GO = METHOD(function(m) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.GO = METHOD({
 
-		run : function(uri) {
+		run : (uri) => {
 			//REQUIRED: uri
 
 			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
@@ -9246,25 +8297,23 @@ FOR_BOX(function(box) {
 	});
 });
 
-/**
+/*
  * 새 창에서 URI에 해당하는 뷰를 띄웁니다.
  */
 global.GO_NEW_WIN = METHOD({
 
-	run : function(uri) {
-		'use strict';
+	run : (uri) => {
 		//REQUIRED: uri
 
 		global.open(HREF(uri));
 	}
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.GO_NEW_WIN = METHOD({
 
-		run : function(uri) {
+		run : (uri) => {
 			//REQUIRED: uri
 
 			GO_NEW_WIN((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
@@ -9272,25 +8321,23 @@ FOR_BOX(function(box) {
 	});
 });
 
-/**
+/*
  * URI로부터 주소를 생성하여 반환합니다.
  */
 global.HREF = METHOD({
 
-	run : function(uri) {
-		'use strict';
+	run : (uri) => {
 		//REQUIRED: uri
 
 		return '/' + uri;
 	}
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.HREF = METHOD({
 
-		run : function(uri) {
+		run : (uri) => {
 			//OPTIONAL: uri
 
 			return HREF((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
@@ -9298,72 +8345,49 @@ FOR_BOX(function(box) {
 	});
 });
 
-/**
+/*
  * 특정 URI와 뷰를 연결합니다.
  */
-global.MATCH_VIEW = METHOD(function(m) {
-	'use strict';
+global.MATCH_VIEW = METHOD((m) => {
 	
-	var
-	// change uri handlers
-	changeURIHandlers = [],
+	let changeURIHandlers = [];
 	
-	// check all.
-	checkAll;
-	
-	m.checkAll = checkAll = function() {
-		EACH(changeURIHandlers, function(changeURIHandler) {
+	let checkAll = m.checkAll = () => {
+		EACH(changeURIHandlers, (changeURIHandler) => {
 			changeURIHandler();
 		});
 	};
 	
 	return {
 
-		run : function(params) {
+		run : (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.uri
 			//OPTIONAL: params.excludeURI
 			//REQUIRED: params.target
-	
-			var
-			// uri
-			uri = params.uri,
+
+			let uri = params.uri;
+			let excludeURI = params.excludeURI;
+			let target = params.target;
 			
-			// exclude uri
-			excludeURI = params.excludeURI,
+			let uriMatcher = URI_MATCHER(uri);
+			let excludeURIMatcher = excludeURI === undefined ? undefined : URI_MATCHER(excludeURI);
 	
-			// target
-			target = params.target,
-	
-			// uri matcher
-			uriMatcher = URI_MATCHER(uri),
-	
-			// exclude uri matcher
-			excludeURIMatcher = excludeURI === undefined ? undefined : URI_MATCHER(excludeURI),
-	
-			// view
-			view,
-	
-			// pre params
-			preParams,
+			let view;
+			let preParams;
 			
-			// change uri handler.
-			changeURIHandler = function() {
+			let changeURIHandler = () => {
 	
-				var
-				// uri
-				uri = URI(),
-	
-				// result
-				result,
-	
-				// uri parmas
-				uriParams;
+				let uri = URI();
+				let result;
 	
 				// when view founded
-				if (uri !== REFRESH.getRefreshingURI() && (result = uriMatcher.check(uri)).checkIsMatched() === true && (excludeURI === undefined || excludeURIMatcher.check(uri).checkIsMatched() !== true)) {
-	
-					uriParams = result.getURIParams();
+				if (
+				uri !== REFRESH.getRefreshingURI() &&
+				(result = uriMatcher.check(uri)).checkIsMatched() === true &&
+				(excludeURI === undefined || excludeURIMatcher.check(uri).checkIsMatched() !== true)) {
+
+					let uriParams = result.getURIParams();
 	
 					// when before view not exists, create view.
 					if (view === undefined) {
@@ -9397,7 +8421,7 @@ global.MATCH_VIEW = METHOD(function(m) {
 			
 			changeURIHandlers.push(changeURIHandler);
 	
-			EVENT('popstate', function() {
+			EVENT('popstate', () => {
 				changeURIHandler();
 			});
 			
@@ -9406,45 +8430,33 @@ global.MATCH_VIEW = METHOD(function(m) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.MATCH_VIEW = METHOD({
 
-		run : function(params) {
+		run : (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.uri
 			//OPTIONAL: params.excludeURI
 			//REQUIRED: params.target
 
-			var
-			// uri
-			uri = params.uri,
-			
-			// exclude uri
-			excludeURI = params.excludeURI,
+			let uri = params.uri;
+			let excludeURI = params.excludeURI;
+			let target = params.target;
 
-			// target
-			target = params.target,
+			let newURIs = [];
+			let newExcludeURIs = [];
 
-			// new uris
-			newURIs = [],
-			
-			// new exclude uris
-			newExcludeURIs = [],
-
-			// push uri.
-			pushURI = function(uri) {
+			let pushURI = (uri) => {
 
 				if (box.boxName === CONFIG.defaultBoxName) {
 					newURIs.push(uri);
 				}
 
 				newURIs.push(box.boxName + '/' + uri);
-			},
+			};
 
-			// push exclude uri.
-			pushExcludeURI = function(uri) {
+			let pushExcludeURI = (uri) => {
 
 				if (box.boxName === CONFIG.defaultBoxName) {
 					newExcludeURIs.push(uri);
@@ -9476,33 +8488,25 @@ FOR_BOX(function(box) {
 	});
 });
 
-/**
+/*
  * 뷰를 새로 불러옵니다.
  */
-global.REFRESH = METHOD(function(m) {
-	'use strict';
+global.REFRESH = METHOD((m) => {
 	
-	var
-	// refreshing uri
-	refreshingURI = '__REFRESHING',
+	const REFRESHING_URI = '__REFRESHING';
 	
-	// get refreshing uri.
-	getRefreshingURI;
-	
-	m.getRefreshingURI = getRefreshingURI = function() {
-		return refreshingURI;
+	let getRefreshingURI = m.getRefreshingURI = () => {
+		return REFRESHING_URI;
 	};
 	
 	return {
 
-		run : function(uri) {
+		run : (uri) => {
 			//OPTIONAL: uri
 	
-			var
-			// saved uri
-			savedURI = uri !== undefined ? uri : location.pathname.substring(1);
+			let savedURI = uri !== undefined ? uri : location.pathname.substring(1);
 	
-			history.pushState(undefined, undefined, '/' + refreshingURI);
+			history.pushState(undefined, undefined, '/' + REFRESHING_URI);
 			MATCH_VIEW.checkAll();
 			
 			history.replaceState(undefined, undefined, '/' + savedURI);
@@ -9511,12 +8515,11 @@ global.REFRESH = METHOD(function(m) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.REFRESH = METHOD({
 
-		run : function(uri) {
+		run : (uri) => {
 			//OPTIONAL: uri
 			
 			REFRESH((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + (uri === undefined ? '' : uri));
@@ -9524,61 +8527,33 @@ FOR_BOX(function(box) {
 	});
 });
 
-/**
+/*
  * 현재 브라우저의 URI를 가져옵니다.
  */
 global.URI = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 		
 		return decodeURIComponent(location.pathname.substring(1));
 	}
 });
 
-/**
+/*
  * 뷰를 정의하기 위한 VIEW 클래스
  */
 global.VIEW = CLASS({
 
-	init : function(inner, self) {
-		'use strict';
+	init : (inner, self) => {
 
-		var
-		// is closed
-		isClosed = false,
-
-		// params change handlers
-		paramsChangeHandlers = [],
+		let isClosed = false;
+		let paramsChangeHandlers = [];
+		let uriChangeHandlers = [];
+		let closeHandlers = [];
 		
-		// uri change handlers
-		uriChangeHandlers = [],
+		let nowParams;
+		let nowURI;
 
-		// close handlers
-		closeHandlers = [],
-		
-		// now params
-		nowParams,
-		
-		// now uri
-		nowURI,
-
-		// on.
-		on,
-
-		// change params.
-		changeParams,
-		
-		// run uri change handlers.
-		runURIChangeHandlers,
-
-		// close.
-		close,
-
-		// check is closed.
-		checkIsClosed;
-
-		inner.on = on = function(eventName, eventHandler) {
+		let on = inner.on = (eventName, eventHandler) => {
 			//REQUIRED: eventName
 			//REQUIRED: eventHandler
 
@@ -9604,34 +8579,34 @@ global.VIEW = CLASS({
 			}
 		};
 
-		self.changeParams = changeParams = function(params) {
+		let changeParams = self.changeParams = (params) => {
 			
 			nowParams = params;
 
-			EACH(paramsChangeHandlers, function(handler) {
+			EACH(paramsChangeHandlers, (handler) => {
 				handler(params);
 			});
 		};
 		
-		self.runURIChangeHandlers = runURIChangeHandlers = function(uri) {
+		let runURIChangeHandlers = self.runURIChangeHandlers = (uri) => {
 			
 			nowURI = uri;
 			
-			EACH(uriChangeHandlers, function(handler) {
+			EACH(uriChangeHandlers, (handler) => {
 				handler(uri);
 			});
 		};
 
-		self.close = close = function() {
+		let close = self.close = () => {
 
-			EACH(closeHandlers, function(handler) {
+			EACH(closeHandlers, (handler) => {
 				handler();
 			});
 
 			isClosed = true;
 		};
 
-		inner.checkIsClosed = checkIsClosed = function() {
+		let checkIsClosed = inner.checkIsClosed = () => {
 			return isClosed;
 		};
 		
@@ -9639,37 +8614,34 @@ global.VIEW = CLASS({
 	}
 });
 
-/**
+/*
  * 가로 스크롤의 현재 위치를 픽셀 단위로 가져옵니다.
  */
 global.SCROLL_LEFT = METHOD({
 
-	run : function() {
-		'use strict';
-
+	run : () => {
+		
 		return global.pageXOffset;
 	}
 });
 
-/**
+/*
  * 세로 스크롤의 현재 위치를 픽셀 단위로 가져옵니다.
  */
 global.SCROLL_TOP = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 
 		return global.pageYOffset;
 	}
 });
 
-/**
+/*
  * 브라우저 창에 표시되는 문서의 제목을 가져오거나 변경합니다.
  */
 global.TITLE = METHOD({
 
-	run : function(title) {
-		'use strict';
+	run : (title) => {
 		//OPTIONAL: title
 
 		if (title === undefined) {
@@ -9680,25 +8652,23 @@ global.TITLE = METHOD({
 	}
 });
 
-/**
+/*
  * 브라우저 창의 세로 길이를 픽셀 단위로 반환합니다.
  */
 global.WIN_HEIGHT = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 
 		return document.documentElement.clientHeight;
 	}
 });
 
-/**
+/*
  * 브라우저 창의 가로 길이를 픽셀 단위로 반환합니다.
  */
 global.WIN_WIDTH = METHOD({
 
-	run : function() {
-		'use strict';
+	run : () => {
 
 		return document.documentElement.clientWidth;
 	}

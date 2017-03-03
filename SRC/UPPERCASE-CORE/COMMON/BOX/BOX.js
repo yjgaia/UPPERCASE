@@ -1,4 +1,4 @@
-/**
+/*
  * BOX를 생성합니다.
  */
 global.BOX = METHOD((m) => {

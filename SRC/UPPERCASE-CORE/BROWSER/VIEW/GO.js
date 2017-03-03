@@ -1,28 +1,25 @@
-/**
+/*
  * URI를 변경하여 다른 뷰로 이동합니다.
  */
-global.GO = METHOD(function(m) {
-	'use strict';
+global.GO = METHOD((m) => {
 	
-	var
-	// is ctrl key down
-	isCTRLKeyDown;
+	let isCTRLKeyDown;
 
 	return {
 		
-		run : function(uri) {
+		run : (uri) => {
 			//REQUIRED: uri
 			
 			if (isCTRLKeyDown === undefined) {
 				isCTRLKeyDown = false;
-							
-				EVENT('keydown', function(e) {
+				
+				EVENT('keydown', (e) => {
 					if (e.getKey() === 'Control') {
 						isCTRLKeyDown = true;
 					}
 				});
 				
-				EVENT('keyup', function(e) {
+				EVENT('keyup', (e) => {
 					if (e.getKey() === 'Control') {
 						isCTRLKeyDown = false;
 					}
@@ -46,12 +43,11 @@ global.GO = METHOD(function(m) {
 	};
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.GO = METHOD({
 
-		run : function(uri) {
+		run : (uri) => {
 			//REQUIRED: uri
 
 			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);

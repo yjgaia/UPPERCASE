@@ -221,4 +221,4 @@ let SomeClass = CLASS(...
 UPPERCASE의 OOP 시스템으로 인해, `this` 키워드를 쓸 필요가 전혀 없습니다. 필요한 경우, `self`를 대신해서 사용할 수 있습니다.
 
 ## `function`을 쓰지 않습니다.
-UPPERCASE는 ECMAScript6을 지원합니다. 따라서 화살표 함수(`() => {}`)를 사용할 수 있습니다. 따라서 `function`을 쓰지 않습니다.
+UPPERCASE는 ECMAScript6을 지원합니다. 따라서 화살표 함수(`() => {}`)를 사용할 수 있습니다. 통일성을 위하여 `function`을 쓰지 않습니다.

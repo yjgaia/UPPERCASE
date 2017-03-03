@@ -1,18 +1,15 @@
-TEST('MULTI_PROTOCOL_SOCKET_SERVER', function(check) {
-	'use strict';
+TEST('MULTI_PROTOCOL_SOCKET_SERVER', (check) => {
 	
 	MULTI_PROTOCOL_SOCKET_SERVER({
 		socketServerPort : 8124,
 		webServer : WEB_SERVER(8125)
-	}, function(clientInfo, on, off, send) {
+	}, (clientInfo, on, off, send) => {
 
-		var
-		// roles
-		roles = [];
+		let roles = [];
 
 		console.log('CONNECTED!', clientInfo);
 
-		on('message', function(data, ret) {
+		on('message', (data, ret) => {
 
 			console.log('SERVER!', data, CPU_CLUSTERING.getWorkerId());
 
@@ -24,18 +21,18 @@ TEST('MULTI_PROTOCOL_SOCKET_SERVER', function(check) {
 			data : {
 				msg : 'message from server. ' + CPU_CLUSTERING.getWorkerId()
 			}
-		}, function(retMsg) {
+		}, (retMsg) => {
 
 			console.log('RETURN MESSAGE:', retMsg);
 		});
 
-		on('login', function(data) {
+		on('login', (data) => {
 			if (data.username === 'test' && data.password === '1234') {
 				roles.push('USER');
 			}
 		});
 
-		on('checkRole', function(role) {
+		on('checkRole', (role) => {
 
 			if (CHECK_IS_IN({
 				data : roles,
@@ -47,7 +44,7 @@ TEST('MULTI_PROTOCOL_SOCKET_SERVER', function(check) {
 		});
 
 		// when disconnected
-		on('__DISCONNECTED', function() {
+		on('__DISCONNECTED', () => {
 			console.log('DISCONNECTED!');
 		});
 	});

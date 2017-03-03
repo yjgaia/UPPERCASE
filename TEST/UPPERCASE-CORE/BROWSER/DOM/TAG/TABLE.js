@@ -1,22 +1,17 @@
-TEST('TABLE', function(check) {
-	'use strict';
+TEST('TABLE', (check) => {
 
-	var
-	// th style
-	thStyle = {
+	let thStyle = {
 		padding : 5,
 		border : '1px solid #999',
 		fontWeight : 'bold'
-	},
-
-	// td style
-	tdStyle = {
+	};
+	
+	let tdStyle = {
 		padding : 5,
 		border : '1px solid #999'
-	},
-
-	// test div
-	div = DIV({
+	};
+	
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,

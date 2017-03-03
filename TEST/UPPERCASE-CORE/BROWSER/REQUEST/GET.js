@@ -1,10 +1,9 @@
-TEST('GET', function(check) {
-	'use strict';
+TEST('GET', (check) => {
 
 	// test GET request.
 	GET({
 		uri : 'request_test'
-	}, function(content) {
+	}, (content) => {
 		check(content === 'Request DONE!');
 	});
 
@@ -12,7 +11,7 @@ TEST('GET', function(check) {
 	GET({
 		uri : 'request_test',
 		paramStr : 'thisis=parameter'
-	}, function(content) {
+	}, (content) => {
 		check(content === 'Request DONE!');
 	});
 
@@ -22,14 +21,14 @@ TEST('GET', function(check) {
 		data : {
 			thisis : 'data'
 		}
-	}, function(content) {
+	}, (content) => {
 		check(content === 'Request DONE!');
 	});
 
 	// test GET request.
 	GET({
 		uri : 'request_test_json'
-	}, function(content) {
+	}, (content) => {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
@@ -39,7 +38,7 @@ TEST('GET', function(check) {
 	GET({
 		uri : 'request_test_json',
 		paramStr : 'thisis=parameter'
-	}, function(content) {
+	}, (content) => {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));
@@ -51,7 +50,7 @@ TEST('GET', function(check) {
 		data : {
 			thisis : 'data'
 		}
-	}, function(content) {
+	}, (content) => {
 		check(CHECK_ARE_SAME([PARSE_STR(content), {
 			thisis : 'JSON'
 		}]));

@@ -3,8 +3,7 @@
  */
 global.CONSOLE_BLUE = METHOD({
 
-	run : function(text) {
-		'use strict';
+	run : (text) => {
 		//REQUIRED: text
 
 		return '[36m' + text + '[0m';

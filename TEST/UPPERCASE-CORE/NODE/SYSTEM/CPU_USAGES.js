@@ -1,7 +1,6 @@
-TEST('CPU_USAGES', function(check) {
-	'use strict';
+TEST('CPU_USAGES', (check) => {
 
-	INTERVAL(1, RAR(function() {
+	INTERVAL(1, RAR(() => {
 		console.log(CPU_USAGES());
 	}));
 });

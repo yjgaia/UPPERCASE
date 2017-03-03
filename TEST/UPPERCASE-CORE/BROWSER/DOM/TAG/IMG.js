@@ -1,9 +1,6 @@
-TEST('IMG', function(check) {
-	'use strict';
-
-	var
-	// img
-	img = IMG({
+TEST('IMG', (check) => {
+	
+	let img = IMG({
 		style : {
 			width : 300,
 			position : 'fixed',

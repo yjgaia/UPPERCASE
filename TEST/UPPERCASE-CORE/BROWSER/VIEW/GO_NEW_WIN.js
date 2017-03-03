@@ -1,9 +1,6 @@
-TEST('GO_NEW_WIN', function(check) {
-	'use strict';
+TEST('GO_NEW_WIN', (check) => {
 
-	var
-	// div
-	div = DIV({
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,
@@ -18,7 +15,7 @@ TEST('GO_NEW_WIN', function(check) {
 			},
 			c : 'open test view on new window.',
 			on : {
-				tap : function() {
+				tap : () => {
 					GO_NEW_WIN('test');
 				}
 			}

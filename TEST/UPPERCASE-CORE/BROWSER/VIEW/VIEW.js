@@ -1,34 +1,24 @@
-TEST('VIEW', function(check) {
-	'use strict';
+TEST('VIEW', (check) => {
 
-	var
-	// test view
-	TestView = CLASS({
+	let TestView = CLASS({
 
-		preset : function() {
+		preset : () => {
 			return VIEW;
 		},
 
-		init : function(inner, self) {
-
-			var
-			// change params.
-			changeParams,
-
-			// close.
-			close;
-
+		init : (inner, self) => {
+			
 			// on view.
 			console.log('View Opened!');
 
-			self.changeParams = changeParams = function(params) {
+			let changeParams = self.changeParams = (params) => {
 
 				// when change params.
 				console.log(params);
 			};
 
 			//OVERRIDE: self.close
-			self.close = close = function() {
+			let close = self.close = () => {
 				// when close.
 				console.log('View Closed!');
 			};
@@ -51,7 +41,7 @@ TEST('VIEW', function(check) {
 			},
 			c : 'view',
 			on : {
-				tap : function() {
+				tap : () => {
 					GO('view');
 				}
 			}
@@ -61,7 +51,7 @@ TEST('VIEW', function(check) {
 			},
 			c : 'view/1',
 			on : {
-				tap : function() {
+				tap : () => {
 					GO('view/1');
 				}
 			}

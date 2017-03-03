@@ -1,19 +1,13 @@
-/**
+/*
  * 지정된 경로에 위치한 폴더들의 이름 목록을 불러옵니다.
  */
-global.FIND_FOLDER_NAMES = METHOD(function() {
-	'use strict';
+global.FIND_FOLDER_NAMES = METHOD(() => {
 
-	var
-	//IMPORT: fs
-	fs = require('fs'),
-
-	//IMPORT: path
-	_path = require('path');
-
+	let FS = require('fs');
+	
 	return {
 
-		run : function(pathOrParams, callbackOrHandlers) {
+		run : (pathOrParams, callbackOrHandlers) => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	폴더들이 위치한 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행하여 결과를 반환합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
@@ -22,24 +16,14 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 			//OPTIONAL: callbackOrHandlers.error
 			//OPTIONAL: callbackOrHandlers.success
 
-			var
-			// path
-			path,
+			let path;
+			let isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
 
-			// is sync
-			isSync,
-
-			// not exists handler.
-			notExistsHandler,
-
-			// error handler.
-			errorHandler,
-
-			// callback.
-			callback,
-
-			// file names
-			folderNames = [];
+			let folderNames = [];
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -62,19 +46,15 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, function(isExists) {
+				CHECK_FILE_EXISTS(path, (isExists) => {
 
 					if (isExists === true) {
 
-						fs.readdir(path, function(error, names) {
-
-							var
-							// error msg
-							errorMsg;
+						FS.readdir(path, (error, names) => {
 
 							if (error !== TO_DELETE) {
 
-								errorMsg = error.toString();
+								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
@@ -85,19 +65,15 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 							} else if (callback !== undefined) {
 
 								PARALLEL(names, [
-								function(name, done) {
+								(name, done) => {
 
 									if (name[0] !== '.') {
 
-										fs.stat(path + '/' + name, function(error, stats) {
-
-											var
-											// error msg
-											errorMsg;
+										FS.stat(path + '/' + name, (error, stats) => {
 
 											if (error !== TO_DELETE) {
 
-												errorMsg = error.toString();
+												let errorMsg = error.toString();
 
 												if (errorHandler !== undefined) {
 													errorHandler(errorMsg);
@@ -120,7 +96,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 									}
 								},
 
-								function() {
+								() => {
 									if (callback !== undefined) {
 										callback(folderNames);
 									}
@@ -144,15 +120,8 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 			// when sync mode
 			else {
 
-				return RUN(function() {
-
-					var
-					// names
-					names,
-
-					// error msg
-					errorMsg;
-
+				return RUN(() => {
+					
 					try {
 
 						if (CHECK_FILE_EXISTS({
@@ -160,10 +129,10 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 							isSync : true
 						}) === true) {
 
-							names = fs.readdirSync(path);
+							let names = FS.readdirSync(path);
 
-							EACH(names, function(name) {
-								if (name[0] !== '.' && fs.statSync(path + '/' + name).isDirectory() === true) {
+							EACH(names, (name) => {
+								if (name[0] !== '.' && FS.statSync(path + '/' + name).isDirectory() === true) {
 									folderNames.push(name);
 								}
 							});
@@ -178,7 +147,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 								});
 							}
 
-							// do not run callback.
+							// return undefined.
 							return;
 						}
 
@@ -186,7 +155,7 @@ global.FIND_FOLDER_NAMES = METHOD(function() {
 
 						if (error !== TO_DELETE) {
 
-							errorMsg = error.toString();
+							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);

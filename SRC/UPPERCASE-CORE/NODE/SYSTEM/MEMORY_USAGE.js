@@ -1,23 +1,17 @@
-/**
+/*
  * 메모리 사용률을 반환합니다.
  */
-global.MEMORY_USAGE = METHOD(function(m) {
-	'use strict';
+global.MEMORY_USAGE = METHOD((m) => {
 	
-	var
-	//IMPORT: os
-	os = require('os'),
+	let os = require('os');
 	
-	// total memory
-	totalMemory = os.totalmem();
+	let totalMemory = os.totalmem();
 	
 	return {
 		
-		run : function() {
+		run : () => {
 			
-			var
-			// free memory
-			freeMemory = os.freemem();
+			let freeMemory = os.freemem();
 			
 			return (1 - freeMemory / totalMemory) * 100;
 		}

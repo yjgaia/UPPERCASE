@@ -1,5 +1,4 @@
-TEST('INTEGER', function(check) {
-	'use strict';
+TEST('INTEGER', (check) => {
 
 	check(INTEGER('1') === 1);
 });

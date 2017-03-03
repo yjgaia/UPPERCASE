@@ -1,17 +1,14 @@
-/**
+/*
  * HTML iframe 태그와 대응되는 클래스
  */
 global.IFRAME = CLASS({
 
-	preset : function() {
-		'use strict';
-
+	preset : () => {
 		return DOM;
 	},
 
-	params : function() {
-		'use strict';
-
+	params : () => {
+		
 		return {
 			tag : 'iframe',
 			style : {
@@ -20,8 +17,7 @@ global.IFRAME = CLASS({
 		};
 	},
 
-	init : function(inner, self, params) {
-		'use strict';
+	init : (inner, self, params) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.id		id 속성
 		//OPTIONAL: params.cls		class 속성
@@ -30,19 +26,9 @@ global.IFRAME = CLASS({
 		//OPTIONAL: params.src
 		//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 		//OPTIONAL: params.on		이벤트
-
-		var
-		// name
-		name,
-
-		// src
-		src,
-
-		// set src.
-		setSrc,
-
-		// get src.
-		getSrc;
+		
+		let name;
+		let src;
 
 		// init params.
 		if (params !== undefined) {
@@ -57,7 +43,7 @@ global.IFRAME = CLASS({
 			});
 		}
 
-		self.setSrc = setSrc = function(_src) {
+		let setSrc = self.setSrc = (_src) => {
 			//REQUIRED: _src
 
 			src = _src;
@@ -72,7 +58,7 @@ global.IFRAME = CLASS({
 			setSrc(src);
 		}
 
-		self.getSrc = getSrc = function() {
+		let getSrc = self.getSrc = () => {
 			return src;
 		};
 	}

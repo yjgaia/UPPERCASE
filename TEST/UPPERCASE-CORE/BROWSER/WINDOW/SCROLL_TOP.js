@@ -1,5 +1,4 @@
-TEST('SCROLL_TOP', function(check) {
-	'use strict';
+TEST('SCROLL_TOP', (check) => {
 
 	// get scroll top.
 	console.log(SCROLL_TOP());

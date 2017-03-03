@@ -1,31 +1,23 @@
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
-	/**
+	/*
 	 * get resource's real path with version.
 	 */
-	box.R = METHOD(function(m) {
+	box.R = METHOD((m) => {
 		
-		var
-		// base path
-		basePath,
+		let basePath;
 		
-		// set base path.
-		setBasePath;
-		
-		m.setBasePath = setBasePath = function(_basePath) {
+		let setBasePath = m.setBasePath = (_basePath) => {
 			basePath = _basePath;
 		};
 		
 		return {
 
-			run : function(path, callback) {
+			run : (path, callback) => {
 				//REQUIRED: path
 				//OPTIONAL: callback
 	
-				var
-				// uri
-				uri = box.boxName + '/R/' + path;
+				let uri = box.boxName + '/R/' + path;
 	
 				if (CONFIG.version !== undefined) {
 					uri += '?version=' + CONFIG.version;

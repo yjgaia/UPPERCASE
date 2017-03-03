@@ -1,18 +1,17 @@
+'use strict';
+
 /*
 
 Welcome to UPPERCASE-BOOT! (http://uppercase.io)
 
 */
 
-RUN(function() {
-	'use strict';
+RUN(() => {
 
 	// init objects.
 	INIT_OBJECTS();
 	
-	var
-	// title
-	title = MSG({
+	let title = MSG({
 		en : 'Resource not found',
 		ko : '리소스를 찾을 수 없습니다.'
 	});
