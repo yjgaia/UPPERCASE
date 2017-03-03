@@ -6832,7 +6832,7 @@ global.MINIFY_JS = METHOD(function() {
 			} catch(error) {
 			    
 			    SHOW_ERROR('MINIFY_JS', error.message, {
-			        code : (error.pos - 20 > 0 ? '...' : '') + code.substring(error.pos - 20, error.pos + 20) + (error.pos + 20 < code.length ? '...' : ''),
+			        code : (error.pos - 50 > 0 ? '...' : '') + code.substring(error.pos - 50, error.pos + 50) + (error.pos + 50 < code.length ? '...' : ''),
                     line : error.line,
                     column : error.col
 			    });
