@@ -1,9 +1,9 @@
 {
 	"name": "uppercase-db",
-	"version": "0.0.0-beta",
+	"version": "0.0.2-beta",
 	"dependencies": {
 		"mongodb": "latest",
 		"uppercase-core": "latest"
 	},
-	"main": "NODE.js"
+	"main": "index.js"
 }

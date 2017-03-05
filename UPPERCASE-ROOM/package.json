@@ -1,8 +1,8 @@
 {
 	"name": "uppercase-room",
-	"version": "0.0.0-beta",
+	"version": "0.0.2-beta",
 	"dependencies": {
 		"uppercase-core": "latest"
 	},
-	"main": "NODE.js"
+	"main": "index.js"
 }

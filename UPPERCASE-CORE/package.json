@@ -1,6 +1,6 @@
 {
 	"name": "uppercase-core",
-	"version": "0.0.8-beta",
+	"version": "0.0.10-beta",
 	"dependencies": {
 		"hanul-imagemagick": "latest",
 		"hanul-uglify-js": "latest",
@@ -9,5 +9,5 @@
 		"sqwish": "latest",
 		"ws": "latest"
 	},
-	"main": "NODE.js"
+	"main": "index.js"
 }
