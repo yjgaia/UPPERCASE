@@ -83,6 +83,10 @@ RUN(() => {
 		if (isToSaveMin === true) {
 			
 			content = '';
+			
+			if (path === 'BROWSER') {
+			    content += 'let global=window;';
+			}
 		
 			EACH(scriptPaths, (scriptPath) => {
 				content += MINIFY_JS(READ_FILE({
