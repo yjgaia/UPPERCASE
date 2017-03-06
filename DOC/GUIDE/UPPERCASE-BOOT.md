@@ -28,7 +28,7 @@ BOOT({
 });
 ```
 
-사실상 UPPERCASE-BOOT는 UPPERCASE 그 자체이므로, [튜토리얼 문서](../TUTORIAL.md)를 참고하시어 프로젝트 개발을 진행하면 됩니다.
+UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를 실행시키기 때문에, 이제 [튜토리얼 문서](../TUTORIAL.md)를 참고하시어 프로젝트 개발을 진행하면 됩니다.
 
 ## `CONFIG`
 
