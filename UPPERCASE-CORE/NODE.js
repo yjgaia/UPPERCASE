@@ -4145,13 +4145,20 @@ global.SHARED_STORE = CLASS((cls) => {
 				}
 			};
 			
-			let all = self.all = (filter, callback) => {
-				//OPTIONAL: filter
+			let all = self.all = (params, callback) => {
+				//OPTIONAL: params
+				//OPTIONAL: params.filter
 				//REQUIRED: callback
 				
+				let filter;
+				
 				if (callback === undefined) {
-					callback = filter;
-					filter = undefined;
+					callback = params;
+					params = undefined;
+				}
+				
+				if (params !== undefined) {
+					filter = params.filter;
 				}
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
@@ -4186,13 +4193,20 @@ global.SHARED_STORE = CLASS((cls) => {
 				}
 			};
 			
-			let count = self.count = (filter, callback) => {
-				//OPTIONAL: filter
+			let count = self.count = (params, callback) => {
+				//OPTIONAL: params
+				//OPTIONAL: params.filter
 				//REQUIRED: callback
 				
+				let filter;
+				
 				if (callback === undefined) {
-					callback = filter;
-					filter = undefined;
+					callback = params;
+					params = undefined;
+				}
+				
+				if (params !== undefined) {
+					filter = params.filter;
 				}
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
@@ -4227,17 +4241,20 @@ global.SHARED_STORE = CLASS((cls) => {
 				}
 			};
 			
-			let checkIsExists = self.checkIsExists = (idOrFilter, callback) => {
-				//REQUIRED: idOrFilter
+			let checkIsExists = self.checkIsExists = (idOrParams, callback) => {
+				//REQUIRED: idOrParams
+				//OPTIONAL: idOrParams.id
+				//OPTIONAL: idOrParams.filter
 				//REQUIRED: callback
 				
 				let id;
 				let filter;
 				
-				if (CHECK_IS_DATA(idOrFilter) !== true) {
-					id = idOrFilter;
+				if (CHECK_IS_DATA(idOrParams) !== true) {
+					id = idOrParams;
 				} else {
-					filter = idOrFilter;
+					id = idOrParams.id;
+					filter = idOrParams.filter;
 				}
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
