@@ -1279,7 +1279,7 @@ sampleStore.remove('1234', {
 
 #### `all`
 * `all((savedDataSet) => {})`
-* `all(filter, (savedDataSet) => {})`
+* `all({filter:}, (savedDataSet) => {})`
 
 저장소의 모든 데이터를 가져옵니다. 혹은 `filter`에 해당하는 모든 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](https://docs.mongodb.com/manual/reference/operator/query/#query-selectors)를 사용합니다.
 
@@ -1291,7 +1291,7 @@ sampleStore.all((savedDataSet) => {
 
 #### `count`
 * `count((count) => {})`
-* `count(filter, (count) => {})`
+* `count({filter:}, (count) => {})`
 
 저장소의 모든 데이터의 개수를 가져옵니다. 혹은 `filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](https://docs.mongodb.com/manual/reference/operator/query/#query-selectors)를 사용합니다.
 
@@ -1303,7 +1303,7 @@ sampleStore.count((count) => {
 
 #### `checkIsExists`
 * `checkIsExists(id, (isExists) => {})`
-* `checkIsExists(filter, (isExists) => {})`
+* `checkIsExists({filter:}, (isExists) => {})`
 
 `id`에 해당하는 데이터가 존재하는지 확인합니다. 혹은 `filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](https://docs.mongodb.com/manual/reference/operator/query/#query-selectors)를 사용합니다.
 
