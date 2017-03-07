@@ -47,12 +47,12 @@
 - UPPERCASE MODEL hidden property names - 저장만 되고, 가져오는건 안됨
 - onNew나 onRemove authKey 및 role
 - getAuthKey findAuthKey
-- get, find, count, checkIsExists 등은 restful 하게 제공할 수 있도록 (만약 role이 없다면.)
+- MODEL의 get, find, count, checkIsExists 등은 restful 하게 제공할 수 있도록 (만약 role이 없다면.)
 - UADMIN 값이 배열이거나 데이터일 경우 표현할 방법 -> 그냥 json 형태로 표현 및 저장 해야할듯
 - UPPERCASE 접속한 사용자 분석 툴
 
-- let, const 적용하기
-
+- ADD_FONT 예제 작성
+- SHARED_STORE filter 예제 작성
 
 ## 미래에 반영할 것들
 HTTP/2 지원

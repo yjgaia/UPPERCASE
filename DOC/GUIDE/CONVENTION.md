@@ -1,3 +1,5 @@
+작성중
+
 # UPPERCASE 코드 컨벤션 규칙
 UPPERCASE 코드 컨벤션 규칙은 기본적으로  [Douglas Crockford의 코드 컨벤션 규칙](http://javascript.crockford.com/code.html)을 따릅니다. 그러나 몇 가지 중요한 차이점과 추가사항들이 있으니 아래 내용을 꼭 숙지하시고 사용하시기 바랍니다.
 

@@ -1,3 +1,5 @@
+작성중
+
 # UPPERCASE-ROOM
 UPPERCASE-ROOM은 [UPPERCASE-CORE](UPPERCASE-CORE.md)에서 지원하는 통신 시스템을 확장하여, 룸이라는 개념으로 모든 통신이 이루어질 수 있도록 만든 모듈입니다.
 

@@ -6,7 +6,6 @@
 * 데스크톱 하이브리드 앱
 
 # Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발
-※ 이 문서는 작성중인 문서입니다.
 
 Apache Cordova와 Crosswalk를 사용하여 하이브리드 앱을 만드는 방법입니다.
 
