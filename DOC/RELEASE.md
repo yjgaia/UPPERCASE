@@ -17,3 +17,4 @@ UPPERCASE의 최신 변경 사항을 다룹니다. 변경 사항을 확인하신
 - CPU_SHARED_DB, CPU_SHARED_STORE, SHARED_DB가 SHARED_STORE로 통합되었습니다.
 - REDIS_STORE가 제거되었습니다.
 - 큰 장점이 없는 DB 캐시 기능이 제거되었습니다.
+- isUsingHTMLSnapshot, isMobileFullScreen 설정이 제거되었습니다.
