@@ -2,6 +2,8 @@
 
 # UPPERCASE를 수정하여 사용하기
 
+`SRC` 폴더의 내용을 수정
+
 # UPPERCASE 빌드
 SRC 폴더에 있는 `__BUILD.js` 스크립트를 실행하여 UPPERCASE를 빌드합니다.
 

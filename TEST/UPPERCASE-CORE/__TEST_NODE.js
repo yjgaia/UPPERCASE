@@ -111,7 +111,6 @@ RUN(() => {
 	require('./NODE/CONSOLE/SHOW_WARNING.js');
 	
 	// 문자열 암호화 기능
-	require('./NODE/ENCRYPTION/SHA1.js');
 	require('./NODE/ENCRYPTION/SHA256.js');
 	require('./NODE/ENCRYPTION/SHA512.js');*/
 	

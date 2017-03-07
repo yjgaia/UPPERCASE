@@ -1,59 +1,42 @@
-일단 다 만들고, 문서 정리도 끝 -> box.uppercase.io 만들기 -> ubm -> 튜토리얼 제작 (프로젝트 따로 분리)
+## UPPERCASE 2.0에서 해야 할 것들
 - UPPERCASE 1.0의 SHOW_ERROR 확인해서 메시지가 필요한 부분은 옮겨담기
-- SHA1 제거하기
-
-* REDIS_STORE-BOX 프로젝트 개발하기
-* 'transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition' 테스트
-
+- 'transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition' 테스트
 - HTTP 브라우저 기능 uri 일때 테스트
-- AUDIO/VIDEO) 확장자를 파악해서 재생, 확장자가 지정되지 않는 경우 기본 XXX입니다.
+- AUDIO/VIDEO 확장자를 파악해서 재생, 확장자가 지정되지 않는 경우 기본 XXX입니다.
 - ROOM 서버 undefined 데이터 보내보기
-
-- 예제는 채팅, 게시판, SNS 개발
-- 새 버전 확인하는 기능
+- UPPERCASE의 새 버전을 확인하는 기능
 - UAPI에서 문서 만들 때, README.md 파일이 이미 있으면 ## API 밑에 API 목록 넣고, 없으면 맨 하단에 넣기
-
-- 모든 BOX들 설치하는 방법 및 업데이트 방법(git pull) 수록하기
 - 안드로이드 기본 브라우저에서 파일 업로드가 안됨
-
 - UPUSH 문서 만들기
-- BOX 매니저 만들기 - box.uppercase.io
-- 각 모듈 npm 제공
-
 - dev.hanul.me NSP로 만들기
 - dev.hanul.me 만들고 Pure 소개하기
 - Cordova용 어떻게 할지
 - 웹 앱과 코르도바 앱을 동시에 개발하는 경우에 대한 처리
-
-- BOX들 문서화
+- BOX들 ES6 반영 및 문서화
 - ondrop, file reader 등 처리
-
 - Unicorn waitingSendInfos 처리
 - Java-Client connectedHandler 넣기, 첫 접속 안될때 disconnected 처리
 - Game maker studio Client Extension 만들기
-- U.IO 맨 처음에 서버에 접속할 수 없을 때 처리
+- 웹 브라우저 단에서 맨 처음에 서버에 접속할 수 없을 때에 대한 처리
 - 모니터링 툴, 트래픽 모니터링 에러 모니터링
 - UPPERCASE-Java-Client watching 등 만들기 and Method handle 타입별로 다 만들기
 - 자동으로 썸네일 만들어주는 기능
-- R도 분산 서버 구성하기 (IE는 10 이상부터 하기)
-- 접속자 analyze 툴
+- R도 분산 서버 구성하기
 - 서버 clustering 보안 설정 (설정된 호스트만 연결 가능하도록)
-- 모델 생성기
+- 모델 생성기 개발
 - 국가별 접속시 접속 서버 분산하는 구성
 - flappybug 현재 어퍼케이스 버젼에 맞춤
-- SlideShare로 슬라이드 소개 만들기
-
+- SlideShare로 UPPERCASE 소개 문서 만들기
 - UPPERCASE MODEL find 원하는 필드만 가져오기
 - UPPERCASE MODEL hidden property names - 저장만 되고, 가져오는건 안됨
 - onNew나 onRemove authKey 및 role
 - getAuthKey findAuthKey
 - MODEL의 get, find, count, checkIsExists 등은 restful 하게 제공할 수 있도록 (만약 role이 없다면.)
 - UADMIN 값이 배열이거나 데이터일 경우 표현할 방법 -> 그냥 json 형태로 표현 및 저장 해야할듯
-- UPPERCASE 접속한 사용자 분석 툴
-
+- 현재 접속한 사용자 분석 툴
 - ADD_FONT 예제 작성
 - SHARED_STORE filter 예제 작성
 
 ## 미래에 반영할 것들
-HTTP/2 지원
-vert.x와의 연동
+- HTTP/2 지원
+- vert.x와의 연동
