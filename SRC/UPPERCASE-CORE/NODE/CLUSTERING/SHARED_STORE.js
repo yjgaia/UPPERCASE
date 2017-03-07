@@ -623,6 +623,8 @@ global.SHARED_STORE = CLASS((cls) => {
 				//OPTIONAL: params.filter
 				//REQUIRED: callback
 				
+				let filter;
+				
 				if (callback === undefined) {
 					callback = params;
 					params = undefined;

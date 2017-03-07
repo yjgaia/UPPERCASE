@@ -4150,6 +4150,8 @@ global.SHARED_STORE = CLASS((cls) => {
 				//OPTIONAL: params.filter
 				//REQUIRED: callback
 				
+				let filter;
+				
 				if (callback === undefined) {
 					callback = params;
 					params = undefined;
@@ -6299,21 +6301,21 @@ global.MINIFY_JS = METHOD(() => {
 			
 			try {
 
-    			return UglifyJS.minify(code, {
-    				fromString : true,
-    				mangle : true,
-    				output : {
-    					comments : /@license|@preserve|^!/
-    				}
-    			}).code;
+				return UglifyJS.minify(code, {
+					fromString : true,
+					mangle : true,
+					output : {
+						comments : /@license|@preserve|^!/
+					}
+				}).code;
 			
 			} catch(error) {
-			    
-			    SHOW_ERROR('MINIFY_JS', error.message, {
-			        code : (error.pos - 50 > 0 ? '...' : '') + code.substring(error.pos - 50, error.pos + 50) + (error.pos + 50 < code.length ? '...' : ''),
-                    line : error.line,
-                    column : error.col
-			    });
+				
+				SHOW_ERROR('MINIFY_JS', error.message, {
+					code : (error.pos - 50 > 0 ? '...' : '') + code.substring(error.pos - 50, error.pos + 50) + (error.pos + 50 < code.length ? '...' : ''),
+					line : error.line,
+					column : error.col
+				});
 			}
 		}
 	};
