@@ -2,6 +2,8 @@
  * 클러스터링 공유 저장소를 생성하는 클래스
  */
 global.SHARED_STORE = CLASS((cls) => {
+	
+	let Sift = require('sift');
 
 	let storages = {};
 	let removeDelayMap = {};
@@ -247,20 +249,46 @@ global.SHARED_STORE = CLASS((cls) => {
 		}
 	};
 	
-	let all = cls.all = (storeName, callback) => {
-		//REQUIRED: storeName
+	let all = cls.all = (params, callback) => {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//OPTIONAL: params.filter
 		//REQUIRED: callback
+		
+		let storeName = params.storeName;
+		let filter = params.filter;
 		
 		let storage = storages[storeName];
 		
-		callback(storage === undefined ? {} : storage);
+		if (storage === undefined) {
+			callback({});
+		}
+		
+		else if (filter === undefined) {
+			callback(storage);
+		}
+		
+		else {
+			
+			let result = {};
+			
+			EACH(storage, (data, id) => {
+				if (Sift(filter)(data) === true) {
+					result[id] = data;
+				}
+			});
+			
+			callback(result);
+		}
 	};
 	
-	let count = cls.count = (storeName, callback) => {
-		//REQUIRED: storeName
+	let count = cls.count = (params, callback) => {
+		//REQUIRED: params
+		//REQUIRED: params.storeName
+		//OPTIONAL: params.filter
 		//REQUIRED: callback
 		
-		all(storeName, (dataSet) => {
+		all(params, (dataSet) => {
 			callback(COUNT_PROPERTIES(dataSet));
 		});
 	};
@@ -268,18 +296,36 @@ global.SHARED_STORE = CLASS((cls) => {
 	let checkIsExists = cls.checkIsExists = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
-		//REQUIRED: params.id
+		//OPTIONAL: params.id
+		//OPTIONAL: params.filter
 		//REQUIRED: callback
 		
 		let storeName = params.storeName;
 		let id = params.id;
+		let filter = params.filter;
 		
 		let storage = storages[storeName];
 		
 		if (storage === undefined) {
 			callback(false);
-		} else {
+		}
+		
+		else if (id !== undefined) {
 			callback(storage[id] !== undefined);
+		}
+		
+		else if (filter !== undefined) {
+			
+			// 중간에 멈추면, 해당하는 값이 존재한다.
+			callback(EACH(storage, (data) => {
+				if (Sift(filter)(data) === true) {
+					return false;
+				}
+			}) !== true);
+		}
+		
+		else {
+			callback(false);
 		}
 	};
 	
@@ -572,15 +618,29 @@ global.SHARED_STORE = CLASS((cls) => {
 				}
 			};
 			
-			let all = self.all = (callback) => {
+			let all = self.all = (params, callback) => {
+				//OPTIONAL: params
+				//OPTIONAL: params.filter
 				//REQUIRED: callback
+				
+				if (callback === undefined) {
+					callback = params;
+					params = undefined;
+				}
+				
+				if (params !== undefined) {
+					filter = params.filter;
+				}
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
 
 					SERVER_CLUSTERING.send({
 						serverName : serverName,
 						methodName : '__SHARED_STORE_ALL',
-						data : storeName
+						data : {
+							storeName : storeName,
+							filter : filter
+						}
 					}, callback);
 				}
 
@@ -589,24 +649,46 @@ global.SHARED_STORE = CLASS((cls) => {
 					CPU_CLUSTERING.send({
 						workerId : '~',
 						methodName : '__SHARED_STORE_ALL',
-						data : storeName
+						data : {
+							storeName : storeName,
+							filter : filter
+						}
 					}, callback);
 				}
 				
 				else {
-					cls.all(storeName, callback);
+					cls.all({
+						storeName : storeName,
+						filter : filter
+					}, callback);
 				}
 			};
 			
-			let count = self.count = (callback) => {
+			let count = self.count = (params, callback) => {
+				//OPTIONAL: params
+				//OPTIONAL: params.filter
 				//REQUIRED: callback
+				
+				let filter;
+				
+				if (callback === undefined) {
+					callback = params;
+					params = undefined;
+				}
+				
+				if (params !== undefined) {
+					filter = params.filter;
+				}
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
 
 					SERVER_CLUSTERING.send({
 						serverName : serverName,
 						methodName : '__SHARED_STORE_COUNT',
-						data : storeName
+						data : {
+							storeName : storeName,
+							filter : filter
+						}
 					}, callback);
 				}
 
@@ -615,18 +697,36 @@ global.SHARED_STORE = CLASS((cls) => {
 					CPU_CLUSTERING.send({
 						workerId : '~',
 						methodName : '__SHARED_STORE_COUNT',
-						data : storeName
+						data : {
+							storeName : storeName,
+							filter : filter
+						}
 					}, callback);
 				}
 				
 				else {
-					cls.count(storeName, callback);
+					cls.count({
+						storeName : storeName,
+						filter : filter
+					}, callback);
 				}
 			};
 			
-			let checkIsExists = self.checkIsExists = (id, callback) => {
-				//REQUIRED: id
+			let checkIsExists = self.checkIsExists = (idOrParams, callback) => {
+				//REQUIRED: idOrParams
+				//OPTIONAL: idOrParams.id
+				//OPTIONAL: idOrParams.filter
 				//REQUIRED: callback
+				
+				let id;
+				let filter;
+				
+				if (CHECK_IS_DATA(idOrParams) !== true) {
+					id = idOrParams;
+				} else {
+					id = idOrParams.id;
+					filter = idOrParams.filter;
+				}
 				
 				if (SERVER_CLUSTERING.send !== undefined) {
 
@@ -635,7 +735,8 @@ global.SHARED_STORE = CLASS((cls) => {
 						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
 						data : {
 							storeName : storeName,
-							id : id
+							id : id,
+							filter : filter
 						}
 					}, callback);
 				}
@@ -647,7 +748,8 @@ global.SHARED_STORE = CLASS((cls) => {
 						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
 						data : {
 							storeName : storeName,
-							id : id
+							id : id,
+							filter : filter
 						}
 					}, callback);
 				}
@@ -655,7 +757,8 @@ global.SHARED_STORE = CLASS((cls) => {
 				else {
 					cls.checkIsExists({
 						storeName : storeName,
-						id : id
+						id : id,
+						filter : filter
 					}, callback);
 				}
 			};

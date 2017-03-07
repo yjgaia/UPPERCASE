@@ -252,36 +252,36 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 			});
 
 			// get all shared data.
-			on('__SHARED_STORE_ALL', (storeName, ret) => {
+			on('__SHARED_STORE_ALL', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
 						workerId : '~',
 						methodName : '__SHARED_STORE_ALL',
-						data : storeName
+						data : params
 					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.all(storeName, ret);
+					SHARED_STORE.all(params, ret);
 				}
 			});
 
 			// count shared data.
-			on('__SHARED_STORE_COUNT', (storeName, ret) => {
+			on('__SHARED_STORE_COUNT', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
 						workerId : '~',
 						methodName : '__SHARED_STORE_COUNT',
-						data : storeName
+						data : params
 					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.count(storeName, ret);
+					SHARED_STORE.count(params, ret);
 				}
 			});
 

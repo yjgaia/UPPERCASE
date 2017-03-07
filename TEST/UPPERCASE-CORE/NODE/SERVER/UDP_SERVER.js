@@ -5,8 +5,8 @@ TEST('UDP_SERVER', (check) => {
 	});
 	
 	server.send({
-	    ip : 'localhost',
-	    port : 8126,
-	    content : 'Hello!'
+		ip : 'localhost',
+		port : 8126,
+		content : 'Hello!'
 	});
 });

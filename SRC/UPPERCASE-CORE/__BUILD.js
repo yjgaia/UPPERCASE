@@ -85,7 +85,7 @@ RUN(() => {
 			content = '';
 			
 			if (path === 'BROWSER') {
-			    content += 'let global=window;';
+				content += 'let global=window;';
 			}
 		
 			EACH(scriptPaths, (scriptPath) => {
