@@ -159,8 +159,10 @@ global.SHOW_ERROR = (tag, errorMsg, params) => {
 	//REQUIRED: tag
 	//REQUIRED: errorMsg
 	//OPTIONAL: params
+	
+	let cal = CALENDAR();
 		
-	console.error('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	console.error(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	
 	if (params !== undefined) {
 		console.error('다음은 오류를 발생시킨 파라미터입니다.');
@@ -175,7 +177,9 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 	//REQUIRED: warningMsg
 	//OPTIONAL: params
 	
-	console.warn('[' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg);
+	let cal = CALENDAR();
+	
+	console.warn(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg);
 	
 	if (params !== undefined) {
 		console.warn('다음은 경고를 발생시킨 파라미터입니다.');
@@ -4388,7 +4392,9 @@ global.SHOW_ERROR = (tag, errorMsg, params) => {
 	//REQUIRED: errorMsg
 	//OPTIONAL: params
 	
-	console.error(CONSOLE_RED('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg));
+	let cal = CALENDAR();
+	
+	console.error(CONSOLE_RED(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg));
 	
 	if (params !== undefined) {
 		console.error(CONSOLE_RED('다음은 오류를 발생시킨 파라미터입니다.'));
@@ -4417,7 +4423,9 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 	//REQUIRED: warningMsg
 	//OPTIONAL: params
 	
-	console.error(CONSOLE_YELLOW('[' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg));
+	let cal = CALENDAR();
+	
+	console.error(CONSOLE_YELLOW(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg));
 	
 	if (params !== undefined) {
 		console.error(CONSOLE_YELLOW('다음은 경고를 발생시킨 파라미터입니다.'));
@@ -4438,27 +4446,6 @@ FOR_BOX((box) => {
 		}
 	});
 });
-/*
- * 비밀번호를 주어진 키를 이용하여 HMAC SHA1 알고리즘으로 암호화 합니다.
- * 
- * 그러나 SHA1 알고리즘의 취약점이 발견되었기 때문에, 암호화가 필요한 경우에는 SHA256을 사용하시기 바랍니다.
- */
-global.SHA1 = METHOD({
-
-	run : (params) => {
-		//REQUIRED: params
-		//REQUIRED: params.password
-		//REQUIRED: params.key
-
-		let password = params.password;
-		let key = params.key;
-		
-		let crypto = require('crypto');
-
-		return crypto.createHmac('sha1', key).update(password).digest('hex');
-	}
-});
-
 /*
  * 비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
  */

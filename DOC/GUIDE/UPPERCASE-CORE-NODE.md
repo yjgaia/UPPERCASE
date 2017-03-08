@@ -772,7 +772,7 @@ WEB_SERVER({
 	},
 	uploadSuccess : (params, fileDataSet, requestInfo, response) => {
 		// params		파라미터
-		// fileDataSet	업로드 파일 데이터 목록
+		// fileDataSet	업로드 파일 데이터(path, size, name, type, lastModifiedTime) 목록
 		// requestInfo	요청 정보
 		// response		응답 함수
 		
@@ -780,8 +780,6 @@ WEB_SERVER({
 	}
 });
 ```
-
-* 파일 업로드 시, 이미지 파일인 경우 [Exif 메타데이터의 정보](https://ko.wikipedia.org/wiki/%EA%B5%90%ED%99%98_%EC%9D%B4%EB%AF%B8%EC%A7%80_%ED%8C%8C%EC%9D%BC_%ED%98%95%EC%8B%9D#Exif_.EB.A9.94.ED.83.80.EB.8D.B0.EC.9D.B4.ED.84.B0.EC.9D.98_.EC.A0.95.EB.B3.B4)를 참고하여 자동으로 이미지의 방향을 교정해줍니다. 이를 위해 [ImageMagick](http://www.imagemagick.org)을 이용한 이미지 처리 기능을 사용합니다. 따라서 [ImageMagick 설치하기](INSTALL_IMAGEMAGICK.md)를 참고하시어, ImageMagick을 먼저 설치해주시기 바랍니다.
 
 `WEB_SERVER`에 사용 가능한 파라미터 목록은 다음과 같습니다.
 * `port` HTTP 서버 포트

@@ -67,6 +67,16 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 				port + '/' +
 				name,
 				
+				{
+					server : {
+						socketOptions : {
+							// 기본 타임아웃을 없앤다.
+							connectTimeoutMS : 0,
+							socketTimeoutMS : 0
+						}
+					}
+				},
+				
 				(error, nativeDB) => {
 
 				if (error !== TO_DELETE) {

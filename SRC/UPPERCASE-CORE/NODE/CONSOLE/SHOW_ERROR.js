@@ -6,7 +6,9 @@ global.SHOW_ERROR = (tag, errorMsg, params) => {
 	//REQUIRED: errorMsg
 	//OPTIONAL: params
 	
-	console.error(CONSOLE_RED('[' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg));
+	let cal = CALENDAR();
+	
+	console.error(CONSOLE_RED(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg));
 	
 	if (params !== undefined) {
 		console.error(CONSOLE_RED('다음은 오류를 발생시킨 파라미터입니다.'));

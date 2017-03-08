@@ -36,6 +36,7 @@
 - 현재 접속한 사용자 분석 툴
 - ADD_FONT 예제 작성
 - SHARED_STORE filter 예제 작성
+- Histroy나 Log 저장 안하는 백업 서버 설정
 
 ## 미래에 반영할 것들
 - HTTP/2 지원
