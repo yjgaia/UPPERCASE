@@ -162,7 +162,7 @@ global.SHOW_ERROR = (tag, errorMsg, params) => {
 	
 	let cal = CALENDAR();
 		
-	console.error(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	console.error(cal.getYear() + '-' + cal.getMonth(true) + '-' + cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	
 	if (params !== undefined) {
 		console.error('다음은 오류를 발생시킨 파라미터입니다.');
@@ -179,7 +179,7 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 	
 	let cal = CALENDAR();
 	
-	console.warn(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg);
+	console.warn(cal.getYear() + '-' + cal.getMonth(true) + '-' + cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg);
 	
 	if (params !== undefined) {
 		console.warn('다음은 경고를 발생시킨 파라미터입니다.');
@@ -4394,7 +4394,7 @@ global.SHOW_ERROR = (tag, errorMsg, params) => {
 	
 	let cal = CALENDAR();
 	
-	console.error(CONSOLE_RED(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg));
+	console.error(CONSOLE_RED(cal.getYear() + '-' + cal.getMonth(true) + '-' + cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 오류가 발생했습니다. 오류 메시지: ' + errorMsg));
 	
 	if (params !== undefined) {
 		console.error(CONSOLE_RED('다음은 오류를 발생시킨 파라미터입니다.'));
@@ -4425,7 +4425,7 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 	
 	let cal = CALENDAR();
 	
-	console.error(CONSOLE_YELLOW(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg));
+	console.error(CONSOLE_YELLOW(cal.getYear() + '-' + cal.getMonth(true) + '-' + cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg));
 	
 	if (params !== undefined) {
 		console.error(CONSOLE_YELLOW('다음은 경고를 발생시킨 파라미터입니다.'));

@@ -8,7 +8,7 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 	
 	let cal = CALENDAR();
 	
-	console.error(CONSOLE_YELLOW(cal.getYear() + '-' + cal.getMonth(true) + '-' cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg));
+	console.error(CONSOLE_YELLOW(cal.getYear() + '-' + cal.getMonth(true) + '-' + cal.getDate(true) + ' ' + cal.getHour(true) + ':' + cal.getMinute(true) + ':' + cal.getSecond(true) + ' [' + tag + '] 경고가 발생했습니다. 경고 메시지: ' + warningMsg));
 	
 	if (params !== undefined) {
 		console.error(CONSOLE_YELLOW('다음은 경고를 발생시킨 파라미터입니다.'));
