@@ -3,10 +3,10 @@
 ## 윈도우 관련 이벤트
 ```javascript
 EVENT('resize', () => {
-    console.log('화면 크기 변경: ' + WIN_WIDTH() + 'x' + WIN_HEIGHT());
+    console.log('윈도우 크기 변경: ' + WIN_WIDTH() + 'x' + WIN_HEIGHT());
 });
 ```
-- `resize` 화면의 크기가 변경되면 발생하는 이벤트
+- `resize` 윈도우의 크기가 변경되면 발생하는 이벤트
 - `scroll` 화면을 스크롤할 때 발생하는 이벤트
 
 ## DOM 관련 이벤트
@@ -38,7 +38,8 @@ EVENT({
 - `touchstart` 윈도우나 DOM에 터치를 시작할 때 발생하는 이벤트
 - `touchmove` 윈도우나 DOM에 터치를 한 상태에서 손가락이나 마우스를 움직이면 발생하는 이벤트
 - `touchend` 윈도우나 DOM으로부터 터치를 떼면 발생하는 이벤트
-- `mouseover` 윈도우나 DOM에 마우스를 가져다대면 발생하는 이벤트
+- `mouseover` DOM에 마우스를 가져다대면 발생하는 이벤트
+- `mouseout` DOM으로부터 마우스가 떠날 때 발생하는 이벤트
 
 ## 폼 관련 이벤트
 ```javascript
