@@ -2,7 +2,7 @@
 	"name": "uppercase-db",
 	"version": "0.0.2-beta",
 	"dependencies": {
-		"mongodb": "latest",
+		"mongodb": "2.2.19",
 		"uppercase-core": "latest"
 	},
 	"main": "index.js"
