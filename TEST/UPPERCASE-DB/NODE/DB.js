@@ -107,4 +107,60 @@ TEST('DB', (ok) => {
 	}], (result) => {
 		console.log('Aggregate success!', result);
 	});*/
+	
+	db.createIndex({
+	    msg : 1
+	});
+	
+	db.removeIndex({
+	    msg : 1
+	});
+	
+	db.findAllIndexes((indexes) => {
+		console.log('인덱스 목록:', indexes);
+	});
+	
+	
+	/*
+	 var
+		// db
+		db = TestBox.DB('test');
+		
+		// create data test
+		db.create({
+			msg : 'test',
+			array : []
+		}, function(savedData) {
+
+			console.log('Create data successed!', savedData);
+
+			// update data test
+			db.update({
+				id : savedData.id,
+				msg : 'test2',
+
+				// push 3 to array.
+				$push : {
+					array : 3
+				}
+			}, function(savedData) {
+				
+				console.log('Update data successed!', savedData);
+				
+				// update data test
+				db.update({
+					id : savedData.id,
+					msg : 'test2',
+	
+					// pull 3 from array.
+					$pull : {
+						array : 3
+					}
+				}, function(savedData) {
+					
+					console.log('Update data successed!', savedData);
+				});
+			});
+		});
+	 */
 });

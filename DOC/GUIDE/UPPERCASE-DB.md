@@ -1,5 +1,3 @@
-작성중
-
 # UPPERCASE-DB
 UPPERCASE-DB는 Node.js 환경에서 MongoDB 기반 데이터베이스를 다루기 위해 필요한 기능들을 담고 있는 모듈입니다. 구동을 위해 [UPPERCASE-COMMON-NODE](UPPERCASE-COMMON-NODE.md)가 필요합니다.
 * [API 문서](../../API/UPPERCASE-DB/NODE/README.md)
@@ -45,7 +43,7 @@ CONNECT_TO_DB_SERVER({
 });
 ```
 
-여러 MongoDB 서버에 접속하는 경우
+여러 MongoDB 서버에 접속하는 경우, `dbServerName`을 지정합니다.
 ```javascript
 CONNECT_TO_DB_SERVER({
     dbServerName : 'DB_SERVER_1',
@@ -77,7 +75,7 @@ CONNECT_TO_DB_SERVER({
 ## `Box.DB`
 MongoDB 컬렉션을 다루는 `DB` 클래스
 
-MongoDB를 기반으로 [CRUD](https://ko.wikipedia.org/wiki/CRUD) 기능을 구현한 모듈입니다.
+MongoDB를 기반으로 [CRUD](https://ko.wikipedia.org/wiki/CRUD) 기능을 구현한 클래스입니다.
 
 ```javascript
 let db = TestBox.DB('Test');
@@ -91,7 +89,7 @@ db.create({
 });
 ```
 
-여러 MongoDB 서버에 접속하는 경우
+여러 MongoDB 서버에 접속하는 경우, `dbServerName`를 지정하여 연결할 데이터베이스 서버를 선택합니다.
 ```javascript
 let db1 = TestBox.DB({
     dbServerName : 'DB_SERVER_1',
@@ -118,272 +116,365 @@ db2.create({
 });
 ```
 
+`Box.DB`에 사용 가능한 파라미터 목록은 다음과 같습니다.
+* `dbServerName` 여러 MongoDB 서버에 접속하는 경우 서버 이름
+* `name` 데이터베이스 이름
+* `isNotUsingObjectId` MongoDB의 기본 `id` 형식인 `ObjectId`를 쓰지 않을 것인지 여부. `true`로 지정하면 데이터를 생성할 때 `id`를 따로 지정해야 합니다.
+* `isNotUsingHistory` 데이터를 생성, 수정, 삭제할 때 변경 내역을 남기지 않을 것인지 여부
+
+`Box.DB`로 생성한 객체의 함수들은 다음과 같습니다.
+
 ### `create`
+* `db.create(data, (savedData) => {})`
+* `db.create(data, {error:, success:})`
+
+데이터를 생성합니다. `isNotUsingObjectId`가 `true`가 아니고 `data`에 `id`를 따로 지정하지 않으면 `id`가 자동으로 생성됩니다. 또한 데이터 생성 시간이 `createTime`에 저장됩니다.
+
+```javascript
+db.create({
+	msg : 'Hello, DB!',
+	number : 12
+}, (savedData) => {
+	console.log('데이터 생성 완료', savedData);
+});
+```
 
 ### `get`
+* `db.get(id, (savedData) => {})`
+* `db.get(id, {notExists:, error:, success:})`
+* `db.get({filter:, sort:, isRandom:}, {notExists:, error:, success:})`
+
+`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+
+```javascript
+db.get('5636e47415899c3c04b5e70f', {
+    notExists : () => {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : (savedData) => {
+		console.log('데이터:', savedData);
+	}
+});
+```
 
 ### `update`
+* `db.update(data, (savedData, originData) => {})`
+* `db.update(data, {notExists:, error:, success:})`
 
-DB의 update명령어가 동시에 여러번 호출 될 경우 비동기 처리에 의해 모든 update는 같은 데이터(수정된)를 반환합니다.
+데이터를 수정합니다. `lastUpdateTime`에 마지막 수정 시간이 저장됩니다.
 
-### `updateNoHistory`
-
-### `updateNoRecord`
-
-### `remove`
-
-### `find`
-
-find 명령시 filter의 모든 property가 `undefined`로만 이루어진 경우, 모든 값을 가져옵니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려는 경우에는, `CHECK_ARE_SAME([{}, filter])`로 filter가 비어있는지 검사해 주시기 바랍니다.
-
-### `count`
-
-### `checkIsExists`
-
-### `aggregate`
-
-### `createIndex`
-
-### `removeIndex`
-
-### `findAllIndexes`
-
-## `Box.LOG_DB`
-
-### `log`
-
-### `find`
-
-## 성능 관련 팁
-
-## 너무 많은 문서 추가나 수정이 일어날 경우 데이터베이스가 lock에 걸릴 수 있습니다.
-이는 MongoDB의 단점 중의 하나로, 순간적으로 너무 많은 문서 추가나 수정이 발생하면 데이터베이스가 lock에 걸려 반응 속도가 현저히 떨어집니다. 이럴 경우에는 SHARED_STORE와 같은 캐싱을 적절히 사용하시기 바랍니다.
-
-## 자주 변경되는 문서는 `updateNoHistory`를 사용합니다.
-게시판 게시글의 조회수 같은 경우는 굳이 history를 남길 필요가 없습니다. 이럴 경우 `updateNoHistory`를 사용합니다. 또한 `updateNoHistory`는 `lastUpdateTime`을 갱신하지 않습니다.
-
-
-
-
-
-
-
-
-
-
-
-## API
-
-* `DB(name)` `DB({dbServerName:, name:})` MongoDB collection wrapper [예제보기](../EXAMPLES/DB/NODE/DB.js)
 ```javascript
-db = TestBox.DB('test');
-
-// 데이터를 저장합니다.
-db.create(data, (savedData) => {...})
-db.create(data, {error:, success:})
-
-// 데이터를 가져옵니다.
-db.get(id, (savedData) => {...})
-db.get(id, {success:, notExists:, error:})
-db.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
-
-// 데이터를 수정합니다.
-db.update(data, (savedData, originData) => {...})
-db.update(data, {success:, notExists:, error:})
-db.updateNoHistory(data, () => {...}) // 변경 내역을 남기지 않습니다.
-db.updateNoHistory(data, {success:, notExists:, error:}) // 변경 내역을 남기지 않습니다.
-db.updateNoRecord(data, () => {...}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
-db.updateNoRecord(data, {success:, notExists:, error:}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다.
-
-// 데이터를 삭제합니다.
-db.remove(id, (originData) => {...})
-db.remove(id, {success:, notExists:, error:})
-
-// 데이터를 찾아 목록으로 가져옵니다.
-db.find({filter:, sort:, start:, count:}, (savedDataSet) => {...})
-db.find({filter:, sort:, start:, count:}, {error:, success:})
-
-// 데이터의 개수를 가져옵니다.
-db.count({filter:}, (count) => {...})
-db.count({filter:}, {error:, success:})
-
-// 데이터가 존재하는지 확인합니다.
-db.checkIsExists({filter:}, (isExists) => {...})
-db.checkIsExists({filter:}, {error:, success:})
-
-// MongoDB의 Aggregation 기능을 이용해, 데이터를 가공해서 가져옵니다. 자세한 내용은 MongoDB의 Aggregation 기능을 참고하시기 바랍니다.
-db.aggregate(params, (dataSet) => {...})
-db.aggregate(params, {error:, success:})
-```
-* `LOG_DB(name)` MongoDB collection wrapper class for logging [예제보기](../EXAMPLES/DB/NODE/LOG_DB.js)
-```javascript
-logDB = TestBox.LOG_DB('testLog');
-logDB.log(data)
+db.update({
+    id : '5636e47415899c3c04b5e70f',
+	number : 3
+}, {
+    notExists : () => {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : (savedData, originData) => {
+		console.log('데이터 수정 완료', savedData);
+	}
+});
 ```
 
-`CONNECT_TO_DB_SERVER`의 `dbServerName`을 지정하면, 여러 데이터베이스 서버에 접속할 수 있습니다. `DB`의 `dbServerName` 설정으로 연결할 데이터베이스 서버를 선택할 수 있습니다.
+`update` 명령의 `data`에 다음과 같은 특수기호들을 사용하여 데이터를 수정할 수 있습니다. 이를 통해 분산 시스템에서 발생할 수 있는 **데이터 동시성 문제**를 피할 수 있습니다.
 
-### 사용 가능한 특수 기호
-`get`, `find` 명령의 `filter`에는 다음과 같은 특수기호를 사용할 수 있습니다.
-* `$and`
-```javascript
-// a가 3이고, b가 2인 데이터를 찾습니다.
-filter : {
-    $and : [{
-        a : 3
-    }, {
-        b : 2
-    }]
-}
-```
-* `$or`
-```javascript
-// a가 3이거나, b가 2인 데이터를 찾습니다.
-filter : {
-    $or : [{
-        a : 3
-    }, {
-        b : 2
-    }]
-}
-```
-* `$gt`
-```javascript
-// a가 3보다 큰 데이터를 찾습니다.
-filter : {
-    a : {
-        $gt : 3
-    }
-}
-```
-* `$gte`
-```javascript
-// a가 3보다 크거나 같은 데이터를 찾습니다.
-filter : {
-    a : {
-        $gte : 3
-    }
-}
-```
-* `$lt`
-```javascript
-// a가 3보다 작은 데이터를 찾습니다.
-filter : {
-    a : {
-        $lt : 3
-    }
-}
-```
-* `$lte`
-```javascript
-// a가 3보다 작거나 같은 데이터를 찾습니다.
-filter : {
-    a : {
-        $lte : 3
-    }
-}
-```
-* `$ne`
-```javascript
-// a가 3이 아닌 데이터를 찾습니다.
-filter : {
-    a : {
-        $ne : 3
-    }
-}
-```
-
-`update` 명령의 `data`에 다음과 같은 특수기호를 사용하여 데이터를 가공할 수 있습니다.
 * `$inc`
 ```javascript
 // num이 2 증가합니다.
-SampleModel.update({
-    ...
-    $inc : {
-        num : 2
-    }
-})
+db.update({
+	...
+	$inc : {
+		num : 2
+	}
+}, ...);
 ```
 ```javascript
 // num이 2 감소합니다.
-SampleModel.update({
-    ...
-    $inc : {
-        num : -2
-    }
-})
+db.update({
+	...
+	$inc : {
+		num : -2
+	}
+}, ...);
 ```
-* `$addToSet`
-```javascript
-// 배열 array에 3이 없는 경우에만 3을 추가합니다.
-SampleModel.update({
-    ...
-    $addToSet : {
-        array : 3
-    }
-})
-```
+
 * `$push`
 ```javascript
 // 배열 array에 3을 추가합니다.
-SampleModel.update({
-    ...
-    $push : {
-        array : 3
-    }
-})
+sampleStore.update({
+	...
+	data : {
+		$push : {
+			array : 3
+		}
+	}
+});
 ```
+
+* `$addToSet`
+```javascript
+// 배열 array에 3이 없는 경우에만 3을 추가합니다.
+db.update({
+	...
+	$addToSet : {
+		array : 3
+	}
+}, ...);
+```
+
 * `$pull`
 ```javascript
 // 배열 array에서 3을 제거합니다.
-SampleModel.update({
-    ...
-    $pull : {
-        array : 3
-    }
-})
+db.update({
+	...
+	$pull : {
+		array : 3
+	}
+}, ...);
 ```
+
 * `$pull`
 ```javascript
 // 배열 array에서 a가 3인 데이터를 제거합니다.
-SampleModel.update({
-    ...
-    $pull : {
-        array : {
-            a : 3
-        }
-    }
-})
-```
-
-## 특정 문서의 수정 내역을 가져오는 방법
-특정 문서의 수정 내역은 문서가 저장된 데이터베이스 이름 뒤에 `__HISTORY`를 붙혀 `DB` 오브젝트를 만들고, `find`로 가져올 수 있습니다. 
-```javascript
-let historyDB = TestBox.DB('test__HISTORY');
-
-db.find({filter:}, (historyDataSet) => {...})
-```
-
-## UPPERCASE-DB 단독 사용
-`UPPERCASE-DB`는 `UPPERCASE`에 포함되어 있으나, 단독으로 사용할 수도 있습니다.
-
-### 의존 모듈
-`UPPERCASE-DB`는 아래 모듈들에 의존성을 가지므로, 단독으로 사용할 경우 `UPPERCASE-DB` 폴더와 함께 아래 모듈들을 복사해서 사용하시기 바랍니다.
-* UJS-NODE.js
-
-## 사용 방법
-```javascript
-// load UJS.
-require('../../../UJS-NODE.js');
-
-// load UPPERCASE-DB.
-require('../../../UPPERCASE-DB/NODE.js');
-
-CONNECT_TO_DB_SERVER({
-	name : 'test'
-}, () => {
-
-	let db = TestBox.DB('test');
+db.update({
 	...
+	$pull : {
+		array : {
+			a : 3
+		}
+	}
+}, ...);
+```
+
+`update`명령어가 동시에 여러번 호출된 경우 비동기 처리에 의해 모든 `update`의 결과는 최종적으로 수정된 같은 데이터를 반환합니다.
+
+### `updateNoHistory`
+사용 방식은 `update`와 동일하나, 변경 내역을 남기지 않고 데이터를 수정합니다. 그러나 `lastUpdateTime`은 갱신됩니다.
+
+### `updateNoRecord`
+사용 방식은 `update`와 동일하나, 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않고 데이터를 수정합니다.
+
+### `remove`
+* `db.remove(id, (originData) => {})`
+* `db.remove(id, {notExists:, error:, success:})`
+
+`id`에 해당하는 데이터를 삭제합니다.
+
+```javascript
+db.remove('5636e47415899c3c04b5e70f', {
+    notExists : () => {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : (originData) => {
+		console.log('삭제된 데이터:', originData);
+	}
+});
+```
+
+### `find`
+* `db.find({filter:, sort:, start:, count:}, (savedDataSet) => {})`
+* `db.find({filter:, sort:, start:, count:}, {error:, success:})`
+
+`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+
+```javascript
+db.find({
+    filter : {
+        number : 3
+    },
+    sort : {
+        createTime : -1
+    }
+}, (savedDataSet) => {
+	console.log('검색된 데이터 목록:', savedDataSet);
+});
+```
+
+`find` 명령시 `filter`의 모든 요소가 `undefined`로만 이루어진 경우, 모든 값을 가져옵니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려는 경우에는, `CHECK_ARE_SAME([filter, {}])`로 `filter`의 모든 요소가 `undefined` 인지 검사하여 적절한 처리를 해 주시기 바랍니다.
+
+```javascript
+// 아래 두 find 명령은 결과가 같습니다.
+
+db.find({
+    filter : {
+        number : undefined
+    }
+}, (savedDataSet) => {
+	console.log('검색된 데이터 목록:', savedDataSet);
+});
+
+db.find((savedDataSet) => {
+	console.log('검색된 데이터 목록:', savedDataSet);
+});
+```
+
+`find`로 가져올 수 있는 데이터의 최대 개수는 `NODE_CONFIG.maxDataCount`에 설정한 숫자입니다. 이를 무시하고 모든 데이터를 가져오고자 하는 경우에는 `isFindAll` 파라미터를 `true`로 설정합니다. 성능에 치명적인 영향을 끼칠 수 있으므로 주의하시기 바랍니다.
+
+```javascript
+db.find({
+    filter : {
+        number : 3
+    },
+    isFindAll : true
+}, (savedDataSet) => {
+	console.log('모든 데이터 목록:', savedDataSet);
+});
+```
+
+### `count`
+* `db.count({filter:}, (count) => {})`
+* `db.count({filter:}, {error:, success:})`
+
+`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+
+```javascript
+db.count({
+    filter : {
+        number : 3
+    }
+}, (count) => {
+	console.log('검색된 데이터의 개수:', count);
+});
+```
+
+### `checkIsExists`
+* `db.checkIsExists({filter:}, (isExists) => {})`
+* `db.checkIsExists({filter:}, {error:, success:})`
+
+`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+
+```javascript
+db.checkIsExists({
+    filter : {
+        number : 3
+    }
+}, (isExists) => {
+	if (isExists === true) {
+		console.log('데이터가 존재합니다.');
+	} else {
+		console.log('데이터가 존재하지 않습니다.');
+	}
+});
+```
+
+### `aggregate`
+* `db.aggregate(params, (dataSet) => {})`
+* `db.aggregate(params, {error:, success:})`
+
+MongoDB의 Aggregation 기능을 이용해, 데이터를 가공해서 가져옵니다. 자세한 내용은 [MongoDB Aggregation 문서](https://docs.mongodb.com/manual/aggregation/)를 참고하시기 바랍니다.
+
+```javascript
+db.aggregate([{
+	$sort : {
+		number : 1
+	}
+}, {
+	$group : {
+		_id : '$msg',
+		highestNumber : {
+			$first : '$number'
+		}
+	}
+}], (result) => {
+	console.log(result);
+});
+```
+
+### `createIndex`
+* `db.createIndex(index)`
+* `db.createIndex(index, () => {})`
+* `db.createIndex(index, {error:, success:})`
+
+`find`가 빠르게 수행될 수 있도록 인덱스를 생성합니다.
+
+```javascript
+db.createIndex({
+    msg : 1
+});
+```
+
+### `removeIndex`
+* `db.removeIndex(index)`
+* `db.removeIndex(index, () => {})`
+* `db.removeIndex(index, {error:, success:})`
+
+인덱스를 삭제합니다.
+
+```javascript
+db.removeIndex({
+    msg : 1
+});
+```
+
+### `findAllIndexes`
+* `db.findAllIndexes(() => {})`
+* `db.findAllIndexes({error:, success:})`
+
+모든 인덱스 목록을 가져옵니다.
+
+```javascript
+db.findAllIndexes((indexes) => {
+	console.log('인덱스 목록:', indexes);
+});
+```
+
+### 데이터의 변경 내역을 가져오는 방법
+데이터를 생성하거나 수정, 삭제하는 경우 데이터의 변경 내역이 대상 데이터베이스의 이름 뒤에 `__HISTORY`를 붙힌 데이터베이스(예: `Test`인 경우 `Test__HISTORY`)에 저장됩니다. 단, `update` 명령으로 데이터를 수정할 때 `isNotUsingHistory` 파라미터가 `true`이거나, `updateNoHistory`나 `updateNoRecord`를 사용하여 데이터를 수정하면 변경 내역이 남지 않습니다.
+
+데이터의 변경 내역은 다음과 같이 가져올 수 있습니다.
+```javascript
+let historyDB = TestBox.DB('Test__HISTORY');
+
+historyDB.find({
+    filter : {
+        docId : '5636e47415899c3c04b5e70f'
+    },
+    sort : {
+        time : -1
+    }
+}, (historyDataSet) => {
+    console.log('데이터의 모든 변경 내역:', historyDataSet);
+});
+```
+
+## `Box.LOG_DB`
+로그를 저장하는 기능을 제공하는 `LOG_DB` 클래스
+
+```javascript
+let logDB = TestBox.LOG_DB('testLog');
+
+logDB.log({
+    feeling : 'good',
+    weather : 'sunny'
+});
+```
+
+### `log(data)`
+로그를 남깁니다. 로그 기록 시간이 `time`에 저장됩니다.
+
+```javascript
+logDB.log({
+    feeling : 'good',
+    weather : 'sunny'
+});
+```
+
+### `find`
+* `logDB.find({filter:, sort:, start:, count:}, (logs) => {})`
+* `logDB.find({filter:, sort:, start:, count:}, {error:, success:})`
+
+`filter`에 해당하는 로그를 찾아 목록으로 가져옵니다.
+
+```javascript
+logDB.find({
+    filter : {
+        feeling : 'good'
+    },
+    sort : {
+        time : -1
+    }
+}, (logs) => {
+	console.log('검색된 로그 목록:', logs);
 });
 ```

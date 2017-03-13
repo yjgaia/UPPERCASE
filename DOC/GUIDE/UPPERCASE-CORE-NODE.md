@@ -1134,6 +1134,23 @@ sampleStore.save({
 });
 ```
 
+#### `get`
+* `get(id, (savedData) => {})`
+* `get(id, {notExists:, success:})`
+
+`id`에 해당하는 데이터를 가져옵니다.
+
+```javascript
+sampleStore.get('1234', {
+	notExists : () => {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : (savedData) => {
+		console.log('데이터:', savedData);
+	}
+});
+```
+
 #### `update`
 * `update({id:, data:}, (savedData) => {})`
 * `update({id:, data:}, {notExists:, success:})`
@@ -1188,18 +1205,6 @@ sampleStore.update({
 });
 ```
 
-* `$addToSet`
-```javascript
-// 배열 array에 3이 없는 경우에만 3을 추가합니다.
-sampleStore.update({
-	...
-	data : {
-		$addToSet : {
-			array : 3
-		}
-	}
-});
-```
 * `$push`
 ```javascript
 // 배열 array에 3을 추가합니다.
@@ -1207,6 +1212,19 @@ sampleStore.update({
 	...
 	data : {
 		$push : {
+			array : 3
+		}
+	}
+});
+```
+
+* `$addToSet`
+```javascript
+// 배열 array에 3이 없는 경우에만 3을 추가합니다.
+sampleStore.update({
+	...
+	data : {
+		$addToSet : {
 			array : 3
 		}
 	}
@@ -1241,23 +1259,6 @@ sampleStore.update({
 });
 ```
 
-#### `get`
-* `get(id, (savedData) => {})`
-* `get(id, {notExists:, success:})`
-
-`id`에 해당하는 데이터를 가져옵니다.
-
-```javascript
-sampleStore.get('1234', {
-	notExists : () => {
-		console.log('데이터가 존재하지 않습니다.');
-	},
-	success : (savedData) => {
-		console.log('데이터:', savedData);
-	}
-});
-```
-
 #### `remove`
 * `remove(id, (originData) => {})`
 * `remove(id, {notExists:, success:})`
@@ -1279,7 +1280,7 @@ sampleStore.remove('1234', {
 * `all((savedDataSet) => {})`
 * `all(filter, (savedDataSet) => {})`
 
-저장소의 모든 데이터를 가져옵니다. 혹은 `filter`에 해당하는 모든 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](https://docs.mongodb.com/manual/reference/operator/query/#query-selectors)를 사용합니다.
+저장소의 모든 데이터를 가져옵니다. 혹은 `filter`에 해당하는 모든 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
 
 ```javascript
 sampleStore.all((savedDataSet) => {
@@ -1291,7 +1292,7 @@ sampleStore.all((savedDataSet) => {
 * `count((count) => {})`
 * `count(filter, (count) => {})`
 
-저장소의 모든 데이터의 개수를 가져옵니다. 혹은 `filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](https://docs.mongodb.com/manual/reference/operator/query/#query-selectors)를 사용합니다.
+저장소의 모든 데이터의 개수를 가져옵니다. 혹은 `filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
 
 ```javascript
 sampleStore.count((count) => {
@@ -1303,7 +1304,7 @@ sampleStore.count((count) => {
 * `checkIsExists(id, (isExists) => {})`
 * `checkIsExists(filter, (isExists) => {})`
 
-`id`에 해당하는 데이터가 존재하는지 확인합니다. 혹은 `filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](https://docs.mongodb.com/manual/reference/operator/query/#query-selectors)를 사용합니다.
+`id`에 해당하는 데이터가 존재하는지 확인합니다. 혹은 `filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
 
 ```javascript
 sampleStore.checkIsExists('1234', (isExists) => {

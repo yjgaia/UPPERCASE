@@ -1,17 +1,9 @@
 <script>
-	var
-	// splits
-	splits = location.search.substring(1).split('&'),
+	let splits = location.search.substring(1).split('&');
+	
+	for (let i = 0; i < splits.length; i += 1) {
 
-	// pair
-	pair,
-
-	// i
-	i;
-
-	for (i = 0; i < splits.length; i += 1) {
-
-		pair = splits[i].split('=');
+		let pair = splits[i].split('=');
 
 		if (window[pair[0]] === undefined) {
 			window[pair[0]] = pair[1];

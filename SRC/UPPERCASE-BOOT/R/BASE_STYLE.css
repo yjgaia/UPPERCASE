@@ -26,8 +26,6 @@ input, textarea, select {
 	font-family: inherit;
 	font-size: inherit;
 	font-weight: inherit;
-	/* to enable resizing for IE */
-	*font-size: 100%;
 }
 
 /* UPPERCASE BASE STYLE */

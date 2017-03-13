@@ -155,9 +155,9 @@ FOR_BOX((box) => {
 					//OPTIONAL: idOrParams.sort
 					//OPTIONAL: idOrParams.isRandom
 					//REQUIRED: callbackOrHandlers
-					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists
 					//OPTIONAL: callbackOrHandlers.error
+					//OPTIONAL: callbackOrHandlers.success
 	
 					waitingGetInfos.push({
 						idOrParams : idOrParams,
@@ -173,9 +173,9 @@ FOR_BOX((box) => {
 					//OPTIONAL: data.$addToSet
 					//OPTIONAL: data.$pull
 					//OPTIONAL: callbackOrHandlers
-					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists
 					//OPTIONAL: callbackOrHandlers.error
+					//OPTIONAL: callbackOrHandlers.success
 	
 					waitingUpdateInfos.push({
 						data : data,
@@ -225,9 +225,9 @@ FOR_BOX((box) => {
 				let remove = self.remove = (id, callbackOrHandlers) => {
 					//REQUIRED: id
 					//OPTIONAL: callbackOrHandlers
-					//OPTIONAL: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.notExists
 					//OPTIONAL: callbackOrHandlers.error
+					//OPTIONAL: callbackOrHandlers.success
 	
 					waitingRemoveInfos.push({
 						id : id,
@@ -243,8 +243,8 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.count
 					//OPTIONAL: params.isFindAll
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 	
 					waitingFindInfos.push({
 						params : params,
@@ -256,8 +256,8 @@ FOR_BOX((box) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 	
 					waitingCountInfos.push({
 						params : params,
@@ -269,8 +269,8 @@ FOR_BOX((box) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 	
 					waitingCheckIsExistsInfos.push({
 						params : params,
@@ -281,8 +281,8 @@ FOR_BOX((box) => {
 				let aggregate = self.aggregate = (params, callbackOrHandlers) => {
 					//REQUIRED: params
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 	
 					waitingAggregateInfos.push({
 						params : params,
@@ -290,14 +290,14 @@ FOR_BOX((box) => {
 					});
 				};
 				
-				let createIndex = self.createIndex = (keys, callbackOrHandlers) => {
-					//REQUIRED: keys
+				let createIndex = self.createIndex = (index, callbackOrHandlers) => {
+					//REQUIRED: index
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 					
 					waitingCreateIndexInfos.push({
-						keys : keys,
+						index : index,
 						callbackOrHandlers : callbackOrHandlers
 					});
 				};
@@ -305,8 +305,8 @@ FOR_BOX((box) => {
 				let removeIndex = self.removeIndex = (index, callbackOrHandlers) => {
 					//REQUIRED: index
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 					
 					waitingRemoveIndexInfos.push({
 						index : index,
@@ -316,8 +316,8 @@ FOR_BOX((box) => {
 				
 				let findAllIndexes = self.findAllIndexes = (callbackOrHandlers) => {
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 					
 					waitingFindAllIndexesInfos.push({
 						callbackOrHandlers : callbackOrHandlers
@@ -486,16 +486,16 @@ FOR_BOX((box) => {
 						//REQUIRED: params.filter
 						//REQUIRED: params.sort
 						//REQUIRED: callbackOrHandlers
-						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
+						//OPTIONAL: callbackOrHandlers.success
 	
 						let filter = params.filter;
 						let sort = params.sort;
 						
-						let callback;
 						let notExistsHandler;
 						let errorHandler;
+						let callback;
 						
 						try {
 	
@@ -504,9 +504,9 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
 								notExistsHandler = callbackOrHandlers.notExists;
 								errorHandler = callbackOrHandlers.error;
+								callback = callbackOrHandlers.success;
 							}
 							
 							collection.find(filter).sort(sort).limit(1).toArray((error, savedDataSet) => {
@@ -564,19 +564,19 @@ FOR_BOX((box) => {
 						//OPTIONAL: idOrParams.sort
 						//OPTIONAL: idOrParams.isRandom
 						//REQUIRED: callbackOrHandlers
-						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
+						//OPTIONAL: callbackOrHandlers.success
 	
 						let id;
 						let filter;
 						let sort;
 						let isRandom;
 						
-						let callback;
 						let notExistsHandler;
 						let errorHandler;
-	
+						let callback;
+						
 						try {
 							
 							// init params.
@@ -600,9 +600,9 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
 								notExistsHandler = callbackOrHandlers.notExists;
 								errorHandler = callbackOrHandlers.error;
+								callback = callbackOrHandlers.success;
 							}
 	
 							if (isRandom === true) {
@@ -702,9 +702,9 @@ FOR_BOX((box) => {
 						//OPTIONAL: data.$addToSet
 						//OPTIONAL: data.$pull
 						//OPTIONAL: callbackOrHandlers
-						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
+						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: isNotToSaveHistory
 						//OPTIONAL: isNotToUpdateLastUpdateTime
 						
@@ -714,9 +714,9 @@ FOR_BOX((box) => {
 						let $addToSet = data.$addToSet;
 						let $pull = data.$pull;
 						
-						let callback;
 						let notExistsHandler;
 						let errorHandler;
+						let callback;
 	
 						try {
 	
@@ -728,9 +728,9 @@ FOR_BOX((box) => {
 								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 									callback = callbackOrHandlers;
 								} else {
-									callback = callbackOrHandlers.success;
 									notExistsHandler = callbackOrHandlers.notExists;
 									errorHandler = callbackOrHandlers.error;
+									callback = callbackOrHandlers.success;
 								}
 							}
 							
@@ -952,9 +952,9 @@ FOR_BOX((box) => {
 						//OPTIONAL: data.$addToSet
 						//OPTIONAL: data.$pull
 						//OPTIONAL: callbackOrHandlers
-						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
+						//OPTIONAL: callbackOrHandlers.success
 	
 						innerUpdate(data, callbackOrHandlers);
 					};
@@ -992,13 +992,13 @@ FOR_BOX((box) => {
 					remove = self.remove = (id, callbackOrHandlers) => {
 						//REQUIRED: id
 						//OPTIONAL: callbackOrHandlers
-						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.notExists
 						//OPTIONAL: callbackOrHandlers.error
+						//OPTIONAL: callbackOrHandlers.success
 						
-						let callback;
 						let notExistsHandler;
 						let errorHandler;
+						let callback;
 	
 						try {
 	
@@ -1010,9 +1010,9 @@ FOR_BOX((box) => {
 								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 									callback = callbackOrHandlers;
 								} else {
-									callback = callbackOrHandlers.success;
 									notExistsHandler = callbackOrHandlers.notExists;
 									errorHandler = callbackOrHandlers.error;
+									callback = callbackOrHandlers.success;
 								}
 							}
 	
@@ -1096,8 +1096,8 @@ FOR_BOX((box) => {
 						//OPTIONAL: params.count
 						//OPTIONAL: params.isFindAll
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
+						//REQUIRED: callbackOrHandlers.success
 	
 						let filter;
 						let sort;
@@ -1105,8 +1105,8 @@ FOR_BOX((box) => {
 						let count;
 						let isFindAll;
 						
-						let callback;
 						let errorHandler;
+						let callback;
 	
 						try {
 	
@@ -1126,8 +1126,8 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
 								errorHandler = callbackOrHandlers.error;
+								callback = callbackOrHandlers.success;
 							}
 	
 							if (filter === undefined) {
@@ -1219,13 +1219,13 @@ FOR_BOX((box) => {
 						//OPTIONAL: params
 						//OPTIONAL: params.filter
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
+						//REQUIRED: callbackOrHandlers.success
 	
 						let filter;
 						
-						let callback;
 						let errorHandler;
+						let callback;
 	
 						try {
 	
@@ -1250,8 +1250,8 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
 								errorHandler = callbackOrHandlers.error;
+								callback = callbackOrHandlers.success;
 							}
 	
 							makeUpFilter(filter);
@@ -1289,13 +1289,13 @@ FOR_BOX((box) => {
 						//OPTIONAL: params
 						//OPTIONAL: params.filter
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
+						//REQUIRED: callbackOrHandlers.success
 	
 						let filter;
 						
-						let callback;
 						let errorHandler;
+						let callback;
 						
 						try {
 	
@@ -1329,8 +1329,8 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
 								errorHandler = callbackOrHandlers.error;
+								callback = callbackOrHandlers.success;
 							}
 	
 							makeUpFilter(filter);
@@ -1367,19 +1367,19 @@ FOR_BOX((box) => {
 					aggregate = self.aggregate = (params, callbackOrHandlers) => {
 						//REQUIRED: params
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
+						//REQUIRED: callbackOrHandlers.success
 	
-						let callback;
 						let errorHandler;
+						let callback;
 	
 						try {
 	
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
 								errorHandler = callbackOrHandlers.error;
+								callback = callbackOrHandlers.success;
 							}
 	
 							collection.aggregate(params).toArray((error, result) => {
@@ -1412,14 +1412,14 @@ FOR_BOX((box) => {
 						}
 					};
 					
-					let createIndex = self.createIndex = (keys, callbackOrHandlers) => {
-						//REQUIRED: keys
+					let createIndex = self.createIndex = (index, callbackOrHandlers) => {
+						//REQUIRED: index
 						//OPTIONAL: callbackOrHandlers
-						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
+						//OPTIONAL: callbackOrHandlers.success
 						
-						let callback;
 						let errorHandler;
+						let callback;
 						
 						try {
 							
@@ -1427,12 +1427,12 @@ FOR_BOX((box) => {
 								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 									callback = callbackOrHandlers;
 								} else {
-									callback = callbackOrHandlers.success;
 									errorHandler = callbackOrHandlers.error;
+									callback = callbackOrHandlers.success;
 								}
 							}
 							
-							collection.createIndex(keys, {
+							collection.createIndex(index, {
 								w : 1
 							}, (error) => {
 		
@@ -1448,7 +1448,7 @@ FOR_BOX((box) => {
 		
 									logError({
 										method : 'createIndex',
-										keys : keys,
+										index : index,
 										errorMsg : error.toString()
 									}, errorHandler);
 								}
@@ -1460,7 +1460,7 @@ FOR_BOX((box) => {
 							
 							logError({
 								method : 'createIndex',
-								keys : keys,
+								index : index,
 								errorMsg : error.toString()
 							}, errorHandler);
 						}
@@ -1474,11 +1474,11 @@ FOR_BOX((box) => {
 					let removeIndex = self.removeIndex = (index, callbackOrHandlers) => {
 						//REQUIRED: index
 						//OPTIONAL: callbackOrHandlers
-						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
+						//OPTIONAL: callbackOrHandlers.success
 						
-						let callback;
 						let errorHandler;
+						let callback;
 						
 						try {
 						
@@ -1486,8 +1486,8 @@ FOR_BOX((box) => {
 								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 									callback = callbackOrHandlers;
 								} else {
-									callback = callbackOrHandlers.success;
 									errorHandler = callbackOrHandlers.error;
+									callback = callbackOrHandlers.success;
 								}
 							}
 							
@@ -1527,41 +1527,39 @@ FOR_BOX((box) => {
 					
 					findAllIndexes = self.findAllIndexes = (callbackOrHandlers) => {
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
+						//REQUIRED: callbackOrHandlers.success
 	
-						let callback;
 						let errorHandler;
+						let callback;
 						
 						try {
 	
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
 								errorHandler = callbackOrHandlers.error;
+								callback = callbackOrHandlers.success;
 							}
 	
 							collection.indexInformation((error, indexInfo) => {
 								
 								if (error === TO_DELETE) {
 									
-									let keyMap = [];
+									let indexes = [];
 									
 									EACH(indexInfo, (pairs) => {
 											
-										var
-										// keys
-										keys = {};
+										let index = {};
 										
 										EACH(pairs, (pair) => {
-											keys[pair[0]] = pair[1];
+											index[pair[0]] = pair[1];
 										});
 										
-										keyMap.push(keys);
+										indexes.push(index);
 									});
 	
-									callback(keyMap);
+									callback(indexes);
 								}
 	
 								// if error is not TO_DELETE
@@ -1636,7 +1634,7 @@ FOR_BOX((box) => {
 					waitingAggregateInfos = undefined;
 					
 					EACH(waitingCreateIndexInfos, (info) => {
-						createIndex(info.keys, info.callbackOrHandlers);
+						createIndex(info.index, info.callbackOrHandlers);
 					});
 	
 					waitingCreateIndexInfos = undefined;

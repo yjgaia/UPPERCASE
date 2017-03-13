@@ -95,8 +95,8 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.count
 					//OPTIONAL: params.isFindAll
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 	
 					waitingFindInfos.push({
 						params : params,
@@ -127,8 +127,8 @@ FOR_BOX((box) => {
 						//OPTIONAL: params.count
 						//OPTIONAL: params.isFindAll
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
+						//REQUIRED: callbackOrHandlers.success
 		
 						let filter;
 						let sort;
@@ -136,8 +136,9 @@ FOR_BOX((box) => {
 						let count;
 						let isFindAll;
 						
-						let callback;
 						let errorHandler;
+						let callback;
+						
 						let errorMsg;
 						let cleanedFilter;
 						let cachedInfo;
@@ -160,8 +161,8 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
 								errorHandler = callbackOrHandlers.error;
+								callback = callbackOrHandlers.success;
 							}
 	
 							if (filter === undefined) {

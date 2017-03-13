@@ -19,49 +19,55 @@ RUN(() => {
 	INIT_OBJECTS();
 	
 	// Node.js 환경에서의 테스트 실행
-	require('./UPPERCASE-CORE/__TEST_NODE.js');
+	//require('./UPPERCASE-CORE/__TEST_NODE.js');
 	//require('./UPPERCASE-ROOM/__TEST_NODE.js');
-	//require('./UPPERCASE-DB/__TEST_NODE.js');
+	require('./UPPERCASE-DB/__TEST_NODE.js');
 	/*require('./UPPERCASE-MODEL/__TEST_NODE.js');
 	require('./UPPERCASE-BOOT/__TEST_NODE.js');*/
 	
-	WEB_SERVER({
-		port : PORT,
-		rootPath : __dirname
-	}, (requestInfo, response, replaceRootPath, next) => {
-		
-		let uri = requestInfo.uri;
-		let method = requestInfo.method;
-		let params = requestInfo.params;
-		
-		if (uri.substring(0, 10) === 'UPPERCASE/') {
-			requestInfo.uri = uri.substring(10);
-			replaceRootPath(__dirname + '/..');
-		}
-		
-		if (uri === 'request_test') {
+	//const IS_TO_CREATE_SERVER = true;
+	const IS_TO_CREATE_SERVER = false;
 	
-			console.log(method, params);
+	if (IS_TO_CREATE_SERVER === true) {
+		
+		WEB_SERVER({
+			port : PORT,
+			rootPath : __dirname
+		}, (requestInfo, response, replaceRootPath, next) => {
 			
-			response({
-				content : 'Request DONE!',
-				headers : {
-					'Access-Control-Allow-Origin' : '*'
-				}
-			});
+			let uri = requestInfo.uri;
+			let method = requestInfo.method;
+			let params = requestInfo.params;
+			
+			if (uri.substring(0, 10) === 'UPPERCASE/') {
+				requestInfo.uri = uri.substring(10);
+				replaceRootPath(__dirname + '/..');
+			}
+			
+			if (uri === 'request_test') {
 		
-		} else if (uri === 'request_test_json') {
-	
-			console.log(method, params);
-	
-			response({
-				content : '{ "thisis" : "JSON" }',
-				headers : {
-					'Access-Control-Allow-Origin' : '*'
-				}
-			});
-		}
-	});
-	
-	console.log(CONSOLE_GREEN('UPPERCASE 테스트 콘솔을 실행하였습니다. 웹 브라우저에서 [http://localhost:' + PORT + ']로 접속해주시기 바랍니다.'));
+				console.log(method, params);
+				
+				response({
+					content : 'Request DONE!',
+					headers : {
+						'Access-Control-Allow-Origin' : '*'
+					}
+				});
+			
+			} else if (uri === 'request_test_json') {
+		
+				console.log(method, params);
+		
+				response({
+					content : '{ "thisis" : "JSON" }',
+					headers : {
+						'Access-Control-Allow-Origin' : '*'
+					}
+				});
+			}
+		});
+		
+		console.log(CONSOLE_GREEN('UPPERCASE 테스트 콘솔을 실행하였습니다. 웹 브라우저에서 [http://localhost:' + PORT + ']로 접속해주시기 바랍니다.'));
+	}
 });
