@@ -7,6 +7,3 @@ ImageMagick의 convert 기능을 사용합니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

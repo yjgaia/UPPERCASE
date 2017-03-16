@@ -7,8 +7,5 @@ Get time.
 ## Static Members
 
 ### setDiff
-###### Parameters
+#### Parameters
 No parameters.
-
-## Public Members
-No public members.

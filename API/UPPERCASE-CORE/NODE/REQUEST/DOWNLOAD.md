@@ -20,6 +20,3 @@ HTTP 리소스를 다운로드합니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

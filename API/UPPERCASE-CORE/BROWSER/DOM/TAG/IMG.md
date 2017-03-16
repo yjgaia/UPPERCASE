@@ -19,29 +19,29 @@ No static members.
 ## Public Members
 
 ### getEl
-###### Parameters
+#### Parameters
 No parameters.
 
 ### getWidth
 OVERRIDE: self.getWidth
-###### Parameters
+#### Parameters
 No parameters.
 
 ### getHeight
 OVERRIDE: self.getHeight
-###### Parameters
+#### Parameters
 No parameters.
 
 ### setSize
-###### Parameters
+#### Parameters
 * `REQUIRED` size
 * `OPTIONAL` size.width
 * `OPTIONAL` size.height
 
 ### getSrc
-###### Parameters
+#### Parameters
 No parameters.
 
 ### setSrc
-###### Parameters
+#### Parameters
 * `REQUIRED` _src

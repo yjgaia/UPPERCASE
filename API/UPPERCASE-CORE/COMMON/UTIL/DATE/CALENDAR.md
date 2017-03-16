@@ -10,29 +10,29 @@ No static members.
 ## Public Members
 
 ### getYear
-###### Parameters
+#### Parameters
 No parameters.
 
 ### getMonth
-###### Parameters
+#### Parameters
 * `OPTIONAL` isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09
 
 ### getDate
-###### Parameters
+#### Parameters
 * `OPTIONAL` isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09
 
 ### getDay
-###### Parameters
+#### Parameters
 No parameters.
 
 ### getHour
-###### Parameters
+#### Parameters
 * `OPTIONAL` isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09
 
 ### getMinute
-###### Parameters
+#### Parameters
 * `OPTIONAL` isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09
 
 ### getSecond
-###### Parameters
+#### Parameters
 * `OPTIONAL` isFormal	true로 설정하면 10보다 작은 수일 경우 앞에 0을 붙힌 문자열을 반환합니다. ex) 01, 04, 09

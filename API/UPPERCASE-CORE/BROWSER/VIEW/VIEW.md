@@ -10,13 +10,13 @@ No static members.
 ## Public Members
 
 ### changeParams
-###### Parameters
+#### Parameters
 No parameters.
 
 ### runURIChangeHandlers
-###### Parameters
+#### Parameters
 No parameters.
 
 ### close
-###### Parameters
+#### Parameters
 No parameters.

@@ -8,8 +8,5 @@ get resource's real path with version.
 ## Static Members
 
 ### setBasePath
-###### Parameters
+#### Parameters
 No parameters.
-
-## Public Members
-No public members.

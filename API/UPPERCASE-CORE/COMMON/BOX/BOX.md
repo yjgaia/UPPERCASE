@@ -7,8 +7,5 @@ BOX를 생성합니다.
 ## Static Members
 
 ### getAllBoxes
-###### Parameters
+#### Parameters
 No parameters.
-
-## Public Members
-No public members.

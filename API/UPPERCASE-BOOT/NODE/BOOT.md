@@ -9,6 +9,3 @@ UPPERCASE를 실행합니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

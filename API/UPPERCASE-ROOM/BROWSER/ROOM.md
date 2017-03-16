@@ -12,22 +12,22 @@ No static members.
 ## Public Members
 
 ### on
-###### Parameters
+#### Parameters
 * `REQUIRED` methodName
 * `REQUIRED` method
 
 ### off
-###### Parameters
+#### Parameters
 * `REQUIRED` methodName
 * `OPTIONAL` method
 
 ### send
-###### Parameters
+#### Parameters
 * `REQUIRED` methodNameOrParams
 * `REQUIRED` methodNameOrParams.methodName
 * `OPTIONAL` methodNameOrParams.data
 * `OPTIONAL` callback
 
 ### exit
-###### Parameters
+#### Parameters
 No parameters.

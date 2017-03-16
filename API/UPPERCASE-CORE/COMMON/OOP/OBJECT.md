@@ -7,12 +7,9 @@
 ## Static Members
 
 ### removeReadyObject
-###### Parameters
+#### Parameters
 * `REQUIRED` object	대기열에서  삭제할 싱글톤 객체
 
 ### initObjects
-###### Parameters
+#### Parameters
 No parameters.
-
-## Public Members
-No public members.

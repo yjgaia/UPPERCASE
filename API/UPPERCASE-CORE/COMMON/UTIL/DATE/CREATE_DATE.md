@@ -12,6 +12,3 @@ Date형 값을 생성합니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

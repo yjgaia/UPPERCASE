@@ -11,13 +11,13 @@ No static members.
 ## Public Members
 
 ### resume
-###### Parameters
+#### Parameters
 No parameters.
 
 ### pause
-###### Parameters
+#### Parameters
 No parameters.
 
 ### remove
-###### Parameters
+#### Parameters
 No parameters.

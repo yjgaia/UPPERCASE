@@ -18,6 +18,3 @@ HTTP PUT 요청을 보냅니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

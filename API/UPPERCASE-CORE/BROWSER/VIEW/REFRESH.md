@@ -7,8 +7,5 @@
 ## Static Members
 
 ### getRefreshingURI
-###### Parameters
+#### Parameters
 No parameters.
-
-## Public Members
-No public members.

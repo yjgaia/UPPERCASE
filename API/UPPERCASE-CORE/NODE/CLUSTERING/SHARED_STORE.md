@@ -7,11 +7,11 @@
 ## Static Members
 
 ### getStorages
-###### Parameters
+#### Parameters
 No parameters.
 
 ### save
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `REQUIRED` params.storeName 
 * `REQUIRED` params.id 
@@ -20,7 +20,7 @@ No parameters.
 * `OPTIONAL` callback 
 
 ### update
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `REQUIRED` params.storeName 
 * `REQUIRED` params.id 
@@ -33,35 +33,35 @@ No parameters.
 * `OPTIONAL` callback 
 
 ### get
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `REQUIRED` params.storeName 
 * `REQUIRED` params.id 
 * `REQUIRED` callback 
 
 ### remove
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `REQUIRED` params.storeName 
 * `REQUIRED` params.id 
 * `OPTIONAL` callback 
 
 ### all
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `REQUIRED` params.storeName 
 * `OPTIONAL` params.filter 
 * `REQUIRED` callback 
 
 ### count
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `REQUIRED` params.storeName 
 * `OPTIONAL` params.filter 
 * `REQUIRED` callback 
 
 ### checkIsExists
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `REQUIRED` params.storeName 
 * `OPTIONAL` params.id 
@@ -69,14 +69,14 @@ No parameters.
 * `REQUIRED` callback 
 
 ### clear
-###### Parameters
+#### Parameters
 * `REQUIRED` storeName 
 * `OPTIONAL` callback 
 
 ## Public Members
 
 ### save
-###### Parameters
+#### Parameters
 * `REQUIRED` params
 * `REQUIRED` params.id
 * `REQUIRED` params.data
@@ -84,7 +84,7 @@ No parameters.
 * `OPTIONAL` callback
 
 ### update
-###### Parameters
+#### Parameters
 * `REQUIRED` params
 * `REQUIRED` params.id
 * `REQUIRED` params.data
@@ -98,34 +98,34 @@ No parameters.
 * `OPTIONAL` callbackOrHandlers.success
 
 ### get
-###### Parameters
+#### Parameters
 * `REQUIRED` id
 * `REQUIRED` callbackOrHandlers
 * `OPTIONAL` callbackOrHandlers.notExists
 * `OPTIONAL` callbackOrHandlers.success
 
 ### remove
-###### Parameters
+#### Parameters
 * `REQUIRED` id
 * `OPTIONAL` callbackOrHandlers
 * `OPTIONAL` callbackOrHandlers.notExists
 * `OPTIONAL` callbackOrHandlers.success
 
 ### all
-###### Parameters
+#### Parameters
 * `OPTIONAL` filter
 * `REQUIRED` callback
 
 ### count
-###### Parameters
+#### Parameters
 * `OPTIONAL` filter
 * `REQUIRED` callback
 
 ### checkIsExists
-###### Parameters
+#### Parameters
 * `REQUIRED` idOrFilter
 * `REQUIRED` callback
 
 ### clear
-###### Parameters
+#### Parameters
 * `OPTIONAL` callback

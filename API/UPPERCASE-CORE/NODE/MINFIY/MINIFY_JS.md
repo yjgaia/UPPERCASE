@@ -6,6 +6,3 @@ JavaScript 코드를 압축합니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

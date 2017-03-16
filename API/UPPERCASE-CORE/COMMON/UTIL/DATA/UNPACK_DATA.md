@@ -6,6 +6,3 @@ PACK_DATA가 적용된 데이터의 값들 중 정수형태로 변환된 Date형
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

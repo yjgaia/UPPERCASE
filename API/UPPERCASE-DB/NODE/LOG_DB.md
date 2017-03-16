@@ -12,11 +12,11 @@ No static members.
 ## Public Members
 
 ### log
-###### Parameters
+#### Parameters
 * `REQUIRED` data
 
 ### find
-###### Parameters
+#### Parameters
 * `OPTIONAL` params
 * `OPTIONAL` params.filter
 * `OPTIONAL` params.sort

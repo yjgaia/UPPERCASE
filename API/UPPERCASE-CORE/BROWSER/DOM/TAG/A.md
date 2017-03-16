@@ -20,9 +20,9 @@ No static members.
 ## Public Members
 
 ### setHref
-###### Parameters
+#### Parameters
 No parameters.
 
 ### tap
-###### Parameters
+#### Parameters
 No parameters.

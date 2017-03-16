@@ -7,12 +7,9 @@ CPU 코어 간 클러스터링을 수행합니다.
 ## Static Members
 
 ### getWorkerId
-###### Parameters
+#### Parameters
 No parameters.
 
 ### getWorkerCount
-###### Parameters
+#### Parameters
 No parameters.
-
-## Public Members
-No public members.

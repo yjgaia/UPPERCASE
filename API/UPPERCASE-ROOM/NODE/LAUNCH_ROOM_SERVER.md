@@ -10,12 +10,12 @@
 ## Static Members
 
 ### addInitRoomFunc
-###### Parameters
+#### Parameters
 * `REQUIRED` roomName 
 * `REQUIRED` initRoomFunc 
 
 ### broadcast
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `REQUIRED` params.roomName 
 * `REQUIRED` params.methodName 

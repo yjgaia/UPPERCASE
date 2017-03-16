@@ -21,5 +21,5 @@ No static members.
 ## Public Members
 
 ### getEl
-###### Parameters
+#### Parameters
 No parameters.

@@ -21,13 +21,13 @@ No static members.
 ## Public Members
 
 ### play
-###### Parameters
+#### Parameters
 No parameters.
 
 ### pause
-###### Parameters
+#### Parameters
 No parameters.
 
 ### stop
-###### Parameters
+#### Parameters
 No parameters.

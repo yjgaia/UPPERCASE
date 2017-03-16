@@ -6,6 +6,3 @@ get final resource's real path.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

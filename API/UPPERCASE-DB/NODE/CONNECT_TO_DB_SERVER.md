@@ -19,9 +19,6 @@ MongoDB 서버에 연결합니다.
 ## Static Members
 
 ### addInitDBFunc
-###### Parameters
+#### Parameters
 * `OPTIONAL` dbServerName 
 * `REQUIRED` initDBFunc 
-
-## Public Members
-No public members.

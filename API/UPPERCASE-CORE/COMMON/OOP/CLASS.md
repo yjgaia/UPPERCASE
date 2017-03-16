@@ -7,8 +7,5 @@
 ## Static Members
 
 ### getNextInstanceId
-###### Parameters
+#### Parameters
 No parameters.
-
-## Public Members
-No public members.

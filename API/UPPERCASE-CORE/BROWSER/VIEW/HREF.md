@@ -6,6 +6,3 @@ URI로부터 주소를 생성하여 반환합니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

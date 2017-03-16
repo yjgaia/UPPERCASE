@@ -8,6 +8,3 @@ INFO의 웹 애플리케이션 언어 설정 코드에 해당하는 문자열을
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

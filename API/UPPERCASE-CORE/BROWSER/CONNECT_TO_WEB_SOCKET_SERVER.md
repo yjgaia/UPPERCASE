@@ -12,6 +12,3 @@ WEB_SOCKET_SERVER로 생성한 웹 소켓 서버에 연결합니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

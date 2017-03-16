@@ -6,6 +6,3 @@ target이 JavaScript arguments인지 확인합니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

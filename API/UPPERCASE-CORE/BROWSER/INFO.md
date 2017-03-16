@@ -10,17 +10,17 @@ No static members.
 ## Public Members
 
 ### getLang
-###### Parameters
+#### Parameters
 No parameters.
 
 ### changeLang
-###### Parameters
+#### Parameters
 * `REQUIRED` lang
 
 ### checkIsTouchMode
-###### Parameters
+#### Parameters
 No parameters.
 
 ### getBrowserInfo
-###### Parameters
+#### Parameters
 No parameters.

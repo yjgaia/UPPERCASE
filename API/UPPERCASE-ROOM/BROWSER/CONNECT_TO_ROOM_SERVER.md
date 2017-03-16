@@ -14,31 +14,31 @@
 ## Static Members
 
 ### checkIsConnected
-###### Parameters
+#### Parameters
 * `OPTIONAL` roomServerName 
 
 ### enterRoom
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `OPTIONAL` params.roomServerName 
 * `REQUIRED` params.roomName 
 
 ### on
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `OPTIONAL` params.roomServerName 
 * `REQUIRED` params.methodName 
 * `REQUIRED` method 
 
 ### off
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `OPTIONAL` params.roomServerName 
 * `REQUIRED` params.methodName 
 * `OPTIONAL` method 
 
 ### send
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `OPTIONAL` params.roomServerName 
 * `REQUIRED` params.methodName 
@@ -46,10 +46,7 @@
 * `OPTIONAL` callback 
 
 ### exitRoom
-###### Parameters
+#### Parameters
 * `REQUIRED` params 
 * `OPTIONAL` params.roomServerName 
 * `REQUIRED` params.roomName 
-
-## Public Members
-No public members.

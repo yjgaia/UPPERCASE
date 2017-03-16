@@ -13,6 +13,3 @@ UPPERCASE 서버에 접속합니다.
 
 ## Static Members
 No static members.
-
-## Public Members
-No public members.

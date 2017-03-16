@@ -20,23 +20,23 @@ No static members.
 ## Public Members
 
 ### getContext
-###### Parameters
+#### Parameters
 * `REQUIRED` contextType
 
 ### setSize
-###### Parameters
+#### Parameters
 * `REQUIRED` size
 * `OPTIONAL` size.width
 * `OPTIONAL` size.height
 
 ### getWidth
-###### Parameters
+#### Parameters
 No parameters.
 
 ### getHeight
-###### Parameters
+#### Parameters
 No parameters.
 
 ### getDataURL
-###### Parameters
+#### Parameters
 No parameters.

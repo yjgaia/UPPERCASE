@@ -10,8 +10,5 @@
 ## Static Members
 
 ### checkAll
-###### Parameters
+#### Parameters
 No parameters.
-
-## Public Members
-No public members.
