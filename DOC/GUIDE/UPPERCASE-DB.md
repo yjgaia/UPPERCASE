@@ -1,3 +1,5 @@
+백업 서버 세팅하기 작성중
+
 # UPPERCASE-DB
 UPPERCASE-DB는 Node.js 환경에서 MongoDB 기반 데이터베이스를 다루기 위해 필요한 기능들을 담고 있는 모듈입니다. 구동을 위해 [UPPERCASE-COMMON-NODE](UPPERCASE-COMMON-NODE.md)가 필요합니다.
 * [API 문서](../../API/UPPERCASE-DB/NODE/README.md)
@@ -8,6 +10,7 @@ UPPERCASE-DB는 Node.js 환경에서 MongoDB 기반 데이터베이스를 다루
 * [`CONNECT_TO_DB_SERVER`](#connect_to_db_server)
 * [`Box.DB`](#boxdb)
 * [`Box.LOG_DB`](#boxlog_db)
+* [백업 서버 세팅하기](#백업-서버-세팅하기)
 
 ## 사용방법
 `UPPERCASE-DB` 폴더를 복사하여 사용하거나, `npm`으로 설치하여 사용합니다.
@@ -71,6 +74,11 @@ CONNECT_TO_DB_SERVER({
 * `name` 데이터베이스 이름
 * `username` 인증 모드로 MongoDB 서버를 구동한 경우, 데이터베이스의 아이디
 * `password` 인증 모드로 MongoDB 서버를 구동한 경우, 데이터베이스의 비밀번호
+* `backupHost` 백업 서버의 호스트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
+* `backupPort` 백업 서버의 포트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
+* `backupName` 백업 데이터베이스 이름. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
+* `backupUsername` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 아이디
+* `backupPassword` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 비밀번호
 
 ## `Box.DB`
 MongoDB 컬렉션을 다루는 `DB` 클래스
@@ -476,5 +484,21 @@ logDB.find({
     }
 }, (logs) => {
 	console.log('검색된 로그 목록:', logs);
+});
+```
+
+## 백업 서버 세팅하기
+`CONNECT_TO_DB_SERVER`로 데이터베이스 서버에 연결할 때 `backup` 관련 파라미터를 지정하면, 백업 서버에도 함께 연결됩니다. 이 경우 데이터의 생성, 수정, 삭제 등 갱신을 하게 되면 백업 서버에도 동일하게 반영됩니다. 단, 변경 내역은 저장되지 않으며, `LOG_DB`로 작성하신 로그도 저장되지 않습니다. 이점 유의하시기 바랍니다.
+
+```javascript
+CONNECT_TO_DB_SERVER({
+	host : '127.0.0.1',
+	port : 27017,
+	name : 'Test',
+	backupHost : '111.222.333.444',
+	backupPort : 27017,
+	backupName : 'Test__BACKUP'
+}, () => {
+	console.log('MongoDB 서버에 접속되었습니다.');
 });
 ```

@@ -5,7 +5,11 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 
 	const DEFAULT_DB_SERVER_NAME = '__';
 	
+	let MongoDB = require('mongodb');
+	
 	let nativeDBs = {};
+	let backupDBs = {};
+	
 	let initDBFuncMap = {};
 
 	let addInitDBFunc = m.addInitDBFunc = (dbServerName, initDBFunc) => {
@@ -44,6 +48,11 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			//REQUIRED: params.name
 			//OPTIONAL: params.username
 			//OPTIONAL: params.password
+			//OPTIONAL: params.backupHost
+			//OPTIONAL: params.backupPort
+			//OPTIONAL: params.backupName
+			//OPTIONAL: params.backupUsername
+			//OPTIONAL: params.backupPassword
 			//OPTIONAL: callback
 
 			let dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName;
@@ -52,29 +61,77 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			let name = params.name;
 			let username = params.username;
 			let password = params.password;
-
-			require('mongodb').MongoClient.connect(
+			
+			let backupHost = params.backupHost;
+			let backupPort = params.backupPort === undefined ? 27017 : params.backupPort;
+			let backupName = params.backupName;
+			let backupUsername = params.backupUsername;
+			let backupPassword = params.backupPassword;
+			
+			NEXT([
+			function(next) {
 				
-				'mongodb://' +
-				(username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') +
-				host + ':' +
-				port + '/' +
-				name,
-				
-				(error, nativeDB) => {
-
-				if (error !== TO_DELETE) {
-
-					SHOW_ERROR('CONNECT_TO_DB_SERVER', error.toString());
-
-				} else {
-
-					nativeDBs[dbServerName] = nativeDB;
-
+				MongoDB.MongoClient.connect(
+					
+					'mongodb://' +
+					(username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') +
+					host + ':' +
+					port + '/' +
+					name,
+					
+					(error, nativeDB) => {
+	
+					if (error !== TO_DELETE) {
+	
+						SHOW_ERROR('CONNECT_TO_DB_SERVER', error.toString());
+	
+					} else {
+	
+						nativeDBs[dbServerName] = nativeDB;
+	
+						if (backupHost === undefined) {
+							next.next(nativeDB);
+						} else {
+							next(nativeDB);
+						}
+					}
+				});
+			},
+			
+			function(next) {
+				return function(nativeDB) {
+					
+					MongoDB.MongoClient.connect(
+						
+						'mongodb://' +
+						(backupUsername !== undefined && backupPassword !== undefined ? backupUsername + ':' + backupPassword.replace(/@/g, '%40') + '@' : '') +
+						backupHost + ':' +
+						backupPort + '/' +
+						backupName,
+						
+						(error, backupDB) => {
+		
+						if (error !== TO_DELETE) {
+							
+							SHOW_ERROR('CONNECT_TO_DB_SERVER (BACKUP DB)', error.toString());
+		
+						} else {
+							
+							backupDBs[dbServerName] = backupDB;
+		
+							next(nativeDB, backupDB);
+						}
+					});
+				};
+			},
+			
+			function() {
+				return function(nativeDB, backupDB) {
+					
 					if (initDBFuncMap[dbServerName] !== undefined) {
 						
 						EACH(initDBFuncMap[dbServerName], (initDBFunc) => {
-							initDBFunc(nativeDB);
+							initDBFunc(nativeDB, backupDB);
 						});
 						
 						delete initDBFuncMap[dbServerName];
@@ -83,8 +140,8 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 					if (callback !== undefined) {
 						callback();
 					}
-				}
-			});
+				};
+			}]);
 		}
 	};
 });

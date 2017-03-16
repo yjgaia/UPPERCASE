@@ -324,11 +324,16 @@ FOR_BOX((box) => {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB) => {
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB, backupDB) => {
 					
 					let collection = nativeDB.collection(box.boxName + '.' + name);
 					let historyCollection;
 					let errorLogCollection;
+					
+					let backupCollection;
+					if (backupDB !== undefined) {
+						backupCollection = backupDB.collection(box.boxName + '.' + name);
+					}
 					
 					let addHistory = (method, id, change, time) => {
 						//REQUIRED: method
@@ -436,6 +441,19 @@ FOR_BOX((box) => {
 									callback = callbackOrHandlers.success;
 									errorHandler = callbackOrHandlers.error;
 								}
+							}
+							
+							if (backupCollection !== undefined) {
+								backupCollection.insertOne(data, (error) => {
+									
+									if (error !== TO_DELETE) {
+										
+										SHOW_ERROR('BACKUP DB', error.toString(), {
+											boxName : box.boxName,
+											name : name
+										});
+									}
+								});
 							}
 	
 							collection.insertOne(data, {
@@ -819,6 +837,19 @@ FOR_BOX((box) => {
 										}
 										
 									} else {
+										
+										if (backupCollection !== undefined) {
+											backupCollection.updateOne(filter, updateData, (error) => {
+												
+												if (error !== TO_DELETE) {
+													
+													SHOW_ERROR('BACKUP DB', error.toString(), {
+														boxName : box.boxName,
+														name : name
+													});
+												}
+											});
+										}
 	
 										collection.updateOne(filter, updateData, {
 											w : 1
@@ -1039,6 +1070,19 @@ FOR_BOX((box) => {
 								},
 	
 								success : (originData) => {
+									
+									if (backupCollection !== undefined) {
+										backupCollection.deleteOne(filter, (error) => {
+											
+											if (error !== TO_DELETE) {
+												
+												SHOW_ERROR('BACKUP DB', error.toString(), {
+													boxName : box.boxName,
+													name : name
+												});
+											}
+										});
+									}
 	
 									collection.deleteOne(filter, {
 										w : 1
