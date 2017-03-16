@@ -207,20 +207,20 @@ global.CONNECT_TO_ROOM_SERVER = METHOD((m) => {
 
 		run : (params, connectionListenerOrListeners) => {
 			//REQUIRED: params
-			//OPTIONAL: params.name
+			//OPTIONAL: params.roomServerName
 			//REQUIRED: params.host
 			//REQUIRED: params.port
 			//OPTIONAL: connectionListenerOrListeners
 			//OPTIONAL: connectionListenerOrListeners.success
 			//OPTIONAL: connectionListenerOrListeners.error
 
-			let name = params.name;
+			let roomServerName = params.roomServerName;
 			
 			let connectionListener;
 			let errorListener;
 			
-			if (name === undefined) {
-				name = DEFAULT_ROOM_SERVER_NAME;
+			if (roomServerName === undefined) {
+				roomServerName = DEFAULT_ROOM_SERVER_NAME;
 			}
 
 			if (connectionListenerOrListeners !== undefined) {
@@ -241,13 +241,13 @@ global.CONNECT_TO_ROOM_SERVER = METHOD((m) => {
 
 				success : (on, off, send) => {
 					
-					let enterRoomNames = enterRoomNameMap[name];
-					let onInfos = onInfoMap[name];
-					let waitingSendInfos = waitingSendInfoMap[name];
+					let enterRoomNames = enterRoomNameMap[roomServerName];
+					let onInfos = onInfoMap[roomServerName];
+					let waitingSendInfos = waitingSendInfoMap[roomServerName];
 
-					innerOns[name] = on;
-					innerOffs[name] = off;
-					innerSends[name] = send;
+					innerOns[roomServerName] = on;
+					innerOffs[roomServerName] = off;
+					innerSends[roomServerName] = send;
 
 					if (enterRoomNames !== undefined) {
 						EACH(enterRoomNames, (roomName) => {
@@ -269,22 +269,22 @@ global.CONNECT_TO_ROOM_SERVER = METHOD((m) => {
 							send(sendInfo.params, sendInfo.callback);
 						});
 					}
-					delete waitingSendInfoMap[name];
+					delete waitingSendInfoMap[roomServerName];
 
 					if (connectionListener !== undefined) {
 						connectionListener(on, off, send);
 					}
 					
-					isConnecteds[name] = true;
+					isConnecteds[roomServerName] = true;
 
 					// when disconnected, rewait.
 					on('__DISCONNECTED', () => {
 
-						delete innerOns[name];
-						delete innerOffs[name];
-						delete innerSends[name];
+						delete innerOns[roomServerName];
+						delete innerOffs[roomServerName];
+						delete innerSends[roomServerName];
 						
-						isConnecteds[name] = false;
+						isConnecteds[roomServerName] = false;
 					});
 				}
 			});

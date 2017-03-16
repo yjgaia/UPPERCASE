@@ -8,7 +8,7 @@ FOR_BOX((box) => {
 		run : (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.roomName
-			//OPTIONAL: params.methodName
+			//REQUIRED: params.methodName
 			//OPTIONAL: params.data
 
 			let roomName = box.boxName + '/' + params.roomName;

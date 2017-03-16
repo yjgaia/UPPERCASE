@@ -1,0 +1,11 @@
+# `METHOD` global.REAL
+실수 문자열을 실수 값으로 변환합니다.
+
+## Parameters
+* `OPTIONAL` realNumberString 
+
+## Static Members
+No static members.
+
+## Public Members
+No public members.

@@ -78,7 +78,7 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 			success : (host) => {
 
 				CONNECT_TO_ROOM_SERVER({
-					name : roomServerName,
+					roomServerName : roomServerName,
 					isSecure : isSecure,
 					host : host,
 					port : webServerPort

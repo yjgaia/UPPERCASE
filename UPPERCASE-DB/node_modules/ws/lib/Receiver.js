@@ -272,7 +272,7 @@ class Receiver {
       return;
     }
 
-    this.payloadLength = num * Math.pow(2, 32) + buf.readUInt32BE(4, true);
+    this.payloadLength = (num * Math.pow(2, 32)) + buf.readUInt32BE(4, true);
     this.haveLength();
   }
 
@@ -532,7 +532,7 @@ module.exports = Receiver;
  */
 function toBuffer (fragments, messageLength) {
   if (fragments.length === 1) return fragments[0];
-  if (fragments.length > 1) return Buffer.concat(fragments, messageLength);
+  if (fragments.length > 1) return bufferUtil.concat(fragments, messageLength);
   return constants.EMPTY_BUFFER;
 }
 
