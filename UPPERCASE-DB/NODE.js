@@ -11,7 +11,11 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 
 	const DEFAULT_DB_SERVER_NAME = '__';
 	
+	let MongoDB = require('mongodb');
+	
 	let nativeDBs = {};
+	let backupDBs = {};
+	
 	let initDBFuncMap = {};
 
 	let addInitDBFunc = m.addInitDBFunc = (dbServerName, initDBFunc) => {
@@ -50,6 +54,11 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			//REQUIRED: params.name
 			//OPTIONAL: params.username
 			//OPTIONAL: params.password
+			//OPTIONAL: params.backupHost
+			//OPTIONAL: params.backupPort
+			//OPTIONAL: params.backupName
+			//OPTIONAL: params.backupUsername
+			//OPTIONAL: params.backupPassword
 			//OPTIONAL: callback
 
 			let dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName;
@@ -58,29 +67,77 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			let name = params.name;
 			let username = params.username;
 			let password = params.password;
-
-			require('mongodb').MongoClient.connect(
+			
+			let backupHost = params.backupHost;
+			let backupPort = params.backupPort === undefined ? 27017 : params.backupPort;
+			let backupName = params.backupName;
+			let backupUsername = params.backupUsername;
+			let backupPassword = params.backupPassword;
+			
+			NEXT([
+			function(next) {
 				
-				'mongodb://' +
-				(username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') +
-				host + ':' +
-				port + '/' +
-				name,
-				
-				(error, nativeDB) => {
-
-				if (error !== TO_DELETE) {
-
-					SHOW_ERROR('CONNECT_TO_DB_SERVER', error.toString());
-
-				} else {
-
-					nativeDBs[dbServerName] = nativeDB;
-
+				MongoDB.MongoClient.connect(
+					
+					'mongodb://' +
+					(username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') +
+					host + ':' +
+					port + '/' +
+					name,
+					
+					(error, nativeDB) => {
+	
+					if (error !== TO_DELETE) {
+	
+						SHOW_ERROR('CONNECT_TO_DB_SERVER', error.toString());
+	
+					} else {
+	
+						nativeDBs[dbServerName] = nativeDB;
+	
+						if (backupHost === undefined) {
+							next.next(nativeDB);
+						} else {
+							next(nativeDB);
+						}
+					}
+				});
+			},
+			
+			function(next) {
+				return function(nativeDB) {
+					
+					MongoDB.MongoClient.connect(
+						
+						'mongodb://' +
+						(backupUsername !== undefined && backupPassword !== undefined ? backupUsername + ':' + backupPassword.replace(/@/g, '%40') + '@' : '') +
+						backupHost + ':' +
+						backupPort + '/' +
+						backupName,
+						
+						(error, backupDB) => {
+		
+						if (error !== TO_DELETE) {
+							
+							SHOW_ERROR('CONNECT_TO_DB_SERVER (BACKUP DB)', error.toString());
+		
+						} else {
+							
+							backupDBs[dbServerName] = backupDB;
+		
+							next(nativeDB, backupDB);
+						}
+					});
+				};
+			},
+			
+			function() {
+				return function(nativeDB, backupDB) {
+					
 					if (initDBFuncMap[dbServerName] !== undefined) {
 						
 						EACH(initDBFuncMap[dbServerName], (initDBFunc) => {
-							initDBFunc(nativeDB);
+							initDBFunc(nativeDB, backupDB);
 						});
 						
 						delete initDBFuncMap[dbServerName];
@@ -89,8 +146,8 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 					if (callback !== undefined) {
 						callback();
 					}
-				}
-			});
+				};
+			}]);
 		}
 	};
 });
@@ -421,11 +478,16 @@ FOR_BOX((box) => {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB) => {
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB, backupDB) => {
 					
 					let collection = nativeDB.collection(box.boxName + '.' + name);
 					let historyCollection;
 					let errorLogCollection;
+					
+					let backupCollection;
+					if (backupDB !== undefined) {
+						backupCollection = backupDB.collection(box.boxName + '.' + name);
+					}
 					
 					let addHistory = (method, id, change, time) => {
 						//REQUIRED: method
@@ -533,6 +595,19 @@ FOR_BOX((box) => {
 									callback = callbackOrHandlers.success;
 									errorHandler = callbackOrHandlers.error;
 								}
+							}
+							
+							if (backupCollection !== undefined) {
+								backupCollection.insertOne(data, (error) => {
+									
+									if (error !== TO_DELETE) {
+										
+										SHOW_ERROR('BACKUP DB', error.toString(), {
+											boxName : box.boxName,
+											name : name
+										});
+									}
+								});
 							}
 	
 							collection.insertOne(data, {
@@ -916,6 +991,19 @@ FOR_BOX((box) => {
 										}
 										
 									} else {
+										
+										if (backupCollection !== undefined) {
+											backupCollection.updateOne(filter, updateData, (error) => {
+												
+												if (error !== TO_DELETE) {
+													
+													SHOW_ERROR('BACKUP DB', error.toString(), {
+														boxName : box.boxName,
+														name : name
+													});
+												}
+											});
+										}
 	
 										collection.updateOne(filter, updateData, {
 											w : 1
@@ -1136,6 +1224,19 @@ FOR_BOX((box) => {
 								},
 	
 								success : (originData) => {
+									
+									if (backupCollection !== undefined) {
+										backupCollection.deleteOne(filter, (error) => {
+											
+											if (error !== TO_DELETE) {
+												
+												SHOW_ERROR('BACKUP DB', error.toString(), {
+													boxName : box.boxName,
+													name : name
+												});
+											}
+										});
+									}
 	
 									collection.deleteOne(filter, {
 										w : 1
@@ -1850,8 +1951,8 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.count
 					//OPTIONAL: params.isFindAll
 					//REQUIRED: callbackOrHandlers
-					//REQUIRED: callbackOrHandlers.success
 					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 	
 					waitingFindInfos.push({
 						params : params,
@@ -1882,8 +1983,8 @@ FOR_BOX((box) => {
 						//OPTIONAL: params.count
 						//OPTIONAL: params.isFindAll
 						//REQUIRED: callbackOrHandlers
-						//REQUIRED: callbackOrHandlers.success
 						//OPTIONAL: callbackOrHandlers.error
+						//REQUIRED: callbackOrHandlers.success
 		
 						let filter;
 						let sort;
@@ -1891,8 +1992,9 @@ FOR_BOX((box) => {
 						let count;
 						let isFindAll;
 						
-						let callback;
 						let errorHandler;
+						let callback;
+						
 						let errorMsg;
 						let cleanedFilter;
 						let cachedInfo;
@@ -1915,8 +2017,8 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
 								errorHandler = callbackOrHandlers.error;
+								callback = callbackOrHandlers.success;
 							}
 	
 							if (filter === undefined) {

@@ -6,9 +6,6 @@ Welcome to UPPERCASE-BOOT! (http://uppercase.io)
 
 */
 
-// 웹 브라우저 환경에서는 window가 global 객체 입니다.
-let global = window;
-
 /*
  * Configuration
  */
@@ -110,7 +107,7 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 			success : (host) => {
 
 				CONNECT_TO_ROOM_SERVER({
-					name : roomServerName,
+					roomServerName : roomServerName,
 					isSecure : isSecure,
 					host : host,
 					port : webServerPort

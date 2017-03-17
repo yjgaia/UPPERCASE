@@ -58,12 +58,6 @@ RUN(() => {
 			
 			if (content === undefined) {
 				content = BASE_CONTENT;
-				
-				if (path === 'BROWSER') {
-					content += '// 웹 브라우저 환경에서는 window가 global 객체 입니다.\n';
-					content += 'let global = window;\n\n';
-				}
-				
 			} else {
 				content += '\n';
 			}

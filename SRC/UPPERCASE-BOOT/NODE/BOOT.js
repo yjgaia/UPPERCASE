@@ -1065,11 +1065,11 @@ global.BOOT = (params) => {
 	};
 	
 	// load all UPPERCASE modules for browser.
-	EACH(['CORE', 'ROOM', 'MODEL', 'BOOT'], (name) => {
+	EACH(['CORE', 'ROOM', 'MODEL', 'BOOT'], (name, i) => {
 		
 		let isDevMode = (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true));
 		
-		if (isDevMode === true) {
+		if (isDevMode === true && i > 0) {
 			addContentToBrowserScript('\n\n');
 		}
 		
