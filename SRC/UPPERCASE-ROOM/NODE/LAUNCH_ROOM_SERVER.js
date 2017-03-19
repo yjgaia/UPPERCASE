@@ -47,9 +47,8 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 
 		init : (inner, self, params) => {
 			//REQUIRED: params
-			//OPTIONAL: params.socketServerPort
-			//OPTIONAL: params.webSocketServerPort
-			//OPTIONAL: params.webServer
+			//OPTIONAL: params.socketServerPort	TCP 소켓 기반으로 룸 서버를 생성하기 위한 포트 번호
+			//OPTIONAL: params.webServer		웹 소켓 기반으로 룸 서버를 생성하기 위한 웹 서버
 			
 			if (CPU_CLUSTERING.on !== undefined) {
 

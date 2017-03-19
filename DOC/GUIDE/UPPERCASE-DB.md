@@ -28,7 +28,6 @@ require('uppercase-db');
 ```
 
 ## `NODE_CONFIG`
-* `isDBLogMode` 데이터가 갱신될 때 콘솔 로그를 출력할 지 여부. 기본값은 `false` 입니다.
 * `maxDataCount` [`find` 함수]('#find')를 수행할 때 최대로 가져올 데이터의 개수. 기본값은 `1000` 입니다.
 
 ## `CONNECT_TO_DB_SERVER`

@@ -24,7 +24,7 @@ UPPERCASE를 사용하기 위해 필요한 사전 지식들은 다음과 같습�
 [UPPERCASE 설치하기](INSTALL.md)
 
 ## 개발하기
-* UPPERCASE를 구현할 때와 UPPERCASE 기반 프로젝트를 개발할 때는 [UPPERCASE 코드 컨벤션 규칙](GUIDE/CONVENTION.md)에 따라 개발합니다.
+* UPPERCASE 기반 프로젝트를 개발할 때는 [UPPERCASE 코드 컨벤션 규칙](GUIDE/CONVENTION.md)에 따라 개발합니다.
 * [프로젝트 생성](GUIDE/CREATE_PROJECT.md)
 * [프로젝트 설정](GUIDE/CONFIGURATION.md)
 * [모델 만들기](GUIDE/CREATE_MODEL.md)

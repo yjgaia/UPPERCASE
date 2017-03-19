@@ -463,6 +463,7 @@ global.BOOT = (params) => {
 			_404PageContent += '</noscript>';
 			
 			// load script.
+			_404PageContent += '<script type="text/javascript" src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
 			_404PageContent += '<script>' + READ_FILE({
 				path : UPPERCASE_PATH + '/UPPERCASE-BOOT/404.js',
 				isSync : true
@@ -1010,15 +1011,6 @@ global.BOOT = (params) => {
 						return false;
 					}
 					
-					// serve favicon.ico.
-					else if (uri === 'favicon.ico') {
-						
-						requestInfo.uri = CHECK_IS_IN({
-							array : boxNamesInBOXFolder,
-							value : CONFIG.defaultBoxName
-						}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/R/favicon.ico' : CONFIG.defaultBoxName + '/R/favicon.ico';
-					}
-					
 					// serve others.
 					else {
 
@@ -1031,11 +1023,15 @@ global.BOOT = (params) => {
 						} else {
 							boxName = uri.substring(0, i);
 
-							if (BOX.getAllBoxes()[boxName] !== undefined || boxName === 'UPPERCASE-TRANSPORT') {
+							if (BOX.getAllBoxes()[boxName] !== undefined) {
 								uri = uri.substring(i + 1);
 							} else {
 								boxName = CONFIG.defaultBoxName;
 							}
+						}
+						
+						if (uri === 'favicon.ico' || uri.substring(0, 12) === '.well-known/') {
+							uri = 'R/' + uri;
 						}
 						
 						// serve resource.

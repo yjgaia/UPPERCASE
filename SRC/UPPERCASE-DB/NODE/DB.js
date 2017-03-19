@@ -362,15 +362,6 @@ FOR_BOX((box) => {
 						}
 	
 						historyCollection.insertOne(historyData);
-	
-						if (NODE_CONFIG.isDBLogMode === true) {
-							
-							if (method === 'remove') {
-								console.log('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` DATA(' + id + ') REMOVED.');
-							} else {
-								console.log('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` DATA(' + id + ') SAVED:', change);
-							}
-						}
 					};
 					
 					let logError = (errorInfo, errorHandler) => {

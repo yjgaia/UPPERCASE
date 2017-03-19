@@ -69,7 +69,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			let backupPassword = params.backupPassword;
 			
 			NEXT([
-			function(next) {
+			(next) => {
 				
 				MongoDB.MongoClient.connect(
 					
@@ -98,8 +98,8 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 				});
 			},
 			
-			function(next) {
-				return function(nativeDB) {
+			(next) => {
+				return (nativeDB) => {
 					
 					MongoDB.MongoClient.connect(
 						
@@ -125,8 +125,8 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 				};
 			},
 			
-			function() {
-				return function(nativeDB, backupDB) {
+			() => {
+				return (nativeDB, backupDB) => {
 					
 					if (initDBFuncMap[dbServerName] !== undefined) {
 						

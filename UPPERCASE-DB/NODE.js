@@ -75,7 +75,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			let backupPassword = params.backupPassword;
 			
 			NEXT([
-			function(next) {
+			(next) => {
 				
 				MongoDB.MongoClient.connect(
 					
@@ -104,8 +104,8 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 				});
 			},
 			
-			function(next) {
-				return function(nativeDB) {
+			(next) => {
+				return (nativeDB) => {
 					
 					MongoDB.MongoClient.connect(
 						
@@ -131,8 +131,8 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 				};
 			},
 			
-			function() {
-				return function(nativeDB, backupDB) {
+			() => {
+				return (nativeDB, backupDB) => {
 					
 					if (initDBFuncMap[dbServerName] !== undefined) {
 						
@@ -516,15 +516,6 @@ FOR_BOX((box) => {
 						}
 	
 						historyCollection.insertOne(historyData);
-	
-						if (NODE_CONFIG.isDBLogMode === true) {
-							
-							if (method === 'remove') {
-								console.log('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` DATA(' + id + ') REMOVED.');
-							} else {
-								console.log('[UPPERCASE-DB] `' + box.boxName + '.' + name + '` DATA(' + id + ') SAVED:', change);
-							}
-						}
 					};
 					
 					let logError = (errorInfo, errorHandler) => {
@@ -2135,10 +2126,7 @@ OVERRIDE(NODE_CONFIG, (origin) => {
 	 * Node.js 환경에서의 기본 설정
 	 */
 	global.NODE_CONFIG = COMBINE([{
-
-		// 데이터가 갱신될 때 콘솔 로그를 출력할 지 여부
-		isDBLogMode : false,
-
+		
 		// find 함수를 수행할 때 최대로 가져올 데이터의 개수
 		maxDataCount : 1000
 		

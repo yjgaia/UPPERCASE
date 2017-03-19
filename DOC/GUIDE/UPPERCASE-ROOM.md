@@ -21,21 +21,57 @@ UPPERCASE-ROOM은 [UPPERCASE-CORE](UPPERCASE-CORE.md)에서 지원하는 통신 
 
 Node.js 환경에서만 사용할 수 있습니다.
 
-사용 가능한 파라미터 목록은 다음과 같습니다.
-* `socketServerPort`
-* `webSocketServerPort`
-* `webServer`
+```javascript
+let webServer = WEB_SERVER(9127);
+
+LAUNCH_ROOM_SERVER({
+	socketServerPort : 9126,
+	webServer : webServer
+});
+```
+
+`LAUNCH_ROOM_SERVER`에 사용 가능한 파라미터 목록은 다음과 같습니다.
+* `socketServerPort` TCP 소켓 기반으로 룸 서버를 생성하기 위한 포트 번호
+* `webServer` 웹 소켓 기반으로 룸 서버를 생성하기 위한 웹 서버
 
 ## `CONNECT_TO_ROOM_SERVER`
 룸 서버에 접속합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
+```javascript
+CONNECT_TO_ROOM_SERVER({
+	host : '127.0.0.1',
+	port : 9127
+}, () => {
+	console.log('룸 서버에 접속되었습니다.');
+});
+```
+
+여러 룸 서버에 접속하는 경우, `roomServerName`을 지정합니다.
+```javascript
+CONNECT_TO_ROOM_SERVER({
+    roomServerName : 'ROOM_SERVER_1',
+	host : '111.111.111.111',
+	port : 9127
+}, () => {
+	console.log('첫번째 룸 서버에 접속되었습니다.');
+});
+
+CONNECT_TO_ROOM_SERVER({
+    roomServerName : 'ROOM_SERVER_2',
+	host : '222.222.222.222',
+	port : 9128
+}, () => {
+	console.log('두번째 룸 서버에 접속되었습니다.');
+});
+```
+
 `CONNECT_TO_ROOM_SERVER`에 사용 가능한 파라미터 목록은 다음과 같습니다.
 * `roomServerName` 접속할 룸 서버의 이름. 여러 룸 서버 접속이 필요한 경우 임의로 지정합니다.
 * `isSecure` 웹 브라우저 환경에서만 사용되는 파라미터로, 룸 서버에 WSS 프로토콜을 사용하여 접속할지 여부
 * `host` 접속할 룸 서버의 호스트
-* `port` 접속할 룸 서버의 포트
+* `port` 접속할 룸 서버의 포트. Node.js 환경에서는 `socketServerPort`로 설정한 소켓 서버의 포트 번호, 웹 브라우저 환경에서는 웹 서버의 포트 번호에 해당합니다.
 
 ## `Box.ROOM`
 `ROOM`은 Node.js와 웹 브라우저 환경에서의 사용법이 각각 다릅니다.
