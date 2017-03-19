@@ -1,5 +1,3 @@
-백업 서버 세팅하기 작성중
-
 # UPPERCASE-DB
 UPPERCASE-DB는 Node.js 환경에서 MongoDB 기반 데이터베이스를 다루기 위해 필요한 기능들을 담고 있는 모듈입니다. 구동을 위해 [UPPERCASE-COMMON-NODE](UPPERCASE-COMMON-NODE.md)가 필요합니다.
 * [API 문서](../../API/UPPERCASE-DB/NODE/README.md)
@@ -488,7 +486,13 @@ logDB.find({
 ```
 
 ## 백업 서버 세팅하기
-`CONNECT_TO_DB_SERVER`로 데이터베이스 서버에 연결할 때 `backup` 관련 파라미터를 지정하면, 백업 서버에도 함께 연결됩니다. 이 경우 데이터의 생성, 수정, 삭제 등 갱신을 하게 되면 백업 서버에도 동일하게 반영됩니다. 단, 변경 내역은 저장되지 않으며, `LOG_DB`로 작성하신 로그도 저장되지 않습니다. 이점 유의하시기 바랍니다.
+`CONNECT_TO_DB_SERVER`로 데이터베이스 서버에 연결할 때 `backup` 관련 파라미터를 지정하면, 백업 서버에도 동시에 연결됩니다. 이후 데이터의 생성, 수정, 삭제와 같은 갱신 작업을 하게되면 백업 서버에도 동일하게 반영됩니다. 단, 데이터의 변경 내역이 `__HISTORY` 데이터베이스에 저장되지는 않으며, `LOG_DB`를 이용해 작성한 로그 데이터도 저장되지 않습니다.
+
+* `backupHost` 백업 서버의 호스트
+* `backupPort` 백업 서버의 포트
+* `backupName` 백업 데이터베이스 이름
+* `backupUsername` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 아이디
+* `backupPassword` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 비밀번호
 
 ```javascript
 CONNECT_TO_DB_SERVER({
