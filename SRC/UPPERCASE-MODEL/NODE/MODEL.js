@@ -150,16 +150,23 @@ FOR_BOX((box) => {
 								
 								SHOW_WARNING(box.boxName + '.' + name + 'Model', '초기화 되지 않은 데이터가 ' + notInitedDataSet.length + '개 있습니다. 모두 초기화합니다.');
 								
-								EACH(notInitedDataSet, (notInitedData) => {
+								NEXT(notInitedDataSet, [
+								(notInitedData, next) => {
 									
 									EACH(initData, (value, name) => {
 										if (notInitedData[name] === undefined) {
 											notInitedData[name] = value;
 										}
 									});
-		
-									db.update(notInitedData);
-								});
+									
+									db.update(notInitedData, next);
+								},
+								
+								() => {
+									return () => {
+										SHOW_WARNING(box.boxName + '.' + name + 'Model', notInitedDataSet.length + '개 데이터를 모두 초기화하였습니다.');
+									};
+								}]);
 							}
 						});
 					}

@@ -397,7 +397,13 @@ global.BOOT = (params) => {
 				host : NODE_CONFIG.dbHost,
 				port : NODE_CONFIG.dbPort,
 				username : NODE_CONFIG.dbUsername,
-				password : NODE_CONFIG.dbPassword
+				password : NODE_CONFIG.dbPassword,
+				
+				backupHost : NODE_CONFIG.backupHost,
+				backupPort : NODE_CONFIG.backupPort,
+				backupName : NODE_CONFIG.backupName,
+				backupUsername : NODE_CONFIG.backupUsername,
+				backupPassword : NODE_CONFIG.backupPassword
 			});
 		}
 	};
