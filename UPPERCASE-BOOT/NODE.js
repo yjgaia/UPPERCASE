@@ -596,8 +596,8 @@ global.BOOT = (params) => {
 				port : CONFIG.webServerPort,
 
 				securedPort : CONFIG.securedWebServerPort,
-				securedKeyFilePath : rootPath + '/' + NODE_CONFIG.securedKeyFilePath,
-				securedCertFilePath : rootPath + '/' + NODE_CONFIG.securedCertFilePath,
+				securedKeyFilePath : NODE_CONFIG.securedKeyFilePath,
+				securedCertFilePath : NODE_CONFIG.securedCertFilePath,
 				
 				uploadURI : '__UPLOAD',
 				uploadPath : rootPath + '/__RF/__TEMP',
