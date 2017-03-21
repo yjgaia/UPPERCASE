@@ -6649,6 +6649,7 @@ global.REQUEST = METHOD((m) => {
 			if (method === 'GET') {
 
 				req = (isSecure !== true ? HTTP : HTTPS).get({
+					rejectUnauthorized : false,
 					hostname : host,
 					port : port,
 					path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
@@ -6686,6 +6687,7 @@ global.REQUEST = METHOD((m) => {
 			else {
 
 				req = (isSecure !== true ? HTTP : HTTPS).request({
+					rejectUnauthorized : false,
 					hostname : host,
 					port : port,
 					path : '/' + (uri === undefined ? '' : uri) + (method === 'DELETE' ? '?' + paramStr : ''),

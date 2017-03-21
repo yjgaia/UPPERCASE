@@ -80,12 +80,12 @@ RUN(() => {
 	require('./NODE/IMAGEMAGICK/IMAGEMAGICK_RESIZE.js');*/
 	
 	// HTTP 요청 기능
-	/*require('./NODE/REQUEST/REQUEST.js');
+	//require('./NODE/REQUEST/REQUEST.js');
 	require('./NODE/REQUEST/GET.js');
-	require('./NODE/REQUEST/POST.js');
-	require('./NODE/REQUEST/PUT.js');
-	require('./NODE/REQUEST/DELETE.js');
-	require('./NODE/REQUEST/DOWNLOAD.js');*/
+	//require('./NODE/REQUEST/POST.js');
+	//require('./NODE/REQUEST/PUT.js');
+	//require('./NODE/REQUEST/DELETE.js');
+	//require('./NODE/REQUEST/DOWNLOAD.js');
 	
 	// 손쉬운 서버 생성
 	//require('./NODE/SERVER/WEB_SERVER.js');
@@ -98,7 +98,7 @@ RUN(() => {
 	// 손쉬운 클러스터링 (이 테스트를 수행하려면 서버 관련 기능을 모두 제거해야 합니다. 그렇지 않을 경우 중복 포트 사용 오류가 발생합니다.)
 	//require('./NODE/CLUSTERING/CPU_CLUSTERING.js');
 	//require('./NODE/CLUSTERING/SERVER_CLUSTERING.js');
-	require('./NODE/CLUSTERING/SHARED_STORE.js');
+	//require('./NODE/CLUSTERING/SHARED_STORE.js');
 	
 	// 시스템 관련 기능
 	/*require('./NODE/SYSTEM/CPU_USAGES.js');

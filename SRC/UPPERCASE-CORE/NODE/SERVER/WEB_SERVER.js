@@ -843,8 +843,20 @@ global.WEB_SERVER = CLASS((cls) => {
 
 			// init sever.
 			if (port !== undefined) {
+				
 				nativeServer = HTTP.createServer((nativeReq, nativeRes) => {
-					serve(nativeReq, nativeRes, false);
+					
+					if (securedPort === undefined) {
+						serve(nativeReq, nativeRes, false);
+					}
+					
+					else {
+						nativeRes.writeHead(302, {
+							'Location' : 'https://' + nativeReq.headers.host + nativeReq.url
+						});
+						nativeRes.end();
+					}
+					
 				}).listen(port);
 			}
 

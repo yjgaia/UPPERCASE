@@ -1,4 +1,5 @@
 ## UPPERCASE 2.0에서 해야 할 것들
+- HTTP, HTTPS 설정 둘다 되어있으면 자동으로 HTTPS로 변경해주기
 - UPPERCASE 1.0의 SHOW_ERROR 확인해서 메시지가 필요한 부분은 옮겨담기
 - 'transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition' 테스트
 - HTTP 브라우저 기능 uri 일때 테스트
