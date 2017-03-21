@@ -8,7 +8,7 @@ global.BOOT = (params) => {
 	//OPTIONAL: params.BROWSER_CONFIG
 	
 	const UPPERCASE_PATH = __dirname + '/..';
-	const BOX_SITE_URL = 'http://box.uppercase.io';
+	const BOX_SITE_URL = 'https://box.uppercase.io';
 	
 	let Path = require('path');
 
@@ -66,14 +66,11 @@ global.BOOT = (params) => {
 			// node.js module
 			name !== 'node_modules' &&
 
-			// not_load
-			name !== 'not_load' &&
+			// not load
+			name !== '__NOT_LOAD' &&
 
 			// deprecated
-			name !== 'deprecated' &&
-
-			// _ folder
-			name[0] !== '_'
+			name !== '__OLD'
 		);
 	};
 	
