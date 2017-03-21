@@ -8098,7 +8098,7 @@ global.WEB_SERVER = CLASS((cls) => {
 					
 					else {
 						nativeRes.writeHead(302, {
-							'Location' : 'https://' + nativeReq.headers.host + nativeReq.url
+							'Location' : 'https://' + nativeReq.headers.host + (securedPort === 443 ? '' : ':' + securedPort) + nativeReq.url
 						});
 						nativeRes.end();
 					}
