@@ -6409,6 +6409,7 @@ global.DOWNLOAD = METHOD(() => {
 			}
 
 			req = (isSecure !== true ? HTTP : HTTPS).get({
+				rejectUnauthorized : false,
 				hostname : host,
 				port : port,
 				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
@@ -8088,8 +8089,20 @@ global.WEB_SERVER = CLASS((cls) => {
 
 			// init sever.
 			if (port !== undefined) {
+				
 				nativeServer = HTTP.createServer((nativeReq, nativeRes) => {
-					serve(nativeReq, nativeRes, false);
+					
+					if (securedPort === undefined) {
+						serve(nativeReq, nativeRes, false);
+					}
+					
+					else {
+						nativeRes.writeHead(302, {
+							'Location' : 'https://' + nativeReq.headers.host + nativeReq.url
+						});
+						nativeRes.end();
+					}
+					
 				}).listen(port);
 			}
 

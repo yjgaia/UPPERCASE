@@ -84,6 +84,7 @@ global.DOWNLOAD = METHOD(() => {
 			}
 
 			req = (isSecure !== true ? HTTP : HTTPS).get({
+				rejectUnauthorized : false,
 				hostname : host,
 				port : port,
 				path : '/' + (uri === undefined ? '' : uri) + '?' + paramStr,
