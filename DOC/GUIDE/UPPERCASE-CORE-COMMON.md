@@ -20,7 +20,7 @@ UPPERCASE-CORE-COMMON은 모든 JavaScript 환경에서 사용할 수 있는 모
 * [기타 기능](#기타-기능)
 
 ## 사용방법
-`UPPERCASE-CORE` 폴더를 복사하여 사용하거나, `npm`으로 설치하여 사용합니다. UPPERCASE-CORE-NODE와 UPPERCASE-CORE-BROWSER가 UPPERCASE-CORE-COMMON을 포함하기 때문에, 각 환경에 맞는 모듈을 사용합니다.
+UPPERCASE 프로젝트 내 `UPPERCASE-CORE` 폴더를 복사하여 사용하거나, `npm`으로 설치하여 사용합니다. UPPERCASE-CORE-NODE와 UPPERCASE-CORE-BROWSER가 UPPERCASE-CORE-COMMON을 포함하기 때문에, 각 환경에 맞는 모듈을 사용합니다.
 
 ### `UPPERCASE-CORE` 폴더를 복사하는 경우
 Node.js 환경

@@ -20,7 +20,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [`ADD_FONT`](#add_font)
 
 ## 사용방법
-`UPPERCASE-CORE` 폴더를 복사하여 사용합니다.
+UPPERCASE 프로젝트 내 `UPPERCASE-CORE` 폴더를 복사하여 사용합니다.
 
 ```html
 <script src="/UPPERCASE-CORE/BROWSER.js"></script>
