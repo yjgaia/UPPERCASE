@@ -1,4 +1,4 @@
-# METHOD `global.ANIMATE(params, animationEndHandler)`
+# METHOD `ANIMATE(params, animationEndHandler)`
 노드에 애니메이션을 지정합니다.
 
 ## Parameters

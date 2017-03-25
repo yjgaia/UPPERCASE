@@ -1,4 +1,4 @@
-# METHOD `global.COPY_FILE(params, callbackOrHandlers)`
+# METHOD `COPY_FILE(params, callbackOrHandlers)`
 파일을 복사합니다.
 
 ## Parameters

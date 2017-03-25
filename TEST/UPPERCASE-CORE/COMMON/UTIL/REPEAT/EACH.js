@@ -32,15 +32,4 @@ TEST('EACH', (check) => {
 	});
 
 	check(sum === 12);
-
-	let func = () => {
-		EACH(arguments, (value, i) => {
-			console.log('arguments each - ' + i + ': ' + value);
-			sum += value;
-		});
-	};
-
-	func(3, 2, 1);
-
-	check(sum === 18);
 });

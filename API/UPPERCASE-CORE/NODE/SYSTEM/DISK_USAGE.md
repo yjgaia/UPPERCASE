@@ -1,4 +1,4 @@
-# METHOD `global.DISK_USAGE(drive, callbackOrHandlers)`
+# METHOD `DISK_USAGE(drive, callbackOrHandlers)`
 디스크 사용률을 반환합니다.
 
 ## Parameters

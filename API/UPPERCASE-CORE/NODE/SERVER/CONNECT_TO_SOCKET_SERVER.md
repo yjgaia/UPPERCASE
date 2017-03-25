@@ -1,4 +1,4 @@
-# METHOD `global.CONNECT_TO_SOCKET_SERVER(params, connectionListenerOrListeners)`
+# METHOD `CONNECT_TO_SOCKET_SERVER(params, connectionListenerOrListeners)`
 SOCKET_SERVER로 생성한 TCP 소켓 서버에 연결합니다.
 
 ## Parameters

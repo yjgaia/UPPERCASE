@@ -1,4 +1,4 @@
-# CLASS `global.SELECT(inner, self, params)`
+# CLASS `SELECT(inner, self, params)`
 HTML select 태그와 대응되는 클래스
 
 ## Mom CLASS

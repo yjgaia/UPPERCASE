@@ -1,4 +1,4 @@
-# CLASS `global.DELAY(inner, self, seconds, func)`
+# CLASS `DELAY(inner, self, seconds, func)`
 주어진 초가 흐른 뒤에 함수를 실행하는 DELAY 클래스
 
 ## Parameters

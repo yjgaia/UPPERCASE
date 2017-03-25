@@ -1,4 +1,4 @@
-# METHOD `global.CHECK_IS_IN(params)`
+# METHOD `CHECK_IS_IN(params)`
 특정 값이 데이터나 배열에 존재하는지 확인합니다.
 
 ## Parameters

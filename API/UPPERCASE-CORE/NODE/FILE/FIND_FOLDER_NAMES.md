@@ -1,4 +1,4 @@
-# METHOD `global.FIND_FOLDER_NAMES(pathOrParams, callbackOrHandlers)`
+# METHOD `FIND_FOLDER_NAMES(pathOrParams, callbackOrHandlers)`
 지정된 경로에 위치한 폴더들의 이름 목록을 불러옵니다.
 
 ## Parameters

@@ -1,4 +1,4 @@
-# METHOD `global.REMOVE_FILE(pathOrParams, callbackOrHandlers)`
+# METHOD `REMOVE_FILE(pathOrParams, callbackOrHandlers)`
 파일을 삭제합니다.
 
 ## Parameters

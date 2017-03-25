@@ -1,4 +1,4 @@
-# CLASS `global.A(inner, self, params)`
+# CLASS `A(inner, self, params)`
 A class
 
 ## Mom CLASS

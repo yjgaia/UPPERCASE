@@ -1,4 +1,4 @@
-# `global.METHOD(define)`
+# `METHOD(define)`
 메소드를 생성합니다.
 
 ## Parameters

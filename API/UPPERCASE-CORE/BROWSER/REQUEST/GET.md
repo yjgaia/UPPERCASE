@@ -1,4 +1,4 @@
-# METHOD `global.GET(urlOrParams, responseListenerOrListeners)`
+# METHOD `GET(urlOrParams, responseListenerOrListeners)`
 HTTP GET 요청을 보냅니다.
 
 ## Parameters

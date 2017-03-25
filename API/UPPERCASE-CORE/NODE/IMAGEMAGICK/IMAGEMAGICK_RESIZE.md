@@ -1,4 +1,4 @@
-# METHOD `global.IMAGEMAGICK_RESIZE(params, callbackOrHandlers)`
+# METHOD `IMAGEMAGICK_RESIZE(params, callbackOrHandlers)`
 ImageMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
 
 ## Parameters

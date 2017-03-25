@@ -1,1 +1,1 @@
-# `global.CONFIG`
+# `CONFIG`

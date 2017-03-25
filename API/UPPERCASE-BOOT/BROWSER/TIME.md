@@ -1,4 +1,4 @@
-# METHOD `global.TIME(date)`
+# METHOD `TIME(date)`
 Get time.
 
 ## Parameters

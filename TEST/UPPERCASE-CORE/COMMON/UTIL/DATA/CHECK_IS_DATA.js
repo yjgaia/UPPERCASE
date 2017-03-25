@@ -13,5 +13,4 @@ TEST('CHECK_IS_DATA', (check) => {
 	check(CHECK_IS_DATA(value) === false);
 	check(CHECK_IS_DATA(data) === true);
 	check(CHECK_IS_DATA(array) === false);
-	check(CHECK_IS_DATA(arguments) === false);
 });

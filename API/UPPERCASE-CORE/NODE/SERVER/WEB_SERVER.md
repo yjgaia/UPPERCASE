@@ -1,4 +1,4 @@
-# CLASS `global.WEB_SERVER(inner, self, portOrParams, requestListenerOrHandlers)`
+# CLASS `WEB_SERVER(inner, self, portOrParams, requestListenerOrHandlers)`
 웹 서버를 생성하는 클래스
 
 ## Parameters

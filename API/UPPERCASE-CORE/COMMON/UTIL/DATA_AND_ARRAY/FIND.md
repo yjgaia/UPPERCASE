@@ -1,4 +1,4 @@
-# METHOD `global.FIND(dataOrArrayOrParams, filter)`
+# METHOD `FIND(dataOrArrayOrParams, filter)`
 데이터나 배열의 특정 값을 찾아, 데이터인 경우 그 값에 해당하는 이름을, 배열인 경우 그 값에 해당하는 키(index)를 반환합니다.
 
 ## Parameters

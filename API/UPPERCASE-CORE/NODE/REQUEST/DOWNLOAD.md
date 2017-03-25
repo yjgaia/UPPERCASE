@@ -1,4 +1,4 @@
-# METHOD `global.DOWNLOAD(params, callbackOrHandlers)`
+# METHOD `DOWNLOAD(params, callbackOrHandlers)`
 HTTP 리소스를 다운로드합니다.
 
 ## Parameters

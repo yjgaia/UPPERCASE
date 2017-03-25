@@ -1,4 +1,4 @@
-# METHOD `global.RANDOM(limitOrParams)`
+# METHOD `RANDOM(limitOrParams)`
 임의의 정수를 생성합니다.
 
 ## Parameters

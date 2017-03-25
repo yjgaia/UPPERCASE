@@ -1,6 +1,6 @@
 TEST('STORE', (check) => {
 
-	let store = STORE('TestStore');
+	let store = TestBox.STORE('TestStore');
 
 	check(store.get('msg') === undefined);
 

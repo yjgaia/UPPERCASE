@@ -1,4 +1,4 @@
-# CLASS `global.EVENT_ONCE(inner, self, nameOrParams, eventHandler)`
+# CLASS `EVENT_ONCE(inner, self, nameOrParams, eventHandler)`
 이벤트가 한번 발생하면 자동으로 제거되는 EVENT_ONCE 클래스
 
 ## Parameters

@@ -1,4 +1,4 @@
-# METHOD `global.COPY(dataOrArray)`
+# METHOD `COPY(dataOrArray)`
 데이터나 배열을 복제합니다.
 
 ## Parameters

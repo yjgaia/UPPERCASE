@@ -1,4 +1,4 @@
-# CLASS `global.IFRAME(inner, self, params)`
+# CLASS `IFRAME(inner, self, params)`
 HTML iframe 태그와 대응되는 클래스
 
 ## Mom CLASS

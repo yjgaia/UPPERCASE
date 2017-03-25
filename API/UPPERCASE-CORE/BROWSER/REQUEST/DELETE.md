@@ -1,4 +1,4 @@
-# METHOD `global.DELETE(urlOrParams, responseListenerOrListeners)`
+# METHOD `DELETE(urlOrParams, responseListenerOrListeners)`
 HTTP DELETE 요청을 보냅니다.
 
 ## Parameters

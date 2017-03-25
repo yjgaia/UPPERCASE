@@ -1,4 +1,4 @@
-# CLASS `global.CALENDAR(inner, self, date)`
+# CLASS `CALENDAR(inner, self, date)`
 날짜를 처리할 때 Date형을 좀 더 쓰기 편하도록 개선한 CALENDAR 클래스
 
 ## Parameters

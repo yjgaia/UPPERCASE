@@ -469,32 +469,6 @@ global.OBJECT = METHOD((m) => {
 });
 
 /*
- * target이 JavaScript arguments인지 확인합니다.
- */
-global.CHECK_IS_ARGUMENTS = METHOD({
-
-	run : (target) => {
-		//OPTIONAL: target
-
-		if (
-		target !== undefined &&
-		target !== TO_DELETE &&
-		typeof target === 'object' &&
-		(
-			Object.prototype.toString.call(target) === '[object Arguments]' ||
-			(
-				target.callee !== undefined &&
-				typeof target.callee === 'function'
-			)
-		)) {
-			return true;
-		}
-
-		return false;
-	}
-});
-
-/*
  * 주어진 비동기 함수들을 순서대로 실행합니다.
  */
 global.NEXT = METHOD({
@@ -1076,7 +1050,7 @@ global.VALID = CLASS((cls) => {
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^[_a-zA-Z0-9\-]+$/) !== TO_DELETE;
 	};
 
-	// mongodb id check
+	// check is mongo id.
 	let mongoId = cls.mongoId = (value) => {
 		//REQUIRED: value
 
@@ -1578,7 +1552,6 @@ global.CHECK_IS_DATA = METHOD({
 		if (
 		target !== undefined &&
 		target !== TO_DELETE &&
-		CHECK_IS_ARGUMENTS(target) !== true &&
 		CHECK_IS_ARRAY(target) !== true &&
 		target instanceof Date !== true &&
 		target instanceof RegExp !== true &&
@@ -2634,7 +2607,7 @@ global.EACH = METHOD({
 			};
 		}
 
-		// when dataOrArrayOrString is array or arguments or string
+		// when dataOrArrayOrString is array or string
 		else {
 
 			let length = dataOrArrayOrString.length;
@@ -2772,7 +2745,7 @@ global.REVERSE_EACH = METHOD({
 			};
 		}
 
-		// when arrayOrString is array or arguments or string
+		// when arrayOrString is array or string
 		else {
 
 			let length = arrayOrString.length;

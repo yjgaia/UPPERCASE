@@ -1,4 +1,4 @@
-# CLASS `global.VALID(inner, self, validDataSet)`
+# CLASS `VALID(inner, self, validDataSet)`
 데이터를 검증하고, 어떤 부분이 잘못되었는지 오류를 확인할 수 있는 VALID 클래스
 
 ## Parameters

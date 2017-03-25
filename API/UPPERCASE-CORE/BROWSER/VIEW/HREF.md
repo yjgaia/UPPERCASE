@@ -1,4 +1,4 @@
-# METHOD `global.HREF(uri)`
+# METHOD `HREF(uri)`
 URI로부터 주소를 생성하여 반환합니다.
 
 ## Parameters

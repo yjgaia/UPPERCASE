@@ -1,4 +1,4 @@
-# METHOD `global.MOVE_FILE(params, callbackOrHandlers)`
+# METHOD `MOVE_FILE(params, callbackOrHandlers)`
 파일의 위치를 이동시킵니다.
 
 ## Parameters

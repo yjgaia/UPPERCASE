@@ -1,4 +1,4 @@
-# METHOD `global.OVERRIDE(origin, func)`
+# METHOD `OVERRIDE(origin, func)`
 오버라이딩을 수행합니다.
 
 ## Parameters

@@ -1,4 +1,4 @@
-# CLASS `global.OPTION(inner, self, params)`
+# CLASS `OPTION(inner, self, params)`
 HTML option 태그와 대응되는 클래스
 
 ## Mom CLASS

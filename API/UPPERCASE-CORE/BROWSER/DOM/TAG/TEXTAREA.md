@@ -1,4 +1,4 @@
-# CLASS `global.TEXTAREA(inner, self, params)`
+# CLASS `TEXTAREA(inner, self, params)`
 Textarea class
 
 ## Mom CLASS

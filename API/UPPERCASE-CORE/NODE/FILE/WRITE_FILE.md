@@ -1,4 +1,4 @@
-# METHOD `global.WRITE_FILE(params, callbackOrHandlers)`
+# METHOD `WRITE_FILE(params, callbackOrHandlers)`
 파일을 작성합니다.
 
 파일이 없으면 파일을 생성하고, 파일이 이미 있으면 내용을 덮어씁니다.

@@ -1,4 +1,4 @@
-# METHOD `global.CONNECT_TO_DB_SERVER(params, callback)`
+# METHOD `CONNECT_TO_DB_SERVER(params, callback)`
 MongoDB 서버에 연결합니다.
 
 ## Parameters

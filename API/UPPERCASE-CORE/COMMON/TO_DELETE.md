@@ -1,4 +1,4 @@
-# `global.TO_DELETE`
+# `TO_DELETE`
 DB의 update 기능을 사용할 때, 데이터의 특정 값에 TO_DELETE를 지정하게 되면 해당 값이 삭제됩니다.
 자세한 것은 DB의 update 예제를 살펴보시기 바랍니다.
 

@@ -1,4 +1,4 @@
-# METHOD `global.REQUEST(params, responseListenerOrListeners)`
+# METHOD `REQUEST(params, responseListenerOrListeners)`
 HTTP 요청을 보냅니다.
 
 ## Parameters

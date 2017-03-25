@@ -1,4 +1,4 @@
-# METHOD `global.EXTEND(params)`
+# METHOD `EXTEND(params)`
 데이터나 배열을 덧붙혀 확장합니다.
 
 ## Parameters

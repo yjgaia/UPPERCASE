@@ -1,4 +1,4 @@
-# CLASS `global.EVENT(inner, self, nameOrParams, eventHandler)`
+# CLASS `EVENT(inner, self, nameOrParams, eventHandler)`
 노드의 이벤트 처리를 담당하는 EVENT 클래스
 
 ## Parameters

@@ -1,4 +1,4 @@
-# METHOD `global.OBJECT(define)`
+# METHOD `OBJECT(define)`
 실글톤 객체를 생성합니다.
 
 ## Parameters

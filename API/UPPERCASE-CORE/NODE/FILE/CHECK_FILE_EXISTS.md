@@ -1,4 +1,4 @@
-# METHOD `global.CHECK_FILE_EXISTS(pathOrParams, callback)`
+# METHOD `CHECK_FILE_EXISTS(pathOrParams, callback)`
 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
 
 ## Parameters

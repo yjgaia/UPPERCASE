@@ -436,14 +436,6 @@ CHECK_IS_DATA({
 CHECK_IS_ARRAY([1, 2, 3]);
 ```
 
-### `CHECK_IS_ARGUMENTS(target)`
-`target`이 JavaScript `arguments`인지 확인합니다.
-```javascript
-() => {
-    CHECK_IS_ARGUMENTS(arguments);
-}
-```
-
 ### `CHECK_IS_EMPTY_DATA(data)`
 데이터가 아무런 값이 없는 빈 데이터(`{}`)인지 확인합니다.
 ```javascript

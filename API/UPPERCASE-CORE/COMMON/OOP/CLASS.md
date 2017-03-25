@@ -1,4 +1,4 @@
-# METHOD `global.CLASS(define)`
+# METHOD `CLASS(define)`
 클래스를 생성합니다.
 
 ## Parameters

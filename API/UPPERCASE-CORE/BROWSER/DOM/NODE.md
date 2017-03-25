@@ -1,4 +1,4 @@
-# CLASS `global.NODE(inner, self, params)`
+# CLASS `NODE(inner, self, params)`
 DOM 트리 구조를 정의하기 위한 NODE 클래스
 
 ## Parameters

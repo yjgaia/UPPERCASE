@@ -1,4 +1,4 @@
-# METHOD `global.SERVER_TIME(date)`
+# METHOD `SERVER_TIME(date)`
 Get server time.
 
 ## Parameters

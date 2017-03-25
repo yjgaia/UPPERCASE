@@ -1,4 +1,4 @@
-# METHOD `global.CHECK_IS_FOLDER(pathOrParams, callbackOrHandlers)`
+# METHOD `CHECK_IS_FOLDER(pathOrParams, callbackOrHandlers)`
 지정된 경로가 (파일이 아닌) 폴더인지 확인합니다.
 
 ## Parameters

@@ -9,7 +9,6 @@ global.CHECK_IS_DATA = METHOD({
 		if (
 		target !== undefined &&
 		target !== TO_DELETE &&
-		CHECK_IS_ARGUMENTS(target) !== true &&
 		CHECK_IS_ARRAY(target) !== true &&
 		target instanceof Date !== true &&
 		target instanceof RegExp !== true &&

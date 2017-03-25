@@ -7,7 +7,7 @@ Welcome to UPPERCASE-ROOM! (http://uppercase.io)
 FOR_BOX((box) => {
 	
 	/*
-	 * 주어진 이름을 가진 모든 룸에 데이터를 전송합니다.
+	 * 주어진 이름을 가진 룸에 접속한 모든 클라이언트에게 데이터를 전송합니다.
 	 */
 	box.BROADCAST = METHOD({
 

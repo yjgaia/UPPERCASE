@@ -1,4 +1,4 @@
-# CLASS `global.DOM(inner, self, params)`
+# CLASS `DOM(inner, self, params)`
 DOM 객체를 생성하고 다루는 클래스
 
 ## Mom CLASS

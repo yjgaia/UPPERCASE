@@ -13,5 +13,4 @@ TEST('CHECK_IS_ARRAY', (check) => {
 	check(CHECK_IS_ARRAY(value) === false);
 	check(CHECK_IS_ARRAY(data) === false);
 	check(CHECK_IS_ARRAY(array) === true);
-	check(CHECK_IS_ARRAY(arguments) === false);
 });

@@ -1,4 +1,4 @@
-# CLASS `global.CANVAS(inner, self, params)`
+# CLASS `CANVAS(inner, self, params)`
 HTML canvas 태그와 대응되는 클래스
 
 ## Mom CLASS

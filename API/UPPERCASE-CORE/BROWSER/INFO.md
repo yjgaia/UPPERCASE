@@ -1,4 +1,4 @@
-# OBJECT `global.INFO(inner, self)`
+# OBJECT `INFO(inner, self)`
 웹 브라우저 정보를 담고 있는 객체
 
 ## Public Members

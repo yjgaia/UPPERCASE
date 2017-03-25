@@ -1,12 +1,15 @@
 RUN(() => {
 	
 	// COMMON 테스트
-	/*require('./COMMON/TO_DELETE.js');
+	require('./COMMON/TO_DELETE.js');
 	require('./COMMON/METHOD.js');
 	
 	// 객체지향 관련 기능
 	require('./COMMON/OOP/CLASS.js');
 	require('./COMMON/OOP/OBJECT.js');
+	
+	// BOX 관련 기능
+	require('./COMMON/BOX/BOX.js');
 	
 	// 숫자 관련 기능
 	require('./COMMON/UTIL/NUMBER/INTEGER.js');
@@ -20,7 +23,6 @@ RUN(() => {
 	// 데이터({...}) 및 배열([...]) 관련 기능
 	require('./COMMON/UTIL/DATA/CHECK_IS_DATA.js');
 	require('./COMMON/UTIL/ARRAY/CHECK_IS_ARRAY.js');
-	require('./COMMON/UTIL/CHECK_IS_ARGUMENTS.js');
 	require('./COMMON/UTIL/DATA/CHECK_IS_EMPTY_DATA.js');
 	require('./COMMON/UTIL/DATA_AND_ARRAY/CHECK_IS_IN.js');
 	require('./COMMON/UTIL/ARRAY/CHECK_ARE_SAME.js');
@@ -56,7 +58,7 @@ RUN(() => {
 	// 기타 기능
 	require('./COMMON/UTIL/OVERRIDE.js');
 	require('./COMMON/UTIL/RANDOM_STR.js');
-	require('./COMMON/UTIL/URI_MATCHER.js');*/
+	require('./COMMON/UTIL/URI_MATCHER.js');
 	
 	// NODE 테스트
 	// 파일 처리 기능
@@ -81,7 +83,7 @@ RUN(() => {
 	
 	// HTTP 요청 기능
 	//require('./NODE/REQUEST/REQUEST.js');
-	require('./NODE/REQUEST/GET.js');
+	//require('./NODE/REQUEST/GET.js');
 	//require('./NODE/REQUEST/POST.js');
 	//require('./NODE/REQUEST/PUT.js');
 	//require('./NODE/REQUEST/DELETE.js');

@@ -1,4 +1,4 @@
-# METHOD `global.REFRESH(uri)`
+# METHOD `REFRESH(uri)`
 뷰를 새로 불러옵니다.
 
 ## Parameters

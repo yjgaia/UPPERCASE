@@ -1,4 +1,4 @@
-# METHOD `global.POST(urlOrParams, responseListenerOrListeners)`
+# METHOD `POST(urlOrParams, responseListenerOrListeners)`
 HTTP POST 요청을 보냅니다.
 
 ## Parameters

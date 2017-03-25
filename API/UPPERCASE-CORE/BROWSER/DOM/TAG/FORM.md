@@ -1,4 +1,4 @@
-# CLASS `global.FORM(inner, self, params)`
+# CLASS `FORM(inner, self, params)`
 Form class
 
 ## Mom CLASS

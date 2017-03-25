@@ -1,4 +1,4 @@
-# METHOD `global.ADD_STYLE(params)`
+# METHOD `ADD_STYLE(params)`
 노드에 스타일을 지정합니다.
 
 ## Parameters

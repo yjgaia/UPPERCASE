@@ -19,15 +19,4 @@ TEST('REVERSE_EACH', (check) => {
 	});
 
 	check(sum === 6);
-
-	let func = () => {
-		REVERSE_EACH(arguments, (value, i) => {
-			console.log('arguments each - ' + i + ': ' + value);
-			sum += value;
-		});
-	};
-
-	func(3, 2, 1);
-
-	check(sum === 12);
 });

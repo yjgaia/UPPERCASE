@@ -1,4 +1,4 @@
-# CLASS `global.INTERVAL(inner, self, seconds, func)`
+# CLASS `INTERVAL(inner, self, seconds, func)`
 주어진 초 마다 함수를 반복해서 실행하는 INTERVAL 클래스
 
 ## Parameters

@@ -22,7 +22,7 @@ global.REVERSE_EACH = METHOD({
 			};
 		}
 
-		// when arrayOrString is array or arguments or string
+		// when arrayOrString is array or string
 		else {
 
 			let length = arrayOrString.length;

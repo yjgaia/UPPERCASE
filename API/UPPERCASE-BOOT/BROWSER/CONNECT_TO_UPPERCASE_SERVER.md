@@ -1,4 +1,4 @@
-# METHOD `global.CONNECT_TO_UPPERCASE_SERVER(params, connectionListenerOrListeners)`
+# METHOD `CONNECT_TO_UPPERCASE_SERVER(params, connectionListenerOrListeners)`
 UPPERCASE 서버에 접속합니다.
 
 ## Parameters

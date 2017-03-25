@@ -13,8 +13,12 @@ FOR_BOX((box) => {
 
 		init : (inner, self, params) => {
 			//REQUIRED: params
+			//OPTIONAL: params.roomServerName
 			//REQUIRED: params.name
-			//OPTIONAL: params.config
+			//OPTIONAL: params.initData
+			//OPTIONAL: params.methodConfig
+			//OPTIONAL: params.isNotUsingObjectId
+			//OPTIONAL: params.isNotUsingHistory
 			
 			let getBoxName = self.getBoxName = () => {
 				return box.boxName;
@@ -54,7 +58,7 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.initData
 					//OPTIONAL: params.methodConfig
 					//OPTIONAL: params.isNotUsingObjectId
-		
+					
 					let roomServerName = params.roomServerName;
 					let name = params.name;
 					let initData = params.initData;

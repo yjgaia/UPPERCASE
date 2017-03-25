@@ -1,4 +1,4 @@
-# METHOD `global.CREATE_DATE(params)`
+# METHOD `CREATE_DATE(params)`
 Date형 값을 생성합니다.
 
 ## Parameters

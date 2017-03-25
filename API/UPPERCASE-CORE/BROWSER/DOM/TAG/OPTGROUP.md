@@ -1,4 +1,4 @@
-# CLASS `global.OPTGROUP(inner, self, params)`
+# CLASS `OPTGROUP(inner, self, params)`
 HTML optgroup 태그와 대응되는 클래스
 
 ## Mom CLASS

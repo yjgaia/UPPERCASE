@@ -1,4 +1,4 @@
-# CLASS `global.EVENT_LOW(inner, self, nameOrParams, eventHandler)`
+# CLASS `EVENT_LOW(inner, self, nameOrParams, eventHandler)`
 내부적으로 이벤트를 처리하기 위해 사용되는 EVENT_LOW 클래스
 
 ## Parameters

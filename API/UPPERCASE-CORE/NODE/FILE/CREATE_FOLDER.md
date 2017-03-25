@@ -1,4 +1,4 @@
-# METHOD `global.CREATE_FOLDER(pathOrParams, callbackOrHandlers)`
+# METHOD `CREATE_FOLDER(pathOrParams, callbackOrHandlers)`
 폴더를 생성합니다.
 
 ## Parameters

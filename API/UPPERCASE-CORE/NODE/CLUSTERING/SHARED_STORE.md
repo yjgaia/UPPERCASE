@@ -1,4 +1,4 @@
-# CLASS `global.SHARED_STORE(inner, self, storeName)`
+# CLASS `SHARED_STORE(inner, self, storeName)`
 클러스터링 공유 저장소를 생성하는 클래스
 
 ## Parameters

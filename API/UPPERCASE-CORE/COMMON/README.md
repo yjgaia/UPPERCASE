@@ -17,7 +17,6 @@
 * [OOP/OBJECT.md](OOP/OBJECT.md) 실글톤 객체를 생성합니다.
 
 ## [UTIL](UTIL/README.md)
-* [UTIL/CHECK_IS_ARGUMENTS.md](UTIL/CHECK_IS_ARGUMENTS.md) target이 JavaScript arguments인지 확인합니다.
 * [UTIL/NEXT.md](UTIL/NEXT.md) 주어진 비동기 함수들을 순서대로 실행합니다.
 * [UTIL/OVERRIDE.md](UTIL/OVERRIDE.md) 오버라이딩을 수행합니다.
 * [UTIL/PARALLEL.md](UTIL/PARALLEL.md) 주어진 비동기 함수들을 병렬로 실행합니다.

@@ -1,4 +1,4 @@
-# CLASS `global.EMPTY_E(inner, self)`
+# CLASS `EMPTY_E(inner, self)`
 빈 이벤트 정보를 제공하는 객체를 생성하는 EMPTY_E 클래스
 
 ## Public Members

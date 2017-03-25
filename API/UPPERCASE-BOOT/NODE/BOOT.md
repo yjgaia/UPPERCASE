@@ -1,4 +1,4 @@
-# `global.BOOT(params)`
+# `BOOT(params)`
 UPPERCASE를 실행합니다.
 
 ## Parameters

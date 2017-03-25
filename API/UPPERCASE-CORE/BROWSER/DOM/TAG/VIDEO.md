@@ -1,4 +1,4 @@
-# CLASS `global.VIDEO(inner, self, params)`
+# CLASS `VIDEO(inner, self, params)`
 HTML video 태그와 대응되는 클래스
 
 ## Mom CLASS

@@ -32,7 +32,7 @@ global.EACH = METHOD({
 			};
 		}
 
-		// when dataOrArrayOrString is array or arguments or string
+		// when dataOrArrayOrString is array or string
 		else {
 
 			let length = dataOrArrayOrString.length;

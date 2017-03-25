@@ -1,4 +1,4 @@
-# CLASS `global.LAUNCH_ROOM_SERVER(inner, self, params)`
+# CLASS `LAUNCH_ROOM_SERVER(inner, self, params)`
 룸 서버를 생성하는 클래스
 
 ## Parameters

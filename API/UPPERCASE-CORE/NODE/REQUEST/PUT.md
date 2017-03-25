@@ -1,4 +1,4 @@
-# METHOD `global.PUT(urlOrParams, responseListenerOrListeners)`
+# METHOD `PUT(urlOrParams, responseListenerOrListeners)`
 HTTP PUT 요청을 보냅니다.
 
 ## Parameters

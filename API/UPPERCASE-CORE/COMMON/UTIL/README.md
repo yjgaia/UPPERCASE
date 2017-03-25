@@ -1,5 +1,4 @@
 # UTIL API
-* [CHECK_IS_ARGUMENTS.md](CHECK_IS_ARGUMENTS.md) target이 JavaScript arguments인지 확인합니다.
 * [NEXT.md](NEXT.md) 주어진 비동기 함수들을 순서대로 실행합니다.
 * [OVERRIDE.md](OVERRIDE.md) 오버라이딩을 수행합니다.
 * [PARALLEL.md](PARALLEL.md) 주어진 비동기 함수들을 병렬로 실행합니다.

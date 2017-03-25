@@ -1,4 +1,4 @@
-# METHOD `global.REMOVE_FOLDER(pathOrParams, callbackOrHandlers)`
+# METHOD `REMOVE_FOLDER(pathOrParams, callbackOrHandlers)`
 폴더를 삭제합니다.
 
 폴더 내의 모든 파일 및 폴더를 삭제하므로, 주의해서 사용해야 합니다.

@@ -1,4 +1,4 @@
-# METHOD `global.RUN(func)`
+# METHOD `RUN(func)`
 주어진 함수를 즉시 실행합니다.
 
 ## Parameters

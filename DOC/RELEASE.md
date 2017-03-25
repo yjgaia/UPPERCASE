@@ -5,6 +5,7 @@ UPPERCASE의 최신 변경 사항을 다룹니다. 변경 사항을 확인하신
 1.x에서 2.0.0으로 업데이트하면서 변경된 점은 다음과 같습니다.
 - UJS의 모든 코드는 UPPERCASE-CORE에 흡수되었습니다.
 - box.uppercase.io라는 BOX 저장소 및 UPPERCASE BOX Manager를 만들었습니다.
+- CHECK_IS_ARGUMENTS 메소드가 제거되었습니다.
 - 기존 VALID의 check는 checkAndWash로 변경되었으며, 빈 값을 임의로 삭제하지 않는 check 함수가 따로 추가되었습니다.
 - VALID.id가 VALID.mongoId로 변경되었습니다.
 - CHECK_IS_EXISTS_FILE는 CHECK_FILE_EXISTS로 이름이 변경되었습니다.

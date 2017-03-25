@@ -1,4 +1,4 @@
-# METHOD `global.REMOVE(dataOrArrayOrParams, filter)`
+# METHOD `REMOVE(dataOrArrayOrParams, filter)`
 데이터나 배열의 특정 값을 삭제합니다.
 
 ## Parameters
