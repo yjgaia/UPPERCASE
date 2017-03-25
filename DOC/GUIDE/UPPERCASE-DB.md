@@ -1,5 +1,5 @@
 # UPPERCASE-DB
-UPPERCASE-DB는 Node.js 환경에서 MongoDB 기반 데이터베이스를 다루기 위해 필요한 기능들을 담고 있는 모듈입니다. 구동을 위해 [UPPERCASE-COMMON-NODE](UPPERCASE-COMMON-NODE.md)가 필요합니다.
+UPPERCASE-DB는 Node.js 환경에서 MongoDB 기반 데이터베이스를 다루기 위해 필요한 기능들을 담고 있는 모듈입니다. 구동을 위해 [UPPERCASE-CORE-NODE](UPPERCASE-CORE-NODE.md)가 필요합니다.
 * [API 문서](../../API/UPPERCASE-DB/README.md)
 
 ## 목차
@@ -15,7 +15,7 @@ UPPERCASE 프로젝트 내 `UPPERCASE-DB` 폴더를 복사하여 사용하거나
 
 ### `UPPERCASE-DB` 폴더를 복사하는 경우
 ```javascript
-require('./UPPERCASE-COMMON/NODE.js');
+require('./UPPERCASE-CORE/NODE.js');
 require('./UPPERCASE-DB/NODE.js');
 ```
 

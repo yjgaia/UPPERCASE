@@ -27,7 +27,7 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.initData
 					//OPTIONAL: params.methodConfig
 					//OPTIONAL: params.isNotUsingObjectId
-		
+					
 					let roomServerName = params.roomServerName;
 					let name = params.name;
 					let initData = params.initData;

@@ -1,52 +1,52 @@
-# `METHOD` global.CONNECT_TO_ROOM_SERVER
+# METHOD `global.CONNECT_TO_ROOM_SERVER(params, connectionListenerOrListeners)`
 룸 서버에 접속합니다.
 
 ## Parameters
-* `REQUIRED` params 
-* `OPTIONAL` params.roomServerName 
-* `OPTIONAL` params.isSecure 
-* `OPTIONAL` params.host 
-* `REQUIRED` params.port 
-* `OPTIONAL` connectionListenerOrListeners 
-* `OPTIONAL` connectionListenerOrListeners.success 
-* `OPTIONAL` connectionListenerOrListeners.error 
+* `REQUIRED` *params*
+* `OPTIONAL` *params.roomServerName*
+* `OPTIONAL` *params.isSecure*
+* `OPTIONAL` *params.host*
+* `REQUIRED` *params.port*
+* `OPTIONAL` *connectionListenerOrListeners*
+* `OPTIONAL` *connectionListenerOrListeners.success*
+* `OPTIONAL` *connectionListenerOrListeners.error*
 
 ## Static Members
 
-### checkIsConnected
+### `checkIsConnected(roomServerName)`
 #### Parameters
-* `OPTIONAL` roomServerName 
+* `OPTIONAL` *roomServerName*
 
-### enterRoom
+### `enterRoom(params)`
 #### Parameters
-* `REQUIRED` params 
-* `OPTIONAL` params.roomServerName 
-* `REQUIRED` params.roomName 
+* `REQUIRED` *params*
+* `OPTIONAL` *params.roomServerName*
+* `REQUIRED` *params.roomName*
 
-### on
+### `on(params, method)`
 #### Parameters
-* `REQUIRED` params 
-* `OPTIONAL` params.roomServerName 
-* `REQUIRED` params.methodName 
-* `REQUIRED` method 
+* `REQUIRED` *params*
+* `OPTIONAL` *params.roomServerName*
+* `REQUIRED` *params.methodName*
+* `REQUIRED` *method*
 
-### off
+### `off(params, method)`
 #### Parameters
-* `REQUIRED` params 
-* `OPTIONAL` params.roomServerName 
-* `REQUIRED` params.methodName 
-* `OPTIONAL` method 
+* `REQUIRED` *params*
+* `OPTIONAL` *params.roomServerName*
+* `REQUIRED` *params.methodName*
+* `OPTIONAL` *method*
 
-### send
+### `send(params, callback)`
 #### Parameters
-* `REQUIRED` params 
-* `OPTIONAL` params.roomServerName 
-* `REQUIRED` params.methodName 
-* `REQUIRED` params.data 
-* `OPTIONAL` callback 
+* `REQUIRED` *params*
+* `OPTIONAL` *params.roomServerName*
+* `REQUIRED` *params.methodName*
+* `REQUIRED` *params.data*
+* `OPTIONAL` *callback*
 
-### exitRoom
+### `exitRoom(params)`
 #### Parameters
-* `REQUIRED` params 
-* `OPTIONAL` params.roomServerName 
-* `REQUIRED` params.roomName 
+* `REQUIRED` *params*
+* `OPTIONAL` *params.roomServerName*
+* `REQUIRED` *params.roomName*

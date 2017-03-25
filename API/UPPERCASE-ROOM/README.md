@@ -5,7 +5,7 @@
 * [BROWSER/ROOM.md](BROWSER/ROOM.md) 서버에 생성된 룸과 통신을 주고받는 ROOM 클래스
 
 ## [NODE](NODE/README.md)
-* [NODE/BROADCAST.md](NODE/BROADCAST.md) 주어진 이름을 가진 모든 룸에 데이터를 전송합니다.
+* [NODE/BROADCAST.md](NODE/BROADCAST.md) 주어진 이름을 가진 룸에 접속한 모든 클라이언트에게 데이터를 전송합니다.
 * [NODE/CLIENT_ROOM.md](NODE/CLIENT_ROOM.md) 룸 서버와 통신을 주고받는 CLIENT_ROOM 클래스
 * [NODE/CONNECT_TO_ROOM_SERVER.md](NODE/CONNECT_TO_ROOM_SERVER.md) 룸 서버에 접속합니다.
 * [NODE/LAUNCH_ROOM_SERVER.md](NODE/LAUNCH_ROOM_SERVER.md) 룸 서버를 생성하는 클래스

@@ -1,9 +1,6 @@
-# `METHOD` box.SHOW_WARNING
+# METHOD `box.SHOW_WARNING(tag, warningMsg, params)`
 
 ## Parameters
-* `REQUIRED` tag 
-* `REQUIRED` warningMsg 
-* `OPTIONAL` params 
-
-## Static Members
-No static members.
+* `REQUIRED` *tag*
+* `REQUIRED` *warningMsg*
+* `OPTIONAL` *params*

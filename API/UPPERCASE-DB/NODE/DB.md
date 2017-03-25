@@ -1,138 +1,138 @@
-# `CLASS` box.DB
+# CLASS `box.DB(inner, self, nameOrParams)`
 MongoDB 컬렉션을 다루는 DB 클래스
 
 ## Parameters
-* `REQUIRED` nameOrParams 
-* `OPTIONAL` nameOrParams.dbServerName 
-* `REQUIRED` nameOrParams.name 
-* `OPTIONAL` nameOrParams.isNotUsingObjectId 
-* `OPTIONAL` nameOrParams.isNotUsingHistory 
+* `REQUIRED` *nameOrParams*
+* `OPTIONAL` *nameOrParams.dbServerName*
+* `REQUIRED` *nameOrParams.name*
+* `OPTIONAL` *nameOrParams.isNotUsingObjectId*
+* `OPTIONAL` *nameOrParams.isNotUsingHistory*
 
 ## Static Members
 
-### removeEmptyValues
+### `removeEmptyValues(data)`
 #### Parameters
-* `REQUIRED` data 
+* `REQUIRED` *data*
 
 ## Public Members
 
-### create
+### `create(data, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` data
-* `OPTIONAL` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.success
-* `OPTIONAL` callbackOrHandlers.error
+* `REQUIRED` *data*
+* `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.success*
+* `OPTIONAL` *callbackOrHandlers.error*
 
-### get
+### `get(idOrParams, callbackOrHandlers)`
 #### Parameters
-* `OPTIONAL` idOrParams
-* `OPTIONAL` idOrParams.id
-* `OPTIONAL` idOrParams.filter
-* `OPTIONAL` idOrParams.sort
-* `OPTIONAL` idOrParams.isRandom
-* `REQUIRED` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.notExists
-* `OPTIONAL` callbackOrHandlers.error
-* `OPTIONAL` callbackOrHandlers.success
+* `OPTIONAL` *idOrParams*
+* `OPTIONAL` *idOrParams.id*
+* `OPTIONAL` *idOrParams.filter*
+* `OPTIONAL` *idOrParams.sort*
+* `OPTIONAL` *idOrParams.isRandom*
+* `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `OPTIONAL` *callbackOrHandlers.success*
 
-### update
+### `update(data, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` data
-* `REQUIRED` data.id
-* `OPTIONAL` data.$inc
-* `OPTIONAL` data.$push
-* `OPTIONAL` data.$addToSet
-* `OPTIONAL` data.$pull
-* `OPTIONAL` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.notExists
-* `OPTIONAL` callbackOrHandlers.error
-* `OPTIONAL` callbackOrHandlers.success
+* `REQUIRED` *data*
+* `REQUIRED` *data.id*
+* `OPTIONAL` *data.$inc*
+* `OPTIONAL` *data.$push*
+* `OPTIONAL` *data.$addToSet*
+* `OPTIONAL` *data.$pull*
+* `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `OPTIONAL` *callbackOrHandlers.success*
 
-### updateNoHistory
+### `updateNoHistory(data, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` data
-* `REQUIRED` data.id
-* `OPTIONAL` data.$inc
-* `OPTIONAL` data.$push
-* `OPTIONAL` data.$addToSet
-* `OPTIONAL` data.$pull
-* `OPTIONAL` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.success
-* `OPTIONAL` callbackOrHandlers.notExists
-* `OPTIONAL` callbackOrHandlers.error
+* `REQUIRED` *data*
+* `REQUIRED` *data.id*
+* `OPTIONAL` *data.$inc*
+* `OPTIONAL` *data.$push*
+* `OPTIONAL` *data.$addToSet*
+* `OPTIONAL` *data.$pull*
+* `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.success*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.error*
 
-### updateNoRecord
+### `updateNoRecord(data, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` data
-* `REQUIRED` data.id
-* `OPTIONAL` data.$inc
-* `OPTIONAL` data.$push
-* `OPTIONAL` data.$addToSet
-* `OPTIONAL` data.$pull
-* `OPTIONAL` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.success
-* `OPTIONAL` callbackOrHandlers.notExists
-* `OPTIONAL` callbackOrHandlers.error
+* `REQUIRED` *data*
+* `REQUIRED` *data.id*
+* `OPTIONAL` *data.$inc*
+* `OPTIONAL` *data.$push*
+* `OPTIONAL` *data.$addToSet*
+* `OPTIONAL` *data.$pull*
+* `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.success*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.error*
 
-### remove
+### `remove(id, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` id
-* `OPTIONAL` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.notExists
-* `OPTIONAL` callbackOrHandlers.error
-* `OPTIONAL` callbackOrHandlers.success
+* `REQUIRED` *id*
+* `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `OPTIONAL` *callbackOrHandlers.success*
 
-### find
+### `find(params, callbackOrHandlers)`
 #### Parameters
-* `OPTIONAL` params
-* `OPTIONAL` params.filter
-* `OPTIONAL` params.sort
-* `OPTIONAL` params.start
-* `OPTIONAL` params.count
-* `OPTIONAL` params.isFindAll
-* `REQUIRED` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.error
-* `REQUIRED` callbackOrHandlers.success
+* `OPTIONAL` *params*
+* `OPTIONAL` *params.filter*
+* `OPTIONAL` *params.sort*
+* `OPTIONAL` *params.start*
+* `OPTIONAL` *params.count*
+* `OPTIONAL` *params.isFindAll*
+* `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*
 
-### count
+### `count(params, callbackOrHandlers)`
 #### Parameters
-* `OPTIONAL` params
-* `OPTIONAL` params.filter
-* `REQUIRED` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.error
-* `REQUIRED` callbackOrHandlers.success
+* `OPTIONAL` *params*
+* `OPTIONAL` *params.filter*
+* `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*
 
-### checkIsExists
+### `checkIsExists(params, callbackOrHandlers)`
 #### Parameters
-* `OPTIONAL` params
-* `OPTIONAL` params.filter
-* `REQUIRED` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.error
-* `REQUIRED` callbackOrHandlers.success
+* `OPTIONAL` *params*
+* `OPTIONAL` *params.filter*
+* `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*
 
-### aggregate
+### `aggregate(params, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` params
-* `REQUIRED` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.error
-* `REQUIRED` callbackOrHandlers.success
+* `REQUIRED` *params*
+* `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*
 
-### createIndex
+### `createIndex(index, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` index
-* `REQUIRED` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.error
-* `REQUIRED` callbackOrHandlers.success
+* `REQUIRED` *index*
+* `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*
 
-### removeIndex
+### `removeIndex(index, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` index
-* `REQUIRED` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.error
-* `REQUIRED` callbackOrHandlers.success
+* `REQUIRED` *index*
+* `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*
 
-### findAllIndexes
+### `findAllIndexes(callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.error
-* `REQUIRED` callbackOrHandlers.success
+* `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*

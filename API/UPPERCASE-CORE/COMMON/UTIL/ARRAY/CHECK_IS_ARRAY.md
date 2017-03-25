@@ -1,8 +1,5 @@
-# `METHOD` global.CHECK_IS_ARRAY
+# METHOD `global.CHECK_IS_ARRAY(target)`
 target이 배열인지 확인합니다.
 
 ## Parameters
-* `OPTIONAL` target 
-
-## Static Members
-No static members.
+* `OPTIONAL` *target*

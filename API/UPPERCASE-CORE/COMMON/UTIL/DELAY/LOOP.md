@@ -1,15 +1,9 @@
-# `CLASS` global.LOOP
+# CLASS `global.LOOP(inner, self, fpsOrRun, intervalOrFuncs)`
 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
 
 ## Parameters
-* `OPTIONAL` fpsOrRun 
-* `OPTIONAL` intervalOrFuncs 
-* `OPTIONAL` intervalOrFuncs.start 
-* `REQUIRED` intervalOrFuncs.interval 
-* `OPTIONAL` intervalOrFuncs.end 
-
-## Static Members
-No static members.
-
-## Public Members
-No public members.
+* `OPTIONAL` *fpsOrRun*
+* `OPTIONAL` *intervalOrFuncs*
+* `OPTIONAL` *intervalOrFuncs.start*
+* `REQUIRED` *intervalOrFuncs.interval*
+* `OPTIONAL` *intervalOrFuncs.end*

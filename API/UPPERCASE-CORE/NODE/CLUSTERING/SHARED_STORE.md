@@ -1,131 +1,129 @@
-# `CLASS` global.SHARED_STORE
+# CLASS `global.SHARED_STORE(inner, self, storeName)`
 클러스터링 공유 저장소를 생성하는 클래스
 
 ## Parameters
-* `REQUIRED` storeName 
+* `REQUIRED` *storeName*
 
 ## Static Members
 
-### getStorages
-#### Parameters
-No parameters.
+### `getStorages()`
 
-### save
+### `save(params, callback)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.storeName 
-* `REQUIRED` params.id 
-* `REQUIRED` params.data 
-* `OPTIONAL` params.removeAfterSeconds 
-* `OPTIONAL` callback 
+* `REQUIRED` *params*
+* `REQUIRED` *params.storeName*
+* `REQUIRED` *params.id*
+* `REQUIRED` *params.data*
+* `OPTIONAL` *params.removeAfterSeconds*
+* `OPTIONAL` *callback*
 
-### update
+### `update(params, callback)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.storeName 
-* `REQUIRED` params.id 
-* `REQUIRED` params.data 
-* `OPTIONAL` params.data.$inc 
-* `OPTIONAL` params.data.$push 
-* `OPTIONAL` params.data.$addToSet 
-* `OPTIONAL` params.data.$pull 
-* `OPTIONAL` params.removeAfterSeconds 
-* `OPTIONAL` callback 
+* `REQUIRED` *params*
+* `REQUIRED` *params.storeName*
+* `REQUIRED` *params.id*
+* `REQUIRED` *params.data*
+* `OPTIONAL` *params.data.$inc*
+* `OPTIONAL` *params.data.$push*
+* `OPTIONAL` *params.data.$addToSet*
+* `OPTIONAL` *params.data.$pull*
+* `OPTIONAL` *params.removeAfterSeconds*
+* `OPTIONAL` *callback*
 
-### get
+### `get(params, callback)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.storeName 
-* `REQUIRED` params.id 
-* `REQUIRED` callback 
+* `REQUIRED` *params*
+* `REQUIRED` *params.storeName*
+* `REQUIRED` *params.id*
+* `REQUIRED` *callback*
 
-### remove
+### `remove(params, callback)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.storeName 
-* `REQUIRED` params.id 
-* `OPTIONAL` callback 
+* `REQUIRED` *params*
+* `REQUIRED` *params.storeName*
+* `REQUIRED` *params.id*
+* `OPTIONAL` *callback*
 
-### all
+### `all(params, callback)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.storeName 
-* `OPTIONAL` params.filter 
-* `REQUIRED` callback 
+* `REQUIRED` *params*
+* `REQUIRED` *params.storeName*
+* `OPTIONAL` *params.filter*
+* `REQUIRED` *callback*
 
-### count
+### `count(params, callback)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.storeName 
-* `OPTIONAL` params.filter 
-* `REQUIRED` callback 
+* `REQUIRED` *params*
+* `REQUIRED` *params.storeName*
+* `OPTIONAL` *params.filter*
+* `REQUIRED` *callback*
 
-### checkIsExists
+### `checkIsExists(params, callback)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.storeName 
-* `OPTIONAL` params.id 
-* `OPTIONAL` params.filter 
-* `REQUIRED` callback 
+* `REQUIRED` *params*
+* `REQUIRED` *params.storeName*
+* `OPTIONAL` *params.id*
+* `OPTIONAL` *params.filter*
+* `REQUIRED` *callback*
 
-### clear
+### `clear(storeName, callback)`
 #### Parameters
-* `REQUIRED` storeName 
-* `OPTIONAL` callback 
+* `REQUIRED` *storeName*
+* `OPTIONAL` *callback*
 
 ## Public Members
 
-### save
+### `save(params, callback)`
 #### Parameters
-* `REQUIRED` params
-* `REQUIRED` params.id
-* `REQUIRED` params.data
-* `OPTIONAL` params.removeAfterSeconds
-* `OPTIONAL` callback
+* `REQUIRED` *params*
+* `REQUIRED` *params.id*
+* `REQUIRED` *params.data*
+* `OPTIONAL` *params.removeAfterSeconds*
+* `OPTIONAL` *callback*
 
-### update
+### `update(params, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` params
-* `REQUIRED` params.id
-* `REQUIRED` params.data
-* `OPTIONAL` params.data.$inc
-* `OPTIONAL` params.data.$push
-* `OPTIONAL` params.data.$addToSet
-* `OPTIONAL` params.data.$pull
-* `OPTIONAL` params.removeAfterSeconds
-* `OPTIONAL` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.notExists
-* `OPTIONAL` callbackOrHandlers.success
+* `REQUIRED` *params*
+* `REQUIRED` *params.id*
+* `REQUIRED` *params.data*
+* `OPTIONAL` *params.data.$inc*
+* `OPTIONAL` *params.data.$push*
+* `OPTIONAL` *params.data.$addToSet*
+* `OPTIONAL` *params.data.$pull*
+* `OPTIONAL` *params.removeAfterSeconds*
+* `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.success*
 
-### get
+### `get(id, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` id
-* `REQUIRED` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.notExists
-* `OPTIONAL` callbackOrHandlers.success
+* `REQUIRED` *id*
+* `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.success*
 
-### remove
+### `remove(id, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` id
-* `OPTIONAL` callbackOrHandlers
-* `OPTIONAL` callbackOrHandlers.notExists
-* `OPTIONAL` callbackOrHandlers.success
+* `REQUIRED` *id*
+* `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.success*
 
-### all
+### `all(filter, callback)`
 #### Parameters
-* `OPTIONAL` filter
-* `REQUIRED` callback
+* `OPTIONAL` *filter*
+* `REQUIRED` *callback*
 
-### count
+### `count(filter, callback)`
 #### Parameters
-* `OPTIONAL` filter
-* `REQUIRED` callback
+* `OPTIONAL` *filter*
+* `REQUIRED` *callback*
 
-### checkIsExists
+### `checkIsExists(idOrFilter, callback)`
 #### Parameters
-* `REQUIRED` idOrFilter
-* `REQUIRED` callback
+* `REQUIRED` *idOrFilter*
+* `REQUIRED` *callback*
 
-### clear
+### `clear(callback)`
 #### Parameters
-* `OPTIONAL` callback
+* `OPTIONAL` *callback*

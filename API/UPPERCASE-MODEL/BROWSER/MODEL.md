@@ -1,56 +1,44 @@
-# `CLASS` box.MODEL
+# CLASS `box.MODEL(inner, self, params)`
 MODEL 클래스
 
-## Mom
-origin
+## Mom CLASS
+`MODEL`
 
 ## Parameters
-* `REQUIRED` params 
-* `OPTIONAL` params.roomServerName 
-* `REQUIRED` params.name 
-* `OPTIONAL` params.initData 
-* `OPTIONAL` params.methodConfig 
-* `OPTIONAL` params.isNotUsingObjectId 
+* `REQUIRED` *params*
+* `OPTIONAL` *params.roomServerName*
+* `REQUIRED` *params.name*
+* `OPTIONAL` *params.initData*
+* `OPTIONAL` *params.methodConfig*
+* `OPTIONAL` *params.isNotUsingObjectId*
 
 ## Static Members
 
-### getOnNewInfos
-#### Parameters
-No parameters.
+### `getOnNewInfos()`
 
 ## Public Members
 
-### getName
-#### Parameters
-No parameters.
+### `getName()`
 
-### getInitData
-#### Parameters
-No parameters.
+### `getInitData()`
 
-### getCreateValid
-#### Parameters
-No parameters.
+### `getCreateValid()`
 
-### getUpdateValid
-#### Parameters
-No parameters.
+### `getUpdateValid()`
 
-### getRoom
-#### Parameters
-No parameters.
+### `getRoom()`
 
-### onNew
+### `onNew(properties, handler)`
 #### Parameters
-* `OPTIONAL` properties
-* `REQUIRED` handler
+* `OPTIONAL` *properties*
+* `REQUIRED` *handler*
 
-### onNewWatching
+### `onNewWatching(properties, handler)`
 #### Parameters
-* `OPTIONAL` properties
-* `REQUIRED` handler
+* `OPTIONAL` *properties*
+* `REQUIRED` *handler*
 
-### onRemove
+### `onRemove(properties, handler)`
 #### Parameters
-* `OPTIONAL` properties
-* `REQUIRED` handler
+* `OPTIONAL` *properties*
+* `REQUIRED` *handler*

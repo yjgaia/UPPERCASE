@@ -1,38 +1,18 @@
-# `CLASS` global.EMPTY_E
+# CLASS `global.EMPTY_E(inner, self)`
 빈 이벤트 정보를 제공하는 객체를 생성하는 EMPTY_E 클래스
-
-## Parameters
-No parameters.
-
-## Static Members
-No static members.
 
 ## Public Members
 
-### stopDefault
-#### Parameters
-No parameters.
+### `stopDefault()`
 
-### stopBubbling
-#### Parameters
-No parameters.
+### `stopBubbling()`
 
-### stop
-#### Parameters
-No parameters.
+### `stop()`
 
-### getLeft
-#### Parameters
-No parameters.
+### `getLeft()`
 
-### getTop
-#### Parameters
-No parameters.
+### `getTop()`
 
-### getKey
-#### Parameters
-No parameters.
+### `getKey()`
 
-### getWheelDelta
-#### Parameters
-No parameters.
+### `getWheelDelta()`

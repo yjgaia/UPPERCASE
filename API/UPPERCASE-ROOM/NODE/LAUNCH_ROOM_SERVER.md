@@ -1,26 +1,22 @@
-# `CLASS` global.LAUNCH_ROOM_SERVER
+# CLASS `global.LAUNCH_ROOM_SERVER(inner, self, params)`
 룸 서버를 생성하는 클래스
 
 ## Parameters
-* `REQUIRED` params 
-* `OPTIONAL` params.socketServerPort 
-* `OPTIONAL` params.webSocketServerPort 
-* `OPTIONAL` params.webServer 
+* `REQUIRED` *params*
+* `OPTIONAL` *params.socketServerPort	TCP* 소켓 기반으로 룸 서버를 생성하기 위한 포트 번호
+* `OPTIONAL` *params.webServer		웹* 소켓 기반으로 룸 서버를 생성하기 위한 웹 서버
 
 ## Static Members
 
-### addInitRoomFunc
+### `addInitRoomFunc(roomName, initRoomFunc)`
 #### Parameters
-* `REQUIRED` roomName 
-* `REQUIRED` initRoomFunc 
+* `REQUIRED` *roomName*
+* `REQUIRED` *initRoomFunc*
 
-### broadcast
+### `broadcast(params, toExceptSend)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.roomName 
-* `REQUIRED` params.methodName 
-* `OPTIONAL` params.data 
-* `OPTIONAL` toExceptSend 
-
-## Public Members
-No public members.
+* `REQUIRED` *params*
+* `REQUIRED` *params.roomName*
+* `REQUIRED` *params.methodName*
+* `OPTIONAL` *params.data*
+* `OPTIONAL` *toExceptSend*

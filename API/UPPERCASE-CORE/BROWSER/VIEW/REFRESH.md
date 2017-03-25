@@ -1,11 +1,9 @@
-# `METHOD` global.REFRESH
+# METHOD `global.REFRESH(uri)`
 뷰를 새로 불러옵니다.
 
 ## Parameters
-* `OPTIONAL` uri 
+* `OPTIONAL` *uri*
 
 ## Static Members
 
-### getRefreshingURI
-#### Parameters
-No parameters.
+### `getRefreshingURI()`

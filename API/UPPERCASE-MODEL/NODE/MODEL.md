@@ -1,102 +1,89 @@
-# `CLASS` box.MODEL
+# CLASS `box.MODEL(inner, self, params)`
 MODEL 클래스
 
-## Mom
-origin
+## Mom CLASS
+`MODEL`
 
 ## Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.name 
-* `OPTIONAL` params.initData 
-* `OPTIONAL` params.methodConfig 
-* `OPTIONAL` params.isNotUsingObjectId 
-* `OPTIONAL` params.isNotUsingHistory 
-
-## Static Members
-No static members.
+* `REQUIRED` *params*
+* `REQUIRED` *params.name*
+* `OPTIONAL` *params.initData*
+* `OPTIONAL` *params.methodConfig*
+* `OPTIONAL` *params.isNotUsingObjectId*
+* `OPTIONAL` *params.isNotUsingHistory*
 
 ## Public Members
 
-### getName
-#### Parameters
-No parameters.
+### `getName()`
 
-### getInitData
-#### Parameters
-No parameters.
+### `getInitData()`
 
-### getCreateValid
-#### Parameters
-No parameters.
+### `getCreateValid()`
 
-### getUpdateValid
-#### Parameters
-No parameters.
+### `getUpdateValid()`
 
-### getDB
-#### Parameters
-No parameters.
+### `getDB()`
 
-### create
+### `create(data, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` data
-* `OPTIONAL` callbackOrHandlers
+* `REQUIRED` *data*
+* `OPTIONAL` *callbackOrHandlers*
 
-### get
+### `get(idOrParams, callbackOrHandlers)`
 #### Parameters
-* `OPTIONAL` idOrParams
-* `OPTIONAL` idOrParams.id
-* `OPTIONAL` idOrParams.filter
-* `OPTIONAL` idOrParams.sort
-* `OPTIONAL` idOrParams.isRandom
-* `OPTIONAL` idOrParams.isToCache
-* `OPTIONAL` idOrParams.clientInfo
-* `REQUIRED` callbackOrHandlers
+* `OPTIONAL` *idOrParams*
+* `OPTIONAL` *idOrParams.id*
+* `OPTIONAL` *idOrParams.filter*
+* `OPTIONAL` *idOrParams.sort*
+* `OPTIONAL` *idOrParams.isRandom*
+* `OPTIONAL` *idOrParams.isToCache*
+* `OPTIONAL` *idOrParams.clientInfo*
+* `REQUIRED` *callbackOrHandlers*
 
-### update
+### `update(data, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` data
-* `REQUIRED` data.id
-* `OPTIONAL` callbackOrHandlers
+* `REQUIRED` *data*
+* `REQUIRED` *data.id*
+* `OPTIONAL` *callbackOrHandlers*
 
-### updateNoHistory
+### `updateNoHistory(data, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` data
-* `REQUIRED` data.id
-* `OPTIONAL` callbackOrHandlers
+* `REQUIRED` *data*
+* `REQUIRED` *data.id*
+* `OPTIONAL` *callbackOrHandlers*
 
-### updateNoRecord
+### `updateNoRecord(data, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` data
-* `REQUIRED` data.id
-* `OPTIONAL` callbackOrHandlers
+* `REQUIRED` *data*
+* `REQUIRED` *data.id*
+* `OPTIONAL` *callbackOrHandlers*
 
-### remove
+### `remove(id, callbackOrHandlers)`
 #### Parameters
-* `REQUIRED` id
-* `OPTIONAL` callbackOrHandlers
+* `REQUIRED` *id*
+* `OPTIONAL` *callbackOrHandlers*
 
-### find
+### `find(params, callbackOrHandlers)`
 #### Parameters
-* `OPTIONAL` params
-* `OPTIONAL` params.filter
-* `OPTIONAL` params.sort
-* `OPTIONAL` params.start
-* `OPTIONAL` params.count
-* `OPTIONAL` params.isFindAll
-* `OPTIONAL` params.isToCache
-* `REQUIRED` callbackOrHandlers
+* `OPTIONAL` *params*
+* `OPTIONAL` *params.filter*
+* `OPTIONAL` *params.sort*
+* `OPTIONAL` *params.start*
+* `OPTIONAL` *params.count*
+* `OPTIONAL` *params.isFindAll*
+* `OPTIONAL` *params.isToCache*
+* `REQUIRED` *callbackOrHandlers*
 
-### count
+### `count(params, callbackOrHandlers)`
 #### Parameters
-* `OPTIONAL` params
-* `OPTIONAL` params.filter
-* `OPTIONAL` params.isToCache
-* `REQUIRED` callbackOrHandlers
+* `OPTIONAL` *params*
+* `OPTIONAL` *params.filter*
+* `OPTIONAL` *params.isToCache*
+* `REQUIRED` *callbackOrHandlers*
 
-### checkIsExists
+### `checkIsExists(params, callbackOrHandlers)`
 #### Parameters
-* `OPTIONAL` params
-* `OPTIONAL` params.filter
-* `OPTIONAL` params.isToCache
-* `REQUIRED` callbackOrHandlers
+* `OPTIONAL` *params*
+* `OPTIONAL` *params.filter*
+* `OPTIONAL` *params.isToCache*
+* `REQUIRED` *callbackOrHandlers*

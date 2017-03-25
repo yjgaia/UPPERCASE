@@ -1,19 +1,16 @@
-# `CLASS` box.MODEL
+# CLASS `box.MODEL(inner, self, params)`
 MODEL 클래스
 
 ## Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.name 
-* `OPTIONAL` params.config 
-
-## Static Members
-No static members.
+* `REQUIRED` *params*
+* `OPTIONAL` *params.roomServerName*
+* `REQUIRED` *params.name*
+* `OPTIONAL` *params.initData*
+* `OPTIONAL` *params.methodConfig*
+* `OPTIONAL` *params.isNotUsingObjectId*
+* `OPTIONAL` *params.isNotUsingHistory*
 
 ## Public Members
 
-### getBoxName
-REQUIRED: params
-REQUIRED: params.name
-OPTIONAL: params.config
-#### Parameters
-No parameters.
+### `getBoxName()`
+

@@ -1,33 +1,28 @@
-# `CLASS` box.ROOM
+# CLASS `box.ROOM(inner, self, nameOrParams)`
 서버에 생성된 룸과 통신을 주고받는 ROOM 클래스
 
 ## Parameters
-* `REQUIRED` nameOrParams 
-* `OPTIONAL` nameOrParams.roomServerName 
-* `REQUIRED` nameOrParams.name 
-
-## Static Members
-No static members.
+* `REQUIRED` *nameOrParams*
+* `OPTIONAL` *nameOrParams.roomServerName*
+* `REQUIRED` *nameOrParams.name*
 
 ## Public Members
 
-### on
+### `on(methodName, method)`
 #### Parameters
-* `REQUIRED` methodName
-* `REQUIRED` method
+* `REQUIRED` *methodName*
+* `REQUIRED` *method*
 
-### off
+### `off(methodName, method)`
 #### Parameters
-* `REQUIRED` methodName
-* `OPTIONAL` method
+* `REQUIRED` *methodName*
+* `OPTIONAL` *method*
 
-### send
+### `send(methodNameOrParams, callback)`
 #### Parameters
-* `REQUIRED` methodNameOrParams
-* `REQUIRED` methodNameOrParams.methodName
-* `OPTIONAL` methodNameOrParams.data
-* `OPTIONAL` callback
+* `REQUIRED` *methodNameOrParams*
+* `REQUIRED` *methodNameOrParams.methodName*
+* `OPTIONAL` *methodNameOrParams.data*
+* `OPTIONAL` *callback*
 
-### exit
-#### Parameters
-No parameters.
+### `exit()`

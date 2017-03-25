@@ -1,22 +1,10 @@
-# `CLASS` global.VIEW
+# CLASS `global.VIEW(inner, self)`
 뷰를 정의하기 위한 VIEW 클래스
-
-## Parameters
-No parameters.
-
-## Static Members
-No static members.
 
 ## Public Members
 
-### changeParams
-#### Parameters
-No parameters.
+### `changeParams(params)`
 
-### runURIChangeHandlers
-#### Parameters
-No parameters.
+### `runURIChangeHandlers(uri)`
 
-### close
-#### Parameters
-No parameters.
+### `close()`

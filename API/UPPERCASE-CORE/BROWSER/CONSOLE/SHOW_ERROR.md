@@ -1,9 +1,6 @@
-# `METHOD` box.SHOW_ERROR
+# METHOD `box.SHOW_ERROR(tag, errorMsg, params)`
 
 ## Parameters
-* `REQUIRED` tag 
-* `REQUIRED` errorMsg 
-* `OPTIONAL` params 
-
-## Static Members
-No static members.
+* `REQUIRED` *tag*
+* `REQUIRED` *errorMsg*
+* `OPTIONAL` *params*

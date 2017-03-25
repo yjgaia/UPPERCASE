@@ -1,8 +1,5 @@
-# `METHOD` global.GO_NEW_WIN
+# METHOD `global.GO_NEW_WIN(uri)`
 새 창에서 URI에 해당하는 뷰를 띄웁니다.
 
 ## Parameters
-* `REQUIRED` uri 
-
-## Static Members
-No static members.
+* `REQUIRED` *uri*

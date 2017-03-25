@@ -1,8 +1,5 @@
-# `METHOD` global.MINIFY_CSS
+# METHOD `global.MINIFY_CSS(code)`
 CSS 코드를 압축합니다.
 
 ## Parameters
-* `REQUIRED` code 
-
-## Static Members
-No static members.
+* `REQUIRED` *code*

@@ -1,11 +1,9 @@
-# `METHOD` global.TIME
+# METHOD `global.TIME(date)`
 Get time.
 
 ## Parameters
-* `REQUIRED` date 
+* `REQUIRED` *date*
 
 ## Static Members
 
-### setDiff
-#### Parameters
-No parameters.
+### `setDiff(_diff)`

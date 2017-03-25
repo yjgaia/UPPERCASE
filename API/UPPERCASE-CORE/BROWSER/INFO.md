@@ -1,26 +1,14 @@
-# `OBJECT` global.INFO
+# OBJECT `global.INFO(inner, self)`
 웹 브라우저 정보를 담고 있는 객체
-
-## Parameters
-No parameters.
-
-## Static Members
-No static members.
 
 ## Public Members
 
-### getLang
-#### Parameters
-No parameters.
+### `getLang()`
 
-### changeLang
+### `changeLang(lang)`
 #### Parameters
-* `REQUIRED` lang
+* `REQUIRED` *lang*
 
-### checkIsTouchMode
-#### Parameters
-No parameters.
+### `checkIsTouchMode()`
 
-### getBrowserInfo
-#### Parameters
-No parameters.
+### `getBrowserInfo()`

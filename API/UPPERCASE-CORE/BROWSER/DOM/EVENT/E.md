@@ -1,40 +1,23 @@
-# `CLASS` global.E
+# CLASS `global.E(inner, self, params)`
 이벤트 정보를 제공하는 객체를 생성하는 E 클래스
 
 ## Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.e 
-* `REQUIRED` params.el 
-
-## Static Members
-No static members.
+* `REQUIRED` *params*
+* `REQUIRED` *params.e*
+* `REQUIRED` *params.el*
 
 ## Public Members
 
-### stopDefault
-#### Parameters
-No parameters.
+### `stopDefault()`
 
-### stopBubbling
-#### Parameters
-No parameters.
+### `stopBubbling()`
 
-### stop
-#### Parameters
-No parameters.
+### `stop()`
 
-### getLeft
-#### Parameters
-No parameters.
+### `getLeft()`
 
-### getTop
-#### Parameters
-No parameters.
+### `getTop()`
 
-### getKey
-#### Parameters
-No parameters.
+### `getKey()`
 
-### getWheelDelta
-#### Parameters
-No parameters.
+### `getWheelDelta()`

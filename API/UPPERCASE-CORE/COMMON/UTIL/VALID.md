@@ -1,132 +1,124 @@
-# `CLASS` global.VALID
+# CLASS `global.VALID(inner, self, validDataSet)`
 데이터를 검증하고, 어떤 부분이 잘못되었는지 오류를 확인할 수 있는 VALID 클래스
 
 ## Parameters
-* `REQUIRED` validDataSet 
+* `REQUIRED` *validDataSet*
 
 ## Static Members
 
-### notEmpty
+### `notEmpty(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### regex
+### `regex(params)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.value 
-* `REQUIRED` params.pattern 
+* `REQUIRED` *params*
+* `REQUIRED` *params.value*
+* `REQUIRED` *params.pattern*
 
-### size
+### `size(params)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.value 
-* `OPTIONAL` params.min 
-* `REQUIRED` params.max 
+* `REQUIRED` *params*
+* `REQUIRED` *params.value*
+* `OPTIONAL` *params.min*
+* `REQUIRED` *params.max*
 
-### integer
+### `integer(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### real
+### `real(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### bool
+### `bool(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### date
+### `date(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### min
+### `min(params)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.value 
-* `REQUIRED` params.min 
+* `REQUIRED` *params*
+* `REQUIRED` *params.value*
+* `REQUIRED` *params.min*
 
-### max
+### `max(params)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.value 
-* `REQUIRED` params.max 
+* `REQUIRED` *params*
+* `REQUIRED` *params.value*
+* `REQUIRED` *params.max*
 
-### email
+### `email(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### png
+### `png(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### url
+### `url(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### username
+### `username(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### mongoId
-mongodb id check
+### `mongoId(value)`
+check is mongo id.
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### one
+### `one(params)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.value 
-* `REQUIRED` params.array 
+* `REQUIRED` *params*
+* `REQUIRED` *params.value*
+* `REQUIRED` *params.array*
 
-### array
+### `array(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### data
+### `data(value)`
 #### Parameters
-* `REQUIRED` value 
+* `REQUIRED` *value*
 
-### element
+### `element(params)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.array 
-* `REQUIRED` params.validData 
-* `OPTIONAL` params.isToWash 
+* `REQUIRED` *params*
+* `REQUIRED` *params.array*
+* `REQUIRED` *params.validData*
+* `OPTIONAL` *params.isToWash*
 
-### property
+### `property(params)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.data 
-* `REQUIRED` params.validData 
-* `OPTIONAL` params.isToWash 
+* `REQUIRED` *params*
+* `REQUIRED` *params.data*
+* `REQUIRED` *params.validData*
+* `OPTIONAL` *params.isToWash*
 
-### detail
+### `detail(params)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.data 
-* `REQUIRED` params.validDataSet 
-* `OPTIONAL` params.isToWash 
+* `REQUIRED` *params*
+* `REQUIRED` *params.data*
+* `REQUIRED` *params.validDataSet*
+* `OPTIONAL` *params.isToWash*
 
-### equal
+### `equal(params)`
 #### Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.value 
-* `REQUIRED` params.validValue 
+* `REQUIRED` *params*
+* `REQUIRED` *params.value*
+* `REQUIRED` *params.validValue*
 
 ## Public Members
 
-### check
-#### Parameters
-No parameters.
+### `check(data)`
 
-### checkAndWash
-#### Parameters
-No parameters.
+### `checkAndWash(data)`
 
-### checkForUpdate
-#### Parameters
-No parameters.
+### `checkForUpdate(data)`
 
-### getValidDataSet
-#### Parameters
-No parameters.
+### `getValidDataSet()`

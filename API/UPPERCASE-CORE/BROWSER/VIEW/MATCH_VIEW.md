@@ -1,14 +1,12 @@
-# `METHOD` global.MATCH_VIEW
+# METHOD `global.MATCH_VIEW(params)`
 특정 URI와 뷰를 연결합니다.
 
 ## Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.uri 
-* `OPTIONAL` params.excludeURI 
-* `REQUIRED` params.target 
+* `REQUIRED` *params*
+* `REQUIRED` *params.uri*
+* `OPTIONAL` *params.excludeURI*
+* `REQUIRED` *params.target*
 
 ## Static Members
 
-### checkAll
-#### Parameters
-No parameters.
+### `checkAll()`

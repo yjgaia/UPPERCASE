@@ -118,7 +118,7 @@ global.VALID = CLASS((cls) => {
 		return typeof value === 'string' && notEmpty(value) === true && value.match(/^[_a-zA-Z0-9\-]+$/) !== TO_DELETE;
 	};
 
-	// mongodb id check
+	// check is mongo id.
 	let mongoId = cls.mongoId = (value) => {
 		//REQUIRED: value
 

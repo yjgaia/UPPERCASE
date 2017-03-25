@@ -18,7 +18,7 @@ FOR_BOX((box) => {
 				//OPTIONAL: params.methodConfig
 				//OPTIONAL: params.isNotUsingObjectId
 				//OPTIONAL: params.isNotUsingHistory
-
+				
 				let name = params.name;
 				let initData = params.initData;
 				let methodConfig = params.methodConfig;

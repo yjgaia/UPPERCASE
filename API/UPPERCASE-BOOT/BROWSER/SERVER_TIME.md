@@ -1,11 +1,9 @@
-# `METHOD` global.SERVER_TIME
+# METHOD `global.SERVER_TIME(date)`
 Get server time.
 
 ## Parameters
-* `REQUIRED` date 
+* `REQUIRED` *date*
 
 ## Static Members
 
-### setDiff
-#### Parameters
-No parameters.
+### `setDiff(_diff)`

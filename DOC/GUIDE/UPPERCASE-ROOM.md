@@ -19,7 +19,7 @@ UPPERCASE 프로젝트 내 `UPPERCASE-ROOM` 폴더를 복사하여 사용하거�
 
 ### `UPPERCASE-ROOM` 폴더를 복사하는 경우
 ```javascript
-require('./UPPERCASE-COMMON/NODE.js');
+require('./UPPERCASE-CORE/NODE.js');
 require('./UPPERCASE-ROOM/NODE.js');
 ```
 

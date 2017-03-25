@@ -1,2 +1,2 @@
-# `data` global.CONFIG
+# `global.CONFIG`
 기본 설정

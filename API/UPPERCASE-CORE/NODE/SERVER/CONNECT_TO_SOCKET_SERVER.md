@@ -1,13 +1,10 @@
-# `METHOD` global.CONNECT_TO_SOCKET_SERVER
+# METHOD `global.CONNECT_TO_SOCKET_SERVER(params, connectionListenerOrListeners)`
 SOCKET_SERVER로 생성한 TCP 소켓 서버에 연결합니다.
 
 ## Parameters
-* `REQUIRED` params 
-* `REQUIRED` params.host 
-* `REQUIRED` params.port 
-* `REQUIRED` connectionListenerOrListeners 
-* `REQUIRED` connectionListenerOrListeners.success 
-* `OPTIONAL` connectionListenerOrListeners.error 
-
-## Static Members
-No static members.
+* `REQUIRED` *params*
+* `REQUIRED` *params.host*
+* `REQUIRED` *params.port*
+* `REQUIRED` *connectionListenerOrListeners*
+* `REQUIRED` *connectionListenerOrListeners.success*
+* `OPTIONAL` *connectionListenerOrListeners.error*

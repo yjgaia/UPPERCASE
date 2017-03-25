@@ -1,8 +1,5 @@
-# `METHOD` global.BOX
+# METHOD `global.BOX(boxName)`
 BOX를 생성합니다.
 
 ## Parameters
-* `REQUIRED` boxName 
-
-## Static Members
-No static members.
+* `REQUIRED` *boxName*

@@ -1,8 +1,5 @@
-# `METHOD` box.RF
+# METHOD `box.RF(path)`
 get final resource's real path.
 
 ## Parameters
-* `REQUIRED` path 
-
-## Static Members
-No static members.
+* `REQUIRED` *path*
