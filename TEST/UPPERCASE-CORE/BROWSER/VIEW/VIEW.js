@@ -23,10 +23,10 @@ TEST('VIEW', (check) => {
 				console.log('View Closed!');
 			};
 		}
-	}),
+	});
 
 	// test div
-	div = DIV({
+	let div = DIV({
 		style : {
 			position : 'fixed',
 			left : 40,
@@ -42,7 +42,7 @@ TEST('VIEW', (check) => {
 			c : 'view',
 			on : {
 				tap : () => {
-					GO('view');
+					TestBox.GO('view');
 				}
 			}
 		}), BR(), A({
@@ -52,14 +52,14 @@ TEST('VIEW', (check) => {
 			c : 'view/1',
 			on : {
 				tap : () => {
-					GO('view/1');
+					TestBox.GO('view/1');
 				}
 			}
 		})]
 	}).appendTo(BODY);
 
 	// match view.
-	MATCH_VIEW({
+	TestBox.MATCH_VIEW({
 		uri : ['view', 'view/{id}'],
 		target : TestView
 	});

@@ -26,13 +26,13 @@ TEST('REFRESH', (check) => {
 	});
 
 	// match view.
-	MATCH_VIEW({
+	TestBox.MATCH_VIEW({
 		uri : ['refresh', 'refresh/{id}'],
 		target : TestView
 	});
 
 	// go test view.
-	//GO('refresh/1');
+	TestBox.GO('refresh/1');
 
 	let div = DIV({
 		style : {

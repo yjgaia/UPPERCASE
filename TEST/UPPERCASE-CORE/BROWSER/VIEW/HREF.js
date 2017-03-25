@@ -1,13 +1,5 @@
 TEST('HREF', (check) => {
 	
-	if (history.pushState !== undefined) {
-		
-		// get test href.
-		check(HREF('Test') === '/Test');
-		
-	} else {
-		
-		// get test href.
-		check(HREF('Test') === '#!/Test');
-	}
+	// get test href.
+	check(TestBox.HREF('Test') === '/TestBox/Test');
 });

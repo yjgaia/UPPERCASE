@@ -26,13 +26,13 @@ TEST('GO', (check) => {
 	});
 
 	// match view.
-	MATCH_VIEW({
+	TestBox.MATCH_VIEW({
 		uri : ['go', 'go/{id}'],
 		target : TestView
 	});
 
 	// go test view.
-	GO('go/1');
+	TestBox.GO('go/1');
 	
 	// go back.
 	GO('');

@@ -16,7 +16,7 @@ TEST('GO_NEW_WIN', (check) => {
 			c : 'open test view on new window.',
 			on : {
 				tap : () => {
-					GO_NEW_WIN('test');
+					TestBox.GO_NEW_WIN('test');
 				}
 			}
 		})
