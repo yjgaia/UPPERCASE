@@ -178,7 +178,6 @@ let room2 = TestBox.ROOM({
 * `Box.CLIENT_ROOM(name)`
 * `Box.CLIENT_ROOM({roomServerName:, name:})`
 
-
 Node.js 환경에서도 룸 서버와 통신을 주고받을 수 있도록 만들어진 `CLIENT_ROOM` 클래스 입니다. 사용 방법은 웹 브라우저 환경에서의 `ROOM` 클래스와 완전히 동일합니다.
 
 ```javascript

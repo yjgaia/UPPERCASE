@@ -16,6 +16,28 @@ FOR_BOX((box) => {
 				//REQUIRED: params.name
 				//OPTIONAL: params.initData
 				//OPTIONAL: params.methodConfig
+				//OPTIONAL: params.methodConfig.create
+				//OPTIONAL: params.methodConfig.create.valid
+				//OPTIONAL: params.methodConfig.create.role
+				//OPTIONAL: params.methodConfig.create.authKey
+				//OPTIONAL: params.methodConfig.create.adminRole
+				//OPTIONAL: params.methodConfig.get
+				//OPTIONAL: params.methodConfig.get.role
+				//OPTIONAL: params.methodConfig.update
+				//OPTIONAL: params.methodConfig.update.valid
+				//OPTIONAL: params.methodConfig.update.role
+				//OPTIONAL: params.methodConfig.update.authKey
+				//OPTIONAL: params.methodConfig.update.adminRole
+				//OPTIONAL: params.methodConfig.remove
+				//OPTIONAL: params.methodConfig.remove.role
+				//OPTIONAL: params.methodConfig.remove.authKey
+				//OPTIONAL: params.methodConfig.remove.adminRole
+				//OPTIONAL: params.methodConfig.find
+				//OPTIONAL: params.methodConfig.find.role
+				//OPTIONAL: params.methodConfig.count
+				//OPTIONAL: params.methodConfig.count.role
+				//OPTIONAL: params.methodConfig.checkIsExists
+				//OPTIONAL: params.methodConfig.checkIsExists.role
 				//OPTIONAL: params.isNotUsingObjectId
 				//OPTIONAL: params.isNotUsingHistory
 				
@@ -1116,18 +1138,21 @@ FOR_BOX((box) => {
 				let create = self.create = (data, callbackOrHandlers) => {
 					//REQUIRED: data
 					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//OPTIONAL: callbackOrHandlers.notValid
+					//OPTIONAL: callbackOrHandlers.success
 
-					let callback;
-					let notValidHandler;
 					let errorHandler;
+					let notValidHandler;
+					let callback;
 
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
 						} else {
-							callback = callbackOrHandlers.success;
-							notValidHandler = callbackOrHandlers.notValid;
 							errorHandler = callbackOrHandlers.error;
+							notValidHandler = callbackOrHandlers.notValid;
+							callback = callbackOrHandlers.success;
 						}
 					}
 
@@ -1177,10 +1202,13 @@ FOR_BOX((box) => {
 					//OPTIONAL: idOrParams.isToCache
 					//OPTIONAL: idOrParams.clientInfo
 					//REQUIRED: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//OPTIONAL: callbackOrHandlers.notExists
+					//REQUIRED: callbackOrHandlers.success
 
-					let callback;
-					let notExistsHandler;
 					let errorHandler;
+					let notExistsHandler;
+					let callback;
 					
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -1191,9 +1219,9 @@ FOR_BOX((box) => {
 					if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 						callback = callbackOrHandlers;
 					} else {
-						callback = callbackOrHandlers.success;
-						notExistsHandler = callbackOrHandlers.notExists;
 						errorHandler = callbackOrHandlers.error;
+						notExistsHandler = callbackOrHandlers.notExists;
+						callback = callbackOrHandlers.success;
 					}
 
 					innerGet(idOrParams, (result) => {
@@ -1218,7 +1246,7 @@ FOR_BOX((box) => {
 							} else {
 								SHOW_WARNING(box.boxName + '.' + name + 'Model.get', '데이터가 존재하지 않습니다.', idOrParams);
 							}
-						} else if (callback !== undefined) {
+						} else {
 							callback(savedData);
 						}
 					});
@@ -1228,20 +1256,24 @@ FOR_BOX((box) => {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//OPTIONAL: callbackOrHandlers.notValid
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.success
 
-					let callback;
-					let notExistsHandler;
-					let notValidHandler;
 					let errorHandler;
+					let notValidHandler;
+					let notExistsHandler;
+					let callback;
 
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
 						} else {
-							callback = callbackOrHandlers.success;
-							notExistsHandler = callbackOrHandlers.notExists;
-							notValidHandler = callbackOrHandlers.notValid;
 							errorHandler = callbackOrHandlers.error;
+							notValidHandler = callbackOrHandlers.notValid;
+							notExistsHandler = callbackOrHandlers.notExists;
+							callback = callbackOrHandlers.success;
 						}
 					}
 
@@ -1290,20 +1322,24 @@ FOR_BOX((box) => {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//OPTIONAL: callbackOrHandlers.notValid
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.success
 
-					let callback;
-					let notExistsHandler;
-					let notValidHandler;
 					let errorHandler;
+					let notValidHandler;
+					let notExistsHandler;
+					let callback;
 
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
 						} else {
-							callback = callbackOrHandlers.success;
-							notExistsHandler = callbackOrHandlers.notExists;
-							notValidHandler = callbackOrHandlers.notValid;
 							errorHandler = callbackOrHandlers.error;
+							notValidHandler = callbackOrHandlers.notValid;
+							notExistsHandler = callbackOrHandlers.notExists;
+							callback = callbackOrHandlers.success;
 						}
 					}
 
@@ -1353,20 +1389,24 @@ FOR_BOX((box) => {
 					//REQUIRED: data
 					//REQUIRED: data.id
 					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//OPTIONAL: callbackOrHandlers.notValid
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.success
 
-					let callback;
-					let notExistsHandler;
-					let notValidHandler;
 					let errorHandler;
+					let notValidHandler;
+					let notExistsHandler;
+					let callback;
 
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
 						} else {
-							callback = callbackOrHandlers.success;
-							notExistsHandler = callbackOrHandlers.notExists;
-							notValidHandler = callbackOrHandlers.notValid;
 							errorHandler = callbackOrHandlers.error;
+							notValidHandler = callbackOrHandlers.notValid;
+							notExistsHandler = callbackOrHandlers.notExists;
+							callback = callbackOrHandlers.success;
 						}
 					}
 
@@ -1415,18 +1455,21 @@ FOR_BOX((box) => {
 				let remove = self.remove = (id, callbackOrHandlers) => {
 					//REQUIRED: id
 					//OPTIONAL: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//OPTIONAL: callbackOrHandlers.notExists
+					//OPTIONAL: callbackOrHandlers.success
 
-					let callback;
-					let notExistsHandler;
 					let errorHandler;
+					let notExistsHandler;
+					let callback;
 
 					if (callbackOrHandlers !== undefined) {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
 						} else {
-							callback = callbackOrHandlers.success;
-							notExistsHandler = callbackOrHandlers.notExists;
 							errorHandler = callbackOrHandlers.error;
+							notExistsHandler = callbackOrHandlers.notExists;
+							callback = callbackOrHandlers.success;
 						}
 					}
 
@@ -1467,9 +1510,11 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.isFindAll
 					//OPTIONAL: params.isToCache
 					//REQUIRED: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 
-					let callback;
 					let errorHandler;
+					let callback;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -1481,8 +1526,8 @@ FOR_BOX((box) => {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
 						} else {
-							callback = callbackOrHandlers.success;
 							errorHandler = callbackOrHandlers.error;
+							callback = callbackOrHandlers.success;
 						}
 					}
 
@@ -1508,9 +1553,11 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.isToCache
 					//REQUIRED: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 
-					let callback;
 					let errorHandler;
+					let callback;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -1522,8 +1569,8 @@ FOR_BOX((box) => {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
 						} else {
-							callback = callbackOrHandlers.success;
 							errorHandler = callbackOrHandlers.error;
+							callback = callbackOrHandlers.success;
 						}
 					}
 
@@ -1549,9 +1596,11 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.isToCache
 					//REQUIRED: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 
-					let callback;
 					let errorHandler;
+					let callback;
 
 					// init params.
 					if (callbackOrHandlers === undefined) {
@@ -1563,8 +1612,8 @@ FOR_BOX((box) => {
 						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 							callback = callbackOrHandlers;
 						} else {
-							callback = callbackOrHandlers.success;
 							errorHandler = callbackOrHandlers.error;
+							callback = callbackOrHandlers.success;
 						}
 					}
 

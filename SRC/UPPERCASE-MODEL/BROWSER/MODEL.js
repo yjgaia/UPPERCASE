@@ -26,6 +26,15 @@ FOR_BOX((box) => {
 					//REQUIRED: params.name
 					//OPTIONAL: params.initData
 					//OPTIONAL: params.methodConfig
+					//OPTIONAL: params.methodConfig.create
+					//OPTIONAL: params.methodConfig.create.valid
+					//OPTIONAL: params.methodConfig.get
+					//OPTIONAL: params.methodConfig.update
+					//OPTIONAL: params.methodConfig.update.valid
+					//OPTIONAL: params.methodConfig.remove
+					//OPTIONAL: params.methodConfig.find
+					//OPTIONAL: params.methodConfig.count
+					//OPTIONAL: params.methodConfig.checkIsExists
 					//OPTIONAL: params.isNotUsingObjectId
 					
 					let roomServerName = params.roomServerName;
@@ -109,15 +118,15 @@ FOR_BOX((box) => {
 						create = self.create = (data, callbackOrHandlers) => {
 							//REQUIRED: data
 							//OPTIONAL: callbackOrHandlers
-							//OPTIONAL: callbackOrHandlers.success
+							//OPTIONAL: callbackOrHandlers.error
 							//OPTIONAL: callbackOrHandlers.notValid
 							//OPTIONAL: callbackOrHandlers.notAuthed
-							//OPTIONAL: callbackOrHandlers.error
-		
-							let callback;
+							//OPTIONAL: callbackOrHandlers.success
+							
+							let errorHandler;
 							let notValidHandler;
 							let notAuthedHandler;
-							let errorHandler;
+							let callback;
 							
 							let validResult;
 		
@@ -125,10 +134,10 @@ FOR_BOX((box) => {
 								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 									callback = callbackOrHandlers;
 								} else {
-									callback = callbackOrHandlers.success;
+									errorHandler = callbackOrHandlers.error;
 									notValidHandler = callbackOrHandlers.notValid;
 									notAuthedHandler = callbackOrHandlers.notAuthed;
-									errorHandler = callbackOrHandlers.error;
+									callback = callbackOrHandlers.success;
 								}
 							}
 		
@@ -148,7 +157,10 @@ FOR_BOX((box) => {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validResult.getErrors());
 								} else {
-									console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` NOT VALID!: ', validResult.getErrors());
+									SHOW_WARNING(box.boxName + '.' + name + 'Model.create', '데이터가 유효하지 않습니다.', {
+										data : data,
+										validErrors : validResult.getErrors()
+									});
 								}
 		
 							} else {
@@ -174,19 +186,22 @@ FOR_BOX((box) => {
 											if (errorHandler !== undefined) {
 												errorHandler(errorMsg);
 											} else {
-												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` ERROR: ' + errorMsg);
+												SHOW_ERROR(box.boxName + '.' + name + 'Model.create', errorMsg);
 											}
 										} else if (validErrors !== undefined) {
 											if (notValidHandler !== undefined) {
 												notValidHandler(validErrors);
 											} else {
-												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` NOT VALID!: ', validErrors);
+												SHOW_WARNING(box.boxName + '.' + name + 'Model.create', '데이터가 유효하지 않습니다.', {
+													data : data,
+													validErrors : validErrors
+												});
 											}
 										} else if (isNotAuthed === true) {
 											if (notAuthedHandler !== undefined) {
 												notAuthedHandler();
 											} else {
-												console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.create` NOT AUTHED!');
+												SHOW_WARNING(box.boxName + '.' + name + 'Model.create', '인증되지 않았습니다.');
 											}
 										} else if (callback !== undefined) {
 											callback(savedData);
@@ -210,11 +225,15 @@ FOR_BOX((box) => {
 							//OPTIONAL: idOrParams.sort
 							//OPTIONAL: idOrParams.isRandom
 							//REQUIRED: callbackOrHandlers
+							//REQUIRED: callbackOrHandlers.error
+							//REQUIRED: callbackOrHandlers.notAuthed
+							//REQUIRED: callbackOrHandlers.notExists
+							//REQUIRED: callbackOrHandlers.success
 		
-							let callback;
-							let notExistsHandler;
-							let notAuthedHandler;
 							let errorHandler;
+							let notAuthedHandler;
+							let notExistsHandler;
+							let callback;
 							
 							// init params.
 							if (callbackOrHandlers === undefined) {
@@ -225,10 +244,10 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
-								notExistsHandler = callbackOrHandlers.notExists;
-								notAuthedHandler = callbackOrHandlers.notAuthed;
 								errorHandler = callbackOrHandlers.error;
+								notAuthedHandler = callbackOrHandlers.notAuthed;
+								notExistsHandler = callbackOrHandlers.notExists;
+								callback = callbackOrHandlers.success;
 							}
 		
 							room.send({
@@ -250,21 +269,21 @@ FOR_BOX((box) => {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.get` ERROR: ' + errorMsg);
+										SHOW_ERROR(box.boxName + '.' + name + 'Model.get', errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.get` NOT AUTHED!');
+										SHOW_WARNING(box.boxName + '.' + name + 'Model.get', '인증되지 않았습니다.');
 									}
 								} else if (savedData === undefined) {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.get` NOT EXISTS!', idOrParams);
+										SHOW_WARNING(box.boxName + '.' + name + 'Model.get', '데이터가 존재하지 않습니다.', idOrParams);
 									}
-								} else if (callback !== undefined) {
+								} else {
 									callback(savedData);
 								}
 							});
@@ -277,11 +296,15 @@ FOR_BOX((box) => {
 							//OPTIONAL: idOrParams.sort
 							//OPTIONAL: idOrParams.isRandom
 							//REQUIRED: callbackOrHandlers
+							//OPTIONAL: callbackOrHandlers.error
+							//OPTIONAL: callbackOrHandlers.notAuthed
+							//OPTIONAL: callbackOrHandlers.notExists
+							//REQUIRED: callbackOrHandlers.success
 		
-							let callback;
-							let notExistsHandler;
-							let notAuthedHandler;
 							let errorHandler;
+							let notAuthedHandler;
+							let notExistsHandler;
+							let callback;
 							
 							let isExited;
 							let subRoom;
@@ -295,19 +318,23 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
-								notExistsHandler = callbackOrHandlers.notExists;
-								notAuthedHandler = callbackOrHandlers.notAuthed;
 								errorHandler = callbackOrHandlers.error;
+								notAuthedHandler = callbackOrHandlers.notAuthed;
+								notExistsHandler = callbackOrHandlers.notExists;
+								callback = callbackOrHandlers.success;
 							}
 		
 							self.get(idOrParams, {
 		
+								error : errorHandler,
+								notAuthed : notAuthedHandler,
+								notExists : notExistsHandler,
+								
 								success : (savedData) => {
 		
 									let exit;
 		
-									if (isExited !== true && callback !== undefined) {
+									if (isExited !== true) {
 		
 										subRoom = box.ROOM({
 											roomServerName : roomServerName,
@@ -337,11 +364,7 @@ FOR_BOX((box) => {
 											}
 										});
 									}
-								},
-		
-								notExists : notExistsHandler,
-								notAuthed : notAuthedHandler,
-								error : errorHandler
+								}
 							});
 		
 							return OBJECT({
@@ -368,17 +391,22 @@ FOR_BOX((box) => {
 							//REQUIRED: data
 							//REQUIRED: data.id
 							//OPTIONAL: callbackOrHandlers
+							//OPTIONAL: callbackOrHandlers.error
+							//OPTIONAL: callbackOrHandlers.notValid
+							//OPTIONAL: callbackOrHandlers.notAuthed
+							//OPTIONAL: callbackOrHandlers.notExists
+							//OPTIONAL: callbackOrHandlers.success
 		
 							let id = data.id;
 							let $inc = data.$inc;
 							let $push = data.$push;
 							let $pull = data.$pull;
 							
-							let callback;
-							let notValidHandler;
-							let notExistsHandler;
-							let notAuthedHandler;
 							let errorHandler;
+							let notValidHandler;
+							let notAuthedHandler;
+							let notExistsHandler;
+							let callback;
 
 							let validResult;
 							let $incValidResult;
@@ -390,11 +418,11 @@ FOR_BOX((box) => {
 								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 									callback = callbackOrHandlers;
 								} else {
-									callback = callbackOrHandlers.success;
-									notValidHandler = callbackOrHandlers.notValid;
-									notExistsHandler = callbackOrHandlers.notExists;
-									notAuthedHandler = callbackOrHandlers.notAuthed;
 									errorHandler = callbackOrHandlers.error;
+									notValidHandler = callbackOrHandlers.notValid;
+									notAuthedHandler = callbackOrHandlers.notAuthed;
+									notExistsHandler = callbackOrHandlers.notExists;
+									callback = callbackOrHandlers.success;
 								}
 							}
 		
@@ -457,7 +485,10 @@ FOR_BOX((box) => {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validErrors);
 								} else {
-									console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT VALID!: ', validErrors);
+									SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', {
+										data : data,
+										validErrors : validErrors
+									});
 								}
 		
 							} else {
@@ -485,25 +516,28 @@ FOR_BOX((box) => {
 										if (errorHandler !== undefined) {
 											errorHandler(errorMsg);
 										} else {
-											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` ERROR: ' + errorMsg);
+											SHOW_ERROR(box.boxName + '.' + name + 'Model.update', errorMsg);
 										}
 									} else if (validErrors !== undefined) {
 										if (notValidHandler !== undefined) {
 											notValidHandler(validErrors);
 										} else {
-											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT VALID!: ', validErrors);
+											SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', {
+												data : data,
+												validErrors : validErrors
+											});
 										}
 									} else if (isNotAuthed === true) {
 										if (notAuthedHandler !== undefined) {
 											notAuthedHandler();
 										} else {
-											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT AUTHED!');
+											SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '인증되지 않았습니다.');
 										}
 									} else if (savedData === undefined) {
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
 										} else {
-											console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.update` NOT EXISTS!', data);
+											SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '수정할 데이터가 존재하지 않습니다.', data);
 										}
 									} else if (callback !== undefined) {
 										callback(savedData, originData);
@@ -519,20 +553,24 @@ FOR_BOX((box) => {
 						remove = self.remove = (id, callbackOrHandlers) => {
 							//REQUIRED: id
 							//OPTIONAL: callbackOrHandlers
+							//OPTIONAL: callbackOrHandlers.error
+							//OPTIONAL: callbackOrHandlers.notAuthed
+							//OPTIONAL: callbackOrHandlers.notExists
+							//OPTIONAL: callbackOrHandlers.success
 		
-							let callback;
-							let notExistsHandler;
-							let notAuthedHandler;
 							let errorHandler;
+							let notAuthedHandler;
+							let notExistsHandler;
+							let callback;
 		
 							if (callbackOrHandlers !== undefined) {
 								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 									callback = callbackOrHandlers;
 								} else {
-									callback = callbackOrHandlers.success;
-									notExistsHandler = callbackOrHandlers.notExists;
-									notAuthedHandler = callbackOrHandlers.notAuthed;
 									errorHandler = callbackOrHandlers.error;
+									notAuthedHandler = callbackOrHandlers.notAuthed;
+									notExistsHandler = callbackOrHandlers.notExists;
+									callback = callbackOrHandlers.success;
 								}
 							}
 		
@@ -555,19 +593,19 @@ FOR_BOX((box) => {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.remove` ERROR: ' + errorMsg);
+										SHOW_ERROR(box.boxName + '.' + name + 'Model.remove', errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.remove` NOT AUTHED!');
+										SHOW_WARNING(box.boxName + '.' + name + 'Model.remove', '인증되지 않았습니다.');
 									}
 								} else if (originData === undefined) {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.remove` NOT EXISTS!', id);
+										SHOW_WARNING(box.boxName + '.' + name + 'Model.remove', '삭제할 데이터가 존재하지 않습니다.', id);
 									}
 								} else if (callback !== undefined) {
 									callback(originData);
@@ -586,10 +624,13 @@ FOR_BOX((box) => {
 							//OPTIONAL: params.start
 							//OPTIONAL: params.count
 							//REQUIRED: callbackOrHandlers
+							//OPTIONAL: callbackOrHandlers.error
+							//OPTIONAL: callbackOrHandlers.notAuthed
+							//REQUIRED: callbackOrHandlers.success
 		
-							let callback;
-							let notAuthedHandler;
 							let errorHandler;
+							let notAuthedHandler;
+							let callback;
 		
 							// init params.
 							if (callbackOrHandlers === undefined) {
@@ -600,9 +641,9 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
-								notAuthedHandler = callbackOrHandlers.notAuthed;
 								errorHandler = callbackOrHandlers.error;
+								notAuthedHandler = callbackOrHandlers.notAuthed;
+								callback = callbackOrHandlers.success;
 							}
 		
 							room.send({
@@ -618,15 +659,15 @@ FOR_BOX((box) => {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.find` ERROR: ' + errorMsg);
+										SHOW_ERROR(box.boxName + '.' + name + 'Model.find', errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.find` NOT AUTHED!');
+										SHOW_WARNING(box.boxName + '.' + name + 'Model.find', '인증되지 않았습니다.');
 									}
-								} else if (callback !== undefined) {
+								} else {
 									callback(savedDataSet);
 								}
 							});
@@ -639,10 +680,13 @@ FOR_BOX((box) => {
 							//OPTIONAL: params.start
 							//OPTIONAL: params.count
 							//REQUIRED: callbackOrHandlers
+							//OPTIONAL: callbackOrHandlers.error
+							//OPTIONAL: callbackOrHandlers.notAuthed
+							//REQUIRED: callbackOrHandlers.success
 		
-							let callback;
-							let notAuthedHandler;
 							let errorHandler;
+							let notAuthedHandler;
+							let callback;
 							
 							let isExited;
 							let subRooms = {};
@@ -656,9 +700,9 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
-								notAuthedHandler = callbackOrHandlers.notAuthed;
 								errorHandler = callbackOrHandlers.error;
+								notAuthedHandler = callbackOrHandlers.notAuthed;
+								callback = callbackOrHandlers.success;
 							}
 		
 							self.find(params, {
@@ -667,7 +711,7 @@ FOR_BOX((box) => {
 		
 									let exit;
 		
-									if (isExited !== true && callback !== undefined) {
+									if (isExited !== true) {
 		
 										EACH(savedDataSet, (savedData, i) => {
 		
@@ -731,10 +775,13 @@ FOR_BOX((box) => {
 							//OPTIONAL: params
 							//OPTIONAL: params.filter
 							//REQUIRED: callbackOrHandlers
+							//OPTIONAL: callbackOrHandlers.error
+							//OPTIONAL: callbackOrHandlers.notAuthed
+							//REQUIRED: callbackOrHandlers.success
 		
-							let callback;
-							let notAuthedHandler;
 							let errorHandler;
+							let notAuthedHandler;
+							let callback;
 		
 							// init params.
 							if (callbackOrHandlers === undefined) {
@@ -745,9 +792,9 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
-								notAuthedHandler = callbackOrHandlers.notAuthed;
 								errorHandler = callbackOrHandlers.error;
+								notAuthedHandler = callbackOrHandlers.notAuthed;
+								callback = callbackOrHandlers.success;
 							}
 		
 							room.send({
@@ -763,15 +810,15 @@ FOR_BOX((box) => {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.count` ERROR: ' + errorMsg);
+										SHOW_ERROR(box.boxName + '.' + name + 'Model.count', errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.count` NOT AUTHED!');
+										SHOW_WARNING(box.boxName + '.' + name + 'Model.count', '인증되지 않았습니다.');
 									}
-								} else if (callback !== undefined) {
+								} else {
 									callback(count);
 								}
 							});
@@ -784,10 +831,13 @@ FOR_BOX((box) => {
 							//OPTIONAL: params
 							//OPTIONAL: params.filter
 							//REQUIRED: callbackOrHandlers
+							//OPTIONAL: callbackOrHandlers.error
+							//OPTIONAL: callbackOrHandlers.notAuthed
+							//REQUIRED: callbackOrHandlers.success
 		
-							let callback;
-							let notAuthedHandler;
 							let errorHandler;
+							let notAuthedHandler;
+							let callback;
 		
 							// init params.
 							if (callbackOrHandlers === undefined) {
@@ -798,9 +848,9 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 								callback = callbackOrHandlers;
 							} else {
-								callback = callbackOrHandlers.success;
-								notAuthedHandler = callbackOrHandlers.notAuthed;
 								errorHandler = callbackOrHandlers.error;
+								notAuthedHandler = callbackOrHandlers.notAuthed;
+								callback = callbackOrHandlers.success;
 							}
 		
 							room.send({
@@ -816,15 +866,15 @@ FOR_BOX((box) => {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.checkIsExists` ERROR: ' + errorMsg);
+										SHOW_ERROR(box.boxName + '.' + name + 'Model.checkIsExists', errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										console.log('[UPPERCASE-MODEL] `' + box.boxName + '.' + name + 'Model.checkIsExists` NOT AUTHED!');
+										SHOW_WARNING(box.boxName + '.' + name + 'Model.checkIsExists', '인증되지 않았습니다.');
 									}
-								} else if (callback !== undefined) {
+								} else {
 									callback(isExists);
 								}
 							});
@@ -1119,10 +1169,10 @@ FOR_BOX((box) => {
 							//OPTIONAL: params.count
 							//OPTIONAL: params.isNotOnNew
 							//REQUIRED: handlerOrHandlers
-							//REQUIRED: handlerOrHandlers.handler
-							//OPTIONAL: handlerOrHandlers.success
-							//OPTIONAL: handlerOrHandlers.notAuthed
 							//OPTIONAL: handlerOrHandlers.error
+							//OPTIONAL: handlerOrHandlers.notAuthed
+							//OPTIONAL: handlerOrHandlers.success
+							//REQUIRED: handlerOrHandlers.handler
 							
 							let properties;
 							let filter;
@@ -1132,10 +1182,10 @@ FOR_BOX((box) => {
 							let isNotOnNew;
 							let onNewRoom;
 							
-							let handler;
-							let callback;
-							let notAuthedHandler;
 							let errorHandler;
+							let notAuthedHandler;
+							let callback;
+							let handler;
 		
 							// init params.
 							if (handlerOrHandlers === undefined) {
@@ -1155,10 +1205,10 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(handlerOrHandlers) !== true) {
 								handler = handlerOrHandlers;
 							} else {
-								handler = handlerOrHandlers.handler;
-								callback = handlerOrHandlers.success;
-								notAuthedHandler = handlerOrHandlers.notAuthed;
 								errorHandler = handlerOrHandlers.error;
+								notAuthedHandler = handlerOrHandlers.notAuthed;
+								callback = handlerOrHandlers.success;
+								handler = handlerOrHandlers.handler;
 							}
 							
 							if (isNotOnNew !== true) {
@@ -1210,10 +1260,10 @@ FOR_BOX((box) => {
 							//OPTIONAL: params.count
 							//OPTIONAL: params.isNotOnNew
 							//REQUIRED: handlerOrHandlers
-							//REQUIRED: handlerOrHandlers.handler
-							//OPTIONAL: handlerOrHandlers.success
-							//OPTIONAL: handlerOrHandlers.notAuthed
 							//OPTIONAL: handlerOrHandlers.error
+							//OPTIONAL: handlerOrHandlers.notAuthed
+							//OPTIONAL: handlerOrHandlers.success
+							//REQUIRED: handlerOrHandlers.handler
 							
 							let properties;
 							let filter;
@@ -1222,10 +1272,10 @@ FOR_BOX((box) => {
 							let count;
 							let isNotOnNew;
 							
-							let handler;
-							let callback;
-							let notAuthedHandler;
 							let errorHandler;
+							let notAuthedHandler;
+							let callback;
+							let handler;
 							
 							let onNewWatchingRoom;
 							let findWatchingRoom;
@@ -1248,10 +1298,10 @@ FOR_BOX((box) => {
 							if (CHECK_IS_DATA(handlerOrHandlers) !== true) {
 								handler = handlerOrHandlers;
 							} else {
-								handler = handlerOrHandlers.handler;
-								callback = handlerOrHandlers.success;
-								notAuthedHandler = handlerOrHandlers.notAuthed;
 								errorHandler = handlerOrHandlers.error;
+								notAuthedHandler = handlerOrHandlers.notAuthed;
+								callback = handlerOrHandlers.success;
+								handler = handlerOrHandlers.handler;
 							}
 							
 							if (isNotOnNew !== true) {
@@ -1274,9 +1324,13 @@ FOR_BOX((box) => {
 									
 									REVERSE_EACH(savedDataSet, (savedData) => {
 										
-										handler(savedData, (handler) => {
+										handler(savedData,
+											
+										(handler) => {
 											addUpdateHandler(savedData.id, handler);
-										}, (handler) => {
+										},
+										
+										(handler) => {
 											addRemoveHandler(savedData.id, handler);
 										},
 	

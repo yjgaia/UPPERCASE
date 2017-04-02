@@ -9,6 +9,9 @@ UPPERCASE-MODEL은 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8
 ## 목차
 * [사용방법](#사용방법)
 * [`Box.MODEL`](#model)
+* [초기화 데이터](#초기화-데이터)
+* [함수별 설정](#함수별-설정)
+* [모델 기능 확장](#모델-기능-확장)
 
 ## 사용방법
 UPPERCASE 프로젝트 내 `UPPERCASE-MODEL` 폴더를 복사하여 사용하거나, `npm`으로 설치하여 사용합니다.
@@ -30,6 +33,8 @@ require('uppercase-model');
 ```
 
 UPPERCASE-MODEL은 UPPERCASE-ROOM을 기반으로 하기 때문에 룸 서버 설정을 완료한 후 사용 가능합니다. 이에 대한 자세한 사항은 [UPPERCASE-ROOM 문서](UPPERCASE-ROOM.md)를 살펴보시기 바랍니다.
+
+*UPPERCASE-MODEL 모듈을 따로 사용하는 것이 아닌, UPPERCASE를 기반으로 프로젝트를 생성한 경우에는 [모델 생성](CREATE_MODEL.md) 문서를 참고하시기 바랍니다.*
 
 ## `Box.MODEL`
 `Box.MODEL` 클래스
@@ -55,7 +60,7 @@ TestBox.TestModel = OBJECT({
 		    // 모델 명을 지정합니다.
 			name : 'Test',
 			
-			// 각 함수들의 설정을 지정합니다.
+			// 함수별 설정을 지정합니다.
 			methodConfig : {
 				create : ...,
                 get : ...,
@@ -69,6 +74,13 @@ TestBox.TestModel = OBJECT({
 	}
 });
 ```
+
+`params`에 `return`으로 사용 가능한 파라미터 목록은 다음과 같습니다.
+
+* `roomServerName` 접속할 룸 서버의 이름. 여러 룸 서버 접속이 필요한 경우 임의로 지정합니다.
+* `name` 모델 명
+* `initData` 초기화 데이터. 자세한 내용은 [초기화 데이터](#초기화-데이터)을 참고하시기 바랍니다.
+* `methodConfig` 함수별 설정. 자세한 내용은 [모델 기능 확장](#모델-기능-확장)을 참고하시기 바랍니다.
 
 ### 모델 구현 예시
 ```javascript
@@ -118,85 +130,358 @@ TestBox.TestModel = OBJECT({
 });
 ```
 
-`Box.MODEL`로 생성한 객체의 함수들은 다음과 같습니다.
+`Box.MODEL`를 상속받은 객체의 함수들은 다음과 같습니다.
 
 ### `create`
-// 데이터를 저장합니다.
-TestBox.TestModel.create(data, (savedData) => {...})
-TestBox.TestModel.create(data, {error:, success:})
+* `Model.create(data, (savedData) => {})`
+* `Model.create(data, {error:, notValid:, success:})`
+
+데이터를 생성합니다. `isNotUsingObjectId`가 `true`가 아니고 `data`에 `id`를 따로 지정하지 않으면 `id`가 자동으로 생성됩니다. 또한 데이터 생성 시간이 `createTime`에 저장됩니다.
+
+Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
+
+```javascript
+Model.create({
+	msg : 'Hello, DB!',
+	number : 12
+}, (savedData) => {
+	console.log('데이터 생성 완료', savedData);
+});
+```
 
 ### `get`
-// 데이터를 가져옵니다.
-TestBox.TestModel.get(id, (savedData) => {...}) // id가 undefined 일 수도 있습니다. 이 때는 가장 최근 데이터를 가져옵니다.
-TestBox.TestModel.get(id, {success:, notExists:, error:})
-TestBox.TestModel.get({filter:, sort:, isRandom:}, {success:, notExists:, error:})
+* `Model.get(id, (savedData) => {})`
+* `Model.get(id, {error:, notExists:, success:})`
+* `Model.get({filter:, sort:, isRandom:}, {error:, notExists:, success:})`
+* `Model.get((savedData) => {})` 가장 최근 데이터를 가져옵니다.
+
+`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+
+Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
+
+```javascript
+Model.get('5636e47415899c3c04b5e70f', {
+    notExists : () => {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : (savedData) => {
+		console.log('데이터:', savedData);
+	}
+});
+```
 
 ### `getWatching`
-// 데이터를 가져오고, 해당 데이터가 수정되거나 삭제될 때를 감지합니다.
-TestBox.TestModel.getWatching(id, (savedData, addUpdateHandler, addRemoveHandler, exit) => {...}) // 데이터가 수정 될 때 addUpdateHandler를, 데이터가 삭제 될 때 addRemoveHandler를 실행합니다. 더 이상 변화를 감지하지 않고자 하는 경우에는 exit을 실행합니다.
-TestBox.TestModel.getWatching(id, {success:, notExists:, error:})
-TestBox.TestModel.getWatching({filter:, sort:, isRandom:}, {success:, notExists:, error:})
+* `Model.getWatching(id, (savedData, addUpdateHandler, addRemoveHandler, exit) => {})` 데이터가 수정 될 때 `addUpdateHandler`를, 데이터가 삭제 될 때 `addRemoveHandler`를 실행합니다. 더 이상 변화를 감지하지 않고자 하는 경우에는 `exit`을 실행합니다.
+* `Model.getWatching(id, {error:, notExists:, success:})`
+* `Model.getWatching({filter:, sort:, isRandom:}, {error:, notExists:, success:})`
+
+데이터를 가져오고, 해당 데이터가 수정되거나 삭제될 때를 감지합니다.
+
+웹 브라우저 환경에서만 사용할 수 있습니다.
+
+```javascript
+Model.getWatching('5636e47415899c3c04b5e70f', {
+    notExists : () => {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : (savedData, addUpdateHandler, addRemoveHandler, exit) => {
+		
+		console.log('데이터:', savedData);
+		
+		addUpdateHandler((savedData) => {
+	    	console.log('데이터가 수정되었습니다.', savedData);
+		});
+		
+		addRemoveHandler(() => {
+			console.log('데이터가 삭제되었습니다.');
+		});
+	}
+});
+```
 
 ### `update`
-// 데이터를 수정합니다.
-TestBox.TestModel.update(data, (savedData, originData) => {...})
-TestBox.TestModel.update(data, {success:, notExists:, error:})
+* `Model.update(data, (savedData, originData) => {})`
+* `Model.update(data, {error:, notValid:, notExists:, success:})`
+
+데이터를 수정합니다. `lastUpdateTime`에 마지막 수정 시간이 저장됩니다.
+
+Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
+
+```javascript
+Model.update({
+    id : '5636e47415899c3c04b5e70f',
+	number : 3
+}, {
+    notExists : () => {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : (savedData, originData) => {
+		console.log('데이터 수정 완료', savedData);
+	}
+});
+```
+
+`update` 명령의 `data`에 다음과 같은 특수기호들을 사용하여 데이터를 수정할 수 있습니다. 이를 통해 분산 시스템에서 발생할 수 있는 **데이터 동시성 문제**를 피할 수 있습니다.
+
+* `$inc`
+```javascript
+// num이 2 증가합니다.
+Model.update({
+	...
+	$inc : {
+		num : 2
+	}
+}, ...);
+```
+```javascript
+// num이 2 감소합니다.
+Model.update({
+	...
+	$inc : {
+		num : -2
+	}
+}, ...);
+```
+
+* `$push`
+```javascript
+// 배열 array에 3을 추가합니다.
+Model.update({
+	...
+	data : {
+		$push : {
+			array : 3
+		}
+	}
+});
+```
+
+* `$addToSet`
+```javascript
+// 배열 array에 3이 없는 경우에만 3을 추가합니다.
+Model.update({
+	...
+	$addToSet : {
+		array : 3
+	}
+}, ...);
+```
+
+* `$pull`
+```javascript
+// 배열 array에서 3을 제거합니다.
+Model.update({
+	...
+	$pull : {
+		array : 3
+	}
+}, ...);
+```
+
+* `$pull`
+```javascript
+// 배열 array에서 a가 3인 데이터를 제거합니다.
+Model.update({
+	...
+	$pull : {
+		array : {
+			a : 3
+		}
+	}
+}, ...);
+```
+
+`update`명령어가 동시에 여러번 호출된 경우 비동기 처리에 의해 모든 `update`의 결과는 최종적으로 수정된 같은 데이터를 반환합니다.
 
 ### `updateNoHistory`
-TestBox.TestModel.updateNoHistory(data, (savedData, originData) => {...}) // 변경 내역을 남기지 않습니다. (node.js 환경에서만 제공)
-TestBox.TestModel.updateNoHistory(data, {success:, notExists:, error:}) // 변경 내역을 남기지 않습니다. (node.js 환경에서만 제공)
+사용 방식은 `update`와 동일하나, 변경 내역을 남기지 않고 데이터를 수정합니다. 그러나 `lastUpdateTime`은 갱신됩니다.
+
+Node.js 환경에서만 사용할 수 있습니다.
 
 ### `updateNoRecord`
-TestBox.TestModel.updateNoRecord(data, (savedData, originData) => {...}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다. (node.js 환경에서만 제공)
-TestBox.TestModel.updateNoRecord(data, {success:, notExists:, error:}) // 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않습니다. (node.js 환경에서만 제공)
+사용 방식은 `update`와 동일하나, 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않고 데이터를 수정합니다.
+
+Node.js 환경에서만 사용할 수 있습니다.
 
 ### `remove`
-// 데이터를 삭제합니다.
-TestBox.TestModel.remove(id, (originData) => {...})
-TestBox.TestModel.remove(id, {success:, notExists:, error:})
+* `Model.remove(id, (originData) => {})`
+* `Model.remove(id, {error:, notExists:, success:})`
+
+`id`에 해당하는 데이터를 삭제합니다.
+
+```javascript
+Model.remove('5636e47415899c3c04b5e70f', {
+    notExists : () => {
+		console.log('데이터가 존재하지 않습니다.');
+	},
+	success : (originData) => {
+		console.log('삭제된 데이터:', originData);
+	}
+});
+```
 
 ### `find`
-// 데이터를 찾아 목록으로 가져옵니다.
-TestBox.TestModel.find({filter:, sort:, start:, count:}, (savedDataSet) => {...})
-TestBox.TestModel.find({filter:, sort:, start:, count:}, {error:, success:})
+* `Model.find({filter:, sort:, start:, count:}, (savedDataSet) => {})`
+* `Model.find({filter:, sort:, start:, count:}, {error:, success:})`
+
+`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+
+Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
+
+```javascript
+Model.find({
+    filter : {
+        number : 3
+    },
+    sort : {
+        createTime : -1
+    }
+}, (savedDataSet) => {
+	console.log('검색된 데이터 목록:', savedDataSet);
+});
+```
+
+`find` 명령시 `filter`의 모든 요소가 `undefined`로만 이루어진 경우, 모든 값을 가져옵니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려는 경우에는, `CHECK_ARE_SAME([filter, {}])`로 `filter`의 모든 요소가 `undefined` 인지 검사하여 적절한 처리를 해 주시기 바랍니다.
+
+```javascript
+// 아래 두 find 명령은 결과가 같습니다.
+
+Model.find({
+    filter : {
+        number : undefined
+    }
+}, (savedDataSet) => {
+	console.log('검색된 데이터 목록:', savedDataSet);
+});
+
+Model.find((savedDataSet) => {
+	console.log('검색된 데이터 목록:', savedDataSet);
+});
+```
+
+`find`로 가져올 수 있는 데이터의 최대 개수는 `NODE_CONFIG.maxDataCount`에 설정한 숫자입니다. 이를 무시하고 모든 데이터를 가져오고자 하는 경우에는 `isFindAll` 파라미터를 `true`로 설정합니다. (Node.js 환경에서만 사용 가능합니다.) 성능에 치명적인 영향을 끼칠 수 있으므로 주의하시기 바랍니다.
+
+```javascript
+Model.find({
+    filter : {
+        number : 3
+    },
+    isFindAll : true
+}, (savedDataSet) => {
+	console.log('모든 데이터 목록:', savedDataSet);
+});
+```
 
 ### `findWatching`
-// 데이터를 찾아 목록으로 가져오고, 각 데이터가 수정되거나 삭제될 때를 감지합니다.
-TestBox.TestModel.findWatching({filter:, sort:, start:, count:}, (savedDataSet, addUpdateHandler, addRemoveHandler, exit) => {...}) // 데이터가 수정 될 때 addUpdateHandler를, 데이터가 삭제 될 때 addRemoveHandler를 실행합니다. 더 이상 변화를 감지하지 않고자 하는 경우에는 exit을 실행합니다.
-TestBox.TestModel.findWatching({filter:, sort:, start:, count:}, {error:, success:})
+* `Model.findWatching({filter:, sort:, start:, count:}, (savedDataSet, addUpdateHandler, addRemoveHandler, exit) => {})` 데이터가 수정 될 때 `addUpdateHandler`를, 데이터가 삭제 될 때 `addRemoveHandler`를 실행합니다. 더 이상 변화를 감지하지 않고자 하는 경우에는 `exit`을 실행합니다.
+* `Model.findWatching({filter:, sort:, start:, count:}, {error:, success:})`
+
+`filter`에 해당하는 데이터를 찾아 목록으로 가져오고, 각 데이터가 수정되거나 삭제될 때를 감지합니다.
+
+웹 브라우저 환경에서만 사용할 수 있습니다.
+
+```javascript
+Model.findWatching({
+    filter : {
+        number : 3
+    },
+    sort : {
+        createTime : -1
+    }
+}, (savedDataSet, addUpdateHandler, addRemoveHandler, exit) => {
+	
+	console.log('검색된 데이터 목록:', savedDataSet);
+	
+	EACH(savedDataSet, (savedData) => {
+		
+		addUpdateHandler(savedData.id, (savedData) => {
+	    	console.log('데이터가 수정되었습니다.', savedData);
+		});
+		
+		addRemoveHandler(savedData.id, () => {
+			console.log('데이터가 삭제되었습니다.');
+		});
+	});
+});
+```
 
 ### `count`
-// 데이터의 개수를 가져옵니다.
-TestBox.TestModel.count({filter:}, (count) => {...})
-TestBox.TestModel.count({filter:}, {error:, success:})
+* `Model.count({filter:}, (count) => {})`
+* `Model.count({filter:}, {error:, success:})`
+
+`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+
+Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
+
+```javascript
+Model.count({
+    filter : {
+        number : 3
+    }
+}, (count) => {
+	console.log('검색된 데이터의 개수:', count);
+});
+```
 
 ### `checkIsExists`
-// 데이터가 존재하는지 확인합니다.
-TestBox.TestModel.checkIsExists({filter:}, (isExists) => {...})
-TestBox.TestModel.checkIsExists({filter:}, {error:, success:})
+* `Model.checkIsExists({filter:}, (isExists) => {})`
+* `Model.checkIsExists({filter:}, {error:, success:})`
+
+`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+
+Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
+
+```javascript
+Model.checkIsExists({
+    filter : {
+        number : 3
+    }
+}, (isExists) => {
+	if (isExists === true) {
+		console.log('데이터가 존재합니다.');
+	} else {
+		console.log('데이터가 존재하지 않습니다.');
+	}
+});
+```
 
 ### `onNew`
-// 신규 데이터가 생길 때 받아옵니다.
-TestBox.TestModel.onNew(properties, handler)
+* `Model.onNew(properties, handler)`
+
+신규 데이터가 생길 때 받아옵니다.
+
+웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ### `onNewWatching`
 TestBox.TestModel.onNewWatching(properties, handler)
+
+웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ### `onNewAndFind`
 // 신규 데이터가 생길 때 받아오며, 최초 한번 데이터들을 찾아 가져옵니다.
 TestBox.TestModel.onNewAndFind({properties:, filter:, sort:, start:, count:}, {error:, success:})
 
+웹 브라우저 환경에서만 사용할 수 있습니다.
+
 ### `onNewAndFindWatching`
 TestBox.TestModel.onNewAndFindWatching({properties:, filter:, sort:, start:, count:}, {error:, success:})
+
+웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ### `onRemove`
 // 모델에서 데이터가 삭제 될 때 받아옵니다.
 TestBox.TestModel.onRemove(properties, handler)
 
-### 모델 확장
+웹 브라우저 환경에서만 사용할 수 있습니다.
+
+## 초기화 데이터
+
+## 함수별 설정
+
+## 모델 확장
 API에서 기본으로 제공되지 않는 기능들은 직접 구현하여 모델을 확장시킬 수 있습니다. 모델 확장은 node.js 환경과 웹 브라우저 환경에서 각각 진행합니다.
 
-#### node.js 환경에서 모델 확장 예시
+### node.js 환경에서 모델 확장 예시
 ```javascript
 OVERRIDE(TestBox.TestModel, (origin) => {
 
@@ -254,7 +539,7 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 });
 ```
 
-#### 웹 브라우저 환경에서 모델 확장 예시
+### 웹 브라우저 환경에서 모델 확장 예시
 ```javascript
 OVERRIDE(TestBox.TestModel, (origin) => {
 

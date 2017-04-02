@@ -148,6 +148,7 @@ db.create({
 * `db.get(id, (savedData) => {})`
 * `db.get(id, {notExists:, error:, success:})`
 * `db.get({filter:, sort:, isRandom:}, {notExists:, error:, success:})`
+* `db.get((savedData) => {})` 가장 최근 데이터를 가져옵니다.
 
 `id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
 
@@ -207,7 +208,7 @@ db.update({
 * `$push`
 ```javascript
 // 배열 array에 3을 추가합니다.
-sampleStore.update({
+db.update({
 	...
 	data : {
 		$push : {
