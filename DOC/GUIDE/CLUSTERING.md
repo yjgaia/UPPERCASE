@@ -137,6 +137,8 @@ rdate -s time.bora.net
 ```
 
 ## 몽고 DB 분산
+아래 명령어들은 `root` 유저일 때를 기반으로 한 것입니다. AWS등을 사용하는 경우에는 모든 명령어 앞에 `sudo`를 붙혀주시기 바랍니다.
+
 우선 인증을 위한 키 파일을 생성합니다.
 ```
 mkdir /srv/mongodb
@@ -146,6 +148,7 @@ chmod 600 /srv/mongodb/mongodb-shard-keyfile
 
 몽고 DB 데몬을 원하는 수(CPU 개수 등) 만큼 생성합니다. 여기서 중요한 점은 `--shardsvr` 옵션을 붙혀야 한다는 것입니다. 또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
 ```
+mkdir /data
 mkdir /data/shard_db1
 mkdir /data/shard_db2
 mkdir /data/shard_db3
@@ -222,16 +225,16 @@ db.createUser({ user : 'root 유저명', pwd : 'root 비밀번호', roles : ['ro
 db.auth('root 유저명', 'root 비밀번호');
 ```
 
-`shard` 할 데몬의 접속 경로를 지정합니다. replica set을 사용하였으므로 localhost 사용 불가
+`shard` 할 데몬의 접속 경로를 지정합니다.
 ```
-sh.addShard('11.22.33.44:30001');
-sh.addShard('11.22.33.44:30002');
-sh.addShard('11.22.33.44:30003');
-sh.addShard('11.22.33.44:30004');
-sh.addShard('11.22.33.44:30005');
-sh.addShard('11.22.33.44:30006');
-sh.addShard('11.22.33.44:30007');
-sh.addShard('11.22.33.44:30008');
+sh.addShard('localhost:30001');
+sh.addShard('localhost:30002');
+sh.addShard('localhost:30003');
+sh.addShard('localhost:30004');
+sh.addShard('localhost:30005');
+sh.addShard('localhost:30006');
+sh.addShard('localhost:30007');
+sh.addShard('localhost:30008');
 ```
 
 샤딩 할 데이터베이스를 지정합니다.
