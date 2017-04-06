@@ -69,8 +69,8 @@ UPPERCASE는 이 외에도 업로드 기능, 각종 유틸리티 기능, 모든 
 ## 클라이언트
 UPPERCASE가 공식 지원하는 클라이언트 목록은 다음과 같습니다.
 * 웹 브라우저 - UPPERCASE는 기본적으로 웹 브라우저에서 구동됩니다.
-* [Android 클라이언트](https://github.com/Hanul/Unicorn-Android)
-* [iOS 클라이언트](https://github.com/Hanul/Unicorn-iOS)
+* [Android 클라이언트](https://github.com/Hanul/Uniconn-Android)
+* [iOS 클라이언트](https://github.com/Hanul/Uniconn-iOS)
 
 곧 지원 예정인 클라이언트 목록은 다음과 같습니다.
 * Unity 클라이언트

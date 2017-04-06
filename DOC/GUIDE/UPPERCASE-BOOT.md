@@ -41,6 +41,51 @@ UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를
 
 * `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
 
+## `BROWSER_CONFIG`
+
+* `reconnect` `reconnect(isVersionSame, reconnect)` 함수를 정의합니다. 이 함수는 서버와의 연결이 끊어진 이후 서버에 다시 접속하려 할 때 실행됩니다. 서버의 버젼이 달라지면 `isVersionSame`이 `false`로 설정됩니다. 또한 `false`를 `return`하면, 서버에 재접속 되지 않습니다. 그러나 파라미터로 설정된 `reconnect` 함수로 서버에 재접속하는 코드를 작성할 수 있습니다. `reconnect` 하기 전 페이지를 새로고침 하고자 할 때는 `REFRESH` 메소드를 사용합니다. 인증 등을 사용할 때에는 **서버와의 접속이 끊어지면 인증이 풀리**기 때문에, 재접속 시 인증을 수행하는 코드를 작성해주시기 바랍니다. (로그인 화면으로 넘어가는 방법도 있습니다.)
+	```javascript
+	BROWSER_CONFIG : {
+		
+		reconnect : (isVersionSame, reconnect) => {
+			
+			// if versions are same, REFRESH.
+			if (isVersionSame === true) {
+				REFRESH();
+				reconnect();
+			}
+			
+			// if versions are not same, reload page.
+			else {
+				location.reload();
+			}
+		}
+	}
+	```
+	```javascript
+	BROWSER_CONFIG : {
+		
+		reconnect : (isVersionSame, reconnect) => {
+			
+			// if versions are same, reconnect.
+			if (isVersionSame === true) {
+				
+				Sample.UserModel.login({
+					username : rememberMeStore.get('username'),
+					password : rememberMeStore.get('password')
+				});
+				
+				reconnect(false);
+			}
+			
+			// if versions are not same, reload page.
+			else {
+				location.reload();
+			}
+		}
+	}
+	```
+
 ## `Box.R(path)`
 
 웹 브라우저 환경에서만 사용 가능합니다.

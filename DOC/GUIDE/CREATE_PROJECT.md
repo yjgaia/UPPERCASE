@@ -1,7 +1,7 @@
 작성중
 
 # 프로젝트 생성하기
-이 문서는 독자가 JavaScript와 웹 개발의 전반적인 내용을 알고 있다고 가정합니다. 이 문서에서 생성된 Sample 프로젝트는 UPPERCASE 저장소의 최상단의 [Sample 폴더](https://github.com/Hanul/UPPERCASE/tree/master/Sample)에 만들어져 있습니다. 참고하시기 바랍니다.
+이 문서는 UPPERCASE 기반 프로젝트를 생성하는 방법에 대해 설명합니다.
 
 ## 프로젝트 폴더 생성
 1. 적당한 위치에 프로젝트 폴더를 생성합니다.
@@ -27,8 +27,8 @@ Sample
 
 ## 개발 시작
 1. 사용하는 JavaScript 개발툴을 엽니다.
-2. 코드 컨벤션 규칙을 익힙니다. 코드 컨벤션 규칙은 [UJS의 방식](https://github.com/Hanul/UJS/blob/master/DOC/CONVENTION.md)을 따릅니다.
-3. 코드 컨벤션 규칙을 모두 익혔다면, 프로젝트 실행을 위한 코드를 작성합니다.
+2. [UPPERCASE의 코드 컨벤션 규칙](CONVENTION.md)을 익힙니다.
+3. 프로젝트 실행을 위한 코드를 작성합니다.
 
 ## 프로젝트 실행을 위한 코드(Sample.js) 작성
 아래와 같이 Sample.js 코드를 작성합니다. 코드를 작성하기에 앞서 `UPPERCASE_PATH 환경 변수`가 설정되어 있어야 합니다. 설정하는 방법은 [설치하기 문서](INSTALL.md)를 참고해주시기 바랍니다.
@@ -157,9 +157,12 @@ Sample.MAIN = METHOD({
 * `DEPENDENCY`
 * `BOX`
 
-## .gitignore 설정
-gitignore 내용 추가 __RF/, __PACK/ 빼야한다고
+## `.gitignore` 설정
+프로젝트를 Git으로 관리하는 경우 `.gitignore` 파일에 다음과 같은 내용을 추가하여 주시기 바랍니다.
 ```.gitignore
-__RF
-__PACK
+__RF/
+__PACK/
 ```
+
+* `__RF` 업로드 파일이 이 폴더에 저장됩니다.
+* `__PACK` [`ubm`](https://www.npmjs.com/package/ubm)을 이용해 BOX를 패키징 하면 이 폴더에 저장됩니다.
