@@ -453,24 +453,26 @@ Model.checkIsExists({
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ### `onNewWatching`
-TestBox.TestModel.onNewWatching(properties, handler)
+* `TestBox.TestModel.onNewWatching(properties, handler)`
 
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ### `onNewAndFind`
-// 신규 데이터가 생길 때 받아오며, 최초 한번 데이터들을 찾아 가져옵니다.
-TestBox.TestModel.onNewAndFind({properties:, filter:, sort:, start:, count:}, {error:, success:})
+* `TestBox.TestModel.onNewAndFind({properties:, filter:, sort:, start:, count:}, {error:, success:})`
+
+신규 데이터가 생길 때 받아오며, 최초 한번 데이터들을 찾아 가져옵니다.
 
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ### `onNewAndFindWatching`
-TestBox.TestModel.onNewAndFindWatching({properties:, filter:, sort:, start:, count:}, {error:, success:})
+* `TestBox.TestModel.onNewAndFindWatching({properties:, filter:, sort:, start:, count:}, {error:, success:})`
 
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ### `onRemove`
-// 모델에서 데이터가 삭제 될 때 받아옵니다.
-TestBox.TestModel.onRemove(properties, handler)
+* `TestBox.TestModel.onRemove(properties, handler)`
+
+모델에서 데이터가 삭제 될 때 받아옵니다.
 
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
