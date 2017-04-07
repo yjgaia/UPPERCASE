@@ -1,5 +1,3 @@
-작성중
-
 # BOX
 BOX란 UPPERCASE용 모듈을 지칭하는 말입니다.
 
@@ -62,15 +60,17 @@ Sample
             BROWSER.js
 	Sample
         COMMON
+        NODE
+        	MAIN.js
     	BROWSER
     		MAIN.js
     		CONNECTED.js
     		DISCONNECTED.js
     		RECONNECT.js
-        NODE
-        	MAIN.js
         R
     Sample.js
+    VERSION
+    DEPENDENCY
 ```
 
 ## BOX의 일반적인 구성요소
@@ -79,33 +79,33 @@ Sample
 * `VERSION` 프로젝트의 버전 문자열을 저장하는 곳입니다.
 * `DEPENDENCY` 프로젝트가 의존하고 있는 BOX들의 목록을 작성하는 곳입니다.
 
-아래 폴더들을 프로젝트의 성격에 따라 프로젝트 폴더 내의 **프로젝트 이름에 해당하는 폴더**에 선택적으로 구성할 수 있습니다.
-* `BROWSER` 웹 브라우저에서 구동되는 소스들을 저장하는 폴더입니다.
-* `COMMON` 웹 브라우저와 Node.js에서 동시에 구동되는 소스들을 저장하는 폴더입니다.
-* `NODE` Node.js 위에서 구동되는 소스들을 저장하는 폴더입니다.
-* `R` 리소스 파일들을 저장하는 폴더입니다.
+아래의 폴더들을 성격에 따라 프로젝트 폴더 내의 **프로젝트 이름에 해당하는 폴더**에 선택적으로 구성할 수 있습니다.
+* `COMMON` Node.js와 웹 브라우저 환경 양쪽에서 사용하는 소스들을 저장하는 폴더입니다.
+* `NODE` Node.js 환경에서 사용하는 소스들을 저장하는 폴더입니다.
+* `BROWSER` 웹 브라우저 환경에서 사용하는 소스들을 저장하는 폴더입니다.
+* `R` 이미지 등 리소스 파일들을 저장하는 폴더입니다.
 
 ## 특수 파일
-아래 파일들은 특수한 기능을 가진 파일들입니다.
-* `MAIN.js`에는 `box.MAIN()` 함수를 정의합니다. 이 함수는 UPPERCASE가 각 BOX에서 맨 처음 실행하는 코드입니다. `BROWSER` 폴더나 `NODE` 폴더에 작성합니다.
+아래 파일들은 UPPERCASE 기반 프로젝트에서 특수한 기능을 가진 파일들입니다.
+* `MAIN.js`에는 `box.MAIN()` 함수를 정의합니다. 이 함수는 UPPERCASE가 각 BOX에서 맨 처음 실행하는 코드입니다. `BROWSER` 폴더와 `NODE` 폴더에 작성할 수 있습니다.
 * `CONNECTED.js`에는 `box.CONNECTED()` 함수를 정의합니다. 이 함수는 서버와 연결되었을 때 실행됩니다. `BROWSER` 폴더에 작성합니다.
 * `DISCONNECTED.js`에는 `box.DISCONNECTED()` 함수를 정의합니다. 이 함수는 서버와의 연결이 끊어졌을 때 실행됩니다. `BROWSER` 폴더에 작성합니다.
 
 ## BOX 패키징
-프로젝트 폴더를 패키징하여 다른 프로젝트에서 재사용 할 수 있습니다.
+프로젝트 폴더를 패키징하여 BOX 형태로 다른 프로젝트에서 재사용 할 수 있습니다.
 
 1. [`ubm`](https://www.npmjs.com/package/ubm)을 설치합니다.
     ```
     npm install -g ubm
     ```
-2. ubm을 이용해 BOX를 패킹합니다.
+2. `ubm`을 이용해 프로젝트를 BOX로 패킹합니다.
     ```
     ubm pack SampleBox
     ```
 
-패키징을 하게되면 각 폴더들의 JavaScript 코드들이 하나로 합쳐져 `__PACK` 폴더 내에 저장됩니다. 이를테면 `BROWSER` 폴더의 코드들은 `BROWSER.js`로 합쳐집니다. JavaScript 코드가 아닌 기타 파일 및 폴더는 그대로 복사됩니다.
+패키징 하게되면 각 폴더들의 JavaScript 코드들이 하나로 합쳐져 `__PACK` 폴더에 저장됩니다. 이를테면 `BROWSER` 폴더의 코드들은 `BROWSER.js`로 합쳐집니다. JavaScript 코드가 아닌 기타 파일들 및 폴더들은 그대로 복사됩니다.
 
-아래는 예시입니다. 다음과 같은 폴더 구조가 있다고 가정합니다.
+아래는 예시입니다. 다음과 같은 폴더 구조가 있다고 가정했을때,
 
 ```
 Sample
@@ -114,11 +114,11 @@ Sample
     	    a.js
     	    b.js
     	    c.js
-    	BROWSER
+        NODE
     	    a.js
     	    b.js
     	    c.js
-        NODE
+    	BROWSER
     	    a.js
     	    b.js
     	    c.js
@@ -129,13 +129,13 @@ Sample
     Sample.js
 ```
 
-PACK 명령을 실행합니다.
+아래와 같이 `ubm pack` 명령을 실행하면
 
 ```
 ubm pack Sample
 ```
 
-패키징 된 폴더가 `__PACK` 폴더 이하에 생성됩니다.
+패키징 된 BOX가 `__PACK` 폴더에 생성됩니다.
 
 ```
 Sample
@@ -153,11 +153,11 @@ Sample
     	    a.js
     	    b.js
     	    c.js
-    	BROWSER
+        NODE
     	    a.js
     	    b.js
     	    c.js
-        NODE
+    	BROWSER
     	    a.js
     	    b.js
     	    c.js
@@ -169,5 +169,5 @@ Sample
     PACK.js
 ```
 
-## [BOX 저장소 사이트](http://box.uppercase.io)
-여러 개발자들이 만든 UPPERCASE용 BOX들을 살펴보려면, [UPPERCASE BOX 저장소 사이트](http://box.uppercase.io)에 방문해 보시기 바랍니다.
+## [BOX 저장소 사이트](http://box.uppercase.io) 
+여러 개발자들이 만든 UPPERCASE용 BOX들을 살펴보려면, [BOX 저장소 사이트](http://box.uppercase.io)에 방문해 보시기 바랍니다.
