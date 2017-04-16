@@ -1,6 +1,6 @@
 RUN(() => {
 	
-	// COMMON 테스트
+	/*// COMMON 테스트
 	require('./COMMON/TO_DELETE.js');
 	require('./COMMON/METHOD.js');
 	
@@ -58,7 +58,7 @@ RUN(() => {
 	// 기타 기능
 	require('./COMMON/UTIL/OVERRIDE.js');
 	require('./COMMON/UTIL/RANDOM_STR.js');
-	require('./COMMON/UTIL/URI_MATCHER.js');
+	require('./COMMON/UTIL/URI_MATCHER.js');*/
 	
 	// NODE 테스트
 	// 파일 처리 기능
@@ -91,7 +91,7 @@ RUN(() => {
 	
 	// 손쉬운 서버 생성
 	//require('./NODE/SERVER/WEB_SERVER.js');
-	//require('./NODE/SERVER/SOCKET_SERVER.js');
+	require('./NODE/SERVER/SOCKET_SERVER.js');
 	//require('./NODE/SERVER/CONNECT_TO_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/WEB_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js');

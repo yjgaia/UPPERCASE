@@ -38,6 +38,9 @@ _.each([52, 97], (value, index) => {
 #### UPPERCASE는 멀티코어 CPU 및 분산 서버 시스템을 지원합니다.
 * [클러스터링 문서](DOC/GUIDE/CLUSTERING.md) 참고
 
+## UPPERCASE의 구조
+![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/DOC/GUIDE/STRUCTURE.png)
+
 ## UPPERCASE가 제공하는 기능들
 UPPERCASE는 동적인 웹 애플리케이션을 개발하기 위해 필요한 다양한 기능들을 제공합니다.
 

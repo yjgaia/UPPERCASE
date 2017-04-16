@@ -25,8 +25,8 @@ RUN(() => {
 	/*require('./UPPERCASE-MODEL/__TEST_NODE.js');
 	require('./UPPERCASE-BOOT/__TEST_NODE.js');*/
 	
-	const IS_TO_CREATE_SERVER = true;
-	//const IS_TO_CREATE_SERVER = false;
+	//const IS_TO_CREATE_SERVER = true;
+	const IS_TO_CREATE_SERVER = false;
 	
 	if (IS_TO_CREATE_SERVER === true) {
 		

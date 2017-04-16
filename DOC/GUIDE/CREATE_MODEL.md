@@ -144,4 +144,8 @@ node Sample.js
 
 [Robomongo](http://www.robomongo.org)등의 MongoDB 관리 툴로 데이터가 잘 생성되었는지 확인해보시기 바랍니다.
 
-다음 문서: [간단 블로그 만들기](MAKE_BLOG.md)
+초기화 데이터 설정
+
+함수별 전처리/후처리 설정
+
+모델 기능확장 문서로 연결

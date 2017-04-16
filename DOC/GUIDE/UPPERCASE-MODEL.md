@@ -1,9 +1,12 @@
 작성중
 
 # UPPERCASE-MODEL
-UPPERCASE-MODEL은 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8-%EB%B7%B0-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC)에서 Model에 해당하는 부분을 다루기 위해 필요한 기능들을 담고 있는 모듈입니다. 데이터 모델 구조에 맞게 서버와 클라이언트 사이에서 데이터를 전달하고, 필요에 따라 데이터를 데이터베이스에 저장하거나 불러옵니다. 또한 복잡한 Business Logic을 추가하여 확장시킬 수 있습니다.
+UPPERCASE-MODEL은 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8-%EB%B7%B0-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC)에서 Model에 해당하는 부분을 다루기 위해 필요한 기능들을 담고 있는 모듈입니다. 데이터 모델 구조에 맞게 서버와 클라이언트 사이에서 데이터를 전달하고, 필요에 따라 데이터를 데이터베이스에 저장하거나 불러옵니다. 또한 복잡한 Business Logic을 추가하여 모델을 확장시킬 수 있습니다.
 
 구동을 위해 [UPPERCASE-ROOM](UPPERCASE-ROOM.md) 및 [UPPERCASE-DB](UPPERCASE-DB.md)가 필요합니다.
+
+*UPPERCASE-MODEL 모듈을 따로 사용하는 것이 아닌, UPPERCASE를 기반으로 프로젝트를 생성하는 경우에는 [모델 생성](CREATE_MODEL.md) 문서를 참고하시기 바랍니다.*
+
 * [API 문서](../../API/UPPERCASE-MODEL/README.md)
 
 ## 목차
@@ -32,12 +35,10 @@ npm install uppercase-model
 require('uppercase-model');
 ```
 
-UPPERCASE-MODEL은 UPPERCASE-ROOM을 기반으로 하기 때문에 룸 서버 설정을 완료한 후 사용 가능합니다. 이에 대한 자세한 사항은 [UPPERCASE-ROOM 문서](UPPERCASE-ROOM.md)를 살펴보시기 바랍니다.
-
-*UPPERCASE-MODEL 모듈을 따로 사용하는 것이 아닌, UPPERCASE를 기반으로 프로젝트를 생성한 경우에는 [모델 생성](CREATE_MODEL.md) 문서를 참고하시기 바랍니다.*
+UPPERCASE-MODEL은 UPPERCASE-ROOM을 기반으로 하기 때문에 룸 서버 설정을 완료한 후에 사용이 가능합니다. 룸 서버 설정에 대한 자세한 내용은 [UPPERCASE-ROOM 문서](UPPERCASE-ROOM.md)를 살펴보시기 바랍니다.
 
 ## `Box.MODEL`
-`Box.MODEL` 클래스
+UPPERCASE 모델을 생성하는 `Box.MODEL` 클래스
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
@@ -476,9 +477,9 @@ Model.checkIsExists({
 
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
-## 초기화 데이터
+## 초기 데이터 설정
 
-## 함수별 설정
+## 함수별 전처리/후처리 설정
 
 ## 모델 확장
 API에서 기본으로 제공되지 않는 기능들은 직접 구현하여 모델을 확장시킬 수 있습니다. 모델 확장은 node.js 환경과 웹 브라우저 환경에서 각각 진행합니다.

@@ -10,7 +10,37 @@ BOX란 UPPERCASE용 모듈을 지칭하는 말입니다.
 * [BOX 저장소 사이트](#BOX-저장소-사이트)
 
 ## BOX 생성
-[UPPERCASE-CORE의 `BOX` 메소드](UPPERCASE-CORE-COMMON.md#uppercase의-모듈화-box)로 BOX를 생성할 수 있습니다.
+UPPERCASE 기반 프로젝트에서는 폴더 구조를 읽어 자동으로 BOX들이 생성됩니다. **프로젝트 폴더의 이름**과, `BOX` 폴더 내부의 각 폴더들의 이름으로 BOX가 생성됩니다.
+
+예를 들어 아래와 같이 폴더가 구성되어 있다면, `UUI`, `UANI`, `Yogurt`, `Sample` BOX가 생성됩니다. (`Sample`은 프로젝트 폴더의 이름입니다.)
+
+```
+Sample
+    __PACK
+    __RF
+    BOX
+        UUI
+            BROWSER.js
+        UANI
+            BROWSER.js
+        Yogurt
+            BROWSER.js
+	Sample
+        COMMON
+            SampleModel.js
+        NODE
+        	MAIN.js
+    	BROWSER
+    		MAIN.js
+    		CONNECTED.js
+    		DISCONNECTED.js
+        R
+    Sample.js
+    VERSION
+    DEPENDENCY
+```
+
+UPPERCASE 기반 프로젝트를 생성하지 않고 [UPPERCASE의 모듈들](../GUIDE.md#모듈-별-문서)을 따로 사용하는 경우에는 [UPPERCASE-CORE의 `BOX` 메소드](UPPERCASE-CORE-COMMON.md#uppercase의-모듈화-box)로 BOX를 생성할 수 있습니다.
 
 ```javascript
 BOX('SampleBox');
@@ -44,34 +74,6 @@ SomeBox.SomePack.GoodPack.SomeMethod();
 ```
 
 따라서 BOX 단위로 프로젝트를 나눌 수 있습니다. 이를 조합하여 큰 규모의 프로젝트를 제작할 수도 있습니다.
-
-UPPERCASE 기반 프로젝트에서는 폴더 구조를 읽어 자동으로 BOX들이 생성됩니다. **프로젝트 폴더의 이름**과, `BOX` 폴더 내부의 각 폴더들의 이름으로 BOX가 생성됩니다.
-
-예를 들어 아래와 같이 폴더가 구성되어 있다면, `UUI`, `UANI`, `Yogurt`, `Sample` BOX가 생성됩니다. (`Sample`은 프로젝트 폴더의 이름입니다.)
-
-```
-Sample
-    BOX
-        UUI
-            BROWSER.js
-        UANI
-            BROWSER.js
-        Yogurt
-            BROWSER.js
-	Sample
-        COMMON
-        NODE
-        	MAIN.js
-    	BROWSER
-    		MAIN.js
-    		CONNECTED.js
-    		DISCONNECTED.js
-    		RECONNECT.js
-        R
-    Sample.js
-    VERSION
-    DEPENDENCY
-```
 
 ## BOX의 일반적인 구성요소
 * `{{프로젝트 이름}}` 프로젝트 이름에 해당하는 폴더입니다. 프로젝트의 모든 소스코드를 저장하는 곳입니다.
