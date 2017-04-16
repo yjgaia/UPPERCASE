@@ -4167,7 +4167,7 @@ global.NODE = CLASS({
 			return childNodes;
 		};
 
-		let setParent = (node) => {
+		let setParent = self.setParent = (node) => {
 			//OPTIONAL: node
 			
 			if (parentNode !== undefined) {
