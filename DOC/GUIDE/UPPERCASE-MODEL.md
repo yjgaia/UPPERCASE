@@ -13,7 +13,7 @@ UPPERCASE-MODEL은 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8
 * [사용방법](#사용방법)
 * [`Box.MODEL`](#model)
 * [초기화 데이터](#초기화-데이터)
-* [함수별 설정](#함수별-설정)
+* [함수별 전처리/후처리 설정](#함수별-설정)
 * [모델 기능 확장](#모델-기능-확장)
 
 ## 사용방법
@@ -38,7 +38,7 @@ require('uppercase-model');
 UPPERCASE-MODEL은 UPPERCASE-ROOM을 기반으로 하기 때문에 룸 서버 설정을 완료한 후에 사용이 가능합니다. 룸 서버 설정에 대한 자세한 내용은 [UPPERCASE-ROOM 문서](UPPERCASE-ROOM.md)를 살펴보시기 바랍니다.
 
 ## `Box.MODEL`
-UPPERCASE 모델을 생성하는 `Box.MODEL` 클래스
+`Box.MODEL` 클래스
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
