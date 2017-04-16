@@ -902,6 +902,8 @@ CONNECT_TO_SOCKET_SERVER({
 WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
 	// clientInfo				클라이언트 정보
 	// clientInfo.ip			클라이언트의 IP
+	// clientInfo.headers		요청 헤더
+	// clientInfo.cookies  		클라이언트에서 넘어온 HTTP 쿠키
 	// clientInfo.connectTime	접속 시작 시간
 	// on						메소드를 생성합니다.
 	// off						메소드를 제거합니다.
