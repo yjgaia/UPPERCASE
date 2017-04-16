@@ -21,3 +21,4 @@ UPPERCASE의 최신 변경 사항을 다룹니다. 변경 사항을 확인하신
 - 큰 장점이 없는 DB 캐시 기능이 제거되었습니다.
 - isUsingHTMLSnapshot, isMobileFullScreen 설정이 제거되었습니다.
 - SHA1 알고리즘의 취약점이 발견되어 SHA1 메소드가 제거되었습니다.
+- COOKIE_STORE가 제거되었습니다.
