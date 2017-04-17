@@ -40,6 +40,7 @@ _.each([52, 97], (value, index) => {
 
 ## UPPERCASE의 구조
 ![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/DOC/GUIDE/STRUCTURE.png)
+UPPERCASE는 [각종 모듈](DOC/GUIDE.md#모듈-별-문서)과 [BOX](DOC/GUIDE/BOX.md), [Uniconn](#클라이언트) 등으로 이루어져 있습니다.
 
 ## UPPERCASE가 제공하는 기능들
 UPPERCASE는 동적인 웹 애플리케이션을 개발하기 위해 필요한 다양한 기능들을 제공합니다.
