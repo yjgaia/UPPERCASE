@@ -59,6 +59,8 @@ UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를
 			else {
 				location.reload();
 			}
+			
+			return false;
 		}
 	}
 	```
@@ -82,6 +84,8 @@ UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를
 			else {
 				location.reload();
 			}
+			
+			return false;
 		}
 	}
 	```
@@ -132,7 +136,7 @@ UPPERCASE는 웹 브라우저에 상관 없이 같은 모양이 출력되게 하
 </html>
 ```
 
-
+**`<script src="/__SCRIPT"></script>` 코드는 반드시 `<body></body>` 사이에 들어가야 합니다. `<head></head>`에 들어가면 제대로 작동하지 않습니다.**
 
 
 

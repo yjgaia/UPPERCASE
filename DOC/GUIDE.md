@@ -28,7 +28,7 @@ UPPERCASE를 사용하기 위해 필요한 사전 지식들은 다음과 같습�
 * [프로젝트 생성](GUIDE/CREATE_PROJECT.md)
 * [프로젝트 설정](GUIDE/CONFIGURATION.md)
 * [모델 생성](GUIDE/CREATE_MODEL.md)
-* [UPPERCASE의 모듈 시스템, BOX 사용하기](GUIDE/BOX.md)
+* [UPPERCASE의 모듈 시스템, BOX](GUIDE/BOX.md)
 * [튜토리얼](TUTORIAL.md)
 
 ## 출시하기

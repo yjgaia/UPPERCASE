@@ -3,6 +3,13 @@
 # 모델 생성
 UPPERCASE는 Model-View 패턴을 따릅니다. 여기서는 Model에 해당하는 부분을 만드는 방법을 알아보겠습니다.
 
+## 목차
+* MongoDB 실행하기
+* 데이터베이스 설정
+* 모델 정의 코드 작성
+* 모델 작동 확인하기
+* 모델의 세부 기능 작성
+
 ## MongoDB 실행하기
 UPPERCASE는 데이터베이스로 MongoDB를 사용합니다. 콘솔 혹은 터미널에서 MongoDB를 실행합니다.
 
@@ -39,8 +46,8 @@ BOOT({
 });
 ```
 
-## 모델 코드 작성
-이제, 모델 코드를 작성해보겠습니다. 프로젝트의 COMMON 폴더 이하에 SomeModel.js를 만들어 봅시다. 이 때, 데이터 검증을 위해 UJS의 VALID 기능을 사용하므로 해당 내용을 숙지하시기 바랍니다.
+## 모델 정의 코드 작성
+이제, UPPERCASE 모델을 정의하는 코드를 작성해보겠습니다. 프로젝트의 COMMON 폴더 이하에 SomeModel.js를 만들어 봅시다. 이 때, 데이터 검증을 위해 UJS의 VALID 기능을 사용하므로 해당 내용을 숙지하시기 바랍니다.
 
 ###### SomeModel.js
 ```javascript
@@ -94,7 +101,7 @@ Sample.SomeModel = OBJECT({
 ```
 
 ## 모델 작동 확인하기
-모델 작동을 확인하기 위해 프로젝트의 NODE 폴더 이하에 MAIN.js를 만들어, 다음과 같은 코드를 추가해 보겠습니다. MAIN.js는 UPPERCASE가 프로젝트 부팅 시 맨 처음 실행하는 코드입니다.
+모델의 작동을 확인하기 위해 프로젝트의 NODE 폴더 이하에 MAIN.js를 만들어, 다음과 같은 코드를 추가해 보겠습니다. MAIN.js는 UPPERCASE가 프로젝트 부팅 시 맨 처음 실행하는 코드입니다.
 
 ###### MAIN.js
 ```javascript
@@ -144,4 +151,9 @@ node Sample.js
 
 [Robomongo](http://www.robomongo.org)등의 MongoDB 관리 툴로 데이터가 잘 생성되었는지 확인해보시기 바랍니다.
 
-다음 문서: [간단 블로그 만들기](MAKE_BLOG.md)
+## 모델의 세부 기능 작성
+모델의 세부 기능 작성에 대해서는 UPPERCASE-MODEL 문서에 수록되어 있습니다.
+
+* [초기화 데이터 설정]
+* [함수별 전처리/후처리 설정]
+* [모델 기능 확장]
