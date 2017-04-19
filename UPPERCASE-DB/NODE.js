@@ -104,7 +104,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			let backupUsername = params.backupUsername;
 			let backupPassword = params.backupPassword;
 			
-			if (callCountStore !== undefined) {
+			if (callCountStore === undefined) {
 				callCountStore = SHARED_STORE('__DB_CALL_COUNT_STORE');
 			}
 			
