@@ -323,7 +323,7 @@ FOR_BOX((box) => {
 									} else {
 										SHOW_WARNING(box.boxName + '.' + name + 'Model.get', '데이터가 존재하지 않습니다.', idOrParams);
 									}
-								} else {
+								} else if (callback !== undefined) {
 									callback(savedData);
 								}
 							});
@@ -374,7 +374,7 @@ FOR_BOX((box) => {
 		
 									let exit;
 		
-									if (isExited !== true) {
+									if (isExited !== true && callback !== undefined) {
 		
 										subRoom = box.ROOM({
 											roomServerName : roomServerName,
@@ -707,7 +707,7 @@ FOR_BOX((box) => {
 									} else {
 										SHOW_WARNING(box.boxName + '.' + name + 'Model.find', '인증되지 않았습니다.');
 									}
-								} else {
+								} else if (callback !== undefined) {
 									callback(savedDataSet);
 								}
 							});
@@ -751,7 +751,7 @@ FOR_BOX((box) => {
 		
 									let exit;
 		
-									if (isExited !== true) {
+									if (isExited !== true && callback !== undefined) {
 		
 										EACH(savedDataSet, (savedData, i) => {
 		
@@ -858,7 +858,7 @@ FOR_BOX((box) => {
 									} else {
 										SHOW_WARNING(box.boxName + '.' + name + 'Model.count', '인증되지 않았습니다.');
 									}
-								} else {
+								} else if (callback !== undefined) {
 									callback(count);
 								}
 							});
@@ -914,7 +914,7 @@ FOR_BOX((box) => {
 									} else {
 										SHOW_WARNING(box.boxName + '.' + name + 'Model.checkIsExists', '인증되지 않았습니다.');
 									}
-								} else {
+								} else if (callback !== undefined) {
 									callback(isExists);
 								}
 							});

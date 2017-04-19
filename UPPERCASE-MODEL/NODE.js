@@ -1286,7 +1286,7 @@ FOR_BOX((box) => {
 							} else {
 								SHOW_WARNING(box.boxName + '.' + name + 'Model.get', '데이터가 존재하지 않습니다.', idOrParams);
 							}
-						} else {
+						} else if (callback !== undefined) {
 							callback(savedData);
 						}
 					});
@@ -1582,7 +1582,7 @@ FOR_BOX((box) => {
 							} else {
 								SHOW_ERROR(box.boxName + '.' + name + 'Model.find', errorMsg);
 							}
-						} else {
+						} else if (callback !== undefined) {
 							callback(savedDataSet);
 						}
 					});
@@ -1625,7 +1625,7 @@ FOR_BOX((box) => {
 							} else {
 								SHOW_ERROR(box.boxName + '.' + name + 'Model.count', errorMsg);
 							}
-						} else {
+						} else if (callback !== undefined) {
 							callback(count);
 						}
 					});
@@ -1668,7 +1668,7 @@ FOR_BOX((box) => {
 							} else {
 								SHOW_ERROR(box.boxName + '.' + name + 'Model.checkIsExists', errorMsg);
 							}
-						} else {
+						} else if (callback !== undefined) {
 							callback(isExists);
 						}
 					});
