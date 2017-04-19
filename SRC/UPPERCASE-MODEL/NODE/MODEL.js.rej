@@ -1,0 +1,10 @@
+diff a/SRC/UPPERCASE-MODEL/NODE/MODEL.js b/SRC/UPPERCASE-MODEL/NODE/MODEL.js	(rejected hunks)
+@@ -1585,7 +1585,7 @@
+ 							} else {
+ 								SHOW_ERROR(box.boxName + '.' + name + 'Model.count', errorMsg);
+ 							}
+-						} else {
++						} else if (callback !== undefined) {
+ 							callback(count);
+ 						}
+ 					});
