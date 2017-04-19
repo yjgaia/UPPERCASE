@@ -98,7 +98,7 @@ global.SHARED_STORE = CLASS((cls) => {
 			
 			if ($inc !== undefined) {
 				EACH($inc, (value, name) => {
-					if (avedData[name] === undefined) {
+					if (savedData[name] === undefined) {
 						savedData[name] = 0;
 					}
 					savedData[name] += value;
