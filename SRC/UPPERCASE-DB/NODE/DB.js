@@ -39,6 +39,15 @@ FOR_BOX((box) => {
 				let name;
 				let isNotUsingObjectId;
 				let isNotUsingHistory;
+	
+				if (CHECK_IS_DATA(nameOrParams) !== true) {
+					name = nameOrParams;
+				} else {
+					dbServerName = nameOrParams.dbServerName;
+					name = nameOrParams.name;
+					isNotUsingObjectId = nameOrParams.isNotUsingObjectId;
+					isNotUsingHistory = nameOrParams.isNotUsingHistory;
+				}
 				
 				let waitingCreateInfos = [];
 				let waitingGetInfos = [];
@@ -126,15 +135,6 @@ FOR_BOX((box) => {
 						f(filter);
 					}
 				};
-	
-				if (CHECK_IS_DATA(nameOrParams) !== true) {
-					name = nameOrParams;
-				} else {
-					dbServerName = nameOrParams.dbServerName;
-					name = nameOrParams.name;
-					isNotUsingObjectId = nameOrParams.isNotUsingObjectId;
-					isNotUsingHistory = nameOrParams.isNotUsingHistory;
-				}
 	
 				let create = self.create = (data, callbackOrHandlers) => {
 					//REQUIRED: data
@@ -324,7 +324,7 @@ FOR_BOX((box) => {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB, backupDB) => {
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB, backupDB, _increaseCallCount) => {
 					
 					let collection = nativeDB.collection(box.boxName + '.' + name);
 					let historyCollection;
@@ -334,6 +334,10 @@ FOR_BOX((box) => {
 					if (backupDB !== undefined) {
 						backupCollection = backupDB.collection(box.boxName + '.' + name);
 					}
+					
+					let increaseCallCount = (method) => {
+						_increaseCallCount(box.boxName + '.' + name + 'DB.' + method);
+					};
 					
 					let addHistory = (method, id, change, time) => {
 						//REQUIRED: method
@@ -446,7 +450,9 @@ FOR_BOX((box) => {
 									}
 								});
 							}
-	
+							
+							increaseCallCount('create');
+							
 							collection.insertOne(data, {
 								w : 1
 							}, (error, result) => {
@@ -517,6 +523,8 @@ FOR_BOX((box) => {
 								errorHandler = callbackOrHandlers.error;
 								callback = callbackOrHandlers.success;
 							}
+							
+							increaseCallCount('get');
 							
 							collection.find(filter).sort(sort).limit(1).toArray((error, savedDataSet) => {
 								
@@ -841,6 +849,8 @@ FOR_BOX((box) => {
 												}
 											});
 										}
+										
+										increaseCallCount('update');
 	
 										collection.updateOne(filter, updateData, {
 											w : 1
@@ -1074,7 +1084,9 @@ FOR_BOX((box) => {
 											}
 										});
 									}
-	
+									
+									increaseCallCount('remove');
+									
 									collection.deleteOne(filter, {
 										w : 1
 									}, (error, result) => {
@@ -1221,6 +1233,8 @@ FOR_BOX((box) => {
 								}
 							};
 							
+							increaseCallCount('find');
+							
 							if (isFindAll === true) {
 	
 								// find all data set.
@@ -1290,6 +1304,8 @@ FOR_BOX((box) => {
 							}
 	
 							makeUpFilter(filter);
+							
+							increaseCallCount('count');
 							
 							collection.find(filter).count((error, count) => {
 	
@@ -1370,6 +1386,8 @@ FOR_BOX((box) => {
 	
 							makeUpFilter(filter);
 							
+							increaseCallCount('checkIsExists');
+							
 							collection.find(filter).count((error, count) => {
 	
 								if (error === TO_DELETE) {
@@ -1416,6 +1434,8 @@ FOR_BOX((box) => {
 								errorHandler = callbackOrHandlers.error;
 								callback = callbackOrHandlers.success;
 							}
+							
+							increaseCallCount('aggregate');
 	
 							collection.aggregate(params).toArray((error, result) => {
 	
@@ -1466,6 +1486,8 @@ FOR_BOX((box) => {
 									callback = callbackOrHandlers.success;
 								}
 							}
+							
+							increaseCallCount('createIndex');
 							
 							collection.createIndex(index, {
 								w : 1
@@ -1526,6 +1548,8 @@ FOR_BOX((box) => {
 								}
 							}
 							
+							increaseCallCount('removeIndex');
+							
 							collection.dropIndex(index, {
 								w : 1
 							}, (error) => {
@@ -1576,6 +1600,8 @@ FOR_BOX((box) => {
 								errorHandler = callbackOrHandlers.error;
 								callback = callbackOrHandlers.success;
 							}
+							
+							increaseCallCount('findAllIndexes');
 	
 							collection.indexInformation((error, indexInfo) => {
 								

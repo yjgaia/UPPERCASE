@@ -265,10 +265,10 @@ FOR_BOX((box) => {
 							//OPTIONAL: idOrParams.sort
 							//OPTIONAL: idOrParams.isRandom
 							//REQUIRED: callbackOrHandlers
-							//REQUIRED: callbackOrHandlers.error
-							//REQUIRED: callbackOrHandlers.notAuthed
-							//REQUIRED: callbackOrHandlers.notExists
-							//REQUIRED: callbackOrHandlers.success
+							//OPTIONAL: callbackOrHandlers.error
+							//OPTIONAL: callbackOrHandlers.notAuthed
+							//OPTIONAL: callbackOrHandlers.notExists
+							//OPTIONAL: callbackOrHandlers.success
 		
 							let errorHandler;
 							let notAuthedHandler;
@@ -374,7 +374,7 @@ FOR_BOX((box) => {
 		
 									let exit;
 		
-									if (isExited !== true && callback !== undefined) {
+									if (isExited !== true) {
 		
 										subRoom = box.ROOM({
 											roomServerName : roomServerName,
@@ -707,7 +707,7 @@ FOR_BOX((box) => {
 									} else {
 										SHOW_WARNING(box.boxName + '.' + name + 'Model.find', '인증되지 않았습니다.');
 									}
-								} else if (callback !== undefined) {
+								} else {
 									callback(savedDataSet);
 								}
 							});
@@ -751,7 +751,7 @@ FOR_BOX((box) => {
 		
 									let exit;
 		
-									if (isExited !== true && callback !== undefined) {
+									if (isExited !== true) {
 		
 										EACH(savedDataSet, (savedData, i) => {
 		
@@ -858,7 +858,7 @@ FOR_BOX((box) => {
 									} else {
 										SHOW_WARNING(box.boxName + '.' + name + 'Model.count', '인증되지 않았습니다.');
 									}
-								} else if (callback !== undefined) {
+								} else {
 									callback(count);
 								}
 							});
@@ -914,7 +914,7 @@ FOR_BOX((box) => {
 									} else {
 										SHOW_WARNING(box.boxName + '.' + name + 'Model.checkIsExists', '인증되지 않았습니다.');
 									}
-								} else if (callback !== undefined) {
+								} else {
 									callback(isExists);
 								}
 							});

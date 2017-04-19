@@ -11,6 +11,34 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 	let backupDBs = {};
 	
 	let initDBFuncMap = {};
+	
+	let callCountStore;
+	
+	let increaseCallCount = (dbServerName, method) => {
+		
+		if (callCountStore !== undefined) {
+			
+			let updateData = {
+				$inc : {}
+			};
+			updateData.$inc[method] = 1; 
+			
+			callCountStore.update({
+				id : dbServerName,
+				data : updateData
+			});
+		}
+	};
+	
+	let getCallCounts = m.getCallCounts = (callback) => {
+		//REQUIRED: callback
+		
+		if (callCountStore === undefined) {
+			callback({});
+		} else {
+			callCountStore.all(callback);
+		}
+	};
 
 	let addInitDBFunc = m.addInitDBFunc = (dbServerName, initDBFunc) => {
 		//OPTIONAL: dbServerName
@@ -34,7 +62,9 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			initDBFuncMap[dbServerName].push(initDBFunc);
 			
 		} else {
-			initDBFunc(nativeDBs[dbServerName]);
+			initDBFunc(nativeDBs[dbServerName], backupDBs[dbServerName], (method) => {
+				increaseCallCount(dbServerName, method);
+			});
 		}
 	};
 
@@ -67,6 +97,15 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			let backupName = params.backupName;
 			let backupUsername = params.backupUsername;
 			let backupPassword = params.backupPassword;
+			
+			if (callCountStore !== undefined) {
+				callCountStore = SHARED_STORE('__DB_CALL_COUNT_STORE');
+			}
+			
+			callCountStore.save({
+				id : dbServerName,
+				data : {}
+			});
 			
 			NEXT([
 			(next) => {
@@ -131,7 +170,9 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 					if (initDBFuncMap[dbServerName] !== undefined) {
 						
 						EACH(initDBFuncMap[dbServerName], (initDBFunc) => {
-							initDBFunc(nativeDB, backupDB);
+							initDBFunc(nativeDB, backupDB, (method) => {
+								increaseCallCount(dbServerName, method);
+							});
 						});
 						
 						delete initDBFuncMap[dbServerName];

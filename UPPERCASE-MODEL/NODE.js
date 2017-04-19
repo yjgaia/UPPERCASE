@@ -1244,7 +1244,7 @@ FOR_BOX((box) => {
 					//REQUIRED: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.error
 					//OPTIONAL: callbackOrHandlers.notExists
-					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.success
 
 					let errorHandler;
 					let notExistsHandler;
@@ -1582,7 +1582,7 @@ FOR_BOX((box) => {
 							} else {
 								SHOW_ERROR(box.boxName + '.' + name + 'Model.find', errorMsg);
 							}
-						} else if (callback !== undefined) {
+						} else {
 							callback(savedDataSet);
 						}
 					});
@@ -1625,7 +1625,7 @@ FOR_BOX((box) => {
 							} else {
 								SHOW_ERROR(box.boxName + '.' + name + 'Model.count', errorMsg);
 							}
-						} else if (callback !== undefined) {
+						} else {
 							callback(count);
 						}
 					});
@@ -1668,7 +1668,7 @@ FOR_BOX((box) => {
 							} else {
 								SHOW_ERROR(box.boxName + '.' + name + 'Model.checkIsExists', errorMsg);
 							}
-						} else if (callback !== undefined) {
+						} else {
 							callback(isExists);
 						}
 					});
