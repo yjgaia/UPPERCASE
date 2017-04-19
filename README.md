@@ -65,6 +65,7 @@ UPPERCASE는 이 외에도 업로드 기능, 각종 유틸리티 기능, 모든 
 
 ## 문서
 * [설치하기](DOC/INSTALL.md)
+* [개발하기](DOC/GUIDE.md#개발하기)
 * [튜토리얼](DOC/TUTORIAL.md)
 * [가이드](DOC/GUIDE.md)
 * [API 문서](API/README.md)

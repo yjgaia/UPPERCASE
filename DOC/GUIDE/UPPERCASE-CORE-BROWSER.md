@@ -1493,7 +1493,7 @@ store.remove(name);
 MSG({
 	ko : '안녕하세요',
 	en : 'Hello',
-	jp : 'こんにちは'
+	ja : 'こんにちは'
 });
 ```
 

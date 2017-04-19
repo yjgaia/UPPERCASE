@@ -13,14 +13,7 @@ global.INFO = OBJECT({
 			let lang = STORE('__INFO').get('lang');
 
 			if (lang === undefined) {
-
-				lang = navigator.language;
-
-				if (lang.length > 2) {
-					lang = lang.substring(0, 2);
-				}
-
-				lang = lang.toLowerCase();
+				lang = navigator.language.toLowerCase();
 			}
 
 			return lang;
