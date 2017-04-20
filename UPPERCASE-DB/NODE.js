@@ -19,6 +19,8 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 	let initDBFuncMap = {};
 	
 	let callCountStore;
+	let callTimeStore;
+	let resultCountStore;
 	
 	let increaseCallCount = (dbServerName, method) => {
 		
@@ -43,6 +45,58 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			callback({});
 		} else {
 			callCountStore.all(callback);
+		}
+	};
+	
+	let increaseCallTime = (dbServerName, method, time) => {
+		
+		if (callTimeStore !== undefined) {
+			
+			let updateData = {
+				$inc : {}
+			};
+			updateData.$inc[method] = time; 
+			
+			callTimeStore.update({
+				id : dbServerName,
+				data : updateData
+			});
+		}
+	};
+	
+	let getCallTimes = m.getCallTimes = (callback) => {
+		//REQUIRED: callback
+		
+		if (callTimeStore === undefined) {
+			callback({});
+		} else {
+			callTimeStore.all(callback);
+		}
+	};
+	
+	let increaseResultCount = (dbServerName, method, count) => {
+		
+		if (resultCountStore !== undefined) {
+			
+			let updateData = {
+				$inc : {}
+			};
+			updateData.$inc[method] = count; 
+			
+			resultCountStore.update({
+				id : dbServerName,
+				data : updateData
+			});
+		}
+	};
+	
+	let getResultCounts = m.getResultCounts = (callback) => {
+		//REQUIRED: callback
+		
+		if (resultCountStore === undefined) {
+			callback({});
+		} else {
+			resultCountStore.all(callback);
 		}
 	};
 
@@ -70,6 +124,10 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 		} else {
 			initDBFunc(nativeDBs[dbServerName], backupDBs[dbServerName], (method) => {
 				increaseCallCount(dbServerName, method);
+			}, (method, time) => {
+				increaseCallTime(dbServerName, method, time);
+			}, (method, count) => {
+				increaseResultTime(dbServerName, method, count);
 			});
 		}
 	};
@@ -109,6 +167,24 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			}
 			
 			callCountStore.save({
+				id : dbServerName,
+				data : {}
+			});
+			
+			if (callTimeStore === undefined) {
+				callTimeStore = SHARED_STORE('__DB_CALL_TIME_STORE');
+			}
+			
+			callTimeStore.save({
+				id : dbServerName,
+				data : {}
+			});
+			
+			if (resultCountStore === undefined) {
+				resultCountStore = SHARED_STORE('__DB_RESULT_COUNT_STORE');
+			}
+			
+			resultCountStore.save({
 				id : dbServerName,
 				data : {}
 			});
@@ -178,6 +254,10 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 						EACH(initDBFuncMap[dbServerName], (initDBFunc) => {
 							initDBFunc(nativeDB, backupDB, (method) => {
 								increaseCallCount(dbServerName, method);
+							}, (method, time) => {
+								increaseCallTime(dbServerName, method, time);
+							}, (method, count) => {
+								increaseResultTime(dbServerName, method, count);
 							});
 						});
 						
@@ -519,7 +599,7 @@ FOR_BOX((box) => {
 					});
 				};
 	
-				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB, backupDB, _increaseCallCount) => {
+				CONNECT_TO_DB_SERVER.addInitDBFunc(dbServerName, (nativeDB, backupDB, _increaseCallCount, _increaseCallTime, _increaseResultCount) => {
 					
 					let collection = nativeDB.collection(box.boxName + '.' + name);
 					let historyCollection;
@@ -532,6 +612,14 @@ FOR_BOX((box) => {
 					
 					let increaseCallCount = (method) => {
 						_increaseCallCount(box.boxName + '.' + name + 'DB.' + method);
+					};
+					
+					let increaseCallTime = (method, time) => {
+						_increaseCallTime(box.boxName + '.' + name + 'DB.' + method, time);
+					};
+					
+					let increaseResultCount = (method, count) => {
+						_increaseResultCount(box.boxName + '.' + name + 'DB.' + method, count);
 					};
 					
 					let addHistory = (method, id, change, time) => {
@@ -648,6 +736,8 @@ FOR_BOX((box) => {
 							
 							increaseCallCount('create');
 							
+							let now = Date.now();
+							
 							collection.insertOne(data, {
 								w : 1
 							}, (error, result) => {
@@ -677,6 +767,8 @@ FOR_BOX((box) => {
 										errorMsg : error !== TO_DELETE ? error.toString() : '_id가 이미 존재합니다.'
 									}, errorHandler);
 								}
+								
+								increaseCallTime('create', Date.now() - now);
 							});
 						}
 	
@@ -721,6 +813,8 @@ FOR_BOX((box) => {
 							
 							increaseCallCount('get');
 							
+							let now = Date.now();
+							
 							collection.find(filter).sort(sort).limit(1).toArray((error, savedDataSet) => {
 								
 								if (error === TO_DELETE) {
@@ -755,6 +849,8 @@ FOR_BOX((box) => {
 										errorMsg : error.toString()
 									}, errorHandler);
 								}
+								
+								increaseCallTime('get', Date.now() - now);
 							});
 						}
 	
@@ -1046,6 +1142,8 @@ FOR_BOX((box) => {
 										}
 										
 										increaseCallCount('update');
+										
+										let now = Date.now();
 	
 										collection.updateOne(filter, updateData, {
 											w : 1
@@ -1154,6 +1252,8 @@ FOR_BOX((box) => {
 													}
 												});
 											}
+											
+											increaseCallTime('update', Date.now() - now);
 										});
 									}
 								}
@@ -1282,6 +1382,8 @@ FOR_BOX((box) => {
 									
 									increaseCallCount('remove');
 									
+									let now = Date.now();
+									
 									collection.deleteOne(filter, {
 										w : 1
 									}, (error, result) => {
@@ -1307,13 +1409,15 @@ FOR_BOX((box) => {
 										else {
 	
 											if (isNotUsingHistory !== true) {
-												addHistory('remove', id, undefined, new Date());
+												addHistory('remove', id, originData, new Date());
 											}
 											
 											if (callback !== undefined) {
 												callback(originData);
 											}
 										}
+										
+										increaseCallTime('remove', Date.now() - now);
 									});
 								}
 							});
@@ -1405,6 +1509,10 @@ FOR_BOX((box) => {
 	
 							makeUpFilter(filter);
 							
+							increaseCallCount('find');
+							
+							let now = Date.now();
+							
 							let proc = (error, savedDataSet) => {
 	
 								if (error === TO_DELETE) {
@@ -1415,6 +1523,8 @@ FOR_BOX((box) => {
 									});
 									
 									callback(savedDataSet);
+									
+									increaseResultCount('find', savedDataSet.length);
 								}
 	
 								// if error is not TO_DELETE
@@ -1426,9 +1536,9 @@ FOR_BOX((box) => {
 										errorMsg : error.toString()
 									}, errorHandler);
 								}
+								
+								increaseCallTime('find', Date.now() - now);
 							};
-							
-							increaseCallCount('find');
 							
 							if (isFindAll === true) {
 	
@@ -1502,6 +1612,8 @@ FOR_BOX((box) => {
 							
 							increaseCallCount('count');
 							
+							let now = Date.now();
+							
 							collection.find(filter).count((error, count) => {
 	
 								if (error === TO_DELETE) {
@@ -1517,6 +1629,8 @@ FOR_BOX((box) => {
 										errorMsg : error.toString()
 									}, errorHandler);
 								}
+								
+								increaseCallTime('count', Date.now() - now);
 							});
 						}
 	
@@ -1583,6 +1697,8 @@ FOR_BOX((box) => {
 							
 							increaseCallCount('checkIsExists');
 							
+							let now = Date.now();
+							
 							collection.find(filter).count((error, count) => {
 	
 								if (error === TO_DELETE) {
@@ -1598,6 +1714,8 @@ FOR_BOX((box) => {
 										errorMsg : error.toString()
 									}, errorHandler);
 								}
+								
+								increaseCallTime('checkIsExists', Date.now() - now);
 							});
 						}
 	
@@ -1631,6 +1749,8 @@ FOR_BOX((box) => {
 							}
 							
 							increaseCallCount('aggregate');
+							
+							let now = Date.now();
 	
 							collection.aggregate(params).toArray((error, result) => {
 	
@@ -1648,6 +1768,8 @@ FOR_BOX((box) => {
 										errorMsg : error.toString()
 									}, errorHandler);
 								}
+								
+								increaseCallTime('aggregate', Date.now() - now);
 							});
 						}
 	
@@ -1684,6 +1806,8 @@ FOR_BOX((box) => {
 							
 							increaseCallCount('createIndex');
 							
+							let now = Date.now();
+							
 							collection.createIndex(index, {
 								w : 1
 							}, (error) => {
@@ -1704,6 +1828,8 @@ FOR_BOX((box) => {
 										errorMsg : error.toString()
 									}, errorHandler);
 								}
+								
+								increaseCallTime('createIndex', Date.now() - now);
 							});
 						}
 	
@@ -1745,6 +1871,8 @@ FOR_BOX((box) => {
 							
 							increaseCallCount('removeIndex');
 							
+							let now = Date.now();
+							
 							collection.dropIndex(index, {
 								w : 1
 							}, (error) => {
@@ -1765,6 +1893,8 @@ FOR_BOX((box) => {
 										errorMsg : error.toString()
 									}, errorHandler);
 								}
+								
+								increaseCallTime('removeIndex', Date.now() - now);
 							});
 						}
 	
@@ -1797,6 +1927,8 @@ FOR_BOX((box) => {
 							}
 							
 							increaseCallCount('findAllIndexes');
+							
+							let now = Date.now();
 	
 							collection.indexInformation((error, indexInfo) => {
 								
@@ -1814,8 +1946,10 @@ FOR_BOX((box) => {
 										
 										indexes.push(index);
 									});
-	
+
 									callback(indexes);
+									
+									increaseResultCount('findAllIndexes', indexes.length);
 								}
 	
 								// if error is not TO_DELETE
@@ -1826,6 +1960,8 @@ FOR_BOX((box) => {
 										errorMsg : error.toString()
 									}, errorHandler);
 								}
+								
+								increaseCallTime('findAllIndexes', Date.now() - now);
 							});
 						}
 	
@@ -1911,6 +2047,7 @@ FOR_BOX((box) => {
 		};
 	});
 });
+
 
 FOR_BOX((box) => {
 

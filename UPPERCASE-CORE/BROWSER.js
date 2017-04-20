@@ -3073,38 +3073,22 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 	}
 });
 
-/**
- * Browser store class (using Cookie)
+/*
+ * 쿠키 저장소 클래스
+ * 
+ * 쿠키에 데이터를 저장할 수 있는 클래스 입니다.
+ * domain 파라미터를 통해 쿠키를 불러 올 수 있는 도메인 범위를 설정할 수 있습니다.
+ * 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
  */
 global.COOKIE_STORE = CLASS({
 
-	init : function(inner, self, storeNameOrParams) {
-		'use strict';
+	init : (inner, self, storeNameOrParams) => {
 		//REQUIRED: storeNameOrParams
 		//REQUIRED: storeNameOrParams.storeName
 		//OPTIONAL: storeNameOrParams.domain
 
-		var
-		// store name
-		storeName,
-		
-		// domain
-		domain,
-		
-		// gen full name.
-		genFullName,
-
-		// save.
-		save,
-
-		// get.
-		get,
-		
-		// list.
-		list,
-
-		// remove.
-		remove;
+		let storeName;
+		let domain;
 		
 		if (CHECK_IS_DATA(storeNameOrParams) !== true) {
 			storeName = storeNameOrParams;
@@ -3113,63 +3097,38 @@ global.COOKIE_STORE = CLASS({
 			domain = storeNameOrParams.domain;
 		}
 
-		inner.genFullName = genFullName = function(name) {
+		let genFullName = inner.genFullName = (name) => {
 			//REQUIRED: name
 
 			return storeName + '.' + name;
 		};
 
-		self.save = save = function(params) {
+		let save = self.save = (params) => {
 			//REQUIRED: params
 			//REQUIRED: params.name
 			//REQUIRED: params.value
-			//OPTIONAL: params.isToSession
 
-			var
-			// name
-			name = params.name,
+			let name = params.name;
+			let value = params.value;
 
-			// value
-			value = params.value,
-
-			// expire time
-			expireTime,
-
-			// is to session
-			isToSession = params.isToSession;
-
-			if (isToSession === true) {
-				expireTime = 0;
-			} else {
-
-				// set expire time 1 year
-				expireTime = new Date();
-				expireTime.setDate(expireTime.getDate() + 356);
-			}
+			let expireTime = new Date();
+			expireTime.setDate(expireTime.getDate() + 356);
 
 			document.cookie = genFullName(name) + '=' + encodeURIComponent(JSON.stringify(value)) + '; expires=' + (expireTime === 0 ? expireTime : expireTime.toGMTString()) + '; path=/;' + (domain === undefined ? '' : ' domain=' + domain + ';');
 		};
 
-		self.get = get = function(name) {
+		let get = self.get = (name) => {
 			//REQUIRED: name
-
-			var
-			// cookie
-			cookie = document.cookie,
-
-			// isPop
-			pop,
-
-			// extras
-			i, temp, d;
 
 			name = genFullName(name) + '=';
 
-			i = cookie.indexOf(name);
+			let cookie = document.cookie;
+			let i = cookie.indexOf(name);
 
+			let pop;
 			if (cookie && i >= 0) {
-				temp = cookie.substring(i, cookie.length);
-				d = temp.indexOf(';');
+				let temp = cookie.substring(i, cookie.length);
+				let d = temp.indexOf(';');
 				if (d > 0) {
 					pop = temp.substring(name.length, d);
 				} else {
@@ -3180,46 +3139,27 @@ global.COOKIE_STORE = CLASS({
 			return pop === undefined ? undefined : JSON.parse(decodeURIComponent(pop));
 		};
 		
-		self.list = list = function() {
+		let list = self.list = () => {
 			
-			var
-			// values
-			values = {},
+			let values = {};
 			
-			// full name
-			fullName,
-			
-			// name
-			name;
-			
-			EACH(document.cookie.split(';'), function(str) {
+			EACH(document.cookie.split(';'), (str) => {
 				
-				var
-				// index
-				index = str.indexOf('='),
-				
-				// full name
-				fullName = str.substring(0, index);
+				let index = str.indexOf('=');
+				let fullName = str.substring(0, index);
 				
 				if (fullName.substring(0, storeName.length + 1) === storeName + '.') {
-					
-					name = fullName.substring(storeName.length + 1);
-					
-					values[name] = str.substring(index + 1);
+					values[fullName.substring(storeName.length + 1)] = str.substring(index + 1);
 				}
 			});
 			
 			return values;
 		};
 
-		self.remove = remove = function(name) {
+		let remove = self.remove = (name) => {
 			//REQUIRED: name
 
-			var
-			// expire time
-			expireTime;
-
-			expireTime = new Date();
+			let expireTime = new Date();
 			expireTime.setDate(expireTime.getDate() - 1);
 			
 			document.cookie = genFullName(name) + '=; expires=' + expireTime.toGMTString() + '; path=/;' + (domain === undefined ? '' : ' domain=' + domain + ';');
@@ -3227,34 +3167,17 @@ global.COOKIE_STORE = CLASS({
 	}
 });
 
-FOR_BOX(function(box) {
-	'use strict';
+FOR_BOX((box) => {
 
 	box.COOKIE_STORE = CLASS({
 
-		init : function(inner, self, storeNameOrParams) {
+		init : (inner, self, storeNameOrParams) => {
 			//REQUIRED: storeNameOrParams
 			//REQUIRED: storeNameOrParams.storeName
 			//OPTIONAL: storeNameOrParams.domain
 
-			var
-			// store name
-			storeName,
-			
-			// domain
-			domain,
-			
-			// store
-			store,
-			
-			// save.
-			save,
-
-			// get.
-			get,
-
-			// remove.
-			remove;
+			let storeName;
+			let domain;
 			
 			if (CHECK_IS_DATA(storeNameOrParams) !== true) {
 				storeName = storeNameOrParams;
@@ -3263,16 +3186,14 @@ FOR_BOX(function(box) {
 				domain = storeNameOrParams.domain;
 			}
 			
-			store = COOKIE_STORE({
+			let store = COOKIE_STORE({
 				storeName : box.boxName + '.' + storeName,
 				domain : domain
 			});
 
-			self.save = save = store.save;
-
-			self.get = get = store.get;
-
-			self.remove = remove = store.remove;
+			let save = self.save = store.save;
+			let get = self.get = store.get;
+			let remove = self.remove = store.remove;
 		}
 	});
 });
@@ -3291,14 +3212,7 @@ global.INFO = OBJECT({
 			let lang = STORE('__INFO').get('lang');
 
 			if (lang === undefined) {
-
-				lang = navigator.language;
-
-				if (lang.length > 2) {
-					lang = lang.substring(0, 2);
-				}
-
-				lang = lang.toLowerCase();
+				lang = navigator.language.toLowerCase();
 			}
 
 			return lang;
@@ -3543,12 +3457,17 @@ global.MSG = METHOD({
 		let msg = msgs[INFO.getLang()];
 
 		if (msg === undefined) {
-
-			// get first msg.
-			EACH(msgs, (_msg) => {
-				msg = _msg;
-				return false;
-			});
+			
+			msg = msgs[INFO.getLang().substring(0, 2)];
+			
+			if (msg === undefined) {
+				
+				// get first msg.
+				EACH(msgs, (_msg) => {
+					msg = _msg;
+					return false;
+				});
+			}
 		}
 
 		return msg;

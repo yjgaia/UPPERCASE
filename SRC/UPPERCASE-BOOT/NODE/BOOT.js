@@ -339,8 +339,8 @@ global.BOOT = (params) => {
 	};
 
 	let clustering = (work) => {
-
-		(NODE_CONFIG.isNotUsingCPUClustering !== true ? CPU_CLUSTERING : RUN)(() => {
+		
+		let innerWork = () => {
 
 			if (NODE_CONFIG.clusteringServerHosts !== undefined && NODE_CONFIG.thisServerName !== undefined && NODE_CONFIG.clusteringPort !== undefined) {
 
@@ -353,7 +353,25 @@ global.BOOT = (params) => {
 			} else {
 				work();
 			}
-		});
+		};
+
+		if (NODE_CONFIG.isNotUsingCPUClustering !== true) {
+			CPU_CLUSTERING({
+				work : innerWork,
+				terminate : () => {
+					
+					FOR_BOX((box) => {
+						if (box.TERMINATED !== undefined) {
+							box.TERMINATED();
+						}
+					});
+				}
+			});
+		}
+		
+		else {
+			RUN(innerWork);
+		}
 	};
 
 	let connectToDatabase = () => {
