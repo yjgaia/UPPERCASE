@@ -127,7 +127,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			}, (method, time) => {
 				increaseCallTime(dbServerName, method, time);
 			}, (method, count) => {
-				increaseResultTime(dbServerName, method, count);
+				increaseResultCount(dbServerName, method, count);
 			});
 		}
 	};
@@ -257,7 +257,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 							}, (method, time) => {
 								increaseCallTime(dbServerName, method, time);
 							}, (method, count) => {
-								increaseResultTime(dbServerName, method, count);
+								increaseResultCount(dbServerName, method, count);
 							});
 						});
 						
