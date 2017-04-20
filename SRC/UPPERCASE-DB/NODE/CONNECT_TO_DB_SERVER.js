@@ -11,88 +11,6 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 	let backupDBs = {};
 	
 	let initDBFuncMap = {};
-	
-	let callCountStore;
-	let callTimeStore;
-	let resultCountStore;
-	
-	let increaseCallCount = (dbServerName, method) => {
-		
-		if (callCountStore !== undefined) {
-			
-			let updateData = {
-				$inc : {}
-			};
-			updateData.$inc[method] = 1; 
-			
-			callCountStore.update({
-				id : dbServerName,
-				data : updateData
-			});
-		}
-	};
-	
-	let getCallCounts = m.getCallCounts = (callback) => {
-		//REQUIRED: callback
-		
-		if (callCountStore === undefined) {
-			callback({});
-		} else {
-			callCountStore.all(callback);
-		}
-	};
-	
-	let increaseCallTime = (dbServerName, method, time) => {
-		
-		if (callTimeStore !== undefined) {
-			
-			let updateData = {
-				$inc : {}
-			};
-			updateData.$inc[method] = time; 
-			
-			callTimeStore.update({
-				id : dbServerName,
-				data : updateData
-			});
-		}
-	};
-	
-	let getCallTimes = m.getCallTimes = (callback) => {
-		//REQUIRED: callback
-		
-		if (callTimeStore === undefined) {
-			callback({});
-		} else {
-			callTimeStore.all(callback);
-		}
-	};
-	
-	let increaseResultCount = (dbServerName, method, count) => {
-		
-		if (resultCountStore !== undefined) {
-			
-			let updateData = {
-				$inc : {}
-			};
-			updateData.$inc[method] = count; 
-			
-			resultCountStore.update({
-				id : dbServerName,
-				data : updateData
-			});
-		}
-	};
-	
-	let getResultCounts = m.getResultCounts = (callback) => {
-		//REQUIRED: callback
-		
-		if (resultCountStore === undefined) {
-			callback({});
-		} else {
-			resultCountStore.all(callback);
-		}
-	};
 
 	let addInitDBFunc = m.addInitDBFunc = (dbServerName, initDBFunc) => {
 		//OPTIONAL: dbServerName
@@ -116,13 +34,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			initDBFuncMap[dbServerName].push(initDBFunc);
 			
 		} else {
-			initDBFunc(nativeDBs[dbServerName], backupDBs[dbServerName], (method) => {
-				increaseCallCount(dbServerName, method);
-			}, (method, time) => {
-				increaseCallTime(dbServerName, method, time);
-			}, (method, count) => {
-				increaseResultCount(dbServerName, method, count);
-			});
+			initDBFunc(nativeDBs[dbServerName], backupDBs[dbServerName]);
 		}
 	};
 
@@ -155,33 +67,6 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			let backupName = params.backupName;
 			let backupUsername = params.backupUsername;
 			let backupPassword = params.backupPassword;
-			
-			if (callCountStore === undefined) {
-				callCountStore = SHARED_STORE('__DB_CALL_COUNT_STORE');
-			}
-			
-			callCountStore.save({
-				id : dbServerName,
-				data : {}
-			});
-			
-			if (callTimeStore === undefined) {
-				callTimeStore = SHARED_STORE('__DB_CALL_TIME_STORE');
-			}
-			
-			callTimeStore.save({
-				id : dbServerName,
-				data : {}
-			});
-			
-			if (resultCountStore === undefined) {
-				resultCountStore = SHARED_STORE('__DB_RESULT_COUNT_STORE');
-			}
-			
-			resultCountStore.save({
-				id : dbServerName,
-				data : {}
-			});
 			
 			NEXT([
 			(next) => {
@@ -246,13 +131,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 					if (initDBFuncMap[dbServerName] !== undefined) {
 						
 						EACH(initDBFuncMap[dbServerName], (initDBFunc) => {
-							initDBFunc(nativeDB, backupDB, (method) => {
-								increaseCallCount(dbServerName, method);
-							}, (method, time) => {
-								increaseCallTime(dbServerName, method, time);
-							}, (method, count) => {
-								increaseResultCount(dbServerName, method, count);
-							});
+							initDBFunc(nativeDB, backupDB);
 						});
 						
 						delete initDBFuncMap[dbServerName];
