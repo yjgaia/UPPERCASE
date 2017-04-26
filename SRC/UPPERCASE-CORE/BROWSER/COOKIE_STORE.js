@@ -32,12 +32,21 @@ global.COOKIE_STORE = CLASS({
 			//REQUIRED: params
 			//REQUIRED: params.name
 			//REQUIRED: params.value
+			//OPTIONAL: params.isToSession
 
 			let name = params.name;
 			let value = params.value;
+			let isToSession = params.isToSession;
 
-			let expireTime = new Date();
-			expireTime.setDate(expireTime.getDate() + 356);
+			let expireTime;
+			
+			if (isToSession === true) {
+				expireTime = 0;
+			} else {
+				// set expire time 1 year
+				expireTime = new Date();
+				expireTime.setDate(expireTime.getDate() + 356);
+			}
 
 			document.cookie = genFullName(name) + '=' + encodeURIComponent(JSON.stringify(value)) + '; expires=' + (expireTime === 0 ? expireTime : expireTime.toGMTString()) + '; path=/;' + (domain === undefined ? '' : ' domain=' + domain + ';');
 		};
