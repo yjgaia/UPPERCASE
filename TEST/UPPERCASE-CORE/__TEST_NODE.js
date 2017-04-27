@@ -35,9 +35,9 @@ RUN(() => {
 	require('./COMMON/UTIL/DATA/PACK_DATA.js');
 	require('./COMMON/UTIL/DATA/UNPACK_DATA.js');
 	require('./COMMON/UTIL/STRINGIFY.js');
-	require('./COMMON/UTIL/PARSE_STR.js');
+	require('./COMMON/UTIL/PARSE_STR.js');*/
 	require('./COMMON/UTIL/VALID.js');
-	
+	/*
 	// 반복 관련 기능
 	require('./COMMON/UTIL/REPEAT/REPEAT.js');
 	require('./COMMON/UTIL/REPEAT/EACH.js');
@@ -91,7 +91,7 @@ RUN(() => {
 	
 	// 손쉬운 서버 생성
 	//require('./NODE/SERVER/WEB_SERVER.js');
-	require('./NODE/SERVER/SOCKET_SERVER.js');
+	//require('./NODE/SERVER/SOCKET_SERVER.js');
 	//require('./NODE/SERVER/CONNECT_TO_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/WEB_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js');

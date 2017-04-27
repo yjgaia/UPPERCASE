@@ -950,8 +950,10 @@ global.VALID = CLASS((cls) => {
 
 		let str = String(params.value);
 		let pattern = params.pattern;
+		
+		let result = str.match(pattern);
 
-		return str === str.match(pattern)[0];
+		return result !== TO_DELETE && str === result[0];
 	};
 
 	let size = cls.size = (params) => {
@@ -1400,17 +1402,28 @@ global.VALID = CLASS((cls) => {
 									}
 								}
 
-								if (notEmpty(value) === true && typeof value === 'string') {
-									if (name === 'integer') {
-										data[attr] = INTEGER(value);
-									} else if (name === 'real') {
-										data[attr] = REAL(value);
-									} else if (name === 'bool') {
-										data[attr] = value === 'true';
-									} else if (name === 'date') {
-										data[attr] = new Date(value);
-									} else if (name === 'username') {
-										data[attr] = value.toLowerCase();
+								if (typeof value === 'string') {
+									
+									value = value.trim();
+									
+									if (notEmpty(value) === true) {
+										if (name === 'integer') {
+											data[attr] = INTEGER(value);
+										} else if (name === 'real') {
+											data[attr] = REAL(value);
+										} else if (name === 'bool') {
+											data[attr] = value === 'true';
+										} else if (name === 'date') {
+											data[attr] = new Date(value);
+										} else if (name === 'username') {
+											data[attr] = value.toLowerCase();
+										} else {
+											data[attr] = value;
+										}
+									}
+									
+									else {
+										data[attr] = value;
 									}
 								}
 							});
@@ -3107,12 +3120,21 @@ global.COOKIE_STORE = CLASS({
 			//REQUIRED: params
 			//REQUIRED: params.name
 			//REQUIRED: params.value
+			//OPTIONAL: params.isToSession
 
 			let name = params.name;
 			let value = params.value;
+			let isToSession = params.isToSession;
 
-			let expireTime = new Date();
-			expireTime.setDate(expireTime.getDate() + 356);
+			let expireTime;
+			
+			if (isToSession === true) {
+				expireTime = 0;
+			} else {
+				// set expire time 1 year
+				expireTime = new Date();
+				expireTime.setDate(expireTime.getDate() + 356);
+			}
 
 			document.cookie = genFullName(name) + '=' + encodeURIComponent(JSON.stringify(value)) + '; expires=' + (expireTime === 0 ? expireTime : expireTime.toGMTString()) + '; path=/;' + (domain === undefined ? '' : ' domain=' + domain + ';');
 		};
