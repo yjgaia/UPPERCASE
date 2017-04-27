@@ -279,7 +279,7 @@ global.CPU_CLUSTERING = METHOD((m) => {
 					SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + ')');
 					
 					if (terminateHandler !== undefined) {
-						terminateHandler();
+						terminateHandler(worker.id);
 					}
 				});
 			}

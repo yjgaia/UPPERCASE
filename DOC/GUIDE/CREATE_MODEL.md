@@ -11,7 +11,7 @@ UPPERCASE는 Model-View 패턴을 따릅니다. 여기서는 Model에 해당하�
 * 모델의 세부 기능 작성
 
 ## MongoDB 실행하기
-UPPERCASE는 데이터베이스로 MongoDB를 사용합니다. 콘솔 혹은 터미널에서 MongoDB를 실행합니다.
+UPPERCASE는 데이터베이스로 MongoDB를 사용합니다. CMD나 터미널에서 MongoDB를 실행합니다.
 
 ###### Mac or Linux
 ```
@@ -139,7 +139,7 @@ Sample.MAIN = METHOD({
 node Sample.js
 ```
 
-콘솔 혹은 터미널에 아래와 같이 출력된다면 모델이 잘 만들어진 것입니다!
+CMD나 터미널에 아래와 같이 출력된다면 모델이 잘 만들어진 것입니다!
 
 ```
 [UPPERCASE-MODEL] `Sample.Some/create` NOT VALID. { kind: { type: 'notEmpty', value: undefined } }
@@ -151,8 +151,10 @@ node Sample.js
 
 [Robomongo](http://www.robomongo.org)등의 MongoDB 관리 툴로 데이터가 잘 생성되었는지 확인해보시기 바랍니다.
 
+축하합니다! 이제 모델 생성까지 해 보았습니다. 이제 [튜토리얼 문서](../TUTORIAL.md)의 각종 튜토리얼을 살펴보시기 바랍니다.
+
 ## 모델의 세부 기능 작성
-모델의 세부 기능 작성에 대해서는 UPPERCASE-MODEL 문서에 수록되어 있습니다.
+모델의 세부 기능 작성에 대해서는 [UPPERCASE-MODEL 문서](UPPERCASE-MODEL.md)에 수록되어 있습니다.
 
 * [초기화 데이터 설정](UPPERCASE-MODEL.md#초기-데이터-설정)
 * [함수별 전처리/후처리 설정](UPPERCASE-MODEL.md#함수별-전처리후처리-설정)
