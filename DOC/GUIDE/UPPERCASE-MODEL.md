@@ -13,6 +13,7 @@ UPPERCASE-MODEL은 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8
 * [사용방법](#사용방법)
 * [`Box.MODEL`](#model)
 * [초기 데이터 설정](#초기-데이터-설정)
+* [함수별 설정](#함수별-설정)
 * [함수별 전처리/후처리 설정](#함수별-전처리후처리-설정)
 * [모델 기능 확장](#모델-기능-확장)
 
@@ -76,12 +77,12 @@ TestBox.TestModel = OBJECT({
 });
 ```
 
-`params`에 `return`으로 사용 가능한 파라미터 목록은 다음과 같습니다.
+`params`에서 `return`으로 사용 가능한 파라미터 목록은 다음과 같습니다.
 
-* `roomServerName` 접속할 룸 서버의 이름. 여러 룸 서버 접속이 필요한 경우 임의로 지정합니다.
+* `roomServerName` 접속할 룸 서버의 이름. 여러 룸 서버에 접속한 경우 임의로 지정합니다.
 * `name` 모델 명
-* `initData` 초기화 데이터. 자세한 내용은 [초기화 데이터](#초기화-데이터)을 참고하시기 바랍니다.
-* `methodConfig` 함수별 설정. 자세한 내용은 [모델 기능 확장](#모델-기능-확장)을 참고하시기 바랍니다.
+* `initData` 초기화 데이터. 자세한 내용은 [초기화 데이터](#초기화-데이터) 항목을 참고하시기 바랍니다.
+* `methodConfig` 함수별 설정. 자세한 내용은 [함수별 설정](#함수별-설정) 항목을 참고하시기 바랍니다.
 
 ### 모델 구현 예시
 ```javascript
@@ -100,7 +101,7 @@ TestBox.TestModel = OBJECT({
 			name : {
 				notEmpty : true,
 				size : {
-					min : 0,
+					min : 1,
 					max : 255
 				}
 			},
@@ -478,6 +479,131 @@ Model.checkIsExists({
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ## 초기 데이터 설정
+초기 데이터를 설정하면, `create`함수로 데이터를 생성할 때 주어진 데이터에 초기 데이터를 덮어 씌우고 생성하게 됩니다.
+
+```javascript
+
+```
+
+## 함수별 설정
+`create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 함수들에 대해 설정을 지정할 수 있습니다.
+
+### 함수를 사용하지 않음
+단순히 `false`를 지정하게 되면, 해당 함수 자체를 생성하지 않습니다.
+
+```javascript
+TestBox.TestModel = OBJECT({
+    
+    preset : () => {
+        return TestBox.MODEL;
+    },
+    
+    params : () => {
+        return {
+            name : 'Test',
+            methodConfig : {
+                // create 함수를 생성하지 않습니다.
+                create : false
+            }
+        };
+    }
+});
+
+// create 함수를 생성하지 않았으므로 오류 발생
+TestBox.TestModel.create({
+    name : 'YJ',
+    age : 30
+});
+```
+
+### `valid`
+`create`와 `update` 함수에는 `valid` 설정을 지정할 수 있습니다. `valid` 설정을 지정하면 데이터를 생성하거나 수정할 때, 주어진 데이터를 검증하게 됩니다.
+
+```javascript
+TestBox.TestModel = OBJECT({
+    
+    preset : () => {
+        return TestBox.MODEL;
+    },
+    
+    params : () => {
+    
+        let validDataSet = {
+        
+            // 이름
+			name : {
+			    // 이름은 필수로 입력해야 합니다.
+				notEmpty : true,
+				// 이름은 최소 1글자 이상, 255글자 이하입니다.
+				size : {
+					min : 1,
+					max : 255
+				}
+			},
+			
+			// 나이
+			age : {
+			    // 나이는 필수로 입력해야 합니다.
+				notEmpty : true,
+				// 나이는 숫자입니다.
+				integer : true
+			},
+			
+			// 남자인가?
+			isMan : {
+				bool : true
+			}
+		};
+        
+        return {
+            name : 'Test',
+            methodConfig : {
+                // 데이터를 생성하거나 수정할 때 데이터를 검증합니다.
+                create : {
+					valid : VALID(validDataSet)
+				},
+				update : {
+					valid : VALID(validDataSet)
+				}
+            }
+        };
+    }
+});
+
+// 데이터 검증 실패 (name 값이 없고, age가 숫자가 아님)
+TestBox.TestModel.create({
+    age : '30살'
+}, {
+    notValid : (validErrors) => {
+        console.log('데이터 검증에 실패하였습니다.', validErrors);
+    }
+});
+```
+
+### `role`
+`clientInfo.roles` 배열에 해당 롤이 포함되어 있는 경우에 실행 가능도록 설정합니다. 회원 전용 기능 등을 구현할 때 유용합니다.
+
+### `authKey`
+`create`와 `update`, `remove` 함수에는 `authKey` 설정을 지정할 수 있습니다. 
+
+`create`의 경우 데이터의 `authKey`에 `clientInfo.authKey`의 값을 삽입합니다.
+
+```javascript
+
+```
+
+`update` 및 `remove`의 경우 원래 데이터의 `authKey`의 값이 `clientInfo.authKey`와 동일한 경우에만 실행됩니다.
+
+```javascript
+
+```
+
+### `adminRole`
+`clientInfo.roles` 배열에 해당 롤이 포함되어 있는 경우에 실행 가능도록 설정합니다. `role` 설정과 `authKey` 설정에 해당하지 않는 경우에도, `adminRole` 설정에 해당되면 실행 가능한 것이 특징입니다. 운영자 전용 기능 등을 구현할 때 유용합니다.
+
+```javascript
+
+```
 
 ## 함수별 전처리/후처리 설정
 `clientInfo`는 `undefined` 일 수 있습니다.

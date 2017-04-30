@@ -2,10 +2,18 @@
 
 # 하이브리드 앱 개발
 
-* 모바일 하이브리드 앱
-* 데스크톱 하이브리드 앱
+* 데스크톱 애플리케이션
+* 모바일 애플리케이션
 
-# Apache Cordova와 Crosswalk를 이용한 하이브리드 앱 개발
+## 데스크톱 하이브리드 앱
+### Electron을 이용한 데스크톱 애플리케이션 개발
+https://electron.atom.io/
+
+### NW.js를 이용한 데스크톱 애플리케이션 개발
+https://nwjs.io/
+
+## 모바일 애플리케이션
+### Apache Cordova를 이용한 모바일 애플리케이션 개발
 
 Apache Cordova와 Crosswalk를 사용하여 하이브리드 앱을 만드는 방법입니다.
 
