@@ -79,7 +79,7 @@ TestBox.TestModel = OBJECT({
 
 `params`에서 `return`으로 사용 가능한 파라미터 목록은 다음과 같습니다.
 
-* `roomServerName` 접속할 룸 서버의 이름. 여러 룸 서버에 접속한 경우 임의로 지정합니다.
+* `roomServerName` 접속할 룸 서버의 이름. [여러 룸 서버에 접속](UPPERCASE-ROOM.md#connect_to_room_server)한 경우 임의로 지정합니다.
 * `name` 모델 명
 * `initData` 초기화 데이터. 자세한 내용은 [초기화 데이터](#초기화-데이터) 항목을 참고하시기 바랍니다.
 * `methodConfig` 함수별 설정. 자세한 내용은 [함수별 설정](#함수별-설정) 항목을 참고하시기 바랍니다.
@@ -124,7 +124,7 @@ TestBox.TestModel = OBJECT({
 					valid : VALID(validDataSet)
 				},
 				remove : {
-					role : 'Test'
+					role : 'TestRole'
 				}
 			}
 		};
@@ -138,7 +138,7 @@ TestBox.TestModel = OBJECT({
 * `Model.create(data, (savedData) => {})`
 * `Model.create(data, {error:, notValid:, success:})`
 
-데이터를 생성합니다. `isNotUsingObjectId`가 `true`가 아니고 `data`에 `id`를 따로 지정하지 않으면 `id`가 자동으로 생성됩니다. 또한 데이터 생성 시간이 `createTime`에 저장됩니다.
+데이터를 생성합니다. `isNotUsingObjectId`가 `true`가 아니고, `data`에 `id`를 따로 지정하지 않으면 `id`가 자동으로 생성됩니다. 또한 데이터 생성 시간이 `createTime`에 저장됩니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
@@ -147,6 +147,7 @@ Model.create({
 	msg : 'Hello, DB!',
 	number : 12
 }, (savedData) => {
+    // id와 createTime은 자동 생성
 	console.log('데이터 생성 완료', savedData);
 });
 ```
@@ -155,9 +156,9 @@ Model.create({
 * `Model.get(id, (savedData) => {})`
 * `Model.get(id, {error:, notExists:, success:})`
 * `Model.get({filter:, sort:, isRandom:}, {error:, notExists:, success:})`
-* `Model.get((savedData) => {})` 가장 최근 데이터를 가져옵니다.
+* `Model.get((savedData) => {})` `id`를 지정하지 않으면 가장 최근 데이터를 가져옵니다.
 
-`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
@@ -177,12 +178,12 @@ Model.get('5636e47415899c3c04b5e70f', {
 * `Model.getWatching(id, {error:, notExists:, success:})`
 * `Model.getWatching({filter:, sort:, isRandom:}, {error:, notExists:, success:})`
 
-데이터를 가져오고, 해당 데이터가 수정되거나 삭제될 때를 감지합니다.
+데이터를 가져오고, 해당 데이터가 수정되거나 삭제되는 것을 감지합니다.
 
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ```javascript
-Model.getWatching('5636e47415899c3c04b5e70f', {
+let watchingRoom = Model.getWatching('5636e47415899c3c04b5e70f', {
     notExists : () => {
 		console.log('데이터가 존재하지 않습니다.');
 	},
@@ -196,9 +197,13 @@ Model.getWatching('5636e47415899c3c04b5e70f', {
 		
 		addRemoveHandler(() => {
 			console.log('데이터가 삭제되었습니다.');
+			// 데이터가 삭제되면 자동으로 exit이 실행됩니다.
 		});
 	}
 });
+
+// 더 이상 변화를 감지하지 않고자 하는 경우 exit을 실행합니다.
+watchingRoom.exit();
 ```
 
 ### `update`
@@ -326,7 +331,7 @@ Model.remove('5636e47415899c3c04b5e70f', {
 * `Model.find({filter:, sort:, start:, count:}, (savedDataSet) => {})`
 * `Model.find({filter:, sort:, start:, count:}, {error:, success:})`
 
-`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
@@ -411,7 +416,7 @@ Model.findWatching({
 * `Model.count({filter:}, (count) => {})`
 * `Model.count({filter:}, {error:, success:})`
 
-`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
@@ -429,7 +434,7 @@ Model.count({
 * `Model.checkIsExists({filter:}, (isExists) => {})`
 * `Model.checkIsExists({filter:}, {error:, success:})`
 
-`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
