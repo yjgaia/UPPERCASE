@@ -14,7 +14,6 @@ UPPERCASE-MODEL은 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8
 * [`Box.MODEL`](#model)
 * [초기 데이터 설정](#초기-데이터-설정)
 * [함수별 설정](#함수별-설정)
-* [함수별 전처리/후처리 설정](#함수별-전처리후처리-설정)
 * [모델 기능 확장](#모델-기능-확장)
 
 ## 사용방법
@@ -627,7 +626,7 @@ Model.create({
 ```
 
 ## 함수별 설정
-`create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 함수들에 대해 설정을 지정할 수 있습니다.
+모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 함수들에 대한 설정을 지정할 수 있습니다.
 
 ### 함수를 사용하지 않음
 단순히 `false`를 지정하게 되면, 해당 함수 자체를 생성하지 않습니다.
@@ -722,7 +721,7 @@ TestBox.TestModel.create({
 ```
 
 ### `role`
-`clientInfo.roles` 배열에 해당 롤이 포함되어 있는 경우에 실행 가능도록 설정합니다. 회원 전용 기능 등을 구현할 때 유용합니다.
+`clientInfo.roles` 배열에 해당 롤이 포함되어 있는 경우에 실행 가능도록 설정합니다. 이 설정은 회원 전용 기능을 구현할 때 유용합니다.
 
 ```javascript
 TestBox.ArticleModel = OBJECT({
@@ -755,9 +754,7 @@ TestBox.ArticleModel.create({
 ```
 
 ### `authKey`
-`create`와 `update`, `remove` 함수에는 `authKey` 설정을 지정할 수 있습니다. 
-
-`create`의 경우 데이터의 `authKey`에 `clientInfo.authKey`의 값을 삽입합니다.
+`create`와 `update`, `remove` 함수에는 `authKey` 설정을 지정할 수 있습니다. 데이터의 `authKey`에 해당하는 값이 `clientInfo.authKey`와 동일한 경우에만 실행됩니다.
 
 ```javascript
 TestBox.ArticleModel = OBJECT({
@@ -767,45 +764,134 @@ TestBox.ArticleModel = OBJECT({
 	},
 
 	params : () => {
+	
+	    let validDataSet = {
+			title : {
+				notEmpty : true,
+				size : {
+					max : 255
+				}
+			},
+			content : {
+				notEmpty : true,
+				size : {
+					max : 100000
+				}
+			},
+			userId : {
+				notEmpty : true,
+				id : true
+			}
+		};
+		
 		return {
 			name : 'Article',
             methodConfig : {
                 create : {
-                    authKey : 'userId'
+                    valid : VALID(validDataSet),
+                    // userId가 데이터의 authKey가 됩니다.
+                    authKey : 'userId',
+                    role : 'User'
+                },
+                update : {
+                    valid : VALID(validDataSet),
+                    authKey : 'userId',
+                    role : 'User'
+                },
+                remove : {
+                    authKey : 'userId',
+                    role : 'User'
                 }
             }
 		};
 	}
 });
 
-// clientInfo.authKey가 '5636e47415899c3c04b5e70f'인 경우
-// { title : '오늘의 일기', content : '날씨가 맑았습니다.', userId : '5636e47415899c3c04b5e70f' }
+// 데이터를 생성합니다.
 TestBox.ArticleModel.create({
     title : '오늘의 일기',
-    content : '날씨가 맑았습니다.'
+    content : '날씨가 맑았습니다.',
+    userId : '5636e47415899c3c04b5e70f'
+});
+
+// 데이터를 생성한 이후, 수정 할 때
+TestBox.ArticleModel.update({
+    id : '5636e47415899c3c04b5e70f',
+    title : '오늘의 일기 (수정)'
+}, {
+    // clientInfo.authKey가 데이터의 userId 값인 '5636e47415899c3c04b5e70f'와 다른 경우
+    notAuthed : () => {
+        console.log('본인이 작성한 글만 수정 가능합니다.');
+    }
 });
 ```
 
-`update` 및 `remove`의 경우 원래 데이터의 `authKey`의 값이 `clientInfo.authKey`와 동일한 경우에만 실행됩니다.
-
-```javascript
-
-```
-
 ### `adminRole`
-`clientInfo.roles` 배열에 해당 롤이 포함되어 있는 경우에 실행 가능도록 설정합니다. `role` 설정과 `authKey` 설정에 해당하지 않는 경우에도, `adminRole` 설정에 해당되면 실행 가능한 것이 특징입니다. 운영자 전용 기능 등을 구현할 때 유용합니다.
+`clientInfo.roles` 배열에 해당 롤이 포함되어 있는 경우에 실행 가능도록 설정합니다. 클라이언트가 `role` 설정과 `authKey` 설정에 부합하지 않아도 `adminRole` 설정에 부합하면 함수를 실행할 수 있습니다. 이 설정은 운영자 기능을 구현할 때 유용합니다.
 
 ```javascript
+TestBox.ArticleModel = OBJECT({
 
+	preset : () => {
+		return TestBox.MODEL;
+	},
+
+	params : () => {
+	
+	    let validDataSet = {
+			title : {
+				notEmpty : true,
+				size : {
+					max : 255
+				}
+			},
+			content : {
+				notEmpty : true,
+				size : {
+					max : 100000
+				}
+			},
+			userId : {
+				notEmpty : true,
+				id : true
+			}
+		};
+		
+		return {
+			name : 'Article',
+            methodConfig : {
+                create : {
+                    valid : VALID(validDataSet),
+                    authKey : 'userId',
+                    role : 'User'
+                },
+                update : {
+                    valid : VALID(validDataSet),
+                    authKey : 'userId',
+                    role : 'User',
+                    adminRole : 'Admin'
+                },
+                remove : {
+                    authKey : 'userId',
+                    role : 'User',
+                    adminRole : 'Admin'
+                }
+            }
+		};
+	}
+});
+
+// clientInfo.roles에 'Admin' 롤이 포함되어 있으면 'role' 및 'authKey' 설정을 무시하고 실행합니다.
+TestBox.ArticleModel.update({
+    id : '5636e47415899c3c04b5e70f',
+    content : '글 내용이 적절하지 못하여 운영자가 수정하였습니다.'
+});
 ```
-
-## 함수별 전처리/후처리 설정
-`clientInfo`는 `undefined` 일 수 있습니다.
 
 ## 모델 기능 확장
-API에서 기본으로 제공되지 않는 기능들은 직접 구현하여 모델을 확장시킬 수 있습니다. 모델 확장은 node.js 환경과 웹 브라우저 환경에서 각각 진행합니다.
+모델에서 기본으로 제공되지 않는 기능들은 직접 구현하여 모델을 확장시킬 수 있습니다. 모델 확장은 Node.js 환경과 웹 브라우저 환경에서 각각 진행해야 합니다.
 
-### node.js 환경에서 모델 확장 예시
+### node.js 환경에서 모델 확장
 ```javascript
 OVERRIDE(TestBox.TestModel, (origin) => {
 
@@ -816,6 +902,8 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 		},
 
 		init : (inner, self, params) => {
+		
+		    let db = self.getDB();
 
             // 아래와 같은 방법으로 기본적으로 제공하는 create, get, update, remove, find, count, checkIsExists를 확장할 수 있습니다.
 			inner.on('create', {
@@ -863,7 +951,18 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 });
 ```
 
-### 웹 브라우저 환경에서 모델 확장 예시
+#### 함수별 전처리/후처리 설정
+모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 함수들이 실행되기 전과 후에 실행할 리스너를 지정할 수 있습니다.
+
+##### 전처리 설정
+
+* *`clientInfo`는 `undefined` 일 수 있습니다.*
+
+##### 후처리 설정
+
+* *`clientInfo`는 `undefined` 일 수 있습니다.*
+
+### 웹 브라우저 환경에서 모델 확장
 ```javascript
 OVERRIDE(TestBox.TestModel, (origin) => {
 

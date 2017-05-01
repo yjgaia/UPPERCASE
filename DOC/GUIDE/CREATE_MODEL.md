@@ -166,5 +166,4 @@ CMD나 터미널에 아래와 같은 내용이 출력되었다면 모델이 잘 
 
 * [초기화 데이터 설정](UPPERCASE-MODEL.md#초기-데이터-설정)
 * [함수별 설정](UPPERCASE-MODEL.md#함수별-설정)
-* [함수별 전처리/후처리 설정](UPPERCASE-MODEL.md#함수별-전처리후처리-설정)
 * [모델 기능 확장](UPPERCASE-MODEL.md#모델-기능-확장)
