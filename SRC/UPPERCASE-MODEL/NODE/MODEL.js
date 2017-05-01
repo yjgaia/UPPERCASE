@@ -1826,7 +1826,7 @@ FOR_BOX((box) => {
 										});
 	
 									} else if (removeAuthKey === undefined && removeAdminRole !== undefined) {
-	
+
 										if (clientInfo.roles !== undefined && CHECK_IS_IN({
 											array : clientInfo.roles,
 											value : removeAdminRole

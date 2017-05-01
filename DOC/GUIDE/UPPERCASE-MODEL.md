@@ -136,7 +136,7 @@ TestBox.TestModel = OBJECT({
 
 ### `create`
 * `Model.create(data, (savedData) => {})`
-* `Model.create(data, {error:, notValid:, success:})`
+* `Model.create(data, {error:, notValid:, notAuthed:, success:})`
 
 데이터를 생성합니다. `isNotUsingObjectId`가 `true`가 아니고, `data`에 `id`를 따로 지정하지 않으면 `id`가 자동으로 생성됩니다. 또한 데이터 생성 시간이 `createTime`에 저장됩니다.
 
@@ -154,8 +154,8 @@ Model.create({
 
 ### `get`
 * `Model.get(id, (savedData) => {})`
-* `Model.get(id, {error:, notExists:, success:})`
-* `Model.get({filter:, sort:, isRandom:}, {error:, notExists:, success:})`
+* `Model.get(id, {error:, notAuthed:, notExists:, success:})`
+* `Model.get({filter:, sort:, isRandom:}, {error:, notAuthed:, notExists:, success:})`
 * `Model.get((savedData) => {})` `id`를 지정하지 않으면 가장 최근 데이터를 가져옵니다.
 
 `id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
@@ -178,7 +178,7 @@ Model.get('5636e47415899c3c04b5e70f', {
 * `Model.getWatching(id, {error:, notExists:, success:})`
 * `Model.getWatching({filter:, sort:, isRandom:}, {error:, notExists:, success:})`
 
-데이터를 가져오고, 해당 데이터가 수정되거나 삭제되는 것을 감지합니다.
+데이터를 가져오고, 해당 데이터가 수정되거나 삭제될 때를 감지합니다.
 
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
@@ -208,9 +208,9 @@ watchingRoom.exit();
 
 ### `update`
 * `Model.update(data, (savedData, originData) => {})`
-* `Model.update(data, {error:, notValid:, notExists:, success:})`
+* `Model.update(data, {error:, notValid:, notAuthed:, notExists:, success:})`
 
-데이터를 수정합니다. `lastUpdateTime`에 마지막 수정 시간이 저장됩니다.
+데이터를 수정합니다. 마지막 수정 시간이 `lastUpdateTime`에 저장됩니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
@@ -223,6 +223,7 @@ Model.update({
 		console.log('데이터가 존재하지 않습니다.');
 	},
 	success : (savedData, originData) => {
+	    // lastUpdateTime은 자동 생성
 		console.log('데이터 수정 완료', savedData);
 	}
 });
@@ -298,7 +299,9 @@ Model.update({
 }, ...);
 ```
 
-`update`명령어가 동시에 여러번 호출된 경우 비동기 처리에 의해 모든 `update`의 결과는 최종적으로 수정된 같은 데이터를 반환합니다.
+`update`명령어가 동시에 여러번 호출된 경우 모든 `update`의 결과는 최종적으로 수정된 데이터를 똑같이 반환하는 사실에 주의하시기 바랍니다.
+
+데이터를 수정하는 경우 데이터의 변경 내역이 대상 데이터베이스의 이름 뒤에 `__HISTORY`를 붙힌 데이터베이스(예: `Test`인 경우 `Test__HISTORY`)에 저장됩니다.
 
 ### `updateNoHistory`
 사용 방식은 `update`와 동일하나, 변경 내역을 남기지 않고 데이터를 수정합니다. 그러나 `lastUpdateTime`은 갱신됩니다.
@@ -312,7 +315,7 @@ Node.js 환경에서만 사용할 수 있습니다.
 
 ### `remove`
 * `Model.remove(id, (originData) => {})`
-* `Model.remove(id, {error:, notExists:, success:})`
+* `Model.remove(id, {error:, notAuthed:, notExists:, success:})`
 
 `id`에 해당하는 데이터를 삭제합니다.
 
@@ -329,7 +332,7 @@ Model.remove('5636e47415899c3c04b5e70f', {
 
 ### `find`
 * `Model.find({filter:, sort:, start:, count:}, (savedDataSet) => {})`
-* `Model.find({filter:, sort:, start:, count:}, {error:, success:})`
+* `Model.find({filter:, sort:, start:, count:}, {error:, notAuthed:, success:})`
 
 `filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
@@ -380,15 +383,15 @@ Model.find({
 ```
 
 ### `findWatching`
-* `Model.findWatching({filter:, sort:, start:, count:}, (savedDataSet, addUpdateHandler, addRemoveHandler, exit) => {})` 데이터가 수정 될 때 `addUpdateHandler`를, 데이터가 삭제 될 때 `addRemoveHandler`를 실행합니다. 더 이상 변화를 감지하지 않고자 하는 경우에는 `exit`을 실행합니다.
-* `Model.findWatching({filter:, sort:, start:, count:}, {error:, success:})`
+* `Model.findWatching({filter:, sort:, start:, count:}, (savedDataSet, addUpdateHandler, addRemoveHandler, exit) => {})` 데이터가 수정 될 때 `addUpdateHandler`를, 데이터가 삭제 될 때 `addRemoveHandler`를 실행합니다. 더 이상 해당 데이터에 대해 변화를 감지하지 않고자 하는 경우에는 `exit`을 실행합니다.
+* `Model.findWatching({filter:, sort:, start:, count:}, {error:, notAuthed:, success:})`
 
 `filter`에 해당하는 데이터를 찾아 목록으로 가져오고, 각 데이터가 수정되거나 삭제될 때를 감지합니다.
 
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ```javascript
-Model.findWatching({
+let watchingRoom = Model.findWatching({
     filter : {
         number : 3
     },
@@ -407,14 +410,18 @@ Model.findWatching({
 		
 		addRemoveHandler(savedData.id, () => {
 			console.log('데이터가 삭제되었습니다.');
+			// 데이터가 삭제되면 해당 데이터에 대해서는 더 이상 감지하지 않습니다.
 		});
 	});
 });
+
+// 더 이상 변화를 감지하지 않고자 하는 경우 exit을 실행합니다.
+watchingRoom.exit();
 ```
 
 ### `count`
 * `Model.count({filter:}, (count) => {})`
-* `Model.count({filter:}, {error:, success:})`
+* `Model.count({filter:}, {error:, notAuthed:, success:})`
 
 `filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
@@ -432,7 +439,7 @@ Model.count({
 
 ### `checkIsExists`
 * `Model.checkIsExists({filter:}, (isExists) => {})`
-* `Model.checkIsExists({filter:}, {error:, success:})`
+* `Model.checkIsExists({filter:}, {error:, notAuthed:, success:})`
 
 `filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
@@ -453,41 +460,170 @@ Model.checkIsExists({
 ```
 
 ### `onNew`
-* `Model.onNew(properties, handler)`
+* `Model.onNew((savedData) => {})`
+* `Model.onNew(properties, (savedData) => {})`
 
-신규 데이터가 생길 때 받아옵니다.
-
-웹 브라우저 환경에서만 사용할 수 있습니다.
-
-### `onNewWatching`
-* `TestBox.TestModel.onNewWatching(properties, handler)`
+신규 데이터가 생성될 때를 감지합니다.
 
 웹 브라우저 환경에서만 사용할 수 있습니다.
-
-### `onNewAndFind`
-* `TestBox.TestModel.onNewAndFind({properties:, filter:, sort:, start:, count:}, {error:, success:})`
-
-신규 데이터가 생길 때 받아오며, 최초 한번 데이터들을 찾아 가져옵니다.
-
-웹 브라우저 환경에서만 사용할 수 있습니다.
-
-### `onNewAndFindWatching`
-* `TestBox.TestModel.onNewAndFindWatching({properties:, filter:, sort:, start:, count:}, {error:, success:})`
-
-웹 브라우저 환경에서만 사용할 수 있습니다.
-
-### `onRemove`
-* `TestBox.TestModel.onRemove(properties, handler)`
-
-모델에서 데이터가 삭제 될 때 받아옵니다.
-
-웹 브라우저 환경에서만 사용할 수 있습니다.
-
-## 초기 데이터 설정
-초기 데이터를 설정하면, `create`함수로 데이터를 생성할 때 주어진 데이터에 초기 데이터를 덮어 씌우고 생성하게 됩니다.
 
 ```javascript
+let watchingRoom = Model.onNew((savedData) => {
+	console.log('데이터가 생성되었습니다.', savedData);
+});
 
+// 더 이상 신규 데이터가 생성될 때를 감지하지 않고자 하는 경우 exit을 실행합니다.
+watchingRoom.exit();
+```
+
+`properties`를 지정하면 생성되는 데이터가 `properties`의 값들과 일치하는 경우에만 감지할 수 있습니다.
+
+```javascript
+Model.onNew({
+    age : 30
+}, (savedData) => {
+	console.log('age가 30인 데이터가 생성되었습니다.', savedData);
+});
+```
+
+### `onNewWatching`
+* `TestBox.TestModel.onNewWatching((savedData, addUpdateHandler, addRemoveHandler, exit) => {})` 데이터가 수정 될 때 `addUpdateHandler`를, 데이터가 삭제 될 때 `addRemoveHandler`를 실행합니다. 더 이상 변화를 감지하지 않고자 하는 경우에는 `exit`을 실행합니다.
+* `TestBox.TestModel.onNewWatching(properties, (savedData, addUpdateHandler, addRemoveHandler, exit) => {})`
+
+신규 데이터가 생성될 때를 감지하고, 해당 데이터가 수정되거나 삭제될 때를 감지합니다.
+
+웹 브라우저 환경에서만 사용할 수 있습니다.
+
+```javascript
+let watchingRoom = Model.onNewWatching((savedData, addUpdateHandler, addRemoveHandler, exit) => {
+	console.log('데이터가 생성되었습니다.', savedData);
+	
+	addUpdateHandler((savedData) => {
+    	console.log('데이터가 수정되었습니다.', savedData);
+	});
+	
+	addRemoveHandler(() => {
+		console.log('데이터가 삭제되었습니다.');
+		// 데이터가 삭제되면 해당 데이터에 대해서는 더 이상 감지하지 않습니다.
+	});
+});
+
+// 더 이상 신규 데이터가 생성될 때 및 데이터의 변화를 감지하지 않고자 하는 경우 exit을 실행합니다.
+watchingRoom.exit();
+```
+
+### `onNewAndFind`
+* `TestBox.TestModel.onNewAndFind({properties:}, (savedData, isNewData) => {})`
+* `TestBox.TestModel.onNewAndFind({filter:, sort:, start:, count:}, (savedData, isNewData) => {})`
+* `TestBox.TestModel.onNewAndFind({properties:, filter:, sort:, start:, count:}, {error:, notAuthed:, success:, handler})`
+
+신규 데이터가 생성될 때를 감지하며, 최초 한번 데이터들을 찾아 목록으로 가져옵니다.
+
+웹 브라우저 환경에서만 사용할 수 있습니다.
+
+```javascript
+// age가 30인 데이터들을 가져오며, 이후 age가 30인 신규 데이터가 생성될 때를 감지합니다.
+Model.onNewAndFind({
+    age : 30
+}, (savedData, isNewData) => {
+	console.log('age가 30인 ' + (isNewData === true ? '신규' : '기존') + ' 데이터', savedData);
+});
+```
+
+### `onNewAndFindWatching`
+* `TestBox.TestModel.onNewAndFindWatching({properties:}, (savedData, addUpdateHandler, addRemoveHandler, exit, isNewData) => {})` 데이터가 수정 될 때 `addUpdateHandler`를, 데이터가 삭제 될 때 `addRemoveHandler`를 실행합니다. 더 이상 해당 데이터에 대해 변화를 감지하지 않고자 하는 경우에는 `exit`을 실행합니다.
+* `TestBox.TestModel.onNewAndFindWatching({filter:, sort:, start:, count:}, (savedData, addUpdateHandler, addRemoveHandler, exit, isNewData) => {})`
+* `TestBox.TestModel.onNewAndFindWatching({properties:, filter:, sort:, start:, count:}, {error:, notAuthed:, success:, handler:})`
+
+신규 데이터가 생성될 때를 감지하며, 최초 한번 데이터들을 찾아 목록으로 가져오고 각 데이터가 수정되거나 삭제될 때를 감지합니다.
+
+웹 브라우저 환경에서만 사용할 수 있습니다.
+
+```javascript
+let watchingRoom = Model.onNewAndFindWatching({
+    age : 30
+}, (savedData, addUpdateHandler, addRemoveHandler, exit, isNewData) => {
+	
+	console.log('age가 30인 ' + (isNewData === true ? '신규' : '기존') + ' 데이터', savedData);
+		
+	addUpdateHandler(savedData.id, (savedData) => {
+    	console.log('데이터가 수정되었습니다.', savedData);
+	});
+	
+	addRemoveHandler(savedData.id, () => {
+		console.log('데이터가 삭제되었습니다.');
+		// 데이터가 삭제되면 해당 데이터에 대해서는 더 이상 감지하지 않습니다.
+	});
+});
+
+// 더 이상 변화를 감지하지 않고자 하는 경우 exit을 실행합니다.
+watchingRoom.exit();
+```
+
+### `onRemove`
+* `TestBox.TestModel.onRemove((originData) => {})`
+* `TestBox.TestModel.onRemove(properties, (originData) => {})`
+
+데이터가 삭제될 때를 감지합니다.
+
+웹 브라우저 환경에서만 사용할 수 있습니다.
+
+```javascript
+let watchingRoom = Model.onRemove((originData) => {
+	console.log('데이터가 삭제되었습니다.', originData);
+});
+
+// 더 이상 데이터가 삭제될 때를 감지하지 않고자 하는 경우 exit을 실행합니다.
+watchingRoom.exit();
+```
+
+`properties`를 지정하면 삭제되는 데이터가 `properties`의 값들과 일치하는 경우에만 감지할 수 있습니다.
+
+```javascript
+Model.onRemove({
+    age : 30
+}, (originData) => {
+	console.log('age가 30인 데이터가 삭제되었습니다.', originData);
+});
+```
+
+## 초기 데이터 설정
+초기 데이터를 설정하면, `create`함수로 데이터를 생성할 때 주어진 데이터에 초기 데이터를 덮어씌우고 생성하게 됩니다.
+
+```javascript
+TestBox.TestModel = OBJECT({
+
+	preset : () => {
+		return TestBox.MODEL;
+	},
+
+	params : () => {
+
+		...
+
+		return {
+			name : 'Test',
+			
+			// 초기 데이터 설정
+		    initData : {
+		        // 최초 로그인 횟수는 0입니다.
+		        loginCount : 0,
+		        // 최초 레벨은 1입니다.
+		        level : 1
+		    },
+		    
+			methodConfig : {
+				...
+			}
+		};
+	}
+});
+
+// { name : 'YJ', age : 30, loginCount : 0, level : 1 }
+Model.create({
+	name : 'YJ',
+	age : 30
+});
 ```
 
 ## 함수별 설정
@@ -588,13 +724,66 @@ TestBox.TestModel.create({
 ### `role`
 `clientInfo.roles` 배열에 해당 롤이 포함되어 있는 경우에 실행 가능도록 설정합니다. 회원 전용 기능 등을 구현할 때 유용합니다.
 
+```javascript
+TestBox.ArticleModel = OBJECT({
+    
+    preset : () => {
+        return TestBox.MODEL;
+    },
+    
+    params : () => {
+        return {
+            name : 'Article',
+            methodConfig : {
+                create : {
+                    role : 'User'
+                }
+            }
+        };
+    }
+});
+
+TestBox.ArticleModel.create({
+    title : '오늘의 일기',
+    content : '날씨가 맑았습니다.'
+}, {
+    // clientInfo.roles에 'User' 롤이 포함되어 있지 않은 경우
+    notAuthed : () => {
+        console.log('로그인이 필요한 기능입니다.');
+    }
+});
+```
+
 ### `authKey`
 `create`와 `update`, `remove` 함수에는 `authKey` 설정을 지정할 수 있습니다. 
 
 `create`의 경우 데이터의 `authKey`에 `clientInfo.authKey`의 값을 삽입합니다.
 
 ```javascript
+TestBox.ArticleModel = OBJECT({
 
+	preset : () => {
+		return TestBox.MODEL;
+	},
+
+	params : () => {
+		return {
+			name : 'Article',
+            methodConfig : {
+                create : {
+                    authKey : 'userId'
+                }
+            }
+		};
+	}
+});
+
+// clientInfo.authKey가 '5636e47415899c3c04b5e70f'인 경우
+// { title : '오늘의 일기', content : '날씨가 맑았습니다.', userId : '5636e47415899c3c04b5e70f' }
+TestBox.ArticleModel.create({
+    title : '오늘의 일기',
+    content : '날씨가 맑았습니다.'
+});
 ```
 
 `update` 및 `remove`의 경우 원래 데이터의 `authKey`의 값이 `clientInfo.authKey`와 동일한 경우에만 실행됩니다.
