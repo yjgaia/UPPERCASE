@@ -820,6 +820,7 @@ SOCKET_SERVER(8124, (clientInfo, on, off, send, disconnect) => {
 		}
 	});
 	
+	// 연결이 끊어졌을 때
 	on('__DISCONNECTED', () => {
 		console.log('연결이 끊어졌습니다.');
 	});
@@ -870,6 +871,7 @@ CONNECT_TO_SOCKET_SERVER({
 			console.log('서버로부터의 메시지:' + retMsg);
 		});
 		
+		// 연결이 끊어졌을 때
 		on('__DISCONNECTED', () => {
 			console.log('연결이 끊어졌습니다.');
 		});
@@ -916,6 +918,7 @@ WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
 		}
 	});
 	
+	// 연결이 끊어졌을 때
 	on('__DISCONNECTED', () => {
 		console.log('연결이 끊어졌습니다.');
 	});
@@ -962,6 +965,7 @@ MULTI_PROTOCOL_SOCKET_SERVER({
 		}
 	});
 	
+	// 연결이 끊어졌을 때
 	on('__DISCONNECTED', () => {
 		console.log('연결이 끊어졌습니다.');
 	});

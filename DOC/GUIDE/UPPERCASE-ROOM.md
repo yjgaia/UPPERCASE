@@ -117,6 +117,11 @@ TestBox.ROOM('testRoom', (clientInfo, on, off, send, broadcastExceptMe) => {
 	
 	// 더 이상 데이터를 받지 않습니다.
 	off(methodName);
+	
+	// 연결이 끊어졌을 때
+	on('__DISCONNECTED', () => {
+		...
+	});
 });
 ```
 
