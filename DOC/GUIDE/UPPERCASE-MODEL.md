@@ -38,7 +38,7 @@ UPPERCASE-MODEL은 UPPERCASE-ROOM을 기반으로 하기 때문에 룸 서버 �
 ## `Box.MODEL`
 `Box.MODEL` 클래스
 
-Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
+Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다. 따라서 `COMMON` 폴더에 작성합니다.
 
 모델의 기본적인 모습은 다음과 같습니다.
 ```javascript
@@ -80,6 +80,8 @@ TestBox.TestModel = OBJECT({
 * `name` 모델 명
 * `initData` 초기화 데이터. 자세한 내용은 [초기화 데이터](#초기화-데이터) 항목을 참고하시기 바랍니다.
 * `methodConfig` 함수별 설정. 자세한 내용은 [함수별 설정](#함수별-설정) 항목을 참고하시기 바랍니다.
+* `isNotUsingObjectId` MongoDB의 기본 `id` 형식인 `ObjectId`를 쓰지 않을 것인지 여부. `true`로 지정하면 데이터를 생성할 때 `id`를 따로 지정해야 합니다. 자세한 내용은 [`Box.DB` 문서](UPPERCASE-DB.md#boxdb)를 참고해 주시기 바랍니다.
+* `isNotUsingHistory` 데이터를 생성, 수정, 삭제할 때 변경 내역을 남기지 않을 것인지 여부. 자세한 내용은 [`Box.DB` 문서](UPPERCASE-DB.md#boxdb)를 참고해 주시기 바랍니다.
 
 ### 모델 구현 예시
 ```javascript
