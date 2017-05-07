@@ -619,7 +619,7 @@ FOR_BOX((box) => {
 									} else {
 										SHOW_WARNING(box.boxName + '.' + name + 'Model.remove', MSG({
 											ko : '인증되지 않았습니다.'
-										});
+										}));
 									}
 								} else if (originData === undefined) {
 									if (notExistsHandler !== undefined) {
