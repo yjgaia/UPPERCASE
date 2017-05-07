@@ -48,7 +48,7 @@ html, body {
 	background-color: #000;
 	color: #fff;
 	word-wrap: break-word;
-	font-family: '나눔고딕', 'Malgun Gothic', sans-serif;
+	font-family: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, freesans, sans-serif;
 	font-size: 14px;
 	/* Prevent font scaling in landscape */
 	-webkit-text-size-adjust: none;
