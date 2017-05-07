@@ -1,6 +1,6 @@
 {
 	"name": "uppercase-core",
-	"version": "0.0.14-beta",
+	"version": "0.0.15-beta",
 	"dependencies": {
 		"hanul-imagemagick": "latest",
 		"hanul-uglify-js": "latest",
@@ -8,7 +8,8 @@
 		"diskspace": "latest",
 		"sqwish": "latest",
 		"ws": "latest",
-		"sift": "latest"
+		"sift": "latest",
+		"os-locale": "latest"
 	},
 	"main": "index.js"
 }

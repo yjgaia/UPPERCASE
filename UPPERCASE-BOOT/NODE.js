@@ -387,11 +387,11 @@ global.BOOT = (params) => {
 		if (NODE_CONFIG.isNotUsingCPUClustering !== true) {
 			CPU_CLUSTERING({
 				work : innerWork,
-				terminate : () => {
+				terminate : (workerId) => {
 					
 					FOR_BOX((box) => {
 						if (box.TERMINATED !== undefined) {
-							box.TERMINATED();
+							box.TERMINATED(workerId);
 						}
 					});
 				}

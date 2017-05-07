@@ -36,7 +36,7 @@ RUN(() => {
 	require('./COMMON/UTIL/DATA/UNPACK_DATA.js');
 	require('./COMMON/UTIL/STRINGIFY.js');
 	require('./COMMON/UTIL/PARSE_STR.js');*/
-	require('./COMMON/UTIL/VALID.js');
+	//require('./COMMON/UTIL/VALID.js');
 	/*
 	// 반복 관련 기능
 	require('./COMMON/UTIL/REPEAT/REPEAT.js');
@@ -119,4 +119,7 @@ RUN(() => {
 	// 코드 압축 기능
 	//require('./NODE/MINIFY/MINIFY_JS.js');
 	//require('./NODE/MINIFY/MINIFY_CSS.js');
+	
+	// MSG
+	require('./NODE/MSG.js');
 });

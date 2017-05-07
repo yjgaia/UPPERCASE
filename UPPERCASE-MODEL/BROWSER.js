@@ -13,19 +13,31 @@ FOR_BOX((box) => {
 
 		init : (inner, self, params) => {
 			//REQUIRED: params
-			//OPTIONAL: params.roomServerName
 			//REQUIRED: params.name
 			//OPTIONAL: params.initData
 			//OPTIONAL: params.methodConfig
 			//OPTIONAL: params.methodConfig.create
 			//OPTIONAL: params.methodConfig.create.valid
+			//OPTIONAL: params.methodConfig.create.role
+			//OPTIONAL: params.methodConfig.create.authKey
+			//OPTIONAL: params.methodConfig.create.adminRole
 			//OPTIONAL: params.methodConfig.get
+			//OPTIONAL: params.methodConfig.get.role
 			//OPTIONAL: params.methodConfig.update
 			//OPTIONAL: params.methodConfig.update.valid
+			//OPTIONAL: params.methodConfig.update.role
+			//OPTIONAL: params.methodConfig.update.authKey
+			//OPTIONAL: params.methodConfig.update.adminRole
 			//OPTIONAL: params.methodConfig.remove
+			//OPTIONAL: params.methodConfig.remove.role
+			//OPTIONAL: params.methodConfig.remove.authKey
+			//OPTIONAL: params.methodConfig.remove.adminRole
 			//OPTIONAL: params.methodConfig.find
+			//OPTIONAL: params.methodConfig.find.role
 			//OPTIONAL: params.methodConfig.count
+			//OPTIONAL: params.methodConfig.count.role
 			//OPTIONAL: params.methodConfig.checkIsExists
+			//OPTIONAL: params.methodConfig.checkIsExists.role
 			//OPTIONAL: params.isNotUsingObjectId
 			//OPTIONAL: params.isNotUsingHistory
 			
@@ -1052,7 +1064,7 @@ FOR_BOX((box) => {
 							
 							let subRoom;
 							
-							let closeWatching;
+							let exit;
 		
 							subRooms.push(subRoom = box.ROOM({
 								roomServerName : roomServerName,
@@ -1070,12 +1082,12 @@ FOR_BOX((box) => {
 							(callback) => {
 								subRoom.on('remove', (originData) => {
 									callback(originData);
-									closeWatching();
+									exit();
 								});
 							},
-		
-							// close watching.
-							closeWatching = () => {
+							
+							// exit.
+							exit = () => {
 		
 								subRoom.exit();
 		
@@ -1345,8 +1357,8 @@ FOR_BOX((box) => {
 							}
 							
 							if (isNotOnNew !== true) {
-								onNewWatchingRoom = onNewWatching(properties, (savedData, addUpdateHandler, addRemoveHandler, closeWatching) => {
-									handler(savedData, addUpdateHandler, addRemoveHandler, closeWatching, true);
+								onNewWatchingRoom = onNewWatching(properties, (savedData, addUpdateHandler, addRemoveHandler, exit) => {
+									handler(savedData, addUpdateHandler, addRemoveHandler, exit, true);
 								});
 							}
 							
@@ -1374,7 +1386,7 @@ FOR_BOX((box) => {
 											addRemoveHandler(savedData.id, handler);
 										},
 	
-										// close watching.
+										// exit.
 										() => {
 											exit(savedData.id);
 										},

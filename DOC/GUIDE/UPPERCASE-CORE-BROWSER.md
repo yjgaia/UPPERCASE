@@ -1483,6 +1483,31 @@ store.remove(name);
 ### `remove(name)`
 `name`에 해당하는 값을 지웁니다.
 
+### `COOKIE_STORE`
+쿠키 저장소 클래스
+
+쿠키에 데이터를 저장할 수 있는 클래스 입니다. `domain` 파라미터를 통해 쿠키를 불러 올 수 있는 도메인 범위를 지정할 수 있습니다. 사용 방법은 [`STORE`](#store)와 동일합니다. 단 `save` 함수의 경우, `isToSession` 파라미터를 추가하여 웹 브라우저가 종료 될 때 데이터를 자동으로 지울 수 있습니다.
+
+```javascript
+let store = COOKIE_STORE('testStore');
+
+// 도메인 범위를 지정할 수 있습니다.
+let store = COOKIE_STORE({
+    storeName : 'testStore',
+    // example.com 도메인을 포함한 모든 서브 도메인에서 사용할 수 있습니다.
+    domain : '.example.com'
+});
+
+// 웹 브라우저가 종료될 때 데이터가 삭제됩니다.
+store.save({
+    name : 'name',
+    value : 'YJ Sim',
+    isToSession : true
+});
+
+store.get(name); // 'YJ Sim'
+```
+
 ## `MSG({ko:, en:, ...})`
 [`INFO`](#info)의 [웹 애플리케이션 언어 설정 코드](#getlang)에 해당하는 문자열을 반환합니다. 만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
 
