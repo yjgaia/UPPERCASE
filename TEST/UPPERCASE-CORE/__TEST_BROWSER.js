@@ -6,7 +6,7 @@ RUN(() => {
 		document.body.appendChild(script);
 	};
 	
-	/*// COMMON 테스트
+	// COMMON 테스트
 	require('./COMMON/TO_DELETE.js');
 	require('./COMMON/METHOD.js');
 	
@@ -65,9 +65,9 @@ RUN(() => {
 	// 기타 기능
 	require('./COMMON/UTIL/OVERRIDE.js');
 	require('./COMMON/UTIL/RANDOM_STR.js');
-	require('./COMMON/UTIL/URI_MATCHER.js');*/
+	require('./COMMON/UTIL/URI_MATCHER.js');
 	
-	/*// BROWSER 테스트
+	// BROWSER 테스트
 	// INFO
 	require('./BROWSER/INFO.js');
 	
@@ -107,25 +107,25 @@ RUN(() => {
 	require('./BROWSER/DOM/ADD_STYLE.js');
 	
 	// 노드에 애니메이션 지정
-	require('./BROWSER/DOM/ANIMATE.js');*/
+	require('./BROWSER/DOM/ANIMATE.js');
 	
 	// 뷰 기능
-	//require('./BROWSER/VIEW/VIEW.js');
-	//require('./BROWSER/VIEW/URI.js');
-	//require('./BROWSER/VIEW/HREF.js');
-	//require('./BROWSER/VIEW/GO.js');
-	//require('./BROWSER/VIEW/GO_NEW_WIN.js');
-	//require('./BROWSER/VIEW/REFRESH.js');
+	/*require('./BROWSER/VIEW/VIEW.js');
+	require('./BROWSER/VIEW/URI.js');
+	require('./BROWSER/VIEW/HREF.js');
+	require('./BROWSER/VIEW/GO.js');
+	require('./BROWSER/VIEW/GO_NEW_WIN.js');
+	require('./BROWSER/VIEW/REFRESH.js');*/
 	
 	// HTTP 요청 기능
-	/*require('./BROWSER/REQUEST/REQUEST.js');
+	require('./BROWSER/REQUEST/REQUEST.js');
 	require('./BROWSER/REQUEST/GET.js');
 	require('./BROWSER/REQUEST/POST.js');
 	require('./BROWSER/REQUEST/PUT.js');
-	require('./BROWSER/REQUEST/DELETE.js');*/
+	require('./BROWSER/REQUEST/DELETE.js');
 	
 	// CONNECT_TO_WEB_SOCKET_SERVER
-	/*require('./BROWSER/CONNECT_TO_WEB_SOCKET_SERVER.js');
+	//require('./BROWSER/CONNECT_TO_WEB_SOCKET_SERVER.js');
 	
 	// STORE
 	require('./BROWSER/STORE.js');
@@ -138,7 +138,7 @@ RUN(() => {
 	require('./BROWSER/CONSOLE/SHOW_WARNING.js');
 	
 	// SOUND
-	require('./BROWSER/SOUND.js');*/
+	require('./BROWSER/SOUND.js');
 	
-	//require('./BROWSER/ADD_FONT.js');
+	require('./BROWSER/ADD_FONT.js');
 });

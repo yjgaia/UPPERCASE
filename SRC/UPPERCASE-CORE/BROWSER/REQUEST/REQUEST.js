@@ -84,12 +84,12 @@ global.REQUEST = METHOD({
 		(method === 'GET' || method === 'DELETE' ? fetch(url + '?' + paramStr, {
 			method : method,
 			credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
-			headers : headers === undefined ? undefined : new Headers(headers)
+			headers : new Headers(headers)
 		}) : fetch(url, {
 			method : method,
 			body : paramStr,
 			credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
-			headers : headers === undefined ? undefined : new Headers(headers)
+			headers : new Headers(headers)
 		})).then((response) => {
 			return response.text();
 		}).then((responseText) => {
