@@ -13,7 +13,7 @@ global.WEB_SERVER = CLASS((cls) => {
 	let ZLib = require('zlib');
 	let IncomingForm = require('formidable').IncomingForm;
 
-	let getContentTypeFromExtension = (extension) => {
+	let getContentTypeFromExtension = cls.getContentTypeFromExtension = (extension) => {
 		
 		// png image
 		if (extension === 'png') {
@@ -98,7 +98,7 @@ global.WEB_SERVER = CLASS((cls) => {
 		return 'application/octet-stream';
 	};
 
-	let getEncodingFromContentType = (contentType) => {
+	let getEncodingFromContentType = cls.getEncodingFromContentType = (contentType) => {
 
 		if (contentType === 'application/javascript') {
 			return 'utf-8';
@@ -181,7 +181,7 @@ global.WEB_SERVER = CLASS((cls) => {
 		return strs;
 	};
 	
-	let parseCookieStr = (cookieStr) => {
+	let parseCookieStr = cls.parseCookieStr = (cookieStr) => {
 		
 		let data = {};
 
@@ -366,7 +366,7 @@ global.WEB_SERVER = CLASS((cls) => {
 						
 						requestInfo = {
 							headers : headers,
-							cookies : parseCookieStr(headers.cookie),							
+							cookies : parseCookieStr(headers.cookie),
 							isSecure : isSecure,
 							uri : uri,
 							method : method,

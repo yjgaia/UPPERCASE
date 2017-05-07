@@ -10,6 +10,8 @@ global.WEB_SOCKET_SERVER = METHOD({
 		let WebSocket = require('ws');
 		let WebSocketServer = WebSocket.Server;
 		
+		let parseCookieStr = WEB_SERVER.parseCookieStr;
+		
 		let nativeConnectionListener = (conn) => {
 
 			let headers = conn.upgradeReq.headers;
@@ -101,6 +103,10 @@ global.WEB_SOCKET_SERVER = METHOD({
 			clientInfo = {
 				
 				ip : ip,
+				
+				headers : headers,
+				
+				cookies : parseCookieStr(headers.cookie),
 				
 				connectTime : new Date()
 			},

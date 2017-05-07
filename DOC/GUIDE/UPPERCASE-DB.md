@@ -150,7 +150,7 @@ db.create({
 * `db.get({filter:, sort:, isRandom:}, {notExists:, error:, success:})`
 * `db.get((savedData) => {})` 가장 최근 데이터를 가져옵니다.
 
-`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 ```javascript
 db.get('5636e47415899c3c04b5e70f', {
@@ -253,7 +253,9 @@ db.update({
 }, ...);
 ```
 
-`update`명령어가 동시에 여러번 호출된 경우 비동기 처리에 의해 모든 `update`의 결과는 최종적으로 수정된 같은 데이터를 반환합니다.
+`update`명령어가 동시에 여러번 호출된 경우 모든 `update`의 결과는 최종적으로 수정된 데이터를 똑같이 반환하는 사실에 주의하시기 바랍니다.
+
+데이터를 수정하는 경우 데이터의 변경 내역이 대상 데이터베이스의 이름 뒤에 `__HISTORY`를 붙힌 데이터베이스(예: `Test`인 경우 `Test__HISTORY`)에 저장됩니다.
 
 ### `updateNoHistory`
 사용 방식은 `update`와 동일하나, 변경 내역을 남기지 않고 데이터를 수정합니다. 그러나 `lastUpdateTime`은 갱신됩니다.
@@ -282,7 +284,7 @@ db.remove('5636e47415899c3c04b5e70f', {
 * `db.find({filter:, sort:, start:, count:}, (savedDataSet) => {})`
 * `db.find({filter:, sort:, start:, count:}, {error:, success:})`
 
-`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 ```javascript
 db.find({
@@ -332,7 +334,7 @@ db.find({
 * `db.count({filter:}, (count) => {})`
 * `db.count({filter:}, {error:, success:})`
 
-`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 ```javascript
 db.count({
@@ -348,7 +350,7 @@ db.count({
 * `db.checkIsExists({filter:}, (isExists) => {})`
 * `db.checkIsExists({filter:}, {error:, success:})`
 
-`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용합니다.
+`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 ```javascript
 db.checkIsExists({

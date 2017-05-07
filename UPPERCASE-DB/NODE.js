@@ -40,7 +40,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			initDBFuncMap[dbServerName].push(initDBFunc);
 			
 		} else {
-			initDBFunc(nativeDBs[dbServerName]);
+			initDBFunc(nativeDBs[dbServerName], backupDBs[dbServerName]);
 		}
 	};
 
@@ -193,6 +193,15 @@ FOR_BOX((box) => {
 				let name;
 				let isNotUsingObjectId;
 				let isNotUsingHistory;
+	
+				if (CHECK_IS_DATA(nameOrParams) !== true) {
+					name = nameOrParams;
+				} else {
+					dbServerName = nameOrParams.dbServerName;
+					name = nameOrParams.name;
+					isNotUsingObjectId = nameOrParams.isNotUsingObjectId;
+					isNotUsingHistory = nameOrParams.isNotUsingHistory;
+				}
 				
 				let waitingCreateInfos = [];
 				let waitingGetInfos = [];
@@ -280,15 +289,6 @@ FOR_BOX((box) => {
 						f(filter);
 					}
 				};
-	
-				if (CHECK_IS_DATA(nameOrParams) !== true) {
-					name = nameOrParams;
-				} else {
-					dbServerName = nameOrParams.dbServerName;
-					name = nameOrParams.name;
-					isNotUsingObjectId = nameOrParams.isNotUsingObjectId;
-					isNotUsingHistory = nameOrParams.isNotUsingHistory;
-				}
 	
 				let create = self.create = (data, callbackOrHandlers) => {
 					//REQUIRED: data

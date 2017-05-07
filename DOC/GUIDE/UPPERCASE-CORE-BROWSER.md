@@ -1428,6 +1428,7 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 		    console.log('서버로부터의 메시지:' + retMsg);
 		});
 		
+		// 연결이 끊어졌을 때
 		on('__DISCONNECTED', () => {
 			console.log('연결이 끊어졌습니다.');
 		});
@@ -1493,7 +1494,7 @@ store.remove(name);
 MSG({
 	ko : '안녕하세요',
 	en : 'Hello',
-	jp : 'こんにちは'
+	ja : 'こんにちは'
 });
 ```
 

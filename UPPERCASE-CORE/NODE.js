@@ -947,8 +947,10 @@ global.VALID = CLASS((cls) => {
 
 		let str = String(params.value);
 		let pattern = params.pattern;
+		
+		let result = str.match(pattern);
 
-		return str === str.match(pattern)[0];
+		return result !== TO_DELETE && str === result[0];
 	};
 
 	let size = cls.size = (params) => {
@@ -1397,17 +1399,28 @@ global.VALID = CLASS((cls) => {
 									}
 								}
 
-								if (notEmpty(value) === true && typeof value === 'string') {
-									if (name === 'integer') {
-										data[attr] = INTEGER(value);
-									} else if (name === 'real') {
-										data[attr] = REAL(value);
-									} else if (name === 'bool') {
-										data[attr] = value === 'true';
-									} else if (name === 'date') {
-										data[attr] = new Date(value);
-									} else if (name === 'username') {
-										data[attr] = value.toLowerCase();
+								if (typeof value === 'string') {
+									
+									value = value.trim();
+									
+									if (notEmpty(value) === true) {
+										if (name === 'integer') {
+											data[attr] = INTEGER(value);
+										} else if (name === 'real') {
+											data[attr] = REAL(value);
+										} else if (name === 'bool') {
+											data[attr] = value === 'true';
+										} else if (name === 'date') {
+											data[attr] = new Date(value);
+										} else if (name === 'username') {
+											data[attr] = value.toLowerCase();
+										} else {
+											data[attr] = value;
+										}
+									}
+									
+									else {
+										data[attr] = value;
 									}
 								}
 							});
@@ -2818,8 +2831,20 @@ global.CPU_CLUSTERING = METHOD((m) => {
 
 	return {
 
-		run : (work) => {
-			//REQUIRED: work
+		run : (workOrHandlers) => {
+			//REQUIRED: workOrHandlers
+			//REQUIRED: workOrHandlers.work
+			//OPTIONAL: workOrHandlers.terminate
+			
+			let work;
+			let terminateHandler;
+			
+			if (CHECK_IS_DATA(workOrHandlers) !== true) {
+				work = workOrHandlers;
+			} else {
+				work = workOrHandlers.work;
+				terminateHandler = workOrHandlers.terminate;
+			}
 			
 			let methodMap = {};
 			let sendKey = 0;
@@ -3058,8 +3083,12 @@ global.CPU_CLUSTERING = METHOD((m) => {
 				});
 
 				Cluster.on('exit', (worker, code, signal) => {
-					SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다.');
-					fork();
+					
+					SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + ')');
+					
+					if (terminateHandler !== undefined) {
+						terminateHandler(worker.id);
+					}
 				});
 			}
 
@@ -7232,7 +7261,7 @@ global.WEB_SERVER = CLASS((cls) => {
 	let ZLib = require('zlib');
 	let IncomingForm = require('formidable').IncomingForm;
 
-	let getContentTypeFromExtension = (extension) => {
+	let getContentTypeFromExtension = cls.getContentTypeFromExtension = (extension) => {
 		
 		// png image
 		if (extension === 'png') {
@@ -7317,7 +7346,7 @@ global.WEB_SERVER = CLASS((cls) => {
 		return 'application/octet-stream';
 	};
 
-	let getEncodingFromContentType = (contentType) => {
+	let getEncodingFromContentType = cls.getEncodingFromContentType = (contentType) => {
 
 		if (contentType === 'application/javascript') {
 			return 'utf-8';
@@ -7400,7 +7429,7 @@ global.WEB_SERVER = CLASS((cls) => {
 		return strs;
 	};
 	
-	let parseCookieStr = (cookieStr) => {
+	let parseCookieStr = cls.parseCookieStr = (cookieStr) => {
 		
 		let data = {};
 
@@ -7585,7 +7614,7 @@ global.WEB_SERVER = CLASS((cls) => {
 						
 						requestInfo = {
 							headers : headers,
-							cookies : parseCookieStr(headers.cookie),							
+							cookies : parseCookieStr(headers.cookie),
 							isSecure : isSecure,
 							uri : uri,
 							method : method,
@@ -8125,6 +8154,8 @@ global.WEB_SOCKET_SERVER = METHOD({
 		let WebSocket = require('ws');
 		let WebSocketServer = WebSocket.Server;
 		
+		let parseCookieStr = WEB_SERVER.parseCookieStr;
+		
 		let nativeConnectionListener = (conn) => {
 
 			let headers = conn.upgradeReq.headers;
@@ -8216,6 +8247,10 @@ global.WEB_SOCKET_SERVER = METHOD({
 			clientInfo = {
 				
 				ip : ip,
+				
+				headers : headers,
+				
+				cookies : parseCookieStr(headers.cookie),
 				
 				connectTime : new Date()
 			},

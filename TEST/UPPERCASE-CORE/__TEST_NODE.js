@@ -1,6 +1,6 @@
 RUN(() => {
 	
-	// COMMON 테스트
+	/*// COMMON 테스트
 	require('./COMMON/TO_DELETE.js');
 	require('./COMMON/METHOD.js');
 	
@@ -35,9 +35,9 @@ RUN(() => {
 	require('./COMMON/UTIL/DATA/PACK_DATA.js');
 	require('./COMMON/UTIL/DATA/UNPACK_DATA.js');
 	require('./COMMON/UTIL/STRINGIFY.js');
-	require('./COMMON/UTIL/PARSE_STR.js');
+	require('./COMMON/UTIL/PARSE_STR.js');*/
 	require('./COMMON/UTIL/VALID.js');
-	
+	/*
 	// 반복 관련 기능
 	require('./COMMON/UTIL/REPEAT/REPEAT.js');
 	require('./COMMON/UTIL/REPEAT/EACH.js');
@@ -58,7 +58,7 @@ RUN(() => {
 	// 기타 기능
 	require('./COMMON/UTIL/OVERRIDE.js');
 	require('./COMMON/UTIL/RANDOM_STR.js');
-	require('./COMMON/UTIL/URI_MATCHER.js');
+	require('./COMMON/UTIL/URI_MATCHER.js');*/
 	
 	// NODE 테스트
 	// 파일 처리 기능

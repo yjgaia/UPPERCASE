@@ -38,6 +38,10 @@ _.each([52, 97], (value, index) => {
 #### UPPERCASE는 멀티코어 CPU 및 분산 서버 시스템을 지원합니다.
 * [클러스터링 문서](DOC/GUIDE/CLUSTERING.md) 참고
 
+## UPPERCASE의 구조
+![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/DOC/GUIDE/STRUCTURE.png)
+UPPERCASE는 [각종 모듈](DOC/GUIDE.md#모듈-별-문서)과 [BOX](DOC/GUIDE/BOX.md), [Uniconn](#클라이언트) 등으로 이루어져 있습니다.
+
 ## UPPERCASE가 제공하는 기능들
 UPPERCASE는 동적인 웹 애플리케이션을 개발하기 위해 필요한 다양한 기능들을 제공합니다.
 
@@ -61,6 +65,7 @@ UPPERCASE는 이 외에도 업로드 기능, 각종 유틸리티 기능, 모든 
 
 ## 문서
 * [설치하기](DOC/INSTALL.md)
+* [개발하기](DOC/GUIDE.md#개발하기)
 * [튜토리얼](DOC/TUTORIAL.md)
 * [가이드](DOC/GUIDE.md)
 * [API 문서](API/README.md)
@@ -71,9 +76,9 @@ UPPERCASE가 공식 지원하는 클라이언트 목록은 다음과 같습니�
 * 웹 브라우저 - UPPERCASE는 기본적으로 웹 브라우저에서 구동됩니다.
 * [Android 클라이언트](https://github.com/Hanul/Uniconn-Android)
 * [iOS 클라이언트](https://github.com/Hanul/Uniconn-iOS)
+* [Unity 클라이언트](https://github.com/Hanul/Uniconn-Unity)
 
 곧 지원 예정인 클라이언트 목록은 다음과 같습니다.
-* Unity 클라이언트
 * Unreal 클라이언트
 * Xamarin 클라이언트
 

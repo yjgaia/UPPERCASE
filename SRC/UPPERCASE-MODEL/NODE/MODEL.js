@@ -1204,7 +1204,7 @@ FOR_BOX((box) => {
 					//REQUIRED: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.error
 					//OPTIONAL: callbackOrHandlers.notExists
-					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.success
 
 					let errorHandler;
 					let notExistsHandler;
@@ -1246,7 +1246,7 @@ FOR_BOX((box) => {
 							} else {
 								SHOW_WARNING(box.boxName + '.' + name + 'Model.get', '데이터가 존재하지 않습니다.', idOrParams);
 							}
-						} else {
+						} else if (callback !== undefined) {
 							callback(savedData);
 						}
 					});
@@ -1826,7 +1826,7 @@ FOR_BOX((box) => {
 										});
 	
 									} else if (removeAuthKey === undefined && removeAdminRole !== undefined) {
-	
+
 										if (clientInfo.roles !== undefined && CHECK_IS_IN({
 											array : clientInfo.roles,
 											value : removeAdminRole

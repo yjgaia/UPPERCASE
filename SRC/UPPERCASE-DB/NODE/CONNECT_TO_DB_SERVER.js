@@ -34,7 +34,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			initDBFuncMap[dbServerName].push(initDBFunc);
 			
 		} else {
-			initDBFunc(nativeDBs[dbServerName]);
+			initDBFunc(nativeDBs[dbServerName], backupDBs[dbServerName]);
 		}
 	};
 

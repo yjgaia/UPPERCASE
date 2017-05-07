@@ -11,12 +11,17 @@ global.MSG = METHOD({
 		let msg = msgs[INFO.getLang()];
 
 		if (msg === undefined) {
-
-			// get first msg.
-			EACH(msgs, (_msg) => {
-				msg = _msg;
-				return false;
-			});
+			
+			msg = msgs[INFO.getLang().substring(0, 2)];
+			
+			if (msg === undefined) {
+				
+				// get first msg.
+				EACH(msgs, (_msg) => {
+					msg = _msg;
+					return false;
+				});
+			}
 		}
 
 		return msg;

@@ -820,6 +820,7 @@ SOCKET_SERVER(8124, (clientInfo, on, off, send, disconnect) => {
 		}
 	});
 	
+	// 연결이 끊어졌을 때
 	on('__DISCONNECTED', () => {
 		console.log('연결이 끊어졌습니다.');
 	});
@@ -870,6 +871,7 @@ CONNECT_TO_SOCKET_SERVER({
 			console.log('서버로부터의 메시지:' + retMsg);
 		});
 		
+		// 연결이 끊어졌을 때
 		on('__DISCONNECTED', () => {
 			console.log('연결이 끊어졌습니다.');
 		});
@@ -902,6 +904,8 @@ CONNECT_TO_SOCKET_SERVER({
 WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
 	// clientInfo				클라이언트 정보
 	// clientInfo.ip			클라이언트의 IP
+	// clientInfo.headers		요청 헤더
+	// clientInfo.cookies  		클라이언트에서 넘어온 HTTP 쿠키
 	// clientInfo.connectTime	접속 시작 시간
 	// on						메소드를 생성합니다.
 	// off						메소드를 제거합니다.
@@ -914,6 +918,7 @@ WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
 		}
 	});
 	
+	// 연결이 끊어졌을 때
 	on('__DISCONNECTED', () => {
 		console.log('연결이 끊어졌습니다.');
 	});
@@ -960,6 +965,7 @@ MULTI_PROTOCOL_SOCKET_SERVER({
 		}
 	});
 	
+	// 연결이 끊어졌을 때
 	on('__DISCONNECTED', () => {
 		console.log('연결이 끊어졌습니다.');
 	});
@@ -1350,7 +1356,7 @@ DISK_USAGE('c:', (usage) => {
 ```
 
 ### `RUN_SCHEDULE_DAEMON(schedules)`
-매일 정해진 시간마다 주어진 터미널 명령어들을 실행하는 데몬을 구동합니다.
+매일 정해진 시간마다 주어진 CMD/터미널 명령어들을 실행하는 데몬을 구동합니다.
 
 아래는 프로세스에 쌓여있는 메모리를 초기화하기 위해, 유저 수가 적은 새벽 6시에 `forever` 모듈로 실행시킨 데몬을 재시작하는 코드입니다.
 ```javascript

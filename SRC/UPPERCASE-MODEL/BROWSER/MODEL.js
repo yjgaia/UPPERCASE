@@ -225,10 +225,10 @@ FOR_BOX((box) => {
 							//OPTIONAL: idOrParams.sort
 							//OPTIONAL: idOrParams.isRandom
 							//REQUIRED: callbackOrHandlers
-							//REQUIRED: callbackOrHandlers.error
-							//REQUIRED: callbackOrHandlers.notAuthed
-							//REQUIRED: callbackOrHandlers.notExists
-							//REQUIRED: callbackOrHandlers.success
+							//OPTIONAL: callbackOrHandlers.error
+							//OPTIONAL: callbackOrHandlers.notAuthed
+							//OPTIONAL: callbackOrHandlers.notExists
+							//OPTIONAL: callbackOrHandlers.success
 		
 							let errorHandler;
 							let notAuthedHandler;
@@ -283,7 +283,7 @@ FOR_BOX((box) => {
 									} else {
 										SHOW_WARNING(box.boxName + '.' + name + 'Model.get', '데이터가 존재하지 않습니다.', idOrParams);
 									}
-								} else {
+								} else if (callback !== undefined) {
 									callback(savedData);
 								}
 							});
@@ -1012,7 +1012,7 @@ FOR_BOX((box) => {
 							
 							let subRoom;
 							
-							let closeWatching;
+							let exit;
 		
 							subRooms.push(subRoom = box.ROOM({
 								roomServerName : roomServerName,
@@ -1030,12 +1030,12 @@ FOR_BOX((box) => {
 							(callback) => {
 								subRoom.on('remove', (originData) => {
 									callback(originData);
-									closeWatching();
+									exit();
 								});
 							},
-		
-							// close watching.
-							closeWatching = () => {
+							
+							// exit.
+							exit = () => {
 		
 								subRoom.exit();
 		
@@ -1305,8 +1305,8 @@ FOR_BOX((box) => {
 							}
 							
 							if (isNotOnNew !== true) {
-								onNewWatchingRoom = onNewWatching(properties, (savedData, addUpdateHandler, addRemoveHandler, closeWatching) => {
-									handler(savedData, addUpdateHandler, addRemoveHandler, closeWatching, true);
+								onNewWatchingRoom = onNewWatching(properties, (savedData, addUpdateHandler, addRemoveHandler, exit) => {
+									handler(savedData, addUpdateHandler, addRemoveHandler, exit, true);
 								});
 							}
 							
@@ -1334,7 +1334,7 @@ FOR_BOX((box) => {
 											addRemoveHandler(savedData.id, handler);
 										},
 	
-										// close watching.
+										// exit.
 										() => {
 											exit(savedData.id);
 										},

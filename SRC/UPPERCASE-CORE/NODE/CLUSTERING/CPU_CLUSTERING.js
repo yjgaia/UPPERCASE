@@ -23,8 +23,20 @@ global.CPU_CLUSTERING = METHOD((m) => {
 
 	return {
 
-		run : (work) => {
-			//REQUIRED: work
+		run : (workOrHandlers) => {
+			//REQUIRED: workOrHandlers
+			//REQUIRED: workOrHandlers.work
+			//OPTIONAL: workOrHandlers.terminate
+			
+			let work;
+			let terminateHandler;
+			
+			if (CHECK_IS_DATA(workOrHandlers) !== true) {
+				work = workOrHandlers;
+			} else {
+				work = workOrHandlers.work;
+				terminateHandler = workOrHandlers.terminate;
+			}
 			
 			let methodMap = {};
 			let sendKey = 0;
@@ -263,8 +275,12 @@ global.CPU_CLUSTERING = METHOD((m) => {
 				});
 
 				Cluster.on('exit', (worker, code, signal) => {
-					SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + '). 재시작합니다.');
-					fork();
+					
+					SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + ')');
+					
+					if (terminateHandler !== undefined) {
+						terminateHandler(worker.id);
+					}
 				});
 			}
 
