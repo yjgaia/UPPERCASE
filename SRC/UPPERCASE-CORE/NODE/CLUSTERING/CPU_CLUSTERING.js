@@ -276,7 +276,9 @@ global.CPU_CLUSTERING = METHOD((m) => {
 
 				Cluster.on('exit', (worker, code, signal) => {
 					
-					SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + ')');
+					SHOW_ERROR('CPU_CLUSTERING', MSG({
+						ko : '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + ')'
+					}));
 					
 					if (terminateHandler !== undefined) {
 						terminateHandler(worker.id);
@@ -310,7 +312,9 @@ global.CPU_CLUSTERING = METHOD((m) => {
 				
 				work();
 
-				console.log('[CPU_CLUSTERING] 클러스터링 워커가 실행중입니다. (워커 ID:' + thisWorkerId + ')');
+				console.log('[CPU_CLUSTERING] ' + MSG({
+					ko : '클러스터링 워커가 실행중입니다. (워커 ID:' + thisWorkerId + ')'
+				}));
 			}
 		}
 	};

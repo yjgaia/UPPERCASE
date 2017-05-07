@@ -67,7 +67,9 @@ global.READ_FILE = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('READ_FILE', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										path : path
 									});
 								}
@@ -98,7 +100,9 @@ global.READ_FILE = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+							SHOW_WARNING('READ_FILE', MSG({
+								ko : '파일이 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -123,7 +127,9 @@ global.READ_FILE = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('READ_FILE', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										path : path
 									});
 								}
@@ -144,7 +150,9 @@ global.READ_FILE = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+								SHOW_WARNING('READ_FILE', MSG({
+									ko : '파일이 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}

@@ -67,7 +67,9 @@ global.GET_FILE_INFO = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('GET_FILE_INFO', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										path : path
 									});
 								}
@@ -86,7 +88,9 @@ global.GET_FILE_INFO = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+							SHOW_WARNING('GET_FILE_INFO', MSG({
+								ko : '파일이 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -113,7 +117,9 @@ global.GET_FILE_INFO = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('GET_FILE_INFO', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										path : path
 									});
 								}
@@ -140,7 +146,9 @@ global.GET_FILE_INFO = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+								SHOW_WARNING('GET_FILE_INFO', MSG({
+									ko : '파일이 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}

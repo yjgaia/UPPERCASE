@@ -538,7 +538,9 @@ FOR_BOX((box) => {
 										if (notExistsHandler !== undefined) {
 											notExistsHandler();
 										} else {
-											SHOW_WARNING(box.boxName + '.' + name + 'DB.get', '데이터가 존재하지 않습니다.', filter);
+											SHOW_WARNING(box.boxName + '.' + name + 'DB.get', MSG({
+												ko : '데이터가 존재하지 않습니다.'
+											}), filter);
 										}
 									}
 								}
@@ -656,7 +658,9 @@ FOR_BOX((box) => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler();
 								} else {
-									SHOW_WARNING(box.boxName + '.' + name + 'DB.get', '데이터가 존재하지 않습니다.', filter);
+									SHOW_WARNING(box.boxName + '.' + name + 'DB.get', MSG({
+										ko : '데이터가 존재하지 않습니다.'
+									}), filter);
 								}
 							}
 							
@@ -814,7 +818,9 @@ FOR_BOX((box) => {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										SHOW_WARNING(box.boxName + '.' + name + 'DB.update', '수정할 데이터가 존재하지 않습니다.', filter);
+										SHOW_WARNING(box.boxName + '.' + name + 'DB.update', MSG({
+											ko : '수정할 데이터가 존재하지 않습니다.'
+										}), filter);
 									}
 								},
 	
@@ -860,7 +866,9 @@ FOR_BOX((box) => {
 												if (notExistsHandler !== undefined) {
 													notExistsHandler();
 												} else {
-													SHOW_WARNING(box.boxName + '.' + name + 'DB.update', '수정할 데이터가 존재하지 않습니다.', filter);
+													SHOW_WARNING(box.boxName + '.' + name + 'DB.update', MSG({
+														ko : '수정할 데이터가 존재하지 않습니다.'
+													}), filter);
 												}
 											}
 											
@@ -884,7 +892,9 @@ FOR_BOX((box) => {
 														if (notExistsHandler !== undefined) {
 															notExistsHandler();
 														} else {
-															SHOW_WARNING(box.boxName + '.' + name + 'DB.update', '수정할 데이터가 존재하지 않습니다.', filter);
+															SHOW_WARNING(box.boxName + '.' + name + 'DB.update', MSG({
+																ko : '수정할 데이터가 존재하지 않습니다.'
+															}), filter);
 														}
 													},
 				
@@ -1056,7 +1066,9 @@ FOR_BOX((box) => {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler();
 									} else {
-										SHOW_WARNING(box.boxName + '.' + name + 'DB.remove', '삭제할 데이터가 존재하지 않습니다.', filter);
+										SHOW_WARNING(box.boxName + '.' + name + 'DB.remove', MSG({
+											ko : '삭제할 데이터가 존재하지 않습니다.'
+										}), filter);
 									}
 								},
 	
@@ -1093,7 +1105,9 @@ FOR_BOX((box) => {
 											if (notExistsHandler !== undefined) {
 												notExistsHandler();
 											} else {
-												SHOW_WARNING(box.boxName + '.' + name + 'DB.remove', '삭제할 데이터가 존재하지 않습니다.', filter);
+												SHOW_WARNING(box.boxName + '.' + name + 'DB.remove', MSG({
+													ko : '삭제할 데이터가 존재하지 않습니다.'
+												}), filter);
 											}
 										}
 	
@@ -1231,7 +1245,9 @@ FOR_BOX((box) => {
 								collection.find(filter).sort(sort).skip(start).limit(count).toArray((error, savedDataSet) => {
 									
 									if (error === TO_DELETE && savedDataSet.length === NODE_CONFIG.maxDataCount) {
-										SHOW_WARNING(box.boxName + '.' + name + 'DB.find', '데이터의 개수가 ' + NODE_CONFIG.maxDataCount + '개 이상입니다. 최대 가져올 수 있는 데이터의 개수는 ' + NODE_CONFIG.maxDataCount + '개 입니다.');
+										SHOW_WARNING(box.boxName + '.' + name + 'DB.find', MSG({
+											ko : '데이터의 개수가 ' + NODE_CONFIG.maxDataCount + '개 이상입니다. 최대 가져올 수 있는 데이터의 개수는 ' + NODE_CONFIG.maxDataCount + '개 입니다.'
+										}));
 									}
 									
 									proc(error, savedDataSet);

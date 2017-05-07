@@ -111,7 +111,9 @@ global.REMOVE_FOLDER = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('REMOVE_FOLDER', '폴더가 존재하지 않습니다.', {
+							SHOW_WARNING('REMOVE_FOLDER', MSG({
+								ko : '폴더가 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -160,7 +162,9 @@ global.REMOVE_FOLDER = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('REMOVE_FOLDER', '폴더가 존재하지 않습니다.', {
+								SHOW_WARNING('REMOVE_FOLDER', MSG({
+									ko : '폴더가 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}

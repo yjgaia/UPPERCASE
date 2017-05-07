@@ -170,7 +170,9 @@ FOR_BOX((box) => {
 							
 							if (notInitedDataSet.length > 0) {
 								
-								SHOW_WARNING(box.boxName + '.' + name + 'Model', '초기화 되지 않은 데이터가 ' + notInitedDataSet.length + '개 있습니다. 모두 초기화합니다.');
+								SHOW_WARNING(box.boxName + '.' + name + 'Model', MSG({
+									ko : '초기화 되지 않은 데이터가 ' + notInitedDataSet.length + '개 있습니다. 모두 초기화합니다.'
+								}));
 								
 								NEXT(notInitedDataSet, [
 								(notInitedData, next) => {
@@ -186,7 +188,9 @@ FOR_BOX((box) => {
 								
 								() => {
 									return () => {
-										SHOW_WARNING(box.boxName + '.' + name + 'Model', notInitedDataSet.length + '개 데이터를 모두 초기화하였습니다.');
+										SHOW_WARNING(box.boxName + '.' + name + 'Model', MSG({
+											ko : notInitedDataSet.length + '개 데이터를 모두 초기화하였습니다.'
+										}));
 									};
 								}]);
 							}
@@ -1178,7 +1182,9 @@ FOR_BOX((box) => {
 								if (notValidHandler !== undefined) {
 									notValidHandler(validErrors);
 								} else {
-									SHOW_WARNING(box.boxName + '.' + name + 'Model.create', '데이터가 유효하지 않습니다.', {
+									SHOW_WARNING(box.boxName + '.' + name + 'Model.create', MSG({
+										ko : '데이터가 유효하지 않습니다.'
+									}), {
 										data : data,
 										validErrors : validErrors
 									});
@@ -1244,7 +1250,9 @@ FOR_BOX((box) => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.get', '데이터가 존재하지 않습니다.', idOrParams);
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.get', MSG({
+									ko : '데이터가 존재하지 않습니다.'
+								}), idOrParams);
 							}
 						} else if (callback !== undefined) {
 							callback(savedData);
@@ -1301,7 +1309,9 @@ FOR_BOX((box) => {
 							if (notValidHandler !== undefined) {
 								notValidHandler(validErrors);
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', {
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', MSG({
+									ko : '데이터가 유효하지 않습니다.'
+								}), {
 									data : data,
 									validErrors : validErrors
 								});
@@ -1310,7 +1320,9 @@ FOR_BOX((box) => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '수정할 데이터가 존재하지 않습니다.', data);
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', MSG({
+									ko : '수정할 데이터가 존재하지 않습니다.'
+								}), data);
 							}
 						} else if (callback !== undefined) {
 							callback(savedData, originData);
@@ -1367,7 +1379,9 @@ FOR_BOX((box) => {
 							if (notValidHandler !== undefined) {
 								notValidHandler(validErrors);
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', {
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', MSG({
+									ko : '데이터가 유효하지 않습니다.'
+								}), {
 									data : data,
 									validErrors : validErrors
 								});
@@ -1376,7 +1390,9 @@ FOR_BOX((box) => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '수정할 데이터가 존재하지 않습니다.', data);
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', MSG({
+									ko : '수정할 데이터가 존재하지 않습니다.'
+								}), data);
 							}
 						} else if (callback !== undefined) {
 							callback(savedData, originData);
@@ -1434,7 +1450,9 @@ FOR_BOX((box) => {
 							if (notValidHandler !== undefined) {
 								notValidHandler(validErrors);
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '데이터가 유효하지 않습니다.', {
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', MSG({
+									ko : '데이터가 유효하지 않습니다.'
+								}), {
 									data : data,
 									validErrors : validErrors
 								});
@@ -1443,7 +1461,9 @@ FOR_BOX((box) => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', '수정할 데이터가 존재하지 않습니다.', data);
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', MSG({
+									ko : '수정할 데이터가 존재하지 않습니다.'
+								}), data);
 							}
 						} else if (callback !== undefined) {
 							callback(savedData, originData);
@@ -1493,7 +1513,9 @@ FOR_BOX((box) => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler();
 							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.remove', '삭제할 데이터가 존재하지 않습니다.', id);
+								SHOW_WARNING(box.boxName + '.' + name + 'Model.remove', MSG({
+									ko : '삭제할 데이터가 존재하지 않습니다.'
+								}), id);
 							}
 						} else if (callback !== undefined) {
 							callback(originData);

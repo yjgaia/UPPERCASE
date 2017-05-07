@@ -419,7 +419,7 @@ FOR_BOX((box) => {
 					}, callback);
 
 				} else {
-					console.log('[UPPERCASE-ROOM] `ROOM.send` ERROR! ROOM EXITED!');
+					SHOW_ERROR(box.boxName + '.' + roomName + 'Room.send', 'ROOM EXITED.');
 				}
 			};
 

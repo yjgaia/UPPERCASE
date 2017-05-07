@@ -824,7 +824,9 @@ global.TEST = METHOD((m) => {
 				let line;
 				
 				if (bool === true) {
-					console.log('[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
+					console.log(MSG({
+						ko : '[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
+					}));
 				} else {
 
 					temp.__THROW_ERROR_$$$ = () => {
@@ -845,7 +847,9 @@ global.TEST = METHOD((m) => {
 
 					errorCount += 1;
 
-					console.log('[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
+					console.log(MSG({
+						ko : '[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
+					}));
 				}
 			});
 		}
@@ -3128,7 +3132,9 @@ global.CPU_CLUSTERING = METHOD((m) => {
 
 				Cluster.on('exit', (worker, code, signal) => {
 					
-					SHOW_ERROR('CPU_CLUSTERING', '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + ')');
+					SHOW_ERROR('CPU_CLUSTERING', MSG({
+						ko : '워커 ID:' + worker.id + '가 작동을 중지하였습니다. (코드:' + (signal !== undefined ? signal : code) + ')'
+					}));
 					
 					if (terminateHandler !== undefined) {
 						terminateHandler(worker.id);
@@ -3162,7 +3168,9 @@ global.CPU_CLUSTERING = METHOD((m) => {
 				
 				work();
 
-				console.log('[CPU_CLUSTERING] 클러스터링 워커가 실행중입니다. (워커 ID:' + thisWorkerId + ')');
+				console.log('[CPU_CLUSTERING] ' + MSG({
+					ko : '클러스터링 워커가 실행중입니다. (워커 ID:' + thisWorkerId + ')'
+				}));
 			}
 		}
 	};
@@ -3263,10 +3271,14 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 								delete serverSends[serverName];
 								delete isConnectings[serverName];
 								
-								SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
+								SHOW_ERROR('SERVER_CLUSTERING', MSG({
+									ko : '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')'
+								}));
 							});
 
-							console.log('[SERVER_CLUSTERING] 클러스터링 서버와 연결되었습니다. (연결된 서버 이름:' + serverName + ')');
+							console.log('[SERVER_CLUSTERING] ' + MSG({
+								ko : '클러스터링 서버와 연결되었습니다. (연결된 서버 이름:' + serverName + ')'
+							}));
 
 							if (CPU_CLUSTERING.broadcast !== undefined) {
 
@@ -3326,7 +3338,9 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 						value : socketServeOn
 					});
 					
-					SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
+					SHOW_ERROR('SERVER_CLUSTERING', MSG({
+						ko : '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')'
+					}));
 				});
 			});
 
@@ -3517,7 +3531,9 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 								data : data
 							});
 						} else {
-							SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+							SHOW_ERROR('SERVER_CLUSTERING', MSG({
+								ko : '[' + serverName + ']라는 서버는 존재하지 않습니다.'
+							}));
 						}
 					}
 					
@@ -3543,7 +3559,9 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 								callback : callback
 							});
 						} else {
-							SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+							SHOW_ERROR('SERVER_CLUSTERING', MSG({
+								ko : '[' + serverName + ']라는 서버는 존재하지 않습니다.'
+							}));
 						}
 					}
 					
@@ -3570,7 +3588,9 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 				work();
 			}
 
-			console.log(CONSOLE_BLUE('[SERVER_CLUSTERING] 클러스터링 서버가 실행중입니다. (현재 서버 이름:' + thisServerName + ', 포트:' + port + ')'));
+			console.log(CONSOLE_BLUE('[SERVER_CLUSTERING] ' + MSG({
+				ko : '클러스터링 서버가 실행중입니다. (현재 서버 이름:' + thisServerName + ', 포트:' + port + ')'
+			})));
 		}
 	};
 });
@@ -4025,7 +4045,9 @@ global.SHARED_STORE = CLASS((cls) => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
 						} else {
-							SHOW_WARNING('SHARED_STORE (' + storeName + ')', '수정할 데이터가 존재하지 않습니다.', params);
+							SHOW_WARNING('SHARED_STORE (' + storeName + ')', MSG({
+								ko : '수정할 데이터가 존재하지 않습니다.'
+							}), params);
 						}
 					} else if (callback !== undefined) {
 						callback(savedData);
@@ -4092,7 +4114,9 @@ global.SHARED_STORE = CLASS((cls) => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
 						} else {
-							SHOW_WARNING('SHARED_STORE (' + storeName + ')', '가져올 데이터가 존재하지 않습니다.', id);
+							SHOW_WARNING('SHARED_STORE (' + storeName + ')', MSG({
+								ko : '가져올 데이터가 존재하지 않습니다.'
+							}), id);
 						}
 					} else if (callback !== undefined) {
 						callback(savedData);
@@ -4155,7 +4179,9 @@ global.SHARED_STORE = CLASS((cls) => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler();
 						} else {
-							SHOW_WARNING('SHARED_STORE (' + storeName + ')', '삭제할 데이터가 존재하지 않습니다.', id);
+							SHOW_WARNING('SHARED_STORE (' + storeName + ')', MSG({
+								ko : '삭제할 데이터가 존재하지 않습니다.'
+							}), id);
 						}
 					} else if (callback !== undefined) {
 						callback(originData);
@@ -4718,7 +4744,9 @@ global.COPY_FILE = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(from);
 								} else {
-									SHOW_WARNING('COPY_FILE', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('COPY_FILE', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										from : from
 									});
 								}
@@ -4745,7 +4773,9 @@ global.COPY_FILE = METHOD(() => {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler(from);
 									} else {
-										SHOW_WARNING('COPY_FILE', '파일이 존재하지 않습니다.', {
+										SHOW_WARNING('COPY_FILE', MSG({
+											ko : '파일이 존재하지 않습니다.'
+										}), {
 											from : from
 										});
 									}
@@ -5034,7 +5064,9 @@ global.FIND_FILE_NAMES = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+							SHOW_WARNING('FIND_FOLDER_NAMES', MSG({
+								ko : '폴더가 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -5067,7 +5099,9 @@ global.FIND_FILE_NAMES = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('FIND_FILE_NAMES', '폴더가 존재하지 않습니다.', {
+								SHOW_WARNING('FIND_FILE_NAMES', MSG({
+									ko : '폴더가 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}
@@ -5212,7 +5246,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+							SHOW_WARNING('FIND_FOLDER_NAMES', MSG({
+								ko : '폴더가 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -5245,7 +5281,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+								SHOW_WARNING('FIND_FOLDER_NAMES', MSG({
+									ko : '폴더가 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}
@@ -5348,7 +5386,9 @@ global.GET_FILE_INFO = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('GET_FILE_INFO', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										path : path
 									});
 								}
@@ -5367,7 +5407,9 @@ global.GET_FILE_INFO = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+							SHOW_WARNING('GET_FILE_INFO', MSG({
+								ko : '파일이 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -5394,7 +5436,9 @@ global.GET_FILE_INFO = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('GET_FILE_INFO', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										path : path
 									});
 								}
@@ -5421,7 +5465,9 @@ global.GET_FILE_INFO = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('GET_FILE_INFO', '파일이 존재하지 않습니다.', {
+								SHOW_WARNING('GET_FILE_INFO', MSG({
+									ko : '파일이 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}
@@ -5566,7 +5612,9 @@ global.READ_FILE = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('READ_FILE', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										path : path
 									});
 								}
@@ -5597,7 +5645,9 @@ global.READ_FILE = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+							SHOW_WARNING('READ_FILE', MSG({
+								ko : '파일이 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -5622,7 +5672,9 @@ global.READ_FILE = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(path);
 								} else {
-									SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('READ_FILE', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										path : path
 									});
 								}
@@ -5643,7 +5695,9 @@ global.READ_FILE = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('READ_FILE', '파일이 존재하지 않습니다.', {
+								SHOW_WARNING('READ_FILE', MSG({
+									ko : '파일이 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}
@@ -5744,7 +5798,9 @@ global.REMOVE_FILE = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('REMOVE_FILE', '파일이 존재하지 않습니다.', {
+							SHOW_WARNING('REMOVE_FILE', MSG({
+								ko : '파일이 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -5771,7 +5827,9 @@ global.REMOVE_FILE = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('REMOVE_FILE', '파일이 존재하지 않습니다.', {
+								SHOW_WARNING('REMOVE_FILE', MSG({
+									ko : '파일이 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}
@@ -5916,7 +5974,9 @@ global.REMOVE_FOLDER = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('REMOVE_FOLDER', '폴더가 존재하지 않습니다.', {
+							SHOW_WARNING('REMOVE_FOLDER', MSG({
+								ko : '폴더가 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -5965,7 +6025,9 @@ global.REMOVE_FOLDER = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('REMOVE_FOLDER', '폴더가 존재하지 않습니다.', {
+								SHOW_WARNING('REMOVE_FOLDER', MSG({
+									ko : '폴더가 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}
@@ -7227,7 +7289,9 @@ global.SOCKET_SERVER = METHOD({
 		// listen.
 		server.listen(port);
 
-		console.log('[SOCKET_SERVER] TCP 소켓 서버가 실행중입니다. (포트:' + port + ')');
+		console.log('[SOCKET_SERVER] ' + MSG({
+			ko : 'TCP 소켓 서버가 실행중입니다. (포트:' + port + ')'
+		}));
 	}
 });
 
@@ -7283,7 +7347,9 @@ global.UDP_SERVER = CLASS({
 		});
 		
 		server.on('listening', () => {
-			console.log('[UDP_SERVER] UDP 서버가 실행중입니다. (포트:' + port + ')');
+			console.log('[UDP_SERVER] ' + MSG({
+				ko : 'UDP 서버가 실행중입니다. (포트:' + port + ')'
+			}));
 		});
 		
 		server.bind(port);
@@ -8181,7 +8247,9 @@ global.WEB_SERVER = CLASS((cls) => {
 				preprocessors[extension] = preprocessor;
 			};
 			
-			console.log('[WEB_SERVER] 웹 서버가 실행중입니다.' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')')));
+			console.log('[WEB_SERVER] ' + MSG({
+				ko : '웹 서버가 실행중입니다.' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')'))
+			}));
 		}
 	};
 });
@@ -8408,7 +8476,9 @@ global.WEB_SOCKET_SERVER = METHOD({
 			server : webServer.getNativeServer()
 		}).on('connection', nativeConnectionListener);
 		
-		console.log('[WEB_SOCKET_SERVER] 웹 소켓 서버가 실행중입니다.');
+		console.log('[WEB_SOCKET_SERVER] ' + MSG({
+			ko : '웹 소켓 서버가 실행중입니다.'
+		}));
 	}
 });
 

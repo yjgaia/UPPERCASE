@@ -824,7 +824,9 @@ global.TEST = METHOD((m) => {
 				let line;
 				
 				if (bool === true) {
-					console.log('[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
+					console.log(MSG({
+						ko : '[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
+					}));
 				} else {
 
 					temp.__THROW_ERROR_$$$ = () => {
@@ -845,7 +847,9 @@ global.TEST = METHOD((m) => {
 
 					errorCount += 1;
 
-					console.log('[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
+					console.log(MSG({
+						ko : '[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
+					}));
 				}
 			});
 		}

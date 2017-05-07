@@ -889,7 +889,9 @@ global.WEB_SERVER = CLASS((cls) => {
 				preprocessors[extension] = preprocessor;
 			};
 			
-			console.log('[WEB_SERVER] 웹 서버가 실행중입니다.' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')')));
+			console.log('[WEB_SERVER] ' + MSG({
+				ko : '웹 서버가 실행중입니다.' + (port === undefined ? '' : (' (HTTP 서버 포트:' + port + ')')) + (securedPort === undefined ? '' : (' (HTTPS 서버 포트:' + securedPort + ')'))
+			}));
 		}
 	};
 });

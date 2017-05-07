@@ -109,7 +109,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 						if (notExistsHandler !== undefined) {
 							notExistsHandler(path);
 						} else {
-							SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+							SHOW_WARNING('FIND_FOLDER_NAMES', MSG({
+								ko : '폴더가 존재하지 않습니다.'
+							}), {
 								path : path
 							});
 						}
@@ -142,7 +144,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 							if (notExistsHandler !== undefined) {
 								notExistsHandler(path);
 							} else {
-								SHOW_WARNING('FIND_FOLDER_NAMES', '폴더가 존재하지 않습니다.', {
+								SHOW_WARNING('FIND_FOLDER_NAMES', MSG({
+									ko : '폴더가 존재하지 않습니다.'
+								}), {
 									path : path
 								});
 							}

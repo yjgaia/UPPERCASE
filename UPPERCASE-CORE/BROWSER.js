@@ -827,7 +827,9 @@ global.TEST = METHOD((m) => {
 				let line;
 				
 				if (bool === true) {
-					console.log('[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
+					console.log(MSG({
+						ko : '[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
+					}));
 				} else {
 
 					temp.__THROW_ERROR_$$$ = () => {
@@ -848,7 +850,9 @@ global.TEST = METHOD((m) => {
 
 					errorCount += 1;
 
-					console.log('[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.');
+					console.log(MSG({
+						ko : '[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
+					}));
 				}
 			});
 		}
@@ -3090,7 +3094,7 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
  * 쿠키 저장소 클래스
  * 
  * 쿠키에 데이터를 저장할 수 있는 클래스 입니다.
- * domain 파라미터를 통해 쿠키를 불러 올 수 있는 도메인 범위를 설정할 수 있습니다.
+ * domain 파라미터를 통해 쿠키를 불러 올 수 있는 도메인 범위를 지정할 수 있습니다.
  * 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
  */
 global.COOKIE_STORE = CLASS({
@@ -7880,12 +7884,12 @@ global.REQUEST = METHOD({
 		(method === 'GET' || method === 'DELETE' ? fetch(url + '?' + paramStr, {
 			method : method,
 			credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
-			headers : new Headers(headers)
+			headers : new Headers(headers === undefined ? {} : headers)
 		}) : fetch(url, {
 			method : method,
 			body : paramStr,
 			credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
-			headers : new Headers(headers)
+			headers : new Headers(headers === undefined ? {} : headers)
 		})).then((response) => {
 			return response.text();
 		}).then((responseText) => {

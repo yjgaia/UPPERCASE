@@ -276,7 +276,9 @@ global.BOOT = (params) => {
 			}, {
 				
 				notExists : () => {
-					SHOW_ERROR('BOOT', 'VERSION 파일이 존재하지 않습니다.');
+					SHOW_ERROR('BOOT', MSG({
+						ko : 'VERSION 파일이 존재하지 않습니다.'
+					}));
 				},
 				
 				success : (buffer) => {
@@ -1107,7 +1109,9 @@ global.BOOT = (params) => {
 		
 		let cal = CALENDAR();
 		
-		console.log(CONSOLE_GREEN('[BOOT] <' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> [' + CONFIG.title + '] 부팅 완료' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '') + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort))));
+		console.log(CONSOLE_GREEN('[BOOT] ' + MSG({
+			ko : '<' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> [' + CONFIG.title + '] 부팅 완료' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '') + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort))
+		})));
 	};
 	
 	// load all UPPERCASE modules for browser.
@@ -1131,7 +1135,9 @@ global.BOOT = (params) => {
 	// clustering cpus and servers.
 	clustering(() => {
 		
-		console.log('[BOOT] 부팅중...' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : ''));
+		console.log('[BOOT] ' + MSG({
+			ko : '부팅중...' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '')
+		}));
 
 		// connect to database.
 		connectToDatabase();
@@ -1215,7 +1221,9 @@ global.BOOT = (params) => {
 								
 								() => {
 									return (version, nowVersion) => {
-										SHOW_WARNING('BOOT', '[' + boxName + '] BOX의 새 버전이 존재합니다. 현재 버전: ' + nowVersion + ', 새 버전: ' + version);
+										SHOW_WARNING('BOOT', MSG({
+											ko : '[' + boxName + '] BOX의 새 버전이 존재합니다. 현재 버전: ' + nowVersion + ', 새 버전: ' + version
+										}));
 									};
 								}]);
 							}

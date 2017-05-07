@@ -93,10 +93,14 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 								delete serverSends[serverName];
 								delete isConnectings[serverName];
 								
-								SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
+								SHOW_ERROR('SERVER_CLUSTERING', MSG({
+									ko : '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')'
+								}));
 							});
 
-							console.log('[SERVER_CLUSTERING] 클러스터링 서버와 연결되었습니다. (연결된 서버 이름:' + serverName + ')');
+							console.log('[SERVER_CLUSTERING] ' + MSG({
+								ko : '클러스터링 서버와 연결되었습니다. (연결된 서버 이름:' + serverName + ')'
+							}));
 
 							if (CPU_CLUSTERING.broadcast !== undefined) {
 
@@ -156,7 +160,9 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 						value : socketServeOn
 					});
 					
-					SHOW_ERROR('SERVER_CLUSTERING', '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')');
+					SHOW_ERROR('SERVER_CLUSTERING', MSG({
+						ko : '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')'
+					}));
 				});
 			});
 
@@ -347,7 +353,9 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 								data : data
 							});
 						} else {
-							SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+							SHOW_ERROR('SERVER_CLUSTERING', MSG({
+								ko : '[' + serverName + ']라는 서버는 존재하지 않습니다.'
+							}));
 						}
 					}
 					
@@ -373,7 +381,9 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 								callback : callback
 							});
 						} else {
-							SHOW_ERROR('SERVER_CLUSTERING', '[' + serverName + ']라는 서버는 존재하지 않습니다.');
+							SHOW_ERROR('SERVER_CLUSTERING', MSG({
+								ko : '[' + serverName + ']라는 서버는 존재하지 않습니다.'
+							}));
 						}
 					}
 					
@@ -400,7 +410,9 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 				work();
 			}
 
-			console.log(CONSOLE_BLUE('[SERVER_CLUSTERING] 클러스터링 서버가 실행중입니다. (현재 서버 이름:' + thisServerName + ', 포트:' + port + ')'));
+			console.log(CONSOLE_BLUE('[SERVER_CLUSTERING] ' + MSG({
+				ko : '클러스터링 서버가 실행중입니다. (현재 서버 이름:' + thisServerName + ', 포트:' + port + ')'
+			})));
 		}
 	};
 });

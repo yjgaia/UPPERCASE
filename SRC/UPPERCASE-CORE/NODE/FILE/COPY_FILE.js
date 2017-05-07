@@ -78,7 +78,9 @@ global.COPY_FILE = METHOD(() => {
 								if (notExistsHandler !== undefined) {
 									notExistsHandler(from);
 								} else {
-									SHOW_WARNING('COPY_FILE', '파일이 존재하지 않습니다.', {
+									SHOW_WARNING('COPY_FILE', MSG({
+										ko : '파일이 존재하지 않습니다.'
+									}), {
 										from : from
 									});
 								}
@@ -105,7 +107,9 @@ global.COPY_FILE = METHOD(() => {
 									if (notExistsHandler !== undefined) {
 										notExistsHandler(from);
 									} else {
-										SHOW_WARNING('COPY_FILE', '파일이 존재하지 않습니다.', {
+										SHOW_WARNING('COPY_FILE', MSG({
+											ko : '파일이 존재하지 않습니다.'
+										}), {
 											from : from
 										});
 									}
