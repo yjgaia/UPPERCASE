@@ -387,21 +387,8 @@ global.BOOT = (params) => {
 		};
 
 		if (NODE_CONFIG.isNotUsingCPUClustering !== true) {
-			CPU_CLUSTERING({
-				work : innerWork,
-				terminate : (workerId) => {
-					
-					FOR_BOX((box) => {
-						console.log(box.boxName, box.TERMINATED);
-						if (box.TERMINATED !== undefined) {
-							box.TERMINATED(workerId);
-						}
-					});
-				}
-			});
-		}
-		
-		else {
+			CPU_CLUSTERING(innerWork);
+		} else {
 			RUN(innerWork);
 		}
 	};
@@ -1129,111 +1116,157 @@ global.BOOT = (params) => {
 	
 	// configuration.
 	configuration();
-
-	// init boxes.
-	initBoxes();
-
-	// clustering cpus and servers.
-	clustering(() => {
-		
-		console.log('[BOOT] ' + MSG({
-			ko : '부팅중...' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '')
-		}));
-
-		// connect to database.
-		connectToDatabase();
-
-		// load all scripts.
-		scanAllBoxFolders('COMMON', loadForNode);
-		scanAllBoxFolders('COMMON', loadForBrowser);
-		
-		scanAllBoxFolders('NODE', loadForNode);
-		
-		scanAllBoxFolders('BROWSER', loadForBrowser);
-		
-		scanAllBoxJS('NODE', loadForNode);
-		scanAllBoxJS('BROWSER', loadForBrowser);
-		
-		// load BROWSER_INIT.
-		loadBrowserInit();
-		
-		// generate 404 page.
-		generate404Page();
-		
-		// generate index page.
-		generateIndexPage();
-
-		// run.
-		run();
-	});
 	
-	if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.getWorkerId() === '~') {
+	NEXT([
+	(next) => {
 		
-		READ_FILE(rootPath + '/DEPENDENCY', {
+		if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.getWorkerId() === '~') {
 			
-			notExists : () => {
-				// ignore.
-			},
-			
-			success : (content) => {
+			READ_FILE(rootPath + '/DEPENDENCY', {
 				
-				EACH(content.toString().split('\n'), (box) => {
+				notExists : () => {
+					next();
+				},
+				
+				success : (content) => {
 					
-					box = box.trim();
+					let ubm = require('ubm')();
 					
-					if (box !== '' && box.indexOf('/') !== -1) {
+					NEXT(content.toString().split('\n'), [
+					
+					(box, next) => {
 						
-						let username = box.substring(0, box.indexOf('/'));
-						let boxName = box.substring(box.indexOf('/') + 1);
+						box = box.trim();
 						
-						GET({
-							url : BOX_SITE_URL + '/_/info',
-							data : {
-								username : username,
-								boxName : boxName
-							}
-						}, (result) => {
+						if (box !== '' && box.indexOf('/') !== -1) {
 							
-							result = PARSE_STR(result);
+							let username = box.substring(0, box.indexOf('/'));
+							let boxName = box.substring(box.indexOf('/') + 1);
 							
-							if (result.boxData !== undefined) {
+							GET({
+								url : BOX_SITE_URL + '/_/info',
+								data : {
+									username : username,
+									boxName : boxName
+								}
+							}, {
+								error : next,
 								
-								let boxData = result.boxData;
-								
-								NEXT([
-								(next) => {
+								success : (result) => {
 									
-									READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
+									result = PARSE_STR(result);
+									
+									if (result.boxData === undefined) {
+										next();
+									} else {
 										
-										notExists : () => {
-											next(boxData.version);
+										let boxData = result.boxData;
+										
+										NEXT([
+										(next) => {
+											
+											READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
+												
+												notExists : () => {
+													next(boxData.version);
+												},
+												
+												success : (versionContent) => {
+													
+													let nowVersion = versionContent.toString();
+													
+													if (boxData.version !== nowVersion) {
+														next(nowVersion, boxData.version);
+													} else {
+														next();
+													}
+												}
+											});
 										},
 										
-										success : (versionContent) => {
-											
-											let nowVersion = versionContent.toString();
-											
-											if (boxData.version !== nowVersion) {
-												next(boxData.version, nowVersion);
-											}
-										}
-									});
-								},
-								
-								() => {
-									return (version, nowVersion) => {
-										SHOW_WARNING('BOOT', MSG({
-											ko : '[' + boxName + '] BOX의 새 버전이 존재합니다. 현재 버전: ' + nowVersion + ', 새 버전: ' + version
-										}));
-									};
-								}]);
-							}
-						});
-					}
-				});
-			}
-		});
-	}
+										() => {
+											return (nowVersion, newVersion) => {
+												
+												// 새 버전 존재
+												if (newVersion !== undefined) {
+													
+													console.log(CONSOLE_YELLOW(MSG({
+														ko : '[' + boxName + '] BOX를 업데이트합니다. (' + nowVersion + ' -> ' + newVersion + ')'
+													})));
+													
+													ubm.installBox(username, boxName, next);
+												}
+												
+												else {
+													next();
+												}
+											};
+										}]);
+									}
+								}
+							});
+						}
+						
+						else {
+							next();
+						}
+					},
+					
+					() => {
+						return () => {
+							next();
+						};
+					}]);
+				}
+			});
+		}
+		
+		else {
+			next();
+		}
+	},
+	
+	() => {
+		return () => {
+			
+			// init boxes.
+			initBoxes();
+		
+			// clustering cpus and servers.
+			clustering(() => {
+				
+				console.log('[BOOT] ' + MSG({
+					ko : '부팅중...' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '')
+				}));
+		
+				// connect to database.
+				connectToDatabase();
+		
+				// load all scripts.
+				scanAllBoxFolders('COMMON', loadForNode);
+				scanAllBoxFolders('COMMON', loadForBrowser);
+				
+				scanAllBoxFolders('NODE', loadForNode);
+				
+				scanAllBoxFolders('BROWSER', loadForBrowser);
+				
+				scanAllBoxJS('NODE', loadForNode);
+				scanAllBoxJS('BROWSER', loadForBrowser);
+				
+				// load BROWSER_INIT.
+				loadBrowserInit();
+				
+				// generate 404 page.
+				generate404Page();
+				
+				// generate index page.
+				generateIndexPage();
+		
+				// run.
+				run();
+			});
+		};
+	}]);
 };
 
 /*
