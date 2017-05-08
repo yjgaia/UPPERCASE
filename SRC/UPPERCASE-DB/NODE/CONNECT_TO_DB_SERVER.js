@@ -79,6 +79,12 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 					port + '/' +
 					name,
 					
+					{
+						poolSize : 16,
+						connectTimeoutMS : 600000,
+						socketTimeoutMS : 600000
+					},
+					
 					(error, nativeDB) => {
 	
 					if (error !== TO_DELETE) {
