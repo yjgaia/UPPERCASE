@@ -213,19 +213,6 @@ Sample.DISCONNECTED = METHOD({
 });
 ```
 
-#### `TERMINATED.js`
-`TERMINATED.js` 파일에 작성되어 있는 각 BOX 별 `TERMINATED` 메소드는, `NODE` 폴더에만 작성 가능하며, [CPU 클러스터링](CLUSTERING.md#CPU-클러스터링)을 하는 경우 Worker 프로세스의 작동이 중지될 때 실행됩니다.
-
-```javascript
-Sample.TERMINATED = METHOD({
-	
-	run : (workerId) => {
-		// workerId에 해당하는 Worker 프로세스의 작동이 중지되었습니다.
-		...
-	}
-});
-```
-
 ## `.gitignore` 설정
 프로젝트를 Git으로 관리하는 경우 `.gitignore` 파일에 다음과 같은 내용을 추가하여 주시기 바랍니다.
 ```.gitignore

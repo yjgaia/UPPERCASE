@@ -392,6 +392,7 @@ global.BOOT = (params) => {
 				terminate : (workerId) => {
 					
 					FOR_BOX((box) => {
+						console.log(box.boxName, box.TERMINATED);
 						if (box.TERMINATED !== undefined) {
 							box.TERMINATED(workerId);
 						}
