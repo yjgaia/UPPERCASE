@@ -139,7 +139,7 @@ rdate -s time.bora.net
 ## 몽고 DB 분산
 아래 명령어들은 `root` 유저일 때를 기반으로 한 것입니다. AWS등을 사용하는 경우에는 모든 명령어 앞에 `sudo`를 붙혀주시기 바랍니다.
 
-우선 인증을 위한 키 파일을 생성합니다.
+우선 인증을 위한 키 파일을 생성합니다. ***이 키는 모든 분산 서버에 동일하게 복사되어야 합니다.***
 ```
 mkdir /srv/mongodb
 openssl rand -base64 741 > /srv/mongodb/mongodb-shard-keyfile
@@ -193,9 +193,9 @@ rs.initiate(
     _id: "csReplSet",
     configsvr: true,
     members: [
-      { _id : 0, host : "localhost:40001" },
-      { _id : 1, host : "localhost:40002" },
-      { _id : 2, host : "localhost:40003" }
+      { _id : 0, host : "11.22.33.44:40001" },
+      { _id : 1, host : "11.22.33.44:40002" },
+      { _id : 2, host : "11.22.33.44:40003" }
     ]
   }
 );
@@ -205,6 +205,8 @@ rs.initiate(
 ```
 mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/11.22.33.44:40001,11.22.33.44:40002,11.22.33.44:40003
 ```
+
+모든 config db가 localhost인 경우
 ```
 mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/localhost:40001,localhost:40002,localhost:40003
 ```
@@ -221,20 +223,20 @@ use admin
 
 우선 `root` 계정을 생성하고 로그인합니다.
 ```
-db.createUser({ user : 'root 유저명', pwd : 'root 비밀번호', roles : ['root'] });
-db.auth('root 유저명', 'root 비밀번호');
+db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', roles : ['root'] });
+db.auth('{{root 유저명}}', '{{root 비밀번호}}');
 ```
 
 `shard` 할 데몬의 접속 경로를 지정합니다.
 ```
-sh.addShard('localhost:30001');
-sh.addShard('localhost:30002');
-sh.addShard('localhost:30003');
-sh.addShard('localhost:30004');
-sh.addShard('localhost:30005');
-sh.addShard('localhost:30006');
-sh.addShard('localhost:30007');
-sh.addShard('localhost:30008');
+sh.addShard('11.22.33.44:30001');
+sh.addShard('11.22.33.44:30002');
+sh.addShard('11.22.33.44:30003');
+sh.addShard('11.22.33.44:30004');
+sh.addShard('11.22.33.44:30005');
+sh.addShard('11.22.33.44:30006');
+sh.addShard('11.22.33.44:30007');
+sh.addShard('11.22.33.44:30008');
 ```
 
 샤딩 할 데이터베이스를 지정합니다.
@@ -275,6 +277,7 @@ mongo --port 27018
 다음과 같이 데몬 서버를 종료합니다.
 ```
 use admin
+db.auth('{{root 유저명}}', '{{root 비밀번호}}');
 db.shutdownServer();
 ```
 
@@ -288,6 +291,7 @@ mongo --port 40003
 다음과 같이 데몬 서버를 종료합니다.
 ```
 use admin
+db.auth('{{root 유저명}}', '{{root 비밀번호}}');
 db.shutdownServer();
 ```
 
