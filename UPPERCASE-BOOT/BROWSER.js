@@ -139,7 +139,7 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 FOR_BOX((box) => {
 
 	/*
-	 * get resource's real path with version.
+	 * 리소스의 경로를 가져오거나, callback을 지정하여 리소스의 내용을 가져옵니다.
 	 */
 	box.R = METHOD((m) => {
 		
@@ -182,7 +182,7 @@ FOR_BOX((box) => {
 FOR_BOX((box) => {
 
 	/*
-	 * get final resource's real path.
+	 * 업로드한 파일의 경로를 가져옵니다.
 	 */
 	box.RF = METHOD({
 
@@ -195,7 +195,7 @@ FOR_BOX((box) => {
 });
 
 /*
- * Get server time.
+ * TIME과 반대 역할을 합니다. 웹 브라우저에서 생성된 시간을 서버 시간대의 시간으로 변경합니다.
  */
 global.SERVER_TIME = METHOD((m) => {
 
@@ -241,7 +241,7 @@ global.SYNC_TIME = METHOD({
 });
 
 /*
- * Get time.
+ * 웹 브라우저의 시간과 서버 시간의 차이를 계산하여, 서버로부터 넘어온 시간을 웹 브라우저 시간대의 시간으로 변경합니다.
  */
 global.TIME = METHOD((m) => {
 

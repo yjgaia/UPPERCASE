@@ -2,7 +2,7 @@
 
 # UPPERCASE-BOOT
 UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를 실행하기 위해 필요한 모듈입니다.
-* [API 문서](../../API/UPPERCASE-API/README.md)
+* [API 문서](../../API/UPPERCASE-BOOT/README.md)
 
 ## 목차
 * [사용방법](#사용방법)
@@ -12,8 +12,8 @@ UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를
 * [`Box.RF(path)`](#boxrfpath)
 * [`TIME(date)`](#timedate)
 * [`SERVER_TIME(date)`](#server_timedate)
-* UPPERCASE의 기본 스타일
-* index.html 수정하기
+* [UPPERCASE의 기본 스타일](#uppercase의-기본-스타일)
+* [index.html 수정하기](#indexhtml-수정하기)
 
 ## 사용방법
 [UPPERCASE를 설치](../INSTALL.md)하였다면, 다음과 같이 프로젝트를 실행할 수 있습니다.
@@ -90,7 +90,8 @@ UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를
 	}
 	```
 
-## `Box.R(path)`
+## `Box.R(path)` `Box.R(path, callback)`
+리소스의 경로를 가져오거나, `callback`을 지정하여 리소스의 내용을 가져옵니다.
 
 웹 브라우저 환경에서만 사용 가능합니다.
 
@@ -103,20 +104,22 @@ UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를
 * 이미지의 경우 `__RF/THUMB` 파일에 섬네일이 저장됩니다.
 
 ## `TIME(date)`
+웹 브라우저의 시간과 서버 시간의 차이를 계산하여, 서버로부터 넘어온 시간을 웹 브라우저 시간대의 시간으로 변경합니다.
 
 웹 브라우저 환경에서만 사용 가능합니다.
 
 ## `SERVER_TIME(date)`
+`TIME`과 반대 역할을 합니다. 웹 브라우저에서 생성된 시간을 서버 시간대의 시간으로 변경합니다.
 
 웹 브라우저 환경에서만 사용 가능합니다.
 
 ## UPPERCASE의 기본 스타일
-UPPERCASE는 웹 브라우저에 상관 없이 같은 모양이 출력되게 하는 기본 스타일을 제공합니다.
+UPPERCASE-BOOT는 웹 브라우저에 상관 없이 같은 모양이 출력되게 하는 기본 스타일을 제공합니다.
 
 스타일의 자세한 내용은 [BASE_STYLE.css](../../SRC/IO/R/BASE_STYLE.css) 파일을 참고하시기 바랍니다.
 
 ## index.html 수정하기
-기본적으로 UPPERCASE가 index.html을 생성하기에 일반적으로 이 내용이 필요하지는 않을 것입니다. 그러나 특정한 사유로 인해 index.html을 따로 만들고 싶을 수 있습니다. 그럴 때는 `BROWSER`, `COMMON`, `NODE` 등의 폴더가 있는 프로젝트 폴더에 index.html을 만들면 자동으로 이를 인식하여 사용하게 됩니다. UPPERCASE와 연동하기 위한 기본적인 index.html의 틀은 다음과 같습니다. 이를 수정해서 사용하시기 바랍니다.
+기본적으로 UPPERCASE가 index.html을 생성하기에 일반적으로 이 내용이 필요하지는 않을 것입니다. 그러나 특정한 사유로 인해 index.html을 따로 만들고 싶을 수 있습니다. 그럴 때는 `BROWSER`, `COMMON`, `NODE` 폴더가 저장되어 있는 프로젝트 기본 BOX 폴더에 index.html을 만들면 이를 인식하여 사용하게 됩니다. UPPERCASE와 연동하기 위한 기본적인 index.html의 코드는 다음과 같습니다. 이를 수정해서 사용하시기 바랍니다.
 
 ```html
 <!DOCTYPE html>
@@ -137,38 +140,3 @@ UPPERCASE는 웹 브라우저에 상관 없이 같은 모양이 출력되게 하
 ```
 
 **`<script src="/__SCRIPT"></script>` 코드는 반드시 `<body></body>` 사이에 들어가야 합니다. `<head></head>`에 들어가면 제대로 작동하지 않습니다.**
-
-
-
-
-
-
-
-
-# UPPERCASE
-이 문서는 UPPERCASE의 API 관련 내용을 담고 있습니다. UPPERCASE 기반 프로젝트를 개발하기 위해서는 다음 문서들을 참고하시기 바랍니다.
-
-* [UPPERCASE 설치하기](INSTALL.md)
-* [프로젝트 생성](CREATE_PROJECT.md)
-* [모델 생성](CREATE_MODEL.md)
-* [간단한 블로그 만들기](MAKE_BLOG.md)
-* [블로그에 인증 추가하기](ADD_AUTH_TO_BLOG.md)
-* [UPPERCASE가 제공하는 기능들 살펴보기](OVERVIEW.md)
-* [Configuration](CONFIG.md)
-* [UPPERCASE 업데이트](UPDATE.md)
-
-## 설정
-UPPERCASE의 설정은 [Configuration](CONFIG.md) 문서를 참고해 주시기 바랍니다.
-
-## BROWSER API
-* `CONNECT_TO_IO_SERVER((on, off, send) => {...})` `CONNECT_TO_IO_SERVER({error:, success:})` UPPERCASE 서버에 접속합니다.
-
-### 리소스 경로 관련
-클라이언트에서 사용 가능한 리소스 경로 관련 API입니다.
-* `SampleBox.R(path)` `SampleBox.R(path, (content) => {...})` 리소스의 실제 경로를 반환하거나, 리소스의 내용을 가져옵니다. [예제보기](../EXAMPLES/IO/CLIENT/R.js)
-* `SampleBox.RF(path)` 불변 리소스의 실제 경로를 반환합니다. [예제보기](../EXAMPLES/IO/CLIENT/RF.js)
-
-### 서버 시간 관련
-클라이언트와 서버 시간을 동기화하기 위한 API 입니다.
-* `TIME(date)` 브라우저와 서버 시간의 차이를 계산하여, 데이터베이스에 저장되어 있던 시간을 브라우저의 국가 설정에 맞는 시간대로 변경합니다. [예제보기](../EXAMPLES/IO/CLIENT/TIME.js)
-* `SERVER_TIME(date)` `TIME`과 반대 역할을 합니다. 변경된 시간을 서버의 시간대로 변경합니다. [예제보기](../EXAMPLES/IO/CLIENT/SERVER_TIME.js)

@@ -1,7 +1,7 @@
 FOR_BOX((box) => {
 
 	/*
-	 * get resource's real path with version.
+	 * 리소스의 경로를 가져오거나, callback을 지정하여 리소스의 내용을 가져옵니다.
 	 */
 	box.R = METHOD((m) => {
 		
