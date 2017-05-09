@@ -40,6 +40,7 @@
 - Histroy나 Log 저장 안하는 백업 서버 설정
 
 ## 미래에 반영할 것들
-- HTTP/2 지원
-- Java9 공개 시 Vert.x와의 연동
+- HTTP/2 지원 (https://github.com/nodejs/http2)
+- Java9 공개 시 Vert.x와의 연동 (2017년 7월 예정)
 - WebRTC 지원
+- C++ 버전 개발
