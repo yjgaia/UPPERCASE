@@ -60,7 +60,7 @@ mongo
 관리자 계정을 생성합니다.
 ```javascript
 use admin
-db.createUser({ user : 'root 유저명', pwd : 'root 비밀번호', roles : ['root'] })
+db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', roles : ['root'] });
 ```
 
 MongoDB 서버를 종료합니다.
@@ -85,13 +85,13 @@ mongod --fork --logpath /var/log/mongodb.log --logappend --auth
 	* 만약 관리자 계정이 없다면 생성합니다.
 	```javascript
 	use admin
-	db.createUser({ user : 'root 유저명', pwd : 'root 비밀번호', roles : ['root'] })
+	db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', roles : ['root'] });
 	```
 
 2. 데이터베이스에 유저를 생성합니다.
 	```javascript
 	use DB명
-	db.createUser({ user : '유저명', pwd : '비밀번호', roles : ['readWrite', 'dbAdmin'] })
+	db.createUser({ user : '{{유저명}}', pwd : '{{비밀번호}}', roles : ['readWrite', 'dbAdmin'] });
 	```
 
 3. 다음과 같이 프로젝트 실행을 위한 설정 파일(프로젝트 명.js)에 MongoDB 접속에 필요한 `유저명`과 `비밀번호`를 추가합니다.

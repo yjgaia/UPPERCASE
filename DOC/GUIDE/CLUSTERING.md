@@ -255,7 +255,7 @@ sh.shardCollection('{{데이터베이스 명}}.{{콜렉션 명}}', {_id : 1});
 데이터베이스의 유저를 추가합니다.
 ```
 use {{데이터베이스 명}}
-db.createUser({ user : '유저명', pwd : '비밀번호', roles : ['readWrite', 'dbAdmin'] });
+db.createUser({ user : '{{유저명}}', pwd : '{{비밀번호}}', roles : ['readWrite', 'dbAdmin'] });
 ```
 
 기존 데이터베이스가 존재할 경우, 기존 데이터베이스를 백업하고 새로 생성된 데이터베이스에 복구합니다.
