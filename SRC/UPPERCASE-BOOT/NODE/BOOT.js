@@ -375,11 +375,11 @@ global.BOOT = (params) => {
 				username : NODE_CONFIG.dbUsername,
 				password : NODE_CONFIG.dbPassword,
 				
-				backupHost : NODE_CONFIG.backupHost,
-				backupPort : NODE_CONFIG.backupPort,
-				backupName : NODE_CONFIG.backupName,
-				backupUsername : NODE_CONFIG.backupUsername,
-				backupPassword : NODE_CONFIG.backupPassword
+				backupHost : NODE_CONFIG.backupDBHost,
+				backupPort : NODE_CONFIG.backupDBPort,
+				backupName : NODE_CONFIG.backupDBName,
+				backupUsername : NODE_CONFIG.backupDBUsername,
+				backupPassword : NODE_CONFIG.backupDBPassword
 			});
 		}
 	};
@@ -419,14 +419,6 @@ global.BOOT = (params) => {
 	
 			// load css.
 			_404PageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?version=' + CONFIG.version + '" />';
-			
-			// set base color.
-			_404PageContent += '<style>';
-			_404PageContent += 'html, body {';
-			_404PageContent += 'background-color : ' + CONFIG.baseBackgroundColor + ';';
-			_404PageContent += 'color : ' + CONFIG.baseColor + ';';
-			_404PageContent += '}';
-			_404PageContent += '</style>';
 			
 			_404PageContent += '</head>';
 			_404PageContent += '<body>';
@@ -488,14 +480,6 @@ global.BOOT = (params) => {
 	
 			// load css.
 			indexPageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?version=' + CONFIG.version + '" />';
-			
-			// set base color.
-			indexPageContent += '<style>';
-			indexPageContent += 'html, body {';
-			indexPageContent += 'background-color : ' + CONFIG.baseBackgroundColor + ';';
-			indexPageContent += 'color : ' + CONFIG.baseColor + ';';
-			indexPageContent += '}';
-			indexPageContent += '</style>';
 			
 			indexPageContent += '</head>';
 			indexPageContent += '<body>';

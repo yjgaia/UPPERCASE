@@ -39,13 +39,6 @@ NODE_CONFIG.something = 'sample';
 ## BROWSER_CONFIG
 웹 브라우저 환경에서 사용될 수 있는 설정들 입니다.
 
-* `BROWSER_CONFIG.fixScriptsFolderPath` UJS-BROWSER-FIX 스크립트들이 저장되어 있는 폴더의 경로를 지정합니다.
-* `BROWSER_CONFIG.host` 이 설정의 기본값은 현재 웹 브라우저에서 접속한 호스트와 같습니다. 그러나 하이브리드 앱 등을 만들 경우 변경될 수 있습니다.
-* `BROWSER_CONFIG.port` 이 설정의 기본값은 현재 웹 브라우저에서 접속한 포트와 같습니다. 그러나 하이브리드 앱 등을 만들 경우 변경될 수 있습니다.
-* `BROWSER_CONFIG.isSupportingX2` 도트 아트를 사용하는 프로젝트의 경우, 레티나 디스플레이와 같은 고사양 화면에서는 픽셀을 강제로 늘이기 때문에 이미지가 흐릿하게 보입니다. 이를 대응하기 위해서, HTML5 Cavnas 기능을 사용하여 이미지 픽셀을 2배씩 늘려주어 흐릿하게 보이지 않도록 하는 기능이 UJS에 포함되어 있습니다. 이  설정을 사용할 경우 `true`로 지정합니다. 자세한 내용은 [도트 아트를 사용하는 프로젝트 만들기](DOT_ART.md) 문서를 참고하시기 바랍니다.
-* `BROWSER_CONFIG.isUsingFlashCanvasPro` HTML5 Canvas를 지원하지 않는 구형 브라우저에서 `CANVAS` 기능을 사용하는 경우 UJS-BROWSER-FIX가 내부적으로 [FlashCanvas](http://flashcanvas.net)를 사용합니다. 기본적으로는 Free edition을 사용하나, Pro 버전을 사용하여 성능을 향상시킬 수 있습니다. 상업용 프로젝트에서 Pro 버전을 사용하기 위해서는 FlashCanvas Pro의 라이센스를 구매해야 하므로, 필요한 경우 이하 경로에서 라이센스를 구매한 후 이 설정을 `true`로 지정합니다.
-    * http://flashcanvas.net/purchase
-
 # NODE_CONFIG
 Node.js 환경에서 사용될 수 있는 설정들 입니다.
 * UJS에서 사용되는 설정은 없습니다. 그러나 개발자가 필요에 의해 추가할 수 있습니다.
@@ -80,11 +73,11 @@ Node.js 환경에서 사용될 수 있는 설정들 입니다.
 * `dbUsername` MongoDB 서버의 접속 아이디를 설정합니다.
 * `dbPassword` MongoDB 서버의 접속 비밀번호를 설정합니다.
 * `maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000` 입니다.
-* `backupHost` 백업 서버의 호스트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
-* `backupPort` 백업 서버의 포트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
-* `backupName` 백업 데이터베이스 이름. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
-* `backupUsername` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 아이디
-* `backupPassword` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 비밀번호
+* `backupDBHost` 백업 서버의 호스트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
+* `backupDBPort` 백업 서버의 포트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
+* `backupDBName` 백업 데이터베이스 이름. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
+* `backupDBUsername` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 아이디
+* `backupDBPassword` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 비밀번호
 
 ### 보안 웹서버 설정
 * `securedKeyFilePath` https 프로토콜을 사용하는 보안 웹서버를 위한 key file의 경로를 설정합니다.

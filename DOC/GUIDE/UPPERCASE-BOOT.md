@@ -1,7 +1,7 @@
 작성중
 
 # UPPERCASE-BOOT
-UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를 실행하기 위해 필요한 모듈입니다.
+UPPERCASE-BOOT는 UPPERCASE의 모든 내장 모듈들을 불러들이고, 프로젝트를 실행하기 위한 기능들을 제공하는 모듈입니다. 이 문서에서는 UPPERCASE-BOOT 모듈이 제공하는 기능들에 대해서만 설명합니다. UPPERCASE를 기반으로 프로젝트를 개발하는 방법에 대해서는 [가이드 문서](../GUIDE.md#%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0)를 참고하여 주시기 바랍니다.
 * [API 문서](../../API/UPPERCASE-BOOT/README.md)
 
 ## 목차
@@ -30,19 +30,41 @@ BOOT({
 });
 ```
 
-UPPERCASE-BOOT는 UPPERCASE의 모든 모듈을 불러들이고, 프로젝트를 실행시키기 때문에, 이제 [튜토리얼 문서](../TUTORIAL.md)를 참고하시어 프로젝트 개발을 진행하면 됩니다.
-
 ## `CONFIG`
-
+* `isDevMode`
+* `webServerPort`
+* `securedWebServerPort`
+* `socketServerPort`
+* `defaultBoxName` 
+* `title` 
+* `description` 
 * `maxThumbWidth` 이미지 업로드 시 만들어지는 섬네일의 최대 가로 길이를 설정합니다.
 * `maxThumbHeight` 이미지 업로드 시 만들어지는 섬네일의 최대 세로 길이를 설정합니다.
 
 ## `NODE_CONFIG`
-
+* `clusteringPort`
+* `clusteringServerHosts`
+* `thisServerName`
+* `isNotUsingCPUClustering` 
 * `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
+* `dbName`
+* `dbHost`
+* `dbPort`
+* `dbUsername`
+* `dbPassword`
+* `backupDBHost`
+* `backupDBPort`
+* `backupDBName`
+* `backupDBUsername`
+* `backupDBPassword`
+* `uploadServerHosts`
+* `socketServerHosts`
+* `webSocketServerHosts`
+* `securedKeyFilePath`
+* `securedCertFilePath`
 
 ## `BROWSER_CONFIG`
-
+* `beforeUnloadMessage`
 * `reconnect` `reconnect(isVersionSame, reconnect)` 함수를 정의합니다. 이 함수는 서버와의 연결이 끊어진 이후 서버에 다시 접속하려 할 때 실행됩니다. 서버의 버젼이 달라지면 `isVersionSame`이 `false`로 설정됩니다. 또한 `false`를 `return`하면, 서버에 재접속 되지 않습니다. 그러나 파라미터로 설정된 `reconnect` 함수로 서버에 재접속하는 코드를 작성할 수 있습니다. `reconnect` 하기 전 페이지를 새로고침 하고자 할 때는 `REFRESH` 메소드를 사용합니다. 인증 등을 사용할 때에는 **서버와의 접속이 끊어지면 인증이 풀리**기 때문에, 재접속 시 인증을 수행하는 코드를 작성해주시기 바랍니다. (로그인 화면으로 넘어가는 방법도 있습니다.)
 	```javascript
 	BROWSER_CONFIG : {
