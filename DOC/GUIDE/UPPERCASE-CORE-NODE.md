@@ -1036,6 +1036,8 @@ CPU_CLUSTERING(() => {
 });
 ```
 
+클러스터링에 대한 자세한 내용은 [클러스터링 문서](CLUSTERING.md)를 참고해 주시기 바랍니다.
+
 ### `SERVER_CLUSTERING({hosts:, thisServerName:, port:}, work)`
 서버 간 클러스터링을 수행합니다.
 
@@ -1062,6 +1064,8 @@ SERVER_CLUSTERING({
 	...
 });
 ```
+
+클러스터링에 대한 자세한 내용은 [클러스터링 문서](CLUSTERING.md)를 참고해 주시기 바랍니다.
 
 ### `SHARED_STORE(storeName)`
 클러스터링 공유 저장소를 생성하는 클래스
