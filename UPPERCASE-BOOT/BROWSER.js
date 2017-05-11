@@ -15,10 +15,9 @@ OVERRIDE(CONFIG, (origin) => {
 		
 		defaultBoxName : 'UPPERCASE',
 		
-		title : 'UPPERCASE PROJECT',
+		title : 'UPPERCASE PROJECT'
 		
-		baseBackgroundColor : '#000',
-		baseColor : '#fff'
+		// description
 		
 		// maxThumbWidth
 		// or

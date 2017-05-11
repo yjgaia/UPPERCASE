@@ -12,13 +12,13 @@ global.CPU_CLUSTERING = METHOD((m) => {
 	let thisWorkerId = 1;
 	
 	Cluster.schedulingPolicy = Cluster.SCHED_RR;
-
-	let getWorkerId = m.getWorkerId = () => {
-		return thisWorkerId;
-	};
 	
 	let getWorkerCount = m.getWorkerCount = () => {
 		return workerCount;
+	};
+
+	let getWorkerId = m.getWorkerId = () => {
+		return thisWorkerId;
 	};
 
 	return {
@@ -71,7 +71,7 @@ global.CPU_CLUSTERING = METHOD((m) => {
 			};
 			
 			// 워커 개수 (CPU 개수보다 하나 적음, 하나는 마스터에게 배분)
-			let workerCount = require('os').cpus().length - 1;
+			workerCount = require('os').cpus().length - 1;
 			
 			// 최소한 한개의 워커는 필요
 			if (workerCount < 1) {
@@ -159,7 +159,7 @@ global.CPU_CLUSTERING = METHOD((m) => {
 			};
 
 			// when master
-			if (Cluster.isMaster) {
+			if (Cluster.isMaster === true) {
 				
 				// 마스터용 아이디
 				thisWorkerId = '~';

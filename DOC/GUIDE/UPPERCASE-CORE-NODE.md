@@ -1334,6 +1334,22 @@ sampleStore.clear(() => {
 });
 ```
 
+### `DISTRIBUTE_PROCESS(work)` `DISTRIBUTE_PROCESS(complexity, work)`
+복잡도 파라미터(`complexity`)를 기준으로, 클러스터링 된 서버들 및 CPU 코어들에게 작업을 고르게 분배합니다.
+
+`complexity`를 입력하지 않으면 기본적으로 1로 인식합니다.
+
+```javascript
+DISTRIBUTE_PROCESS(12, () => {
+	...
+});
+
+// complexity를 입력하지 않으면 기본적으로 1로 인식합니다.
+DISTRIBUTE_PROCESS(() => {
+	...
+});
+```
+
 ## 시스템 관련 기능
 ### `CPU_USAGES()`
 CPU 각 코어 당 사용률을 반환합니다.
