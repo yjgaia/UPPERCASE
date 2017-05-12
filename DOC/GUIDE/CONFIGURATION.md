@@ -1,50 +1,17 @@
 작성중
 
 # 프로젝트 설정
-아래 설정들로, UJS 기반 애플리케이션의 작동 방식을 설정할 수 있습니다. 설정은 다음과 같이, UJS를 불러온 이후에 작성하면 됩니다.
-
-```html
-<!-- UJS-BROWSER.js를 불러옵니다. -->
-<script src="/UJS-BROWSER.js"></script>
-<!-- UJS의 작동방식을 설정합니다. -->
-<script>
-'use strict';
-RUN(() => {
-	
-	// 개발 모드
-	CONFIG.isDevMode = true;
-	
-	// 기본 포트를 변경합니다.
-	BROWSER_CONFIG.port = 8010;
-});
-</script>
-```
-
-```javascript
-// UJS-NODE.js를 불러옵니다.
-require('./UJS-NODE.js');
-
-// 개발 모드
-CONFIG.isDevMode = true;
-
-// 이런 방식으로 설정하면 됩니다.
-NODE_CONFIG.something = 'sample';
-```
 
 ## CONFIG
 웹 브라우저 환경과 Node.js 환경 및 다양한 환경에서 공통으로 사용될 수 있는 설정들 입니다.
 
-* `CONFIG.isDevMode` 이것을 `true`로 설정하면, UJS 기반 프로젝트가 개발 모드로 실행됩니다. Node.js 환경에서 `WEB_SERVER`와 `RESOURCE_SERVER` 기능을 사용할 경우 개발 모드일때 캐싱을 하지 않습니다.
+* `CONFIG.isDevMode` 이것을 `true`로 설정하면, UPPERCASE 기반 프로젝트가 개발 모드로 실행됩니다. Node.js 환경에서 `WEB_SERVER`와 `RESOURCE_SERVER` 기능을 사용할 경우 개발 모드일때 캐싱을 하지 않습니다.
 
 ## BROWSER_CONFIG
 웹 브라우저 환경에서 사용될 수 있는 설정들 입니다.
 
 # NODE_CONFIG
 Node.js 환경에서 사용될 수 있는 설정들 입니다.
-* UJS에서 사용되는 설정은 없습니다. 그러나 개발자가 필요에 의해 추가할 수 있습니다.
-
-이제 다 보았습니다! UJS를 업데이트 하실때는 [이 문서](UPDATE.md)를 참고하시면 됩니다. 더 많은 내용은 [INDEX 문서](INDEX.md)의 `한걸음 더` 항목이나, `튜토리얼` 항목을 참고해 주시기 바랍니다.
-
 
 # Configuration
 
@@ -73,9 +40,9 @@ Node.js 환경에서 사용될 수 있는 설정들 입니다.
 * `dbUsername` MongoDB 서버의 접속 아이디를 설정합니다.
 * `dbPassword` MongoDB 서버의 접속 비밀번호를 설정합니다.
 * `maxDataCount` find 명령으로 한번에 가져올 수 있는 최대 data 수를 설정합니다. 기본값은 `1000` 입니다.
-* `backupDBHost` 백업 서버의 호스트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
-* `backupDBPort` 백업 서버의 포트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
-* `backupDBName` 백업 데이터베이스 이름. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
+* `backupDBHost` 백업 서버의 호스트. 자세한 내용은 [백업 서버 세팅하기](UPPERCASE-DB.md#백업-서버-세팅하기)를 참고하시기 바랍니다.
+* `backupDBPort` 백업 서버의 포트. 자세한 내용은 [백업 서버 세팅하기](UPPERCASE-DB.md#백업-서버-세팅하기)를 참고하시기 바랍니다.
+* `backupDBName` 백업 데이터베이스 이름. 자세한 내용은 [백업 서버 세팅하기](UPPERCASE-DB.md#백업-서버-세팅하기)를 참고하시기 바랍니다.
 * `backupDBUsername` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 아이디
 * `backupDBPassword` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 비밀번호
 
@@ -122,8 +89,6 @@ NODE_CONFIG : {
 * `isNotUsingCPUClustering` 기본적으로 UPPERCASE는 멀티코어 CPU의 개수만큼 프로세서가 실행되어, 멀티코어 CPU에서 최상의 성능을 낼 수 있도록 합니다. 그러나 마이크로 서비스 등을 제작할 때에는 이러한 기능이 불필요할 수 있습니다. 이 때 `true`로 지정하면 프로세스를 하나만 만듭니다. 기본은 `false`입니다.
 
 ## BROWSER_CONFIG
-[UJS의 BROWSER_CONFIG 설정](https://github.com/Hanul/UJS/blob/master/README_KOR.md#configuration)에 아래 설정들을 추가로 지정할 수 있습니다.
-
 ### 접속 관련 설정
 * `beforeUnloadMessage` `INPUT`이나 `TEXTAREA`에 포커스 되어 있을때, 페이지가 이동하려 하면 메시지를 띄웁니다.
 

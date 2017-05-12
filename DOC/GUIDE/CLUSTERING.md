@@ -6,7 +6,7 @@
 
 ## CPU 클러스터링
 기본적으로 Node.js 환경은 멀티코어 CPU를 지원하지 않습니다.
-UJS에서는 `CPU_CLUSTERING`를 통해 멀티코어 CPU 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다.
+UPPERCASE에서는 `CPU_CLUSTERING`를 통해 멀티코어 CPU 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다.
 
 ```javascript
 CPU_CLUSTERING(() => {
@@ -65,7 +65,7 @@ SERVER_CLUSTERING({
 
 ## 프로세스 간 데이터 공유
 각 프로세스들은 고유한 메모리 영역을 가지므로, 메모리를 공유하지 않습니다.
-UJS에는 프로세스 간 데이터를 공유하기 위한 기능들이 있습니다.
+UPPERCASE에는 프로세스 간 데이터를 공유하기 위한 기능들이 있습니다.
 간단한 값을 저장하기 위해서는 `SHARED_STORE`를, 데이터를 저장하기 위해서는 `SHARED_DB`를 사용합니다.
 
 ```javascript
@@ -103,8 +103,6 @@ sharedDB.update({
 
 
 ## UPPERCASE의 분산 처리 전략
-* 업로드 파일들을 분산 서버로 구성할 경우 CORS가 지원되지 않는 Internet Explorer 9 이하 버젼들과 같은 곳에서는 UJS의 GRAPHIC API들을 사용할 수 없습니다.
-
 UPPERCASE의 분산 처리 전략을 설명합니다.
 UPPERCASE 기반 프로젝트의 기능별 서버 파트는 다음과 같습니다.
 1. `대문 서버` 유저들에게 웹 페이지나 분산 서버들의 정보를 제공하는 서버입니다.
