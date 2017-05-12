@@ -2868,13 +2868,13 @@ global.CPU_CLUSTERING = METHOD((m) => {
 	let thisWorkerId = 1;
 	
 	Cluster.schedulingPolicy = Cluster.SCHED_RR;
-
-	let getWorkerId = m.getWorkerId = () => {
-		return thisWorkerId;
-	};
 	
 	let getWorkerCount = m.getWorkerCount = () => {
 		return workerCount;
+	};
+
+	let getWorkerId = m.getWorkerId = () => {
+		return thisWorkerId;
 	};
 
 	return {
@@ -2927,7 +2927,7 @@ global.CPU_CLUSTERING = METHOD((m) => {
 			};
 			
 			// 워커 개수 (CPU 개수보다 하나 적음, 하나는 마스터에게 배분)
-			let workerCount = require('os').cpus().length - 1;
+			workerCount = require('os').cpus().length - 1;
 			
 			// 최소한 한개의 워커는 필요
 			if (workerCount < 1) {
@@ -3015,7 +3015,7 @@ global.CPU_CLUSTERING = METHOD((m) => {
 			};
 
 			// when master
-			if (Cluster.isMaster) {
+			if (Cluster.isMaster === true) {
 				
 				// 마스터용 아이디
 				thisWorkerId = '~';
@@ -3151,6 +3151,77 @@ global.CPU_CLUSTERING = METHOD((m) => {
 				console.log('[CPU_CLUSTERING] ' + MSG({
 					ko : '클러스터링 워커가 실행중입니다. (워커 ID:' + thisWorkerId + ')'
 				}));
+			}
+		}
+	};
+});
+
+/*
+ * 복잡도 파라미터(complexity)를 기준으로, 클러스터링 된 서버들 및 CPU 코어들에게 작업을 고르게 분배합니다.
+ * 
+ * complexity를 입력하지 않으면 기본적으로 1로 인식합니다.
+ */
+global.DISTRIBUTE_PROCESS = METHOD((m) => {
+	
+	let complexityMap = {};
+
+	return {
+
+		run : (complexity, work) => {
+			//OPTIONAL: complexity
+			//REQUIRED: work
+			
+			if (work === undefined) {
+				work = complexity;
+				complexity = 1;
+			}
+			
+			let selectedServerName;
+			
+			// 복잡도가 가장 낮은 서버를 찾습니다.
+			if (SERVER_CLUSTERING.getHosts !== undefined) {
+				
+				let minComplexity = Infinity;
+				EACH(SERVER_CLUSTERING.getHosts(), (host, serverName) => {
+					if (complexityMap['__SERVER_' + serverName] === undefined) {
+						complexityMap['__SERVER_' + serverName] = 0;
+					}
+					if (complexityMap['__SERVER_' + serverName] < minComplexity) {
+						minComplexity = complexityMap['__SERVER_' + serverName];
+						selectedServerName = serverName; 
+					}
+				});
+				
+				complexityMap['__SERVER_' + selectedServerName] += complexity;
+			}
+			
+			if (
+			// 서버 클러스터링을 하지 않는 경우
+			SERVER_CLUSTERING.getThisServerName === undefined ||
+			// 복잡도가 가장 낮은 서버가 현재 서버인 경우
+			selectedServerName === SERVER_CLUSTERING.getThisServerName()) {
+				
+				let selectedWorkerId;
+				
+				// 복잡도가 가장 낮은 CPU를 찾습니다.
+				let minComplexity = Infinity;
+				REPEAT(CPU_CLUSTERING.getWorkerCount(), (i) => {
+					let workerId = i + 1;
+					if (complexityMap['__CPU_' + workerId] === undefined) {
+						complexityMap['__CPU_' + workerId] = 0;
+					}
+					if (complexityMap['__CPU_' + workerId] < minComplexity) {
+						minComplexity = complexityMap['__CPU_' + workerId];
+						selectedWorkerId = workerId; 
+					}
+				});
+				
+				complexityMap['__CPU_' + selectedWorkerId] += complexity;
+				
+				// 최종적으로 선택된 CPU에서 작업 수행
+				if (CPU_CLUSTERING.getWorkerId() === selectedWorkerId) {
+					work();
+				}
 			}
 		}
 	};

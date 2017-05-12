@@ -18,15 +18,11 @@ global.EMPTY_E = CLASS({
 		};
 
 		let getLeft = self.getLeft = () => {
-			
-			// on heaven!
-			return -999999;
+			return -Infinity;
 		};
 
 		let getTop = self.getTop = () => {
-			
-			// on heaven!
-			return -999999;
+			return -Infinity;
 		};
 
 		let getKey = self.getKey = () => {

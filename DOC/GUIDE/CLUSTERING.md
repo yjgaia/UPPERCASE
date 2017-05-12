@@ -8,6 +8,8 @@
 기본적으로 Node.js 환경은 멀티코어 CPU를 지원하지 않습니다.
 UPPERCASE에서는 `CPU_CLUSTERING`를 통해 멀티코어 CPU 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다.
 
+CPU 코어가 두개(듀얼코어)인 경우에는, 하나의 코어는 Master 프로세스가 사용하기 때문에 Worker 프로세스가 하나 밖에 생성되지 않습니다. 이런 경우에는 CPU 클러스터링을 하지 않는 편이 낫습니다. `isNotUsingCPUClustering` 설정을 통해 CPU 클러스터링을 사용하지 않도록 설정해주시기 바랍니다.
+
 ```javascript
 CPU_CLUSTERING(() => {
 

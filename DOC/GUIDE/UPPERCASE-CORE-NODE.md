@@ -1036,6 +1036,8 @@ CPU_CLUSTERING(() => {
 });
 ```
 
+클러스터링에 대한 자세한 내용은 [클러스터링 문서](CLUSTERING.md)를 참고해 주시기 바랍니다.
+
 ### `SERVER_CLUSTERING({hosts:, thisServerName:, port:}, work)`
 서버 간 클러스터링을 수행합니다.
 
@@ -1062,6 +1064,8 @@ SERVER_CLUSTERING({
 	...
 });
 ```
+
+클러스터링에 대한 자세한 내용은 [클러스터링 문서](CLUSTERING.md)를 참고해 주시기 바랍니다.
 
 ### `SHARED_STORE(storeName)`
 클러스터링 공유 저장소를 생성하는 클래스
@@ -1331,6 +1335,22 @@ sampleStore.checkIsExists('1234', (isExists) => {
 ```javascript
 sampleStore.clear(() => {
 	console.log('저장소의 모든 데이터를 삭제하였습니다.');
+});
+```
+
+### `DISTRIBUTE_PROCESS(work)` `DISTRIBUTE_PROCESS(complexity, work)`
+복잡도 파라미터(`complexity`)를 기준으로, 클러스터링 된 서버들 및 CPU 코어들에게 작업을 고르게 분배합니다.
+
+`complexity`를 입력하지 않으면 기본적으로 1로 인식합니다.
+
+```javascript
+DISTRIBUTE_PROCESS(12, () => {
+	...
+});
+
+// complexity를 입력하지 않으면 기본적으로 1로 인식합니다.
+DISTRIBUTE_PROCESS(() => {
+	...
 });
 ```
 
