@@ -56,29 +56,29 @@
 4. 웹 브라우저로 [http://localhost:8888/](http://localhost:8888/)에 접속합니다.
 5. `Hello, UPPERCASE!`
 
-## [채팅 튜토리얼](https://github.com/Hanul/UPPERCASE-Chat-Tutorial)
+## [채팅 튜토리얼](https://github.com/Hanul/UPPERCASE-Chat-Tutorial) - 개발중
 웹 기반 채팅 애플리케이션을 만들어 봅시다.
 
-## [업로드 튜토리얼](https://github.com/Hanul/UPPERCASE-Upload-Tutorial)
+## [업로드 튜토리얼](https://github.com/Hanul/UPPERCASE-Upload-Tutorial) - 개발중
 업로드 기능을 만들어 봅시다.
 
-## [SNS 튜토리얼](https://github.com/Hanul/UPPERCASE-SNS-Tutorial)
+## [SNS 튜토리얼](https://github.com/Hanul/UPPERCASE-SNS-Tutorial) - 개발중
 실시간 SNS를 만들어 봅시다.
 
-## [웹 게임 튜토리얼](https://github.com/Hanul/UPPERCASE-Game-Tutorial)
+## [웹 게임 튜토리얼](https://github.com/Hanul/UPPERCASE-Game-Tutorial) - 개발중
 HTML5 Canvas를 이용해 간단한 웹 게임을 만들어 봅시다.
 
 ## 다른 기술과 함께 사용하는 튜토리얼
 이하 튜토리얼들은 UPPERCASE와 다른 기술을 함께 사용하는 방법에 대해 다룹니다.
 
-### [웹 사이트 튜토리얼](https://github.com/Hanul/UPPERCASE-Site-Tutorial)
+### [웹 사이트 튜토리얼](https://github.com/Hanul/UPPERCASE-Site-Tutorial) - 개발중
 UPPERCASE와 [SML](https://github.com/Hanul/SML)을 사용하여 간단한 웹 사이트를 만들어 봅시다.
 
-### [블로그 튜토리얼](https://github.com/Hanul/UPPERCASE-Blog-Tutorial)
+### [블로그 튜토리얼](https://github.com/Hanul/UPPERCASE-Blog-Tutorial) - 개발중
 UPPERCASE와 [SML](https://github.com/Hanul/SML), [NSP](https://github.com/Hanul/NSP)를 사용하여 블로그를 만들어 봅시다.
 
-### [네이티브 앱 튜토리얼](https://github.com/Hanul/UPPERCASE-Native-App-Tutorial)
+### [네이티브 앱 튜토리얼](https://github.com/Hanul/UPPERCASE-Native-App-Tutorial) - 개발중
 UPPERCASE의 서버사이드 기술로 네이티브 앱의 백엔드를 만들어 봅시다.
 
-### [소셜 서비스 연동 튜토리얼](https://github.com/Hanul/UPPERCASE-Social-Login-Tutorial)
+### [소셜 서비스 연동 튜토리얼](https://github.com/Hanul/UPPERCASE-Social-Login-Tutorial) - 개발중
 UPPERCASE 기반 프로젝트에 소셜 서비스를 연동해 봅시다.

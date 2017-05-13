@@ -150,7 +150,7 @@ db.create({
 * `db.get({filter:, sort:, isRandom:}, {notExists:, error:, success:})`
 * `db.get((savedData) => {})` 가장 최근 데이터를 가져옵니다.
 
-`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
+`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 ```javascript
 db.get('5636e47415899c3c04b5e70f', {
@@ -284,7 +284,7 @@ db.remove('5636e47415899c3c04b5e70f', {
 * `db.find({filter:, sort:, start:, count:}, (savedDataSet) => {})`
 * `db.find({filter:, sort:, start:, count:}, {error:, success:})`
 
-`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
+`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 ```javascript
 db.find({
@@ -334,7 +334,7 @@ db.find({
 * `db.count({filter:}, (count) => {})`
 * `db.count({filter:}, {error:, success:})`
 
-`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
+`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 ```javascript
 db.count({
@@ -350,7 +350,7 @@ db.count({
 * `db.checkIsExists({filter:}, (isExists) => {})`
 * `db.checkIsExists({filter:}, {error:, success:})`
 
-`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
+`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 ```javascript
 db.checkIsExists({

@@ -157,7 +157,7 @@ Model.create({
 * `Model.get({filter:, sort:, isRandom:}, {error:, notAuthed:, notExists:, success:})`
 * `Model.get((savedData) => {})` `id`를 지정하지 않으면 가장 최근 데이터를 가져옵니다.
 
-`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
+`id`에 해당하는 데이터를 가져옵니다. 혹은 `filter`에 해당하는 데이터를 가져옵니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
@@ -333,7 +333,7 @@ Model.remove('5636e47415899c3c04b5e70f', {
 * `Model.find({filter:, sort:, start:, count:}, (savedDataSet) => {})`
 * `Model.find({filter:, sort:, start:, count:}, {error:, notAuthed:, success:})`
 
-`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
+`filter`에 해당하는 데이터를 찾아 목록으로 가져옵니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
@@ -422,7 +422,7 @@ watchingRoom.exit();
 * `Model.count({filter:}, (count) => {})`
 * `Model.count({filter:}, {error:, notAuthed:, success:})`
 
-`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
+`filter`에 해당하는 데이터의 개수를 가져옵니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
@@ -440,7 +440,7 @@ Model.count({
 * `Model.checkIsExists({filter:}, (isExists) => {})`
 * `Model.checkIsExists({filter:}, {error:, notAuthed:, success:})`
 
-`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [MongoDB의 Query Selector](MONGODB_QUERY_SELECTOR.md)를 사용하여 작성합니다.
+`filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
