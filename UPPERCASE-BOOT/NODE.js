@@ -1151,7 +1151,7 @@ global.BOOT = (params) => {
 											READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
 												
 												notExists : () => {
-													next(boxData.version);
+													next(undefined, boxData.version);
 												},
 												
 												success : (versionContent) => {
@@ -1173,9 +1173,17 @@ global.BOOT = (params) => {
 												// 새 버전 존재
 												if (newVersion !== undefined) {
 													
-													console.log(CONSOLE_YELLOW(MSG({
-														ko : '[' + boxName + '] BOX를 업데이트합니다. (' + nowVersion + ' -> ' + newVersion + ')'
-													})));
+													if (nowVersion === undefined) {
+														console.log(CONSOLE_YELLOW(MSG({
+															ko : '[' + boxName + '] BOX를 설치합니다. (v' + newVersion + ')'
+														})));
+													}
+													
+													else {
+														console.log(CONSOLE_YELLOW(MSG({
+															ko : '[' + boxName + '] BOX를 업데이트합니다. (v' + nowVersion + ' -> v' + newVersion + ')'
+														})));
+													}
 													
 													ubm.installBox(username, boxName, next);
 												}
@@ -1224,7 +1232,7 @@ global.BOOT = (params) => {
 		
 				// connect to database.
 				connectToDatabase();
-		
+				
 				// load all scripts.
 				scanAllBoxFolders('COMMON', loadForNode);
 				scanAllBoxFolders('COMMON', loadForBrowser);
