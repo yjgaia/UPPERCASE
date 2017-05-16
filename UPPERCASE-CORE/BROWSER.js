@@ -2859,7 +2859,7 @@ OVERRIDE(BOX, (origin) => {
 				if (BROWSER_CONFIG[boxName] === undefined) {
 					BROWSER_CONFIG[boxName] = {};
 				}
-		
+				
 				return origin(boxName);
 			}
 		};

@@ -15,7 +15,7 @@ OVERRIDE(BOX, (origin) => {
 				if (NODE_CONFIG[boxName] === undefined) {
 					NODE_CONFIG[boxName] = {};
 				}
-		
+				
 				return origin(boxName);
 			}
 		};
