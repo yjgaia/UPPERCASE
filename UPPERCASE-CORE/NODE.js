@@ -8661,24 +8661,31 @@ global.RUN_SCHEDULE_DAEMON = METHOD((m) => {
 		run : (schedules) => {
 			//REQUIRED: schedules
 			
-			INTERVAL(60, RAR(() => {
+			let lastMinute;
+			
+			INTERVAL(30, RAR(() => {
 				
 				let nowCal = CALENDAR();
 				
-				EACH(schedules, (schedule) => {
+				if (lastMinute !== nowCal.getMinute()) {
 					
-					if (nowCal.getHour() === schedule.hour && nowCal.getMinute() === (schedule.minute === undefined ? 0 : schedule.minute)) {
+					EACH(schedules, (schedule) => {
 						
-						EACH(schedule.commands, (command) => {
+						if (nowCal.getHour() === schedule.hour && nowCal.getMinute() === (schedule.minute === undefined ? 0 : schedule.minute)) {
 							
-							exec(command, (error) => {
-								if (error !== TO_DELETE) {
-									SHOW_ERROR('RUN_SCHEDULE_DAEMON', error.toString());
-								}
+							EACH(schedule.commands, (command) => {
+								
+								exec(command, (error) => {
+									if (error !== TO_DELETE) {
+										SHOW_ERROR('RUN_SCHEDULE_DAEMON', error.toString());
+									}
+								});
 							});
-						});
-					}
-				});
+						}
+					});
+				}
+				
+				lastMinute = nowCal.getMinute();
 			}));
 		}
 	};
