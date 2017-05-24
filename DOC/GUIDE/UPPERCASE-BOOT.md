@@ -31,7 +31,9 @@ BOOT({
 ```
 
 ## `CONFIG`
-* `isDevMode` 개발 모드를 활성화합니다. 기본값은 `false`입니다. 이 모드가 활성화되면, 코드 압축이나 캐싱등의 작업을 건너뛰게 됩니다. 자세한 내용은 [프로젝트 설정 문서](CONFIGURATION.md#config)를 참고해주시기 바랍니다.
+아래 설정들은 UPPERCASE-BOOT 관련 설정들입니다. UPPERCASE와 관련된 모든 설정에 대해서는 [프로젝트 설정 문서](CONFIGURATION.md)를 참고해 주시기 바랍니다.
+
+* `isDevMode` 개발 모드를 활성화합니다. 기본값은 `false`입니다. 이 모드가 활성화되면, 코드 압축이나 캐싱 등의 작업을 건너뛰게 됩니다. 개발할 때에는 `true`로 설정하는것이 좋습니다. 자세한 사항은 [프로젝트 설정 문서](CONFIGURATION.md)의 [개발 모드](CONFIGURATION.md#개발-모드) 및 [운영 모드](CONFIGURATION.md#운영-모드) 항목을 참고해 주시기 바랍니다.
 * `defaultBoxName` 기본 BOX의 이름을 설정합니다. 기본값은 `'UPPERCASE'` 입니다.
 * `title` 프로젝트 제목을 입력합니다. 기본값은 `'UPPERCASE PROJECT'` 입니다.
 * `description` 프로젝트 설명을 입력합니다. 기본값은 없습니다.
@@ -62,7 +64,7 @@ BOOT({
 * `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 MB 단위로 설정합니다. 기본값은 `10` 입니다.
 
 ### 클러스터링 설정
-* `isNotUsingCPUClustering` 기본적으로 UPPERCASE는 멀티코어 CPU의 개수만큼 프로세서가 실행되어, 멀티코어 CPU에서 최상의 성능을 낼 수 있도록 합니다. 그러나 마이크로 서비스 등을 제작할 때에는 이러한 기능이 불필요할 수 있습니다. 이 때 `true`로 지정하면 프로세스를 하나만 만듭니다. 기본은 `false`입니다.
+* `isNotUsingCPUClustering` 기본적으로 UPPERCASE는 멀티코어 CPU의 개수만큼 프로세서가 실행되어, 멀티코어 CPU에서 최상의 성능을 낼 수 있도록 합니다. 그러나 마이크로 서비스 등을 제작할 때에는 이러한 기능이 불필요할 수 있습니다. 이 때 `true`로 지정하면 프로세스를 하나만 만듭니다. 기본값은 `false`입니다.
 * `clusteringPort` 클러스터링을 위한 서버의 포트를 설정합니다. 이 포트는 웹서버나 웹소켓 서버 등과는 관계가 없고, 분산 서버들간의 메시지 전달을 위해 사용됩니다.
 * `clusteringServerHosts` 분산 서버들의 host를 아래와 같이 설정합니다.
 * `thisServerName` 현재 서버의 이름을 아래와 같이 설정합니다.
@@ -75,7 +77,7 @@ BOOT({
 * `securedCertFilePath` https 프로토콜을 사용하는 보안 웹서버를 위한 cert file의 경로를 설정합니다.
 
 ## `BROWSER_CONFIG`
-* `isNotToConnectServer` 
+* `isNotToConnectServer` `true`로 지정하면 처음에 UPPERCASE 서버에 연결을 하지 않습니다. 기본값은 `false`입니다.
 * `beforeUnloadMessage` `INPUT`이나 `TEXTAREA`에 포커스 되어 있을때, 페이지가 이동하려 하면 메시지를 띄웁니다.
 * `reconnect` `reconnect(isVersionSame, reconnect)` 함수를 정의합니다. 이 함수는 서버와의 연결이 끊어진 이후 서버에 다시 접속하려 할 때 실행됩니다. 서버의 버젼이 달라지면 `isVersionSame`이 `false`로 설정됩니다. 또한 `false`를 `return`하면, 서버에 재접속 되지 않습니다. 그러나 파라미터로 설정된 `reconnect` 함수로 서버에 재접속하는 코드를 작성할 수 있습니다. `reconnect` 하기 전 페이지를 새로고침 하고자 할 때는 `REFRESH` 메소드를 사용합니다. 인증 등을 사용할 때에는 **서버와의 접속이 끊어지면 인증이 풀리**기 때문에, 재접속 시 인증을 수행하는 코드를 작성해주시기 바랍니다. (로그인 화면으로 넘어가는 방법도 있습니다.)
 	```javascript
@@ -148,9 +150,9 @@ BOOT({
 웹 브라우저 환경에서만 사용 가능합니다.
 
 ## UPPERCASE의 기본 스타일
-UPPERCASE-BOOT는 웹 브라우저에 상관 없이 같은 모양이 출력되게 하는 기본 스타일을 제공합니다.
+UPPERCASE-BOOT는 웹 브라우저마다의 스타일 차이를 없애주고 같은 스타일로 프로젝트 개발을 시작할 수 있도록 기본 스타일을 제공합니다.
 
-스타일의 자세한 내용은 [BASE_STYLE.css](../../SRC/IO/R/BASE_STYLE.css) 파일을 참고하시기 바랍니다.
+기본 스타일의 자세한 내용은 [BASE_STYLE.css](../../SRC/IO/R/BASE_STYLE.css) 파일을 참고하시기 바랍니다.
 
 ## index.html 수정하기
 기본적으로 UPPERCASE가 index.html을 생성하기에 일반적으로 이 내용이 필요하지는 않을 것입니다. 그러나 특정한 사유로 인해 index.html을 따로 만들고 싶을 수 있습니다. 그럴 때는 `BROWSER`, `COMMON`, `NODE` 폴더가 저장되어 있는 프로젝트 기본 BOX 폴더에 index.html을 만들면 이를 인식하여 사용하게 됩니다. UPPERCASE와 연동하기 위한 기본적인 index.html의 코드는 다음과 같습니다. 이를 수정해서 사용하시기 바랍니다.
