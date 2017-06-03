@@ -1,4 +1,4 @@
-# UPPERCASE
+# ![UPPERCASE Logo](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/LOGO.png)
 UPPERCASE는 웹 어플리케이션 개발을 도와주는 JavaScript 기반 프레임워크입니다. 서버와 클라이언트를 부드럽게 연결는데 특화되어, 예를 들면 메신저나 SNS 같이 실시간 통신이 중요한 애플리케이션 개발에 유용합니다. 또한 서버 프레임워크로만으로 사용할 수 있으며, 반대로 서버가 불필요한 웹 애플리케이션 개발을 할 때도 유용하게 사용할 수 있습니다.
 
 ## 특징
@@ -39,7 +39,7 @@ _.each([52, 97], (value, index) => {
 * [클러스터링 문서](DOC/GUIDE/CLUSTERING.md) 참고
 
 ## UPPERCASE의 구조
-![ScreenShot](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/DOC/GUIDE/STRUCTURE.png)
+![STRUCTURE](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/DOC/GUIDE/STRUCTURE.png)
 UPPERCASE는 [각종 모듈](DOC/GUIDE.md#모듈-별-문서)과 [BOX](DOC/GUIDE/BOX.md), [Uniconn](#클라이언트) 등으로 이루어져 있습니다.
 
 ## UPPERCASE가 제공하는 기능들
