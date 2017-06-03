@@ -20,13 +20,17 @@ global.INTERVAL = CLASS({
 		
 		let interval;
 		
+		let count = 0;
+		
 		let resume = self.resume = RAR(() => {
 			
 			if (interval === undefined) {
 				
 				interval = setInterval(() => {
 					
-					if (func(self) === false) {
+					count += 1;
+					
+					if (func(self, count) === false) {
 						remove();
 					}
 					

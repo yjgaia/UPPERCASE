@@ -1,3 +1,5 @@
+작성중
+
 # UPPERCASE-BOOT
 UPPERCASE-BOOT는 UPPERCASE의 모든 내장 모듈들을 불러들이고, 프로젝트를 실행하기 위한 기능들을 제공하는 모듈입니다. 이 문서에서는 UPPERCASE-BOOT 모듈이 제공하는 기능들에 대해서만 설명합니다. UPPERCASE를 기반으로 프로젝트를 개발하는 방법에 대해서는 [가이드 문서](../GUIDE.md#%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0)를 참고하여 주시기 바랍니다.
 * [API 문서](../../API/UPPERCASE-BOOT/README.md)
@@ -156,10 +158,81 @@ UPPERCASE-BOOT가 제공하는 이미지 업로드 기능을 사용할 때, 자�
 
 웹 브라우저 환경에서만 사용 가능합니다.
 
+## `CONNECT_TO_UPPERCASE_SERVER`
+`BROWSER_CONFIG.isNotToConnectServer` 설정을 `true`로 지정하면 자동으로 UPPERCASE 서버에 연결되지 않습니다.
+
+이후 UPPERCASE에 접속하기 위해서는 해당 부분을 직접 개발해야 합니다. 이 때 사용되는 함수가 `CONNECT_TO_UPPERCASE_SERVER`입니다.
+
+[BROWSER_INIT.js](../../SRC/UPPERCASE-BOOT/BROWSER_INIT.js) 파일의 다음 내용을 참고하여 개발하시기 바랍니다.
+
+```javascript
+SYNC_TIME();
+
+let connect = RAR(() => {
+	
+	if (isConnecting !== true) {
+		isConnecting = true;
+		
+		CONNECT_TO_UPPERCASE_SERVER((on) => {
+			
+			FOR_BOX((box) => {
+				if (box.CONNECTED !== undefined) {
+					box.CONNECTED();
+				}
+			});
+		
+			on('__DISCONNECTED', () => {
+				
+				FOR_BOX((box) => {
+					if (box.DISCONNECTED !== undefined) {
+						box.DISCONNECTED();
+					}
+				});
+				
+				isConnecting = false;
+				
+				let reloadInterval = INTERVAL(1, RAR(() => {
+	
+					GET({
+						port : CONFIG.webServerPort,
+						uri : '__VERSION'
+					}, (version) => {
+						
+						if (reloadInterval !== undefined) {
+							reloadInterval.remove();
+							reloadInterval = undefined;
+							
+							if ((document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT')
+							|| BROWSER_CONFIG.beforeUnloadMessage === undefined
+							|| confirm(BROWSER_CONFIG.beforeUnloadMessage) === true) {
+								
+								if (BROWSER_CONFIG.reconnect === undefined || BROWSER_CONFIG.reconnect(CONFIG.version === version, connect) !== false) {
+									
+									// if versions are same, REFRESH.
+									if (CONFIG.version === version) {
+										REFRESH();
+										connect();
+									}
+									
+									// if versions are not same, reload page.
+									else {
+										location.reload();
+									}
+								}
+							}
+						}
+					});
+				}));
+			});
+		});
+	}
+});
+```
+
 ## UPPERCASE의 기본 스타일
 UPPERCASE-BOOT는 웹 브라우저마다의 스타일 차이를 없애주고 같은 스타일로 프로젝트 개발을 시작할 수 있도록 기본 스타일을 제공합니다.
 
-기본 스타일의 자세한 내용은 [BASE_STYLE.css](../../SRC/IO/R/BASE_STYLE.css) 파일을 참고하시기 바랍니다.
+기본 스타일의 자세한 내용은 [BASE_STYLE.css](../../SRC/UPPERCASE-BOOT/R/BASE_STYLE.css) 파일을 참고하시기 바랍니다.
 
 ## index.html 수정하기
 기본적으로 UPPERCASE가 index.html을 생성하기에 일반적으로 이 내용이 필요하지는 않을 것입니다. 그러나 특정한 사유로 인해 index.html을 따로 만들고 싶을 수 있습니다. 그럴 때는 `BROWSER`, `COMMON`, `NODE` 폴더가 저장되어 있는 프로젝트 기본 BOX 폴더에 index.html을 만들면 이를 인식하여 사용하게 됩니다. UPPERCASE와 연동하기 위한 기본적인 index.html의 코드는 다음과 같습니다. 이를 수정해서 사용하시기 바랍니다.
