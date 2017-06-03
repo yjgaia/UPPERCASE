@@ -20,6 +20,7 @@ require('./UPPERCASE-DB/NODE.js');
 ```
 
 ### `npm`을 사용하는 경우
+[![npm](https://img.shields.io/npm/v/uppercase-db.svg)](https://www.npmjs.com/package/uppercase-db)
 ```
 npm install uppercase-db
 ```
