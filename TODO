@@ -1,5 +1,6 @@
 ## UPPERCASE 2.0에서 해야 할 것들
 - Source Map 지원
+- 다른 언어 지원하도록
 - UPPERCASE 1.0의 SHOW_ERROR 확인해서 메시지가 필요한 부분은 옮겨담기
 - 'transform', 'transformOrigin', 'animation', 'touchCallout', 'userSelect', 'backgroundSize', 'backgroundPosition' 테스트
 - HTTP 브라우저 기능 uri 일때 테스트
@@ -13,7 +14,6 @@
 - dev.hanul.me 만들고 Pure 소개하기
 - Cordova용 어떻게 할지
 - 웹 앱과 코르도바 앱을 동시에 개발하는 경우에 대한 처리
-- BOX들 ES6 반영 및 문서화
 - ondrop, file reader 등 처리
 - Unicorn waitingSendInfos 처리
 - Java-Client connectedHandler 넣기, 첫 접속 안될때 disconnected 처리
