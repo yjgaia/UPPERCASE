@@ -1,6 +1,8 @@
 # ![UPPERCASE Logo](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/LOGO.png)
 UPPERCASE는 웹 어플리케이션 개발을 도와주는 JavaScript 기반 프레임워크입니다. 서버와 클라이언트를 부드럽게 연결는데 특화되어, 예를 들면 메신저나 SNS 같이 실시간 통신이 중요한 애플리케이션 개발에 유용합니다. 또한 서버 프레임워크로만으로 사용할 수 있으며, 반대로 서버가 불필요한 웹 애플리케이션 개발을 할 때도 유용하게 사용할 수 있습니다.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 ## 특징
 #### 왜 이름이 UPPERCASE인가요?
 UPPERCASE의 모든 기능들의 이름은 JavaScript의 키워드나 변수 이름, 다른 라이브러리들에서 사용하는 이름을 피하기 위해 대문자로 이루어져 있습니다. 비슷하게, [jQuery](https://jquery.com/)는 `$`를, [Underscore](http://underscorejs.org/)는 `_`를 접두사로 사용하고 있습니다.
