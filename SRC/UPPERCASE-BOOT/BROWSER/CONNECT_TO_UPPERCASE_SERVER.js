@@ -74,87 +74,94 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 			if (isConnecting !== true) {
 				isConnecting = true;
 				
-				GET({
-					isSecure : isSecure,
-					host : webServerHost,
-					port : webServerPort,
-					uri : '__WEB_SOCKET_SERVER_HOST',
-					paramStr : 'defaultHost=' + webServerHost
-				}, {
-					error : errorListener,
-					success : (host) => {
-		
-						CONNECT_TO_ROOM_SERVER({
-							roomServerName : roomServerName,
-							isSecure : isSecure,
-							host : host,
-							port : webServerPort
-						}, (on, off, send) => {
-							
-							FOR_BOX((box) => {
-								
-								if (box.CONNECTED !== undefined) {
-									box.CONNECTED();
-								}
-								
-								EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
-									onNewInfo.findMissingDataSet();
-								});
-							});
-						
-							on('__DISCONNECTED', () => {
-								
-								FOR_BOX((box) => {
-									
-									if (box.DISCONNECTED !== undefined) {
-										box.DISCONNECTED();
-									}
-									
-									EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
-										onNewInfo.lastCreateTime = SERVER_TIME(new Date());
-									});
-								});
-								
-								isConnecting = false;
-								
-								let reloadInterval = INTERVAL(1, RAR(() => {
+				CONNECT_TO_UPPERCASE_SERVER((on) => {
 					
-									GET({
-										port : webServerPort,
-										uri : '__VERSION'
-									}, (version) => {
-										
-										if (reloadInterval !== undefined) {
-											reloadInterval.remove();
-											reloadInterval = undefined;
-											
-											if ((document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT')
-											|| BROWSER_CONFIG.beforeUnloadMessage === undefined
-											|| confirm(BROWSER_CONFIG.beforeUnloadMessage) === true) {
-												
-												if (BROWSER_CONFIG.reconnect === undefined || BROWSER_CONFIG.reconnect(CONFIG.version === version, connect) !== false) {
-													
-													// if versions are same, REFRESH.
-													if (CONFIG.version === version) {
-														REFRESH();
-														connect();
-													}
-													
-													// if versions are not same, reload page.
-													else {
-														location.reload();
-													}
-												}
-											}
-										}
-									});
-								}));
-							});
-							
-							if (connectionListener !== undefined) {
-								connectionListener(on, off, send);
+					FOR_BOX((box) => {
+						if (box.CONNECTED !== undefined) {
+							box.CONNECTED();
+						}
+					});
+				
+					on('__DISCONNECTED', () => {
+						
+						FOR_BOX((box) => {
+							if (box.DISCONNECTED !== undefined) {
+								box.DISCONNECTED();
 							}
 						});
+						
+						isConnecting = false;
+						
+						let reloadInterval = INTERVAL(1, RAR(() => {
+			
+							GET({
+								port : CONFIG.webServerPort,
+								uri : '__VERSION'
+							}, (version) => {
+								
+								if (reloadInterval !== undefined) {
+									reloadInterval.remove();
+									reloadInterval = undefined;
+									
+									if ((document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT')
+									|| BROWSER_CONFIG.beforeUnloadMessage === undefined
+									|| confirm(BROWSER_CONFIG.beforeUnloadMessage) === true) {
+										
+										if (BROWSER_CONFIG.reconnect === undefined || BROWSER_CONFIG.reconnect(CONFIG.version === version, connect) !== false) {
+											
+											// if versions are same, REFRESH.
+											if (CONFIG.version === version) {
+												REFRESH();
+												connect();
+											}
+											
+											// if versions are not same, reload page.
+											else {
+												location.reload();
+											}
+										}
+									}
+								}
+							});
+						}));
+					});
+				});
+			}
+		});
+
+		GET({
+			isSecure : isSecure,
+			host : webServerHost,
+			port : webServerPort,
+			uri : '__WEB_SOCKET_SERVER_HOST',
+			paramStr : 'defaultHost=' + webServerHost
+		}, {
+			error : errorListener,
+			success : (host) => {
+
+				CONNECT_TO_ROOM_SERVER({
+					roomServerName : roomServerName,
+					isSecure : isSecure,
+					host : host,
+					port : webServerPort
+				}, (on, off, send) => {
+					
+					FOR_BOX((box) => {
+						EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
+							onNewInfo.findMissingDataSet();
+						});
+					});
+					
+					on('__DISCONNECTED', () => {
+						FOR_BOX((box) => {
+							EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
+								onNewInfo.lastCreateTime = SERVER_TIME(new Date());
+							});
+						});
+					});
+					
+					if (connectionListener !== undefined) {
+						connectionListener(on, off, send);
 					}
 				});
 			}
