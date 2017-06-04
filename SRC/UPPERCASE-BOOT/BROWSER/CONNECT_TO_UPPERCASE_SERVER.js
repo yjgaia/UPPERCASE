@@ -6,9 +6,9 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 	run : (params, connectionListenerOrListeners) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.roomServerName
+		//OPTIONAL: params.isSecure
 		//OPTIONAL: params.webServerHost
 		//OPTIONAL: params.webServerPort
-		//OPTIONAL: params.isSecure
 		//OPTIONAL: connectionListenerOrListeners
 		//OPTIONAL: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error

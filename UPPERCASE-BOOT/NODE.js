@@ -459,7 +459,7 @@ global.BOOT = (params) => {
 			_404PageContent += '</noscript>';
 			
 			// load script.
-			_404PageContent += '<script type="text/javascript" src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
+			_404PageContent += '<script src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
 			_404PageContent += '<script>' + READ_FILE({
 				path : UPPERCASE_PATH + '/UPPERCASE-BOOT/404.js',
 				isSync : true
@@ -520,7 +520,7 @@ global.BOOT = (params) => {
 			indexPageContent += '</noscript>';
 	
 			// load script.
-			indexPageContent += '<script type="text/javascript" src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
+			indexPageContent += '<script src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
 			indexPageContent += '</body>';
 			indexPageContent += '</html>';
 		}

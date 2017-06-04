@@ -2883,7 +2883,7 @@ global.BROWSER_CONFIG = {
 };
 
 /*
- * WEB_SOCKET_SERVER로 생성한 웹 소켓 서버에 연결합니다.
+ * WEB_SOCKET_SERVER로 생성한 웹소켓 서버에 연결합니다.
  */
 global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 

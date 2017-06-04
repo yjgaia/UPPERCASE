@@ -1,5 +1,5 @@
 /*
- * TCP 소켓 및 웹 소켓 서버를 통합하여 생성합니다.
+ * TCP 소켓 및 웹소켓 서버를 통합하여 생성합니다.
  */
 global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
 

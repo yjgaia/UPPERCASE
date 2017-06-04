@@ -158,12 +158,12 @@ unzip {{프로젝트 폴더 명.zip}}
 
 7. 이전 할 서버에서 데이터베이스를 복구합니다.
 ```
-mongorestore --db {{데이터베이스 이름}} --username {{데이터베이스 접속 username}} --password {{데이터베이스 접속 password}} dump/{{프로젝트 폴더 명}}
+mongorestore --db {{데이터베이스 이름}} --username {{데이터베이스 접속 username}} --password {{데이터베이스 접속 password}} dump/{{프로젝트 BOX 명}}
 ```
 
 8. 프로젝트를 실행합니다. 만약 `forever`를 사용한다면 다음과 같이 입력합니다.
 ```
-cd {{프로젝트 폴더 명}}
+cd {{프로젝트 BOX 명}}
 forever start -c "node --max-old-space-size=2048" {{프로젝트 명.js}}
 ```
 

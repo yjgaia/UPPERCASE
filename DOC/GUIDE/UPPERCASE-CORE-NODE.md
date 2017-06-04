@@ -900,7 +900,7 @@ CONNECT_TO_SOCKET_SERVER({
 서버와의 연결을 끊습니다.
 
 ### `WEB_SOCKET_SERVER(webServer, connectionListener)`
-웹 소켓 서버를 생성합니다. 이렇게 생성된 웹 소켓 서버에 접속하는 방법은 [UPPERCASE-COMMON-BROWSER의 `CONNECT_TO_WEB_SOCKET_SERVER`](UPPERCASE-COMMON-CORE.md#connect_to_web_socket_server)를 참고하시기 바랍니다.
+웹소켓 서버를 생성합니다. 이렇게 생성된 웹소켓 서버에 접속하는 방법은 [UPPERCASE-COMMON-BROWSER의 `CONNECT_TO_WEB_SOCKET_SERVER`](UPPERCASE-COMMON-CORE.md#connect_to_web_socket_server)를 참고하시기 바랍니다.
 
 ```javascript
 WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
@@ -927,13 +927,13 @@ WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
 });
 ```
 
-웹 소켓 서버 내에서 사용하는 함수들은 다음과 같습니다.
+웹소켓 서버 내에서 사용하는 함수들은 다음과 같습니다.
 
 #### `on(methodName, method)`
-`on` 함수는 웹 소켓 서버 내 메소드를 생성하는 함수로써, 클라이언트에서 `send` 함수로 전송한 데이터를 받습니다.
+`on` 함수는 웹소켓 서버 내 메소드를 생성하는 함수로써, 클라이언트에서 `send` 함수로 전송한 데이터를 받습니다.
 
 #### `off(methodName)` `off(methodName, method)`
-`off` 함수는 웹 소켓 서버 내 생성된 메소드를 제거합니다.
+`off` 함수는 웹소켓 서버 내 생성된 메소드를 제거합니다.
 
 #### `send(params)` `send(params, callback)`
 `send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
@@ -946,7 +946,7 @@ WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
 클라이언트와의 연결을 끊습니다.
 
 ### `MULTI_PROTOCOL_SOCKET_SERVER({socketServerPort:, webServer:}, connectionListener)`
-TCP 소켓 및 웹 소켓 서버를 통합하여 생성합니다.
+TCP 소켓 및 웹소켓 서버를 통합하여 생성합니다.
 
 ```javascript
 MULTI_PROTOCOL_SOCKET_SERVER({

@@ -10,9 +10,9 @@ BOX란 UPPERCASE용 모듈을 지칭하는 말입니다.
 * [BOX 저장소 사이트](#BOX-저장소-사이트)
 
 ## BOX 생성
-UPPERCASE 기반 프로젝트에서는 폴더 구조를 읽어 자동으로 BOX들이 생성됩니다. **프로젝트 폴더의 이름**과, `BOX` 폴더 내부의 각 폴더들의 이름으로 BOX가 생성됩니다.
+UPPERCASE 기반 프로젝트에서는 폴더 구조를 읽어 자동으로 BOX들이 생성됩니다. 프로젝트 BOX 폴더의 이름과, `BOX` 폴더 내 각 폴더들의 이름으로 BOX가 생성됩니다.
 
-예를 들어 아래와 같이 폴더가 구성되어 있다면, `UUI`, `UANI`, `Yogurt`, `Sample` BOX가 생성됩니다. (`Sample`은 프로젝트 폴더의 이름입니다.)
+예를 들어 아래와 같이 폴더가 구성되어 있다면, `UUI`, `UANI`, `Yogurt`, `Sample` BOX가 생성됩니다. (`Sample`은 프로젝트 BOX 폴더의 이름입니다.)
 
 ```
 Sample
@@ -25,7 +25,7 @@ Sample
             BROWSER.js
         Yogurt
             BROWSER.js
-	Sample
+	Sample --- 프로젝트 BOX 폴더
         COMMON
             SampleModel.js
         NODE
@@ -81,7 +81,7 @@ SomeBox.SomePack.GoodPack.SomeMethod();
 * `VERSION` 프로젝트의 버전 문자열을 저장하는 파일입니다.
 * `DEPENDENCY` 프로젝트가 의존하고 있는 BOX들의 목록을 작성하는 파일입니다.
 
-아래의 폴더들을 성격에 따라 프로젝트 폴더 내의 **프로젝트 이름에 해당하는 폴더**에 선택적으로 구성할 수 있습니다.
+아래의 폴더들을 성격에 따라 프로젝트 BOX 폴더에 선택적으로 구성할 수 있습니다.
 * `COMMON` Node.js와 웹 브라우저 환경 양쪽에서 사용하는 소스들을 저장하는 폴더입니다.
 * `NODE` Node.js 환경에서 사용하는 소스들을 저장하는 폴더입니다.
 * `BROWSER` 웹 브라우저 환경에서 사용하는 소스들을 저장하는 폴더입니다.
@@ -94,7 +94,7 @@ SomeBox.SomePack.GoodPack.SomeMethod();
 * `DISCONNECTED.js`에는 `box.DISCONNECTED()` 함수를 정의합니다. 이 함수는 서버와의 연결이 끊어졌을 때 실행됩니다. `BROWSER` 폴더에 작성합니다.
 
 ## BOX 패키징
-프로젝트 폴더를 패키징하여 BOX 형태로 다른 프로젝트에서 재사용 할 수 있습니다.
+프로젝트 BOX 폴더를 패키징하여 다른 프로젝트에서 재사용 할 수 있습니다.
 
 1. [`ubm`](https://www.npmjs.com/package/ubm)을 설치합니다.
     ```

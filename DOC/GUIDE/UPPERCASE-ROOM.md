@@ -48,7 +48,7 @@ LAUNCH_ROOM_SERVER({
 
 `LAUNCH_ROOM_SERVER`에 사용 가능한 파라미터 목록은 다음과 같습니다.
 * `socketServerPort` TCP 소켓 기반으로 룸 서버를 생성하기 위한 포트 번호
-* `webServer` 웹 소켓 기반으로 룸 서버를 생성하기 위한 웹 서버
+* `webServer` 웹소켓 기반으로 룸 서버를 생성하기 위한 웹 서버
 
 ## `CONNECT_TO_ROOM_SERVER`
 룸 서버에 접속합니다.

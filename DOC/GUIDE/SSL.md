@@ -22,7 +22,7 @@ sroute('secure.site.com', 8887, '/home/site/privkey.pem', '/home/site/cert.pem')
 
 ### 인증서 발급받기
 1. [https://certbot.eff.org](https://certbot.eff.org)에 접속하여 안내에 따라 인증서를 발급받습니다.
-2. `webroot` 방식으로 발급받습니다. 프로젝트 폴더의 `R` 폴더의 위치를 지정하면 됩니다.
+2. `webroot` 방식으로 발급받습니다. 프로젝트 BOX 폴더의 `R` 폴더의 위치를 지정하면 됩니다.
 3. 이후 UPPERCASE 기반 프로젝트 설정에 관련 설정을 추가하거나, SkyProxy를 사용하여 SSL 인증서를 설정하면 됩니다.
 
 ### 인증서 자동으로 갱신하기

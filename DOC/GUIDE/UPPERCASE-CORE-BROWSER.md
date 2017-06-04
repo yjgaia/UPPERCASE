@@ -1406,7 +1406,7 @@ HTTP POST 요청을 보냅니다.
 * `CONNECT_TO_WEB_SOCKET_SERVER(port, connectionListenerOrListeners)`
 * `CONNECT_TO_WEB_SOCKET_SERVER({host:, port:}, connectionListenerOrListeners)`
 
-[UPPERCASE-CORE-NODE의 `WEB_SOCKET_SERVER`](UPPERCASE-COMMON-NODE.md#web_socket_server)로 생성한 웹 소켓 서버에 연결합니다.
+[UPPERCASE-CORE-NODE의 `WEB_SOCKET_SERVER`](UPPERCASE-COMMON-NODE.md#web_socket_server)로 생성한 웹소켓 서버에 연결합니다.
 
 ```javascript
 CONNECT_TO_WEB_SOCKET_SERVER(8125, {

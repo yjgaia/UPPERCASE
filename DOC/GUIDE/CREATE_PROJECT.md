@@ -13,7 +13,7 @@
 우선, 프로젝트의 모든 내용을 저장하기 위한 *프로젝트 폴더*를 생성해봅시다.
 
 1. 적당한 위치에 폴더를 생성합니다. 해당 폴더가 프로젝트 폴더가 됩니다. 여기서는 `SampleProject`라는 폴더를 생성하겠습니다.
-2. 프로젝트 폴더 내에 `Sample` 폴더를 생성합니다. 이 폴더는 프로젝트의 기본 BOX 폴더로써, 프로젝트의 모든 소스코드가 저장됩니다. BOX에 대한 자세한 설명은 [BOX 문서](BOX.md)를 참고해주시기 바랍니다.
+2. 프로젝트 폴더 내에 `Sample` 폴더를 생성합니다. 이 폴더는 프로젝트 BOX 폴더로써, 프로젝트의 모든 소스코드가 저장됩니다. BOX에 대한 자세한 설명은 [BOX 문서](BOX.md)를 참고해주시기 바랍니다.
 
 ## 개발 시작
 그럼 이제 개발을 시작해 볼까요?
@@ -103,7 +103,7 @@ node Sample.js
 ```
 [BOOT] 부팅중...
 [WEB_SERVER] 웹 서버가 실행중입니다. (HTTP 서버 포트:8888)
-[WEB_SOCKET_SERVER] 웹 소켓 서버가 실행중입니다.
+[WEB_SOCKET_SERVER] 웹소켓 서버가 실행중입니다.
 [BOOT] <2017-4-16 15:58:18> [UPPERCASE PROJECT] 부팅 완료 => http://localhost:8888
 ...
 ```
@@ -149,7 +149,7 @@ SampleProject
 * `SampleProject/BOX` 프로젝트가 사용하는 각종 BOX들이 저장되는 폴더입니다.
 * `SampleProject/BOX/UUI` [UUI BOX](https://box.uppercase.io/Hanul/UUI)입니다.
 * `SampleProject/BOX/UUI/BROWSER.js` [UUI BOX](https://box.uppercase.io/Hanul/UUI)의 웹 브라우저 환경에서 동작하는 코드들이 압축되어있는 파일입니다.
-* `SampleProject/Sample` 프로젝트의 기본 BOX 폴더입니다. 프로젝트의 모든 소스코드들이 저장되는 폴더입니다.
+* `SampleProject/Sample` 프로젝트 BOX 폴더입니다. 프로젝트의 모든 소스코드들이 저장되는 폴더입니다.
 * `SampleProject/Sample/COMMON` Node.js 환경 및 웹 브라우저 환경 모두에서 동작할 코드들을 작성할 폴더입니다.
 * `SampleProject/Sample/COMMON/SampleModel.js` [UPPERCASE 모델](UPPERCASE-MODEL.md)의 경우, Node.js 환경 및 웹 브라우저 환경 모두에서 사용될 수 있기 때문에 `COMMON` 폴더에 정의합니다.
 * `SampleProject/Sample/NODE` Node.js 환경에서 동작할 코드들을 작성할 폴더입니다.

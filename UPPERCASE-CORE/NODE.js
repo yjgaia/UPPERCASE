@@ -7110,7 +7110,7 @@ global.CONNECT_TO_SOCKET_SERVER = METHOD({
 });
 
 /*
- * TCP 소켓 및 웹 소켓 서버를 통합하여 생성합니다.
+ * TCP 소켓 및 웹소켓 서버를 통합하여 생성합니다.
  */
 global.MULTI_PROTOCOL_SOCKET_SERVER = CLASS({
 
@@ -8320,7 +8320,7 @@ global.WEB_SERVER = CLASS((cls) => {
 });
 
 /*
- * 웹 소켓 서버를 생성합니다.
+ * 웹소켓 서버를 생성합니다.
  */
 global.WEB_SOCKET_SERVER = METHOD({
 
@@ -8542,7 +8542,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 		}).on('connection', nativeConnectionListener);
 		
 		console.log('[WEB_SOCKET_SERVER] ' + MSG({
-			ko : '웹 소켓 서버가 실행중입니다.'
+			ko : '웹소켓 서버가 실행중입니다.'
 		}));
 	}
 });

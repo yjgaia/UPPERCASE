@@ -44,9 +44,9 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 	run : (params, connectionListenerOrListeners) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.roomServerName
+		//OPTIONAL: params.isSecure
 		//OPTIONAL: params.webServerHost
 		//OPTIONAL: params.webServerPort
-		//OPTIONAL: params.isSecure
 		//OPTIONAL: connectionListenerOrListeners
 		//OPTIONAL: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
@@ -210,7 +210,7 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 FOR_BOX((box) => {
 
 	/*
-	 * 리소스의 경로를 가져오거나, callback을 지정하여 리소스의 내용을 가져옵니다.
+	 * 프로젝트 폴더 내 R 폴더에 저장되어 있는 리소스의 경로를 가져오거나, callback을 지정하여 리소스의 내용을 가져옵니다.
 	 */
 	box.R = METHOD((m) => {
 		
