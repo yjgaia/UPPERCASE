@@ -654,7 +654,7 @@ FOR_BOX((box) => {
 					}]);
 				};
 
-				let innerUpdate = (data, ret, clientInfo, isNotToSaveHistory, isNotToUpdateLastUpdateTime) => {
+				let innerUpdate = (data, ret, clientInfo, isNotToSaveHistory) => {
 
 					let id = data.id;
 					let $inc = data.$inc;
@@ -771,9 +771,7 @@ FOR_BOX((box) => {
 							return () => {
 
 								// update data in database.
-								(isNotToUpdateLastUpdateTime === true ? db.updateNoRecord :
-								(isNotToSaveHistory === true ? db.updateNoHistory :
-								db.update))(data, {
+								(isNotToSaveHistory === true ? db.updateNoHistory : db.update)(data, {
 
 									error : (errorMsg) => {
 										ret({
@@ -1451,77 +1449,6 @@ FOR_BOX((box) => {
 						}
 						
 					}, undefined, true);
-				};
-				
-				let updateNoRecord = self.updateNoRecord = (data, callbackOrHandlers) => {
-					//REQUIRED: data
-					//REQUIRED: data.id
-					//OPTIONAL: callbackOrHandlers
-					//OPTIONAL: callbackOrHandlers.error
-					//OPTIONAL: callbackOrHandlers.notValid
-					//OPTIONAL: callbackOrHandlers.notExists
-					//OPTIONAL: callbackOrHandlers.success
-
-					let errorHandler;
-					let notValidHandler;
-					let notExistsHandler;
-					let callback;
-
-					if (callbackOrHandlers !== undefined) {
-						if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-							callback = callbackOrHandlers;
-						} else {
-							errorHandler = callbackOrHandlers.error;
-							notValidHandler = callbackOrHandlers.notValid;
-							notExistsHandler = callbackOrHandlers.notExists;
-							callback = callbackOrHandlers.success;
-						}
-					}
-
-					innerUpdate(data, (result) => {
-
-						let errorMsg;
-						let validErrors;
-						let savedData;
-						let originData;
-
-						if (result !== undefined) {
-							errorMsg = result.errorMsg;
-							validErrors = result.validErrors;
-							savedData = result.savedData;
-							originData = result.originData;
-						}
-
-						if (errorMsg !== undefined) {
-							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
-							} else {
-								SHOW_ERROR(box.boxName + '.' + name + 'Model.update', errorMsg);
-							}
-						} else if (validErrors !== undefined) {
-							if (notValidHandler !== undefined) {
-								notValidHandler(validErrors);
-							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', MSG({
-									ko : '데이터가 유효하지 않습니다.'
-								}), {
-									data : data,
-									validErrors : validErrors
-								});
-							}
-						} else if (savedData === undefined) {
-							if (notExistsHandler !== undefined) {
-								notExistsHandler();
-							} else {
-								SHOW_WARNING(box.boxName + '.' + name + 'Model.update', MSG({
-									ko : '수정할 데이터가 존재하지 않습니다.'
-								}), data);
-							}
-						} else if (callback !== undefined) {
-							callback(savedData, originData);
-						}
-						
-					}, undefined, true, true);
 				};
 				
 				let remove = self.remove = (id, callbackOrHandlers) => {

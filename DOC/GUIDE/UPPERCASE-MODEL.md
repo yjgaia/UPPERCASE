@@ -308,11 +308,6 @@ Model.update({
 
 Node.js 환경에서만 사용할 수 있습니다.
 
-### `updateNoRecord`
-사용 방식은 `update`와 동일하나, 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않고 데이터를 수정합니다.
-
-Node.js 환경에서만 사용할 수 있습니다.
-
 ### `remove`
 * `Model.remove(id, (originData) => {})`
 * `Model.remove(id, {error:, notAuthed:, notExists:, success:})`

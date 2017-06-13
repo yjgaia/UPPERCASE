@@ -261,9 +261,6 @@ db.update({
 ### `updateNoHistory`
 사용 방식은 `update`와 동일하나, 변경 내역을 남기지 않고 데이터를 수정합니다. 그러나 `lastUpdateTime`은 갱신됩니다.
 
-### `updateNoRecord`
-사용 방식은 `update`와 동일하나, 변경 내역과 마지막 수정 시간 등 아무런 기록을 남기지 않고 데이터를 수정합니다.
-
 ### `remove`
 * `db.remove(id, (originData) => {})`
 * `db.remove(id, {notExists:, error:, success:})`
@@ -429,7 +426,7 @@ db.findAllIndexes((indexes) => {
 ```
 
 ### 데이터의 변경 내역을 가져오는 방법
-데이터를 생성하거나 수정, 삭제하는 경우 데이터의 변경 내역이 대상 데이터베이스의 이름 뒤에 `__HISTORY`를 붙힌 데이터베이스(예: `Test`인 경우 `Test__HISTORY`)에 저장됩니다. 단, `update` 명령으로 데이터를 수정할 때 `isNotUsingHistory` 파라미터가 `true`이거나, `updateNoHistory`나 `updateNoRecord`를 사용하여 데이터를 수정하면 변경 내역이 남지 않습니다.
+데이터를 생성하거나 수정, 삭제하는 경우 데이터의 변경 내역이 대상 데이터베이스의 이름 뒤에 `__HISTORY`를 붙힌 데이터베이스(예: `Test`인 경우 `Test__HISTORY`)에 저장됩니다. 단, `update` 명령으로 데이터를 수정할 때 `isNotUsingHistory` 파라미터가 `true`이거나, `updateNoHistory`를 사용하여 데이터를 수정하면 변경 내역이 남지 않습니다.
 
 데이터의 변경 내역은 다음과 같이 가져올 수 있습니다.
 ```javascript

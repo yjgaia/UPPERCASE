@@ -362,26 +362,6 @@ FOR_BOX((box) => {
 					});
 				};
 				
-				let updateNoRecord = self.updateNoRecord = (data, callbackOrHandlers) => {
-					//REQUIRED: data
-					//REQUIRED: data.id
-					//OPTIONAL: data.$inc
-					//OPTIONAL: data.$push
-					//OPTIONAL: data.$addToSet
-					//OPTIONAL: data.$pull
-					//OPTIONAL: callbackOrHandlers
-					//OPTIONAL: callbackOrHandlers.success
-					//OPTIONAL: callbackOrHandlers.notExists
-					//OPTIONAL: callbackOrHandlers.error
-	
-					waitingUpdateInfos.push({
-						data : data,
-						callbackOrHandlers : callbackOrHandlers,
-						isNotToSaveHistory : true,
-						isNotToUpdateLastUpdateTime : true
-					});
-				};
-				
 				let remove = self.remove = (id, callbackOrHandlers) => {
 					//REQUIRED: id
 					//OPTIONAL: callbackOrHandlers
@@ -394,7 +374,7 @@ FOR_BOX((box) => {
 						callbackOrHandlers : callbackOrHandlers
 					});
 				};
-	
+				
 				let find = self.find = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
@@ -411,7 +391,24 @@ FOR_BOX((box) => {
 						callbackOrHandlers : callbackOrHandlers
 					});
 				};
+				
+				/*let findAndUpdateNoHistory = self.findAndUpdateNoHistory = (params, callbackOrHandlers) => {
+					//OPTIONAL: params
+					//OPTIONAL: params.filter
+					//OPTIONAL: params.sort
+					//OPTIONAL: params.start
+					//OPTIONAL: params.count
+					//OPTIONAL: params.isFindAll
+					//REQUIRED: callbackOrHandlers
+					//OPTIONAL: callbackOrHandlers.error
+					//REQUIRED: callbackOrHandlers.success
 	
+					waitingFindAndUpdateInfos.push({
+						params : params,
+						callbackOrHandlers : callbackOrHandlers
+					});
+				};*/
+				
 				let count = self.count = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
@@ -867,7 +864,7 @@ FOR_BOX((box) => {
 						}
 					};
 	
-					let innerUpdate = (data, callbackOrHandlers, isNotToSaveHistory, isNotToUpdateLastUpdateTime) => {
+					let innerUpdate = (data, callbackOrHandlers, isNotToSaveHistory) => {
 						//REQUIRED: data
 						//REQUIRED: data.id
 						//OPTIONAL: data.$inc
@@ -879,7 +876,6 @@ FOR_BOX((box) => {
 						//OPTIONAL: callbackOrHandlers.error
 						//OPTIONAL: callbackOrHandlers.success
 						//OPTIONAL: isNotToSaveHistory
-						//OPTIONAL: isNotToUpdateLastUpdateTime
 						
 						let id = data.id;
 						let $inc = data.$inc;
@@ -892,11 +888,11 @@ FOR_BOX((box) => {
 						let callback;
 	
 						try {
-	
+							
 							let filter = {
 								_id : gen_id(id)
 							};
-	
+							
 							if (callbackOrHandlers !== undefined) {
 								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 									callback = callbackOrHandlers;
@@ -908,12 +904,12 @@ FOR_BOX((box) => {
 							}
 							
 							let $unset;
-	
+							
 							EACH(data, (value, name) => {
 								if (name === 'id' || name === '_id' || name === 'createTime' || name[0] === '$') {
 									delete data[name];
 								} else if (value === TO_DELETE) {
-	
+									
 									if ($unset === undefined) {
 										$unset = {};
 									}
@@ -923,10 +919,8 @@ FOR_BOX((box) => {
 							});
 							
 							removeEmptyValues(data);
-	
-							if (isNotToUpdateLastUpdateTime !== true) {
-								data.lastUpdateTime = new Date();
-							}
+							
+							data.lastUpdateTime = new Date();
 							
 							let updateData = {};
 							
@@ -1164,21 +1158,6 @@ FOR_BOX((box) => {
 						//OPTIONAL: callbackOrHandlers.error
 	
 						innerUpdate(data, callbackOrHandlers, true);
-					};
-					
-					updateNoRecord = self.updateNoRecord = (data, callbackOrHandlers) => {
-						//REQUIRED: data
-						//REQUIRED: data.id
-						//OPTIONAL: data.$inc
-						//OPTIONAL: data.$push
-						//OPTIONAL: data.$addToSet
-						//OPTIONAL: data.$pull
-						//OPTIONAL: callbackOrHandlers
-						//OPTIONAL: callbackOrHandlers.success
-						//OPTIONAL: callbackOrHandlers.notExists
-						//OPTIONAL: callbackOrHandlers.error
-	
-						innerUpdate(data, callbackOrHandlers, true, true);
 					};
 					
 					remove = self.remove = (id, callbackOrHandlers) => {
@@ -1809,7 +1788,7 @@ FOR_BOX((box) => {
 					waitingGetInfos = undefined;
 	
 					EACH(waitingUpdateInfos, (info) => {
-						innerUpdate(info.data, info.callbackOrHandlers, info.isNotToSaveHistory, info.isNotToUpdateLastUpdateTime);
+						innerUpdate(info.data, info.callbackOrHandlers, info.isNotToSaveHistory);
 					});
 	
 					waitingUpdateInfos = undefined;
