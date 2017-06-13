@@ -163,4 +163,15 @@ TEST('DB', (ok) => {
 			});
 		});
 	 */
+	
+	/*db.findAllAndUpdateNoHistory({
+		filter : {
+			number : 12
+		},
+		data : {
+			"msg" : "Hello, findAllAndUpdateNoHistory!"
+		}
+	}, () => {
+		console.log('여러 데이터 수정 완료');
+	});*/
 });

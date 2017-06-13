@@ -131,6 +131,7 @@ db2.create({
 `Box.DB`로 생성한 객체의 함수들은 다음과 같습니다.
 
 ### `create`
+* `db.create(data)`
 * `db.create(data, (savedData) => {})`
 * `db.create(data, {error:, success:})`
 
@@ -165,6 +166,7 @@ db.get('5636e47415899c3c04b5e70f', {
 ```
 
 ### `update`
+* `db.update(data)`
 * `db.update(data, (savedData, originData) => {})`
 * `db.update(data, {notExists:, error:, success:})`
 
@@ -259,9 +261,10 @@ db.update({
 데이터를 수정하는 경우 데이터의 변경 내역이 대상 데이터베이스의 이름 뒤에 `__HISTORY`를 붙힌 데이터베이스(예: `Test`인 경우 `Test__HISTORY`)에 저장됩니다.
 
 ### `updateNoHistory`
-사용 방식은 `update`와 동일하나, 변경 내역을 남기지 않고 데이터를 수정합니다. 그러나 `lastUpdateTime`은 갱신됩니다.
+사용 방식은 `update`와 동일하나, 변경 내역을 남기지 않고 데이터를 수정합니다. 한편, `lastUpdateTime`은 갱신됩니다.
 
 ### `remove`
+* `db.remove(id)`
 * `db.remove(id, (originData) => {})`
 * `db.remove(id, {notExists:, error:, success:})`
 
@@ -327,6 +330,30 @@ db.find({
 	console.log('모든 데이터 목록:', savedDataSet);
 });
 ```
+
+### `findAllAndUpdateNoHistory`
+* `db.findAllAndUpdateNoHistory({filter:, data:})`
+* `db.findAllAndUpdateNoHistory({filter:, data:}, () => {})`
+* `db.findAllAndUpdateNoHistory({filter:, data:}, {error:, success:})`
+
+`filter`에 해당하는 데이터를 찾아 수정합니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다. `lastUpdateTime`에 마지막 수정 시간이 저장됩니다.
+
+```javascript
+db.findAllAndUpdateNoHistory({
+    filter : {
+        number : 3
+    },
+    data : {
+        number : 13
+    }
+}, () => {
+	console.log('모든 데이터 수정 완료');
+});
+```
+
+`findAllAndUpdateNoHistory` 명령시 `filter`의 모든 요소가 `undefined`로만 이루어진 경우, 모든 값을 수정합니다. 이는 `filter : {}`와 같기 때문입니다. 이를 방지하려는 경우에는, `CHECK_ARE_SAME([filter, {}])`로 `filter`의 모든 요소가 `undefined` 인지 검사하여 적절한 처리를 해 주시기 바랍니다.
+
+`findAllAndUpdateNoHistory`로 데이터를 수정하는 경우에는 데이터의 변경 내역이 저장되지 않습니다.
 
 ### `count`
 * `db.count({filter:}, (count) => {})`

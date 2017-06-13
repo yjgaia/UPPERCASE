@@ -493,7 +493,6 @@ FOR_BOX((box) => {
 					//OPTIONAL: idOrParams.filter
 					//OPTIONAL: idOrParams.sort
 					//OPTIONAL: idOrParams.isRandom
-					//OPTIONAL: idOrParams.isToCache
 					//OPTIONAL: idOrParams.clientInfo
 
 					let isIdMode;
@@ -501,7 +500,6 @@ FOR_BOX((box) => {
 					let filter;
 					let sort;
 					let isRandom;
-					let isToCache;
 					let params;
 
 					// init params.
@@ -520,7 +518,6 @@ FOR_BOX((box) => {
 							filter = idOrParams.filter;
 							sort = idOrParams.sort;
 							isRandom = idOrParams.isRandom;
-							isToCache = idOrParams.isToCache;
 							
 							if (clientInfo === undefined) {
 								clientInfo = idOrParams.clientInfo;
@@ -531,8 +528,7 @@ FOR_BOX((box) => {
 							id : id,
 							filter : filter,
 							sort : sort,
-							isRandom : isRandom,
-							isToCache : isToCache
+							isRandom : isRandom
 						};
 					}
 					
@@ -873,7 +869,6 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.start
 					//OPTIONAL: params.count
 					//OPTIONAL: params.isFindAll
-					//OPTIONAL: params.isToCache
 					//OPTIONAL: params.clientInfo
 
 					let filter;
@@ -881,7 +876,6 @@ FOR_BOX((box) => {
 					let start;
 					let count;
 					let isFindAll;
-					let isToCache;
 
 					if (params !== undefined) {
 						filter = params.filter;
@@ -889,7 +883,6 @@ FOR_BOX((box) => {
 						start = INTEGER(params.start);
 						count = INTEGER(params.count);
 						isFindAll = params.isFindAll;
-						isToCache = params.isToCache;
 						
 						if (clientInfo === undefined) {
 							clientInfo = params.clientInfo;
@@ -901,8 +894,7 @@ FOR_BOX((box) => {
 						sort : sort,
 						start : start,
 						count : count,
-						isFindAll : isFindAll,
-						isToCache : isToCache
+						isFindAll : isFindAll
 					};
 					
 					NEXT([
@@ -970,15 +962,12 @@ FOR_BOX((box) => {
 				let innerCount = (params, ret, clientInfo) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
-					//OPTIONAL: params.isToCache
 					//OPTIONAL: params.clientInfo
 
 					let filter;
-					let isToCache;
 
 					if (params !== undefined) {
 						filter = params.filter;
-						isToCache = params.isToCache;
 						
 						if (clientInfo === undefined) {
 							clientInfo = params.clientInfo;
@@ -986,8 +975,7 @@ FOR_BOX((box) => {
 					}
 					
 					params = {
-						filter : filter,
-						isToCache : isToCache
+						filter : filter
 					};
 					
 					NEXT([
@@ -1055,15 +1043,12 @@ FOR_BOX((box) => {
 				let innerCheckIsExists = (params, ret, clientInfo) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
-					//OPTIONAL: params.isToCache
 					//OPTIONAL: params.clientInfo
 
 					let filter;
-					let isToCache;
 
 					if (params !== undefined) {
 						filter = params.filter;
-						isToCache = params.isToCache;
 						
 						if (clientInfo === undefined) {
 							clientInfo = params.clientInfo;
@@ -1071,8 +1056,7 @@ FOR_BOX((box) => {
 					}
 					
 					params = {
-						filter : filter,
-						isToCache : isToCache
+						filter : filter
 					};
 					
 					NEXT([
@@ -1203,7 +1187,6 @@ FOR_BOX((box) => {
 					//OPTIONAL: idOrParams.filter
 					//OPTIONAL: idOrParams.sort
 					//OPTIONAL: idOrParams.isRandom
-					//OPTIONAL: idOrParams.isToCache
 					//OPTIONAL: idOrParams.clientInfo
 					//REQUIRED: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.error
@@ -1457,7 +1440,6 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.start
 					//OPTIONAL: params.count
 					//OPTIONAL: params.isFindAll
-					//OPTIONAL: params.isToCache
 					//REQUIRED: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.error
 					//REQUIRED: callbackOrHandlers.success
@@ -1500,7 +1482,6 @@ FOR_BOX((box) => {
 				let count = self.count = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
-					//OPTIONAL: params.isToCache
 					//REQUIRED: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.error
 					//REQUIRED: callbackOrHandlers.success
@@ -1543,7 +1524,6 @@ FOR_BOX((box) => {
 				let checkIsExists = self.checkIsExists = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
-					//OPTIONAL: params.isToCache
 					//REQUIRED: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.error
 					//REQUIRED: callbackOrHandlers.success
@@ -1635,12 +1615,6 @@ FOR_BOX((box) => {
 								value : getRole
 							}) === true)) {
 								
-								if (idOrParams !== undefined && CHECK_IS_DATA(idOrParams) === true) {
-
-									// delete for server params.
-									delete idOrParams.isToCache;
-								}
-
 								innerGet(idOrParams, ret, clientInfo);
 
 							} else {
@@ -1819,7 +1793,6 @@ FOR_BOX((box) => {
 
 									// delete for server params.
 									delete params.isFindAll;
-									delete params.isToCache;
 								}
 
 								innerFind(params, ret, clientInfo);
@@ -1844,12 +1817,6 @@ FOR_BOX((box) => {
 								value : countRole
 							}) === true)) {
 								
-								if (params !== undefined) {
-
-									// delete for server params.
-									delete params.isToCache;
-								}
-
 								innerCount(params, ret, clientInfo);
 
 							} else {
@@ -1872,12 +1839,6 @@ FOR_BOX((box) => {
 								value : checkIsExistsRole
 							}) === true)) {
 								
-								if (params !== undefined) {
-
-									// delete for server params.
-									delete params.isToCache;
-								}
-
 								innerCheckIsExists(params, ret, clientInfo);
 
 							} else {

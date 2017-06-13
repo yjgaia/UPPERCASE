@@ -304,7 +304,7 @@ Model.update({
 데이터를 수정하는 경우 데이터의 변경 내역이 대상 데이터베이스의 이름 뒤에 `__HISTORY`를 붙힌 데이터베이스(예: `Test`인 경우 `Test__HISTORY`)에 저장됩니다.
 
 ### `updateNoHistory`
-사용 방식은 `update`와 동일하나, 변경 내역을 남기지 않고 데이터를 수정합니다. 그러나 `lastUpdateTime`은 갱신됩니다.
+사용 방식은 `update`와 동일하나, 변경 내역을 남기지 않고 데이터를 수정합니다. 한편, `lastUpdateTime`은 갱신됩니다.
 
 Node.js 환경에서만 사용할 수 있습니다.
 

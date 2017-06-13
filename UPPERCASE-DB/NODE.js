@@ -214,6 +214,7 @@ FOR_BOX((box) => {
 				let waitingUpdateInfos = [];
 				let waitingRemoveInfos = [];
 				let waitingFindInfos = [];
+				let waitingFindAllAndUpdateNoHistoryInfos = [];
 				let waitingCountInfos = [];
 				let waitingCheckIsExistsInfos = [];
 				let waitingAggregateInfos = [];
@@ -392,22 +393,23 @@ FOR_BOX((box) => {
 					});
 				};
 				
-				/*let findAndUpdateNoHistory = self.findAndUpdateNoHistory = (params, callbackOrHandlers) => {
-					//OPTIONAL: params
-					//OPTIONAL: params.filter
-					//OPTIONAL: params.sort
-					//OPTIONAL: params.start
-					//OPTIONAL: params.count
-					//OPTIONAL: params.isFindAll
-					//REQUIRED: callbackOrHandlers
+				let findAllAndUpdateNoHistory = self.findAllAndUpdateNoHistory = (params, callbackOrHandlers) => {
+					//REQUIRED: params
+					//REQUIRED: params.filter
+					//REQUIRED: params.data
+					//OPTIONAL: params.data.$inc
+					//OPTIONAL: params.data.$push
+					//OPTIONAL: params.data.$addToSet
+					//OPTIONAL: params.data.$pull
+					//OPTIONAL: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.error
-					//REQUIRED: callbackOrHandlers.success
+					//OPTIONAL: callbackOrHandlers.success
 	
-					waitingFindAndUpdateInfos.push({
+					waitingFindAllAndUpdateNoHistoryInfos.push({
 						params : params,
 						callbackOrHandlers : callbackOrHandlers
 					});
-				};*/
+				};
 				
 				let count = self.count = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
@@ -1404,7 +1406,141 @@ FOR_BOX((box) => {
 							}, errorHandler);
 						}
 					};
+					
+					findAllAndUpdateNoHistory = self.findAllAndUpdateNoHistory = (params, callbackOrHandlers) => {
+						//REQUIRED: params
+						//OPTIONAL: params.filter
+						//REQUIRED: params.data
+						//OPTIONAL: params.data.$inc
+						//OPTIONAL: params.data.$push
+						//OPTIONAL: params.data.$addToSet
+						//OPTIONAL: params.data.$pull
+						//OPTIONAL: callbackOrHandlers
+						//OPTIONAL: callbackOrHandlers.error
+						//OPTIONAL: callbackOrHandlers.success
+						
+						let filter = params.filter;
+						let data = params.data;
+						
+						let $inc = data.$inc;
+						let $push = data.$push;
+						let $addToSet = data.$addToSet;
+						let $pull = data.$pull;
+						
+						let errorHandler;
+						let callback;
 	
+						try {
+	
+							if (callbackOrHandlers !== undefined) {
+								if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+									callback = callbackOrHandlers;
+								} else {
+									errorHandler = callbackOrHandlers.error;
+									callback = callbackOrHandlers.success;
+								}
+							}
+	
+							if (filter === undefined) {
+								filter = {};
+							}
+	
+							makeUpFilter(filter);
+							
+							let $unset;
+							
+							EACH(data, (value, name) => {
+								if (name === 'id' || name === '_id' || name === 'createTime' || name[0] === '$') {
+									delete data[name];
+								} else if (value === TO_DELETE) {
+									
+									if ($unset === undefined) {
+										$unset = {};
+									}
+	
+									$unset[name] = '';
+								}
+							});
+							
+							removeEmptyValues(data);
+							
+							data.lastUpdateTime = new Date();
+							
+							let updateData = {};
+							
+							if (CHECK_IS_EMPTY_DATA(data) !== true) {
+								updateData.$set = data;
+							}
+	
+							if ($unset !== undefined) {
+								updateData.$unset = $unset;
+							}
+	
+							if ($inc !== undefined) {
+								removeEmptyValues($inc);
+								if (CHECK_IS_EMPTY_DATA($inc) !== true) {
+									updateData.$inc = $inc;
+								}
+							}
+							
+							if ($push !== undefined) {
+								removeEmptyValues($push);
+								updateData.$push = $push;
+							}
+							
+							if ($addToSet !== undefined) {
+								removeEmptyValues($addToSet);
+								updateData.$addToSet = $addToSet;
+							}
+							
+							if ($pull !== undefined) {
+								removeEmptyValues($pull);
+								updateData.$pull = $pull;
+							}
+							
+							if (backupCollection !== undefined) {
+								backupCollection.updateMany(filter, updateData, (error) => {
+									
+									if (error !== TO_DELETE) {
+										
+										SHOW_ERROR('BACKUP DB', error.toString(), {
+											boxName : box.boxName,
+											name : name
+										});
+									}
+								});
+							}
+
+							collection.updateMany(filter, updateData, {
+								w : 1
+							}, (error) => {
+
+								if (error !== TO_DELETE) {
+	
+									logError({
+										method : 'update',
+										data : data,
+										errorMsg : error.toString()
+									}, errorHandler);
+								}
+								
+								else if (callback !== undefined) {
+									callback();
+								}
+							});
+						}
+	
+						// if catch error
+						catch (error) {
+	
+							logError({
+								method : 'findAllAndUpdateNoHistory',
+								params : params,
+								errorMsg : error.toString()
+							}, errorHandler);
+						}
+					};
+					
 					count = self.count = (params, callbackOrHandlers) => {
 						//OPTIONAL: params
 						//OPTIONAL: params.filter
@@ -1804,6 +1940,12 @@ FOR_BOX((box) => {
 					});
 	
 					waitingFindInfos = undefined;
+	
+					EACH(waitingFindAllAndUpdateNoHistoryInfos, (info) => {
+						findAllAndUpdateNoHistory(info.params, info.callbackOrHandlers);
+					});
+	
+					waitingFindAllAndUpdateNoHistoryInfos = undefined;
 	
 					EACH(waitingCountInfos, (info) => {
 						count(info.params, info.callbackOrHandlers);
