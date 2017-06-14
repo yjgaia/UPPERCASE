@@ -185,6 +185,7 @@ mongod --configsvr --replSet csReplSet --port 40003 --fork --keyFile /srv/mongod
 mongo --port 40001
 ```
 
+아래 설정은 모든 공유된 서버끼리 공유하는 것이므로, localhost가 아닌 IP를 반드시 지정해주시기 바랍니다.
 ```
 rs.initiate(
   {
