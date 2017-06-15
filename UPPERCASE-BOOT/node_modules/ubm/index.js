@@ -73,25 +73,6 @@ module.exports = CLASS((cls) => {
 		}
 	};
 	
-	let installDependency = (content, callback) => {
-		
-		NEXT(content.toString().split('\n'), [
-		(box, next) => {
-			
-			box = box.trim();
-			
-			if (box !== '' && box.indexOf('/') !== -1) {
-				installBox(box.substring(0, box.indexOf('/')), box.substring(box.indexOf('/') + 1), next);
-			} else {
-				next();
-			}
-		},
-		
-		() => {
-			return callback;
-		}]);
-	};
-	
 	return {
 		
 		init : (inner, self) => {
@@ -249,6 +230,25 @@ module.exports = CLASS((cls) => {
 						}]);
 					}
 				});
+			};
+			
+			let installDependency = (content, callback) => {
+				
+				NEXT(content.toString().split('\n'), [
+				(box, next) => {
+					
+					box = box.trim();
+					
+					if (box !== '' && box.indexOf('/') !== -1) {
+						installBox(box.substring(0, box.indexOf('/')), box.substring(box.indexOf('/') + 1), next);
+					} else {
+						next();
+					}
+				},
+				
+				() => {
+					return callback;
+				}]);
 			};
 			
 			// 설치하기
