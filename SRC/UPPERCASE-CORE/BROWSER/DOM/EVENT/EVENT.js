@@ -355,6 +355,30 @@ global.EVENT = CLASS((cls) => {
 					}
 				}));
 			}
+			
+			else if (name === 'keydown') {
+				
+				let lastKey;
+				
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'keydown'
+				}, (e, node) => {
+					if (lastKey !== e.getKey()) {
+						eventHandler(e, node);
+						lastKey = e.getKey();
+					}
+				}));
+				
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'keyup'
+				}, (e, node) => {
+					lastKey = undefined;
+				}));
+			}
 
 			// other events
 			else if (name !== 'attach' && name !== 'show' && name !== 'remove') {

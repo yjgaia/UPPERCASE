@@ -117,7 +117,7 @@ FOR_BOX((box) => {
 					}, callback);
 
 				} else {
-					SHOW_ERROR(box.boxName + '.' + roomName + 'Room.send', 'ROOM EXITED.');
+					SHOW_ERROR(box.boxName + '.' + roomName + 'Room.send', '이미 룸에서 나갔습니다.');
 				}
 			};
 
