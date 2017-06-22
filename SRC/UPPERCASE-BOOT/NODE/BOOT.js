@@ -921,13 +921,19 @@ global.BOOT = (params) => {
 						if (socketServerHosts === undefined) {
 
 							response({
-								content : wrapCallback(params.defaultHost)
+								content : wrapCallback(params.defaultHost),
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
 							});
 
 						} else {
 
 							response({
-								content : wrapCallback(socketServerHosts[nextSocketServerHostIndex])
+								content : wrapCallback(socketServerHosts[nextSocketServerHostIndex]),
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
 							});
 
 							nextSocketServerHostIndex += 1;
