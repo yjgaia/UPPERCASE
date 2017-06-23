@@ -12,13 +12,24 @@ global.STRINGIFY = METHOD({
 		
 		else if (CHECK_IS_ARRAY(data) === true) {
 			
-			let array = [];
+			let f = (array) => {
+				
+				let newArray = [];
+				
+				EACH(array, (data) => {
+					if (CHECK_IS_DATA(data) === true) {
+						newArray.push(PACK_DATA(data));
+					} else if (CHECK_IS_ARRAY(data) === true) {
+						newArray.push(f(data));
+					} else {
+						newArray.push(data);
+					}
+				});
+				
+				return newArray;
+			};
 			
-			EACH(data, (data) => {
-				array.push(PACK_DATA(data));
-			});
-			
-			return JSON.stringify(array);
+			return JSON.stringify(f(data));
 		}
 		
 		else {
