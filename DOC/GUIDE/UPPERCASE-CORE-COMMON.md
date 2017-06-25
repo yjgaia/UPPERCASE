@@ -142,7 +142,7 @@ SomeMethod.getCallCount(); // 2
 
 ## 객체지향 관련 기능
 비록 JavaScript에서 Prototype 기반 객체지향 프로그래밍이 가능하다고 하나, 표현력에 한계가 있어 [JSFace](https://github.com/tnhu/jsface)나 [oolib.js](http://idya.github.io/oolib/)와 같은 객체지향 프로그래밍을 지원하는 라이브러리를 사용하고는 합니다.
-UPPERCASE는 객체지향 언어들과 비슷한 모습으로 객체지향 프로그래밍을 할 수 있도록 지원합니다.
+UPPERCASE는 객체지향 언어들과 비슷한 모습으로 객체지향 프로그래밍을 할 수 있도록 지원합니다. 자세한 내용은 [UPPERCASE에서의 객체지향 프로그래밍 문서](OOP.md)를 참고해주시기 바랍니다.
 
 ### `CLASS`
 UPPERCASE 기반 클래스를 생성합니다. 생성된 클래스는 상속이 가능하고, `private` 및 `public`, `protected` 접근 제한 변수를 지정할 수 있습니다. 또한 생성자의 파라미터를 객체가 생성되기 이전에 변경할 수 있으며, 클래스에 `static` 함수를 지정할 수도 있습니다.
