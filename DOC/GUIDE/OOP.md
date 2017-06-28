@@ -1,5 +1,5 @@
 # UPPERCASE에서의 객체지향 프로그래밍
-UPPERCASE 기반 프로젝트를 작성할 때, [`CLASS`](UPPERCASE-CORE-COMMON.md#class)나 [`OBJECT`](UPPERCASE-CORE-COMMON.md#object)를 이용해 순수 JavaScript로는 작성하기 어려운 객체지향 프로그래밍이 가능합니다.
+UPPERCASE 기반 프로젝트를 작성할 때, [`CLASS`](UPPERCASE-CORE-COMMON.md#class)나 [`OBJECT`](UPPERCASE-CORE-COMMON.md#object)를 이용해 순수 JavaScript로는 하기 어려운 객체지향 프로그래밍을 쉽게 할 수 있습니다.
 
 ## 캡슐화
 캡슐화란 객체가 데이터를 어떻게 처리하는지 외부에서 알 수 없도록 하는 것입니다.
