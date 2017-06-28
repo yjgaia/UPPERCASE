@@ -323,7 +323,7 @@ global.CLASS = METHOD((m) => {
 							mom.innerInit(inner, self, params, funcs);
 						}
 
-						// when mon's type is OBJECT
+						// when mom's type is OBJECT
 						else {
 							mom.type.innerInit(inner, self, params, funcs);
 						}
