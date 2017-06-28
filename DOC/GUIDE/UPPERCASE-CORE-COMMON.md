@@ -88,7 +88,7 @@ SomeMethod({
 });
 ```
 
-또한 다음과 같이 메소드에 `static` 변수와 함수를 선언할 수 있습니다.
+또한 다음과 같이 메소드에 `static` 멤버들을 선언할 수 있습니다.
 
 ```javascript
 SomeMethod = METHOD((m) => {
@@ -124,7 +124,7 @@ SomeMethod = METHOD((m) => {
 });
 ```
 
-선언한 `static` 함수는 다음과 같이 메소드 이름에 `.`을 붙혀 실행합니다.
+선언한 `static` 멤버는 다음과 같이 메소드 이름에 `.`을 붙혀 실행합니다.
 ```javascript
 SomeMethod({
     name: '하늘',
@@ -145,7 +145,7 @@ SomeMethod.getCallCount(); // 2
 UPPERCASE는 객체지향 언어들과 비슷한 모습으로 객체지향 프로그래밍을 할 수 있도록 지원합니다. 자세한 내용은 [UPPERCASE에서의 객체지향 프로그래밍 문서](OOP.md)를 참고해주시기 바랍니다.
 
 ### `CLASS`
-UPPERCASE 기반 클래스를 생성합니다. 생성된 클래스는 상속이 가능하고, `private` 및 `public`, `protected` 접근 제한 변수를 지정할 수 있습니다. 또한 생성자의 파라미터를 객체가 생성되기 이전에 변경할 수 있으며, 클래스에 `static` 함수를 지정할 수도 있습니다.
+UPPERCASE 기반 클래스를 생성합니다. 생성된 클래스는 상속이 가능하고, `private` 및 `public`, `protected` 접근 제한 변수를 지정할 수 있습니다. 또한 생성자의 파라미터를 객체가 생성되기 이전에 변경할 수 있으며, 클래스에 `static` 멤버를 지정할 수도 있습니다.
 
 아래와 같이 클래스를 선언하고, 파일명 또한 클래스의 이름과 동일하게 `SomeClass.js`로 저장합니다.
 
@@ -167,7 +167,7 @@ SomeClass = CLASS({
 });
 ```
 
-이후 아래와 같이 객체를 생성하고, 객체의 함수를 실행합니다.
+이후 아래와 같이 객체를 생성하고, 객체의 메소드를 실행합니다.
 ```javascript
 let someObject = SomeClass({
 	name: '하늘',
@@ -210,7 +210,7 @@ SomeClass = CLASS({
 	    // 객체 내 변수 선언
 	    let a = 123; // 생성자 내에서만 사용할 수 있습니다. (private)
 	    
-	    // 객체 내 함수 선언
+	    // 객체 내 메소드 선언
 	    let b = () => {...} // 생성자 내에서만 사용할 수 있습니다. (private)
 		let c = inner.c = () => {...} // 이 클래스를 상속한 자식 클래스에서도 사용할 수 있습니다. (protected)
 		let d = self.d = () => {...} // 클래스 외부에서 사용할 수 있습니다. (public)
@@ -223,7 +223,7 @@ SomeClass = CLASS({
 });
 ```
 
-클래스 또한 메소드와 마찬가지로 `static` 함수를 지정할 수 있습니다.
+클래스 또한 메소드와 마찬가지로 `static` 멤버를 지정할 수 있습니다.
 
 ```javascript
 SomeClass = CLASS((cls) => {
@@ -254,7 +254,7 @@ SomeClass = CLASS((cls) => {
 });
 ```
 
-선언한 `static` 함수는 다음과 같이 클래스 이름에 `.`을 붙혀 실행합니다.
+선언한 `static` 멤버는 다음과 같이 클래스 이름에 `.`을 붙혀 실행합니다.
 ```javascript
 let someObject = SomeClass({
 	name: '하늘',
@@ -292,7 +292,7 @@ SomeObject = OBJECT({
 INIT_OBJECT();
 ```
 
-이후 아래와 같이 객체의 함수를 실행할 수 있습니다.
+이후 아래와 같이 객체의 메소드를 실행할 수 있습니다.
 ```javascript
 SomeObject.hello(); // 안녕하세요?
 ```
@@ -368,7 +368,7 @@ RANDOM({
 ```javascript
 new Date().getMonth(); // 8
 ```
-`CALENDAR` 클래스는 이런 부분을 해결하면서 동시에, `getMonth`, `getDate`, `getHour`, `getMinute`, `getSecond` 함수에 파라미터로 `true`를 지정하면, `'0N'`과 같은 형식의 문자열을 반환합니다. (9월인 경우 `'09'`) 이는 `2016-09-02`과 같은 날짜 형태를 만들 때 유용하게 사용할 수 있습니다.
+`CALENDAR` 클래스는 이런 부분을 해결하면서 동시에, `getMonth`, `getDate`, `getHour`, `getMinute`, `getSecond` 메소드에 파라미터로 `true`를 지정하면, `'0N'`과 같은 형식의 문자열을 반환합니다. (9월인 경우 `'09'`) 이는 `2016-09-02`과 같은 날짜 형태를 만들 때 유용하게 사용할 수 있습니다.
 
 ```javascript
 // 2016년 1월 2일 3시 4분 5초인 경우
@@ -677,7 +677,7 @@ let data = UNPACK_DATA(packedData);
 ```
 
 ### `STRINGIFY(data)`, `PARSE_STR(dataStr)`
-`STRINGIFY`와 `PARSE_STR`는 위에서 설명한 `PACK_DATA`와 `UNPACK_DATA`를 내부적으로 수행하여 `JSON.stringify`아 `JSON.parse` 메소드를 대체하는 함수입니다.
+`STRINGIFY`와 `PARSE_STR`는 위에서 설명한 `PACK_DATA`와 `UNPACK_DATA`를 내부적으로 수행하여 `JSON.stringify`와 `JSON.parse`를 대체하는 메소드입니다.
 
 다음과 같은 코드는,
 ```javascript
@@ -734,7 +734,7 @@ let validResult = valid.check({
 });
 ```
 
-`checkHasError` 함수를 통해 데이터에 오류가 있는지 확인합니다.
+`checkHasError` 메소드를 통해 데이터에 오류가 있는지 확인합니다.
 ```javascript
 validResult.checkHasError(); // false
 ```
@@ -747,12 +747,12 @@ validResult = valid.check({
 });
 ```
 
-`checkHasError` 함수를 통해 데이터에 오류가 있는지 확인합니다.
+`checkHasError` 메소드를 통해 데이터에 오류가 있는지 확인합니다.
 ```javascript
 validResult.checkHasError(); // true
 ```
 
-`getErrors` 함수를 통해 어떤 오류가 있는지 확인합니다.
+`getErrors` 메소드를 통해 어떤 오류가 있는지 확인합니다.
 ```javascript
 /*
     {
@@ -773,7 +773,7 @@ validResult.checkHasError(); // true
 validResult.getErrors();
 ```
 
-또한 데이터를 검증함과 동시에 빈 값(`undefined`, `null`, `''`)과 표현식에 정의되지 않은 값을 삭제하는 `checkAndWash` 함수가 존재합니다.
+또한 데이터를 검증함과 동시에 빈 값(`undefined`, `null`, `''`)과 표현식에 정의되지 않은 값을 삭제하는 `checkAndWash` 메소드가 존재합니다.
 ```javascript
 let valid = VALID({
 
@@ -803,7 +803,7 @@ valid.checkAndWash(data);
 console.log(data); // { age : 28 }
 ```
 
-추가로, 데이터를 검증함과 동시에 빈 문자열(`''`)을 `TO_DELETE`로 변경하고, 표현식에 정의되지 않은 값은 삭제하는 `checkForUpdate` 함수가 존재합니다. 이를 이용해 [MongoDB](http://www.mongodb.org)와 같은 시스템에서 `update` 명령을 수행할 때, 빈 문자열에 해당되는 값은 삭제하도록 설정할 수 있습니다.
+추가로, 데이터를 검증함과 동시에 빈 문자열(`''`)을 `TO_DELETE`로 변경하고, 표현식에 정의되지 않은 값은 삭제하는 `checkForUpdate` 메소드가 존재합니다. 이를 이용해 [MongoDB](http://www.mongodb.org)와 같은 시스템에서 `update` 명령을 수행할 때, 빈 문자열에 해당되는 값은 삭제하도록 설정할 수 있습니다.
 ```javascript
 let valid = VALID({
 
@@ -1038,13 +1038,13 @@ let delay = DELAY(3, () => {
 });
 ```
 
-함수의 실행을 취소하고 싶으면, 3초가 지나기 전에 `remove` 함수를 실행하면 됩니다.
+함수의 실행을 취소하고 싶으면, 3초가 지나기 전에 `remove` 메소드를 실행하면 됩니다.
 ```javascript
 // 실행을 취소합니다.
 delay.remove();
 ```
 
-또한 `pause`와 `resume` 함수를 통해 일시정지 및 재개할 수 있습니다. 예를 들어 1초가 지난 뒤 `pause`를 실행하고, 이후에 `resume`을 실행하게 되면 `resume`을 실행한 후 2초 뒤 함수가 실행됩니다.
+또한 `pause`와 `resume` 메소드를 통해 일시정지 및 재개할 수 있습니다. 예를 들어 1초가 지난 뒤 `pause`를 실행하고, 이후에 `resume`을 실행하게 되면 `resume`을 실행한 후 2초 뒤 함수가 실행됩니다.
 ```javascript
 // 일시정지합니다.
 delay.pause();
@@ -1063,13 +1063,13 @@ let interval = DELAY(3, (interval) => {
 });
 ```
 
-함수의 실행을 취소하고 싶으면, `remove` 함수를 실행하면 됩니다.
+함수의 실행을 취소하고 싶으면, `remove` 메소드를 실행하면 됩니다.
 ```javascript
 // 실행을 취소합니다.
 interval.remove();
 ```
 
-또한 `pause`와 `resume` 함수를 통해 일시정지 및 재개할 수 있습니다. 예를 들어 1초가 지난 뒤 `pause`를 실행하고, 이후에 `resume`을 실행하게 되면 `resume`을 실행한 후 2초 뒤 함수가 실행되고, 다시 3초마다 함수가 실행됩니다.
+또한 `pause`와 `resume` 메소드를 통해 일시정지 및 재개할 수 있습니다. 예를 들어 1초가 지난 뒤 `pause`를 실행하고, 이후에 `resume`을 실행하게 되면 `resume`을 실행한 후 2초 뒤 함수가 실행되고, 다시 3초마다 함수가 실행됩니다.
 ```javascript
 // 일시정지합니다.
 interval.pause();
@@ -1193,7 +1193,7 @@ showAge({
 ```
 
 ## Callback Hell 보완 기능
-JavaScript로 개발을 하다보면 수많은 Callback 함수들이 중첩되어 코드의 복잡성이 증가하고 가독성이 떨어지는 경우가 자주 생깁니다. 이를 Callback Hell이라고 부릅니다. 이런 현상을 보완하기 위해서 UPPERCASE에서는 다음과 같은 기능들을 제공합니다.
+JavaScript로 개발을 하다보면 수많은 Callback들이 중첩되어 코드의 복잡성이 증가하고 가독성이 떨어지는 경우가 자주 생깁니다. 이를 Callback Hell이라고 부릅니다. 이런 현상을 보완하기 위해서 UPPERCASE에서는 다음과 같은 기능들을 제공합니다.
 
 ### `NEXT`
 주어진 비동기 함수들을 순서대로 실행합니다.
@@ -1249,7 +1249,7 @@ NEXT(array, [
 }]);
 ```
 
-예를 들어 다음과 같은 Callback 함수가 중첩되어 있는 복잡한 코드가 있을 경우, (출처: http://callbackhell.com)
+예를 들어 다음과 같은 Callback들이 중첩되어 있는 복잡한 코드가 있을 경우, (출처: http://callbackhell.com)
 ```javascript
 fs.readdir(source, (err, files) => {
 	if (err) {
@@ -1507,7 +1507,7 @@ SHOW_WARNING('샘플 경고', '당신에게 경고합니다!');
 
 ## 기타 기능
 ### `OVERRIDE(origin, (origin) => {})`
-[오버라이딩](https://ko.wikipedia.org/wiki/%EB%A9%94%EC%86%8C%EB%93%9C_%EC%98%A4%EB%B2%84%EB%9D%BC%EC%9D%B4%EB%94%A9)을 수행합니다. 클래스나 함수 등을 재지정 할 때 유용합니다.
+[오버라이딩](https://ko.wikipedia.org/wiki/%EB%A9%94%EC%86%8C%EB%93%9C_%EC%98%A4%EB%B2%84%EB%9D%BC%EC%9D%B4%EB%94%A9)을 수행합니다. 함수나 클래스 등을 재지정 할 때 유용합니다.
 
 예를 들어 주어진 두 수를 더하는 `calculate`라는 함수가 있습니다.
 ```javascript
@@ -1548,12 +1548,12 @@ let matcher = URI_MATCHER('book/{name}')
 let matchResult = matcher.check('book/TheLittlePrince');
 ```
 
-`checkIsMatched` 함수로 URI가 포맷에 맞는지 확인합니다.
+`checkIsMatched` 메소드로 URI가 포맷에 맞는지 확인합니다.
 ```javascript
 matchResult.checkIsMatched(); // true
 ```
 
-`getURIParams` 함수로 URI로부터 파라미터 값을 가져옵니다.
+`getURIParams` 메소드로 URI로부터 파라미터 값을 가져옵니다.
 ```javascript
 matchResult.getURIParams(); // { name : 'TheLittlePrince' }
 ```

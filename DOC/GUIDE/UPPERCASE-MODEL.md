@@ -11,7 +11,7 @@ UPPERCASE-MODEL은 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8
 * [사용방법](#사용방법)
 * [`Box.MODEL`](#model)
 * [초기 데이터 설정](#초기-데이터-설정)
-* [함수별 설정](#함수별-설정)
+* [메소드별 설정](#메소드별-설정)
 * [모델 기능 확장](#모델-기능-확장)
 
 ## 사용방법
@@ -60,7 +60,7 @@ TestBox.TestModel = OBJECT({
 		    // 모델 명을 지정합니다.
 			name : 'Test',
 			
-			// 함수별 설정을 지정합니다.
+			// 메소드별 설정을 지정합니다.
 			methodConfig : {
 				create : ...,
                 get : ...,
@@ -80,7 +80,7 @@ TestBox.TestModel = OBJECT({
 * `roomServerName` 접속할 룸 서버의 이름. [여러 룸 서버에 접속](UPPERCASE-ROOM.md#connect_to_room_server)한 경우 임의로 지정합니다.
 * `name` 모델 명
 * `initData` 초기화 데이터. 자세한 내용은 [초기화 데이터](#초기화-데이터) 항목을 참고하시기 바랍니다.
-* `methodConfig` 함수별 설정. 자세한 내용은 [함수별 설정](#함수별-설정) 항목을 참고하시기 바랍니다.
+* `methodConfig` 메소드별 설정. 자세한 내용은 [메소드별 설정](#메소드별-설정) 항목을 참고하시기 바랍니다.
 * `isNotUsingObjectId` MongoDB의 기본 `id` 형식인 `ObjectId`를 쓰지 않을 것인지 여부. `true`로 지정하면 데이터를 생성할 때 `id`를 따로 지정해야 합니다. 자세한 내용은 [`Box.DB` 문서](UPPERCASE-DB.md#boxdb)를 참고해 주시기 바랍니다.
 * `isNotUsingHistory` 데이터를 생성, 수정, 삭제할 때 변경 내역을 남기지 않을 것인지 여부. 자세한 내용은 [`Box.DB` 문서](UPPERCASE-DB.md#boxdb)를 참고해 주시기 바랍니다.
 
@@ -132,7 +132,7 @@ TestBox.TestModel = OBJECT({
 });
 ```
 
-`Box.MODEL`를 상속받은 객체의 함수들은 다음과 같습니다.
+`Box.MODEL`를 상속받은 객체의 메소드들은 다음과 같습니다.
 
 ### `create`
 * `Model.create(data, (savedData) => {})`
@@ -583,7 +583,7 @@ Model.onRemove({
 ```
 
 ## 초기 데이터 설정
-초기 데이터를 설정하면, `create`함수로 데이터를 생성할 때 주어진 데이터에 초기 데이터를 덮어씌우고 생성하게 됩니다.
+초기 데이터를 설정하면, `create` 메소드로 데이터를 생성할 때 주어진 데이터에 초기 데이터를 덮어씌우고 생성하게 됩니다.
 
 ```javascript
 TestBox.TestModel = OBJECT({
@@ -621,11 +621,11 @@ Model.create({
 });
 ```
 
-## 함수별 설정
-모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 함수들에 대한 설정을 지정할 수 있습니다.
+## 메소드별 설정
+모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 메소드들에 대한 설정을 지정할 수 있습니다.
 
-### 함수를 사용하지 않음
-단순히 `false`를 지정하게 되면, 해당 함수 자체를 생성하지 않습니다.
+### 메소드를 사용하지 않음
+단순히 `false`를 지정하게 되면, 해당 메소드 자체를 생성하지 않습니다.
 
 ```javascript
 TestBox.TestModel = OBJECT({
@@ -638,14 +638,14 @@ TestBox.TestModel = OBJECT({
         return {
             name : 'Test',
             methodConfig : {
-                // create 함수를 생성하지 않습니다.
+                // create 메소드를 생성하지 않습니다.
                 create : false
             }
         };
     }
 });
 
-// create 함수를 생성하지 않았으므로 오류 발생
+// create 메소드를 생성하지 않았으므로 오류 발생
 TestBox.TestModel.create({
     name : 'YJ',
     age : 30
@@ -653,7 +653,7 @@ TestBox.TestModel.create({
 ```
 
 ### `valid`
-`create`와 `update` 함수에는 `valid` 설정을 지정할 수 있습니다. `valid` 설정을 지정하면 데이터를 생성하거나 수정할 때, 주어진 데이터를 검증하게 됩니다.
+`create`와 `update` 메소드에는 `valid` 설정을 지정할 수 있습니다. `valid` 설정을 지정하면 데이터를 생성하거나 수정할 때, 주어진 데이터를 검증하게 됩니다.
 
 ```javascript
 TestBox.TestModel = OBJECT({
@@ -750,7 +750,7 @@ TestBox.ArticleModel.create({
 ```
 
 ### `authKey`
-`create`와 `update`, `remove` 함수에는 `authKey` 설정을 지정할 수 있습니다. 데이터의 `authKey`에 해당하는 값이 `clientInfo.authKey`와 동일한 경우에만 실행됩니다.
+`create`와 `update`, `remove` 메소드에는 `authKey` 설정을 지정할 수 있습니다. 데이터의 `authKey`에 해당하는 값이 `clientInfo.authKey`와 동일한 경우에만 실행됩니다.
 
 ```javascript
 TestBox.ArticleModel = OBJECT({
@@ -823,7 +823,7 @@ TestBox.ArticleModel.update({
 ```
 
 ### `adminRole`
-`clientInfo.roles` 배열에 해당 롤이 포함되어 있는 경우에 실행 가능도록 설정합니다. 클라이언트가 `role` 설정과 `authKey` 설정에 부합하지 않아도 `adminRole` 설정에 부합하면 함수를 실행할 수 있습니다. 이 설정은 운영자 기능을 구현할 때 유용합니다.
+`clientInfo.roles` 배열에 해당 롤이 포함되어 있는 경우에 실행 가능도록 설정합니다. 클라이언트가 `role` 설정과 `authKey` 설정에 부합하지 않아도 `adminRole` 설정에 부합하면 메소드를 실행할 수 있습니다. 이 설정은 운영자 기능을 구현할 때 유용합니다.
 
 ```javascript
 TestBox.ArticleModel = OBJECT({
@@ -912,8 +912,8 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 });
 ```
 
-#### 함수별 전처리/후처리 설정
-모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 함수들이 실행되기 전과 후에 실행할 리스너를 지정할 수 있습니다.
+#### 메소드별 전처리/후처리 설정
+모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 메소드들이 실행되기 전과 후에 실행할 리스너를 지정할 수 있습니다.
 
 ##### 전처리 설정
 
@@ -930,7 +930,7 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 		
 			inner.on('create', {
 
-				// create 함수가 실행되기 전에 실행됩니다.
+				// create 메소드가 실행되기 전에 실행됩니다.
 				before : (data, next, ret, clientInfo) => {
 					
 					// ret 함수는 클라이언트에 직접 데이터를 전달할 때 사용합니다.
@@ -942,9 +942,9 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 					    }
 					});
 					
-					// clientInfo는 클라이언트의 정보를 가지고 있습니다. Node.js 환경에서 create 함수를 실행하는 경우에는 undefined입니다. 주의하시기 바랍니다.
+					// clientInfo는 클라이언트의 정보를 가지고 있습니다. Node.js 환경에서 create 메소드를 실행하는 경우에는 undefined입니다. 주의하시기 바랍니다.
 					
-					// return 값으로 false를 넘기면, create 함수가 실행되지 않으며 명시적으로 next(); 를 실행해야 합니다.
+					// return 값으로 false를 넘기면, create 메소드가 실행되지 않으며 명시적으로 next(); 를 실행해야 합니다.
 					return false;
 				}
 			});
@@ -966,7 +966,7 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 
 		init : (inner, self, params) => {
 			
-			// create 함수가 실행되고 난 후에 실행됩니다.
+			// create 메소드가 실행되고 난 후에 실행됩니다.
 			inner.on('get', {
 			
 				after : (savedData, next, ret, clientInfo) => {
@@ -980,7 +980,7 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 					    }
 					});
 					
-					// clientInfo는 클라이언트의 정보를 가지고 있습니다. Node.js 환경에서 create 함수를 실행하는 경우에는 undefined입니다. 주의하시기 바랍니다.
+					// clientInfo는 클라이언트의 정보를 가지고 있습니다. Node.js 환경에서 create 메소드를 실행하는 경우에는 undefined입니다. 주의하시기 바랍니다.
 					
 					// return 값으로 false를 넘기면, 클라이언트에 데이터가 전달되지 않으며 명시적으로 next(); 를 실행해야 합니다.
 					return false;

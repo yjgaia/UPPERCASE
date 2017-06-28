@@ -184,7 +184,7 @@ let Bus = CLASS({
 ```
 
 ## 오버로딩
-메소드가 인자의 갯수나 자료형에 따라서 다른 기능을 하는 것
+메소드가 인자의 갯수나 자료형에 따라서 다른 기능을 하는 것. 자세한 내용은 UPPERCASE 코드 컨벤션 규칙의 [함수 오버로딩](CONVENTION.md#함수-오버로딩) 항목 참고
 
 ```javascript
 let Mathematics = CLASS({

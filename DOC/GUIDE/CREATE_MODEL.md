@@ -85,7 +85,7 @@ Sample.SomeModel = OBJECT({
 		return {
 			// 모델 명
 			name : 'Some',
-			// 함수별 설정
+			// 메소드별 설정
 			methodConfig : {
 				create : {
 					valid : VALID(validDataSet)
@@ -99,7 +99,7 @@ Sample.SomeModel = OBJECT({
 });
 ```
 
-함수별 설정에 대해서는 [함수별 설정 문서](UPPERCASE-MODEL.md#함수별-설정)를 참고하시기 바랍니다.
+메소드별 설정에 대해서는 [메소드별 설정 문서](UPPERCASE-MODEL.md#메소드별-설정)를 참고하시기 바랍니다.
 
 ## 모델 작동 확인하기
 모델의 작동을 확인하기 위해 프로젝트의 기본 BOX 폴더의 `NODE` 폴더에 `MAIN.js`를 만들어, 다음과 코드를 작성해 보겠습니다. `MAIN.js`는 UPPERCASE가 프로젝트를 실행할 때 맨 처음 실행하는 코드입니다.
@@ -165,5 +165,5 @@ MongoDB 데이터베이스 관리 툴을 이용해 데이터가 잘 생성되었
 모델의 세부 기능에 대해서는 [UPPERCASE-MODEL 문서](UPPERCASE-MODEL.md)를 참고하시기 바랍니다.
 
 * [초기화 데이터 설정](UPPERCASE-MODEL.md#초기-데이터-설정)
-* [함수별 설정](UPPERCASE-MODEL.md#함수별-설정)
+* [메소드별 설정](UPPERCASE-MODEL.md#메소드별-설정)
 * [모델 기능 확장](UPPERCASE-MODEL.md#모델-기능-확장)

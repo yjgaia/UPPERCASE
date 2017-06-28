@@ -19,7 +19,7 @@ EVENT({
 });
 ```
 - `attach` 현재 DOM이 다른 DOM에 추가될 때 발생하는 이벤트
-- `show` DOM을 `hide` 함수로 숨긴 상태에서 `show` 함수로 다시 보여질 때 발생하는 이벤트
+- `show` DOM을 `hide`로 숨긴 상태에서 `show`로 다시 보여질 때 발생하는 이벤트
 - `remove` 현재 DOM이 제거될 때 발생하는 이벤트
 - `load` `IMG`나 `IFRAME`에서 로딩이 완료되었을 때 발생하는 이벤트
 - `scroll` `overflow` 스타일이 `scroll`로 지정되어 DOM 내 스크롤 바가 생긴 경우 스크롤할 때 발생하는 이벤트

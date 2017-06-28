@@ -78,7 +78,7 @@ WRITE_FILE({
 ```
 
 ### `READ_FILE`
-파일의 내용을 불러옵니다. 내용을 `Buffer`형으로 불러오기 때문에, 내용을 문자열로 불러오려면 `toString` 함수를 이용하시기 바랍니다.
+파일의 내용을 불러옵니다. 내용을 `Buffer`형으로 불러오기 때문에, 내용을 문자열로 불러오려면 `toString` 메소드를 이용하시기 바랍니다.
 
 사용 가능한 형태들은 다음과 같습니다.
 * `READ_FILE(path, (buffer) => {})`
@@ -667,7 +667,7 @@ WEB_SERVER(8123, (requestInfo, response) => {
 * `contentType` 응답하는 컨텐츠의 종류
 * `buffer` 응답 내용을 `Buffer`형으로 전달
 * `content` 응답 내용을 문자열로 전달
-* `stream` [`fs.createReadStream`](https://nodejs.org/api/fs.html#fs_fs_createreadstream_path_options)와 같은 함수로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
+* `stream` [`fs.createReadStream`](https://nodejs.org/api/fs.html#fs_fs_createreadstream_path_options)와 같은 메소드로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
 * `totalSize` `stream`으로 응답을 전달하는 경우 스트림의 전체 길이
 * `startPosition` `stream`으로 응답을 전달하는 경우 전달할 시작 위치
 * `endPosition` `stream`으로 응답을 전달하는 경우 전달할 끝 위치
@@ -829,19 +829,19 @@ SOCKET_SERVER(8124, (clientInfo, on, off, send, disconnect) => {
 });
 ```
 
-소켓 서버 내에서 사용하는 함수들은 다음과 같습니다.
+소켓 서버 내에서 사용하는 메소드들은 다음과 같습니다.
 
 #### `on(methodName, method)`
-`on` 함수는 소켓 서버 내 메소드를 생성하는 함수로써, 클라이언트에서 `send` 함수로 전송한 데이터를 받습니다.
+`on`은 소켓 서버 내 메소드를 생성하며, 클라이언트에서 `send`로 전송한 데이터를 받습니다.
 
 #### `off(methodName)` `off(methodName, method)`
-`off` 함수는 소켓 서버 내 생성된 메소드를 제거합니다.
+`off`는 소켓 서버 내 생성된 메소드를 제거합니다.
 
 #### `send(params)` `send(params, callback)`
-`send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
+`send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on`으로 생성한 메소드가 데이터를 받습니다.
 
 사용 가능한 파라미터는 다음과 같습니다.
-* `methodName` 클라이언트에 `on` 함수로 설정된 메소드 이름
+* `methodName` 클라이언트에 `on`으로 설정된 메소드 이름
 * `data` 전송할 데이터
 
 #### `disconnect()`
@@ -881,19 +881,19 @@ CONNECT_TO_SOCKET_SERVER({
 });
 ```
 
-클라이언트에서 사용하는 함수들은 다음과 같습니다.
+클라이언트에서 사용하는 메소드들은 다음과 같습니다.
 
 #### `on(methodName, method)`
-`on` 함수는 클라이언트에 메소드를 생성하는 함수로써, 서버에서 `send` 함수로 전송한 데이터를 받습니다.
+`on`은 클라이언트에 메소드를 생성하며, 서버에서 `send`로 전송한 데이터를 받습니다.
 
 #### `off(methodName)` `off(methodName, method)`
-`off` 함수는 클라이언트에 생성된 메소드를 제거합니다.
+`off`는 클라이언트에 생성된 메소드를 제거합니다.
 
 #### `send(params)` `send(params, callback)`
-`send`는 서버로 데이터를 전송하며, 서버에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
+`send`는 서버로 데이터를 전송하며, 서버에서 `on`으로 생성한 메소드가 데이터를 받습니다.
 
 사용 가능한 파라미터는 다음과 같습니다.
-* `methodName` 서버에 `on` 함수로 설정된 메소드 이름
+* `methodName` 서버에 `on`으로 설정된 메소드 이름
 * `data` 전송할 데이터
 
 #### `disconnect()`
@@ -927,19 +927,19 @@ WEB_SOCKET_SERVER(WEB_SERVER(8125), (clientInfo, on, off, send, disconnect) => {
 });
 ```
 
-웹소켓 서버 내에서 사용하는 함수들은 다음과 같습니다.
+웹소켓 서버 내에서 사용하는 메소드들은 다음과 같습니다.
 
 #### `on(methodName, method)`
-`on` 함수는 웹소켓 서버 내 메소드를 생성하는 함수로써, 클라이언트에서 `send` 함수로 전송한 데이터를 받습니다.
+`on`은 웹소켓 서버 내 메소드를 생성하며, 클라이언트에서 `send`로 전송한 데이터를 받습니다.
 
 #### `off(methodName)` `off(methodName, method)`
-`off` 함수는 웹소켓 서버 내 생성된 메소드를 제거합니다.
+`off`는 웹소켓 서버 내 생성된 메소드를 제거합니다.
 
 #### `send(params)` `send(params, callback)`
-`send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
+`send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on`으로 생성한 메소드가 데이터를 받습니다.
 
 사용 가능한 파라미터는 다음과 같습니다.
-* `methodName` 클라이언트에 `on` 함수로 설정된 메소드 이름
+* `methodName` 클라이언트에 `on`으로 설정된 메소드 이름
 * `data` 전송할 데이터
 
 #### `disconnect()`
@@ -974,19 +974,19 @@ MULTI_PROTOCOL_SOCKET_SERVER({
 });
 ```
 
-서버 내에서 사용하는 함수들은 다음과 같습니다.
+서버 내에서 사용하는 메소드들은 다음과 같습니다.
 
 #### `on(methodName, method)`
-`on` 함수는 서버 내 메소드를 생성하는 함수로써, 클라이언트에서 `send` 함수로 전송한 데이터를 받습니다.
+`on`은 서버 내 메소드를 생성하며, 클라이언트에서 `send`로 전송한 데이터를 받습니다.
 
 #### `off(methodName)` `off(methodName, method)`
-`off` 함수는 서버 내 생성된 메소드를 제거합니다.
+`off`는 서버 내 생성된 메소드를 제거합니다.
 
 #### `send(params)` `send(params, callback)`
-`send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on` 함수로 생성한 메소드가 데이터를 받습니다.
+`send`는 클라이언트로 데이터를 전송하며, 클라이언트에서 `on`으로 생성한 메소드가 데이터를 받습니다.
 
 사용 가능한 파라미터는 다음과 같습니다.
-* `methodName` 클라이언트에 `on` 함수로 설정된 메소드 이름
+* `methodName` 클라이언트에 `on`으로 설정된 메소드 이름
 * `data` 전송할 데이터
 
 #### `disconnect()`
@@ -1119,7 +1119,7 @@ CPU_CLUSTERING(() => {
 });
 ```
 
-`SHARED_STORE`로 생성한 객체의 함수들은 다음과 같습니다.
+`SHARED_STORE`로 생성한 객체의 메소드들은 다음과 같습니다.
 
 #### `save`
 * `save({id:, data:}, (savedData) => {})`

@@ -5,7 +5,7 @@ OVERRIDE(NODE_CONFIG, (origin) => {
 	 */
 	global.NODE_CONFIG = COMBINE([{
 		
-		// find 함수를 수행할 때 최대로 가져올 데이터의 개수
+		// find를 수행할 때 최대로 가져올 데이터의 개수
 		maxDataCount : 1000
 		
 	}, origin]);

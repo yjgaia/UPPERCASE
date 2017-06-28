@@ -167,13 +167,14 @@ let SomeMethod = METHOD(...
 let someFunc = () => {...
 ```
 
-## 함수의 형태
-객체 내부에서만 사용되는 `private` 함수를 제외하고는, 모든 함수의 형태는 아래 네가지 형태를 따릅니다.
+## 메소드의 형태
+객체 내부에서만 사용되는 `private` 메소드를 제외하고는, 모든 메소드의 형태는 아래 네가지 형태를 따릅니다.
 * `() => {`
 * `(data) => {`
 * `(funcs) => {`
 * `(data, funcs) => {`
 
+## 함수 오버로딩
 JavaScript에서는 [함수 오버로딩](https://en.wikipedia.org/wiki/Function_overloading)을 지원하지 않습니다.
 ```javascript
 func = (a) => { ... };

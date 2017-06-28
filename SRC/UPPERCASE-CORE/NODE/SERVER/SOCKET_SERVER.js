@@ -152,7 +152,7 @@ global.SOCKET_SERVER = METHOD({
 			// send to client.
 			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
-				//REQUIRED: methodNameOrParams.methodName	클라이언트에 on 함수로 설정된 메소드 이름
+				//REQUIRED: methodNameOrParams.methodName	클라이언트에 on으로 설정된 메소드 이름
 				//REQUIRED: methodNameOrParams.data			전송할 데이터
 				//OPTIONAL: callback
 

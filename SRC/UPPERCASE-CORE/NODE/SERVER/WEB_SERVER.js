@@ -383,7 +383,7 @@ global.WEB_SERVER = CLASS((cls) => {
 							//OPTIONAL: contentOrParams.contentType		응답하는 컨텐츠의 종류
 							//OPTIONAL: contentOrParams.buffer			응답 내용을 Buffer형으로 전달
 							//OPTIONAL: contentOrParams.content			응답 내용을 문자열로 전달
-							//OPTIONAL: contentOrParams.stream			FS.createReadStream와 같은 함수로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
+							//OPTIONAL: contentOrParams.stream			FS.createReadStream와 같은 메소드로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
 							//OPTIONAL: contentOrParams.totalSize		stream으로 응답을 전달하는 경우 스트림의 전체 길이
 							//OPTIONAL: contentOrParams.startPosition	stream으로 응답을 전달하는 경우 전달할 시작 위치
 							//OPTIONAL: contentOrParams.endPosition		stream으로 응답을 전달하는 경우 전달할 끝 위치

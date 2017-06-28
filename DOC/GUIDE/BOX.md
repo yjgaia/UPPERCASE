@@ -89,9 +89,9 @@ SomeBox.SomePack.GoodPack.SomeMethod();
 
 ## 특수 파일
 아래 파일들은 UPPERCASE 기반 프로젝트에서 특수한 기능을 가진 파일들입니다.
-* `MAIN.js`에는 `box.MAIN()` 함수를 정의합니다. 이 함수는 UPPERCASE가 각 BOX에서 맨 처음 실행하는 코드입니다. `BROWSER` 폴더와 `NODE` 폴더에 작성할 수 있습니다.
-* `CONNECTED.js`에는 `box.CONNECTED()` 함수를 정의합니다. 이 함수는 서버와 연결되었을 때 실행됩니다. `BROWSER` 폴더에 작성합니다.
-* `DISCONNECTED.js`에는 `box.DISCONNECTED()` 함수를 정의합니다. 이 함수는 서버와의 연결이 끊어졌을 때 실행됩니다. `BROWSER` 폴더에 작성합니다.
+* `MAIN.js`에는 `box.MAIN()` 메소드를 정의합니다. 이 메소드는 UPPERCASE가 각 BOX에서 맨 처음 실행하는 코드입니다. `BROWSER` 폴더와 `NODE` 폴더에 작성할 수 있습니다.
+* `CONNECTED.js`에는 `box.CONNECTED()` 메소드를 정의합니다. 이 메소드는 서버와 연결되었을 때 실행됩니다. `BROWSER` 폴더에 작성합니다.
+* `DISCONNECTED.js`에는 `box.DISCONNECTED()` 메소드를 정의합니다. 이 메소드는 서버와의 연결이 끊어졌을 때 실행됩니다. `BROWSER` 폴더에 작성합니다.
 
 ## BOX 패키징
 프로젝트 BOX 폴더를 패키징하여 다른 프로젝트에서 재사용 할 수 있습니다.

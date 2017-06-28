@@ -191,12 +191,12 @@ TIME(savedData.createTime);
 ## `CONNECT_TO_UPPERCASE_SERVER`
 `BROWSER_CONFIG.isNotConnectToServer` 설정을 `true`로 지정하면 서버에 자동으로 연결되지 않습니다.
 
-이후 서버에 접속하기 위해서는 해당 부분을 직접 개발해야 합니다. 이 때 사용되는 함수가 `CONNECT_TO_UPPERCASE_SERVER`입니다.
+이후 서버에 접속하기 위해서는 해당 부분을 직접 개발해야 합니다. 이 때 사용되는 메소드가 `CONNECT_TO_UPPERCASE_SERVER`입니다.
 
 [BROWSER_INIT.js](../../SRC/UPPERCASE-BOOT/BROWSER_INIT.js) 파일의 다음 내용을 참고하여 개발하시기 바랍니다.
 
 ```javascript
-// TIME 및 SERVER_TIME 함수를 사용하기 위해 서버의 시간을 가져옵니다.
+// TIME 및 SERVER_TIME 메소드를 사용하기 위해 서버의 시간을 가져옵니다.
 SYNC_TIME();
 
 let connect = RAR(() => {

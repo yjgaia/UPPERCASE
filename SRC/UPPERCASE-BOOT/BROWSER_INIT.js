@@ -19,7 +19,7 @@ RUN(() => {
 	
 	if (BROWSER_CONFIG.isNotConnectToServer !== true) {
 		
-		// TIME 및 SERVER_TIME 함수를 사용하기 위해 서버의 시간을 가져옵니다.
+		// TIME 및 SERVER_TIME 메소드를 사용하기 위해 서버의 시간을 가져옵니다.
 		SYNC_TIME();
 	
 		let connect = RAR(() => {

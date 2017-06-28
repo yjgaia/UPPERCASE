@@ -29,7 +29,7 @@ require('uppercase-db');
 ```
 
 ## `NODE_CONFIG`
-* `maxDataCount` [`find` 함수]('#find')를 수행할 때 최대로 가져올 데이터의 개수. 기본값은 `1000` 입니다.
+* `maxDataCount` [`find` 메소드]('#find')를 수행할 때 최대로 가져올 데이터의 개수. 기본값은 `1000` 입니다.
 
 ## `CONNECT_TO_DB_SERVER`
 MongoDB 서버에 연결합니다.
@@ -128,7 +128,7 @@ db2.create({
 * `isNotUsingObjectId` MongoDB의 기본 `id` 형식인 `ObjectId`를 쓰지 않을 것인지 여부. `true`로 지정하면 데이터를 생성할 때 `id`를 따로 지정해야 합니다.
 * `isNotUsingHistory` 데이터를 생성, 수정, 삭제할 때 변경 내역을 남기지 않을 것인지 여부
 
-`Box.DB`로 생성한 객체의 함수들은 다음과 같습니다.
+`Box.DB`로 생성한 객체의 메소드들은 다음과 같습니다.
 
 ### `create`
 * `db.create(data)`
