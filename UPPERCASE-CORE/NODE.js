@@ -5622,7 +5622,7 @@ global.MOVE_FILE = METHOD({
 /*
  * 파일의 내용을 불러옵니다.
  * 
- * 내용을 Buffer형으로 불러오기 때문에, 내용을 문자열로 불러오려면 toString 함수를 이용하시기 바랍니다.
+ * 내용을 Buffer형으로 불러오기 때문에, 내용을 문자열로 불러오려면 toString 메소드를 이용하시기 바랍니다.
  */
 global.READ_FILE = METHOD(() => {
 	
@@ -7302,7 +7302,7 @@ global.SOCKET_SERVER = METHOD({
 			// send to client.
 			send = (methodNameOrParams, callback) => {
 				//REQUIRED: methodNameOrParams
-				//REQUIRED: methodNameOrParams.methodName	클라이언트에 on 함수로 설정된 메소드 이름
+				//REQUIRED: methodNameOrParams.methodName	클라이언트에 on으로 설정된 메소드 이름
 				//REQUIRED: methodNameOrParams.data			전송할 데이터
 				//OPTIONAL: callback
 
@@ -7817,7 +7817,7 @@ global.WEB_SERVER = CLASS((cls) => {
 							//OPTIONAL: contentOrParams.contentType		응답하는 컨텐츠의 종류
 							//OPTIONAL: contentOrParams.buffer			응답 내용을 Buffer형으로 전달
 							//OPTIONAL: contentOrParams.content			응답 내용을 문자열로 전달
-							//OPTIONAL: contentOrParams.stream			FS.createReadStream와 같은 함수로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
+							//OPTIONAL: contentOrParams.stream			FS.createReadStream와 같은 메소드로 스트림을 생성한 경우, 스트림을 응답으로 전달할 수 있습니다.
 							//OPTIONAL: contentOrParams.totalSize		stream으로 응답을 전달하는 경우 스트림의 전체 길이
 							//OPTIONAL: contentOrParams.startPosition	stream으로 응답을 전달하는 경우 전달할 시작 위치
 							//OPTIONAL: contentOrParams.endPosition		stream으로 응답을 전달하는 경우 전달할 끝 위치
