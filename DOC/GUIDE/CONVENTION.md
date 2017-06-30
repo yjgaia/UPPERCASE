@@ -174,28 +174,27 @@ let someFunc = () => {...
 * `(funcs) => {`
 * `(data, funcs) => {`
 
-## 함수 오버로딩
-JavaScript에서는 [함수 오버로딩](https://en.wikipedia.org/wiki/Function_overloading)을 지원하지 않습니다.
+JavaScript에서는 [메소드 오버로딩](https://en.wikipedia.org/wiki/Method_overloading)을 지원하지 않습니다.
 ```javascript
-func = (a) => { ... };
-func = (a, b) => { ... };
-func = (a, b, c) => { ... };
-func(1); // 세번째 함수 func(a, b, c)가 실행됩니다.
+method = (a) => { ... };
+method = (a, b) => { ... };
+method = (a, b, c) => { ... };
+method(1); // 세번째 메소드인 method(a, b, c)가 실행됩니다.
 ```
-그러나, UPPERCASE에서 제안한 위 네가지 형태로만 작성한다면 다음과 같이 굳이 함수 오버로딩을 하지 않더라도 함수의 다양성을 충족시킬 수 있습니다.
+그러나, 메소드를 [UPPERCASE에서 제안한 네가지 형태](#메소드의-형태)로만 작성한다면 다음과 같이 굳이 메소드 오버로딩을 하지 않더라도 메소드의 다양성을 충족시킬 수 있습니다.
 ```javascript
-let func = (data) => {
+let method = (data) => {
     if (CHECK_IS_DATA(data) !== true) { ... }
     else if (data.c === undefined) { ... }
     else { ... }
 };
 
-func(1);
-func({
+method(1);
+method({
     a : 1,
     b : 2
 });
-func({
+method({
     a : 1,
     b : 2,
     c : 3
