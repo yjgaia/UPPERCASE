@@ -49,7 +49,7 @@ RUN(() => {
 			else if (cmd === 'publish' && boxName !== undefined) {
 				Co(function *() {
 					let password = yield Prompt.password('비밀번호: ');
-					ubm.api(boxName, username, password);
+					ubm.publish(boxName, username, password);
 				});
 			}
 			
