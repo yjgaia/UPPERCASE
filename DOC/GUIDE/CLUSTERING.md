@@ -226,7 +226,7 @@ db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', role
 db.auth('{{root 유저명}}', '{{root 비밀번호}}');
 ```
 
-`shard` 할 데몬의 접속 경로를 지정합니다.
+`shard` 할 데몬의 접속 경로를 지정합니다. 11.22.33.44는 서버의 IP로 변경합니다.
 ```
 sh.addShard('11.22.33.44:30001');
 sh.addShard('11.22.33.44:30002');

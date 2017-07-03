@@ -181,7 +181,7 @@ UPPERCASE의 파일 처리 기능이나 IMAGEMAGICK 관련 기능을 사용할 �
 vi /etc/security/limits.conf
 ```
 
-이 파일의 맨 끝에 다음과 같은 내용을 추가합니다.
+이 파일의 맨 끝에 다음과 같은 내용을 추가합니다. (만약 유저가 root가 아니라면, root를 유저명으로 변경해주시기 바랍니다.)
 ```
 root hard nofile 65535
 root soft nofile 65535

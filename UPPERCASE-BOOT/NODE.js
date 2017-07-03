@@ -787,7 +787,7 @@ global.BOOT = (params) => {
 							reloadBrowserScript();
 							
 							response({
-								contentType : 'text/javascript',
+								contentType : 'application/javascript',
 								content : boxName === undefined ? browserScript : boxBrowserScripts[boxName]
 							});
 
