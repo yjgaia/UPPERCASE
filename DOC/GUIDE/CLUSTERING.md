@@ -1,12 +1,11 @@
 작성중
 
 # 분산 처리
-
-
+UPPERCASE에는 [CPU 클러스터링](#CPU-클러스터링)과 [서버 클러스터링](#서버-클러스터링)을 통한 분산 처리를 지원하고 있습니다. 이를 통해 멀티코어 CPU 환경 및 분산 서버 환경에서 프로젝트를 쉽게 분산하여 구동시킬 수 있습니다.
 
 ## CPU 클러스터링
 기본적으로 Node.js 환경은 멀티코어 CPU를 지원하지 않습니다.
-UPPERCASE에서는 `CPU_CLUSTERING`를 통해 멀티코어 CPU 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다.
+UPPERCASE에서는 [`CPU_CLUSTERING`](UPPERCASE-CORE-NODE.md#cpu_clusteringwork)을 통해 멀티코어 CPU 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다.
 
 ```javascript
 CPU_CLUSTERING(() => {
@@ -33,16 +32,24 @@ CPU_CLUSTERING(() => {
 
 ## 서버 간 클러스터링
 CPU간 클러스터링을 넘어, 다른 하드웨어(서버) 간 클러스터링이 가능합니다.
-이하는 두 서버 간 클러스터링을 하는 예제입니다.
+UPPERCASE에서는 [`SERVER_CLUSTERING`](UPPERCASE-CORE-NODE.md#server_clusteringhosts-thisservername-port-work)을 통해 분산 서버 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다.
+다음은 두 서버 간 분산 처리를 하는 예제입니다.
 
 ```javascript
 SERVER_CLUSTERING({
+
+    // 연동할 서버들의 호스트 정보
 	hosts : {
 		serverA : '12.34.56.78',
 		serverB : '12.34.56.89'
 	},
+	
+	// 현재 서버는 A 서버 입니다. B 서버에서는 'serverB'로 설정합니다.
 	thisServerName : 'serverA',
+	
+	// 클러스터링을 위한 포트 번호 지정
 	port : 8125
+	
 }, () => {
 
 	SERVER_CLUSTERING.on('receive', (data) => {
@@ -62,6 +69,8 @@ SERVER_CLUSTERING({
 	});
 });
 ```
+
+서버 분산 처리 전략에 대해서는 하단의 [UPPERCASE의 서버 분산 처리 전략](#UPPERCASE의-서버-분산-처리-전략)을 살펴보시기 바랍니다.
 
 ## 프로세스 간 데이터 공유
 각 프로세스들은 고유한 메모리 영역을 가지므로, 메모리를 공유하지 않습니다.
@@ -100,33 +109,30 @@ sharedDB.update({
 });
 ```
 
+## UPPERCASE의 서버 분산 처리 전략
+UPPERCASE 기반 프로젝트의 기능별 서버 종류들은 다음과 같습니다.
+1. `대문 서버` : 유저들에게 [`index.html`](UPPERCASE-BOOT.md#indexhtml-%EC%88%98%EC%A0%95%ED%95%98%EA%B8%B0)과 분산 서버들의 정보를 제공하는 서버입니다.
+2. `API 서버` : 각종 기능들을 프로토콜의 제약 없이 JSON 양식으로 통신하는 서버들입니다.
+3. `업로드 파일 서버` : 프로젝트에서 업로드 된 파일들을 관리하는 서버들입니다.
+4. `MongoDB 데이터베이스 서버` : MongoDB를 기반으로 데이터베이스를 관리하는 서버들입니다.
 
-
-## UPPERCASE의 분산 처리 전략
-UPPERCASE의 분산 처리 전략을 설명합니다.
-UPPERCASE 기반 프로젝트의 기능별 서버 파트는 다음과 같습니다.
-1. `대문 서버` 유저들에게 웹 페이지나 분산 서버들의 정보를 제공하는 서버입니다.
-2. `API 서버` 각종 기능들을 프로토콜의 제약 없이 JSON 양식으로 통신하는 서버들입니다.
-3. `업로드 파일 서버` 프로젝트에서 업로드 된 파일들을 관리하는 서버들입니다.
-4. `MongoDB 데이터베이스 서버` MongoDB를 기반으로 데이터베이스를 관리하는 서버들입니다.
-
-MongoDB는 그 자체로 분산 서버 기능을 제공하기 때문에, 이 문서의 분산 처리 전략에서 MongoDB 서버는 제외합니다. 그렇다면 다음과 같이 세가지 경우의 수가 생깁니다.
+MongoDB는 그 자체로 분산 서버 기능을 제공하기 때문에, 분산 처리 전략에서는 MongoDB에 대한 부분은 제외합니다. (MongoDB의 분산 처리에 대해서는 이하 [MongoDB의 분산 처리](#MongoDB의-분산-처리) 항목을 살펴보시기 바랍니다.) 그렇다면 다음과 같이 세가지 경우의 수가 생깁니다.
 
 1. L4 스위치를 이용해 물리적으로 서버가 분산되어 있을 경우
-2. 특정 도메인 주소를 담당하는 `대문 서버`가 있고, 나머지 서버들이 분산하는 경우
+2. 특정 도메인 주소를 담당하는 `대문 서버`가 있고, 나머지 서버들이 분산해 있는 경우
 3. `대문 서버`가 있고, 또한 `API 서버들`이 있으며 업로드 파일을 분산하여 저장하는 `업로드 파일 서버들`도 있는 경우
 
 #### 1. L4 스위치를 이용해 물리적으로 서버가 분산되어 있을 경우
 이 경우에는 각 서버들이 동등하게 분배되어 모든 일을 담당할 수 있습니다.
 
-#### 2. 특정 도메인 주소를 담당하는 `대문 서버`가 있고, 나머지 서버들이 분산하는 경우
+#### 2. 특정 도메인 주소를 담당하는 `대문 서버`가 있고, 나머지 서버들이 분산해 있는 경우
 이 경우에는 대문 서버가 모든 유저들의 처음 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우에만 대문 서버가 역할을 수행하고, API 또는 업로드 파일 제공 등의 기능들은 모두 다른 서버들로 분산하는 전략을 취할 수 있습니다.
 
 #### 3. `대문 서버`가 있고, 또한 `API 서버들`이 있으며 업로드 파일을 분산하여 저장하는 `업로드 파일 서버들`도 있는 경우
 이 경우 또한 마찬가지로 대문 서버가 모든 유저들의 처음 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우를 제외한 기능들은 최대한 다른 서버들로 분산합니다. 하지만 API 서버들과 업로드 서버군 또한 나뉘어져 있기 때문에, 각각 기능에 맞추어 분산하는 전략을 취할 수 있습니다.
 
 ### 각 서버간 시간을 맞추어야 합니다.
-리눅스일 경우 아래 명령어들로 서버 시간을 맞추어야 합니다.
+리눅스일 경우 아래 명령어들로 서버 시간을 서울 표준시로 맞춥니다.
 ```
 mv /etc/localtime /etc/localtime_old
 ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
@@ -134,7 +140,7 @@ rdate -p time.bora.net
 rdate -s time.bora.net
 ```
 
-## 몽고 DB 분산
+### MongoDB의 분산 처리
 아래 명령어들은 `root` 유저일 때를 기반으로 한 것입니다. AWS등을 사용하는 경우에는 모든 명령어 앞에 `sudo`를 붙혀주시기 바랍니다.
 
 우선 인증을 위한 키 파일을 생성합니다. ***이 키는 모든 분산 서버에 동일하게 복사되어야 합니다.***
@@ -167,7 +173,7 @@ mongod --shardsvr --port 30007 --fork --keyFile /srv/mongodb/mongodb-shard-keyfi
 mongod --shardsvr --port 30008 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db8.log --dbpath /data/shard_db8
 ```
 
-### configdb가 여러대일 경우
+#### configdb가 여러대일 경우
 configdb가 여러대일 경우에는 다음과 같이 설정합니다.
 데몬들을 관리하는 설정 데몬을 `--configsvr` 옵션을 붙혀 생성합니다.또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
 ```
@@ -267,7 +273,7 @@ mongorestore --port {{새 데이터베이스의 포트}} --db {{데이터베이�
 
 이제 모든 설정이 끝났습니다.
 
-### 몽고 DB 서버를 재시작 하는 경우
+#### 몽고 DB 서버를 재시작 하는 경우
 `mongos`에 접속합니다.
 ```
 mongo --port 27018
@@ -305,4 +311,3 @@ mongod --dbpath /data/shard_db6 --shutdown
 mongod --dbpath /data/shard_db7 --shutdown
 mongod --dbpath /data/shard_db8 --shutdown
 ```
-

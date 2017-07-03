@@ -95,6 +95,9 @@ UPPERCASE가 공식 지원하는 클라이언트 목록은 다음과 같습니�
 * [UPPERCASE 페이스북 유저 그룹](https://www.facebook.com/groups/uppercase/)
 * [UPPERCASE BOX 저장소](http://box.uppercase.io)
 
+## TODO
+https://trello.com/b/cCiQeIjK/uppercase
+
 ## 라이센스
 [MIT](LICENSE)
 
