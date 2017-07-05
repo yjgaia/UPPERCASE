@@ -10,6 +10,7 @@ global.WEB_SERVER = CLASS((cls) => {
 	let FS = require('fs');
 	let Path = require('path');
 	let Querystring = require('querystring');
+	let ZLib = require('zlib');
 	let IncomingForm = require('formidable').IncomingForm;
 
 	let getContentTypeFromExtension = cls.getContentTypeFromExtension = (extension) => {
@@ -473,8 +474,22 @@ global.WEB_SERVER = CLASS((cls) => {
 										}
 									}
 									
-									nativeRes.writeHead(statusCode, headers);
-									nativeRes.end(buffer !== undefined ? buffer : String(content), encoding);
+									// when gzip encoding
+									if (acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
+	
+										headers['Content-Encoding'] = 'gzip';
+
+										ZLib.gzip(buffer !== undefined ? buffer : String(content), (error, buffer) => {
+											nativeRes.writeHead(statusCode, headers);
+											nativeRes.end(buffer, encoding);
+										});
+									}
+	
+									// when not encoding
+									else {
+										nativeRes.writeHead(statusCode, headers);
+										nativeRes.end(buffer !== undefined ? buffer : String(content), encoding);
+									}
 								}
 
 								requestInfo.isResponsed = true;
