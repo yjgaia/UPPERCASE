@@ -1078,131 +1078,131 @@ global.BOOT = (params) => {
 	// configuration.
 	configuration();
 	
-	NEXT([
-	(next) => {
+	// clustering cpus and servers.
+	clustering(() => {
 		
-		if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.getWorkerId() === '~') {
+		NEXT([
+		(next) => {
 			
-			READ_FILE(rootPath + '/DEPENDENCY', {
+			if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.getWorkerId() === '~') {
 				
-				notExists : () => {
-					next();
-				},
-				
-				success : (content) => {
+				READ_FILE(rootPath + '/DEPENDENCY', {
 					
-					let ubm = require('ubm')();
+					notExists : () => {
+						next();
+					},
 					
-					NEXT(content.toString().split('\n'), [
-					
-					(box, next) => {
+					success : (content) => {
 						
-						box = box.trim();
+						let ubm = require('ubm')();
 						
-						if (box !== '' && box.indexOf('/') !== -1) {
+						NEXT(content.toString().split('\n'), [
+						
+						(box, next) => {
 							
-							let username = box.substring(0, box.indexOf('/'));
-							let boxName = box.substring(box.indexOf('/') + 1);
+							box = box.trim();
 							
-							GET({
-								url : BOX_SITE_URL + '/_/info',
-								data : {
-									username : username,
-									boxName : boxName
-								}
-							}, {
-								error : next,
+							if (box !== '' && box.indexOf('/') !== -1) {
 								
-								success : (result) => {
+								let username = box.substring(0, box.indexOf('/'));
+								let boxName = box.substring(box.indexOf('/') + 1);
+								
+								GET({
+									url : BOX_SITE_URL + '/_/info',
+									data : {
+										username : username,
+										boxName : boxName
+									}
+								}, {
+									error : next,
 									
-									result = PARSE_STR(result);
-									
-									if (result.boxData === undefined) {
-										next();
-									} else {
+									success : (result) => {
 										
-										let boxData = result.boxData;
+										result = PARSE_STR(result);
 										
-										NEXT([
-										(next) => {
+										if (result.boxData === undefined) {
+											next();
+										} else {
 											
-											READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
+											let boxData = result.boxData;
+											
+											NEXT([
+											(next) => {
 												
-												notExists : () => {
-													next(undefined, boxData.version);
-												},
-												
-												success : (versionContent) => {
+												READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
 													
-													let nowVersion = versionContent.toString();
+													notExists : () => {
+														next(undefined, boxData.version);
+													},
 													
-													if (boxData.version !== nowVersion) {
-														next(nowVersion, boxData.version);
-													} else {
-														next();
+													success : (versionContent) => {
+														
+														let nowVersion = versionContent.toString();
+														
+														if (boxData.version !== nowVersion) {
+															next(nowVersion, boxData.version);
+														} else {
+															next();
+														}
 													}
-												}
-											});
-										},
-										
-										() => {
-											return (nowVersion, newVersion) => {
-												
-												// 새 버전 존재
-												if (newVersion !== undefined) {
+												});
+											},
+											
+											() => {
+												return (nowVersion, newVersion) => {
 													
-													if (nowVersion === undefined) {
-														console.log(CONSOLE_YELLOW(MSG({
-															ko : '[' + boxName + '] BOX를 설치합니다. (v' + newVersion + ')'
-														})));
+													// 새 버전 존재
+													if (newVersion !== undefined) {
+														
+														if (nowVersion === undefined) {
+															console.log(CONSOLE_YELLOW(MSG({
+																ko : '[' + boxName + '] BOX를 설치합니다. (v' + newVersion + ')'
+															})));
+														}
+														
+														else {
+															console.log(CONSOLE_YELLOW(MSG({
+																ko : '[' + boxName + '] BOX를 업데이트합니다. (v' + nowVersion + ' -> v' + newVersion + ')'
+															})));
+														}
+														
+														ubm.installBox(username, boxName, next);
 													}
 													
 													else {
-														console.log(CONSOLE_YELLOW(MSG({
-															ko : '[' + boxName + '] BOX를 업데이트합니다. (v' + nowVersion + ' -> v' + newVersion + ')'
-														})));
+														next();
 													}
-													
-													ubm.installBox(username, boxName, next);
-												}
-												
-												else {
-													next();
-												}
-											};
-										}]);
+												};
+											}]);
+										}
 									}
-								}
-							});
-						}
+								});
+							}
+							
+							else {
+								next();
+							}
+						},
 						
-						else {
-							next();
-						}
-					},
-					
-					() => {
-						return () => {
-							next();
-						};
-					}]);
-				}
-			});
-		}
-		
-		else {
-			next();
-		}
-	},
-	
-	() => {
-		return () => {
+						() => {
+							return () => {
+								next();
+							};
+						}]);
+					}
+				});
+			}
 			
-			// init boxes.
-			initBoxes();
+			else {
+				next();
+			}
+		},
 		
-			// clustering cpus and servers.
-			clustering(() => {
+		() => {
+			return () => {
+				
+				// init boxes.
+				initBoxes();
 				
 				console.log('[BOOT] ' + MSG({
 					ko : '부팅중...' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '')
@@ -1233,7 +1233,7 @@ global.BOOT = (params) => {
 		
 				// run.
 				run();
-			});
-		};
-	}]);
+			};
+		}]);
+	});
 };

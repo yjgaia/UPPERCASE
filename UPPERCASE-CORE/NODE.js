@@ -8344,9 +8344,9 @@ global.WEB_SOCKET_SERVER = METHOD({
 		
 		let parseCookieStr = WEB_SERVER.parseCookieStr;
 		
-		let nativeConnectionListener = (conn) => {
+		let nativeConnectionListener = (conn, req) => {
 
-			let headers = conn.upgradeReq.headers;
+			let headers = req.headers;
 
 			let methodMap = {};
 			let sendKey = 0;
@@ -8426,7 +8426,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 			ip = headers['x-forwarded-for'];
 
 			if (ip === undefined) {
-				ip = conn.upgradeReq.connection.remoteAddress;
+				ip = req.connection.remoteAddress;
 			}
 
 			connectionListener(
