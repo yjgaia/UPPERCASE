@@ -475,7 +475,7 @@ global.WEB_SERVER = CLASS((cls) => {
 									}
 									
 									// when gzip encoding
-									if (acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
+									if (encoding === 'utf-8' && acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
 	
 										headers['Content-Encoding'] = 'gzip';
 
