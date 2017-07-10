@@ -817,7 +817,7 @@ global.BOOT = (params) => {
 							else {
 
 								response({
-									contentType : 'text/javascript',
+									contentType : 'application/javascript',
 									content : boxName === undefined ? browserScript : boxBrowserScripts[boxName],
 									version : version
 								});
@@ -1106,131 +1106,131 @@ global.BOOT = (params) => {
 	// configuration.
 	configuration();
 	
-	// clustering cpus and servers.
-	clustering(() => {
+	NEXT([
+	(next) => {
 		
-		NEXT([
-		(next) => {
+		if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.getWorkerId() === '~') {
 			
-			if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.getWorkerId() === '~') {
+			READ_FILE(rootPath + '/DEPENDENCY', {
 				
-				READ_FILE(rootPath + '/DEPENDENCY', {
+				notExists : () => {
+					next();
+				},
+				
+				success : (content) => {
 					
-					notExists : () => {
-						next();
-					},
+					let ubm = require('ubm')();
 					
-					success : (content) => {
+					NEXT(content.toString().split('\n'), [
+					
+					(box, next) => {
 						
-						let ubm = require('ubm')();
+						box = box.trim();
 						
-						NEXT(content.toString().split('\n'), [
-						
-						(box, next) => {
+						if (box !== '' && box.indexOf('/') !== -1) {
 							
-							box = box.trim();
+							let username = box.substring(0, box.indexOf('/'));
+							let boxName = box.substring(box.indexOf('/') + 1);
 							
-							if (box !== '' && box.indexOf('/') !== -1) {
+							GET({
+								url : BOX_SITE_URL + '/_/info',
+								data : {
+									username : username,
+									boxName : boxName
+								}
+							}, {
+								error : next,
 								
-								let username = box.substring(0, box.indexOf('/'));
-								let boxName = box.substring(box.indexOf('/') + 1);
-								
-								GET({
-									url : BOX_SITE_URL + '/_/info',
-									data : {
-										username : username,
-										boxName : boxName
-									}
-								}, {
-									error : next,
+								success : (result) => {
 									
-									success : (result) => {
+									result = PARSE_STR(result);
+									
+									if (result.boxData === undefined) {
+										next();
+									} else {
 										
-										result = PARSE_STR(result);
+										let boxData = result.boxData;
 										
-										if (result.boxData === undefined) {
-											next();
-										} else {
+										NEXT([
+										(next) => {
 											
-											let boxData = result.boxData;
-											
-											NEXT([
-											(next) => {
+											READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
 												
-												READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
+												notExists : () => {
+													next(undefined, boxData.version);
+												},
+												
+												success : (versionContent) => {
 													
-													notExists : () => {
-														next(undefined, boxData.version);
-													},
+													let nowVersion = versionContent.toString();
 													
-													success : (versionContent) => {
-														
-														let nowVersion = versionContent.toString();
-														
-														if (boxData.version !== nowVersion) {
-															next(nowVersion, boxData.version);
-														} else {
-															next();
-														}
+													if (boxData.version !== nowVersion) {
+														next(nowVersion, boxData.version);
+													} else {
+														next();
 													}
-												});
-											},
-											
-											() => {
-												return (nowVersion, newVersion) => {
+												}
+											});
+										},
+										
+										() => {
+											return (nowVersion, newVersion) => {
+												
+												// 새 버전 존재
+												if (newVersion !== undefined) {
 													
-													// 새 버전 존재
-													if (newVersion !== undefined) {
-														
-														if (nowVersion === undefined) {
-															console.log(CONSOLE_YELLOW(MSG({
-																ko : '[' + boxName + '] BOX를 설치합니다. (v' + newVersion + ')'
-															})));
-														}
-														
-														else {
-															console.log(CONSOLE_YELLOW(MSG({
-																ko : '[' + boxName + '] BOX를 업데이트합니다. (v' + nowVersion + ' -> v' + newVersion + ')'
-															})));
-														}
-														
-														ubm.installBox(username, boxName, next);
+													if (nowVersion === undefined) {
+														console.log(CONSOLE_YELLOW(MSG({
+															ko : '[' + boxName + '] BOX를 설치합니다. (v' + newVersion + ')'
+														})));
 													}
 													
 													else {
-														next();
+														console.log(CONSOLE_YELLOW(MSG({
+															ko : '[' + boxName + '] BOX를 업데이트합니다. (v' + nowVersion + ' -> v' + newVersion + ')'
+														})));
 													}
-												};
-											}]);
-										}
+													
+													ubm.installBox(username, boxName, next);
+												}
+												
+												else {
+													next();
+												}
+											};
+										}]);
 									}
-								});
-							}
-							
-							else {
-								next();
-							}
-						},
+								}
+							});
+						}
 						
-						() => {
-							return () => {
-								next();
-							};
-						}]);
-					}
-				});
-			}
-			
-			else {
-				next();
-			}
-		},
+						else {
+							next();
+						}
+					},
+					
+					() => {
+						return () => {
+							next();
+						};
+					}]);
+				}
+			});
+		}
 		
-		() => {
-			return () => {
-				
-				// init boxes.
-				initBoxes();
+		else {
+			next();
+		}
+	},
+	
+	() => {
+		return () => {
+			
+			// init boxes.
+			initBoxes();
+			
+			// clustering cpus and servers.
+			clustering(() => {
 				
 				console.log('[BOOT] ' + MSG({
 					ko : '부팅중...' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '')
@@ -1261,9 +1261,9 @@ global.BOOT = (params) => {
 		
 				// run.
 				run();
-			};
-		}]);
-	});
+			});
+		};
+	}]);
 };
 
 /*
