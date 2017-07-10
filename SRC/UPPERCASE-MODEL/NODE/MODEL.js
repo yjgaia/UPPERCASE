@@ -145,8 +145,8 @@ FOR_BOX((box) => {
 					}
 				}
 
-				// init not inited data set. (when not cpu clustering or worker id is 1)
-				if ((CPU_CLUSTERING.getWorkerId() === undefined || CPU_CLUSTERING.getWorkerId() === 1) && initData !== undefined) {
+				// init not inited data set. (when worker id is 1)
+				if (CPU_CLUSTERING.getWorkerId() === 1 && initData !== undefined) {
 					
 					let $or = [];
 

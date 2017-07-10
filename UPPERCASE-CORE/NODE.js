@@ -2878,13 +2878,18 @@ global.CPU_CLUSTERING = METHOD((m) => {
 
 	let Cluster = require('cluster');
 	
-	// 클러스터링을 수행하지 않을 경우 기본적으로 1개
-	let workerCount = 1;
-	
-	// 클러스터링을 수행하지 않을 경우 기본적으로 1
-	let thisWorkerId = 1;
-	
 	Cluster.schedulingPolicy = Cluster.SCHED_RR;
+	
+	// 클러스터링을 수행하지 않을 경우 0개
+	let workerCount = 0;
+	
+	let thisWorkerId;
+	
+	if (Cluster.isMaster === true) {
+		thisWorkerId = '~';
+	} else {
+		thisWorkerId = Cluster.worker.id;
+	}
 	
 	let getWorkerCount = m.getWorkerCount = () => {
 		return workerCount;
@@ -2901,6 +2906,10 @@ global.CPU_CLUSTERING = METHOD((m) => {
 			
 			// CPU 코어가 두개 미만이면 클러스터링을 하지 않는 편이 나음
 			if (CPU_COUNT <= 2) {
+				
+				workerCount = 1;
+				thisWorkerId = 1;
+				
 				work();
 			}
 			
@@ -3041,9 +3050,6 @@ global.CPU_CLUSTERING = METHOD((m) => {
 				// when master
 				if (Cluster.isMaster === true) {
 					
-					// 마스터용 아이디
-					thisWorkerId = '~';
-					
 					innerSend = (params) => {
 						//REQUIRED: params
 						//OPTIONAL: params.workerId
@@ -3148,8 +3154,6 @@ global.CPU_CLUSTERING = METHOD((m) => {
 	
 				// when worker
 				else {
-					
-					thisWorkerId = Cluster.worker.id;
 					
 					innerSend = (params) => {
 						//REQUIRED: params
