@@ -62,7 +62,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			let username = params.username;
 			let password = params.password;
 			
-			let backupHost = params.backupHost;
+			let backupHost = params.backupHost === undefined ? '127.0.0.1' : params.backupHost;
 			let backupPort = params.backupPort === undefined ? 27017 : params.backupPort;
 			let backupName = params.backupName;
 			let backupUsername = params.backupUsername;
@@ -95,7 +95,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 	
 						nativeDBs[dbServerName] = nativeDB;
 	
-						if (backupHost === undefined) {
+						if (backupName === undefined) {
 							next.next(nativeDB);
 						} else {
 							next(nativeDB);
