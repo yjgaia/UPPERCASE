@@ -7,7 +7,6 @@ global.SHARED_STORE = CLASS((cls) => {
 
 	let storages = {};
 	let removeDelayMap = {};
-	let getWorkerIdByStoreName;
 	
 	let getStorages = cls.getStorages = () => {
 		return storages;

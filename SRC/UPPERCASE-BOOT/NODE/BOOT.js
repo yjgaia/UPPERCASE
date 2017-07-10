@@ -1081,7 +1081,7 @@ global.BOOT = (params) => {
 	NEXT([
 	(next) => {
 		
-		if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.getWorkerId() === '~') {
+		if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.checkIsMaster() === true) {
 			
 			READ_FILE(rootPath + '/DEPENDENCY', {
 				
