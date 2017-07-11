@@ -3153,6 +3153,8 @@ global.CPU_CLUSTERING = METHOD((m) => {
 				// when worker
 				else {
 					
+					thisWorkerId = Cluster.worker.id;
+					
 					innerSend = (params) => {
 						//REQUIRED: params
 						//OPTIONAL: params.workerId
