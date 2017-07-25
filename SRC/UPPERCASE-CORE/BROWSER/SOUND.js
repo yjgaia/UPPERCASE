@@ -38,12 +38,10 @@ global.SOUND = CLASS((cls) => {
 
 				audioContext.decodeAudioData(request.response, (_buffer) => {
 
-					let gain = audioContext.createGain ? audioContext.createGain() : audioContext.createGainNode();
+					let gain = audioContext.createGain();
 
 					buffer = _buffer;
-
-					// default volume
-					// support both webkitAudioContext or standard AudioContext
+					
 					gain.connect(audioContext.destination);
 					gain.gain.value = 0.5;
 
@@ -59,13 +57,8 @@ global.SOUND = CLASS((cls) => {
 				delayed = () => {
 
 					source = audioContext.createBufferSource();
-					// creates a sound source
 					source.buffer = buffer;
-					// tell the source which sound to play
 					source.connect(audioContext.destination);
-					// connect the source to the context's destination (the speakers)
-					// support both webkitAudioContext or standard AudioContext
-
 					source.loop = isLoop;
 					
 					startedAt = Date.now() - pausedAt;
