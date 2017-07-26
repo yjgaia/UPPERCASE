@@ -11,11 +11,11 @@ global.LOOP = CLASS((cls) => {
 
 		if (animationInterval === undefined) {
 
-			let beforeTime = Date.now();
+			let beforeTime = Date.now() / 1000;
 
 			animationInterval = INTERVAL(() => {
 
-				let time = Date.now();
+				let time = Date.now() / 1000;
 				let deltaTime = time - beforeTime;
 				
 				if (deltaTime > 0) {
@@ -32,7 +32,7 @@ global.LOOP = CLASS((cls) => {
 							}
 
 							// calculate count.
-							let count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
+							let count = parseInt(loopInfo.fps * deltaTime * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
 
 							// start.
 							if (loopInfo.start !== undefined) {
