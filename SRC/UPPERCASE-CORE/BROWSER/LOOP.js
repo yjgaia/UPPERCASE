@@ -17,11 +17,11 @@ OVERRIDE(LOOP, (origin) => {
 				
 				let step;
 	
-				beforeTime = Date.now() / 1000;
+				beforeTime = performance.now() / 1000;
 				
-				animationInterval = requestAnimationFrame(step = () => {
-	
-					let time = Date.now() / 1000;
+				animationInterval = requestAnimationFrame(step = (now) => {
+					
+					let time = now / 1000;
 					let deltaTime = time - beforeTime;
 					
 					if (deltaTime > 0) {
