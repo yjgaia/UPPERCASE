@@ -1084,11 +1084,11 @@ interval.resume();
 사용 가능한 형태들은 다음과 같습니다.
 #### 로직만 존재하는 경우
 ```javascript
-LOOP((milliseconds) => {
+LOOP((seconds) => {
     ...
 });
 ```
-함수가 가능한 빠르게 반복해서 수행됩니다. 파라미터로 제공되는 `milliseconds`는, 이전에 수행된 시간과 방금 수행된 시간의 차이를 밀리세컨드(ms) 단위로 제공합니다.
+함수가 가능한 빠르게 반복해서 수행됩니다. 파라미터로 제공되는 `seconds`는, 이전에 수행된 시간과 방금 수행된 시간의 차이를 초 단위로 제공합니다.
 
 #### FPS(Frames Per Second)가 제공되는 경우
 ```javascript

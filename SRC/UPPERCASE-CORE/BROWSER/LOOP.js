@@ -17,11 +17,11 @@ OVERRIDE(LOOP, (origin) => {
 				
 				let step;
 	
-				beforeTime = Date.now();
+				beforeTime = performance.now() / 1000;
 				
-				animationInterval = requestAnimationFrame(step = () => {
-	
-					let time = Date.now();
+				animationInterval = requestAnimationFrame(step = (now) => {
+					
+					let time = now / 1000;
 					let deltaTime = time - beforeTime;
 					
 					if (deltaTime > 0) {
@@ -38,7 +38,7 @@ OVERRIDE(LOOP, (origin) => {
 								}
 	
 								// calculate count.
-								let count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
+								let count = parseInt(loopInfo.fps * deltaTime * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
 	
 								// start.
 								if (loopInfo.start !== undefined) {

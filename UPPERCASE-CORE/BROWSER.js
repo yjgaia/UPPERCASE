@@ -2350,11 +2350,11 @@ global.LOOP = CLASS((cls) => {
 
 		if (animationInterval === undefined) {
 
-			let beforeTime = Date.now();
+			let beforeTime = Date.now() / 1000;
 
 			animationInterval = INTERVAL(() => {
 
-				let time = Date.now();
+				let time = Date.now() / 1000;
 				let deltaTime = time - beforeTime;
 				
 				if (deltaTime > 0) {
@@ -2371,7 +2371,7 @@ global.LOOP = CLASS((cls) => {
 							}
 
 							// calculate count.
-							let count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
+							let count = parseInt(loopInfo.fps * deltaTime * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
 
 							// start.
 							if (loopInfo.start !== undefined) {
@@ -3320,11 +3320,11 @@ OVERRIDE(LOOP, (origin) => {
 				
 				let step;
 	
-				beforeTime = Date.now();
+				beforeTime = performance.now() / 1000;
 				
-				animationInterval = requestAnimationFrame(step = () => {
-	
-					let time = Date.now();
+				animationInterval = requestAnimationFrame(step = (now) => {
+					
+					let time = now / 1000;
 					let deltaTime = time - beforeTime;
 					
 					if (deltaTime > 0) {
@@ -3341,7 +3341,7 @@ OVERRIDE(LOOP, (origin) => {
 								}
 	
 								// calculate count.
-								let count = parseInt(loopInfo.fps / (1000 / deltaTime) * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
+								let count = parseInt(loopInfo.fps * deltaTime * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
 	
 								// start.
 								if (loopInfo.start !== undefined) {
@@ -3555,12 +3555,10 @@ global.SOUND = CLASS((cls) => {
 
 				audioContext.decodeAudioData(request.response, (_buffer) => {
 
-					let gain = audioContext.createGain ? audioContext.createGain() : audioContext.createGainNode();
+					let gain = audioContext.createGain();
 
 					buffer = _buffer;
-
-					// default volume
-					// support both webkitAudioContext or standard AudioContext
+					
 					gain.connect(audioContext.destination);
 					gain.gain.value = 0.5;
 
@@ -3576,13 +3574,8 @@ global.SOUND = CLASS((cls) => {
 				delayed = () => {
 
 					source = audioContext.createBufferSource();
-					// creates a sound source
 					source.buffer = buffer;
-					// tell the source which sound to play
 					source.connect(audioContext.destination);
-					// connect the source to the context's destination (the speakers)
-					// support both webkitAudioContext or standard AudioContext
-
 					source.loop = isLoop;
 					
 					startedAt = Date.now() - pausedAt;

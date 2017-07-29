@@ -29,7 +29,7 @@ global.BOOT = (params) => {
 	};
 
 	let addContentToBrowserScript = (content) => {
-		browserScript += content;
+		browserScript += content + '\n';
 		browserScriptContents.push(content);
 	};
 
@@ -44,7 +44,7 @@ global.BOOT = (params) => {
 			addContentToBrowserScript(content);
 		} else {
 
-			browserScript += content;
+			browserScript += content + '\n';
 			
 			if (boxBrowserScripts[boxName] === undefined) {
 				boxBrowserScripts[boxName] = '';
@@ -177,7 +177,7 @@ global.BOOT = (params) => {
 			isSync : true
 		}).toString();
 		
-		browserScript += content;
+		browserScript += content + '\n';
 		
 		return content;
 	};
@@ -188,7 +188,7 @@ global.BOOT = (params) => {
 		boxBrowserScripts = {};
 
 		EACH(browserScriptContents, (browserScriptContent) => {
-			browserScript += browserScriptContent;
+			browserScript += browserScriptContent + '\n';
 		});
 		
 		scanAllBoxFolders('COMMON', loadForBrowser);

@@ -6,6 +6,7 @@ RUN(() => {
 		document.body.appendChild(script);
 	};
 	
+	/*
 	// COMMON 테스트
 	require('./COMMON/TO_DELETE.js');
 	require('./COMMON/METHOD.js');
@@ -107,7 +108,7 @@ RUN(() => {
 	require('./BROWSER/DOM/ADD_STYLE.js');
 	
 	// 노드에 애니메이션 지정
-	require('./BROWSER/DOM/ANIMATE.js');
+	require('./BROWSER/DOM/ANIMATE.js');*/
 	
 	// 뷰 기능
 	/*require('./BROWSER/VIEW/VIEW.js');
@@ -117,6 +118,7 @@ RUN(() => {
 	require('./BROWSER/VIEW/GO_NEW_WIN.js');
 	require('./BROWSER/VIEW/REFRESH.js');*/
 	
+	/*
 	// HTTP 요청 기능
 	require('./BROWSER/REQUEST/REQUEST.js');
 	require('./BROWSER/REQUEST/GET.js');
@@ -135,10 +137,10 @@ RUN(() => {
 	
 	// 콘솔 로그 관련 기능
 	require('./BROWSER/CONSOLE/SHOW_ERROR.js');
-	require('./BROWSER/CONSOLE/SHOW_WARNING.js');
+	require('./BROWSER/CONSOLE/SHOW_WARNING.js');*/
 	
 	// SOUND
 	require('./BROWSER/SOUND.js');
 	
-	require('./BROWSER/ADD_FONT.js');
+	//require('./BROWSER/ADD_FONT.js');
 });
