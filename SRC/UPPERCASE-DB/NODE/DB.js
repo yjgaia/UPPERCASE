@@ -385,11 +385,17 @@ FOR_BOX((box) => {
 						}
 	
 						if (errorHandler !== undefined) {
-							errorHandler(errorInfo.errorMsg);
+							errorHandler(errorInfo.errorMsg, errorInfo);
 						} else {
-							SHOW_ERROR('DB', errorInfo.errorMsg, {
+							
+							let errorMsg = errorInfo.errorMsg;
+							
+							delete errorInfo.errorMsg;
+							
+							SHOW_ERROR('DB', errorMsg, {
 								boxName : box.boxName,
-								name : name
+								name : name,
+								errorInfo : errorInfo
 							});
 						}
 					};

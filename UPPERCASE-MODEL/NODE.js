@@ -483,9 +483,10 @@ FOR_BOX((box) => {
 								// create data in database.
 								db.create(data, {
 
-									error : (errorMsg) => {
+									error : (errorMsg, errorInfo) => {
 										ret({
-											errorMsg : errorMsg
+											errorMsg : errorMsg,
+											errorInfo : errorInfo
 										});
 									},
 
@@ -607,9 +608,10 @@ FOR_BOX((box) => {
 							// get data in database.
 							db.get(params, {
 								
-								error : (errorMsg) => {
+								error : (errorMsg, errorInfo) => {
 									ret({
-										errorMsg : errorMsg
+										errorMsg : errorMsg,
+										errorInfo : errorInfo
 									});
 								},
 								
@@ -769,9 +771,10 @@ FOR_BOX((box) => {
 								// update data in database.
 								(isNotToSaveHistory === true ? db.updateNoHistory : db.update)(data, {
 
-									error : (errorMsg) => {
+									error : (errorMsg, errorInfo) => {
 										ret({
-											errorMsg : errorMsg
+											errorMsg : errorMsg,
+											errorInfo : errorInfo
 										});
 									},
 
@@ -848,9 +851,10 @@ FOR_BOX((box) => {
 							// remove data in database.
 							db.remove(id, {
 
-								error : (errorMsg) => {
+								error : (errorMsg, errorInfo) => {
 									ret({
-										errorMsg : errorMsg
+										errorMsg : errorMsg,
+										errorInfo : errorInfo
 									});
 								},
 
@@ -972,9 +976,10 @@ FOR_BOX((box) => {
 							// find data set in database.
 							db.find(params, {
 		
-								error : (errorMsg) => {
+								error : (errorMsg, errorInfo) => {
 									ret({
-										errorMsg : errorMsg
+										errorMsg : errorMsg,
+										errorInfo : errorInfo
 									});
 								},
 		
@@ -1053,9 +1058,10 @@ FOR_BOX((box) => {
 							// count data in database.
 							db.count(params, {
 		
-								error : (errorMsg) => {
+								error : (errorMsg, errorInfo) => {
 									ret({
-										errorMsg : errorMsg
+										errorMsg : errorMsg,
+										errorInfo : errorInfo
 									});
 								},
 		
@@ -1134,9 +1140,10 @@ FOR_BOX((box) => {
 							// check is exists data in database.
 							db.checkIsExists(params, {
 		
-								error : (errorMsg) => {
+								error : (errorMsg, errorInfo) => {
 									ret({
-										errorMsg : errorMsg
+										errorMsg : errorMsg,
+										errorInfo : errorInfo
 									});
 								},
 		
@@ -1197,12 +1204,14 @@ FOR_BOX((box) => {
 					innerCreate(data, (result) => {
 
 						let errorMsg;
+						let errorInfo;
 						let validErrors;
 						let savedData;
 
 						if (result !== undefined) {
 
 							errorMsg = result.errorMsg;
+							errorInfo = result.errorInfo;
 							validErrors = result.validErrors;
 							savedData = result.savedData;
 
@@ -1210,7 +1219,7 @@ FOR_BOX((box) => {
 								if (errorHandler !== undefined) {
 									errorHandler(errorMsg);
 								} else {
-									SHOW_ERROR(box.boxName + '.' + name + 'Model.create', errorMsg);
+									SHOW_ERROR(box.boxName + '.' + name + 'Model.create', errorMsg, errorInfo);
 								}
 							} else if (validErrors !== undefined) {
 								if (notValidHandler !== undefined) {
@@ -1266,10 +1275,12 @@ FOR_BOX((box) => {
 					innerGet(idOrParams, (result) => {
 
 						let errorMsg;
+						let errorInfo;
 						let savedData;
 
 						if (result !== undefined) {
 							errorMsg = result.errorMsg;
+							errorInfo = result.errorInfo;
 							savedData = result.savedData;
 						}
 
@@ -1277,7 +1288,7 @@ FOR_BOX((box) => {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR(box.boxName + '.' + name + 'Model.get', errorMsg);
+								SHOW_ERROR(box.boxName + '.' + name + 'Model.get', errorMsg, errorInfo);
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {
@@ -1321,12 +1332,14 @@ FOR_BOX((box) => {
 					innerUpdate(data, (result) => {
 
 						let errorMsg;
+						let errorInfo;
 						let validErrors;
 						let savedData;
 						let originData;
 
 						if (result !== undefined) {
 							errorMsg = result.errorMsg;
+							errorInfo = result.errorInfo;
 							validErrors = result.validErrors;
 							savedData = result.savedData;
 							originData = result.originData;
@@ -1336,7 +1349,7 @@ FOR_BOX((box) => {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR(box.boxName + '.' + name + 'Model.update', errorMsg);
+								SHOW_ERROR(box.boxName + '.' + name + 'Model.update', errorMsg, errorInfo);
 							}
 						} else if (validErrors !== undefined) {
 							if (notValidHandler !== undefined) {
@@ -1391,12 +1404,14 @@ FOR_BOX((box) => {
 					innerUpdate(data, (result) => {
 
 						let errorMsg;
+						let errorInfo;
 						let validErrors;
 						let savedData;
 						let originData;
 
 						if (result !== undefined) {
 							errorMsg = result.errorMsg;
+							errorInfo = result.errorInfo;
 							validErrors = result.validErrors;
 							savedData = result.savedData;
 							originData = result.originData;
@@ -1406,7 +1421,7 @@ FOR_BOX((box) => {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR(box.boxName + '.' + name + 'Model.update', errorMsg);
+								SHOW_ERROR(box.boxName + '.' + name + 'Model.update', errorMsg, errorInfo);
 							}
 						} else if (validErrors !== undefined) {
 							if (notValidHandler !== undefined) {
@@ -1458,10 +1473,12 @@ FOR_BOX((box) => {
 					innerRemove(id, (result) => {
 
 						let errorMsg;
+						let errorInfo;
 						let originData;
 
 						if (result !== undefined) {
 							errorMsg = result.errorMsg;
+							errorInfo = result.errorInfo;
 							originData = result.originData;
 						}
 
@@ -1469,7 +1486,7 @@ FOR_BOX((box) => {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR(box.boxName + '.' + name + 'Model.remove', errorMsg);
+								SHOW_ERROR(box.boxName + '.' + name + 'Model.remove', errorMsg, errorInfo);
 							}
 						} else if (originData === undefined) {
 							if (notExistsHandler !== undefined) {
@@ -1517,13 +1534,14 @@ FOR_BOX((box) => {
 					innerFind(params, (result) => {
 
 						let errorMsg = result.errorMsg;
+						let errorInfo = result.errorInfo;
 						let savedDataSet = result.savedDataSet;
 
 						if (errorMsg !== undefined) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR(box.boxName + '.' + name + 'Model.find', errorMsg);
+								SHOW_ERROR(box.boxName + '.' + name + 'Model.find', errorMsg, errorInfo);
 							}
 						} else {
 							callback(savedDataSet);
@@ -1559,13 +1577,14 @@ FOR_BOX((box) => {
 					innerCount(params, (result) => {
 
 						let errorMsg = result.errorMsg;
+						let errorInfo = result.errorInfo;
 						let count = result.count;
 
 						if (errorMsg !== undefined) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR(box.boxName + '.' + name + 'Model.count', errorMsg);
+								SHOW_ERROR(box.boxName + '.' + name + 'Model.count', errorMsg, errorInfo);
 							}
 						} else {
 							callback(count);
@@ -1601,13 +1620,14 @@ FOR_BOX((box) => {
 					innerCheckIsExists(params, (result) => {
 
 						let errorMsg = result.errorMsg;
+						let errorInfo = result.errorInfo;
 						let isExists = result.isExists;
 
 						if (errorMsg !== undefined) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR(box.boxName + '.' + name + 'Model.checkIsExists', errorMsg);
+								SHOW_ERROR(box.boxName + '.' + name + 'Model.checkIsExists', errorMsg, errorInfo);
 							}
 						} else {
 							callback(isExists);
@@ -1704,9 +1724,10 @@ FOR_BOX((box) => {
 										// get data in database.
 										db.get(data.id, {
 	
-											error : (errorMsg) => {
+											error : (errorMsg, errorInfo) => {
 												ret({
-													errorMsg : errorMsg
+													errorMsg : errorMsg,
+													errorInfo : errorInfo
 												});
 											},
 	
@@ -1774,9 +1795,10 @@ FOR_BOX((box) => {
 										// get data in database.
 										db.get(id, {
 	
-											error : (errorMsg) => {
+											error : (errorMsg, errorInfo) => {
 												ret({
-													errorMsg : errorMsg
+													errorMsg : errorMsg,
+													errorInfo : errorInfo
 												});
 											},
 	
