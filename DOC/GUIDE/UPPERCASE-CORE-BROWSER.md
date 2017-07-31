@@ -1548,6 +1548,13 @@ sound.pause();
 
 // 정지 및 처음으로 돌아가기
 sound.stop();
+
+// 사운드 파일을 한번만 재생하고 더 이상 재생하지 않는 경우엔, SOUND_ONCE 클래스를 사용할 수 있습니다.
+// 자동으로 재생됩니다.
+SOUND_ONCE({
+	ogg : 'ding.ogg',
+	mp3 : 'ding.mp3'
+});
 ```
 
 ## `ADD_FONT`

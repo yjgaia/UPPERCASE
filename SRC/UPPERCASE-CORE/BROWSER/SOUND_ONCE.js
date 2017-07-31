@@ -1,5 +1,5 @@
 /*
- * 사운드 파일을 한번 재생하는 SOUND 클래스
+ * 사운드 파일을 한번 재생하는 SOUND_ONCE 클래스
  */
 global.SOUND_ONCE = CLASS({
 
