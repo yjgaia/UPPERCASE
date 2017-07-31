@@ -3626,6 +3626,26 @@ global.SOUND = CLASS((cls) => {
 });
 
 /*
+ * 사운드 파일을 한번 재생하는 SOUND 클래스
+ */
+global.SOUND_ONCE = CLASS({
+
+	preset : () => {
+		return SOUND;
+	},
+
+	init : (inner, self, params) => {
+		//REQUIRED: params
+		//OPTIONAL: params.ogg
+		//OPTIONAL: params.mp3
+		//OPTIONAL: params.isLoop
+		//OPTIONAL: params.gain
+
+		self.play();
+	}
+});
+
+/*
  * 저장소 클래스
  * 
  * 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
