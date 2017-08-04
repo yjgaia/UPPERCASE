@@ -409,11 +409,7 @@ global.NODE = CLASS({
 
 				setParent(undefined);
 
-				// fire remove event.
-				EVENT.fireAll({
-					node : self,
-					name : 'remove'
-				});
+				fireEvent('remove');
 
 				EVENT.removeAll({
 					node : self
@@ -456,6 +452,15 @@ global.NODE = CLASS({
 					name : eventName
 				});
 			}
+		};
+		
+		let fireEvent = self.fireEvent = (eventName) => {
+			//REQUIRED: eventName
+			
+			EVENT.fireAll({
+				node : self,
+				name : eventName
+			});
 		};
 
 		let addStyle = self.addStyle = (style) => {

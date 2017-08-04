@@ -3626,7 +3626,7 @@ global.SOUND = CLASS((cls) => {
 });
 
 /*
- * 사운드 파일을 한번 재생하는 SOUND 클래스
+ * 사운드 파일을 한번 재생하는 SOUND_ONCE 클래스
  */
 global.SOUND_ONCE = CLASS({
 
@@ -4395,11 +4395,7 @@ global.NODE = CLASS({
 
 				setParent(undefined);
 
-				// fire remove event.
-				EVENT.fireAll({
-					node : self,
-					name : 'remove'
-				});
+				fireEvent('remove');
 
 				EVENT.removeAll({
 					node : self
@@ -4442,6 +4438,15 @@ global.NODE = CLASS({
 					name : eventName
 				});
 			}
+		};
+		
+		let fireEvent = self.fireEvent = (eventName) => {
+			//REQUIRED: eventName
+			
+			EVENT.fireAll({
+				node : self,
+				name : eventName
+			});
 		};
 
 		let addStyle = self.addStyle = (style) => {
