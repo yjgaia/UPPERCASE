@@ -1,6 +1,6 @@
 {
 	"name": "uppercase-core",
-	"version": "0.0.15-beta",
+	"version": "1.0.0",
 	"dependencies": {
 		"hanul-imagemagick": "latest",
 		"hanul-uglify-js": "latest",
