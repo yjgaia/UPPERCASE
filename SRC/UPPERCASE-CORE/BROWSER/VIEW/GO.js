@@ -35,7 +35,12 @@ global.GO = METHOD((m) => {
 			
 			else {
 				
-				history.pushState(undefined, undefined, HREF(uri));
+				// when protocol is 'file:', use hashbang.
+				if (location.protocol === 'file:') {
+					location.href = HREF(uri);
+				} else {
+					history.pushState(undefined, undefined, HREF(uri));
+				}
 				
 				MATCH_VIEW.checkAll();
 			}

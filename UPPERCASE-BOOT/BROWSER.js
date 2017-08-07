@@ -174,7 +174,11 @@ FOR_BOX((box) => {
 					uri = basePath + '/' + uri;
 				}
 				
-				if (location.protocol !== 'file:') {
+				if (location.protocol === 'file:') {
+					if (box.boxName !== CONFIG.defaultBoxName) {
+						uri = 'BOX/' + uri;
+					}
+				} else {
 					uri = '/' + uri;
 				}
 	

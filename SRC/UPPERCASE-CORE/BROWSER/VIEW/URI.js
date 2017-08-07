@@ -5,6 +5,11 @@ global.URI = METHOD({
 
 	run : () => {
 		
-		return decodeURIComponent(location.pathname.substring(1));
+		// when protocol is 'file:', use hashbang.
+		if (location.protocol === 'file:') {
+			return location.hash.substring(3);
+		} else {
+			return decodeURIComponent(location.pathname.substring(1));
+		}
 	}
 });

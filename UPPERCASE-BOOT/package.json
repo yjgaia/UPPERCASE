@@ -1,0 +1,9 @@
+{
+	"name": "uppercase-boot",
+	"version": "1.0.1",
+	"dependencies": {
+		"ubm": "latest",
+		"uppercase-model": "latest"
+	},
+	"main": "index.js"
+}

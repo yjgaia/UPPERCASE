@@ -6,7 +6,12 @@ global.HREF = METHOD({
 	run : (uri) => {
 		//REQUIRED: uri
 
-		return '/' + uri;
+		// when protocol is 'file:', use hashbang.
+		if (location.protocol === 'file:') {
+			return '#!/' + uri;
+		} else {
+			return '/' + uri;
+		}
 	}
 });
 

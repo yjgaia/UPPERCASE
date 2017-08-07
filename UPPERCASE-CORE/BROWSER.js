@@ -8023,7 +8023,12 @@ global.GO = METHOD((m) => {
 			
 			else {
 				
-				history.pushState(undefined, undefined, HREF(uri));
+				// when protocol is 'file:', use hashbang.
+				if (location.protocol === 'file:') {
+					location.href = HREF(uri);
+				} else {
+					history.pushState(undefined, undefined, HREF(uri));
+				}
 				
 				MATCH_VIEW.checkAll();
 			}
@@ -8075,7 +8080,12 @@ global.HREF = METHOD({
 	run : (uri) => {
 		//REQUIRED: uri
 
-		return '/' + uri;
+		// when protocol is 'file:', use hashbang.
+		if (location.protocol === 'file:') {
+			return '#!/' + uri;
+		} else {
+			return '/' + uri;
+		}
 	}
 });
 
@@ -8166,10 +8176,19 @@ global.MATCH_VIEW = METHOD((m) => {
 			};
 			
 			changeURIHandlers.push(changeURIHandler);
-	
-			EVENT('popstate', () => {
-				changeURIHandler();
-			});
+			
+			// when protocol is 'file:', use hashbang.
+			if (location.protocol === 'file:') {
+				EVENT('hashchange', () => {
+					changeURIHandler();
+				});
+			}
+			
+			else {
+				EVENT('popstate', () => {
+					changeURIHandler();
+				});
+			}
 			
 			changeURIHandler();
 		}
@@ -8249,14 +8268,31 @@ global.REFRESH = METHOD((m) => {
 
 		run : (uri) => {
 			//OPTIONAL: uri
-	
-			let savedURI = uri !== undefined ? uri : location.pathname.substring(1);
-	
-			history.pushState(undefined, undefined, '/' + REFRESHING_URI);
-			MATCH_VIEW.checkAll();
 			
-			history.replaceState(undefined, undefined, '/' + savedURI);
-			MATCH_VIEW.checkAll();
+			// when protocol is 'file:', use hashbang.
+			if (location.protocol === 'file:') {
+				
+				let savedHash = uri !== undefined ? '#!/' + uri : location.hash;
+		
+				EVENT_ONCE({
+					name : 'hashchange'
+				}, () => {
+					location.replace(savedHash === '' ? '#!/' : savedHash);
+				});
+		
+				location.href = '#!/' + getRefreshingURI();
+			}
+			
+			else {
+				
+				let savedURI = uri !== undefined ? uri : location.pathname.substring(1);
+		
+				history.pushState(undefined, undefined, '/' + REFRESHING_URI);
+				MATCH_VIEW.checkAll();
+				
+				history.replaceState(undefined, undefined, '/' + savedURI);
+				MATCH_VIEW.checkAll();
+			}
 		}
 	};
 });
@@ -8280,7 +8316,12 @@ global.URI = METHOD({
 
 	run : () => {
 		
-		return decodeURIComponent(location.pathname.substring(1));
+		// when protocol is 'file:', use hashbang.
+		if (location.protocol === 'file:') {
+			return location.hash.substring(3);
+		} else {
+			return decodeURIComponent(location.pathname.substring(1));
+		}
 	}
 });
 

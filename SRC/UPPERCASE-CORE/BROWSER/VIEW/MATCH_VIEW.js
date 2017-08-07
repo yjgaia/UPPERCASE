@@ -73,10 +73,19 @@ global.MATCH_VIEW = METHOD((m) => {
 			};
 			
 			changeURIHandlers.push(changeURIHandler);
-	
-			EVENT('popstate', () => {
-				changeURIHandler();
-			});
+			
+			// when protocol is 'file:', use hashbang.
+			if (location.protocol === 'file:') {
+				EVENT('hashchange', () => {
+					changeURIHandler();
+				});
+			}
+			
+			else {
+				EVENT('popstate', () => {
+					changeURIHandler();
+				});
+			}
 			
 			changeURIHandler();
 		}

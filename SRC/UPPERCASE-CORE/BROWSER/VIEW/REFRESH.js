@@ -13,14 +13,31 @@ global.REFRESH = METHOD((m) => {
 
 		run : (uri) => {
 			//OPTIONAL: uri
-	
-			let savedURI = uri !== undefined ? uri : location.pathname.substring(1);
-	
-			history.pushState(undefined, undefined, '/' + REFRESHING_URI);
-			MATCH_VIEW.checkAll();
 			
-			history.replaceState(undefined, undefined, '/' + savedURI);
-			MATCH_VIEW.checkAll();
+			// when protocol is 'file:', use hashbang.
+			if (location.protocol === 'file:') {
+				
+				let savedHash = uri !== undefined ? '#!/' + uri : location.hash;
+		
+				EVENT_ONCE({
+					name : 'hashchange'
+				}, () => {
+					location.replace(savedHash === '' ? '#!/' : savedHash);
+				});
+		
+				location.href = '#!/' + getRefreshingURI();
+			}
+			
+			else {
+				
+				let savedURI = uri !== undefined ? uri : location.pathname.substring(1);
+		
+				history.pushState(undefined, undefined, '/' + REFRESHING_URI);
+				MATCH_VIEW.checkAll();
+				
+				history.replaceState(undefined, undefined, '/' + savedURI);
+				MATCH_VIEW.checkAll();
+			}
 		}
 	};
 });

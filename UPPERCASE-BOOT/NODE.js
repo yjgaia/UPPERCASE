@@ -37,8 +37,6 @@ global.BOOT = (params) => {
 	
 	const UPPERCASE_PATH = __dirname + '/..';
 	const BOX_SITE_URL = 'https://box.uppercase.io';
-	
-	let Path = require('path');
 
 	let version = 'V' + Date.now();
 	let rootPath = process.cwd();
@@ -50,12 +48,6 @@ global.BOOT = (params) => {
 	let _404PageContent;
 	let indexPageContent;
 	
-	let boxNamesInBOXFolder = [];
-
-	let loadForNode = (path) => {
-		require(path);
-	};
-
 	let addContentToBrowserScript = (content) => {
 		browserScript += content + '\n';
 		browserScriptContents.push(content);
@@ -84,120 +76,6 @@ global.BOOT = (params) => {
 		return content;
 	};
 	
-	let checkIsAllowedFolderName = (name) => {
-
-		return (
-
-			// BOX folder
-			name !== 'BOX' &&
-
-			// node.js module
-			name !== 'node_modules' &&
-
-			// not load
-			name !== '__NOT_LOAD' &&
-
-			// deprecated
-			name !== '__OLD'
-		);
-	};
-	
-	let scanAllBoxFolders = (folderName, funcForJS) => {
-
-		let scanFolder = (folderPath, boxName) => {
-
-			FIND_FILE_NAMES({
-				path : folderPath,
-				isSync : true
-			}, {
-
-				notExists : () => {
-					// ignore.
-				},
-
-				success : (fileNames) => {
-
-					EACH(fileNames, (fileName) => {
-
-						let fullPath = folderPath + '/' + fileName;
-						
-						let extname = Path.extname(fileName).toLowerCase();
-
-						if (extname === '.js') {
-							funcForJS(fullPath, boxName);
-						}
-					});
-				}
-			});
-
-			FIND_FOLDER_NAMES({
-				path : folderPath,
-				isSync : true
-			}, {
-
-				notExists : () => {
-					// ignore.
-				},
-
-				success : (folderNames) => {
-
-					EACH(folderNames, (folderName) => {
-						if (checkIsAllowedFolderName(folderName) === true) {
-							scanFolder(folderPath + '/' + folderName, boxName);
-						}
-					});
-				}
-			});
-		};
-
-		FOR_BOX((box) => {
-
-			let boxRootPath = CHECK_IS_IN({
-				array : boxNamesInBOXFolder,
-				value : box.boxName
-			}) === true ? rootPath + '/BOX' : rootPath;
-
-			scanFolder(boxRootPath + '/' + box.boxName + '/' + folderName, box.boxName);
-		});
-	};
-	
-	let scanAllBoxJS = (folderName, funcForJS) => {
-
-		FOR_BOX((box) => {
-			
-			let boxRootPath = CHECK_IS_IN({
-				array : boxNamesInBOXFolder,
-				value : box.boxName
-			}) === true ? rootPath + '/BOX' : rootPath;
-			
-			FIND_FILE_NAMES({
-				path : boxRootPath + '/' + box.boxName,
-				isSync : true
-			}, {
-
-				notExists : () => {
-					// ignore.
-				},
-
-				success : (fileNames) => {
-
-					EACH(fileNames, (fileName) => {
-
-						let fullPath = boxRootPath + '/' + box.boxName + '/' + fileName;
-						
-						let extname = Path.extname(fileName).toLowerCase();
-
-						if (fileName === folderName + extname) {
-							if (extname === '.js') {
-								funcForJS(fullPath, box.boxName);
-							}
-						}
-					});
-				}
-			});
-		});
-	};
-	
 	let loadBrowserInit = () => {
 		
 		let content = READ_FILE({
@@ -219,10 +97,10 @@ global.BOOT = (params) => {
 			browserScript += browserScriptContent + '\n';
 		});
 		
-		scanAllBoxFolders('COMMON', loadForBrowser);
-		scanAllBoxFolders('BROWSER', loadForBrowser);
-		
-		scanAllBoxJS('BROWSER', loadForBrowser);
+		LOAD_ALL_SCRIPTS({
+			rootPath : rootPath,
+			env : 'BROWSER'
+		}, loadForBrowser);
 		
 		loadBrowserInit();
 	};
@@ -311,63 +189,7 @@ global.BOOT = (params) => {
 			addContentToBrowserScript('EXTEND({ origin : BROWSER_CONFIG, extend : ' + stringifyJSONWithFunction(_BROWSER_CONFIG) + ' });\n');
 		}
 	};
-
-	let initBoxes = (next) => {
-
-		// create UPPERCASE box.
-		BOX('UPPERCASE');
-
-		// add UPPERCASE box to browser script.
-		addContentToBrowserScript('BOX(\'UPPERCASE\');\n');
-
-		// init boxes in root folder.
-		FIND_FOLDER_NAMES({
-			path : rootPath,
-			isSync : true
-		}, (folderNames) => {
-
-			EACH(folderNames, (folderName) => {
-
-				if (checkIsAllowedFolderName(folderName) === true) {
-
-					// create box.
-					BOX(folderName);
-
-					// add box to browser script.
-					addContentToBrowserScript('BOX(\'' + folderName + '\');\n');
-				}
-			});
-		});
-
-		if (CHECK_FILE_EXISTS({
-			path : rootPath + '/BOX',
-			isSync : true
-		}) === true) {
-
-			// init boxes is BOX folder.
-			FIND_FOLDER_NAMES({
-				path : rootPath + '/BOX',
-				isSync : true
-			}, (folderNames) => {
-
-				EACH(folderNames, (folderName) => {
-
-					if (checkIsAllowedFolderName(folderName) === true) {
-
-						// create box.
-						BOX(folderName);
-
-						// add box to browser script.
-						addContentToBrowserScript('BOX(\'' + folderName + '\');\n');
-
-						// save box name.
-						boxNamesInBOXFolder.push(folderName);
-					}
-				});
-			});
-		}
-	};
-
+	
 	let clustering = (work) => {
 		
 		let innerWork = () => {
@@ -415,7 +237,7 @@ global.BOOT = (params) => {
 	let generate404Page = () => {
 		
 		let custom404Path = rootPath + '/' + CHECK_IS_IN({
-			array : boxNamesInBOXFolder,
+			array : INIT_BOXES.getBoxNamesInBOXFolder(),
 			value : CONFIG.defaultBoxName
 		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/404.html' : CONFIG.defaultBoxName + '/404.html';
 		
@@ -472,7 +294,7 @@ global.BOOT = (params) => {
 	let generateIndexPage = () => {
 		
 		let customIndexPath = rootPath + '/' + CHECK_IS_IN({
-			array : boxNamesInBOXFolder,
+			array : INIT_BOXES.getBoxNamesInBOXFolder(),
 			value : CONFIG.defaultBoxName
 		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/index.html' : CONFIG.defaultBoxName + '/index.html';
 		
@@ -571,13 +393,6 @@ global.BOOT = (params) => {
 			});
 		}
 		
-		FOR_BOX((box) => {
-			if (box.OVERRIDE !== undefined) {
-				box.OVERRIDE();
-			}
-		});
-
-		// init objects.
 		INIT_OBJECTS();
 
 		if (CONFIG.webServerPort !== undefined || CONFIG.securedWebServerPort !== undefined) {
@@ -1032,7 +847,7 @@ global.BOOT = (params) => {
 						if (uri.substring(0, 2) === 'R/') {
 							
 							requestInfo.uri = CHECK_IS_IN({
-								array : boxNamesInBOXFolder,
+								array : INIT_BOXES.getBoxNamesInBOXFolder(),
 								value : boxName
 							}) === true ? 'BOX/' + boxName + '/' + uri : boxName + '/' + uri;
 						}
@@ -1103,7 +918,6 @@ global.BOOT = (params) => {
 		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-' + name + '/BROWSER' + (isDevMode === true ? '' : '.MIN') + '.js');
 	});
 	
-	// configuration.
 	configuration();
 	
 	NEXT([
@@ -1226,8 +1040,7 @@ global.BOOT = (params) => {
 	() => {
 		return () => {
 			
-			// init boxes.
-			initBoxes();
+			INIT_BOXES(rootPath, addContentToBrowserScript);
 			
 			// clustering cpus and servers.
 			clustering(() => {
@@ -1235,37 +1048,52 @@ global.BOOT = (params) => {
 				console.log('[BOOT] ' + MSG({
 					ko : '부팅중...' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '')
 				}));
-		
-				// connect to database.
+				
 				connectToDatabase();
 				
-				// load all scripts.
-				scanAllBoxFolders('COMMON', loadForNode);
-				scanAllBoxFolders('COMMON', loadForBrowser);
+				LOAD_ALL_SCRIPTS({
+					rootPath : rootPath,
+					env : 'NODE'
+				}, require);
 				
-				scanAllBoxFolders('NODE', loadForNode);
+				LOAD_ALL_SCRIPTS({
+					rootPath : rootPath,
+					env : 'BROWSER'
+				}, loadForBrowser);
 				
-				scanAllBoxFolders('BROWSER', loadForBrowser);
-				
-				scanAllBoxJS('NODE', loadForNode);
-				scanAllBoxJS('BROWSER', loadForBrowser);
-				
-				// load BROWSER_INIT.
 				loadBrowserInit();
 				
-				// generate 404 page.
 				generate404Page();
 				
-				// generate index page.
 				generateIndexPage();
-		
-				// run.
+				
 				run();
 			});
 		};
 	}]);
 };
 
+global.CHECK_IS_ALLOWED_FOLDER_NAME = METHOD({
+	
+	run : (name) => {
+		//REQUIRED: name
+		
+		return (
+
+			// BOX folder
+			name !== 'BOX' &&
+
+			// node.js module
+			name !== 'node_modules' &&
+
+			// not load
+			name !== '__NOT_LOAD' &&
+
+			// deprecated
+			name !== '__OLD'
+		);
+	}
+});
 /*
  * Check still alive object
  */
@@ -1290,6 +1118,186 @@ global.CHECK_STILL_ALIVE = OBJECT({
 	}
 });
 
+global.INIT_BOXES = METHOD((m) => {
+	
+	let boxNamesInBOXFolder = [];
+	
+	let getBoxNamesInBOXFolder = m.getBoxNamesInBOXFolder = () => {
+		return boxNamesInBOXFolder;
+	};
+	
+	return {
+		
+		run : (rootPath, addContent) => {
+			//REQUIRED: rootPath
+			//OPTIONAL: addContent
+			
+			// create UPPERCASE box.
+			BOX('UPPERCASE');
+			
+			if (addContent !== undefined) {
+				addContent('BOX(\'UPPERCASE\');\n');
+			}
+			
+			// init boxes in root folder.
+			FIND_FOLDER_NAMES({
+				path : rootPath,
+				isSync : true
+			}, (folderNames) => {
+	
+				EACH(folderNames, (folderName) => {
+	
+					if (CHECK_IS_ALLOWED_FOLDER_NAME(folderName) === true) {
+	
+						// create box.
+						BOX(folderName);
+	
+						if (addContent !== undefined) {
+							addContent('BOX(\'' + folderName + '\');\n');
+						}
+					}
+				});
+			});
+	
+			if (CHECK_FILE_EXISTS({
+				path : rootPath + '/BOX',
+				isSync : true
+			}) === true) {
+	
+				// init boxes is BOX folder.
+				FIND_FOLDER_NAMES({
+					path : rootPath + '/BOX',
+					isSync : true
+				}, (folderNames) => {
+	
+					EACH(folderNames, (folderName) => {
+	
+						if (CHECK_IS_ALLOWED_FOLDER_NAME(folderName) === true) {
+	
+							// create box.
+							BOX(folderName);
+	
+							if (addContent !== undefined) {
+								addContent('BOX(\'' + folderName + '\');\n');
+							}
+							
+							// save box name.
+							boxNamesInBOXFolder.push(folderName);
+						}
+					});
+				});
+			}
+		}
+	};
+});
+global.LOAD_ALL_SCRIPTS = METHOD((m) => {
+	
+	let Path = require('path');
+	
+	return {
+		
+		run : (params, load) => {
+			//REQUIRED: params
+			//REQUIRED: params.rootPath
+			//REQUIRED: params.env
+			//REQUIRED: load
+			
+			let rootPath = params.rootPath;
+			let env = params.env;
+			
+			let scanFolder = (folderPath, boxName) => {
+	
+				FIND_FILE_NAMES({
+					path : folderPath,
+					isSync : true
+				}, {
+	
+					notExists : () => {
+						// ignore.
+					},
+	
+					success : (fileNames) => {
+	
+						EACH(fileNames, (fileName) => {
+	
+							let fullPath = folderPath + '/' + fileName;
+							
+							let extname = Path.extname(fileName).toLowerCase();
+	
+							if (extname === '.js') {
+								load(fullPath, boxName);
+							}
+						});
+					}
+				});
+	
+				FIND_FOLDER_NAMES({
+					path : folderPath,
+					isSync : true
+				}, {
+	
+					notExists : () => {
+						// ignore.
+					},
+	
+					success : (folderNames) => {
+	
+						EACH(folderNames, (folderName) => {
+							if (CHECK_IS_ALLOWED_FOLDER_NAME(folderName) === true) {
+								scanFolder(folderPath + '/' + folderName, boxName);
+							}
+						});
+					}
+				});
+			};
+			
+			FOR_BOX((box) => {
+	
+				let boxRootPath = CHECK_IS_IN({
+					array : INIT_BOXES.getBoxNamesInBOXFolder(),
+					value : box.boxName
+				}) === true ? rootPath + '/BOX' : rootPath;
+				
+				scanFolder(boxRootPath + '/' + box.boxName + '/COMMON', box.boxName);
+				scanFolder(boxRootPath + '/' + box.boxName + '/' + env, box.boxName);
+			});
+			
+			FOR_BOX((box) => {
+				
+				let boxRootPath = CHECK_IS_IN({
+					array : INIT_BOXES.getBoxNamesInBOXFolder(),
+					value : box.boxName
+				}) === true ? rootPath + '/BOX' : rootPath;
+				
+				FIND_FILE_NAMES({
+					path : boxRootPath + '/' + box.boxName,
+					isSync : true
+				}, {
+	
+					notExists : () => {
+						// ignore.
+					},
+	
+					success : (fileNames) => {
+	
+						EACH(fileNames, (fileName) => {
+	
+							let fullPath = boxRootPath + '/' + box.boxName + '/' + fileName;
+							
+							let extname = Path.extname(fileName).toLowerCase();
+	
+							if (fileName === env + extname) {
+								if (extname === '.js') {
+									load(fullPath, box.boxName);
+								}
+							}
+						});
+					}
+				});
+			});
+		}
+	};
+});
 /*
  * Node-side Configuration
  */
