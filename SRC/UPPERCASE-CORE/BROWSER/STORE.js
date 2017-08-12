@@ -43,6 +43,46 @@ global.STORE = CLASS({
 			
 			localStorage.removeItem(genFullName(name));
 		};
+
+		let all = self.all = () => {
+			
+			let all = {};
+			
+			EACH(localStorage, (value, fullName) => {
+				
+				if (fullName.indexOf(storeName + '.') === 0) {
+					
+					all[fullName.substring(storeName.length + 1)] = PARSE_STR(value);
+				}
+			});
+			
+			return all;
+		};
+
+		let count = self.count = () => {
+			
+			let count = 0;
+			
+			EACH(localStorage, (value, fullName) => {
+				
+				if (fullName.indexOf(storeName + '.') === 0) {
+					count += 1;
+				}
+			});
+			
+			return count;
+		};
+
+		let clear = self.clear = () => {
+			
+			EACH(localStorage, (value, fullName) => {
+				
+				if (fullName.indexOf(storeName + '.') === 0) {
+					
+					remove(fullName.substring(storeName.length + 1));
+				}
+			});
+		};
 	}
 });
 
@@ -56,8 +96,16 @@ FOR_BOX((box) => {
 			let store = STORE(box.boxName + '.' + storeName);
 
 			let save = self.save = store.save;
+			
 			let get = self.get = store.get;
+			
 			let remove = self.remove = store.remove;
+			
+			let all = self.all = store.all;
+			
+			let count = self.count = store.count;
+			
+			let clear = self.clear = store.clear;
 		}
 	});
 });

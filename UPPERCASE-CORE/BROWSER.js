@@ -3180,23 +3180,6 @@ global.COOKIE_STORE = CLASS({
 			return pop === undefined ? undefined : JSON.parse(decodeURIComponent(pop));
 		};
 		
-		let list = self.list = () => {
-			
-			let values = {};
-			
-			EACH(document.cookie.split(';'), (str) => {
-				
-				let index = str.indexOf('=');
-				let fullName = str.substring(0, index);
-				
-				if (fullName.substring(0, storeName.length + 1) === storeName + '.') {
-					values[fullName.substring(storeName.length + 1)] = str.substring(index + 1);
-				}
-			});
-			
-			return values;
-		};
-
 		let remove = self.remove = (name) => {
 			//REQUIRED: name
 
@@ -3204,6 +3187,55 @@ global.COOKIE_STORE = CLASS({
 			expireTime.setDate(expireTime.getDate() - 1);
 			
 			document.cookie = genFullName(name) + '=; expires=' + expireTime.toGMTString() + '; path=/;' + (domain === undefined ? '' : ' domain=' + domain + ';');
+		};
+		
+		let all = self.all = () => {
+			
+			let all = {};
+			
+			EACH(document.cookie.split(';'), (str) => {
+				
+				let index = str.indexOf('=');
+				let fullName = str.substring(0, index);
+				
+				if (fullName.indexOf(storeName + '.') === 0) {
+					
+					all[fullName.substring(storeName.length + 1)] = str.substring(index + 1);
+				}
+			});
+			
+			return all;
+		};
+
+		let count = self.count = () => {
+			
+			let count = 0;
+			
+			EACH(document.cookie.split(';'), (str) => {
+				
+				let index = str.indexOf('=');
+				let fullName = str.substring(0, index);
+				
+				if (fullName.indexOf(storeName + '.') === 0) {
+					count += 1;
+				}
+			});
+			
+			return count;
+		};
+
+		let clear = self.clear = () => {
+			
+			EACH(document.cookie.split(';'), (str) => {
+				
+				let index = str.indexOf('=');
+				let fullName = str.substring(0, index);
+				
+				if (fullName.indexOf(storeName + '.') === 0) {
+					
+					remove(fullName.substring(storeName.length + 1));
+				}
+			});
 		};
 	}
 });
@@ -3233,8 +3265,16 @@ FOR_BOX((box) => {
 			});
 
 			let save = self.save = store.save;
+			
 			let get = self.get = store.get;
+			
 			let remove = self.remove = store.remove;
+			
+			let all = self.all = store.all;
+			
+			let count = self.count = store.count;
+			
+			let clear = self.clear = store.clear;
 		}
 	});
 });
@@ -3690,6 +3730,46 @@ global.STORE = CLASS({
 			
 			localStorage.removeItem(genFullName(name));
 		};
+
+		let all = self.all = () => {
+			
+			let all = {};
+			
+			EACH(localStorage, (value, fullName) => {
+				
+				if (fullName.indexOf(storeName + '.') === 0) {
+					
+					all[fullName.substring(storeName.length + 1)] = PARSE_STR(value);
+				}
+			});
+			
+			return all;
+		};
+
+		let count = self.count = () => {
+			
+			let count = 0;
+			
+			EACH(localStorage, (value, fullName) => {
+				
+				if (fullName.indexOf(storeName + '.') === 0) {
+					count += 1;
+				}
+			});
+			
+			return count;
+		};
+
+		let clear = self.clear = () => {
+			
+			EACH(localStorage, (value, fullName) => {
+				
+				if (fullName.indexOf(storeName + '.') === 0) {
+					
+					remove(fullName.substring(storeName.length + 1));
+				}
+			});
+		};
 	}
 });
 
@@ -3703,8 +3783,16 @@ FOR_BOX((box) => {
 			let store = STORE(box.boxName + '.' + storeName);
 
 			let save = self.save = store.save;
+			
 			let get = self.get = store.get;
+			
 			let remove = self.remove = store.remove;
+			
+			let all = self.all = store.all;
+			
+			let count = self.count = store.count;
+			
+			let clear = self.clear = store.clear;
 		}
 	});
 });
