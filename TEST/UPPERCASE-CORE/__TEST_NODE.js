@@ -1,15 +1,16 @@
 RUN(() => {
 	
-	/*// COMMON 테스트
-	require('./COMMON/TO_DELETE.js');
-	require('./COMMON/METHOD.js');
+	// COMMON 테스트
+	//require('./COMMON/TO_DELETE.js');
+	//require('./COMMON/METHOD.js');
 	
 	// 객체지향 관련 기능
-	require('./COMMON/OOP/CLASS.js');
-	require('./COMMON/OOP/OBJECT.js');
+	//require('./COMMON/OOP/CLASS.js');
+	//require('./COMMON/OOP/OBJECT.js');
+	require('./COMMON/OOP/MIXIN.js');
 	
 	// BOX 관련 기능
-	require('./COMMON/BOX/BOX.js');
+	/*require('./COMMON/BOX/BOX.js');
 	
 	// 숫자 관련 기능
 	require('./COMMON/UTIL/NUMBER/INTEGER.js');
@@ -121,5 +122,5 @@ RUN(() => {
 	//require('./NODE/MINIFY/MINIFY_CSS.js');
 	
 	// MSG
-	require('./NODE/MSG.js');
+	//require('./NODE/MSG.js');
 });
