@@ -770,7 +770,10 @@ WEB_SERVER({
 		// requestInfo		요청 정보
 		// response			응답 함수
 		
-		response('업로드 가능한 용량은 최대 ' + maxUploadFileMB + 'MB 입니다.');
+		response({
+			statusCode : 413,
+			content : '업로드 가능한 용량은 최대 ' + maxUploadFileMB + 'MB 입니다.'
+		});
 	},
 	uploadSuccess : (params, fileDataSet, requestInfo, response) => {
 		// params		파라미터

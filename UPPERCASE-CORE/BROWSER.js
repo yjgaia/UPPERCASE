@@ -271,6 +271,8 @@ global.CLASS = METHOD((m) => {
 			cls.id = getNextInstanceId();
 
 			let innerInit = cls.innerInit = (inner, self, params, funcs) => {
+				//REQUIRED: inner
+				//REQUIRED: self
 				//OPTIONAL: params
 				//OPTIONAL: funcs
 				
@@ -341,6 +343,8 @@ global.CLASS = METHOD((m) => {
 			};
 
 			let innerAfterInit = cls.innerAfterInit = (inner, self, params, funcs) => {
+				//REQUIRED: inner
+				//REQUIRED: self
 				//OPTIONAL: params
 				//OPTIONAL: funcs
 

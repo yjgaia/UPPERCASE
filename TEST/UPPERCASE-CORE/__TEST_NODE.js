@@ -7,7 +7,7 @@ RUN(() => {
 	// 객체지향 관련 기능
 	//require('./COMMON/OOP/CLASS.js');
 	//require('./COMMON/OOP/OBJECT.js');
-	require('./COMMON/OOP/MIXIN.js');
+	//require('./COMMON/OOP/MIXIN.js');
 	
 	// BOX 관련 기능
 	/*require('./COMMON/BOX/BOX.js');
@@ -91,7 +91,7 @@ RUN(() => {
 	//require('./NODE/REQUEST/DOWNLOAD.js');
 	
 	// 손쉬운 서버 생성
-	//require('./NODE/SERVER/WEB_SERVER.js');
+	require('./NODE/SERVER/WEB_SERVER.js');
 	//require('./NODE/SERVER/SOCKET_SERVER.js');
 	//require('./NODE/SERVER/CONNECT_TO_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/WEB_SOCKET_SERVER.js');

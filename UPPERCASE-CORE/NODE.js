@@ -268,6 +268,8 @@ global.CLASS = METHOD((m) => {
 			cls.id = getNextInstanceId();
 
 			let innerInit = cls.innerInit = (inner, self, params, funcs) => {
+				//REQUIRED: inner
+				//REQUIRED: self
 				//OPTIONAL: params
 				//OPTIONAL: funcs
 				
@@ -338,6 +340,8 @@ global.CLASS = METHOD((m) => {
 			};
 
 			let innerAfterInit = cls.innerAfterInit = (inner, self, params, funcs) => {
+				//REQUIRED: inner
+				//REQUIRED: self
 				//OPTIONAL: params
 				//OPTIONAL: funcs
 
@@ -7988,66 +7992,75 @@ global.WEB_SERVER = CLASS((cls) => {
 				
 									}).on('end', () => {
 										
-										NEXT(fileDataSet, [
-										(fileData, next) => {
+										let totalFileSize = 0;
+										
+										EACH(fileDataSet, (fileData) => {
+											totalFileSize += fileData.size;
+										});
+										
+										if (totalFileSize > maxUploadFileMB * 1024 * 1024) {
 											
-											let path = fileData.path;
-											let fileSize = fileData.size;
-											let fileType = fileData.type;
+											NEXT(fileDataSet, [
+											(fileData, next) => {
+												REMOVE_FILE(fileData.path, next);
+											},
 											
-											fileData.ip = ip;
-											
-											if (fileSize > maxUploadFileMB * 1024 * 1024) {
-				
-												NEXT(fileDataSet, [
-												(fileData, next) => {
-													REMOVE_FILE(fileData.path, next);
-												},
-				
-												() => {
-													return () => {
-														if (uploadOverFileSizeHandler !== undefined) {
-															uploadOverFileSizeHandler(params, maxUploadFileMB, requestInfo, response);
-														}
-													};
-												}]);
-				
-												return false;
-											}
-											
-											if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
-				
-												IMAGEMAGICK_READ_METADATA(path, {
-													error : () => {
-														next(fileData);
-													},
-													success : (metadata) => {
-				
-														if (metadata.exif !== undefined) {
-				
-															fileData.exif = metadata.exif;
-				
-															IMAGEMAGICK_CONVERT([path, '-auto-orient', path], {
-																error : errorHandler,
-																success : next
-															});
-				
-														} else {
-															next();
-														}
+											() => {
+												return () => {
+													if (uploadOverFileSizeHandler !== undefined) {
+														uploadOverFileSizeHandler(params, maxUploadFileMB, requestInfo, response);
 													}
-												});
-				
-											} else {
-												next();
-											}
-										},
-				
-										() => {
-											return () => {
-												uploadSuccessHandler(params, fileDataSet, requestInfo, response);
-											};
-										}]);
+												};
+											}]);
+											
+											return false;
+										}
+										
+										else {
+											
+											NEXT(fileDataSet, [
+											(fileData, next) => {
+												
+												let path = fileData.path;
+												let fileSize = fileData.size;
+												let fileType = fileData.type;
+												
+												fileData.ip = ip;
+												
+												if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
+					
+													IMAGEMAGICK_READ_METADATA(path, {
+														error : () => {
+															next(fileData);
+														},
+														success : (metadata) => {
+					
+															if (metadata.exif !== undefined) {
+					
+																fileData.exif = metadata.exif;
+					
+																IMAGEMAGICK_CONVERT([path, '-auto-orient', path], {
+																	error : errorHandler,
+																	success : next
+																});
+					
+															} else {
+																next();
+															}
+														}
+													});
+					
+												} else {
+													next();
+												}
+											},
+					
+											() => {
+												return () => {
+													uploadSuccessHandler(params, fileDataSet, requestInfo, response);
+												};
+											}]);
+										}
 										
 									}).on('error', (error) => {
 										responseError(error.toString());
