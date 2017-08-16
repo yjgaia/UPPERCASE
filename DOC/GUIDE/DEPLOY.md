@@ -1,6 +1,6 @@
 작성중
 
-# 배포하기
+# 프로젝트 배포하기
 
 1. 우선, 프로젝트를 배포할 서버를 준비합니다.
 
@@ -221,5 +221,3 @@ ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 rdate -p time.bora.net
 rdate -s time.bora.net
 ```
-
-다음 문서: [UPPERCASE 업데이트](UPDATE.md)
