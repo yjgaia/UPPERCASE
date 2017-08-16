@@ -53,7 +53,6 @@ FOR_BOX((box) => {
 					
 					let createValid;
 					let updateValid;
-					let is_idAssignable;
 					
 					let room = box.ROOM({
 						roomServerName : roomServerName,
@@ -71,10 +70,10 @@ FOR_BOX((box) => {
 					let checkIsExists;
 					let onNewAndFind;
 					let onNewAndFindWatching;
-		
+					
 					// init method config.
 					if (methodConfig !== undefined) {
-		
+						
 						createConfig = methodConfig.create;
 						getConfig = methodConfig.get;
 						updateConfig = methodConfig.update;
@@ -82,16 +81,16 @@ FOR_BOX((box) => {
 						findConfig = methodConfig.find;
 						countConfig = methodConfig.count;
 						checkIsExistsConfig = methodConfig.checkIsExists;
-		
+						
 						if (createConfig !== undefined) {
 							createValid = createConfig.valid;
 						}
-		
+						
 						if (updateConfig !== undefined) {
 							updateValid = updateConfig.valid;
 						}
 					}
-		
+					
 					let getName = self.getName = () => {
 						return name;
 					};
