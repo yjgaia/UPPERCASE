@@ -1,25 +1,15 @@
-TEST('MODEL', function(ok) {
-	'use strict';
-
-	CONNECT_TO_ROOM_SERVER({
-		port : 9127,
-		fixRequestURI : '__WEB_SOCKET_FIX'
-	});
-
+TEST('MODEL', (check) => {
+	
 	// Example Model
 	TestBox.TestModel = OBJECT({
 
-		preset : function() {
+		preset : () => {
 			return TestBox.MODEL;
 		},
 
-		params : function() {
+		params : () => {
 
-			var
-			// valid data set
-			validDataSet;
-
-			validDataSet = {
+			let validDataSet = {
 				name : {
 					notEmpty : true,
 					size : {
@@ -57,43 +47,43 @@ TEST('MODEL', function(ok) {
 		name : 'YJ Sim',
 		isMan : true
 	}, {
-		notValid : function(r) {
+		notValid : (r) => {
 			console.log(r);
 		},
-		success : function(r) {
+		success : (r) => {
 			console.log(r);
 		}
 	});
 
-	TestBox.TestModel.find(function(r) {
+	TestBox.TestModel.find((r) => {
 		console.log(r);
 	});
 
-	TestBox.TestModel.get('test', function(r) {
+	TestBox.TestModel.get('test', (r) => {
 		console.log(r);
 	});
 
-	TestBox.TestModel.onNew(function(savedData) {
+	TestBox.TestModel.onNew((savedData) => {
 		console.log('ON NEW: ', savedData);
 	});
 
 	TestBox.TestModel.onNew({
 		age : 27
-	}, function(savedData) {
+	}, (savedData) => {
 		console.log('ON NEW when age is 27: ', savedData);
 	});
 
 	TestBox.TestModel.onNewWatching({
 		age : 27
-	}, function(savedData, addUpdateHandler, addRemoveHandler, closeWatching) {
+	}, (savedData, addUpdateHandler, addRemoveHandler, closeWatching) => {
 		console.log('ON NEW when age is 27: ', savedData);
 
-		addUpdateHandler(function(savedData) {
+		addUpdateHandler((savedData) => {
 			console.log('UPDATE! when age is 27: ', savedData);
 		});
 	});
 
-	TestBox.TestModel.create({}, function(result) {
+	TestBox.TestModel.create({}, (result) => {
 
 		// result.hasError
 		// -> true -> result.errors
@@ -112,24 +102,24 @@ TEST('MODEL', function(ok) {
 		name : 'YJ Sim',
 		age : 27,
 		isMan : true
-	}, function(savedData) {
+	}, (savedData) => {
 
 		console.log('CREATE: ', savedData);
 
-		TestBox.TestModel.get(savedData.id, function(savedData) {
+		TestBox.TestModel.get(savedData.id, (savedData) => {
 			console.log('GET: ', savedData);
 
 			TestBox.TestModel.update({
 				id : savedData.id,
 				name : 'TEST!!!' + new Date().getTime()
-			}, function(savedData) {
+			}, (savedData) => {
 				console.log('UPDATE: ', savedData);
 
 				TestBox.TestModel.remove(savedData.id, {
-					notAuthed : function() {
+					notAuthed : () => {
 						console.log('not authed!!');
 					},
-					success : function(originData) {
+					success : (originData) => {
 						console.log('REMOVE: ', originData);
 					}
 				});

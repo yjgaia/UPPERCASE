@@ -16,7 +16,6 @@ RUN(() => {
 	CONFIG.isDevMode = true;
 	
 	BOX('UPPERCASE');
-	
 	BOX('TestBox');
 	
 	INIT_OBJECTS();
@@ -26,7 +25,6 @@ RUN(() => {
 	require('./UPPERCASE-ROOM/__TEST_NODE.js');
 	//require('./UPPERCASE-DB/__TEST_NODE.js');
 	//require('./UPPERCASE-MODEL/__TEST_NODE.js');
-	//require('./UPPERCASE-BOOT/__TEST_NODE.js');
 	
 	if (IS_TO_CREATE_SERVER === true) {
 		
