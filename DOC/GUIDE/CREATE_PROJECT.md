@@ -22,8 +22,6 @@
 2. 사용하는 JavaScript 개발툴을 엽니다.
 
 ### 간단한 뷰 생성하기
-*※ 이 과정을 진행하기 전에, [UPPERCASE-CORE](UPPERCASE-CORE.md)와 [BOX](BOX.md)에 대한 내용을 미리 숙지하시기 바랍니다.*
-
 간단한 뷰를 생성해 보도록 하겠습니다. `Sample` 폴더 내에 `BROWSER` 폴더를 생성하고, `BROWSER` 폴더에 이하 두 파일을 만들어주시기 바랍니다.
 
 * `MAIN.js` 맨 처음 실행되는 코드입니다.
@@ -65,9 +63,10 @@
     });
     ```
 
+뷰에 대한 자세한 내용은 [뷰 기능 문서](UPPERCASE-CORE-BROWSER.md#%EB%B7%B0-%EA%B8%B0%EB%8A%A5)를 참고해주시기 바랍니다.
 
 ## 프로젝트 실행을 위한 코드 작성
-이제 프로젝트 폴더(`SampleProject` 폴더)에 다음과 같이 `Sample.js` 코드를 작성합니다. `Sample.js` 코드는 프로젝트의 각종 설정을 지정하고, 프로젝트를 실행하는 코드입니다. 코드를 작성하기에 앞서 `UPPERCASE_PATH` 환경 변수가 설정되어 있어야 합니다. [설치하기 문서](INSTALL.md)를 참고해주시기 바랍니다.
+이제 프로젝트 폴더(`SampleProject` 폴더)에 다음과 같이 `Sample.js` 코드를 작성합니다. `Sample.js` 코드는 프로젝트의 각종 설정을 지정하고, 프로젝트를 실행하는 코드입니다. 코드를 작성하기에 앞서 `UPPERCASE_PATH` 환경 변수가 설정되어 있어야 합니다. 환경 변수에 대해서는 [설치하기 문서](../INSTALL.md)를 참고해주시기 바랍니다.
 
 ```javascript
 require(process.env.UPPERCASE_PATH + '/LOAD.js');
@@ -89,7 +88,7 @@ BOOT({
 });
 ```
 
-프로젝트 설정에 대한 자세한 내용은 [프로젝트 설정 문서](CONFIGURATION.md)를 참고해주세요.
+프로젝트 설정에 대한 자세한 내용은 [프로젝트 설정 문서](CONFIGURATION.md)를 참고해주시기 바랍니다.
 
 ## 프로젝트 실행
 CMD나 터미널에서 프로젝트 폴더로 이동하여 다음 명령을 실행합니다.
