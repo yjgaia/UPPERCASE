@@ -79,13 +79,11 @@ UPPERCASE가 공식 지원하는 클라이언트 목록은 다음과 같습니�
 * [Android 클라이언트](https://github.com/Hanul/Uniconn-Android)
 * [iOS 클라이언트](https://github.com/Hanul/Uniconn-iOS)
 * [Unity 클라이언트](https://github.com/Hanul/Uniconn-Unity)
+* [GameMaker: Studio 클라이언트](https://github.com/Hanul/UPPERCASE-GameMaker-Client)
 
-곧 지원 예정인 클라이언트 목록은 다음과 같습니다.
+지원 예정인 클라이언트 목록은 다음과 같습니다.
 * Unreal 클라이언트
 * Xamarin 클라이언트
-
-비공식 클라이언트 목록은 다음과 같습니다.
-* [GameMaker: Studio 클라이언트](https://github.com/Hanul/UPPERCASE-GameMaker-Client)
 
 기타 클라이언트 라이브러리를 지원받고 싶은 플랫폼이 있으면, [GitHub Issues](https://github.com/Hanul/UPPERCASE/issues)에 글을 남겨주시기 바랍니다.
 
