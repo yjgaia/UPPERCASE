@@ -3,17 +3,17 @@
  */
 global.NEXT = METHOD({
 
-	run : (countOrArray, funcs) => {
+	run : (countOrArray, funcOrFuncs) => {
 		//OPTIONAL: countOrArray
-		//REQUIRED: funcs
+		//REQUIRED: funcOrFuncs
 
 		let count;
 		let array;
 		
 		let f;
 		
-		if (funcs === undefined) {
-			funcs = countOrArray;
+		if (funcOrFuncs === undefined) {
+			funcOrFuncs = countOrArray;
 			countOrArray = undefined;
 		}
 
@@ -24,7 +24,14 @@ global.NEXT = METHOD({
 				array = countOrArray;
 			}
 		}
-
+		
+		let funcs;
+		if (CHECK_IS_ARRAY(funcOrFuncs) !== true) {
+			funcs = [funcOrFuncs];
+		} else {
+			funcs = funcOrFuncs;
+		}
+		
 		REPEAT({
 			start : funcs.length - 1,
 			end : 0

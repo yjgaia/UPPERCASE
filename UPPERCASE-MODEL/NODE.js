@@ -126,8 +126,6 @@ FOR_BOX((box) => {
 				let updateAuthKey;
 				let removeAuthKey;
 				
-				let is_idAssignable;
-				
 				let beforeCreateListeners = [];
 				let afterCreateListeners = [];
 				let beforeGetListeners = [];
