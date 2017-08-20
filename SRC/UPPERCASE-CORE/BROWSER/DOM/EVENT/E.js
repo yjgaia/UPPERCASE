@@ -10,6 +10,8 @@ global.E = CLASS({
 		
 		let e = params.e;
 		let el = params.el;
+		
+		let isBubblingStoped;
 
 		let checkIsDescendant = (parent, child) => {
 
@@ -33,6 +35,11 @@ global.E = CLASS({
 
 		let stopBubbling = self.stopBubbling = () => {
 			e.stopPropagation();
+			isBubblingStoped = true;
+		};
+		
+		let checkIsBubblingStoped = self.checkIsBubblingStoped = () => {
+			return isBubblingStoped;
 		};
 
 		let stop = self.stop = () => {
