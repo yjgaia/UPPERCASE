@@ -65,6 +65,15 @@
 
 뷰에 대한 자세한 내용은 [뷰 기능 문서](UPPERCASE-CORE-BROWSER.md#%EB%B7%B0-%EA%B8%B0%EB%8A%A5)를 참고해주시기 바랍니다.
 
+## `DEPENDENCY` 파일 작성
+`DEPENDENCY`는 프로젝트가 의존하고 있는 BOX들의 목록을 작성하는 파일입니다. 이후 [프로젝트를 실행](프로젝트-실행)하면 자동으로 BOX들을 다운로드하고 설치한 후 실행합니다.
+
+예를들어 [UUI BOX](https://box.uppercase.io/Hanul/UUI)와 [UANI BOX](https://box.uppercase.io/Hanul/UANI)를 사용하고자 하는 경우 다음과 같이 `DEPENDENCY`를 작성하고 프로젝트를 실행하면 됩니다.
+```
+Hanul/UUI
+Hanul/UANI
+```
+
 ## 프로젝트 실행을 위한 코드 작성
 이제 프로젝트 폴더(`SampleProject` 폴더)에 다음과 같이 `Sample.js` 코드를 작성합니다. `Sample.js` 코드는 프로젝트의 각종 설정을 지정하고, 프로젝트를 실행하는 코드입니다. 코드를 작성하기에 앞서 `UPPERCASE_PATH` 환경 변수가 설정되어 있어야 합니다. 환경 변수에 대해서는 [설치하기 문서](../INSTALL.md)를 참고해주시기 바랍니다.
 
