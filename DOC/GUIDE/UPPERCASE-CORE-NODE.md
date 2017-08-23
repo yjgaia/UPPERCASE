@@ -1059,7 +1059,7 @@ SERVER_CLUSTERING({
 	// 현재 서버의 이름 지정
 	thisServerName : 'serverA',
 	
-	// 클러스터링을 위한 포트 번호 지정
+	// 프로세스간 통신을 위한 포트 번호 지정
 	port : 8125
 	
 }, () => {

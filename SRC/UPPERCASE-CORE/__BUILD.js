@@ -120,11 +120,27 @@ RUN(() => {
 
 			success : (fileNames) => {
 				EACH(fileNames, (fileName) => {
-					COPY_FILE({
-						from : from + '/' + fileName,
-						to : realTo + '/' + fileName,
-						isSync : true
-					});
+					
+					if (fileName.substring(fileName.lastIndexOf('.')) === '.css') {
+						
+						WRITE_FILE({
+							path : realTo + '/' + fileName.substring(0, fileName.lastIndexOf('.')) + '.MIN.css',
+							content : MINIFY_CSS(READ_FILE({
+								path : from + '/' + fileName,
+								isSync : true
+							})),
+							isSync : true
+						});
+					}
+					
+					else {
+						
+						COPY_FILE({
+							from : from + '/' + fileName,
+							to : realTo + '/' + fileName,
+							isSync : true
+						});
+					}
 				});
 			}
 		});
@@ -140,7 +156,7 @@ RUN(() => {
 
 			success : (folderNames) => {
 				EACH(folderNames, (folderName) => {
-					copyFolder(from + '/' + folderName, to + '/' + folderName, folderName);
+					copyFolder(from + '/' + folderName, to + '/' + folderName);
 				});
 			}
 		});

@@ -5,21 +5,22 @@ UPPERCASE에는 [CPU 클러스터링](#CPU-클러스터링)과 [서버 클러스
 
 ## CPU 클러스터링
 기본적으로 Node.js 환경은 멀티코어 CPU를 지원하지 않습니다.
-UPPERCASE에서는 [`CPU_CLUSTERING`](UPPERCASE-CORE-NODE.md#cpu_clusteringwork)을 통해 멀티코어 CPU 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다.
+UPPERCASE에서는 [`CPU_CLUSTERING`](UPPERCASE-CORE-NODE.md#cpu_clusteringwork)을 통해 멀티코어 CPU 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다. 자식 프로세스들을 다루는 마스터 프로세스를 포함하여 CPU 개수만큼 프로세스가 실행됩니다. (자식 프로세스는 `CPU 개수 - 1`개만큼 실행됩니다.)
 
 ```javascript
 CPU_CLUSTERING(() => {
 
-	console.log('WORK, WORKER!: ', CPU_CLUSTERING.getWorkerId());
+	console.log('현재 프로세스의 워커 아이디: ', CPU_CLUSTERING.getWorkerId());
 
+    // 다른 프로세스로부터 데이터를 수신받음
 	CPU_CLUSTERING.on('receive', (data) => {
-		ok(CHECK_ARE_SAME([data, {
-			msg : 'Hey!'
-		}]));
+		...
 	});
 
+    // 1번 프로세스에서만 동작
 	if (CPU_CLUSTERING.getWorkerId() === 1) {
 
+        // 모든 프로세스에 데이터 송신
 		CPU_CLUSTERING.broadcast({
 			methodName : 'receive',
 			data : {
@@ -30,10 +31,10 @@ CPU_CLUSTERING(() => {
 });
 ```
 
-## 서버 간 클러스터링
-CPU간 클러스터링을 넘어, 다른 하드웨어(서버) 간 클러스터링이 가능합니다.
-UPPERCASE에서는 [`SERVER_CLUSTERING`](UPPERCASE-CORE-NODE.md#server_clusteringhosts-thisservername-port-work)을 통해 분산 서버 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다.
-다음은 두 서버 간 분산 처리를 하는 예제입니다.
+## 서버 클러스터링
+UPPERCASE를 이용하면 CPU간 클러스터링을 넘어, 다른 하드웨어(서버) 간 클러스터링이 가능합니다.
+UPPERCASE에서는 [`SERVER_CLUSTERING`](UPPERCASE-CORE-NODE.md#server_clusteringhosts-thisservername-port-work)을 통해 분산 서버 각각에 프로세스를 실행시키는 방법으로 서버 클러스터링을 지원하고 있습니다.
+다음은 두 서버 간 분산 처리를 하는 예시입니다.
 
 ```javascript
 SERVER_CLUSTERING({
@@ -47,28 +48,40 @@ SERVER_CLUSTERING({
 	// 현재 서버는 A 서버 입니다. B 서버에서는 'serverB'로 설정합니다.
 	thisServerName : 'serverA',
 	
-	// 클러스터링을 위한 포트 번호 지정
+	// 프로세스간 통신을 위한 포트 번호 지정
 	port : 8125
 	
 }, () => {
 
+	console.log('현재 서버의 이름: ', SERVER_CLUSTERING.getThisServerName());
+
+    // 다른 서버로부터 데이터를 수신받음
 	SERVER_CLUSTERING.on('receive', (data) => {
-		ok(CHECK_ARE_SAME([data, {
-			msg : 'Hey!'
-		}]));
+		...
 	});
 
-	DELAY(1, () => {
+    // serverA 서버에서만 동작
+    if (SERVER_CLUSTERING.getThisServerName() === 'serverA') {
 
+        // 모든 분산 서버에 데이터 송신
 		SERVER_CLUSTERING.broadcast({
 			methodName : 'receive',
 			data : {
 				msg : 'Hey!'
 			}
 		});
-	});
+	}
 });
 ```
+
+
+
+
+
+
+
+
+
 
 서버 분산 처리 전략에 대해서는 하단의 [UPPERCASE의 서버 분산 처리 전략](#UPPERCASE의-서버-분산-처리-전략)을 살펴보시기 바랍니다.
 
@@ -109,10 +122,14 @@ sharedDB.update({
 });
 ```
 
-## UPPERCASE의 서버 분산 처리 전략
+
+
+
+
+## UPPERCASE를 이용한 분산 서버 설계 전략
 UPPERCASE 기반 프로젝트의 기능별 서버 종류들은 다음과 같습니다.
 1. `대문 서버` : 유저들에게 [`index.html`](UPPERCASE-BOOT.md#indexhtml-%EC%88%98%EC%A0%95%ED%95%98%EA%B8%B0)과 분산 서버들의 정보를 제공하는 서버입니다.
-2. `API 서버` : 각종 기능들을 프로토콜의 제약 없이 JSON 양식으로 통신하는 서버들입니다.
+2. `통신 서버` : 각종 기능들을 프로토콜의 제약 없이 JSON 양식으로 통신하는 서버들입니다.
 3. `업로드 파일 서버` : 프로젝트에서 업로드 된 파일들을 관리하는 서버들입니다.
 4. `MongoDB 데이터베이스 서버` : MongoDB를 기반으로 데이터베이스를 관리하는 서버들입니다.
 
