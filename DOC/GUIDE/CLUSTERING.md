@@ -3,6 +3,14 @@
 # 분산 처리
 UPPERCASE에는 [CPU 클러스터링](#CPU-클러스터링)과 [서버 클러스터링](#서버-클러스터링)을 통한 분산 처리를 지원하고 있습니다. 이를 통해 멀티코어 CPU 환경 및 분산 서버 환경에서 프로젝트를 쉽게 분산하여 구동시킬 수 있습니다.
 
+## 목차
+* CPU 클러스터링
+* 서버 클러스터링
+* 프로세스간 데이터 공유
+* UPPERCASE를 이용한 분산 서버 설계 전략
+* 분산 서버간 시간 맞추기
+* MongoDB 분산 서버 설정
+
 ## CPU 클러스터링
 기본적으로 Node.js 환경은 멀티코어 CPU를 지원하지 않습니다.
 UPPERCASE에서는 [`CPU_CLUSTERING`](UPPERCASE-CORE-NODE.md#cpu_clusteringwork)을 통해 멀티코어 CPU 각각에 프로세스를 실행시키는 방법으로 멀티코어 CPU를 지원하고 있습니다. 자식 프로세스들을 다루는 마스터 프로세스를 포함하여 CPU 개수만큼 프로세스가 실행됩니다. (자식 프로세스는 `CPU 개수 - 1`개만큼 실행됩니다.)
@@ -74,32 +82,17 @@ SERVER_CLUSTERING({
 });
 ```
 
+UPPERCASE에서 제안하는 분산 서버 설계 전략에 대해서는 대해서는 하단의 [UPPERCASE를 이용한 분산 서버 설계 전략](#UPPERCASE를-이용한-분산-서버-설계-전략)을 살펴보시기 바랍니다.
 
+## 프로세스간 데이터 공유
+프로세스들은 각자 고유한 메모리 영역을 가지며, 공유 메모리 영역은 존재하지 않습니다. 따라서 프로세스들은 [메시지 전달 방식](https://en.wikipedia.org/wiki/Message_passing)을 통해 데이터를 공유해야 합니다. 이러한 과정을 추상화 하여 마치 공유되는 저장소가 존재하는 것처럼 구현한 것이 UPPERCASE에서 제공하는 `SHARED_STORE` 입니다.
 
-
-
-
-
-
-
-
-서버 분산 처리 전략에 대해서는 하단의 [UPPERCASE의 서버 분산 처리 전략](#UPPERCASE의-서버-분산-처리-전략)을 살펴보시기 바랍니다.
-
-## 프로세스 간 데이터 공유
-각 프로세스들은 고유한 메모리 영역을 가지므로, 메모리를 공유하지 않습니다.
-UPPERCASE에는 프로세스 간 데이터를 공유하기 위한 기능들이 있습니다.
-간단한 값을 저장하기 위해서는 `SHARED_STORE`를, 데이터를 저장하기 위해서는 `SHARED_DB`를 사용합니다.
+[CPU 클러스터링](#CPU-클러스터링)에도 사용할 수 있고, [서버 클러스터링](#서버-클러스터링)에도 사용할 수 있으며 둘 다 사용하는 경우에도 같은 방식으로 사용할 수 있습니다.
 
 ```javascript
 let sharedStore = SHARED_STORE('sharedStore');
-let sharedDB = SHARED_STORE('sharedDB');
 
 sharedStore.save({
-	name : 'msg',
-	value : 'Hello World!'
-});
-
-sharedDB.save({
 	id : '1234',
 	data : {
 		msg : 'Hello World!',
@@ -108,25 +101,16 @@ sharedDB.save({
 });
 ```
 
-`SHARED_DB`로 만들어진 저장소에서 데이터를 수정 할 때에는 `$inc`, `$push`, `$addToSet`, `$pull`등 [MongoDB](http://www.mongodb.org)에서 사용되는 Operator를 사용할 수 있습니다. 이를 통해 모든 프로세스의 데이터 일관성을 유지할 수 있습니다.
-*그러나 동시에 데이터가 수정되는 경우에는 서버 간 데이터의 싱크가 맞지 않을 수 있으므로, 이를 염두해 두고 로직을 작성하시기 바랍니다.*
+자세한 사용법은 [`SHARED_STORE` 문서](UPPERCASE-CORE-NODE.md#shared_storestorename)를 참고하시기 바랍니다.
 
-```javascript
-sharedDB.update({
-	id : '1234',
-	data : {
-		$inc : {
-			age : 1
-		}
-	}
-});
-```
 
 
 
 
 
 ## UPPERCASE를 이용한 분산 서버 설계 전략
+
+### 서버의 종류
 UPPERCASE 기반 프로젝트의 기능별 서버 종류들은 다음과 같습니다.
 1. `대문 서버` : 유저들에게 [`index.html`](UPPERCASE-BOOT.md#indexhtml-%EC%88%98%EC%A0%95%ED%95%98%EA%B8%B0)과 분산 서버들의 정보를 제공하는 서버입니다.
 2. `통신 서버` : 각종 기능들을 프로토콜의 제약 없이 JSON 양식으로 통신하는 서버들입니다.
@@ -139,17 +123,23 @@ MongoDB는 그 자체로 분산 서버 기능을 제공하기 때문에, 분산 
 2. 특정 도메인 주소를 담당하는 `대문 서버`가 있고, 나머지 서버들이 분산해 있는 경우
 3. `대문 서버`가 있고, 또한 `API 서버들`이 있으며 업로드 파일을 분산하여 저장하는 `업로드 파일 서버들`도 있는 경우
 
-#### 1. L4 스위치를 이용해 물리적으로 서버가 분산되어 있을 경우
+### L4 스위치를 이용해 물리적으로 서버가 분산되어 있을 경우
 이 경우에는 각 서버들이 동등하게 분배되어 모든 일을 담당할 수 있습니다.
 
-#### 2. 특정 도메인 주소를 담당하는 `대문 서버`가 있고, 나머지 서버들이 분산해 있는 경우
+### 특정 도메인 주소를 담당하는 `대문 서버`가 있고, 나머지 서버들이 분산해 있는 경우
 이 경우에는 대문 서버가 모든 유저들의 처음 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우에만 대문 서버가 역할을 수행하고, API 또는 업로드 파일 제공 등의 기능들은 모두 다른 서버들로 분산하는 전략을 취할 수 있습니다.
 
-#### 3. `대문 서버`가 있고, 또한 `API 서버들`이 있으며 업로드 파일을 분산하여 저장하는 `업로드 파일 서버들`도 있는 경우
+### `대문 서버`가 있고, 또한 `API 서버들`이 있으며 업로드 파일을 분산하여 저장하는 `업로드 파일 서버들`도 있는 경우
 이 경우 또한 마찬가지로 대문 서버가 모든 유저들의 처음 접속을 맞이하므로, 웹 페이지나 분산 서버들의 정보를 가져오는 경우를 제외한 기능들은 최대한 다른 서버들로 분산합니다. 하지만 API 서버들과 업로드 서버군 또한 나뉘어져 있기 때문에, 각각 기능에 맞추어 분산하는 전략을 취할 수 있습니다.
 
-### 각 서버간 시간을 맞추어야 합니다.
-리눅스일 경우 아래 명령어들로 서버 시간을 서울 표준시로 맞춥니다.
+
+
+
+
+
+
+## 분산 서버간 시간 맞추기
+분산 서버끼리 설정된 시간이 다르면, 데이터를 처리하는데 있어 문제가 발생할 수 있습니다. 따라서 분산 서버간 운영체제의 시간을 통일시키는 것이 좋습니다. 아래 명령어는 리눅스 환경에서 운영체제의 시간을 서울 표준시로 맞춥니다. 분산된 모든 서버에서 실행하여 시간을 통일시켜 주시기 바랍니다.
 ```
 mv /etc/localtime /etc/localtime_old
 ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
@@ -157,16 +147,22 @@ rdate -p time.bora.net
 rdate -s time.bora.net
 ```
 
-### MongoDB의 분산 처리
-아래 명령어들은 `root` 유저일 때를 기반으로 한 것입니다. AWS등을 사용하는 경우에는 모든 명령어 앞에 `sudo`를 붙혀주시기 바랍니다.
 
-우선 인증을 위한 키 파일을 생성합니다. ***이 키는 모든 분산 서버에 동일하게 복사되어야 합니다.***
+
+
+
+## MongoDB 분산 서버 설정
+*아래 설명은 독자가 리눅스 환경을 사용하며, `root` 유저로 로그인 한 상태라고 가정하여 설명합니다. `root` 유저가 아니거나 [AWS](https://aws.amazon.com)와 같은 클라우드 서버를 사용하는 경우에는 모든 명령어 앞에 `sudo`를 붙혀주시기 바랍니다.*
+
+### 1. 키 파일 생성
+인증을 위한 키 파일을 생성합니다. ***이 키는 모든 분산 서버에 동일하게 복사되어야 합니다.***
 ```
 mkdir /srv/mongodb
 openssl rand -base64 741 > /srv/mongodb/mongodb-shard-keyfile
 chmod 600 /srv/mongodb/mongodb-shard-keyfile
 ```
 
+### 2. 몽고 DB 데몬 생성
 몽고 DB 데몬을 원하는 수(CPU 개수 등) 만큼 생성합니다. 여기서 중요한 점은 `--shardsvr` 옵션을 붙혀야 한다는 것입니다. 또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
 ```
 mkdir /data
@@ -190,7 +186,7 @@ mongod --shardsvr --port 30007 --fork --keyFile /srv/mongodb/mongodb-shard-keyfi
 mongod --shardsvr --port 30008 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_db8.log --dbpath /data/shard_db8
 ```
 
-#### configdb가 여러대일 경우
+### 설정 DB 데몬 생성
 configdb가 여러대일 경우에는 다음과 같이 설정합니다.
 데몬들을 관리하는 설정 데몬을 `--configsvr` 옵션을 붙혀 생성합니다.또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
 ```
@@ -223,6 +219,7 @@ rs.initiate(
 );
 ```
 
+### `mongos` 실행
 이제 `mongos`를 실행합니다. `--configdb` 옵션으로 위에서 생성한 설정 데몬을 가리킵니다. 11.22.33.44는 해당하는 ip로 변경해주시기 바랍니다.
 ```
 mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/11.22.33.44:40001,11.22.33.44:40002,11.22.33.44:40003
@@ -290,7 +287,7 @@ mongorestore --port {{새 데이터베이스의 포트}} --db {{데이터베이�
 
 이제 모든 설정이 끝났습니다.
 
-#### 몽고 DB 서버를 재시작 하는 경우
+### 몽고 DB 서버를 재시작 하는 경우
 `mongos`에 접속합니다.
 ```
 mongo --port 27018
