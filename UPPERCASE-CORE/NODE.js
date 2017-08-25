@@ -6483,10 +6483,7 @@ global.MINIFY_JS = METHOD(() => {
 
 				return UglifyJS.minify(code, {
 					fromString : true,
-					mangle : true,
-					output : {
-						comments : /@license|@preserve|^!/
-					}
+					mangle : true
 				}).code;
 			
 			} catch(error) {

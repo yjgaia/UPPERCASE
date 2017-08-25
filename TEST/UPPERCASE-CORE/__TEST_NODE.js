@@ -91,7 +91,7 @@ RUN(() => {
 	//require('./NODE/REQUEST/DOWNLOAD.js');
 	
 	// 손쉬운 서버 생성
-	require('./NODE/SERVER/WEB_SERVER.js');
+	//require('./NODE/SERVER/WEB_SERVER.js');
 	//require('./NODE/SERVER/SOCKET_SERVER.js');
 	//require('./NODE/SERVER/CONNECT_TO_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/WEB_SOCKET_SERVER.js');
@@ -118,7 +118,7 @@ RUN(() => {
 	require('./NODE/ENCRYPTION/SHA512.js');*/
 	
 	// 코드 압축 기능
-	//require('./NODE/MINIFY/MINIFY_JS.js');
+	require('./NODE/MINIFY/MINIFY_JS.js');
 	//require('./NODE/MINIFY/MINIFY_CSS.js');
 	
 	// MSG
