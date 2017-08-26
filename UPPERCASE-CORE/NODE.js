@@ -4791,75 +4791,54 @@ global.COPY_FILE = METHOD(() => {
 					callback = callbackOrHandlers.success;
 				}
 			}
-
-			CREATE_FOLDER({
-				path : Path.dirname(to),
-				isSync : isSync
-			}, {
-
-				error : errorHandler,
-
-				success : () => {
-
-					// when normal mode
-					if (isSync !== true) {
-
-						CHECK_FILE_EXISTS(from, (isExists) => {
-
-							if (isExists === true) {
-
-								let reader = FS.createReadStream(from);
-
-								reader.pipe(FS.createWriteStream(to));
-
-								reader.on('error', (error) => {
-
-									let errorMsg = error.toString();
-
-									if (errorHandler !== undefined) {
-										errorHandler(errorMsg);
-									} else {
-										SHOW_ERROR('COPY_FILE', errorMsg);
-									}
-								});
-
-								reader.on('end', () => {
-									if (callback !== undefined) {
-										callback();
-									}
-								});
-
-							} else {
-
-								if (notExistsHandler !== undefined) {
-									notExistsHandler(from);
-								} else {
-									SHOW_WARNING('COPY_FILE', MSG({
-										ko : '파일이 존재하지 않습니다.'
-									}), {
-										from : from
+			
+			if (from === to) {
+				if (callback !== undefined) {
+					callback();
+				}
+			}
+			
+			else {
+				
+				CREATE_FOLDER({
+					path : Path.dirname(to),
+					isSync : isSync
+				}, {
+	
+					error : errorHandler,
+	
+					success : () => {
+	
+						// when normal mode
+						if (isSync !== true) {
+	
+							CHECK_FILE_EXISTS(from, (isExists) => {
+	
+								if (isExists === true) {
+	
+									let reader = FS.createReadStream(from);
+	
+									reader.pipe(FS.createWriteStream(to));
+	
+									reader.on('error', (error) => {
+	
+										let errorMsg = error.toString();
+	
+										if (errorHandler !== undefined) {
+											errorHandler(errorMsg);
+										} else {
+											SHOW_ERROR('COPY_FILE', errorMsg);
+										}
 									});
-								}
-							}
-						});
-					}
-
-					// when sync mode
-					else {
-
-						RUN(() => {
-
-							try {
-
-								if (CHECK_FILE_EXISTS({
-									path : from,
-									isSync : true
-								}) === true) {
-
-									FS.writeFileSync(to, FS.readFileSync(from));
-
+	
+									reader.on('end', () => {
+										if (callback !== undefined) {
+											callback();
+										}
+									});
+	
 								} else {
-
+	
 									if (notExistsHandler !== undefined) {
 										notExistsHandler(from);
 									} else {
@@ -4869,32 +4848,245 @@ global.COPY_FILE = METHOD(() => {
 											from : from
 										});
 									}
-
-									// do not run callback.
-									return;
 								}
-
-							} catch(error) {
-
-								if (error !== TO_DELETE) {
-
-									let errorMsg = error.toString();
-
-									if (errorHandler !== undefined) {
-										errorHandler(errorMsg);
+							});
+						}
+	
+						// when sync mode
+						else {
+	
+							RUN(() => {
+	
+								try {
+	
+									if (CHECK_FILE_EXISTS({
+										path : from,
+										isSync : true
+									}) === true) {
+	
+										FS.writeFileSync(to, FS.readFileSync(from));
+	
 									} else {
-										SHOW_ERROR('COPY_FILE', errorMsg);
+	
+										if (notExistsHandler !== undefined) {
+											notExistsHandler(from);
+										} else {
+											SHOW_WARNING('COPY_FILE', MSG({
+												ko : '파일이 존재하지 않습니다.'
+											}), {
+												from : from
+											});
+										}
+	
+										// do not run callback.
+										return;
+									}
+	
+								} catch(error) {
+	
+									if (error !== TO_DELETE) {
+	
+										let errorMsg = error.toString();
+	
+										if (errorHandler !== undefined) {
+											errorHandler(errorMsg);
+										} else {
+											SHOW_ERROR('COPY_FILE', errorMsg);
+										}
 									}
 								}
-							}
-
-							if (callback !== undefined) {
-								callback();
-							}
-						});
+	
+								if (callback !== undefined) {
+									callback();
+								}
+							});
+						}
 					}
+				});
+			}
+		}
+	};
+});
+
+/*
+ * 폴더를 복사합니다.
+ */
+global.COPY_FOLDER = METHOD(() => {
+
+	let FS = require('fs');
+
+	return {
+
+		run : (params, callbackOrHandlers) => {
+			//REQUIRED: params
+			//REQUIRED: params.from		복사할 폴더의 위치
+			//REQUIRED: params.to		폴더를 복사할 위치
+			//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.notExists
+			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
+
+			let from = params.from;
+			let to = params.to;
+			let isSync = params.isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				notExistsHandler = callbackOrHandlers.notExists;
+				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
+			}
+			
+			if (from === to) {
+				if (callback !== undefined) {
+					callback();
 				}
-			});
+			}
+			
+			else {
+				
+				// when normal mode
+				if (isSync !== true) {
+	
+					CHECK_FILE_EXISTS(from, (isExists) => {
+	
+						if (isExists === true) {
+							
+							NEXT([
+							(next) => {
+								
+								FIND_FILE_NAMES(from, (fileNames) => {
+									
+									PARALLEL(fileNames, [
+									(fileName, done) => {
+										COPY_FILE({
+											from : from + '/' + fileName,
+											to : to + '/' + fileName
+										}, done);
+									},
+									
+									() => {
+										next();
+									}]);
+								});
+							},
+							
+							() => {
+								return () => {
+									
+									FIND_FOLDER_NAMES(from, (folderNames) => {
+										
+										PARALLEL(folderNames, [
+										(folderName, done) => {
+											COPY_FOLDER({
+												from : from + '/' + folderName,
+												to : to + '/' + folderName
+											}, done);
+										},
+										
+										() => {
+											
+											if (callback !== undefined) {
+												callback();
+											}
+										}]);
+									});
+								};
+							}]);
+	
+						} else {
+	
+							if (notExistsHandler !== undefined) {
+								notExistsHandler(from);
+							} else {
+								SHOW_WARNING('COPY_FOLDER', MSG({
+									ko : '폴더가 존재하지 않습니다.'
+								}), {
+									from : from
+								});
+							}
+						}
+					});
+				}
+	
+				// when sync mode
+				else {
+	
+					RUN(() => {
+	
+						try {
+	
+							if (CHECK_FILE_EXISTS({
+								path : from,
+								isSync : true
+							}) === true) {
+								
+								FIND_FILE_NAMES({
+									path : from,
+									isSync : true
+								}, EACH((fileName) => {
+									
+									COPY_FILE({
+										from : from + '/' + fileName,
+										to : to + '/' + fileName,
+										isSync : true
+									});
+								}));
+								
+								FIND_FOLDER_NAMES({
+									path : from,
+									isSync : true
+								}, EACH((folderName) => {
+									
+									COPY_FOLDER({
+										from : from + '/' + folderName,
+										to : to + '/' + folderName,
+										isSync : true
+									});
+								}));
+	
+							} else {
+	
+								if (notExistsHandler !== undefined) {
+									notExistsHandler(from);
+								} else {
+									SHOW_WARNING('COPY_FOLDER', MSG({
+										ko : '폴더가 존재하지 않습니다.'
+									}), {
+										from : from
+									});
+								}
+	
+								// do not run callback.
+								return;
+							}
+	
+						} catch(error) {
+							
+							if (error !== TO_DELETE) {
+								
+								let errorMsg = error.toString();
+		
+								if (errorHandler !== undefined) {
+									errorHandler(errorMsg);
+								} else {
+									SHOW_ERROR('COPY_FOLDER', errorMsg);
+								}
+							}
+						}
+	
+						if (callback !== undefined) {
+							callback();
+						}
+					});
+				}
+			}
 		}
 	};
 });
@@ -5471,21 +5663,9 @@ global.GET_FILE_INFO = METHOD(() => {
 									SHOW_ERROR('GET_FILE_INFO', errorMsg);
 								}
 
-							} else if (stat.isDirectory() === true) {
-
-								if (notExistsHandler !== undefined) {
-									notExistsHandler(path);
-								} else {
-									SHOW_WARNING('GET_FILE_INFO', MSG({
-										ko : '파일이 존재하지 않습니다.'
-									}), {
-										path : path
-									});
-								}
-
 							} else if (callback !== undefined) {
 								callback({
-									size : stat.size,
+									size : stat.isDirectory() === true ? undefined : stat.size,
 									createTime : stat.birthtime,
 									lastUpdateTime : stat.mtime
 								});
@@ -5521,34 +5701,19 @@ global.GET_FILE_INFO = METHOD(() => {
 							
 							let stat = FS.statSync(path);
 
-							if (stat.isDirectory() === true) {
-
-								if (notExistsHandler !== undefined) {
-									notExistsHandler(path);
-								} else {
-									SHOW_WARNING('GET_FILE_INFO', MSG({
-										ko : '파일이 존재하지 않습니다.'
-									}), {
-										path : path
-									});
-								}
-								
-							} else {
-								
-								if (callback !== undefined) {
-									callback({
-										size : stat.size,
-										createTime : stat.birthtime,
-										lastUpdateTime : stat.mtime
-									});
-								}
-								
-								return {
-									size : stat.size,
+							if (callback !== undefined) {
+								callback({
+									size : stat.isDirectory() === true ? undefined : stat.size,
 									createTime : stat.birthtime,
 									lastUpdateTime : stat.mtime
-								};
+								});
 							}
+							
+							return {
+								size : stat.isDirectory() === true ? undefined : stat.size,
+								createTime : stat.birthtime,
+								lastUpdateTime : stat.mtime
+							};
 
 						} else {
 
@@ -5588,59 +5753,149 @@ global.GET_FILE_INFO = METHOD(() => {
 /*
  * 파일의 위치를 이동시킵니다.
  */
-global.MOVE_FILE = METHOD({
+global.MOVE_FILE = METHOD(() => {
 
-	run : (params, callbackOrHandlers) => {
-		//REQUIRED: params
-		//REQUIRED: params.from		파일의 원래 위치
-		//REQUIRED: params.to		파일을 옮길 위치
-		//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
-		//OPTIONAL: callbackOrHandlers
-		//OPTIONAL: callbackOrHandlers.notExistsHandler
-		//OPTIONAL: callbackOrHandlers.error
-		//OPTIONAL: callbackOrHandlers.success
-
-		let from = params.from;
-		let to = params.to;
-		let isSync = params.isSync;
-		
-		let notExistsHandler;
-		let errorHandler;
-		let callback;
-
-		if (callbackOrHandlers !== undefined) {
-			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-				callback = callbackOrHandlers;
-			} else {
-				notExistsHandler = callbackOrHandlers.notExists;
-				errorHandler = callbackOrHandlers.error;
-				callback = callbackOrHandlers.success;
-			}
-		}
-		
-		if (from === to) {
-			if (callback !== undefined) {
-				callback();
-			}
-		}
-		
-		else {
-			
-			COPY_FILE(params, {
-				error : errorHandler,
-				notExists : notExistsHandler,
-				success : () => {
+	let FS = require('fs');
+	let Path = require('path');
 	
-					REMOVE_FILE({
-						path : from,
-						isSync : isSync
-					}, {
-						error : errorHandler,
-						notExists : notExistsHandler,
-						success : callback
-					});
+	return {
+		
+		run : (params, callbackOrHandlers) => {
+			//REQUIRED: params
+			//REQUIRED: params.from		파일의 원래 위치
+			//REQUIRED: params.to		파일을 옮길 위치
+			//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.notExistsHandler
+			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
+	
+			let from = params.from;
+			let to = params.to;
+			let isSync = params.isSync;
+			
+			let notExistsHandler;
+			let errorHandler;
+			let callback;
+	
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					callback = callbackOrHandlers;
+				} else {
+					notExistsHandler = callbackOrHandlers.notExists;
+					errorHandler = callbackOrHandlers.error;
+					callback = callbackOrHandlers.success;
 				}
-			});
+			}
+			
+			if (from === to) {
+				if (callback !== undefined) {
+					callback();
+				}
+			}
+			
+			else {
+				
+				CREATE_FOLDER({
+					path : Path.dirname(to),
+					isSync : isSync
+				}, {
+	
+					error : errorHandler,
+	
+					success : () => {
+	
+						// when normal mode
+						if (isSync !== true) {
+	
+							CHECK_FILE_EXISTS(from, (isExists) => {
+	
+								if (isExists === true) {
+	
+									FS.rename(from, to, (error) => {
+										
+										if (error !== TO_DELETE) {
+	
+											let errorMsg = error.toString();
+	
+											if (errorHandler !== undefined) {
+												errorHandler(errorMsg);
+											} else {
+												SHOW_ERROR('MOVE_FILE', errorMsg);
+											}
+	
+										} else if (callback !== undefined) {
+											callback(buffer);
+										}
+									});
+	
+								} else {
+	
+									if (notExistsHandler !== undefined) {
+										notExistsHandler(from);
+									} else {
+										SHOW_WARNING('MOVE_FILE', MSG({
+											ko : '파일이 존재하지 않습니다.'
+										}), {
+											from : from
+										});
+									}
+								}
+							});
+						}
+	
+						// when sync mode
+						else {
+	
+							RUN(() => {
+	
+								try {
+	
+									if (CHECK_FILE_EXISTS({
+										path : from,
+										isSync : true
+									}) === true) {
+	
+										FS.renameSync(from, to);
+	
+									} else {
+	
+										if (notExistsHandler !== undefined) {
+											notExistsHandler(from);
+										} else {
+											SHOW_WARNING('MOVE_FILE', MSG({
+												ko : '파일이 존재하지 않습니다.'
+											}), {
+												from : from
+											});
+										}
+	
+										// do not run callback.
+										return;
+									}
+	
+								} catch(error) {
+	
+									if (error !== TO_DELETE) {
+	
+										let errorMsg = error.toString();
+	
+										if (errorHandler !== undefined) {
+											errorHandler(errorMsg);
+										} else {
+											SHOW_ERROR('MOVE_FILE', errorMsg);
+										}
+									}
+								}
+	
+								if (callback !== undefined) {
+									callback();
+								}
+							});
+						}
+					}
+				});
+			}
 		}
 	}
 });
@@ -6046,7 +6301,7 @@ global.REMOVE_FOLDER = METHOD(() => {
 							};
 						},
 						
-						(next) => {
+						() => {
 							return () => {
 								
 								FS.rmdir(path, (error) => {

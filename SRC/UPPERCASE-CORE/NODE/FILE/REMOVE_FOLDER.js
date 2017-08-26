@@ -81,7 +81,7 @@ global.REMOVE_FOLDER = METHOD(() => {
 							};
 						},
 						
-						(next) => {
+						() => {
 							return () => {
 								
 								FS.rmdir(path, (error) => {

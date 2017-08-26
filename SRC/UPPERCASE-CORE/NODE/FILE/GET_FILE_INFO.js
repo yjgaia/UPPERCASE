@@ -62,21 +62,9 @@ global.GET_FILE_INFO = METHOD(() => {
 									SHOW_ERROR('GET_FILE_INFO', errorMsg);
 								}
 
-							} else if (stat.isDirectory() === true) {
-
-								if (notExistsHandler !== undefined) {
-									notExistsHandler(path);
-								} else {
-									SHOW_WARNING('GET_FILE_INFO', MSG({
-										ko : '파일이 존재하지 않습니다.'
-									}), {
-										path : path
-									});
-								}
-
 							} else if (callback !== undefined) {
 								callback({
-									size : stat.size,
+									size : stat.isDirectory() === true ? undefined : stat.size,
 									createTime : stat.birthtime,
 									lastUpdateTime : stat.mtime
 								});
@@ -112,34 +100,19 @@ global.GET_FILE_INFO = METHOD(() => {
 							
 							let stat = FS.statSync(path);
 
-							if (stat.isDirectory() === true) {
-
-								if (notExistsHandler !== undefined) {
-									notExistsHandler(path);
-								} else {
-									SHOW_WARNING('GET_FILE_INFO', MSG({
-										ko : '파일이 존재하지 않습니다.'
-									}), {
-										path : path
-									});
-								}
-								
-							} else {
-								
-								if (callback !== undefined) {
-									callback({
-										size : stat.size,
-										createTime : stat.birthtime,
-										lastUpdateTime : stat.mtime
-									});
-								}
-								
-								return {
-									size : stat.size,
+							if (callback !== undefined) {
+								callback({
+									size : stat.isDirectory() === true ? undefined : stat.size,
 									createTime : stat.birthtime,
 									lastUpdateTime : stat.mtime
-								};
+								});
 							}
+							
+							return {
+								size : stat.isDirectory() === true ? undefined : stat.size,
+								createTime : stat.birthtime,
+								lastUpdateTime : stat.mtime
+							};
 
 						} else {
 

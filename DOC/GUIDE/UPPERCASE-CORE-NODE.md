@@ -102,7 +102,7 @@ READ_FILE('some.txt', {
 ```
 
 ### `GET_FILE_INFO`
-파일의 정보를 불러옵니다. 파일의 크기(`size`), 생성 시간(`createTime`), 최종 수정 시간(`lastUpdateTime`)을 불러옵니다.
+파일이나 폴더의 정보를 불러옵니다. 파일의 경우 파일의 크기(`size`), 생성 시간(`createTime`), 최종 수정 시간(`lastUpdateTime`)을, 폴더의 경우 생성 시간(`createTime`), 최종 수정 시간(`lastUpdateTime`)을 불러옵니다.
 
 사용 가능한 형태들은 다음과 같습니다.
 * `GET_FILE_INFO(path, (info) => {})`
@@ -120,7 +120,11 @@ GET_FILE_INFO('some.txt', {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : (info) => {
-		console.log('파일의 크기: ' + info.size + ' 바이트');
+		
+		if (info.size !== undefined) {
+			console.log('파일의 크기: ' + info.size + ' 바이트');
+		}
+		
 		console.log('파일의 생성 시간: ' + info.createTime);
 		console.log('파일의 최종 수정 시간: ' + info.lastUpdateTime);
 	}
@@ -155,7 +159,7 @@ COPY_FILE({
 ```
 
 ### `MOVE_FILE`
-파일의 위치를 이동시킵니다.
+파일이나 폴더의 위치를 이동시킵니다.
 
 사용 가능한 형태들은 다음과 같습니다.
 * `MOVE_FILE({from:, to:}, () => {})`
@@ -237,6 +241,33 @@ CREATE_FOLDER('SomeFolder', {
 	},
 	success : () => {
 		console.log('폴더를 생성했습니다.');
+	}
+});
+```
+
+### `COPY_FOLDER`
+폴더를 복사합니다.
+
+사용 가능한 형태들은 다음과 같습니다.
+* `COPY_FOLDER({from:, to:}, () => {})`
+* `COPY_FOLDER({from:, to:}, {notExists:, success:})`
+* `COPY_FOLDER({from:, to:}, {error:, success:})`
+* `COPY_FOLDER({from:, to:}, {notExists:, error:, success:})`
+* `COPY_FOLDER({from:, to:, isSync: true})`
+
+```javascript
+COPY_FOLDER({
+	from : 'from',
+	to : 'to'
+}, {
+	notExists : () => {
+		console.log('폴더가 존재하지 않습니다.');
+	},
+	error : (errorMsg) => {
+		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	},
+	success : () => {
+		console.log('폴더를 복사했습니다.');
 	}
 });
 ```
