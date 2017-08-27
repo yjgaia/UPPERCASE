@@ -26,7 +26,7 @@ sroute('secure.site.com', 8887, '/home/site/privkey.pem', '/home/site/cert.pem')
 3. 이후 UPPERCASE 기반 프로젝트 설정에 관련 설정을 추가하거나, SkyProxy를 사용하여 SSL 인증서를 설정하면 됩니다.
 
 ### 인증서 자동으로 갱신하기
-[Let's Encrypt](https://letsencrypt.org)는 90일 이내에 갱신을 해야만 계속해서 사용할 수 있다는 제한이 있습니다. Certbot으로 인증서를 발급받은 경우 아래 방법에 따라 자동갱신을 설정하면 계속해서 인증서를 사용할 수 있습니다.
+[Let's Encrypt](https://letsencrypt.org)는 90일 이내에 갱신을 해야만 계속해서 사용할 수 있다는 제한이 있습니다. Certbot으로 인증서를 발급받은 경우 아래 방법에 따라 자동갱신을 설정하면 계속해서 인증서를 사용할 수 있습니다. (단, 서버를 이전하는 경우에는 인증서를 새로 발급받아야 합니다.)
 
 1. UPPERCASE-CORE-NODE의 `RUN_SCHEDULE_DAEMON` 기능을 이용해 아래와 같이 인증서를 30일에 한번씩 자동으로 갱신하는 코드를 작성합니다.
     ```javascript
