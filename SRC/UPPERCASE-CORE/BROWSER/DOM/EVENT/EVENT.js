@@ -203,14 +203,19 @@ global.EVENT = CLASS((cls) => {
 			eventMaps[nodeId][name].push(self);
 
 			let removeFromMap = () => {
-
-				REMOVE({
-					array : eventMaps[nodeId][name],
-					value : self
-				});
-
-				if (eventMaps[nodeId][name].length <= 0) {
-					delete eventMaps[nodeId][name];
+				
+				let events = eventMaps[nodeId][name];
+				
+				if (events !== undefined) {
+					
+					REMOVE({
+						array : events,
+						value : self
+					});
+	
+					if (events.length <= 0) {
+						delete eventMaps[nodeId][name];
+					}
 				}
 
 				if (CHECK_IS_EMPTY_DATA(eventMaps[nodeId]) === true) {
