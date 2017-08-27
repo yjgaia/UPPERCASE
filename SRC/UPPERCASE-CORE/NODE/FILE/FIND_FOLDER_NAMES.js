@@ -23,8 +23,6 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 			let errorHandler;
 			let callback;
 
-			let folderNames = [];
-
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
 				path = pathOrParams;
@@ -43,6 +41,8 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 				}
 			}
 
+			let folderNames = [];
+
 			// when normal mode
 			if (isSync !== true) {
 
@@ -57,9 +57,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, pathOrParams);
 								} else {
-									SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg);
+									SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg, pathOrParams);
 								}
 
 							} else if (callback !== undefined) {
@@ -76,9 +76,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 												let errorMsg = error.toString();
 
 												if (errorHandler !== undefined) {
-													errorHandler(errorMsg);
+													errorHandler(errorMsg, pathOrParams);
 												} else {
-													SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg);
+													SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg, pathOrParams);
 												}
 
 											} else {
@@ -162,9 +162,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg);
+								SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg, pathOrParams);
 							}
 						}
 					}

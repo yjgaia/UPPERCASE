@@ -48,9 +48,9 @@ global.CHECK_IS_FOLDER = METHOD(() => {
 						let errorMsg = error.toString();
 
 						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
+							errorHandler(errorMsg, pathOrParams);
 						} else {
-							SHOW_ERROR('CHECK_IS_FOLDER', errorMsg);
+							SHOW_ERROR('CHECK_IS_FOLDER', errorMsg, pathOrParams);
 						}
 
 					} else if (callback !== undefined) {

@@ -68,7 +68,7 @@ WRITE_FILE({
 	path : 'some.txt',
 	content : '이것은 텍스트 파일입니다.'
 }, {
-	error : (errorMsg) => {
+	error : (errorMsg, params) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : () => {
@@ -92,7 +92,7 @@ READ_FILE('some.txt', {
 	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : (errorMsg) => {
+	error : (errorMsg, pathOrParams) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : (buffer) => {
@@ -116,7 +116,7 @@ GET_FILE_INFO('some.txt', {
 	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : (errorMsg) => {
+	error : (errorMsg, pathOrParams) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : (info) => {
@@ -149,7 +149,7 @@ COPY_FILE({
 	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : (errorMsg) => {
+	error : (errorMsg, params) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : () => {
@@ -176,7 +176,7 @@ MOVE_FILE({
 	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : (errorMsg) => {
+	error : (errorMsg, params) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : () => {
@@ -200,7 +200,7 @@ REMOVE_FILE('some.txt', {
 	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : (errorMsg) => {
+	error : (errorMsg, pathOrParams) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : () => {
@@ -236,7 +236,7 @@ CHECK_FILE_EXISTS('some.txt', (isExists) => {
 
 ```javascript
 CREATE_FOLDER('SomeFolder', {
-	error : (errorMsg) => {
+	error : (errorMsg, pathOrParams) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : () => {
@@ -263,7 +263,7 @@ COPY_FOLDER({
 	notExists : () => {
 		console.log('폴더가 존재하지 않습니다.');
 	},
-	error : (errorMsg) => {
+	error : (errorMsg, params) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : () => {
@@ -287,7 +287,7 @@ REMOVE_FOLDER('SomeFolder', {
 	notExists : () => {
 		console.log('폴더가 존재하지 않습니다.');
 	},
-	error : (errorMsg) => {
+	error : (errorMsg, pathOrParams) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : () => {
@@ -301,14 +301,20 @@ REMOVE_FOLDER('SomeFolder', {
 
 사용 가능한 형태들은 다음과 같습니다.
 * `CHECK_IS_FOLDER(path, (isFolder) => {})`
+* `CHECK_IS_FOLDER(path, {error:, success:})`
 * `CHECK_IS_FOLDER({path:, isSync: true})`
 
 ```javascript
-CHECK_IS_FOLDER('SomeFolder', (isFolder) => {
-	if (isFolder === true) {
-		console.log('폴더입니다.');
-	} else {
-		console.log('파일입니다.');
+CHECK_IS_FOLDER('SomeFolder', {
+	error : (errorMsg, pathOrParams) => {
+		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
+	},
+	success : (isFolder) => {
+		if (isFolder === true) {
+			console.log('폴더입니다.');
+		} else {
+			console.log('파일입니다.');
+		}
 	}
 });
 ```
@@ -328,7 +334,7 @@ FIND_FILE_NAMES('SomeFolder', {
 	notExists : () => {
 		console.log('폴더가 존재하지 않습니다.');
 	},
-	error : (errorMsg) => {
+	error : (errorMsg, pathOrParams) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : (fileNames) => {
@@ -352,7 +358,7 @@ FIND_FOLDER_NAMES('SomeFolder', {
 	notExists : () => {
 		console.log('폴더가 존재하지 않습니다.');
 	},
-	error : (errorMsg) => {
+	error : (errorMsg, pathOrParams) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : (folderNames) => {

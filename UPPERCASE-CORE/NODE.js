@@ -4735,9 +4735,9 @@ global.CHECK_IS_FOLDER = METHOD(() => {
 						let errorMsg = error.toString();
 
 						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
+							errorHandler(errorMsg, pathOrParams);
 						} else {
-							SHOW_ERROR('CHECK_IS_FOLDER', errorMsg);
+							SHOW_ERROR('CHECK_IS_FOLDER', errorMsg, pathOrParams);
 						}
 
 					} else if (callback !== undefined) {
@@ -4825,9 +4825,9 @@ global.COPY_FILE = METHOD(() => {
 										let errorMsg = error.toString();
 	
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, params);
 										} else {
-											SHOW_ERROR('COPY_FILE', errorMsg);
+											SHOW_ERROR('COPY_FILE', errorMsg, params);
 										}
 									});
 	
@@ -4889,9 +4889,9 @@ global.COPY_FILE = METHOD(() => {
 										let errorMsg = error.toString();
 	
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, params);
 										} else {
-											SHOW_ERROR('COPY_FILE', errorMsg);
+											SHOW_ERROR('COPY_FILE', errorMsg, params);
 										}
 									}
 								}
@@ -4922,10 +4922,10 @@ global.COPY_FOLDER = METHOD(() => {
 			//REQUIRED: params.from		복사할 폴더의 위치
 			//REQUIRED: params.to		폴더를 복사할 위치
 			//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
-			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
-			//REQUIRED: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.success
 
 			let from = params.from;
 			let to = params.to;
@@ -5074,9 +5074,9 @@ global.COPY_FOLDER = METHOD(() => {
 								let errorMsg = error.toString();
 		
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, params);
 								} else {
-									SHOW_ERROR('COPY_FOLDER', errorMsg);
+									SHOW_ERROR('COPY_FOLDER', errorMsg, params);
 								}
 							}
 						}
@@ -5158,9 +5158,9 @@ global.CREATE_FOLDER = METHOD(() => {
 										let errorMsg = error.toString();
 
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, pathOrParams);
 										} else {
-											SHOW_ERROR('CREATE_FOLDER', errorMsg);
+											SHOW_ERROR('CREATE_FOLDER', errorMsg, pathOrParams);
 										}
 
 									} else {
@@ -5220,9 +5220,9 @@ global.CREATE_FOLDER = METHOD(() => {
 						let errorMsg = error.toString();
 
 						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
+							errorHandler(errorMsg, pathOrParams);
 						} else {
-							SHOW_ERROR('CREATE_FOLDER', errorMsg);
+							SHOW_ERROR('CREATE_FOLDER', errorMsg, pathOrParams);
 						}
 					}
 				}
@@ -5259,8 +5259,6 @@ global.FIND_FILE_NAMES = METHOD(() => {
 			let notExistsHandler
 			let errorHandler;
 			let callback;
-			
-			let fileNames = [];
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -5279,6 +5277,8 @@ global.FIND_FILE_NAMES = METHOD(() => {
 					callback = callbackOrHandlers.success;
 				}
 			}
+			
+			let fileNames = [];
 
 			// when normal mode
 			if (isSync !== true) {
@@ -5294,9 +5294,9 @@ global.FIND_FILE_NAMES = METHOD(() => {
 								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, pathOrParams);
 								} else {
-									SHOW_ERROR('FIND_FILE_NAMES', errorMsg);
+									SHOW_ERROR('FIND_FILE_NAMES', errorMsg, pathOrParams);
 								}
 
 							} else if (callback !== undefined) {
@@ -5313,9 +5313,9 @@ global.FIND_FILE_NAMES = METHOD(() => {
 												let errorMsg = error.toString();
 
 												if (errorHandler !== undefined) {
-													errorHandler(errorMsg);
+													errorHandler(errorMsg, pathOrParams);
 												} else {
-													SHOW_ERROR('FIND_FILE_NAMES', errorMsg);
+													SHOW_ERROR('FIND_FILE_NAMES', errorMsg, pathOrParams);
 												}
 
 											} else {
@@ -5399,9 +5399,9 @@ global.FIND_FILE_NAMES = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('FIND_FILE_NAMES', errorMsg);
+								SHOW_ERROR('FIND_FILE_NAMES', errorMsg, pathOrParams);
 							}
 						}
 					}
@@ -5442,8 +5442,6 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 			let errorHandler;
 			let callback;
 
-			let folderNames = [];
-
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
 				path = pathOrParams;
@@ -5462,6 +5460,8 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 				}
 			}
 
+			let folderNames = [];
+
 			// when normal mode
 			if (isSync !== true) {
 
@@ -5476,9 +5476,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, pathOrParams);
 								} else {
-									SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg);
+									SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg, pathOrParams);
 								}
 
 							} else if (callback !== undefined) {
@@ -5495,9 +5495,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 												let errorMsg = error.toString();
 
 												if (errorHandler !== undefined) {
-													errorHandler(errorMsg);
+													errorHandler(errorMsg, pathOrParams);
 												} else {
-													SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg);
+													SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg, pathOrParams);
 												}
 
 											} else {
@@ -5581,9 +5581,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg);
+								SHOW_ERROR('FIND_FOLDER_NAMES', errorMsg, pathOrParams);
 							}
 						}
 					}
@@ -5658,9 +5658,9 @@ global.GET_FILE_INFO = METHOD(() => {
 								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, pathOrParams);
 								} else {
-									SHOW_ERROR('GET_FILE_INFO', errorMsg);
+									SHOW_ERROR('GET_FILE_INFO', errorMsg, pathOrParams);
 								}
 
 							} else if (callback !== undefined) {
@@ -5735,9 +5735,9 @@ global.GET_FILE_INFO = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('GET_FILE_INFO', errorMsg);
+								SHOW_ERROR('GET_FILE_INFO', errorMsg, pathOrParams);
 							}
 						}
 					}
@@ -5751,7 +5751,7 @@ global.GET_FILE_INFO = METHOD(() => {
 });
 
 /*
- * 파일의 위치를 이동시킵니다.
+ * 파일이나 폴더의 위치를 이동시킵니다.
  */
 global.MOVE_FILE = METHOD(() => {
 
@@ -5819,9 +5819,9 @@ global.MOVE_FILE = METHOD(() => {
 											let errorMsg = error.toString();
 	
 											if (errorHandler !== undefined) {
-												errorHandler(errorMsg);
+												errorHandler(errorMsg, params);
 											} else {
-												SHOW_ERROR('MOVE_FILE', errorMsg);
+												SHOW_ERROR('MOVE_FILE', errorMsg, params);
 											}
 	
 										} else if (callback !== undefined) {
@@ -5881,9 +5881,9 @@ global.MOVE_FILE = METHOD(() => {
 										let errorMsg = error.toString();
 	
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, params);
 										} else {
-											SHOW_ERROR('MOVE_FILE', errorMsg);
+											SHOW_ERROR('MOVE_FILE', errorMsg, params);
 										}
 									}
 								}
@@ -5959,9 +5959,9 @@ global.READ_FILE = METHOD(() => {
 								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, pathOrParams);
 								} else {
-									SHOW_ERROR('READ_FILE', errorMsg);
+									SHOW_ERROR('READ_FILE', errorMsg, pathOrParams);
 								}
 
 							} else if (stat.isDirectory() === true) {
@@ -5985,9 +5985,9 @@ global.READ_FILE = METHOD(() => {
 										let errorMsg = error.toString();
 
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, pathOrParams);
 										} else {
-											SHOW_ERROR('READ_FILE', errorMsg);
+											SHOW_ERROR('READ_FILE', errorMsg, pathOrParams);
 										}
 
 									} else if (callback !== undefined) {
@@ -6067,9 +6067,9 @@ global.READ_FILE = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('READ_FILE', errorMsg);
+								SHOW_ERROR('READ_FILE', errorMsg, pathOrParams);
 							}
 						}
 					}
@@ -6095,10 +6095,10 @@ global.REMOVE_FILE = METHOD(() => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	삭제할 파일의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
-			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
-			//REQUIRED: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.success
 
 			let path;
 			let isSync;
@@ -6114,7 +6114,7 @@ global.REMOVE_FILE = METHOD(() => {
 				path = pathOrParams.path;
 				isSync = pathOrParams.isSync;
 			}
-
+			
 			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
 				callback = callbackOrHandlers;
 			} else {
@@ -6137,9 +6137,9 @@ global.REMOVE_FILE = METHOD(() => {
 								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, pathOrParams);
 								} else {
-									SHOW_ERROR('REMOVE_FILE', errorMsg);
+									SHOW_ERROR('REMOVE_FILE', errorMsg, pathOrParams);
 								}
 
 							} else {
@@ -6202,9 +6202,9 @@ global.REMOVE_FILE = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('REMOVE_FILE', errorMsg);
+								SHOW_ERROR('REMOVE_FILE', errorMsg, pathOrParams);
 							}
 						}
 					}
@@ -6233,10 +6233,10 @@ global.REMOVE_FOLDER = METHOD(() => {
 			//REQUIRED: pathOrParams
 			//REQUIRED: pathOrParams.path	삭제할 폴더의 경로
 			//OPTIONAL: pathOrParams.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
-			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
-			//REQUIRED: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.success
 
 			let path;
 			let isSync;
@@ -6311,9 +6311,9 @@ global.REMOVE_FOLDER = METHOD(() => {
 										let errorMsg = error.toString();
 										
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, pathOrParams);
 										} else {
-											SHOW_ERROR('REMOVE_FOLDER', errorMsg);
+											SHOW_ERROR('REMOVE_FOLDER', errorMsg, pathOrParams);
 										}
 		
 									} else {
@@ -6400,9 +6400,9 @@ global.REMOVE_FOLDER = METHOD(() => {
 							let errorMsg = error.toString();
 	
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('REMOVE_FOLDER', errorMsg);
+								SHOW_ERROR('REMOVE_FOLDER', errorMsg, pathOrParams);
 							}
 						}
 					}
@@ -6470,9 +6470,9 @@ global.WRITE_FILE = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, params);
 							} else {
-								SHOW_ERROR('WRITE_FILE', errorMsg);
+								SHOW_ERROR('WRITE_FILE', errorMsg, params);
 							}
 
 						} else if (callback !== undefined) {
@@ -6495,9 +6495,9 @@ global.WRITE_FILE = METHOD(() => {
 							let errorMsg = error.toString();
 								
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, params);
 							} else {
-								SHOW_ERROR('WRITE_FILE', errorMsg);
+								SHOW_ERROR('WRITE_FILE', errorMsg, params);
 							}
 						}
 					}

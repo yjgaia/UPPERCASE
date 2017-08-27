@@ -57,9 +57,9 @@ global.READ_FILE = METHOD(() => {
 								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, pathOrParams);
 								} else {
-									SHOW_ERROR('READ_FILE', errorMsg);
+									SHOW_ERROR('READ_FILE', errorMsg, pathOrParams);
 								}
 
 							} else if (stat.isDirectory() === true) {
@@ -83,9 +83,9 @@ global.READ_FILE = METHOD(() => {
 										let errorMsg = error.toString();
 
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, pathOrParams);
 										} else {
-											SHOW_ERROR('READ_FILE', errorMsg);
+											SHOW_ERROR('READ_FILE', errorMsg, pathOrParams);
 										}
 
 									} else if (callback !== undefined) {
@@ -165,9 +165,9 @@ global.READ_FILE = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('READ_FILE', errorMsg);
+								SHOW_ERROR('READ_FILE', errorMsg, pathOrParams);
 							}
 						}
 					}

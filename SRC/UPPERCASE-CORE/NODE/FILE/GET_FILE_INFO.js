@@ -57,9 +57,9 @@ global.GET_FILE_INFO = METHOD(() => {
 								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, pathOrParams);
 								} else {
-									SHOW_ERROR('GET_FILE_INFO', errorMsg);
+									SHOW_ERROR('GET_FILE_INFO', errorMsg, pathOrParams);
 								}
 
 							} else if (callback !== undefined) {
@@ -134,9 +134,9 @@ global.GET_FILE_INFO = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('GET_FILE_INFO', errorMsg);
+								SHOW_ERROR('GET_FILE_INFO', errorMsg, pathOrParams);
 							}
 						}
 					}

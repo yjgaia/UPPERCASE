@@ -65,9 +65,9 @@ global.CREATE_FOLDER = METHOD(() => {
 										let errorMsg = error.toString();
 
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, pathOrParams);
 										} else {
-											SHOW_ERROR('CREATE_FOLDER', errorMsg);
+											SHOW_ERROR('CREATE_FOLDER', errorMsg, pathOrParams);
 										}
 
 									} else {
@@ -127,9 +127,9 @@ global.CREATE_FOLDER = METHOD(() => {
 						let errorMsg = error.toString();
 
 						if (errorHandler !== undefined) {
-							errorHandler(errorMsg);
+							errorHandler(errorMsg, pathOrParams);
 						} else {
-							SHOW_ERROR('CREATE_FOLDER', errorMsg);
+							SHOW_ERROR('CREATE_FOLDER', errorMsg, pathOrParams);
 						}
 					}
 				}

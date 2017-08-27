@@ -69,9 +69,9 @@ global.COPY_FILE = METHOD(() => {
 										let errorMsg = error.toString();
 	
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, params);
 										} else {
-											SHOW_ERROR('COPY_FILE', errorMsg);
+											SHOW_ERROR('COPY_FILE', errorMsg, params);
 										}
 									});
 	
@@ -133,9 +133,9 @@ global.COPY_FILE = METHOD(() => {
 										let errorMsg = error.toString();
 	
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, params);
 										} else {
-											SHOW_ERROR('COPY_FILE', errorMsg);
+											SHOW_ERROR('COPY_FILE', errorMsg, params);
 										}
 									}
 								}

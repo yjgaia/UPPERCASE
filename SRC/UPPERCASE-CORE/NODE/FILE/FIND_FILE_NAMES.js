@@ -22,8 +22,6 @@ global.FIND_FILE_NAMES = METHOD(() => {
 			let notExistsHandler
 			let errorHandler;
 			let callback;
-			
-			let fileNames = [];
 
 			// init params.
 			if (CHECK_IS_DATA(pathOrParams) !== true) {
@@ -42,6 +40,8 @@ global.FIND_FILE_NAMES = METHOD(() => {
 					callback = callbackOrHandlers.success;
 				}
 			}
+			
+			let fileNames = [];
 
 			// when normal mode
 			if (isSync !== true) {
@@ -57,9 +57,9 @@ global.FIND_FILE_NAMES = METHOD(() => {
 								let errorMsg = error.toString();
 
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, pathOrParams);
 								} else {
-									SHOW_ERROR('FIND_FILE_NAMES', errorMsg);
+									SHOW_ERROR('FIND_FILE_NAMES', errorMsg, pathOrParams);
 								}
 
 							} else if (callback !== undefined) {
@@ -76,9 +76,9 @@ global.FIND_FILE_NAMES = METHOD(() => {
 												let errorMsg = error.toString();
 
 												if (errorHandler !== undefined) {
-													errorHandler(errorMsg);
+													errorHandler(errorMsg, pathOrParams);
 												} else {
-													SHOW_ERROR('FIND_FILE_NAMES', errorMsg);
+													SHOW_ERROR('FIND_FILE_NAMES', errorMsg, pathOrParams);
 												}
 
 											} else {
@@ -162,9 +162,9 @@ global.FIND_FILE_NAMES = METHOD(() => {
 							let errorMsg = error.toString();
 
 							if (errorHandler !== undefined) {
-								errorHandler(errorMsg);
+								errorHandler(errorMsg, pathOrParams);
 							} else {
-								SHOW_ERROR('FIND_FILE_NAMES', errorMsg);
+								SHOW_ERROR('FIND_FILE_NAMES', errorMsg, pathOrParams);
 							}
 						}
 					}

@@ -67,9 +67,9 @@ global.MOVE_FILE = METHOD(() => {
 											let errorMsg = error.toString();
 	
 											if (errorHandler !== undefined) {
-												errorHandler(errorMsg);
+												errorHandler(errorMsg, params);
 											} else {
-												SHOW_ERROR('MOVE_FILE', errorMsg);
+												SHOW_ERROR('MOVE_FILE', errorMsg, params);
 											}
 	
 										} else if (callback !== undefined) {
@@ -129,9 +129,9 @@ global.MOVE_FILE = METHOD(() => {
 										let errorMsg = error.toString();
 	
 										if (errorHandler !== undefined) {
-											errorHandler(errorMsg);
+											errorHandler(errorMsg, params);
 										} else {
-											SHOW_ERROR('MOVE_FILE', errorMsg);
+											SHOW_ERROR('MOVE_FILE', errorMsg, params);
 										}
 									}
 								}

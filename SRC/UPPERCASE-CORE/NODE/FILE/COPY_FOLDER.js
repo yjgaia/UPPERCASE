@@ -12,10 +12,10 @@ global.COPY_FOLDER = METHOD(() => {
 			//REQUIRED: params.from		복사할 폴더의 위치
 			//REQUIRED: params.to		폴더를 복사할 위치
 			//OPTIONAL: params.isSync	true로 설정하면 callback을 실행하지 않고 즉시 실행합니다. 이 설정은 명령이 끝날때 까지 프로그램이 멈추게 되므로 필요한 경우에만 사용합니다.
-			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers
 			//OPTIONAL: callbackOrHandlers.notExists
 			//OPTIONAL: callbackOrHandlers.error
-			//REQUIRED: callbackOrHandlers.success
+			//OPTIONAL: callbackOrHandlers.success
 
 			let from = params.from;
 			let to = params.to;
@@ -164,9 +164,9 @@ global.COPY_FOLDER = METHOD(() => {
 								let errorMsg = error.toString();
 		
 								if (errorHandler !== undefined) {
-									errorHandler(errorMsg);
+									errorHandler(errorMsg, params);
 								} else {
-									SHOW_ERROR('COPY_FOLDER', errorMsg);
+									SHOW_ERROR('COPY_FOLDER', errorMsg, params);
 								}
 							}
 						}
