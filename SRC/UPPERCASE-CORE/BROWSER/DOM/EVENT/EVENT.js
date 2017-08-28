@@ -335,7 +335,7 @@ global.EVENT = CLASS((cls) => {
 				}));
 			}
 
-			// mouse over event (when is touch mode, link to touchstart event.)
+			// mouseover event (when is touch mode, link to touchstart event.)
 			else if (name === 'mouseover') {
 
 				// by touch
@@ -354,6 +354,32 @@ global.EVENT = CLASS((cls) => {
 					node : node,
 					lowNode : lowNode,
 					name : 'mouseover'
+				}, (e, node) => {
+					if (INFO.checkIsTouchMode() !== true) {
+						eventHandler(e, node);
+					}
+				}));
+			}
+			
+			// mouseout event (when is touch mode, link to touchend event.)
+			else if (name === 'mouseout') {
+
+				// by touch
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'touchend'
+				}, (e, node) => {
+					if (INFO.checkIsTouchMode() === true) {
+						eventHandler(e, node);
+					}
+				}));
+
+				// by mouse
+				eventLows.push(EVENT_LOW({
+					node : node,
+					lowNode : lowNode,
+					name : 'mouseout'
 				}, (e, node) => {
 					if (INFO.checkIsTouchMode() !== true) {
 						eventHandler(e, node);
