@@ -53,12 +53,12 @@ global.COPY_FOLDER = METHOD(() => {
 								
 								FIND_FILE_NAMES(from, (fileNames) => {
 									
-									PARALLEL(fileNames, [
-									(fileName, done) => {
+									NEXT(fileNames, [
+									(fileName, next) => {
 										COPY_FILE({
 											from : from + '/' + fileName,
 											to : to + '/' + fileName
-										}, done);
+										}, next);
 									},
 									
 									() => {
