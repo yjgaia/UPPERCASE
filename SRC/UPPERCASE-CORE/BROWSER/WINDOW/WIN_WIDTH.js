@@ -5,6 +5,6 @@ global.WIN_WIDTH = METHOD({
 
 	run : () => {
 
-		return document.documentElement.clientWidth;
+		return window.innerWidth;
 	}
 });

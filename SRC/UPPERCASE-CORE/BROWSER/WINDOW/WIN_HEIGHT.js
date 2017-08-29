@@ -5,6 +5,6 @@ global.WIN_HEIGHT = METHOD({
 
 	run : () => {
 
-		return document.documentElement.clientHeight;
+		return window.innerHeight;
 	}
 });

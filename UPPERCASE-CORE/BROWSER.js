@@ -8583,7 +8583,7 @@ global.WIN_HEIGHT = METHOD({
 
 	run : () => {
 
-		return document.documentElement.clientHeight;
+		return window.innerHeight;
 	}
 });
 
@@ -8594,6 +8594,6 @@ global.WIN_WIDTH = METHOD({
 
 	run : () => {
 
-		return document.documentElement.clientWidth;
+		return window.innerWidth;
 	}
 });
