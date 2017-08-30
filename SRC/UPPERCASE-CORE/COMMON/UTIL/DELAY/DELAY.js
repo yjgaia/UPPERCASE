@@ -26,6 +26,7 @@ global.DELAY = CLASS({
 				
 				timeout = setTimeout(() => {
 					func();
+					remove();
 				}, remaining);
 			}
 		});

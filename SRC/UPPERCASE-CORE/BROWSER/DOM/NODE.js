@@ -559,6 +559,10 @@ global.NODE = CLASS({
 			}
 		};
 
+		let checkIsHiding = self.checkIsHiding = () => {
+			return checkIsShowing() !== true;
+		};
+
 		let checkIsShowing = self.checkIsShowing = () => {
 
 			if (wrapperEl === document.body) {
