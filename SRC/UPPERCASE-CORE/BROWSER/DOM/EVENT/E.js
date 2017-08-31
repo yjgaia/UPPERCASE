@@ -156,5 +156,9 @@ global.E = CLASS({
 		let getWheelDelta = self.getWheelDelta = () => {
 			return e.deltaY;
 		};
+		
+		let getFiles = self.getFiles = () => {
+			return e.dataTransfer === undefined ? undefined : e.dataTransfer.files;
+		};
 	}
 });
