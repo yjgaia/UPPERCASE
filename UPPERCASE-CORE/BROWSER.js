@@ -2274,6 +2274,7 @@ global.DELAY = CLASS({
 				
 				timeout = setTimeout(() => {
 					func();
+					remove();
 				}, remaining);
 			}
 		});
@@ -3920,7 +3921,7 @@ global.ANIMATE = METHOD((m) => {
 			
 			let node = params.node;
 			let keyframes = params.keyframes;
-			let duration = params.duration === undefined ? 0.5 : params.duration;
+			let duration = params.duration === undefined ? 1 : params.duration;
 			let timingFunction = params.timingFunction === undefined ? 'ease' : params.timingFunction;
 			let delay = params.delay === undefined ? 0 : params.delay;
 			let iterationCount = params.iterationCount === undefined ? 1 : params.iterationCount;
@@ -4642,6 +4643,10 @@ global.NODE = CLASS({
 					name : 'show'
 				});
 			}
+		};
+
+		let checkIsHiding = self.checkIsHiding = () => {
+			return checkIsShowing() !== true;
 		};
 
 		let checkIsShowing = self.checkIsShowing = () => {

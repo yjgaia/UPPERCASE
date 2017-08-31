@@ -73,7 +73,7 @@ global.MOVE_FILE = METHOD(() => {
 											}
 	
 										} else if (callback !== undefined) {
-											callback(buffer);
+											callback();
 										}
 									});
 	
