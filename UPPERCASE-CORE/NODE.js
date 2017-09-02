@@ -4653,6 +4653,7 @@ global.SHA512 = METHOD({
 global.CHECK_FILE_EXISTS = METHOD(() => {
 
 	let FS = require('fs');
+	let Path = require('path');
 
 	return {
 
@@ -4675,12 +4676,57 @@ global.CHECK_FILE_EXISTS = METHOD(() => {
 
 			// when normal mode
 			if (isSync !== true) {
-				FS.exists(path, callback);
+				FS.exists(path, (isExists) => {
+					
+					if (isExists !== true) {
+						callback(false);
+					}
+					
+					else {
+						
+						FS.readdir(Path.dirname(path), (error, names) => {
+
+							if (error !== TO_DELETE) {
+								callback(false);
+							}
+							
+							else {
+
+								callback(CHECK_IS_IN({
+									array : names,
+									value : Path.basename(path)
+								}));
+							}
+						});
+					}
+				});
 			}
 
 			// when sync mode
 			else {
-				return FS.existsSync(path);
+				
+				if (FS.existsSync(path) !== true) {
+					
+					if (callback !== undefined) {
+						callback(false);
+					}
+					
+					return false;
+				}
+				
+				else {
+					
+					let result = CHECK_IS_IN({
+						array : FS.readdirSync(Path.dirname(path)),
+						value : Path.basename(path)
+					});
+					
+					if (callback !== undefined) {
+						callback(result);
+					}
+					
+					return result;
+				}
 			}
 		}
 	};
