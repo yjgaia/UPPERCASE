@@ -5193,37 +5193,47 @@ global.CREATE_FOLDER = METHOD(() => {
 					} else {
 
 						let folderPath = Path.dirname(path);
-
-						CHECK_FILE_EXISTS(folderPath, (isExists) => {
-
-							if (isExists === true) {
-
-								FS.mkdir(path, (error) => {
-
-									if (error !== TO_DELETE) {
-
-										let errorMsg = error.toString();
-
-										if (errorHandler !== undefined) {
-											errorHandler(errorMsg, pathOrParams);
-										} else {
-											SHOW_ERROR('CREATE_FOLDER', errorMsg, pathOrParams);
-										}
-
-									} else {
-										callback();
-									}
-								});
-
-							} else {
-
-								CREATE_FOLDER(folderPath, () => {
-
-									// retry.
-									CREATE_FOLDER(path, callback);
-								});
+						
+						if (folderPath === path || folderPath + '/' === path) {
+							
+							if (callback !== undefined) {
+								callback();
 							}
-						});
+						}
+						
+						else {
+							
+							CHECK_FILE_EXISTS(folderPath, (isExists) => {
+	
+								if (isExists === true) {
+	
+									FS.mkdir(path, (error) => {
+	
+										if (error !== TO_DELETE) {
+	
+											let errorMsg = error.toString();
+	
+											if (errorHandler !== undefined) {
+												errorHandler(errorMsg, pathOrParams);
+											} else {
+												SHOW_ERROR('CREATE_FOLDER', errorMsg, pathOrParams);
+											}
+	
+										} else {
+											callback();
+										}
+									});
+	
+								} else {
+	
+									CREATE_FOLDER(folderPath, () => {
+	
+										// retry.
+										CREATE_FOLDER(path, callback);
+									});
+								}
+							});
+						}
 					}
 				});
 			}
@@ -5239,24 +5249,34 @@ global.CREATE_FOLDER = METHOD(() => {
 					}) !== true) {
 
 						let folderPath = Path.dirname(path);
+						
+						if (folderPath === path || folderPath + '/' === path) {
+							
+							if (callback !== undefined) {
+								callback();
+							}
+						}
+						
+						else {
 
-						if (CHECK_FILE_EXISTS({
-							path : folderPath,
-							isSync : true
-						}) === true) {
-							FS.mkdirSync(path);
-						} else {
-
-							CREATE_FOLDER({
+							if (CHECK_FILE_EXISTS({
 								path : folderPath,
 								isSync : true
-							});
-
-							// retry.
-							CREATE_FOLDER({
-								path : path,
-								isSync : true
-							});
+							}) === true) {
+								FS.mkdirSync(path);
+							} else {
+	
+								CREATE_FOLDER({
+									path : folderPath,
+									isSync : true
+								});
+	
+								// retry.
+								CREATE_FOLDER({
+									path : path,
+									isSync : true
+								});
+							}
 						}
 					}
 
