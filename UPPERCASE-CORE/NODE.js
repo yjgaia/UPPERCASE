@@ -5205,7 +5205,7 @@ global.CREATE_FOLDER = METHOD(() => {
 							
 							CHECK_FILE_EXISTS(folderPath, (isExists) => {
 	
-								if (isExists === true) {
+								if (folderPath === '.' || isExists === true) {
 	
 									FS.mkdir(path, (error) => {
 	
@@ -5218,8 +5218,9 @@ global.CREATE_FOLDER = METHOD(() => {
 											} else {
 												SHOW_ERROR('CREATE_FOLDER', errorMsg, pathOrParams);
 											}
-	
-										} else {
+										}
+										
+										else if (callback !== undefined) {
 											callback();
 										}
 									});
@@ -5251,15 +5252,12 @@ global.CREATE_FOLDER = METHOD(() => {
 						let folderPath = Path.dirname(path);
 						
 						if (folderPath === path || folderPath + '/' === path) {
-							
-							if (callback !== undefined) {
-								callback();
-							}
+							// ignore.
 						}
 						
 						else {
 
-							if (CHECK_FILE_EXISTS({
+							if (folderPath === '.' || CHECK_FILE_EXISTS({
 								path : folderPath,
 								isSync : true
 							}) === true) {

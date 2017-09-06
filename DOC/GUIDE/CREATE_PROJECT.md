@@ -8,6 +8,7 @@
 * [프로젝트 실행](#프로젝트-실행)
 * [UPPERCASE 기반 프로젝트 구조 살펴보기](#uppercase-기반-프로젝트-구조-살펴보기)
 * [`.gitignore` 설정하기](#gitignore-설정)
+* [`ubm`을 이용한 프로젝트 초기화](#ubm을-이용한-프로젝트-초기화)
 
 ## 프로젝트 폴더 생성
 우선, 프로젝트의 모든 내용을 저장하기 위한 *프로젝트 폴더*를 생성해봅시다.
@@ -83,15 +84,15 @@ require(process.env.UPPERCASE_PATH + '/LOAD.js');
 BOOT({
 	CONFIG : {
 		// 개발 모드
-        isDevMode : true,
-        
-        // 기본 BOX는 Sample 입니다.
+		isDevMode : true,
+		
+		// 기본 BOX는 Sample 입니다.
 		defaultBoxName : 'Sample',
 		
 		// 프로젝트명은 Sample입니다.
-        title : 'Sample',
-        
-        // 웹 서버 포트를 8888로 지정합니다.
+		title : 'Sample',
+		
+		// 웹 서버 포트를 8888로 지정합니다.
 		webServerPort : 8888
 	}
 });
@@ -134,7 +135,7 @@ SampleProject
             BROWSER.js
         Yogurt
             BROWSER.js
-	Sample
+    Sample
         COMMON
             SampleModel.js
         NODE
@@ -228,3 +229,19 @@ __RF/
 ```
 
 * `__RF` 업로드 파일들이 이 폴더에 저장됩니다. 업로드 파일을 Git으로 관리할 필요는 없으므로, 무시 목록에 추가합니다.
+
+## `ubm`을 이용한 프로젝트 초기화
+[`ubm`](https://www.npmjs.com/package/ubm)을 이용하여 쉽게 프로젝트 폴더를 초기화할 수 있습니다.
+
+1. [`ubm`](https://www.npmjs.com/package/ubm)을 설치합니다.
+    ```
+    npm install -g ubm
+    ```
+2. 프로젝트 폴더로 이동합니다.
+    ```
+    cd SampleBox
+    ```
+3. `ubm`을 이용하여 프로젝트 폴더를 초기화합니다.
+    ```
+    ubm pack SampleBox
+    ```
