@@ -243,5 +243,5 @@ __RF/
     ```
 3. `ubm`을 이용하여 프로젝트 폴더를 초기화합니다.
     ```
-    ubm pack SampleBox
+    ubm init SampleBox
     ```
