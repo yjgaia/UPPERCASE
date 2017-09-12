@@ -4180,17 +4180,11 @@ global.NODE = CLASS({
 				parentNode.getChildren().splice(index, 0, self);
 			}
 			
-			EVENT.fireAll({
-				node : self,
-				name : 'attach'
-			});
+			fireEvent('attach');
 
 			if (checkIsShowing() === true) {
 
-				EVENT.fireAll({
-					node : self,
-					name : 'show'
-				});
+				fireEvent('show');
 
 				EVENT.removeAll({
 					node : self,
@@ -4211,6 +4205,8 @@ global.NODE = CLASS({
 					before(node);
 				});
 			}
+			
+			parentNode.fireEvent('append');
 		};
 
 		let append = self.append = (node) => {
