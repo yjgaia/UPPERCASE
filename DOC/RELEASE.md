@@ -9,6 +9,7 @@ UPPERCASE의 최신 변경 사항을 다룹니다. 변경 사항을 확인하신
 - CHECK_IS_ARGUMENTS 메소드가 제거되었습니다.
 - 기존 VALID의 check는 checkAndWash로 변경되었으며, 빈 값을 임의로 삭제하지 않는 check 메소드가 따로 추가되었습니다.
 - VALID.id가 VALID.mongoId로 변경되었습니다.
+- 모든 IsExists가 Exists로 변경되었습니다.
 - CHECK_IS_EXISTS_FILE는 CHECK_FILE_EXISTS로 이름이 변경되었습니다.
 - RESOURCE_SERVER와 UPLOAD_REQUEST가 WEB_SERVER로 통합되었으며, onDisconnected 기능은 제거되었습니다.
 - clientInfo.lastReceiveTime가 clientInfo.lastSendTime으로 변경되었습니다.
