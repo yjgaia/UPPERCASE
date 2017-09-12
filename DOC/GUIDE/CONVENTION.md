@@ -147,7 +147,7 @@ JavaScript 특성 상 정확한 값 비교를 위해 `==` 대신 `===`, `!=` 대
     const CONSTANT_VALUE = '!@#';
     ```
 
-* `boolean` 변수명은 `is`로 시작합니다.
+* `boolean` 변수명은 `is`로 시작합니다. (`exists`는 예외)
 
     ```
     let isHuman = true;
