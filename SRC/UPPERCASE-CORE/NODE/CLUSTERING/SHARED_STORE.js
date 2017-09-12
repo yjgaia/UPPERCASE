@@ -292,7 +292,7 @@ global.SHARED_STORE = CLASS((cls) => {
 		});
 	};
 
-	let checkIsExists = cls.checkIsExists = (params, callback) => {
+	let checkExists = cls.checkExists = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//OPTIONAL: params.id
@@ -705,7 +705,7 @@ global.SHARED_STORE = CLASS((cls) => {
 				}
 			};
 			
-			let checkIsExists = self.checkIsExists = (idOrFilter, callback) => {
+			let checkExists = self.checkExists = (idOrFilter, callback) => {
 				//REQUIRED: idOrFilter
 				//REQUIRED: callback
 				
@@ -722,7 +722,7 @@ global.SHARED_STORE = CLASS((cls) => {
 
 					SERVER_CLUSTERING.send({
 						serverName : serverName,
-						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
+						methodName : '__SHARED_STORE_CHECK_EXISTS',
 						data : {
 							storeName : storeName,
 							id : id,
@@ -735,7 +735,7 @@ global.SHARED_STORE = CLASS((cls) => {
 
 					CPU_CLUSTERING.send({
 						workerId : '~',
-						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
+						methodName : '__SHARED_STORE_CHECK_EXISTS',
 						data : {
 							storeName : storeName,
 							id : id,
@@ -745,7 +745,7 @@ global.SHARED_STORE = CLASS((cls) => {
 				}
 				
 				else {
-					cls.checkIsExists({
+					cls.checkExists({
 						storeName : storeName,
 						id : id,
 						filter : filter
@@ -803,7 +803,7 @@ FOR_BOX((box) => {
 			
 			let count = self.count = sharedStore.count;
 			
-			let checkIsExists = self.checkIsExists = sharedStore.checkIsExists;
+			let checkExists = self.checkExists = sharedStore.checkExists;
 			
 			let clear = self.clear = sharedStore.clear;
 		}

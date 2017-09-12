@@ -36,8 +36,8 @@ FOR_BOX((box) => {
 				//OPTIONAL: params.methodConfig.find.role
 				//OPTIONAL: params.methodConfig.count
 				//OPTIONAL: params.methodConfig.count.role
-				//OPTIONAL: params.methodConfig.checkIsExists
-				//OPTIONAL: params.methodConfig.checkIsExists.role
+				//OPTIONAL: params.methodConfig.checkExists
+				//OPTIONAL: params.methodConfig.checkExists.role
 				//OPTIONAL: params.isNotUsingObjectId
 				//OPTIONAL: params.isNotUsingHistory
 				
@@ -53,7 +53,7 @@ FOR_BOX((box) => {
 				let removeConfig;
 				let findConfig;
 				let countConfig;
-				let checkIsExistsConfig;
+				let checkExistsConfig;
 				
 				let createValid;
 				let updateValid;
@@ -64,7 +64,7 @@ FOR_BOX((box) => {
 				let removeRole;
 				let findRole;
 				let countRole;
-				let checkIsExistsRole;
+				let checkExistsRole;
 				
 				let createAdminRole;
 				let updateAdminRole;
@@ -86,8 +86,8 @@ FOR_BOX((box) => {
 				let afterFindListeners = [];
 				let beforeCountListeners = [];
 				let afterCountListeners = [];
-				let beforeCheckIsExistsListeners = [];
-				let afterCheckIsExistsListeners = [];
+				let beforeCheckExistsListeners = [];
+				let afterCheckExistsListeners = [];
 				
 				let db = box.DB({
 					name : name,
@@ -104,7 +104,7 @@ FOR_BOX((box) => {
 					removeConfig = methodConfig.remove;
 					findConfig = methodConfig.find;
 					countConfig = methodConfig.count;
-					checkIsExistsConfig = methodConfig.checkIsExists;
+					checkExistsConfig = methodConfig.checkExists;
 
 					if (createConfig !== undefined) {
 						createValid = createConfig.valid;
@@ -138,8 +138,8 @@ FOR_BOX((box) => {
 						countRole = countConfig.role;
 					}
 
-					if (checkIsExistsConfig !== undefined) {
-						checkIsExistsRole = checkIsExistsConfig.role;
+					if (checkExistsConfig !== undefined) {
+						checkExistsRole = checkExistsConfig.role;
 					}
 				}
 
@@ -354,25 +354,25 @@ FOR_BOX((box) => {
 						}
 					}
 
-					// when check is exists method
-					else if (methodName === 'checkIsExists') {
+					// when check exists method
+					else if (methodName === 'checkExists') {
 
 						if (CHECK_IS_DATA(funcOrFuncs) === true) {
 
 							// add before listener.
 							if (funcOrFuncs.before !== undefined) {
-								beforeCheckIsExistsListeners.push(funcOrFuncs.before);
+								beforeCheckExistsListeners.push(funcOrFuncs.before);
 							}
 	
 							// add after listener.
 							if (funcOrFuncs.after !== undefined) {
-								afterCheckIsExistsListeners.push(funcOrFuncs.after);
+								afterCheckExistsListeners.push(funcOrFuncs.after);
 							}
 							
 						} else {
 							
 							// add after listener.
-							afterCheckIsExistsListeners.push(funcOrFuncs);
+							afterCheckExistsListeners.push(funcOrFuncs);
 						}
 					}
 				};
@@ -1044,7 +1044,7 @@ FOR_BOX((box) => {
 					}]);
 				};
 
-				let innerCheckIsExists = (params, ret, clientInfo) => {
+				let innerCheckExists = (params, ret, clientInfo) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//OPTIONAL: params.clientInfo
@@ -1068,9 +1068,9 @@ FOR_BOX((box) => {
 						
 						let isNotRunNext;
 
-						// run before check is exists listeners.
-						EACH(beforeCheckIsExistsListeners, (beforeCheckIsExistsListener) => {
-							if (beforeCheckIsExistsListener(params, next, ret, clientInfo) === false) {
+						// run before check exists listeners.
+						EACH(beforeCheckExistsListeners, (beforeCheckExistsListener) => {
+							if (beforeCheckExistsListener(params, next, ret, clientInfo) === false) {
 								isNotRunNext = true;
 							}
 						});
@@ -1083,8 +1083,8 @@ FOR_BOX((box) => {
 					(next) => {
 						return () => {
 						
-							// check is exists data in database.
-							db.checkIsExists(params, {
+							// check exists data in database.
+							db.checkExists(params, {
 		
 								error : (errorMsg, errorInfo) => {
 									ret({
@@ -1093,15 +1093,15 @@ FOR_BOX((box) => {
 									});
 								},
 		
-								success : (isExists) => {
+								success : (exists) => {
 									
 									let isNotRunNext;
 		
-									// run after check is exists listeners.
-									EACH(afterCheckIsExistsListeners, (afterCheckIsExistsListener) => {
+									// run after check exists listeners.
+									EACH(afterCheckExistsListeners, (afterCheckExistsListener) => {
 		
-										if (afterCheckIsExistsListener(isExists, () => {
-											next(isExists);
+										if (afterCheckExistsListener(exists, () => {
+											next(exists);
 										}, ret, clientInfo) === false) {
 											
 											isNotRunNext = true;
@@ -1109,7 +1109,7 @@ FOR_BOX((box) => {
 									});
 		
 									if (isNotRunNext !== true) {
-										next(isExists);
+										next(exists);
 									}
 								}
 							});
@@ -1117,10 +1117,10 @@ FOR_BOX((box) => {
 					},
 					
 					() => {
-						return (isExists) => {
+						return (exists) => {
 
 							ret({
-								isExists : isExists
+								exists : exists
 							});
 						};
 					}]);
@@ -1538,7 +1538,7 @@ FOR_BOX((box) => {
 					});
 				};
 
-				let checkIsExists = self.checkIsExists = (params, callbackOrHandlers) => {
+				let checkExists = self.checkExists = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//REQUIRED: callbackOrHandlers
@@ -1563,20 +1563,20 @@ FOR_BOX((box) => {
 						}
 					}
 
-					innerCheckIsExists(params, (result) => {
+					innerCheckExists(params, (result) => {
 
 						let errorMsg = result.errorMsg;
 						let errorInfo = result.errorInfo;
-						let isExists = result.isExists;
+						let exists = result.exists;
 
 						if (errorMsg !== undefined) {
 							if (errorHandler !== undefined) {
 								errorHandler(errorMsg);
 							} else {
-								SHOW_ERROR(box.boxName + '.' + name + 'Model.checkIsExists', errorMsg, errorInfo);
+								SHOW_ERROR(box.boxName + '.' + name + 'Model.checkExists', errorMsg, errorInfo);
 							}
 						} else {
-							callback(isExists);
+							callback(exists);
 						}
 					});
 				};
@@ -1848,18 +1848,18 @@ FOR_BOX((box) => {
 						});
 					}
 
-					// init check is exists.
-					if (checkIsExistsConfig !== false) {
+					// init check exists.
+					if (checkExistsConfig !== false) {
 
-						// on check is exists.
-						on('checkIsExists', (params, ret) => {
+						// on check exists.
+						on('checkExists', (params, ret) => {
 							
-							if (checkIsExistsRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
+							if (checkExistsRole === undefined || (clientInfo.roles !== undefined && CHECK_IS_IN({
 								array : clientInfo.roles,
-								value : checkIsExistsRole
+								value : checkExistsRole
 							}) === true)) {
 								
-								innerCheckIsExists(params, ret, clientInfo);
+								innerCheckExists(params, ret, clientInfo);
 
 							} else {
 

@@ -1,4 +1,4 @@
-# METHOD `CONNECT_TO_ROOM_SERVER(params, connectionListenerOrListeners)`
+# `METHOD` CONNECT_TO_ROOM_SERVER
 룸 서버에 접속합니다.
 
 ## Parameters

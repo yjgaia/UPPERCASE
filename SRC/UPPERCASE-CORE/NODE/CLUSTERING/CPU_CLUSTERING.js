@@ -223,8 +223,8 @@ global.CPU_CLUSTERING = METHOD((m) => {
 					// count shared data.
 					on('__SHARED_STORE_COUNT', SHARED_STORE.count);
 					
-					// check is exists shared data.
-					on('__SHARED_STORE_CHECK_IS_EXISTS', SHARED_STORE.checkIsExists);
+					// check exists shared data.
+					on('__SHARED_STORE_CHECK_EXISTS', SHARED_STORE.checkExists);
 	
 					// clear shared store.
 					on('__SHARED_STORE_CLEAR', SHARED_STORE.clear);

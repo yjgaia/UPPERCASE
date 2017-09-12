@@ -1,4 +1,4 @@
-# METHOD `box.ROOM(name, connectionListener)`
+# `METHOD` box.ROOM
 룸을 생성합니다.
 
 ## Parameters

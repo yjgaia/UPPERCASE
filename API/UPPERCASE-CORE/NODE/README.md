@@ -1,9 +1,11 @@
 # NODE API
 * [BOX.md](BOX.md) BOX를 생성합니다.
+* [MSG.md](MSG.md) 운영체제의 언어 설정 코드에 해당하는 문자열을 반환합니다.  만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
 * [NODE_CONFIG.md](NODE_CONFIG.md) Node.js 환경에서의 기본 설정
 
 ## [CLUSTERING](CLUSTERING/README.md)
 * [CLUSTERING/CPU_CLUSTERING.md](CLUSTERING/CPU_CLUSTERING.md) CPU 코어 간 클러스터링을 수행합니다.
+* [CLUSTERING/DISTRIBUTE_PROCESS.md](CLUSTERING/DISTRIBUTE_PROCESS.md) 복잡도 파라미터(complexity)를 기준으로, 클러스터링 된 서버들 및 CPU 코어들에게 작업을 고르게 분배합니다.  complexity를 입력하지 않으면 기본적으로 1로 인식합니다.
 * [CLUSTERING/SERVER_CLUSTERING.md](CLUSTERING/SERVER_CLUSTERING.md) 서버 간 클러스터링을 수행합니다.
 * [CLUSTERING/SHARED_STORE.md](CLUSTERING/SHARED_STORE.md) 클러스터링 공유 저장소를 생성하는 클래스
 
@@ -23,12 +25,13 @@
 * [FILE/CHECK_FILE_EXISTS.md](FILE/CHECK_FILE_EXISTS.md) 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
 * [FILE/CHECK_IS_FOLDER.md](FILE/CHECK_IS_FOLDER.md) 지정된 경로가 (파일이 아닌) 폴더인지 확인합니다.
 * [FILE/COPY_FILE.md](FILE/COPY_FILE.md) 파일을 복사합니다.
+* [FILE/COPY_FOLDER.md](FILE/COPY_FOLDER.md) 폴더를 복사합니다.
 * [FILE/CREATE_FOLDER.md](FILE/CREATE_FOLDER.md) 폴더를 생성합니다.
 * [FILE/FIND_FILE_NAMES.md](FILE/FIND_FILE_NAMES.md) 지정된 경로에 위치한 파일들의 이름 목록을 불러옵니다.
 * [FILE/FIND_FOLDER_NAMES.md](FILE/FIND_FOLDER_NAMES.md) 지정된 경로에 위치한 폴더들의 이름 목록을 불러옵니다.
 * [FILE/GET_FILE_INFO.md](FILE/GET_FILE_INFO.md) 파일의 정보를 불러옵니다.  파일의 크기(size), 생성 시간(createTime), 최종 수정 시간(lastUpdateTime)을 불러옵니다.
-* [FILE/MOVE_FILE.md](FILE/MOVE_FILE.md) 파일의 위치를 이동시킵니다.
-* [FILE/READ_FILE.md](FILE/READ_FILE.md) 파일의 내용을 불러옵니다.  내용을 Buffer형으로 불러오기 때문에, 내용을 문자열로 불러오려면 toString 함수를 이용하시기 바랍니다.
+* [FILE/MOVE_FILE.md](FILE/MOVE_FILE.md) 파일이나 폴더의 위치를 이동시킵니다.
+* [FILE/READ_FILE.md](FILE/READ_FILE.md) 파일의 내용을 불러옵니다.  내용을 Buffer형으로 불러오기 때문에, 내용을 문자열로 불러오려면 toString 메소드를 이용하시기 바랍니다.
 * [FILE/REMOVE_FILE.md](FILE/REMOVE_FILE.md) 파일을 삭제합니다.
 * [FILE/REMOVE_FOLDER.md](FILE/REMOVE_FOLDER.md) 폴더를 삭제합니다.  폴더 내의 모든 파일 및 폴더를 삭제하므로, 주의해서 사용해야 합니다.
 * [FILE/WRITE_FILE.md](FILE/WRITE_FILE.md) 파일을 작성합니다.  파일이 없으면 파일을 생성하고, 파일이 이미 있으면 내용을 덮어씁니다.
@@ -53,11 +56,11 @@
 
 ## [SERVER](SERVER/README.md)
 * [SERVER/CONNECT_TO_SOCKET_SERVER.md](SERVER/CONNECT_TO_SOCKET_SERVER.md) SOCKET_SERVER로 생성한 TCP 소켓 서버에 연결합니다.
-* [SERVER/MULTI_PROTOCOL_SOCKET_SERVER.md](SERVER/MULTI_PROTOCOL_SOCKET_SERVER.md) TCP 소켓 및 웹 소켓 서버를 통합하여 생성합니다.
+* [SERVER/MULTI_PROTOCOL_SOCKET_SERVER.md](SERVER/MULTI_PROTOCOL_SOCKET_SERVER.md) TCP 소켓 및 웹소켓 서버를 통합하여 생성합니다.
 * [SERVER/SOCKET_SERVER.md](SERVER/SOCKET_SERVER.md) TCP 소켓 서버를 생성합니다.
 * [SERVER/UDP_SERVER.md](SERVER/UDP_SERVER.md) UDP 소켓 서버를 생성하는 CLASS
 * [SERVER/WEB_SERVER.md](SERVER/WEB_SERVER.md) 웹 서버를 생성하는 클래스
-* [SERVER/WEB_SOCKET_SERVER.md](SERVER/WEB_SOCKET_SERVER.md) 웹 소켓 서버를 생성합니다.
+* [SERVER/WEB_SOCKET_SERVER.md](SERVER/WEB_SOCKET_SERVER.md) 웹소켓 서버를 생성합니다.
 
 ## [SYSTEM](SYSTEM/README.md)
 * [SYSTEM/CPU_USAGES.md](SYSTEM/CPU_USAGES.md) CPU 각 코어 당 사용률을 반환합니다.

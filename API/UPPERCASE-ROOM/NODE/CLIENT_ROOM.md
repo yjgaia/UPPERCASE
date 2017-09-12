@@ -1,4 +1,4 @@
-# CLASS `box.CLIENT_ROOM(inner, self, nameOrParams)`
+# `CLASS` box.CLIENT_ROOM
 룸 서버와 통신을 주고받는 CLIENT_ROOM 클래스
 
 ## Parameters

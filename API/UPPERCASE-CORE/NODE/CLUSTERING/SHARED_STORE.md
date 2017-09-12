@@ -1,4 +1,4 @@
-# CLASS `SHARED_STORE(inner, self, storeName)`
+# `CLASS` SHARED_STORE
 클러스터링 공유 저장소를 생성하는 클래스
 
 ## Parameters
@@ -58,7 +58,7 @@
 * `OPTIONAL` *params.filter*
 * `REQUIRED` *callback*
 
-### `checkIsExists(params, callback)`
+### `checkExists(params, callback)`
 #### Parameters
 * `REQUIRED` *params*
 * `REQUIRED` *params.storeName*
@@ -119,7 +119,7 @@
 * `OPTIONAL` *filter*
 * `REQUIRED` *callback*
 
-### `checkIsExists(idOrFilter, callback)`
+### `checkExists(idOrFilter, callback)`
 #### Parameters
 * `REQUIRED` *idOrFilter*
 * `REQUIRED` *callback*

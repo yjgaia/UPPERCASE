@@ -46,9 +46,9 @@ global.GET_FILE_INFO = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 
 						FS.stat(path, (error, stat) => {
 

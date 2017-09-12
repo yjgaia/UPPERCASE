@@ -2,11 +2,13 @@
 * [ADD_FONT.md](ADD_FONT.md) 웹 폰트를 사용할 수 있도록 불러옵니다.
 * [BOX.md](BOX.md) BOX를 생성합니다.
 * [BROWSER_CONFIG.md](BROWSER_CONFIG.md) 웹 브라우저 환경에서의 기본 설정
-* [CONNECT_TO_WEB_SOCKET_SERVER.md](CONNECT_TO_WEB_SOCKET_SERVER.md) WEB_SOCKET_SERVER로 생성한 웹 소켓 서버에 연결합니다.
+* [CONNECT_TO_WEB_SOCKET_SERVER.md](CONNECT_TO_WEB_SOCKET_SERVER.md) WEB_SOCKET_SERVER로 생성한 웹소켓 서버에 연결합니다.
+* [COOKIE_STORE.md](COOKIE_STORE.md) 쿠키 저장소 클래스  쿠키에 데이터를 저장할 수 있는 클래스 입니다. domain 파라미터를 통해 쿠키를 불러 올 수 있는 도메인 범위를 지정할 수 있습니다. 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
 * [INFO.md](INFO.md) 웹 브라우저 정보를 담고 있는 객체
 * [LOOP.md](LOOP.md) 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
 * [MSG.md](MSG.md) INFO의 웹 애플리케이션 언어 설정 코드에 해당하는 문자열을 반환합니다.  만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
 * [SOUND.md](SOUND.md) 사운드 파일을 재생하는 SOUND 클래스
+* [SOUND_ONCE.md](SOUND_ONCE.md) 사운드 파일을 한번 재생하는 SOUND_ONCE 클래스
 * [STORE.md](STORE.md) 저장소 클래스  웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
 
 ## [CONSOLE](CONSOLE/README.md)

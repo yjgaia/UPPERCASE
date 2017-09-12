@@ -1,4 +1,4 @@
-# METHOD `BOX(boxName)`
+# `METHOD` BOX
 BOX를 생성합니다.
 
 ## Parameters

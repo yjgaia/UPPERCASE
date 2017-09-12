@@ -371,19 +371,19 @@ db.count({
 });
 ```
 
-### `checkIsExists`
-* `db.checkIsExists({filter:}, (isExists) => {})`
-* `db.checkIsExists({filter:}, {error:, success:})`
+### `checkExists`
+* `db.checkExists({filter:}, (exists) => {})`
+* `db.checkExists({filter:}, {error:, success:})`
 
 `filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 ```javascript
-db.checkIsExists({
+db.checkExists({
     filter : {
         number : 3
     }
-}, (isExists) => {
-	if (isExists === true) {
+}, (exists) => {
+	if (exists === true) {
 		console.log('데이터가 존재합니다.');
 	} else {
 		console.log('데이터가 존재하지 않습니다.');

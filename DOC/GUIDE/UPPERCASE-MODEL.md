@@ -68,7 +68,7 @@ TestBox.TestModel = OBJECT({
 				remove : ...,
                 find : ...,
                 count : ...,
-                checkIsExists : ...
+                checkExists : ...
 			}
 		};
 	}
@@ -432,21 +432,21 @@ Model.count({
 });
 ```
 
-### `checkIsExists`
-* `Model.checkIsExists({filter:}, (isExists) => {})`
-* `Model.checkIsExists({filter:}, {error:, notAuthed:, success:})`
+### `checkExists`
+* `Model.checkExists({filter:}, (exists) => {})`
+* `Model.checkExists({filter:}, {error:, notAuthed:, success:})`
 
 `filter`에 해당하는 데이터가 존재하는지 확인합니다. `filter`는 [Query Selector](QUERY_SELECTOR.md)를 사용하여 작성합니다.
 
 Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
 ```javascript
-Model.checkIsExists({
+Model.checkExists({
     filter : {
         number : 3
     }
-}, (isExists) => {
-	if (isExists === true) {
+}, (exists) => {
+	if (exists === true) {
 		console.log('데이터가 존재합니다.');
 	} else {
 		console.log('데이터가 존재하지 않습니다.');
@@ -622,7 +622,7 @@ Model.create({
 ```
 
 ## 메소드별 설정
-모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 메소드들에 대한 설정을 지정할 수 있습니다.
+모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkExist` 메소드들에 대한 설정을 지정할 수 있습니다.
 
 ### 메소드를 사용하지 않음
 단순히 `false`를 지정하게 되면, 해당 메소드 자체를 생성하지 않습니다.
@@ -913,7 +913,7 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 ```
 
 #### 메소드별 전처리/후처리 설정
-모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkIsExist` 메소드들이 실행되기 전과 후에 실행할 리스너를 지정할 수 있습니다.
+모델의 `create`, `get`, `update`, `remove`, `find`, `count`, `checkExist` 메소드들이 실행되기 전과 후에 실행할 리스너를 지정할 수 있습니다.
 
 ##### 전처리 설정
 

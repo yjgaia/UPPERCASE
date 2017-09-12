@@ -1,4 +1,4 @@
-# METHOD `box.SHOW_ERROR(tag, errorMsg, params)`
+# `METHOD` box.SHOW_ERROR
 
 ## Parameters
 * `REQUIRED` *tag*

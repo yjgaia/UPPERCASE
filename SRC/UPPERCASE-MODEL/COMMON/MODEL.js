@@ -30,8 +30,8 @@ FOR_BOX((box) => {
 			//OPTIONAL: params.methodConfig.find.role
 			//OPTIONAL: params.methodConfig.count
 			//OPTIONAL: params.methodConfig.count.role
-			//OPTIONAL: params.methodConfig.checkIsExists
-			//OPTIONAL: params.methodConfig.checkIsExists.role
+			//OPTIONAL: params.methodConfig.checkExists
+			//OPTIONAL: params.methodConfig.checkExists.role
 			//OPTIONAL: params.isNotUsingObjectId
 			//OPTIONAL: params.isNotUsingHistory
 			

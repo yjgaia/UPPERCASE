@@ -1,4 +1,4 @@
-# CLASS `box.MODEL(inner, self, params)`
+# `CLASS` box.MODEL
 MODEL 클래스
 
 ## Mom CLASS
@@ -10,6 +10,15 @@ MODEL 클래스
 * `REQUIRED` *params.name*
 * `OPTIONAL` *params.initData*
 * `OPTIONAL` *params.methodConfig*
+* `OPTIONAL` *params.methodConfig.create*
+* `OPTIONAL` *params.methodConfig.create.valid*
+* `OPTIONAL` *params.methodConfig.get*
+* `OPTIONAL` *params.methodConfig.update*
+* `OPTIONAL` *params.methodConfig.update.valid*
+* `OPTIONAL` *params.methodConfig.remove*
+* `OPTIONAL` *params.methodConfig.find*
+* `OPTIONAL` *params.methodConfig.count*
+* `OPTIONAL` *params.methodConfig.checkExists*
 * `OPTIONAL` *params.isNotUsingObjectId*
 
 ## Static Members

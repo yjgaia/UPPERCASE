@@ -1,4 +1,4 @@
-# METHOD `REFRESH(uri)`
+# `METHOD` REFRESH
 뷰를 새로 불러옵니다.
 
 ## Parameters

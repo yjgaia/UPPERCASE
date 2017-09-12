@@ -1,0 +1,4 @@
+# `METHOD` CHECK_IS_ALLOWED_FOLDER_NAME
+
+## Parameters
+* `REQUIRED` *name*

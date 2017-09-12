@@ -34,7 +34,7 @@ FOR_BOX((box) => {
 					//OPTIONAL: params.methodConfig.remove
 					//OPTIONAL: params.methodConfig.find
 					//OPTIONAL: params.methodConfig.count
-					//OPTIONAL: params.methodConfig.checkIsExists
+					//OPTIONAL: params.methodConfig.checkExists
 					//OPTIONAL: params.isNotUsingObjectId
 					
 					let roomServerName = params.roomServerName;
@@ -49,7 +49,7 @@ FOR_BOX((box) => {
 					let removeConfig;
 					let findConfig;
 					let countConfig;
-					let checkIsExistsConfig;
+					let checkExistsConfig;
 					
 					let createValid;
 					let updateValid;
@@ -67,7 +67,7 @@ FOR_BOX((box) => {
 					let find;
 					let findWatching;
 					let count;
-					let checkIsExists;
+					let checkExists;
 					let onNewAndFind;
 					let onNewAndFindWatching;
 					
@@ -80,7 +80,7 @@ FOR_BOX((box) => {
 						removeConfig = methodConfig.remove;
 						findConfig = methodConfig.find;
 						countConfig = methodConfig.count;
-						checkIsExistsConfig = methodConfig.checkIsExists;
+						checkExistsConfig = methodConfig.checkExists;
 						
 						if (createConfig !== undefined) {
 							createValid = createConfig.valid;
@@ -850,9 +850,9 @@ FOR_BOX((box) => {
 						};
 					}
 		
-					if (checkIsExistsConfig !== false) {
+					if (checkExistsConfig !== false) {
 		
-						checkIsExists = self.checkIsExists = (params, callbackOrHandlers) => {
+						checkExists = self.checkExists = (params, callbackOrHandlers) => {
 							//OPTIONAL: params
 							//OPTIONAL: params.filter
 							//REQUIRED: callbackOrHandlers
@@ -879,30 +879,30 @@ FOR_BOX((box) => {
 							}
 		
 							room.send({
-								methodName : 'checkIsExists',
+								methodName : 'checkExists',
 								data : params
 							}, (result) => {
 		
 								let errorMsg = result.errorMsg;
 								let isNotAuthed = result.isNotAuthed;
-								let isExists = result.isExists;
+								let exists = result.exists;
 		
 								if (errorMsg !== undefined) {
 									if (errorHandler !== undefined) {
 										errorHandler(errorMsg);
 									} else {
-										SHOW_ERROR(box.boxName + '.' + name + 'Model.checkIsExists', errorMsg);
+										SHOW_ERROR(box.boxName + '.' + name + 'Model.checkExists', errorMsg);
 									}
 								} else if (isNotAuthed === true) {
 									if (notAuthedHandler !== undefined) {
 										notAuthedHandler();
 									} else {
-										SHOW_WARNING(box.boxName + '.' + name + 'Model.checkIsExists', MSG({
+										SHOW_WARNING(box.boxName + '.' + name + 'Model.checkExists', MSG({
 											ko : '인증되지 않았습니다.'
 										}));
 									}
 								} else {
-									callback(isExists);
+									callback(exists);
 								}
 							});
 						};

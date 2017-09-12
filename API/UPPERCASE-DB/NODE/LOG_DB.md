@@ -1,4 +1,4 @@
-# CLASS `box.LOG_DB(inner, self, nameOrParams)`
+# `CLASS` box.LOG_DB
 로그를 저장하는 기능을 제공하는 LOG_DB 클래스
 
 ## Parameters

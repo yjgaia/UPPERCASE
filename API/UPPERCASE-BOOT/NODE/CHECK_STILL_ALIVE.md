@@ -1,2 +1,2 @@
-# OBJECT `CHECK_STILL_ALIVE()`
+# `OBJECT` CHECK_STILL_ALIVE
 Check still alive object

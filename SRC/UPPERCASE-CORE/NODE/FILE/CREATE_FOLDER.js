@@ -42,9 +42,9 @@ global.CREATE_FOLDER = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 
 						if (callback !== undefined) {
 							callback();
@@ -63,9 +63,9 @@ global.CREATE_FOLDER = METHOD(() => {
 						
 						else {
 							
-							CHECK_FILE_EXISTS(folderPath, (isExists) => {
+							CHECK_FILE_EXISTS(folderPath, (exists) => {
 	
-								if (folderPath === '.' || isExists === true) {
+								if (folderPath === '.' || exists === true) {
 	
 									FS.mkdir(path, (error) => {
 	

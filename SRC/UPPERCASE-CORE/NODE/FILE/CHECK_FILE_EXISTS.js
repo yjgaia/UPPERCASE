@@ -27,9 +27,9 @@ global.CHECK_FILE_EXISTS = METHOD(() => {
 
 			// when normal mode
 			if (isSync !== true) {
-				FS.exists(path, (isExists) => {
+				FS.exists(path, (exists) => {
 					
-					if (isExists !== true) {
+					if (exists !== true) {
 						callback(false);
 					}
 					

@@ -1,4 +1,4 @@
-# CLASS `box.ROOM(inner, self, nameOrParams)`
+# `CLASS` box.ROOM
 서버에 생성된 룸과 통신을 주고받는 ROOM 클래스
 
 ## Parameters

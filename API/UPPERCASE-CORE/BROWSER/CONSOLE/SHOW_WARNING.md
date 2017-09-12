@@ -1,4 +1,4 @@
-# METHOD `box.SHOW_WARNING(tag, warningMsg, params)`
+# `METHOD` box.SHOW_WARNING
 
 ## Parameters
 * `REQUIRED` *tag*

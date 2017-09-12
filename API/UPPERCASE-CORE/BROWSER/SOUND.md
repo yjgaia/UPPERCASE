@@ -1,4 +1,4 @@
-# CLASS `SOUND(inner, self, params)`
+# `CLASS` SOUND
 사운드 파일을 재생하는 SOUND 클래스
 
 ## Parameters
@@ -6,6 +6,7 @@
 * `OPTIONAL` *params.ogg*
 * `OPTIONAL` *params.mp3*
 * `OPTIONAL` *params.isLoop*
+* `OPTIONAL` *params.gain*
 
 ## Public Members
 
@@ -14,3 +15,5 @@
 ### `pause()`
 
 ### `stop()`
+
+### `setGain(gain)`

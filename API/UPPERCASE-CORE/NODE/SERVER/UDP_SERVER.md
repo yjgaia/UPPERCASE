@@ -1,4 +1,4 @@
-# CLASS `UDP_SERVER(inner, self, port, requestListener)`
+# `CLASS` UDP_SERVER
 UDP 소켓 서버를 생성하는 CLASS
 
 ## Parameters

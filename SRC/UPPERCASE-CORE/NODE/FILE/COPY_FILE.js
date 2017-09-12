@@ -56,9 +56,9 @@ global.COPY_FILE = METHOD(() => {
 						// when normal mode
 						if (isSync !== true) {
 	
-							CHECK_FILE_EXISTS(from, (isExists) => {
+							CHECK_FILE_EXISTS(from, (exists) => {
 	
-								if (isExists === true) {
+								if (exists === true) {
 	
 									let reader = FS.createReadStream(from);
 	

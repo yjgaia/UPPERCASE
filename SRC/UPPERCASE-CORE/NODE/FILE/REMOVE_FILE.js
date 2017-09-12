@@ -42,9 +42,9 @@ global.REMOVE_FILE = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 
 						FS.unlink(path, (error) => {
 

@@ -1,4 +1,4 @@
-# `SHOW_ERROR(tag, errorMsg, params)`
+# SHOW_ERROR(tag, errorMsg, params)
 콘솔에 오류 메시지를 출력합니다.
 
 ## Parameters

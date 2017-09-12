@@ -1,4 +1,4 @@
-# CLASS `box.MODEL(inner, self, params)`
+# `CLASS` box.MODEL
 MODEL 클래스
 
 ## Mom CLASS
@@ -9,6 +9,28 @@ MODEL 클래스
 * `REQUIRED` *params.name*
 * `OPTIONAL` *params.initData*
 * `OPTIONAL` *params.methodConfig*
+* `OPTIONAL` *params.methodConfig.create*
+* `OPTIONAL` *params.methodConfig.create.valid*
+* `OPTIONAL` *params.methodConfig.create.role*
+* `OPTIONAL` *params.methodConfig.create.authKey*
+* `OPTIONAL` *params.methodConfig.create.adminRole*
+* `OPTIONAL` *params.methodConfig.get*
+* `OPTIONAL` *params.methodConfig.get.role*
+* `OPTIONAL` *params.methodConfig.update*
+* `OPTIONAL` *params.methodConfig.update.valid*
+* `OPTIONAL` *params.methodConfig.update.role*
+* `OPTIONAL` *params.methodConfig.update.authKey*
+* `OPTIONAL` *params.methodConfig.update.adminRole*
+* `OPTIONAL` *params.methodConfig.remove*
+* `OPTIONAL` *params.methodConfig.remove.role*
+* `OPTIONAL` *params.methodConfig.remove.authKey*
+* `OPTIONAL` *params.methodConfig.remove.adminRole*
+* `OPTIONAL` *params.methodConfig.find*
+* `OPTIONAL` *params.methodConfig.find.role*
+* `OPTIONAL` *params.methodConfig.count*
+* `OPTIONAL` *params.methodConfig.count.role*
+* `OPTIONAL` *params.methodConfig.checkExists*
+* `OPTIONAL` *params.methodConfig.checkExists.role*
 * `OPTIONAL` *params.isNotUsingObjectId*
 * `OPTIONAL` *params.isNotUsingHistory*
 
@@ -28,6 +50,9 @@ MODEL 클래스
 #### Parameters
 * `REQUIRED` *data*
 * `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `OPTIONAL` *callbackOrHandlers.notValid*
+* `OPTIONAL` *callbackOrHandlers.success*
 
 ### `get(idOrParams, callbackOrHandlers)`
 #### Parameters
@@ -36,32 +61,39 @@ MODEL 클래스
 * `OPTIONAL` *idOrParams.filter*
 * `OPTIONAL` *idOrParams.sort*
 * `OPTIONAL` *idOrParams.isRandom*
-* `OPTIONAL` *idOrParams.isToCache*
 * `OPTIONAL` *idOrParams.clientInfo*
 * `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.success*
 
 ### `update(data, callbackOrHandlers)`
 #### Parameters
 * `REQUIRED` *data*
 * `REQUIRED` *data.id*
 * `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `OPTIONAL` *callbackOrHandlers.notValid*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.success*
 
 ### `updateNoHistory(data, callbackOrHandlers)`
 #### Parameters
 * `REQUIRED` *data*
 * `REQUIRED` *data.id*
 * `OPTIONAL` *callbackOrHandlers*
-
-### `updateNoRecord(data, callbackOrHandlers)`
-#### Parameters
-* `REQUIRED` *data*
-* `REQUIRED` *data.id*
-* `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `OPTIONAL` *callbackOrHandlers.notValid*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.success*
 
 ### `remove(id, callbackOrHandlers)`
 #### Parameters
 * `REQUIRED` *id*
 * `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `OPTIONAL` *callbackOrHandlers.notExists*
+* `OPTIONAL` *callbackOrHandlers.success*
 
 ### `find(params, callbackOrHandlers)`
 #### Parameters
@@ -71,19 +103,22 @@ MODEL 클래스
 * `OPTIONAL` *params.start*
 * `OPTIONAL` *params.count*
 * `OPTIONAL` *params.isFindAll*
-* `OPTIONAL` *params.isToCache*
 * `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*
 
 ### `count(params, callbackOrHandlers)`
 #### Parameters
 * `OPTIONAL` *params*
 * `OPTIONAL` *params.filter*
-* `OPTIONAL` *params.isToCache*
 * `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*
 
-### `checkIsExists(params, callbackOrHandlers)`
+### `checkExists(params, callbackOrHandlers)`
 #### Parameters
 * `OPTIONAL` *params*
 * `OPTIONAL` *params.filter*
-* `OPTIONAL` *params.isToCache*
 * `REQUIRED` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `REQUIRED` *callbackOrHandlers.success*

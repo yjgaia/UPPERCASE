@@ -1,4 +1,4 @@
-# METHOD `ADD_FONT(params)`
+# `METHOD` ADD_FONT
 웹 폰트를 사용할 수 있도록 불러옵니다.
 
 ## Parameters

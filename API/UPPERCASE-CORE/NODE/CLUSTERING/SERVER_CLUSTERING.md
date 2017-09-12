@@ -1,4 +1,4 @@
-# METHOD `SERVER_CLUSTERING(params, work)`
+# `METHOD` SERVER_CLUSTERING
 서버 간 클러스터링을 수행합니다.
 
 ## Parameters

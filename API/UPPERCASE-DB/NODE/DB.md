@@ -1,4 +1,4 @@
-# CLASS `box.DB(inner, self, nameOrParams)`
+# `CLASS` box.DB
 MongoDB 컬렉션을 다루는 DB 클래스
 
 ## Parameters
@@ -61,19 +61,6 @@ MongoDB 컬렉션을 다루는 DB 클래스
 * `OPTIONAL` *callbackOrHandlers.notExists*
 * `OPTIONAL` *callbackOrHandlers.error*
 
-### `updateNoRecord(data, callbackOrHandlers)`
-#### Parameters
-* `REQUIRED` *data*
-* `REQUIRED` *data.id*
-* `OPTIONAL` *data.$inc*
-* `OPTIONAL` *data.$push*
-* `OPTIONAL` *data.$addToSet*
-* `OPTIONAL` *data.$pull*
-* `OPTIONAL` *callbackOrHandlers*
-* `OPTIONAL` *callbackOrHandlers.success*
-* `OPTIONAL` *callbackOrHandlers.notExists*
-* `OPTIONAL` *callbackOrHandlers.error*
-
 ### `remove(id, callbackOrHandlers)`
 #### Parameters
 * `REQUIRED` *id*
@@ -94,6 +81,19 @@ MongoDB 컬렉션을 다루는 DB 클래스
 * `OPTIONAL` *callbackOrHandlers.error*
 * `REQUIRED` *callbackOrHandlers.success*
 
+### `findAllAndUpdateNoHistory(params, callbackOrHandlers)`
+#### Parameters
+* `REQUIRED` *params*
+* `REQUIRED` *params.filter*
+* `REQUIRED` *params.data*
+* `OPTIONAL` *params.data.$inc*
+* `OPTIONAL` *params.data.$push*
+* `OPTIONAL` *params.data.$addToSet*
+* `OPTIONAL` *params.data.$pull*
+* `OPTIONAL` *callbackOrHandlers*
+* `OPTIONAL` *callbackOrHandlers.error*
+* `OPTIONAL` *callbackOrHandlers.success*
+
 ### `count(params, callbackOrHandlers)`
 #### Parameters
 * `OPTIONAL` *params*
@@ -102,7 +102,7 @@ MongoDB 컬렉션을 다루는 DB 클래스
 * `OPTIONAL` *callbackOrHandlers.error*
 * `REQUIRED` *callbackOrHandlers.success*
 
-### `checkIsExists(params, callbackOrHandlers)`
+### `checkExists(params, callbackOrHandlers)`
 #### Parameters
 * `OPTIONAL` *params*
 * `OPTIONAL` *params.filter*

@@ -1,11 +1,11 @@
-# CLASS `NODE(inner, self, params)`
+# `CLASS` NODE
 DOM 트리 구조를 정의하기 위한 NODE 클래스
 
 ## Parameters
 * `OPTIONAL` *params*
-* `OPTIONAL` *params.style	스타일*
-* `OPTIONAL` *params.c		자식* 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
-* `OPTIONAL` *params.on		이벤트*
+* `OPTIONAL` *params.style* 스타일
+* `OPTIONAL` *params.c* 자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
+* `OPTIONAL` *params.on* 이벤트
 
 ## Public Members
 
@@ -51,6 +51,10 @@ DOM 트리 구조를 정의하기 위한 NODE 클래스
 
 ### `getChildren()`
 
+### `setParent(node)`
+#### Parameters
+* `OPTIONAL` *node*
+
 ### `getParent()`
 
 ### `empty()`
@@ -66,6 +70,10 @@ DOM 트리 구조를 정의하기 위한 NODE 클래스
 #### Parameters
 * `REQUIRED` *eventName*
 * `OPTIONAL` *eventHandler*
+
+### `fireEvent(eventName)`
+#### Parameters
+* `REQUIRED` *eventName*
 
 ### `addStyle(style)`
 #### Parameters
@@ -91,6 +99,8 @@ DOM 트리 구조를 정의하기 위한 NODE 클래스
 
 ### `show()`
 
+### `checkIsHiding()`
+
 ### `checkIsShowing()`
 
 ### `scrollTo(params)`
@@ -107,7 +117,7 @@ DOM 트리 구조를 정의하기 위한 NODE 클래스
 
 ### `getScrollHeight()`
 
-### `setData(_data)`
+### `setData(data)`
 #### Parameters
 * `REQUIRED` *_data*
 
