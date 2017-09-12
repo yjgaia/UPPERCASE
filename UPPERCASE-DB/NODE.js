@@ -216,7 +216,7 @@ FOR_BOX((box) => {
 				let waitingFindInfos = [];
 				let waitingFindAllAndUpdateNoHistoryInfos = [];
 				let waitingCountInfos = [];
-				let waitingCheckIsExistsInfos = [];
+				let waitingCheckExistsInfos = [];
 				let waitingAggregateInfos = [];
 				let waitingCreateIndexInfos = [];
 				let waitingRemoveIndexInfos = [];
@@ -424,14 +424,14 @@ FOR_BOX((box) => {
 					});
 				};
 	
-				let checkIsExists = self.checkIsExists = (params, callbackOrHandlers) => {
+				let checkExists = self.checkExists = (params, callbackOrHandlers) => {
 					//OPTIONAL: params
 					//OPTIONAL: params.filter
 					//REQUIRED: callbackOrHandlers
 					//OPTIONAL: callbackOrHandlers.error
 					//REQUIRED: callbackOrHandlers.success
 	
-					waitingCheckIsExistsInfos.push({
+					waitingCheckExistsInfos.push({
 						params : params,
 						callbackOrHandlers : callbackOrHandlers
 					});
@@ -1617,7 +1617,7 @@ FOR_BOX((box) => {
 						}
 					};
 	
-					checkIsExists = self.checkIsExists = (params, callbackOrHandlers) => {
+					checkExists = self.checkExists = (params, callbackOrHandlers) => {
 						//OPTIONAL: params
 						//OPTIONAL: params.filter
 						//REQUIRED: callbackOrHandlers
@@ -1677,7 +1677,7 @@ FOR_BOX((box) => {
 								else {
 	
 									logError({
-										method : 'checkIsExists',
+										method : 'checkExists',
 										filter : filter,
 										errorMsg : error.toString()
 									}, errorHandler);
@@ -1689,7 +1689,7 @@ FOR_BOX((box) => {
 						catch (error) {
 	
 							logError({
-								method : 'checkIsExists',
+								method : 'checkExists',
 								filter : filter,
 								errorMsg : error.toString()
 							}, errorHandler);
@@ -1959,11 +1959,11 @@ FOR_BOX((box) => {
 	
 					waitingCountInfos = undefined;
 	
-					EACH(waitingCheckIsExistsInfos, (info) => {
-						checkIsExists(info.params, info.callbackOrHandlers);
+					EACH(waitingCheckExistsInfos, (info) => {
+						checkExists(info.params, info.callbackOrHandlers);
 					});
 	
-					waitingCheckIsExistsInfos = undefined;
+					waitingCheckExistsInfos = undefined;
 	
 					EACH(waitingAggregateInfos, (info) => {
 						aggregate(info.params, info.callbackOrHandlers);

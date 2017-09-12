@@ -3106,8 +3106,8 @@ global.CPU_CLUSTERING = METHOD((m) => {
 					// count shared data.
 					on('__SHARED_STORE_COUNT', SHARED_STORE.count);
 					
-					// check is exists shared data.
-					on('__SHARED_STORE_CHECK_IS_EXISTS', SHARED_STORE.checkIsExists);
+					// check exists shared data.
+					on('__SHARED_STORE_CHECK_EXISTS', SHARED_STORE.checkExists);
 	
 					// clear shared store.
 					on('__SHARED_STORE_CLEAR', SHARED_STORE.clear);
@@ -3561,20 +3561,20 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 				}
 			});
 
-			// check is exists shared data.
-			on('__SHARED_STORE_CHECK_IS_EXISTS', (params, ret) => {
+			// check exists shared data.
+			on('__SHARED_STORE_CHECK_EXISTS', (params, ret) => {
 
 				if (CPU_CLUSTERING.send !== undefined) {
 
 					CPU_CLUSTERING.send({
 						workerId : '~',
-						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
+						methodName : '__SHARED_STORE_CHECK_EXISTS',
 						data : params
 					}, ret);
 				}
 				
 				else {
-					SHARED_STORE.checkIsExists(params, ret);
+					SHARED_STORE.checkExists(params, ret);
 				}
 			});
 
@@ -3981,7 +3981,7 @@ global.SHARED_STORE = CLASS((cls) => {
 		});
 	};
 
-	let checkIsExists = cls.checkIsExists = (params, callback) => {
+	let checkExists = cls.checkExists = (params, callback) => {
 		//REQUIRED: params
 		//REQUIRED: params.storeName
 		//OPTIONAL: params.id
@@ -4394,7 +4394,7 @@ global.SHARED_STORE = CLASS((cls) => {
 				}
 			};
 			
-			let checkIsExists = self.checkIsExists = (idOrFilter, callback) => {
+			let checkExists = self.checkExists = (idOrFilter, callback) => {
 				//REQUIRED: idOrFilter
 				//REQUIRED: callback
 				
@@ -4411,7 +4411,7 @@ global.SHARED_STORE = CLASS((cls) => {
 
 					SERVER_CLUSTERING.send({
 						serverName : serverName,
-						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
+						methodName : '__SHARED_STORE_CHECK_EXISTS',
 						data : {
 							storeName : storeName,
 							id : id,
@@ -4424,7 +4424,7 @@ global.SHARED_STORE = CLASS((cls) => {
 
 					CPU_CLUSTERING.send({
 						workerId : '~',
-						methodName : '__SHARED_STORE_CHECK_IS_EXISTS',
+						methodName : '__SHARED_STORE_CHECK_EXISTS',
 						data : {
 							storeName : storeName,
 							id : id,
@@ -4434,7 +4434,7 @@ global.SHARED_STORE = CLASS((cls) => {
 				}
 				
 				else {
-					cls.checkIsExists({
+					cls.checkExists({
 						storeName : storeName,
 						id : id,
 						filter : filter
@@ -4492,7 +4492,7 @@ FOR_BOX((box) => {
 			
 			let count = self.count = sharedStore.count;
 			
-			let checkIsExists = self.checkIsExists = sharedStore.checkIsExists;
+			let checkExists = self.checkExists = sharedStore.checkExists;
 			
 			let clear = self.clear = sharedStore.clear;
 		}
@@ -4676,9 +4676,9 @@ global.CHECK_FILE_EXISTS = METHOD(() => {
 
 			// when normal mode
 			if (isSync !== true) {
-				FS.exists(path, (isExists) => {
+				FS.exists(path, (exists) => {
 					
-					if (isExists !== true) {
+					if (exists !== true) {
 						callback(false);
 					}
 					
@@ -4859,9 +4859,9 @@ global.COPY_FILE = METHOD(() => {
 						// when normal mode
 						if (isSync !== true) {
 	
-							CHECK_FILE_EXISTS(from, (isExists) => {
+							CHECK_FILE_EXISTS(from, (exists) => {
 	
-								if (isExists === true) {
+								if (exists === true) {
 	
 									let reader = FS.createReadStream(from);
 	
@@ -5001,9 +5001,9 @@ global.COPY_FOLDER = METHOD(() => {
 				// when normal mode
 				if (isSync !== true) {
 	
-					CHECK_FILE_EXISTS(from, (isExists) => {
+					CHECK_FILE_EXISTS(from, (exists) => {
 	
-						if (isExists === true) {
+						if (exists === true) {
 							
 							NEXT([
 							(next) => {
@@ -5182,9 +5182,9 @@ global.CREATE_FOLDER = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 
 						if (callback !== undefined) {
 							callback();
@@ -5203,9 +5203,9 @@ global.CREATE_FOLDER = METHOD(() => {
 						
 						else {
 							
-							CHECK_FILE_EXISTS(folderPath, (isExists) => {
+							CHECK_FILE_EXISTS(folderPath, (exists) => {
 	
-								if (folderPath === '.' || isExists === true) {
+								if (folderPath === '.' || exists === true) {
 	
 									FS.mkdir(path, (error) => {
 	
@@ -5348,9 +5348,9 @@ global.FIND_FILE_NAMES = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 
 						FS.readdir(path, (error, names) => {
 
@@ -5530,9 +5530,9 @@ global.FIND_FOLDER_NAMES = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 
 						FS.readdir(path, (error, names) => {
 
@@ -5712,9 +5712,9 @@ global.GET_FILE_INFO = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 
 						FS.stat(path, (error, stat) => {
 
@@ -5873,9 +5873,9 @@ global.MOVE_FILE = METHOD(() => {
 						// when normal mode
 						if (isSync !== true) {
 	
-							CHECK_FILE_EXISTS(from, (isExists) => {
+							CHECK_FILE_EXISTS(from, (exists) => {
 	
-								if (isExists === true) {
+								if (exists === true) {
 	
 									FS.rename(from, to, (error) => {
 										
@@ -6013,9 +6013,9 @@ global.READ_FILE = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 
 						FS.stat(path, (error, stat) => {
 							
@@ -6191,9 +6191,9 @@ global.REMOVE_FILE = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 
 						FS.unlink(path, (error) => {
 
@@ -6329,9 +6329,9 @@ global.REMOVE_FOLDER = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 
-				CHECK_FILE_EXISTS(path, (isExists) => {
+				CHECK_FILE_EXISTS(path, (exists) => {
 
-					if (isExists === true) {
+					if (exists === true) {
 						
 						NEXT([
 						(next) => {
