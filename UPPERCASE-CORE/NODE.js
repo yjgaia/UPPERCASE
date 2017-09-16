@@ -9042,7 +9042,9 @@ global.RUN_SCHEDULE_DAEMON = METHOD((m) => {
 							
 							EACH(schedule.commands, (command) => {
 								
-								exec(command, (error) => {
+								exec(command, {
+									cwd : schedule.folderPath
+								}, (error) => {
 									if (error !== TO_DELETE) {
 										SHOW_ERROR('RUN_SCHEDULE_DAEMON', error.toString());
 									}

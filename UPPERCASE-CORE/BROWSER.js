@@ -3651,19 +3651,25 @@ global.SOUND = CLASS((cls) => {
 			};
 			
 			let pause = self.pause = () => {
+				
 				if (source !== undefined) {
 					source.stop(0);
 					pausedAt = Date.now() - startedAt;
 				}
+				
+				delayed = undefined;
 			};
 
 			let stop = self.stop = () => {
+				
 				if (source !== undefined) {
 					source.stop(0);
 					pausedAt = 0;
 					
 					source = undefined;
 				}
+				
+				delayed = undefined;
 			};
 			
 			let setGain = self.setGain = (_gain) => {
