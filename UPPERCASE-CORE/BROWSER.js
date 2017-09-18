@@ -8605,6 +8605,6 @@ global.WIN_WIDTH = METHOD({
 
 	run : () => {
 
-		return window.innerWidth;
+		return document.documentElement.clientWidth;
 	}
 });
