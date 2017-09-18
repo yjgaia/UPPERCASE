@@ -17,6 +17,8 @@
     ##### 운영체제가 Windows인 경우
 	`내 PC`를 오른클릭하여 `속성 - 고급 시스템 설정 - 환경 변수 - 시스템 변수`에서 `UPPERCASE_PATH`에 UPPERCASE의 경로를 등록합니다. (CMD가 켜져 있는 경우, 환경 변수를 적용하기 위해서는 환경 변수 등록 후에 CMD를 종료했다가 다시 실행해야 합니다.)
 	
+	![WINDOWS_PATH](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/DOC/INSTALL/WINDOWS_PATH.png)
+	
 	##### 운영체제가 Mac인 경우
 	터미널에서 아래와 같이 입력합니다. 이후 터미널을 종료했다가 다시 실행합니다.
     ```
