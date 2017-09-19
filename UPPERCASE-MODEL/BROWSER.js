@@ -40,6 +40,7 @@ FOR_BOX((box) => {
 			//OPTIONAL: params.methodConfig.checkExists.role
 			//OPTIONAL: params.isNotUsingObjectId
 			//OPTIONAL: params.isNotUsingHistory
+			//OPTIONAL: params.isNotToInitialize
 			
 			let getBoxName = self.getBoxName = () => {
 				return box.boxName;

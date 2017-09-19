@@ -79,10 +79,11 @@ TestBox.TestModel = OBJECT({
 
 * `roomServerName` 접속할 룸 서버의 이름. [여러 룸 서버에 접속](UPPERCASE-ROOM.md#connect_to_room_server)한 경우 임의로 지정합니다.
 * `name` 모델 명
-* `initData` 초기화 데이터. 자세한 내용은 [초기화 데이터](#초기화-데이터) 항목을 참고하시기 바랍니다.
+* `initData` 초기 데이터. 자세한 내용은 [초기 데이터 설정](#초기 데이터 설정) 항목을 참고하시기 바랍니다.
 * `methodConfig` 메소드별 설정. 자세한 내용은 [메소드별 설정](#메소드별-설정) 항목을 참고하시기 바랍니다.
 * `isNotUsingObjectId` MongoDB의 기본 `id` 형식인 `ObjectId`를 쓰지 않을 것인지 여부. `true`로 지정하면 데이터를 생성할 때 `id`를 따로 지정해야 합니다. 자세한 내용은 [`Box.DB` 문서](UPPERCASE-DB.md#boxdb)를 참고해 주시기 바랍니다.
 * `isNotUsingHistory` 데이터를 생성, 수정, 삭제할 때 변경 내역을 남기지 않을 것인지 여부. 자세한 내용은 [`Box.DB` 문서](UPPERCASE-DB.md#boxdb)를 참고해 주시기 바랍니다.
+* `isNotToInitialize` `initData` 설정으로 초기 데이터를 지정한 경우, 모델을 생성할 때 초기화 되어있지 않은 데이터들을 자동으로 찾아 초기화시킵니다. `isNotToInitialize`를 `true`로 지정하면 모델을 생성할 때 자동으로 초기화시키지 않습니다.
 
 ### 모델 구현 예시
 ```javascript

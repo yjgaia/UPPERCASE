@@ -64,6 +64,9 @@ UPPERCASE-BOOT가 제공하는 업로드 기능을 사용할 때 자동으로 �
 * `backupDBUsername` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 아이디
 * `backupDBPassword` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 비밀번호
 
+### 모델 설정
+* `isNotToModelInitialize` 모델에 `initData` 설정으로 초기 데이터를 지정한 경우, 모델을 생성할 때 초기화 되어있지 않은 데이터들을 자동으로 찾아 초기화시킵니다. `isNotToModelInitialize`를 `true`로 지정하면 모델을 생성할 때 자동으로 초기화시키지 않습니다.
+
 ### 업로드 설정
 * `maxUploadFileMB` 업로드 가능한 최대 파일 크기를 메가바이트 단위로 설정합니다. 기본값은 `10` 입니다.
 

@@ -1298,6 +1298,28 @@ global.LOAD_ALL_SCRIPTS = METHOD((m) => {
 		}
 	};
 });
+FOR_BOX((box) => {
+
+	OVERRIDE(box.MODEL, (origin) => {
+
+		/*
+		 * MODEL 클래스
+		 */
+		box.MODEL = CLASS({
+			
+			preset : () => {
+				return origin;
+			},
+			
+			params : () => {
+				return {
+					isNotToInitialize : NODE_CONFIG.isNotToModelInitialize
+				};
+			}
+		});
+	});
+});
+
 /*
  * Node-side Configuration
  */
@@ -1306,6 +1328,7 @@ OVERRIDE(NODE_CONFIG, (origin) => {
 	global.NODE_CONFIG = COMBINE([{
 		isNotUsingCPUClustering : false
 		// maxUploadFileMB
+		// isNotToModelInitialize
 	}, origin]);
 });
 

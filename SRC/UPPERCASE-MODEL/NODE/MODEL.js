@@ -40,12 +40,14 @@ FOR_BOX((box) => {
 				//OPTIONAL: params.methodConfig.checkExists.role
 				//OPTIONAL: params.isNotUsingObjectId
 				//OPTIONAL: params.isNotUsingHistory
+				//OPTIONAL: params.isNotToInitialize
 				
 				let name = params.name;
 				let initData = params.initData;
 				let methodConfig = params.methodConfig;
 				let isNotUsingObjectId = params.isNotUsingObjectId;
 				let isNotUsingHistory = params.isNotUsingHistory;
+				let isNotToInitialize = params.isNotToInitialize;
 				
 				let createConfig;
 				let getConfig;
@@ -144,7 +146,7 @@ FOR_BOX((box) => {
 				}
 
 				// init not inited data set. (when worker id is 1)
-				if (CPU_CLUSTERING.getWorkerId() === 1 && initData !== undefined) {
+				if (isNotToInitialize !== true && CPU_CLUSTERING.getWorkerId() === 1 && initData !== undefined) {
 					
 					let $or = [];
 
