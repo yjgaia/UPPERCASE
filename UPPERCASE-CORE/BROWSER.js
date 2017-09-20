@@ -3380,6 +3380,8 @@ OVERRIDE(LOOP, (origin) => {
 					let deltaTime = time - beforeTime;
 					
 					if (deltaTime > 0) {
+	
+						beforeTime = time;
 						
 						for (let i = 0; i < loopInfos.length; i += 1) {
 							
@@ -3425,8 +3427,6 @@ OVERRIDE(LOOP, (origin) => {
 						for (let i = 0; i < runs.length; i += 1) {
 							runs[i](deltaTime);
 						}
-	
-						beforeTime = time;
 					}
 					
 					animationInterval = requestAnimationFrame(step);
