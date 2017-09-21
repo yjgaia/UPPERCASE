@@ -27,42 +27,42 @@
 
 * `MAIN.js` 맨 처음 실행되는 코드입니다.
 
-    ```javascript
-    Sample.MAIN = METHOD({
-    
-    	run : () => {
-    	
-    		// http://localhost:8888/ 로 접속하면 Home 뷰를 보여줍니다.
-    		Sample.MATCH_VIEW({
-    			uri : '',
-    			target : Sample.Home
-    		});
-    	}
-    });
-    ```
+	```javascript
+	Sample.MAIN = METHOD({
+	
+		run : () => {
+		
+			// http://localhost:8888/ 로 접속하면 Home 뷰를 보여줍니다.
+			Sample.MATCH_VIEW({
+				uri : '',
+				target : Sample.Home
+			});
+		}
+	});
+	```
 
 * `Home.js` 초기 화면을 담당하는 뷰 파일입니다.
 
-    ```javascript
-    Sample.Home = CLASS({
-    
-    	preset : () => {
-    		return VIEW;
-    	},
-    
-    	init : (inner, self) => {
-        
-    		let div = DIV({
-    			c : 'Hello, UPPERCASE!'
-    		}).appendTo(BODY);
-    		
-    		// 경로가 달라지면 div를 제거합니다.
-    		inner.on('close', () => {
-    			div.remove();
-    		});
-    	}
-    });
-    ```
+	```javascript
+	Sample.Home = CLASS({
+	
+		preset : () => {
+			return VIEW;
+		},
+	
+		init : (inner, self) => {
+		
+			let div = DIV({
+				c : 'Hello, UPPERCASE!'
+			}).appendTo(BODY);
+			
+			// 경로가 달라지면 div를 제거합니다.
+			inner.on('close', () => {
+				div.remove();
+			});
+		}
+	});
+	```
 
 뷰에 대한 자세한 내용은 [뷰 기능 문서](UPPERCASE-CORE-BROWSER.md#%EB%B7%B0-%EA%B8%B0%EB%8A%A5)를 참고해주시기 바랍니다.
 
@@ -126,28 +126,28 @@ http://localhost:8888 으로 접속하여 까만 화면에 흰 글씨로 `Hello,
 
 ```
 SampleProject
-    __PACK
-    __RF
-    BOX
-        UUI
-            BROWSER.js
-        UANI
-            BROWSER.js
-        Yogurt
-            BROWSER.js
-    Sample
-        COMMON
-            SampleModel.js
-        NODE
-        	MAIN.js
-    	BROWSER
-    		MAIN.js
-    		CONNECTED.js
-    		DISCONNECTED.js
-        R
-    Sample.js
-    VERSION
-    DEPENDENCY
+	__PACK
+	__RF
+	BOX
+		UUI
+			BROWSER.js
+		UANI
+			BROWSER.js
+		Yogurt
+			BROWSER.js
+	Sample
+		COMMON
+			SampleModel.js
+		NODE
+			MAIN.js
+		BROWSER
+			MAIN.js
+			CONNECTED.js
+			DISCONNECTED.js
+		R
+	Sample.js
+	VERSION
+	DEPENDENCY
 ```
 
 이하는 각 폴더 및 파일에 대한 설명입니다.
@@ -234,14 +234,14 @@ __RF/
 [`ubm`](https://www.npmjs.com/package/ubm)을 이용하여 쉽게 프로젝트 폴더를 초기화할 수 있습니다.
 
 1. [`ubm`](https://www.npmjs.com/package/ubm)을 설치합니다.
-    ```
-    npm install -g ubm
-    ```
+	```
+	npm install -g ubm
+	```
 2. 프로젝트 폴더로 이동합니다.
-    ```
-    cd SampleBox
-    ```
+	```
+	cd SampleBox
+	```
 3. `ubm`을 이용하여 프로젝트 폴더를 초기화합니다.
-    ```
-    ubm init SampleBox
-    ```
+	```
+	ubm init SampleBox
+	```

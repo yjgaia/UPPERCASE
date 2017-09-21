@@ -67,7 +67,7 @@ CONNECT_TO_ROOM_SERVER({
 여러 룸 서버에 접속하는 경우, `roomServerName`을 지정합니다.
 ```javascript
 CONNECT_TO_ROOM_SERVER({
-    roomServerName : 'ROOM_SERVER_1',
+	roomServerName : 'ROOM_SERVER_1',
 	host : '111.111.111.111',
 	port : 9127
 }, () => {
@@ -75,7 +75,7 @@ CONNECT_TO_ROOM_SERVER({
 });
 
 CONNECT_TO_ROOM_SERVER({
-    roomServerName : 'ROOM_SERVER_2',
+	roomServerName : 'ROOM_SERVER_2',
 	host : '222.222.222.222',
 	port : 9128
 }, () => {
@@ -151,7 +151,7 @@ let room = TestBox.ROOM('testRoom');
 
 // 특정 method name으로 서버측 룸에서 데이터를 보내게 되면, 여기에서 받게 됩니다.
 room.on(methodName, (data) => {
-    ...
+	...
 });
 
 // 더 이상 데이터를 받지 않습니다.
@@ -159,7 +159,7 @@ room.off(methodName);
 
 // 서버측 룸에 데이터를 전송하고, 서버측 룸으로부터 응답을 받아옵니다.
 room.send({methodName:, data:}, (data) => {
-    ...
+	...
 });
 
 // 룸에서 나옵니다. 이 이후에는 해당 룸에서 더 이상 데이터를 주고받을 수 없습니다.
@@ -170,13 +170,13 @@ room.exit();
 
 ```javascript
 let room1 = TestBox.ROOM({
-    roomServerName : 'ROOM_SERVER_1',
-    name : 'testRoom'
+	roomServerName : 'ROOM_SERVER_1',
+	name : 'testRoom'
 });
 
 let room2 = TestBox.ROOM({
-    roomServerName : 'ROOM_SERVER_2',
-    name : 'testRoom'
+	roomServerName : 'ROOM_SERVER_2',
+	name : 'testRoom'
 });
 ```
 
@@ -199,8 +199,8 @@ Node.js 환경에서만 사용할 수 있습니다.
 
 ```javascript
 TestBox.BROADCAST({
-    roomName : 'testRoom',
-    methodName : methodName,
-    data : data
+	roomName : 'testRoom',
+	methodName : methodName,
+	data : data
 });
 ```

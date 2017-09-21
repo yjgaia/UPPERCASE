@@ -32,13 +32,13 @@ require(process.env.UPPERCASE_PATH + '/LOAD.js');
 
 BOOT({
 	CONFIG : {
-        isDevMode : true,
+		isDevMode : true,
 		defaultBoxName : 'Sample',
-        title : 'Sample',
+		title : 'Sample',
 		webServerPort : 8888
 	},
 	NODE_CONFIG : {
-	    // 데이터베이스 설정
+		// 데이터베이스 설정
 		// 데이터베이스 이름은 Sample 입니다.
 		dbName : 'Sample'
 	}
@@ -142,14 +142,14 @@ CMD나 터미널에 아래와 같은 내용이 출력되었다면 모델이 잘 
 2017-04-29 20:24:09 [Sample.SomeModel.create] 경고가 발생했습니다. 경고 메시지: 데이터가 유효하지 않습니다.
 다음은 경고를 발생시킨 파라미터입니다.
 {
-    "data": {
-        "name": "Pomi"
-    },
-    "validErrors": {
-        "kind": {
-            "type": "notEmpty"
-        }
-    }
+	"data": {
+		"name": "Pomi"
+	},
+	"validErrors": {
+		"kind": {
+			"type": "notEmpty"
+		}
+	}
 }
 { name: 'Maru',
   kind: 'dog',

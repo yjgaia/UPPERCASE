@@ -35,17 +35,17 @@ let func = (something) => {
 ## 주석
 * 주석은 설명하고자 하는 코드의 바로 위 줄에 작성합니다.
 
-    ```javascript
-    // do something.
-    something();
-    ```
+	```javascript
+	// do something.
+	something();
+	```
 
 * 즉시 알 수 있는 코드에 대해서는 주석을 작성하지 않습니다. 코드를 읽는 사람의 시간이 낭비되도록 하지 마시기 바랍니다.
 
-    ```javascript
-    // a is 3. (X)
-    a = 3;
-    ```
+	```javascript
+	// a is 3. (X)
+	a = 3;
+	```
 
 ## for 문
 `for` 문은 다음과 같이 작성합니다.
@@ -143,15 +143,15 @@ JavaScript 특성 상 정확한 값 비교를 위해 `==` 대신 `===`, `!=` 대
 * 변수명은 [Camel Case 방식](http://en.wikipedia.org/wiki/CamelCase)으로 짓습니다.
 * 초기화 이후 값이 변경되지 않는 상수명은 대문자로 짓습니다.
 
-    ```
-    const CONSTANT_VALUE = '!@#';
-    ```
+	```
+	const CONSTANT_VALUE = '!@#';
+	```
 
 * `boolean` 변수명은 `is`로 시작합니다. (`exists`는 예외)
 
-    ```
-    let isHuman = true;
-    ```
+	```
+	let isHuman = true;
+	```
 
 ## 함수 선언
 * 함수명 또한 변수명과 마찬가지로 [Camel Case 방식](http://en.wikipedia.org/wiki/CamelCase)으로 짓습니다.
@@ -184,20 +184,20 @@ method(1); // 세번째 메소드인 method(a, b, c)가 실행됩니다.
 그러나, 메소드를 [UPPERCASE에서 제안한 네가지 형태](#메소드의-형태)로만 작성한다면 다음과 같이 굳이 메소드 오버로딩을 하지 않더라도 메소드의 다양성을 충족시킬 수 있습니다.
 ```javascript
 let method = (data) => {
-    if (CHECK_IS_DATA(data) !== true) { ... }
-    else if (data.c === undefined) { ... }
-    else { ... }
+	if (CHECK_IS_DATA(data) !== true) { ... }
+	else if (data.c === undefined) { ... }
+	else { ... }
 };
 
 method(1);
 method({
-    a : 1,
-    b : 2
+	a : 1,
+	b : 2
 });
 method({
-    a : 1,
-    b : 2,
-    c : 3
+	a : 1,
+	b : 2,
+	c : 3
 });
 ```
 

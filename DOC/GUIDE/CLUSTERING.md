@@ -20,15 +20,15 @@ CPU_CLUSTERING(() => {
 
 	console.log('현재 프로세스의 워커 아이디: ', CPU_CLUSTERING.getWorkerId());
 
-    // 다른 프로세스로부터 데이터를 수신받음
+	// 다른 프로세스로부터 데이터를 수신받음
 	CPU_CLUSTERING.on('receive', (data) => {
 		...
 	});
 
-    // 1번 프로세스에서만 동작
+	// 1번 프로세스에서만 동작
 	if (CPU_CLUSTERING.getWorkerId() === 1) {
 
-        // 모든 프로세스에 데이터 송신
+		// 모든 프로세스에 데이터 송신
 		CPU_CLUSTERING.broadcast({
 			methodName : 'receive',
 			data : {
@@ -47,7 +47,7 @@ UPPERCASE에서는 [`SERVER_CLUSTERING`](UPPERCASE-CORE-NODE.md#server_clusterin
 ```javascript
 SERVER_CLUSTERING({
 
-    // 연동할 서버들의 호스트 정보
+	// 연동할 서버들의 호스트 정보
 	hosts : {
 		serverA : '12.34.56.78',
 		serverB : '12.34.56.89'
@@ -63,15 +63,15 @@ SERVER_CLUSTERING({
 
 	console.log('현재 서버의 이름: ', SERVER_CLUSTERING.getThisServerName());
 
-    // 다른 서버로부터 데이터를 수신받음
+	// 다른 서버로부터 데이터를 수신받음
 	SERVER_CLUSTERING.on('receive', (data) => {
 		...
 	});
 
-    // serverA 서버에서만 동작
-    if (SERVER_CLUSTERING.getThisServerName() === 'serverA') {
+	// serverA 서버에서만 동작
+	if (SERVER_CLUSTERING.getThisServerName() === 'serverA') {
 
-        // 모든 분산 서버에 데이터 송신
+		// 모든 분산 서버에 데이터 송신
 		SERVER_CLUSTERING.broadcast({
 			methodName : 'receive',
 			data : {
@@ -208,13 +208,13 @@ mongo --port 40001
 ```
 rs.initiate(
   {
-    _id: "csReplSet",
-    configsvr: true,
-    members: [
-      { _id : 0, host : "11.22.33.44:40001" },
-      { _id : 1, host : "11.22.33.44:40002" },
-      { _id : 2, host : "11.22.33.44:40003" }
-    ]
+	_id: "csReplSet",
+	configsvr: true,
+	members: [
+	  { _id : 0, host : "11.22.33.44:40001" },
+	  { _id : 1, host : "11.22.33.44:40002" },
+	  { _id : 2, host : "11.22.33.44:40003" }
+	]
   }
 );
 ```

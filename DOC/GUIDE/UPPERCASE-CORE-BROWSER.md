@@ -95,26 +95,26 @@ HTML 코드와 JavaScript 코드가 분리되어 있는 기존 웹 개발 방식
 
 ```html
 <html>
-    <head>
-        <style>
-            #hello {
-                color : red;
-            }
-        </style>
-    </head>
-    <body>
-        <p id="hello">안녕하세요.</p>
-        <script>
-        'use strict';
-        RUN(() => {
-            
-            let hello = document.getElementById('hello');
-            
-            // 빨간색인 글자 색을 파란색으로 변경
-            hello.style.color = 'blue';
-        });
-        </script>
-    </body>
+	<head>
+		<style>
+			#hello {
+				color : red;
+			}
+		</style>
+	</head>
+	<body>
+		<p id="hello">안녕하세요.</p>
+		<script>
+		'use strict';
+		RUN(() => {
+			
+			let hello = document.getElementById('hello');
+			
+			// 빨간색인 글자 색을 파란색으로 변경
+			hello.style.color = 'blue';
+		});
+		</script>
+	</body>
 </html>
 ```
 
@@ -136,15 +136,15 @@ UPPERCASE의 DOM 객체 생성 기능을 사용하면, JavaScript에서의 DOM �
 
 ```javascript
 let hello = P({
-    style : {
-        color : 'red'
-    },
-    c : '안녕하세요.'
+	style : {
+		color : 'red'
+	},
+	c : '안녕하세요.'
 }).appendTo(BODY);
 
 // 빨간색인 글자 색을 파란색으로 변경
 hello.addStyle({
-    color : 'blue'
+	color : 'blue'
 });
 ```
 
@@ -171,9 +171,9 @@ ImageAndText = CLASS({
 		
 		let content;
 		let wrapper = DIV({
-		    c : content = P({
-    			c : [img, BR(), text]
-    		})
+			c : content = P({
+				c : [img, BR(), text]
+			})
 		});
 		
 		inner.setWrapperDom(wrapper);
@@ -201,15 +201,15 @@ ImageAndText = CLASS({
 let div = DIV().appendTo(BODY);
 
 div.append(P({
-    c : '동해물과 백두산이 마르고 닳도록'
+	c : '동해물과 백두산이 마르고 닳도록'
 }));
 
 P({
-    c : '하느님이 보우하사 우리 나라 만세'
+	c : '하느님이 보우하사 우리 나라 만세'
 }).appendTo(div);
 
 div.prepend(H1({
-    c : '애국가'
+	c : '애국가'
 }));
 ```
 다음 메소드들을 통해, 노드를 추가하거나 제거하는 등 트리 구조를 구현할 수 있습니다.
@@ -229,11 +229,11 @@ div.prepend(H1({
 ### 이벤트 관련
 ```javascript
 let button = DIV({
-    c : '저를 눌러주세요.'
+	c : '저를 눌러주세요.'
 }).appendTo(BODY);
 
 button.on('tap', () => {
-    alert('아야! 너무 세게 누르셨어요!');
+	alert('아야! 너무 세게 누르셨어요!');
 });
 ```
 현재 노드에 이벤트를 추가하거나 제거할 수 있습니다. 이벤트에 관한 자세한 내용은 [노드에 이벤트 등록](#노드에_이벤트_등록)을 참고하시기 바랍니다.
@@ -243,13 +243,13 @@ button.on('tap', () => {
 ### 스타일 관련
 ```javascript
 let redBox = DIV({
-    c : '빨간 박스'
+	c : '빨간 박스'
 }).appendTo(BODY);
 
 redBox.addStyle({
-    backgroundColor : 'red',
-    color : 'yellow',
-    padding : 10
+	backgroundColor : 'red',
+	color : 'yellow',
+	padding : 10
 });
 ```
 현재 노드에 스타일을 추가할 수 있습니다. 스타일에 관한 자세한 내용은 [DOM 객체의 스타일](#dom_객체의_스타일)를 참고하시기 바랍니다.
@@ -268,16 +268,16 @@ redBox.addStyle({
 #### 스크롤 관련
 ```javascript
 let div = DIV({
-    style : {
-        overflow : 'scoll',
-        width : 100,
-        height : 100
-    },
-    c : '이 DIV는 스크롤이 가능합니다!'
+	style : {
+		overflow : 'scoll',
+		width : 100,
+		height : 100
+	},
+	c : '이 DIV는 스크롤이 가능합니다!'
 }).appendTo(BODY);
 
 div.scrollTo({
-    left : 50
+	left : 50
 });
 ```
 현재 노드가 `overflow`가 `scroll`로 지정되어 노드 내에 스크롤 바가 있는 경우, 스크롤 바의 위치를 지정하거나 현재 위치 및 스크롤의 길이를 가져올 수 있습니다.
@@ -290,12 +290,12 @@ div.scrollTo({
 ### 데이터 관련
 ```javascript
 let div = DIV({
-    c : '나는 누구?'
+	c : '나는 누구?'
 }).appendTo(BODY);
 
 div.setData({
-    name : 'YJ Sim',
-    age : 29
+	name : 'YJ Sim',
+	age : 29
 });
 
 div.getData();
@@ -308,25 +308,25 @@ div.getData();
 
 ```javascript
 DIV({
-    style : {
-        backgroundColor : 'blue',
-        color : 'white',
-        padding : 10,
-    },
-    c : [H1({
-        c : '애국가'
-    }),
-    P({
-        c : '동해물과 백두산이 마르고 닳도록'
-    }),
-    P({
-        c : '하느님이 보우하사 우리 나라 만세'
-    })],
-    on : {
-        tap : () => {
-            alert('무궁화 삼천리 화려강산, 대한 사람 대한으로 길이 보전하세');
-        }
-    }
+	style : {
+		backgroundColor : 'blue',
+		color : 'white',
+		padding : 10,
+	},
+	c : [H1({
+		c : '애국가'
+	}),
+	P({
+		c : '동해물과 백두산이 마르고 닳도록'
+	}),
+	P({
+		c : '하느님이 보우하사 우리 나라 만세'
+	})],
+	on : {
+		tap : () => {
+			alert('무궁화 삼천리 화려강산, 대한 사람 대한으로 길이 보전하세');
+		}
+	}
 }).appendTo(BODY);
 ```
 
@@ -340,17 +340,17 @@ DOM 객체를 생성하고 다루는 클래스. `NODE` 클래스를 상속하기
 
 ```javascript
 DOM({
-    tag : 'div',
-    c : [DOM({
-        tag : 'h1',
-        style : {
-            fontWeight : 'bold'
-        },
-        c : 'UPPERCASE'
-    }), DOM({
-        tag : 'p',
-        c : 'UPPERCASE는 JavaScript 기반 웹 애플리케이션 프레임워크입니다.'
-    })]
+	tag : 'div',
+	c : [DOM({
+		tag : 'h1',
+		style : {
+			fontWeight : 'bold'
+		},
+		c : 'UPPERCASE'
+	}), DOM({
+		tag : 'p',
+		c : 'UPPERCASE는 JavaScript 기반 웹 애플리케이션 프레임워크입니다.'
+	})]
 }).appendTo(BODY);
 ```
 
@@ -378,7 +378,7 @@ HTML `body` 태그와 대응되는 객체. (`BODY`는 웹 페이지에 단 하�
 ```javascript
 // BODY는 새로 생성할 수 없이 그 자체로 객체이다.
 BODY.append(DIV({
-    c : 'Hello!'
+	c : 'Hello!'
 }));
 ```
 
@@ -387,7 +387,7 @@ HTML `div` 태그와 대응되는 클래스
 
 ```javascript
 DIV({
-    c : 'Hello!'
+	c : 'Hello!'
 }).appendTo(BODY);
 ```
 
@@ -402,7 +402,7 @@ HTML `br` 태그와 대응되는 클래스. 다른 태그와 다르게 아무런
 
 ```javascript
 P({
-    c : ['My', BR(), 'name', BR(), 'is', BR(), 'YJ.']
+	c : ['My', BR(), 'name', BR(), 'is', BR(), 'YJ.']
 }).appendTo(BODY);
 ```
 
@@ -429,14 +429,14 @@ HTML `a` 태그와 대응되는 클래스. `href`와 `target` 파라미터를 �
 
 ```javascript
 A({
-    href : 'http://uppercase.io',
-    target : '_blank', // 새 창에서 열기
-    c : 'UPPERCASE 공식 사이트'
+	href : 'http://uppercase.io',
+	target : '_blank', // 새 창에서 열기
+	c : 'UPPERCASE 공식 사이트'
 }).appendTo(BODY);
 
 // 아무런 내용이 없으면 이동할 경로를 그대로 표시합니다.
 A({
-    href : 'http://uppercase.io'
+	href : 'http://uppercase.io'
 }).appendTo(BODY);
 ```
 
@@ -450,7 +450,7 @@ HTML `img` 태그와 대응되는 클래스. `src` 파라미터를 추가로 사
 
 ```javascript
 IMG({
-    src : 'logo.png'
+	src : 'logo.png'
 }).appendTo(BODY);
 ```
 
@@ -467,13 +467,13 @@ HTML `ul` 태그와 대응되는 클래스
 
 ```javascript
 UL({
-    c : [LI({
-        c : '홈'
-    }), LI({
-        c : '소개'
-    }), LI({
-        c : '게시판'
-    })]
+	c : [LI({
+		c : '홈'
+	}), LI({
+		c : '소개'
+	}), LI({
+		c : '게시판'
+	})]
 }).appendTo(BODY);
 ```
 
@@ -485,31 +485,31 @@ HTML `table` 태그와 대응되는 클래스
 
 ```javascript
 TABLE({
-    c : [TR({
-        c : [TH({
-            c : '이름'
-        }), TH({
-            c : '나이'
-        }), TH({
-            c : '성별'
-        })]
-    }), TR({
-        c : [TD({
-            c : 'YJ Sim'
-        }), TD({
-            c : 29
-        }), TD({
-            c : '남'
-        })]
-    }), TR({
-        c : [TD({
-            c : 'DS Hwang'
-        }), TD({
-            c : 26
-        }), TD({
-            c : '여'
-        })]
-    })]
+	c : [TR({
+		c : [TH({
+			c : '이름'
+		}), TH({
+			c : '나이'
+		}), TH({
+			c : '성별'
+		})]
+	}), TR({
+		c : [TD({
+			c : 'YJ Sim'
+		}), TD({
+			c : 29
+		}), TD({
+			c : '남'
+		})]
+	}), TR({
+		c : [TD({
+			c : 'DS Hwang'
+		}), TD({
+			c : 26
+		}), TD({
+			c : '여'
+		})]
+	})]
 }).appendTo(BODY);
 ```
 
@@ -532,38 +532,38 @@ HTML `form` 태그와 대응되는 클래스. 아래와 같은 파라미터들�
 
 ```javascript
 let form = FORM({
-    action : 'account/create',
-    method : 'POST',
-    c : [INPUT({
-        name : 'name',
-        placeholder : '이름'
-    }), INPUT({
-        name : 'age',
-        placeholder : '나이'
-    }), SELECT({
-        name : 'sex',
-        placeholder : '성별',
-        c : [OPTION({
-            value : 'male',
-            c : '남자'
-        }), OPTION({
-            value : 'female',
-            c : '여자'
-        })]
-    }), TEXTAREA({
-        name : 'introduce',
-        placeholder : '소개'
-    }), INPUT({
-        type : 'submit',
-        value : '가입 완료'
-    })]
+	action : 'account/create',
+	method : 'POST',
+	c : [INPUT({
+		name : 'name',
+		placeholder : '이름'
+	}), INPUT({
+		name : 'age',
+		placeholder : '나이'
+	}), SELECT({
+		name : 'sex',
+		placeholder : '성별',
+		c : [OPTION({
+			value : 'male',
+			c : '남자'
+		}), OPTION({
+			value : 'female',
+			c : '여자'
+		})]
+	}), TEXTAREA({
+		name : 'introduce',
+		placeholder : '소개'
+	}), INPUT({
+		type : 'submit',
+		value : '가입 완료'
+	})]
 }).appendTo(BODY);
 
 form.setData({
-    name : 'YJ Sim',
-    age : 29,
-    sex : 'male',
-    introduce : '안녕하세요.'
+	name : 'YJ Sim',
+	age : 29,
+	sex : 'male',
+	introduce : '안녕하세요.'
 });
 
 form.getData();
@@ -590,21 +590,21 @@ HTML `input` 태그와 대응되는 클래스. 아래와 같은 파라미터들�
 let input;
 
 FORM({
-    action : 'upload',
-    method : 'POST',
-    enctype : 'multipart/form-data',
-    c : [input = INPUT({
+	action : 'upload',
+	method : 'POST',
+	enctype : 'multipart/form-data',
+	c : [input = INPUT({
 		name : 'fileName',
 		placeholder : '저장할 파일명'
-    }), INPUT({
-        type : 'file',
+	}), INPUT({
+		type : 'file',
 		name : 'file',
 		accept : 'image/*',
 		isMultiple : true
-    }), INPUT({
-        type : 'submit',
-        value : '업로드'
-    })]
+	}), INPUT({
+		type : 'submit',
+		value : '업로드'
+	})]
 }).appendTo(BODY);
 
 input.focus();
@@ -639,15 +639,15 @@ HTML `select` 태그와 대응되는 클래스. `name`과 `placeholder`, `value`
 
 ```javascript
 let select = SELECT({
-    name : 'sex',
-    placeholder : '성별',
-    c : [OPTION({
-        value : 'male',
-        c : '남자'
-    }), OPTION({
-        value : 'female',
-        c : '여자'
-    })]
+	name : 'sex',
+	placeholder : '성별',
+	c : [OPTION({
+		value : 'male',
+		c : '남자'
+	}), OPTION({
+		value : 'female',
+		c : '여자'
+	})]
 }).appendTo(form);
 
 select.getName();
@@ -669,33 +669,33 @@ HTML `optgroup` 태그와 대응되는 클래스. `label` 파라미터를 추가
 
 ```javascript
 SELECT({
-    name : 'nation',
-    placeholder : '국가',
-    c : [OPTGROUP({
-        label : '아시아',
-        c : [OPTION({
-            value : 'korea',
-            c : '대한민국'
-        }), OPTION({
-            value : 'japan',
-            c : '일본'
-        }), OPTION({
-            value : 'china',
-            c : '중국'
-        })]
-    }), OPTGROUP({
-        label : '유럽',
-        c : [OPTION({
-            value : 'uk',
-            c : '영국'
-        }), OPTION({
-            value : 'france',
-            c : '프랑스'
-        }), OPTION({
-            value : 'italy',
-            c : '이탈리아'
-        })]
-    })]
+	name : 'nation',
+	placeholder : '국가',
+	c : [OPTGROUP({
+		label : '아시아',
+		c : [OPTION({
+			value : 'korea',
+			c : '대한민국'
+		}), OPTION({
+			value : 'japan',
+			c : '일본'
+		}), OPTION({
+			value : 'china',
+			c : '중국'
+		})]
+	}), OPTGROUP({
+		label : '유럽',
+		c : [OPTION({
+			value : 'uk',
+			c : '영국'
+		}), OPTION({
+			value : 'france',
+			c : '프랑스'
+		}), OPTION({
+			value : 'italy',
+			c : '이탈리아'
+		})]
+	})]
 }).appendTo(form);
 ```
 
@@ -820,23 +820,23 @@ IFRAME({
 
 ```javascript
 DIV({
-    c : [DIV({
-        style : {
-            flt : 'left'
-        },
-        c : '로고'
-    }), DIV({
-        style : {
-            flt : 'right'
-        },
-        c : '메뉴'
-    }),
-    
-    CLEAR_BOTH(),
-    
-    DIV({
-        c : '안녕하세요!'
-    })]
+	c : [DIV({
+		style : {
+			flt : 'left'
+		},
+		c : '로고'
+	}), DIV({
+		style : {
+			flt : 'right'
+		},
+		c : '메뉴'
+	}),
+	
+	CLEAR_BOTH(),
+	
+	DIV({
+		c : '안녕하세요!'
+	})]
 }).appendTo(BODY);
 ```
 
@@ -846,14 +846,14 @@ DIV({
 ### `EVENT`를 사용하여 이벤트 등록/해제
 ```javascript
 let div = DIV({
-    c : 'TOUCH ME!'
+	c : 'TOUCH ME!'
 }).appendTo(BODY);
 
 EVENT({
-    node : div,
-    name : 'tap'
+	node : div,
+	name : 'tap'
 }, (e) => {
-    alert('WOW!');
+	alert('WOW!');
 });
 ```
 
@@ -862,11 +862,11 @@ EVENT({
 
 ```javascript
 let div = DIV({
-    c : 'TOUCH ME!'
+	c : 'TOUCH ME!'
 }).appendTo(BODY);
 
 div.on('tab', (e) => {
-    alert('WOW!');
+	alert('WOW!');
 });
 ```
 
@@ -874,12 +874,12 @@ div.on('tab', (e) => {
 
 ```javascript
 DIV({
-    c : 'TOUCH ME!',
-    on : {
-        tab : (e) => {
-            alert('WOW!');
-        }
-    }
+	c : 'TOUCH ME!',
+	on : {
+		tab : (e) => {
+			alert('WOW!');
+		}
+	}
 }).appendTo(BODY);
 ```
 
@@ -888,10 +888,10 @@ DIV({
 
 ```javascript
 EVENT({
-    node : div,
-    name : 'tap'
+	node : div,
+	name : 'tap'
 }, (e) => {
-    alert('WOW!');
+	alert('WOW!');
 });
 ```
 
@@ -918,15 +918,15 @@ EVENT({
 
 ```javascript
 EVENT({
-    node : div,
-    name : 'tap'
+	node : div,
+	name : 'tap'
 }, (e) => {
-    
-    console.log('이벤트가 발생한 화면 왼쪽으로부터의 위치: ' + e.getLeft());
-    console.log('이벤트가 발생한 화면 위쪽으로부터의 위치: ' + e.getTop());
-    
-    // 이벤트 버블링 중단
-    e.stopBubbling();
+	
+	console.log('이벤트가 발생한 화면 왼쪽으로부터의 위치: ' + e.getLeft());
+	console.log('이벤트가 발생한 화면 위쪽으로부터의 위치: ' + e.getTop());
+	
+	// 이벤트 버블링 중단
+	e.stopBubbling();
 });
 ```
 
@@ -943,11 +943,11 @@ EVENT({
 
 ```javascript
 EVENT_ONCE({
-    node : div,
-    name : 'tap'
+	node : div,
+	name : 'tap'
 }, (e) => {
-    alert('WOW!');
-    // 더 이상 이벤트가 처리되지 않습니다.
+	alert('WOW!');
+	// 더 이상 이벤트가 처리되지 않습니다.
 });
 ```
 
@@ -957,16 +957,16 @@ EVENT_ONCE({
 ### `ADD_STYLE`를 사용하여 이벤트 등록/해제
 ```javascript
 let div = DIV({
-    c : '안녕하세요!'
+	c : '안녕하세요!'
 }).appendTo(BODY);
 
 ADD_STYLE({
-    node : div,
-    style : {
-        backgroundColor : 'blue',
-        color : 'red',
-        fontWeight : 'bold'
-    }
+	node : div,
+	style : {
+		backgroundColor : 'blue',
+		color : 'red',
+		fontWeight : 'bold'
+	}
 });
 ```
 
@@ -975,13 +975,13 @@ ADD_STYLE({
 
 ```javascript
 let div = DIV({
-    c : '안녕하세요!'
+	c : '안녕하세요!'
 }).appendTo(BODY);
 
 div.addStyle({
-    backgroundColor : 'blue',
-    color : 'red',
-    fontWeight : 'bold'
+	backgroundColor : 'blue',
+	color : 'red',
+	fontWeight : 'bold'
 });
 ```
 
@@ -989,12 +989,12 @@ div.addStyle({
 
 ```javascript
 DIV({
-    c : '안녕하세요!'
-    style : {
-        backgroundColor : 'blue',
-        color : 'red',
-        fontWeight : 'bold'
-    }
+	c : '안녕하세요!'
+	style : {
+		backgroundColor : 'blue',
+		color : 'red',
+		fontWeight : 'bold'
+	}
 }).appendTo(BODY);
 ```
 
@@ -1003,12 +1003,12 @@ DIV({
 
 ```javascript
 ADD_STYLE({
-    node : div,
-    style : {
-        backgroundColor : 'blue',
-        color : 'red',
-        fontWeight : 'bold'
-    }
+	node : div,
+	style : {
+		backgroundColor : 'blue',
+		color : 'red',
+		fontWeight : 'bold'
+	}
 });
 ```
 
@@ -1023,19 +1023,19 @@ ADD_STYLE({
 ```javascript
 // div를 화면 중앙에 고정합니다.
 ADD_STYLE({
-    node : div,
-    style : {
-        position : 'fixed',
-        width : 200,
-        height : 200,
-        // 창의 크기가 변경될 때 마다 위치를 가운데로 변경합니다.
-        onDisplayResize : (width, height) => {
-            return {
-                left : width / 2 - 100,
-                top : height / 2 - 100
-            };
-        }
-    }
+	node : div,
+	style : {
+		position : 'fixed',
+		width : 200,
+		height : 200,
+		// 창의 크기가 변경될 때 마다 위치를 가운데로 변경합니다.
+		onDisplayResize : (width, height) => {
+			return {
+				left : width / 2 - 100,
+				top : height / 2 - 100
+			};
+		}
+	}
 });
 ```
 
@@ -1044,7 +1044,7 @@ ADD_STYLE({
 
 ```javascript
 let div = DIV({
-    style : {
+	style : {
 		position : 'fixed',
 		left : 50,
 		top : 50,
@@ -1084,7 +1084,7 @@ ANIMATE({
 ANIMATE({
 	node : div,
 	keyframes : {
-	    // 애니메이션 시작될때의 스타일
+		// 애니메이션 시작될때의 스타일
 		from : {
 			marginLeft : 0,
 			marginTop : 0
@@ -1130,7 +1130,7 @@ MATCH_VIEW({
 		init : (inner, self) => {
 
 			let page = DIV({
-			    c : 'Hello!'
+				c : 'Hello!'
 			}).appendTo(BODY);
 			
 			inner.on('paramsChange', (params) => {
@@ -1139,17 +1139,17 @@ MATCH_VIEW({
 				page.append('Hello, ' + params.name + '!');
 				
 				page.append(A({
-				    c : '메인 페이지',
-				    on : {
-				        tap : () => {
-				            GO('main');
-				        }
-				    }
+					c : '메인 페이지',
+					on : {
+						tap : () => {
+							GO('main');
+						}
+					}
 				}));
 			});
 			
 			inner.on('close', () => {
-			    page.remove();
+				page.remove();
 			});
 		}
 	})
@@ -1169,7 +1169,7 @@ let HelloView = CLASS({
 	init : (inner, self) => {
 
 		let page = DIV({
-		    c : 'Hello!'
+			c : 'Hello!'
 		}).appendTo(BODY);
 		
 		inner.on('paramsChange', (params) => {
@@ -1178,17 +1178,17 @@ let HelloView = CLASS({
 			page.append('Hello, ' + params.name + '!');
 			
 			page.append(A({
-			    c : '메인 페이지',
-			    on : {
-			        tap : () => {
-			            GO('main');
-			        }
-			    }
+				c : '메인 페이지',
+				on : {
+					tap : () => {
+						GO('main');
+					}
+				}
 			}));
 		});
 		
 		inner.on('close', () => {
-		    page.remove();
+			page.remove();
 		});
 	}
 });
@@ -1414,10 +1414,10 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
 	success : (on, off, send, disconnect) => {
-        // on           메소드를 생성합니다.
-        // off          메소드를 제거합니다.
-        // send         서버의 메소드에 데이터를 전송합니다.
-        // disconnect   서버와의 연결을 끊습니다.
+		// on		   메소드를 생성합니다.
+		// off		  메소드를 제거합니다.
+		// send		 서버의 메소드에 데이터를 전송합니다.
+		// disconnect   서버와의 연결을 끊습니다.
 
 		send({
 			methodName : 'message',
@@ -1425,7 +1425,7 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 				name : 'YJ Sim'
 			}
 		}, (retMsg) => {
-		    console.log('서버로부터의 메시지:' + retMsg);
+			console.log('서버로부터의 메시지:' + retMsg);
 		});
 		
 		// 연결이 끊어졌을 때
@@ -1463,8 +1463,8 @@ CONNECT_TO_WEB_SOCKET_SERVER(8125, {
 let store = STORE('testStore');
 
 store.save({
-    name : 'name',
-    value : 'YJ Sim'
+	name : 'name',
+	value : 'YJ Sim'
 });
 
 store.get(name); // 'YJ Sim'
@@ -1502,16 +1502,16 @@ let store = COOKIE_STORE('testStore');
 
 // 도메인 범위를 지정할 수 있습니다.
 let store = COOKIE_STORE({
-    storeName : 'testStore',
-    // example.com 도메인을 포함한 모든 서브 도메인에서 사용할 수 있습니다.
-    domain : '.example.com'
+	storeName : 'testStore',
+	// example.com 도메인을 포함한 모든 서브 도메인에서 사용할 수 있습니다.
+	domain : '.example.com'
 });
 
 // 웹 브라우저가 종료될 때 데이터가 삭제됩니다.
 store.save({
-    name : 'name',
-    value : 'YJ Sim',
-    isToSession : true
+	name : 'name',
+	value : 'YJ Sim',
+	isToSession : true
 });
 
 store.get(name); // 'YJ Sim'

@@ -12,46 +12,46 @@
 화면에 `Hello, UPPERCASE!`를 출력하는 간단한 튜토리얼입니다. 이 튜토리얼에 대한 자세한 설명은 [프로젝트 생성하기 문서](GUIDE/CREATE_PROJECT.md)를 참고해 주시기 바랍니다.
 
 1. `Hello`라는 폴더를 만든 후, 그 아래에 다음 내용을 포함하는 `Hello.js` 파일을 생성합니다.
-    ```javascript
-    require(process.env.UPPERCASE_PATH + '/LOAD.js');
-    
-    BOOT({
-    	CONFIG : {
-    		isDevMode : true,
-    		defaultBoxName : 'Hello',
-    		webServerPort : 8888
-    	}
-    });
-    ```
+	```javascript
+	require(process.env.UPPERCASE_PATH + '/LOAD.js');
+	
+	BOOT({
+		CONFIG : {
+			isDevMode : true,
+			defaultBoxName : 'Hello',
+			webServerPort : 8888
+		}
+	});
+	```
 
 2. `Hello` 폴더에 다시 `Hello` 폴더를 만든 후, 그 아래에 `BROWSER` 폴더를 만듭니다.
 3. `BROWSER` 폴더에 다음 내용을 포함하는 `MAIN.js` 파일을 생성합니다.
-    ```javascript
-    Hello.MAIN = METHOD({
-    
-    	run : (params) => {
-    
-    		Hello.MATCH_VIEW({
-    			uri : '',
-    			target : CLASS({
-    				preset : () => {
-    					return VIEW;
-    				},
-    				init : (inner, self) => {
-    					P({
-    						c : 'Hello, UPPERCASE!'
-    					}).appendTo(BODY);
-    				}
-    			})
-    		});
-    	}
-    });
-    ```
+	```javascript
+	Hello.MAIN = METHOD({
+	
+		run : (params) => {
+	
+			Hello.MATCH_VIEW({
+				uri : '',
+				target : CLASS({
+					preset : () => {
+						return VIEW;
+					},
+					init : (inner, self) => {
+						P({
+							c : 'Hello, UPPERCASE!'
+						}).appendTo(BODY);
+					}
+				})
+			});
+		}
+	});
+	```
 
 3. 프로젝트를 실행합니다.
-    ```
-    node Hello.js
-    ```
+	```
+	node Hello.js
+	```
 
 4. 웹 브라우저로 [http://localhost:8888/](http://localhost:8888/)에 접속합니다.
 5. `Hello, UPPERCASE!`

@@ -56,19 +56,19 @@ UPPERCASE 기반 메소드를 생성합니다.
 SomeMethod = METHOD({
 
 	run : (params) => {
-	    //REQUIRED: params
-	    //REQUIRED: params.name
-	    //REQUIRED: params.age
-	    //OPTIONAL: params.city
+		//REQUIRED: params
+		//REQUIRED: params.name
+		//REQUIRED: params.age
+		//OPTIONAL: params.city
 	
-	    let name = params.name;
-	    let age = params.age;
-	    let city = params.city;
-	    
-	    if (city === undefined) {
-		    console.log(name + '은(는) ' + age + '살입니다.');
+		let name = params.name;
+		let age = params.age;
+		let city = params.city;
+		
+		if (city === undefined) {
+			console.log(name + '은(는) ' + age + '살입니다.');
 		} else {
-		    console.log(name + '은(는) ' + age + '살이고, ' + city + '에 살고 있습니다.');
+			console.log(name + '은(는) ' + age + '살이고, ' + city + '에 살고 있습니다.');
 		}
 	}
 });
@@ -77,14 +77,14 @@ SomeMethod = METHOD({
 이후 아래와 같이 메소드를 실행합니다.
 ```javascript
 SomeMethod({
-    name: '하늘',
-    age: 29,
-    city : '서울'
+	name: '하늘',
+	age: 29,
+	city : '서울'
 });
 
 SomeMethod({
-    name: '다솜',
-    age: 26
+	name: '다솜',
+	age: 26
 });
 ```
 
@@ -102,22 +102,22 @@ SomeMethod = METHOD((m) => {
 	return {
 	
 		run : (params) => {
-		    //REQUIRED: params
-		    //REQUIRED: params.name
-		    //REQUIRED: params.age
-		    //OPTIONAL: params.city
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//REQUIRED: params.age
+			//OPTIONAL: params.city
 		
-		    let name = params.name;
-		    let age = params.age;
-		    let city = params.city;
+			let name = params.name;
+			let age = params.age;
+			let city = params.city;
 			
 			// static 변수 변동
 			callCount += 1;
-		    
-		    if (city === undefined) {
-			    console.log(name + '은(는) ' + age + '살입니다.');
+			
+			if (city === undefined) {
+				console.log(name + '은(는) ' + age + '살입니다.');
 			} else {
-			    console.log(name + '은(는) ' + age + '살이고, ' + city + '에 살고 있습니다.');
+				console.log(name + '은(는) ' + age + '살이고, ' + city + '에 살고 있습니다.');
 			}
 		}
 	};
@@ -127,14 +127,14 @@ SomeMethod = METHOD((m) => {
 선언한 `static` 멤버는 다음과 같이 메소드 이름에 `.`을 붙혀 실행합니다.
 ```javascript
 SomeMethod({
-    name: '하늘',
-    age: 29,
-    city : '서울'
+	name: '하늘',
+	age: 29,
+	city : '서울'
 });
 
 SomeMethod({
-    name: '다솜',
-    age: 26
+	name: '다솜',
+	age: 26
 });
 
 SomeMethod.getCallCount(); // 2
@@ -153,15 +153,15 @@ UPPERCASE 기반 클래스를 생성합니다. 생성된 클래스는 상속이 
 SomeClass = CLASS({
 	
 	init : (inner, self, params) => {
-	    //REQUIRED: params
-	    //REQUIRED: params.name
-	    //REQUIRED: params.age
+		//REQUIRED: params
+		//REQUIRED: params.name
+		//REQUIRED: params.age
 		
 		let name = params.name;
 		let age = params.age;
 		
 		let introduce = self.introduce = () => {
-	        console.log(name + '은(는) ' + age + '살입니다.');
+			console.log(name + '은(는) ' + age + '살입니다.');
 		};
 	}
 });
@@ -186,11 +186,11 @@ SomeClass = CLASS({
 	// 파라미터가 없더라도, 이를 이용해 파라미터를 지정해 객체를 생성할 수 있습니다.
 	params : () => {
 	
-        // 기본 생성자 파라미터
+		// 기본 생성자 파라미터
 		return {
-		    a : 1,
-		    b : 2,
-		    c : 3
+			a : 1,
+			b : 2,
+			c : 3
 		};
 	},
 
@@ -206,12 +206,12 @@ SomeClass = CLASS({
 
 	// 객체를 초기화합니다. (생성자)
 	init : (inner, self, params, funcs) => {
-	    
-	    // 객체 내 변수 선언
-	    let a = 123; // 생성자 내에서만 사용할 수 있습니다. (private)
-	    
-	    // 객체 내 메소드 선언
-	    let b = () => {...} // 생성자 내에서만 사용할 수 있습니다. (private)
+		
+		// 객체 내 변수 선언
+		let a = 123; // 생성자 내에서만 사용할 수 있습니다. (private)
+		
+		// 객체 내 메소드 선언
+		let b = () => {...} // 생성자 내에서만 사용할 수 있습니다. (private)
 		let c = inner.c = () => {...} // 이 클래스를 상속한 자식 클래스에서도 사용할 수 있습니다. (protected)
 		let d = self.d = () => {...} // 클래스 외부에서 사용할 수 있습니다. (public)
 		
@@ -237,9 +237,9 @@ SomeClass = CLASS((cls) => {
 	return {
 		
 		init : (inner, self, params) => {
-		    //REQUIRED: params
-		    //REQUIRED: params.name
-		    //REQUIRED: params.age
+			//REQUIRED: params
+			//REQUIRED: params.name
+			//REQUIRED: params.age
 			
 			let name = params.name;
 			let age = params.age;
@@ -247,7 +247,7 @@ SomeClass = CLASS((cls) => {
 			initCount += 1;
 			
 			let introduce = self.introduce = () => {
-		        console.log(name + '은(는) ' + age + '살입니다.');
+				console.log(name + '은(는) ' + age + '살입니다.');
 			};
 		}
 	};
@@ -279,7 +279,7 @@ SomeClass.getInitCount(); // 2
 SomeObject = OBJECT({
 
 	init : (inner, self) => {
-	    
+		
 		let hello = self.hello = () => {
 			console.log('안녕하세요?');
 		};
@@ -321,7 +321,7 @@ SampleBox.SomeClass = CLASS(...
 아래 코드를 실행하면, 모든 BOX에 `SomeClass`가 생성됩니다.
 ```javascript
 FOR_BOX((box) => {
-    box.SomeClass = CLASS(...
+	box.SomeClass = CLASS(...
 });
 ```
 
@@ -348,15 +348,15 @@ RANDOM(5);
 ```javascript
 // -5 ~ 10 중 임의의 정수
 RANDOM({
-    min : -5,
-    max : 10
+	min : -5,
+	max : 10
 });
 ```
 ```javascript
 // -5 ~ 9 중 임이의 정수
 RANDOM({
-    min : -5,
-    limit : 10
+	min : -5,
+	limit : 10
 });
 ```
 
@@ -401,11 +401,11 @@ Date형 값을 생성합니다.
 
 ```javascript
 let date = CREATE_DATE({
-    year : 2016,
-    month : 11,
-    date : 29,
-    hour : 18,
-    minute : 8
+	year : 2016,
+	month : 11,
+	date : 29,
+	hour : 18,
+	minute : 8
 });
 ```
 
@@ -425,8 +425,8 @@ UPPERCASE 기반 프로젝트에서는 `{...}`로 표현되는 값을 데이터�
 `target`이 데이터인지 확인합니다.
 ```javascript
 CHECK_IS_DATA({
-    name : '하늘',
-    age : 29
+	name : '하늘',
+	age : 29
 });
 ```
 
@@ -447,17 +447,17 @@ CHECK_IS_EMPTY_DATA({});
 
 ```javascript
 CHECK_IS_IN({
-    data : {
-        a : 1,
-        b : 2
-    },
-    value : 1
+	data : {
+		a : 1,
+		b : 2
+	},
+	value : 1
 });
 ```
 ```javascript
 CHECK_IS_IN({
-    array : [1, 2],
-    value : 1
+	array : [1, 2],
+	value : 1
 });
 ```
 
@@ -472,14 +472,14 @@ CHECK_ARE_SAME([[2, 3], [2, 3], [2, 3]);
 ```
 ```javascript
 CHECK_ARE_SAME([{
-    a : 1,
-    b : 2
+	a : 1,
+	b : 2
 }, {
-    a : 1,
-    b : 2
+	a : 1,
+	b : 2
 }, {
-    a : 1,
-    b : 2
+	a : 1,
+	b : 2
 });
 ```
 
@@ -499,32 +499,32 @@ COUNT_PROPERTIES({
 
 ```javascript
 FIND({
-    data : {
-        a : 1,
-        b : 2,
-        c : 3
-    },
-    value : 2
+	data : {
+		a : 1,
+		b : 2,
+		c : 3
+	},
+	value : 2
 }); // b
 ```
 ```javascript
 FIND({
-    array : [1, 2, 3],
-    value : 2
+	array : [1, 2, 3],
+	value : 2
 }); // 1
 ```
 ```javascript
 FIND({
-    a : 1,
-    b : 2,
-    c : 3
+	a : 1,
+	b : 2,
+	c : 3
 }, (value, name) => {
-    return value === 2;
+	return value === 2;
 }); // b
 ```
 ```javascript
 FIND([1, 2, 3], (value, key) => {
-    return value === 2;
+	return value === 2;
 }); // 1
 ```
 
@@ -533,60 +533,60 @@ FIND([1, 2, 3], (value, key) => {
 
 ```javascript
 let data = {
-    a : 1,
-    b : 2,
-    c : 3
+	a : 1,
+	b : 2,
+	c : 3
 };
 
 REMOVE({
-    data : data,
-    name : 'b'
+	data : data,
+	name : 'b'
 }); // { a : 1, b : 2, c : 3 } -> { a : 2, c : 3 }
 ```
 ```javascript
 let array = [1, 2, 3];
 
 REMOVE({
-    array : array,
-    key : 1
+	array : array,
+	key : 1
 }); // [1, 2, 3] -> [1, 3]
 ```
 ```javascript
 let data = {
-    a : 1,
-    b : 2,
-    c : 3
+	a : 1,
+	b : 2,
+	c : 3
 };
 
 REMOVE({
-    data : data,
-    value : 2
+	data : data,
+	value : 2
 }); // { a : 1, b : 2, c : 3 } -> { a : 2, c : 3 }
 ```
 ```javascript
 let array = [1, 2, 3];
 
 REMOVE({
-    array : array,
-    value : 2
+	array : array,
+	value : 2
 }); // [1, 2, 3] -> [1, 3]
 ```
 ```javascript
 let data = {
-    a : 1,
-    b : 2,
-    c : 3
+	a : 1,
+	b : 2,
+	c : 3
 };
 
 REMOVE(data, (value, name) => {
-    return value === 2;
+	return value === 2;
 }); // { a : 1, b : 2, c : 3 } -> { a : 2, c : 3 }
 ```
 ```javascript
 let array = [1, 2, 3];
 
 REMOVE(array, (value, key) => {
-    return value === 2;
+	return value === 2;
 }); // [1, 2, 3] -> [1, 3]
 ```
 
@@ -595,8 +595,8 @@ REMOVE(array, (value, key) => {
 
 ```javascript
 COPY({
-    a : 1,
-    b : 2
+	a : 1,
+	b : 2
 });
 ```
 ```javascript
@@ -608,24 +608,24 @@ COPY([1, 2])
 
 ```javascript
 let data = {
-    a : 1,
-    b : 2
+	a : 1,
+	b : 2
 };
 
 EXTEND({
-    origin : data,
-    extend : {
-        b : 3,
-        c : 4
-    }
+	origin : data,
+	extend : {
+		b : 3,
+		c : 4
+	}
 }); // { a : 1, b : 2 } -> { a : 1, b : 2, c : 3, d : 4 }
 ```
 ```javascript
 let array = [1, 2];
 
 EXTEND({
-    origin : array,
-    extend : [2, 3]
+	origin : array,
+	extend : [2, 3]
 }); // [1, 2] -> [1, 2, 2, 3]
 ```
 
@@ -634,11 +634,11 @@ EXTEND({
 
 ```javascript
 COMBINE([{
-    a : 1,
-    b : 2
+	a : 1,
+	b : 2
 }, {
-    b : 3,
-    c : 4
+	b : 3,
+	c : 4
 }]); // { a : 1, b : 2, c : 3, d : 4 }
 ```
 ```javascript
@@ -710,7 +710,7 @@ PARSE_STR(dataStr);
 ```javascript
 let valid = VALID({
 
-    // 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
+	// 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
 	name : {
 		notEmpty : true,
 		size : {
@@ -755,20 +755,20 @@ validResult.checkHasError(); // true
 `getErrors` 메소드를 통해 어떤 오류가 있는지 확인합니다.
 ```javascript
 /*
-    {
-        name : {
-            type : 'size',
-            validParams : {
-                min : 3,
-                max : 20
-            },
-            value : 'YJ'
-        },
-        age : {
-            type : 'integer',
-            value : 28.5
-        }
-    }
+	{
+		name : {
+			type : 'size',
+			validParams : {
+				min : 3,
+				max : 20
+			},
+			value : 'YJ'
+		},
+		age : {
+			type : 'integer',
+			value : 28.5
+		}
+	}
 */
 validResult.getErrors();
 ```
@@ -777,7 +777,7 @@ validResult.getErrors();
 ```javascript
 let valid = VALID({
 
-    // 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
+	// 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
 	name : {
 		notEmpty : true,
 		size : {
@@ -793,7 +793,7 @@ let valid = VALID({
 });
 
 let data = {
-    name : '', // 빈 값이므로 삭제 예정
+	name : '', // 빈 값이므로 삭제 예정
 	age : 28,
 	city : 'Seoul' // 표현식에 정의되지 않은 값이므로 삭제 예정
 };
@@ -807,7 +807,7 @@ console.log(data); // { age : 28 }
 ```javascript
 let valid = VALID({
 
-    // 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
+	// 이름은 반드시 입력되어야 하고, 최소 3글자, 최대 20글자로 입력되어야 합니다.
 	name : {
 		notEmpty : true,
 		size : {
@@ -823,7 +823,7 @@ let valid = VALID({
 });
 
 let data = {
-    name : '', // 빈 값이므로 TO_DELETE로 변경될 예정
+	name : '', // 빈 값이므로 TO_DELETE로 변경될 예정
 	age : 28,
 	city : 'Seoul' // 표현식에 정의되지 않은 값이므로 삭제 예정
 };
@@ -897,23 +897,23 @@ REPEAT(5, (i) => {...});
 ```javascript
 // 5번 실행합니다. 이 때 i는 1에서 5의 값을 가집니다.
 REPEAT({
-    start : 1,
-    end : 5
+	start : 1,
+	end : 5
 }, (i) => {...});
 ```
 ```javascript
 // 3번 실행합니다. 이 때 i는 1, 3, 5의 값을 가집니다.
 REPEAT({
-    start : 1,
-    end : 5,
-    step : 2
+	start : 1,
+	end : 5,
+	step : 2
 }, (i) => {...});
 ```
 ```javascript
 // 4번 실행합니다. 이 때 i는 1에서 4의 값을 가집니다.
 REPEAT({
-    start : 1,
-    limit : 5
+	start : 1,
+	limit : 5
 }, (i) => {...});
 ```
 
@@ -929,60 +929,60 @@ REPEAT({
 // 1
 // 2
 EACH({
-    a : 1,
-    b : 2
+	a : 1,
+	b : 2
 }, (value) => {
-    console.log(value);
+	console.log(value);
 });
 ```
 ```javascript
 // a is 1.
 // b is 2.
 EACH({
-    a : 1,
-    b : 2,
-    c : 3
+	a : 1,
+	b : 2,
+	c : 3
 }, (value, name) => {
-    
-    console.log(name + ' is ' + value + '.');
-    
-    if (value === 2) {
-        // 도중에 멈춥니다.
-        return false;
-    }
+	
+	console.log(name + ' is ' + value + '.');
+	
+	if (value === 2) {
+		// 도중에 멈춥니다.
+		return false;
+	}
 });
 ```
 ```javascript
 // 1
 // 2
 EACH([1, 2], (value) => {
-    console.log(value);
+	console.log(value);
 });
 ```
 ```javascript
 // array[0] is 1.
 // array[1] is 2.
 EACH([1, 2, 3], (value, key) => {
-    
-    console.log('array[' + key + '] is ' + value + '.');
-    
-    if (value === 2) {
-        // 도중에 멈춥니다.
-        return false;
-    }
+	
+	console.log('array[' + key + '] is ' + value + '.');
+	
+	if (value === 2) {
+		// 도중에 멈춥니다.
+		return false;
+	}
 });
 ```
 ```javascript
 // array[0] is 1.
 // array[1] is 2.
 EACH((value, key) => {
-    
-    console.log('array[' + key + '] is ' + value + '.');
-    
-    if (value === 2) {
-        // 도중에 멈춥니다.
-        return false;
-    }
+	
+	console.log('array[' + key + '] is ' + value + '.');
+	
+	if (value === 2) {
+		// 도중에 멈춥니다.
+		return false;
+	}
 })([1, 2, 3]);
 ```
 
@@ -997,33 +997,33 @@ EACH((value, key) => {
 // 2
 // 1
 REVERSE_EACH([1, 2], (value) => {
-    console.log(value);
+	console.log(value);
 });
 ```
 ```javascript
 // array[2] is 3.
 // array[1] is 2.
 REVERSE_EACH([1, 2, 3], (value, key) => {
-    
-    console.log('array[' + key + '] is ' + value + '.');
-    
-    if (value === 2) {
-        // 도중에 멈춥니다.
-        return false;
-    }
+	
+	console.log('array[' + key + '] is ' + value + '.');
+	
+	if (value === 2) {
+		// 도중에 멈춥니다.
+		return false;
+	}
 });
 ```
 ```javascript
 // array[2] is 3.
 // array[1] is 2.
 REVERSE_EACH((value, key) => {
-    
-    console.log('array[' + key + '] is ' + value + '.');
-    
-    if (value === 2) {
-        // 도중에 멈춥니다.
-        return false;
-    }
+	
+	console.log('array[' + key + '] is ' + value + '.');
+	
+	if (value === 2) {
+		// 도중에 멈춥니다.
+		return false;
+	}
 })([1, 2, 3]);
 ```
 
@@ -1034,7 +1034,7 @@ REVERSE_EACH((value, key) => {
 아래와 같이 코드를 작성하게 되면, 함수가 3초 뒤에 실행됩니다.
 ```javascript
 let delay = DELAY(3, () => {
-    // 3초 뒤에 실행됩니다.
+	// 3초 뒤에 실행됩니다.
 });
 ```
 
@@ -1059,7 +1059,7 @@ delay.resume();
 아래와 같이 코드를 작성하게 되면, 함수가 3초마다 실행됩니다.
 ```javascript
 let interval = DELAY(3, (interval) => {
-    // 3초마다 실행됩니다.
+	// 3초마다 실행됩니다.
 });
 ```
 
@@ -1085,7 +1085,7 @@ interval.resume();
 #### 로직만 존재하는 경우
 ```javascript
 LOOP((seconds) => {
-    ...
+	...
 });
 ```
 함수가 가능한 빠르게 반복해서 수행됩니다. 파라미터로 제공되는 `seconds`는, 이전에 수행된 시간과 방금 수행된 시간의 차이를 초 단위로 제공합니다.
@@ -1093,7 +1093,7 @@ LOOP((seconds) => {
 #### FPS(Frames Per Second)가 제공되는 경우
 ```javascript
 LOOP(fps, (fps) => {
-    ...
+	...
 });
 ```
 `fps` 파라미터를 지정하게 되면, 1초에 몇번 함수를 수행할지 설정이 가능합니다.
@@ -1102,19 +1102,19 @@ LOOP(fps, (fps) => {
 ```javascript
 LOOP(fps, {
 
-    start : () => {
-        // 동시에 어려번 실행되기 전
-        ...
-    },
-    
-    interval : (fps) => {
-        ...
-    },
-    
-    end : (times) => {
-        // 동시에 여러번 실행된 후
-        ...
-    }
+	start : () => {
+		// 동시에 어려번 실행되기 전
+		...
+	},
+	
+	interval : (fps) => {
+		...
+	},
+	
+	end : (times) => {
+		// 동시에 여러번 실행된 후
+		...
+	}
 });
 ```
 CPU의 한계로 인해, 지정된 `fps`마다 함수가 실행되지 않을 수 있습니다. `LOOP`는 이런 경우에도 초당 함수 실행수를 보장합니다. 다만 이런 경우에는 함수가 시간 간격을 두지 않고 동시에 여러번 실행될 수 있는데, 이 경우 여러번 실행되기 전에 `start` 함수를, 여러번 실행된 후 `end` 함수를 실행합니다.
@@ -1132,10 +1132,10 @@ let array = [1, 2, 3, 4, 5];
 let str = '배열의 값은 ';
 
 EACH(array, (value, i) => {
-    if (i > 0) {
-        str += ', ';
-    }
-    str += value;
+	if (i > 0) {
+		str += ', ';
+	}
+	str += value;
 });
 
 str += '입니다.';
@@ -1149,16 +1149,16 @@ let array = [1, 2, 3, 4, 5];
 
 print('배열의 값은 ' + RUN(() => {
 
-    let str = '';
+	let str = '';
 
-    EACH(array, (value, i) => {
-        if (i > 0) {
-            str += ', ';
-        }
-        str += value;
-    });
-    
-    return str;
+	EACH(array, (value, i) => {
+		if (i > 0) {
+			str += ', ';
+		}
+		str += value;
+	});
+	
+	return str;
 
 }) + '입니다.');
 ```
@@ -1169,26 +1169,26 @@ print('배열의 값은 ' + RUN(() => {
 아래 선언된 함수는 선언과 동시에 실행됩니다.
 ```javascript
 let func = RAR(() => {
-    console.log('함수 실행!');
+	console.log('함수 실행!');
 });
 ```
 
 아래와 같이 파라미터를 설정할 수도 있습니다.
 ```javascript
 let showAge = RAR({
-    name : '철수',
-    age : 20
+	name : '철수',
+	age : 20
 }, (params) => {
 
-    let name = params.name;
-    let age = params.age;
-    
-    console.log(name + '은(는)' + age + '살 입니다.');
+	let name = params.name;
+	let age = params.age;
+	
+	console.log(name + '은(는)' + age + '살 입니다.');
 });
 
 showAge({
-    name : '영희',
-    age : 24
+	name : '영희',
+	age : 24
 });
 ```
 
@@ -1203,19 +1203,19 @@ JavaScript로 개발을 하다보면 수많은 Callback들이 중첩되어 코�
 ```javascript
 NEXT([
 (next) => {
-    ...
+	...
 },
 
 (next) => {
-    return () => {
-        ...
-    };
+	return () => {
+		...
+	};
 },
 
 (next) => {
-    return () => {
-        ...
-    };
+	return () => {
+		...
+	};
 },
 
 ...]);
@@ -1225,13 +1225,13 @@ NEXT([
 ```javascript
 NEXT(count, [
 (i, next) => {
-    ...
+	...
 },
 
 () => {
-    return () => {
-        ...
-    };
+	return () => {
+		...
+	};
 }]);
 ```
 
@@ -1239,13 +1239,13 @@ NEXT(count, [
 ```javascript
 NEXT(array, [
 (element, next) => {
-    ...
+	...
 },
 
 () => {
-    return () => {
-        ...
-    };
+	return () => {
+		...
+	};
 }]);
 ```
 
@@ -1256,7 +1256,7 @@ fs.readdir(source, (err, files) => {
 		console.log('Error finding files: ' + err);
 	} else {
 		files.forEach((filename, fileIndex) => {
-		    console.log(filename);
+			console.log(filename);
 			gm(source + filename).size((err, values) => {
 				if (err) {
 					console.log('Error identifying file size: ' + err);
@@ -1268,8 +1268,8 @@ fs.readdir(source, (err, files) => {
 						console.log('resizing ' + filename + 'to ' + height + 'x' + height);
 						this.resize(width, height).write(dest + 'w' + width + '_' + filename, (err) => {
 							if (err) {
-						        console.log('Error writing file: ' + err);
-						    }
+								console.log('Error writing file: ' + err);
+							}
 						});
 					}.bind(this));
 				}
@@ -1283,46 +1283,46 @@ fs.readdir(source, (err, files) => {
 ```javascript
 NEXT([
 (next) => {
-    fs.readdir(source, next);
+	fs.readdir(source, next);
 },
 
 (next) => {
-    return (err, files) => {
-        if (err) {
-    		console.log('Error finding files: ' + err);
-    	} else {
-    		files.forEach(next);
-    	}
-    };
+	return (err, files) => {
+		if (err) {
+			console.log('Error finding files: ' + err);
+		} else {
+			files.forEach(next);
+		}
+	};
 },
 
 (next) => {
-    return (filename, fileIndex) => {
-        console.log(filename);
-        gm(source + filename).size(next);
-    };
+	return (filename, fileIndex) => {
+		console.log(filename);
+		gm(source + filename).size(next);
+	};
 },
 
 (next) => {
-    return (err, values) => {
-        if (err) {
+	return (err, values) => {
+		if (err) {
 			console.log('Error identifying file size: ' + err);
 		} else {
 			console.log(filename + ' : ' + values);
 			aspect = (values.width / values.height);
 			widths.forEach(next);
 		}
-    };
+	};
 },
 
 (next) => {
-    return (width, widthIndex) => {
+	return (width, widthIndex) => {
 		height = Math.round(width / aspect);
 		console.log('resizing ' + filename + 'to ' + height + 'x' + height);
 		this.resize(width, height).write(dest + 'w' + width + '_' + filename, (err) => {
 			if (err) {
-		        console.log('Error writing file: ' + err);
-		    }
+				console.log('Error writing file: ' + err);
+			}
 		});
 	}.bind(this);
 }])
@@ -1336,18 +1336,18 @@ NEXT([
 ```javascript
 PARALLEL([
 (done) => {
-    ...
+	...
 },
 
 (done) => {
-    ...
+	...
 },
 
 ...,
 
 // 최종적으로 실행될 함수
 () => {
-    ...
+	...
 }]);
 ```
 
@@ -1355,12 +1355,12 @@ PARALLEL([
 ```javascript
 PARALLEL(count, [
 (done) => {
-    ...
+	...
 },
 
 // 최종적으로 실행될 함수
 () => {
-    ...
+	...
 }]);
 ```
 
@@ -1368,12 +1368,12 @@ PARALLEL(count, [
 ```javascript
 PARALLEL(array, [
 (value, done) => {
-    ...
+	...
 },
 
 // 최종적으로 실행될 함수
 () => {
-    ...
+	...
 }]);
 ```
 
@@ -1382,36 +1382,36 @@ PARALLEL(array, [
 let successCount = 0;
 
 let successAll = () => {
-    if (successCount < 5) {
-        successCount += 1;
-    } else {
-        console.log('모든 요청이 성공적으로 완료되었습니다.');
-    }
+	if (successCount < 5) {
+		successCount += 1;
+	} else {
+		console.log('모든 요청이 성공적으로 완료되었습니다.');
+	}
 };
 
 request('http://abc.com/1', (result) => {
-    ...
-    successAll();
+	...
+	successAll();
 });
 
 request('http://abc.com/2', (result) => {
-    ...
-    successAll();
+	...
+	successAll();
 });
 
 request('http://abc.com/3', (result) => {
-    ...
-    successAll();
+	...
+	successAll();
 });
 
 request('http://abc.com/4', (result) => {
-    ...
-    successAll();
+	...
+	successAll();
 });
 
 request('http://abc.com/5', (result) => {
-    ...
-    successAll();
+	...
+	successAll();
 });
 ```
 
@@ -1419,45 +1419,45 @@ request('http://abc.com/5', (result) => {
 ```javascript
 PARALLEL([
 (done) => {
-    request('http://abc.com/1', (result) => {
-        ...
-        done();
-    });
+	request('http://abc.com/1', (result) => {
+		...
+		done();
+	});
 },
 
 (done) => {
-    request('http://abc.com/2', (result) => {
-        ...
-        done();
-    });
+	request('http://abc.com/2', (result) => {
+		...
+		done();
+	});
 },
 
 (done) => {
-    request('http://abc.com/3', (result) => {
-        ...
-        done();
-    });
+	request('http://abc.com/3', (result) => {
+		...
+		done();
+	});
 },
 
 (done) => {
-    request('http://abc.com/4', (result) => {
-        ...
-        done();
-    });
+	request('http://abc.com/4', (result) => {
+		...
+		done();
+	});
 },
 
 (done) => {
-    request('http://abc.com/5', (result) => {
-        ...
-        done();
-    });
+	request('http://abc.com/5', (result) => {
+		...
+		done();
+	});
 },
 
 ...,
 
 // 최종적으로 실행될 함수
 () => {
-    console.log('모든 요청이 성공적으로 완료되었습니다.');
+	console.log('모든 요청이 성공적으로 완료되었습니다.');
 }]);
 ```
 
@@ -1477,9 +1477,9 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!');
 다음 코드를 실행하면,
 ```javascript
 SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
-    a : 1,
-    b : 2,
-    c : 3
+	a : 1,
+	b : 2,
+	c : 3
 });
 ```
 콘솔에 다음과 같은 오류 메시지를 출력합니다.
@@ -1487,9 +1487,9 @@ SHOW_ERROR('샘플 오류', '엄청난 오류가 발생했습니다!', {
 [샘플 오류] 오류가 발생했습니다. 오류 메시지: 엄청난 오류가 발생했습니다!
 다음은 오류를 발생시킨 파라미터입니다.
 {
-    "a": 1,
-    "b": 2,
-    "c": 3
+	"a": 1,
+	"b": 2,
+	"c": 3
 }
 ```
 
@@ -1512,7 +1512,7 @@ SHOW_WARNING('샘플 경고', '당신에게 경고합니다!');
 예를 들어 주어진 두 수를 더하는 `calculate`라는 함수가 있습니다.
 ```javascript
 let calculate = (a, b) => {
-    return a + b;
+	return a + b;
 };
 
 calculate(2, 3); // 5
@@ -1521,9 +1521,9 @@ calculate(2, 3); // 5
 이를 주어진 두 수를 더해서, 그 결과를 다시 한번 더하는 함수로 만드려면 다음과 같이 재지정합니다.
 ```javascript
 OVERRIDE(calculate, (origin) => {
-    calculate = (a, b) => {
-        return origin(a, b) + origin(a, b);
-    };
+	calculate = (a, b) => {
+		return origin(a, b) + origin(a, b);
+	};
 });
 
 calculate(2, 3); // 10
@@ -1564,7 +1564,7 @@ matchResult.getURIParams(); // { name : 'TheLittlePrince' }
 아래 코드는 테스트에 성공합니다.
 ```javascript
 TEST('덧셈', (check) => {
-    check(1 + 2 === 3);
+	check(1 + 2 === 3);
 });
 ```
 ```
@@ -1574,7 +1574,7 @@ TEST('덧셈', (check) => {
 아래 코드는 테스트에 실패합니다.
 ```javascript
 TEST('덧셈', (check) => {
-    check(1 + 2 === 4);
+	check(1 + 2 === 4);
 });
 ```
 ```

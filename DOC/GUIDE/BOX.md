@@ -16,28 +16,28 @@ UPPERCASE 기반 프로젝트에서는 폴더 구조를 읽어 자동으로 BOX�
 
 ```
 Sample
-    __PACK
-    __RF
-    BOX
-        UUI
-            BROWSER.js
-        UANI
-            BROWSER.js
-        Yogurt
-            BROWSER.js
+	__PACK
+	__RF
+	BOX
+		UUI
+			BROWSER.js
+		UANI
+			BROWSER.js
+		Yogurt
+			BROWSER.js
 	Sample --- 프로젝트 BOX 폴더
-        COMMON
-            SampleModel.js
-        NODE
-        	MAIN.js
-    	BROWSER
-    		MAIN.js
-    		CONNECTED.js
-    		DISCONNECTED.js
-        R
-    Sample.js
-    VERSION
-    DEPENDENCY
+		COMMON
+			SampleModel.js
+		NODE
+			MAIN.js
+		BROWSER
+			MAIN.js
+			CONNECTED.js
+			DISCONNECTED.js
+		R
+	Sample.js
+	VERSION
+	DEPENDENCY
 ```
 
 UPPERCASE 기반 프로젝트를 생성하지 않고 [UPPERCASE의 모듈들](../GUIDE.md#모듈-별-문서)을 따로 사용하는 경우에는 [UPPERCASE-CORE의 `BOX` 메소드](UPPERCASE-CORE-COMMON.md#uppercase의-모듈화-box)로 BOX를 생성할 수 있습니다.
@@ -97,13 +97,13 @@ SomeBox.SomePack.GoodPack.SomeMethod();
 프로젝트 BOX 폴더를 패키징하여 다른 프로젝트에서 재사용 할 수 있습니다.
 
 1. [`ubm`](https://www.npmjs.com/package/ubm)을 설치합니다.
-    ```
-    npm install -g ubm
-    ```
+	```
+	npm install -g ubm
+	```
 2. `ubm`을 이용해 프로젝트를 BOX로 패킹합니다.
-    ```
-    ubm pack SampleBox
-    ```
+	```
+	ubm pack SampleBox
+	```
 
 패키징 하게되면 각 폴더들의 JavaScript 코드들이 하나로 합쳐져 `__PACK` 폴더에 저장됩니다. 이를테면 `BROWSER` 폴더의 코드들은 `BROWSER.js`로 합쳐집니다. JavaScript 코드가 아닌 기타 파일들 및 폴더들은 그대로 복사됩니다.
 
@@ -112,23 +112,23 @@ SomeBox.SomePack.GoodPack.SomeMethod();
 ```
 Sample
 	Sample
-        COMMON
-    	    a.js
-    	    b.js
-    	    c.js
-        NODE
-    	    a.js
-    	    b.js
-    	    c.js
-    	BROWSER
-    	    a.js
-    	    b.js
-    	    c.js
-        R
-            a.png
-            b.jpg
-            c.txt
-    Sample.js
+		COMMON
+			a.js
+			b.js
+			c.js
+		NODE
+			a.js
+			b.js
+			c.js
+		BROWSER
+			a.js
+			b.js
+			c.js
+		R
+			a.png
+			b.jpg
+			c.txt
+	Sample.js
 ```
 
 아래와 같이 `ubm pack` 명령을 실행하면
@@ -141,34 +141,34 @@ ubm pack Sample
 
 ```
 Sample
-    __PACK
-        Sample
-            BROWSER.js	// COMMON.js 내용을 포함하고 있습니다.
-            COMMON.js
-            NODE.js		// COMMON.js 내용을 포함하고 있습니다.
-            R
-                a.png
-                b.jpg
-                c.txt
+	__PACK
+		Sample
+			BROWSER.js	// COMMON.js 내용을 포함하고 있습니다.
+			COMMON.js
+			NODE.js		// COMMON.js 내용을 포함하고 있습니다.
+			R
+				a.png
+				b.jpg
+				c.txt
 	Sample
-        COMMON
-    	    a.js
-    	    b.js
-    	    c.js
-        NODE
-    	    a.js
-    	    b.js
-    	    c.js
-    	BROWSER
-    	    a.js
-    	    b.js
-    	    c.js
-        R
-            a.png
-            b.jpg
-            c.txt
-    Sample.js
-    PACK.js
+		COMMON
+			a.js
+			b.js
+			c.js
+		NODE
+			a.js
+			b.js
+			c.js
+		BROWSER
+			a.js
+			b.js
+			c.js
+		R
+			a.png
+			b.jpg
+			c.txt
+	Sample.js
+	PACK.js
 ```
 
 ## [BOX 저장소 사이트](http://box.uppercase.io) 
