@@ -47,14 +47,14 @@ MongoDB를 외부에서 접속 가능하게 설정합니다. `mongodb.conf`에�
 vi /etc/mongod.conf
 ```
 
-MongoDB를 아래 명령어로 실행합니다.
+MongoDB를 아래 명령어로 실행합니다. 보안을 위해 기본 포트가 아닌 `27018` 포트로 실행합니다.
 ```
-mongod --fork --logpath /var/log/mongodb.log --logappend
+mongod --port 27018 --fork --logpath /var/log/mongodb.log --logappend
 ```
 
 `mongo`로 접속합니다.
 ```
-mongo
+mongo --port 27018
 ```
 
 관리자 계정을 생성합니다.
@@ -70,7 +70,7 @@ db.shutdownServer();
 
 이제, 인증 모드로 MongoDB를 실행합니다.
 ```
-mongod --fork --logpath /var/log/mongodb.log --logappend --auth
+mongod --port 27018 --fork --logpath /var/log/mongodb.log --logappend --auth
 ```
 
 ## MongoDB 유저 추가
