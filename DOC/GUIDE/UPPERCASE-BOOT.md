@@ -94,12 +94,12 @@ UPPERCASE-BOOT가 제공하는 업로드 기능을 사용할 때 자동으로 �
 	BROWSER_CONFIG : {
 		
 		reconnect : (isVersionSame, reconnect) => {
-		    // 서버의 버전(CONFIG.version)이 달라지면 `isVersionSame` 파라미터가 `false`로 설정됩니다.
-		    // false를 return 하여 서버에 자동으로 재접속하지 않는 경우 reconnect 함수를 사용하여 서버에 접속할 수 있습니다.
+			// 서버의 버전(CONFIG.version)이 달라지면 `isVersionSame` 파라미터가 `false`로 설정됩니다.
+			// false를 return 하여 서버에 자동으로 재접속하지 않는 경우 reconnect 함수를 사용하여 서버에 접속할 수 있습니다.
 			
 			// 버전이 같으면 코드가 변경된 부분이 없으므로, 화면만 다시 새로고침합니다.
 			if (isVersionSame === true) {
-			    // 화면 새로고침
+				// 화면 새로고침
 				REFRESH();
 				// 서버에 재접속
 				reconnect();
@@ -107,7 +107,7 @@ UPPERCASE-BOOT가 제공하는 업로드 기능을 사용할 때 자동으로 �
 			
 			// 버전이 다르면 코드가 변경되었을 수 있으므로, 페이지 자체를 새로고침하여 코드를 새로 불러옵니다.
 			else {
-			    // 페이지 자체를 새로고침
+				// 페이지 자체를 새로고침
 				location.reload();
 			}
 			
@@ -150,7 +150,7 @@ UPPERCASE-BOOT가 제공하는 업로드 기능을 사용할 때 자동으로 �
 ```javascript
 // R 폴더의 이미지
 IMG({
-    src : Sample.R('image.png')
+	src : Sample.R('image.png')
 }).appendTo(BODY);
 ```
 
@@ -162,18 +162,18 @@ IMG({
 ```javascript
 // 업로드한 이미지
 IMG({
-    src : Sample.RF('5636e47415899c3c04b5e70f')
+	src : Sample.RF('5636e47415899c3c04b5e70f')
 }).appendTo(BODY);
 ```
 
 * UPPERCASE 기반 프로젝트에서 업로드 한 파일들은 프로젝트 폴더 내 `__RF` 폴더에 저장됩니다.
 * 이미지를 업로드한 경우 `__RF/THUMB` 폴더에 섬네일이 자동으로 생성됩니다.
-    ```javascript
-    // 섬네일 이미지
-    IMG({
-        src : Sample.RF('THUMB/5636e47415899c3c04b5e70f')
-    }).appendTo(BODY);
-    ```
+	```javascript
+	// 섬네일 이미지
+	IMG({
+		src : Sample.RF('THUMB/5636e47415899c3c04b5e70f')
+	}).appendTo(BODY);
+	```
 
 웹 브라우저 환경에서만 사용 가능합니다.
 
@@ -290,9 +290,9 @@ UPPERCASE-BOOT는 웹 브라우저마다의 스타일 차이를 없애주고 같
 		<link rel="stylesheet" type="text/css" href="/__CSS" />
 	</head>
 	<body>
-	    <noscript>
-            <p style="padding:15px;">JavaScript is disabled. Please enable JavaScript in your browser.</p>
-        </noscript>
+		<noscript>
+			<p style="padding:15px;">JavaScript is disabled. Please enable JavaScript in your browser.</p>
+		</noscript>
 		<script src="/__SCRIPT"></script>
 	</body>
 </html>

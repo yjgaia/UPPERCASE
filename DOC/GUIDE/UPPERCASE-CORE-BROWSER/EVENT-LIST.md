@@ -3,7 +3,7 @@
 ## 윈도우 관련 이벤트
 ```javascript
 EVENT('resize', () => {
-    console.log('윈도우 크기 변경: ' + WIN_WIDTH() + 'x' + WIN_HEIGHT());
+	console.log('윈도우 크기 변경: ' + WIN_WIDTH() + 'x' + WIN_HEIGHT());
 });
 ```
 - `resize` 윈도우의 크기가 변경되면 발생하는 이벤트
@@ -12,10 +12,10 @@ EVENT('resize', () => {
 ## DOM 관련 이벤트
 ```javascript
 EVENT({
-    node : img
-    name : 'load'
+	node : img
+	name : 'load'
 }, () => {
-    console.log('이미지 로딩 완료. 이미지 크기: ' + img.getWidth() + 'x' + img.getHeight());
+	console.log('이미지 로딩 완료. 이미지 크기: ' + img.getWidth() + 'x' + img.getHeight());
 });
 ```
 - `attach` 현재 DOM이 다른 DOM에 추가될 때 발생하는 이벤트
@@ -27,10 +27,10 @@ EVENT({
 ## 마우스 관련 이벤트
 ```javascript
 EVENT({
-    node : div
-    name : 'tap'
+	node : div
+	name : 'tap'
 }, (e) => {
-    console.log('터치 발생: ' + e.getLeft() + 'x' + e.getTop());
+	console.log('터치 발생: ' + e.getLeft() + 'x' + e.getTop());
 });
 ```
 - `tap` 윈도우나 DOM을 터치할 때 발생하는 이벤트
@@ -44,10 +44,10 @@ EVENT({
 ## 폼 관련 이벤트
 ```javascript
 EVENT({
-    node : input
-    name : 'keydown'
+	node : input
+	name : 'keydown'
 }, (e) => {
-    console.log('키가 눌려짐: ' + e.getKey());
+	console.log('키가 눌려짐: ' + e.getKey());
 });
 ```
 - `focus` 입력 칸([`INPUT`](../UPPERCASE-CORE-BROWSER.md#input), [`TEXTAREA`](../UPPERCASE-CORE-BROWSER.md#textarea))이 활성화되어 입력을 대기할 때 발생하는 이벤트

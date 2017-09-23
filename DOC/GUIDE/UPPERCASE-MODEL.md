@@ -53,22 +53,22 @@ TestBox.TestModel = OBJECT({
 	},
 	
 	params : () => {
-	    
-	    ...
-	    
+		
+		...
+		
 		return {
-		    // 모델 명을 지정합니다.
+			// 모델 명을 지정합니다.
 			name : 'Test',
 			
 			// 메소드별 설정을 지정합니다.
 			methodConfig : {
 				create : ...,
-                get : ...,
+				get : ...,
 				update : ...,
 				remove : ...,
-                find : ...,
-                count : ...,
-                checkExists : ...
+				find : ...,
+				count : ...,
+				checkExists : ...
 			}
 		};
 	}
@@ -148,7 +148,7 @@ Model.create({
 	msg : 'Hello, DB!',
 	number : 12
 }, (savedData) => {
-    // id와 createTime은 자동 생성
+	// id와 createTime은 자동 생성
 	console.log('데이터 생성 완료', savedData);
 });
 ```
@@ -165,7 +165,7 @@ Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
 ```javascript
 Model.get('5636e47415899c3c04b5e70f', {
-    notExists : () => {
+	notExists : () => {
 		console.log('데이터가 존재하지 않습니다.');
 	},
 	success : (savedData) => {
@@ -185,7 +185,7 @@ Model.get('5636e47415899c3c04b5e70f', {
 
 ```javascript
 let watchingRoom = Model.getWatching('5636e47415899c3c04b5e70f', {
-    notExists : () => {
+	notExists : () => {
 		console.log('데이터가 존재하지 않습니다.');
 	},
 	success : (savedData, addUpdateHandler, addRemoveHandler, exit) => {
@@ -193,7 +193,7 @@ let watchingRoom = Model.getWatching('5636e47415899c3c04b5e70f', {
 		console.log('데이터:', savedData);
 		
 		addUpdateHandler((savedData) => {
-	    	console.log('데이터가 수정되었습니다.', savedData);
+			console.log('데이터가 수정되었습니다.', savedData);
 		});
 		
 		addRemoveHandler(() => {
@@ -217,14 +217,14 @@ Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
 ```javascript
 Model.update({
-    id : '5636e47415899c3c04b5e70f',
+	id : '5636e47415899c3c04b5e70f',
 	number : 3
 }, {
-    notExists : () => {
+	notExists : () => {
 		console.log('데이터가 존재하지 않습니다.');
 	},
 	success : (savedData, originData) => {
-	    // lastUpdateTime은 자동 생성
+		// lastUpdateTime은 자동 생성
 		console.log('데이터 수정 완료', savedData);
 	}
 });
@@ -317,7 +317,7 @@ Node.js 환경에서만 사용할 수 있습니다.
 
 ```javascript
 Model.remove('5636e47415899c3c04b5e70f', {
-    notExists : () => {
+	notExists : () => {
 		console.log('데이터가 존재하지 않습니다.');
 	},
 	success : (originData) => {
@@ -336,12 +336,12 @@ Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
 ```javascript
 Model.find({
-    filter : {
-        number : 3
-    },
-    sort : {
-        createTime : -1
-    }
+	filter : {
+		number : 3
+	},
+	sort : {
+		createTime : -1
+	}
 }, (savedDataSet) => {
 	console.log('검색된 데이터 목록:', savedDataSet);
 });
@@ -353,9 +353,9 @@ Model.find({
 // 아래 두 find 명령은 결과가 같습니다.
 
 Model.find({
-    filter : {
-        number : undefined
-    }
+	filter : {
+		number : undefined
+	}
 }, (savedDataSet) => {
 	console.log('검색된 데이터 목록:', savedDataSet);
 });
@@ -369,10 +369,10 @@ Model.find((savedDataSet) => {
 
 ```javascript
 Model.find({
-    filter : {
-        number : 3
-    },
-    isFindAll : true
+	filter : {
+		number : 3
+	},
+	isFindAll : true
 }, (savedDataSet) => {
 	console.log('모든 데이터 목록:', savedDataSet);
 });
@@ -388,12 +388,12 @@ Model.find({
 
 ```javascript
 let watchingRoom = Model.findWatching({
-    filter : {
-        number : 3
-    },
-    sort : {
-        createTime : -1
-    }
+	filter : {
+		number : 3
+	},
+	sort : {
+		createTime : -1
+	}
 }, (savedDataSet, addUpdateHandler, addRemoveHandler, exit) => {
 	
 	console.log('검색된 데이터 목록:', savedDataSet);
@@ -401,7 +401,7 @@ let watchingRoom = Model.findWatching({
 	EACH(savedDataSet, (savedData) => {
 		
 		addUpdateHandler(savedData.id, (savedData) => {
-	    	console.log('데이터가 수정되었습니다.', savedData);
+			console.log('데이터가 수정되었습니다.', savedData);
 		});
 		
 		addRemoveHandler(savedData.id, () => {
@@ -425,9 +425,9 @@ Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
 ```javascript
 Model.count({
-    filter : {
-        number : 3
-    }
+	filter : {
+		number : 3
+	}
 }, (count) => {
 	console.log('검색된 데이터의 개수:', count);
 });
@@ -443,9 +443,9 @@ Node.js와 웹 브라우저 환경 양쪽에서 사용 가능합니다.
 
 ```javascript
 Model.checkExists({
-    filter : {
-        number : 3
-    }
+	filter : {
+		number : 3
+	}
 }, (exists) => {
 	if (exists === true) {
 		console.log('데이터가 존재합니다.');
@@ -476,7 +476,7 @@ watchingRoom.exit();
 
 ```javascript
 Model.onNew({
-    age : 30
+	age : 30
 }, (savedData) => {
 	console.log('age가 30인 데이터가 생성되었습니다.', savedData);
 });
@@ -495,7 +495,7 @@ let watchingRoom = Model.onNewWatching((savedData, addUpdateHandler, addRemoveHa
 	console.log('데이터가 생성되었습니다.', savedData);
 	
 	addUpdateHandler((savedData) => {
-    	console.log('데이터가 수정되었습니다.', savedData);
+		console.log('데이터가 수정되었습니다.', savedData);
 	});
 	
 	addRemoveHandler(() => {
@@ -520,7 +520,7 @@ watchingRoom.exit();
 ```javascript
 // age가 30인 데이터들을 가져오며, 이후 age가 30인 신규 데이터가 생성될 때를 감지합니다.
 Model.onNewAndFind({
-    age : 30
+	age : 30
 }, (savedData, isNewData) => {
 	console.log('age가 30인 ' + (isNewData === true ? '신규' : '기존') + ' 데이터', savedData);
 });
@@ -537,13 +537,13 @@ Model.onNewAndFind({
 
 ```javascript
 let watchingRoom = Model.onNewAndFindWatching({
-    age : 30
+	age : 30
 }, (savedData, addUpdateHandler, addRemoveHandler, exit, isNewData) => {
 	
 	console.log('age가 30인 ' + (isNewData === true ? '신규' : '기존') + ' 데이터', savedData);
 		
 	addUpdateHandler(savedData.id, (savedData) => {
-    	console.log('데이터가 수정되었습니다.', savedData);
+		console.log('데이터가 수정되었습니다.', savedData);
 	});
 	
 	addRemoveHandler(savedData.id, () => {
@@ -577,7 +577,7 @@ watchingRoom.exit();
 
 ```javascript
 Model.onRemove({
-    age : 30
+	age : 30
 }, (originData) => {
 	console.log('age가 30인 데이터가 삭제되었습니다.', originData);
 });
@@ -601,13 +601,13 @@ TestBox.TestModel = OBJECT({
 			name : 'Test',
 			
 			// 초기 데이터 설정
-		    initData : {
-		        // 최초 로그인 횟수는 0입니다.
-		        loginCount : 0,
-		        // 최초 레벨은 1입니다.
-		        level : 1
-		    },
-		    
+			initData : {
+				// 최초 로그인 횟수는 0입니다.
+				loginCount : 0,
+				// 최초 레벨은 1입니다.
+				level : 1
+			},
+			
 			methodConfig : {
 				...
 			}
@@ -630,26 +630,26 @@ Model.create({
 
 ```javascript
 TestBox.TestModel = OBJECT({
-    
-    preset : () => {
-        return TestBox.MODEL;
-    },
-    
-    params : () => {
-        return {
-            name : 'Test',
-            methodConfig : {
-                // create 메소드를 생성하지 않습니다.
-                create : false
-            }
-        };
-    }
+	
+	preset : () => {
+		return TestBox.MODEL;
+	},
+	
+	params : () => {
+		return {
+			name : 'Test',
+			methodConfig : {
+				// create 메소드를 생성하지 않습니다.
+				create : false
+			}
+		};
+	}
 });
 
 // create 메소드를 생성하지 않았으므로 오류 발생
 TestBox.TestModel.create({
-    name : 'YJ',
-    age : 30
+	name : 'YJ',
+	age : 30
 });
 ```
 
@@ -658,18 +658,18 @@ TestBox.TestModel.create({
 
 ```javascript
 TestBox.TestModel = OBJECT({
-    
-    preset : () => {
-        return TestBox.MODEL;
-    },
-    
-    params : () => {
-    
-        let validDataSet = {
-        
-            // 이름
+	
+	preset : () => {
+		return TestBox.MODEL;
+	},
+	
+	params : () => {
+	
+		let validDataSet = {
+		
+			// 이름
 			name : {
-			    // 이름은 필수로 입력해야 합니다.
+				// 이름은 필수로 입력해야 합니다.
 				notEmpty : true,
 				// 이름은 최소 1글자 이상, 255글자 이하입니다.
 				size : {
@@ -680,7 +680,7 @@ TestBox.TestModel = OBJECT({
 			
 			// 나이
 			age : {
-			    // 나이는 필수로 입력해야 합니다.
+				// 나이는 필수로 입력해야 합니다.
 				notEmpty : true,
 				// 나이는 숫자입니다.
 				integer : true
@@ -691,29 +691,29 @@ TestBox.TestModel = OBJECT({
 				bool : true
 			}
 		};
-        
-        return {
-            name : 'Test',
-            methodConfig : {
-                // 데이터를 생성하거나 수정할 때 데이터를 검증합니다.
-                create : {
+		
+		return {
+			name : 'Test',
+			methodConfig : {
+				// 데이터를 생성하거나 수정할 때 데이터를 검증합니다.
+				create : {
 					valid : VALID(validDataSet)
 				},
 				update : {
 					valid : VALID(validDataSet)
 				}
-            }
-        };
-    }
+			}
+		};
+	}
 });
 
 // 데이터 검증 실패 (name 값이 없고, age가 숫자가 아님)
 TestBox.TestModel.create({
-    age : '30살'
+	age : '30살'
 }, {
-    notValid : (validErrors) => {
-        console.log('데이터 검증에 실패하였습니다.', validErrors);
-    }
+	notValid : (validErrors) => {
+		console.log('데이터 검증에 실패하였습니다.', validErrors);
+	}
 });
 ```
 
@@ -722,31 +722,31 @@ TestBox.TestModel.create({
 
 ```javascript
 TestBox.ArticleModel = OBJECT({
-    
-    preset : () => {
-        return TestBox.MODEL;
-    },
-    
-    params : () => {
-        return {
-            name : 'Article',
-            methodConfig : {
-                create : {
-                    role : 'User'
-                }
-            }
-        };
-    }
+	
+	preset : () => {
+		return TestBox.MODEL;
+	},
+	
+	params : () => {
+		return {
+			name : 'Article',
+			methodConfig : {
+				create : {
+					role : 'User'
+				}
+			}
+		};
+	}
 });
 
 TestBox.ArticleModel.create({
-    title : '오늘의 일기',
-    content : '날씨가 맑았습니다.'
+	title : '오늘의 일기',
+	content : '날씨가 맑았습니다.'
 }, {
-    // clientInfo.roles에 'User' 롤이 포함되어 있지 않은 경우
-    notAuthed : () => {
-        console.log('로그인이 필요한 기능입니다.');
-    }
+	// clientInfo.roles에 'User' 롤이 포함되어 있지 않은 경우
+	notAuthed : () => {
+		console.log('로그인이 필요한 기능입니다.');
+	}
 });
 ```
 
@@ -762,7 +762,7 @@ TestBox.ArticleModel = OBJECT({
 
 	params : () => {
 	
-	    let validDataSet = {
+		let validDataSet = {
 			title : {
 				notEmpty : true,
 				size : {
@@ -783,43 +783,43 @@ TestBox.ArticleModel = OBJECT({
 		
 		return {
 			name : 'Article',
-            methodConfig : {
-                create : {
-                    valid : VALID(validDataSet),
-                    // userId가 데이터의 authKey가 됩니다.
-                    authKey : 'userId',
-                    role : 'User'
-                },
-                update : {
-                    valid : VALID(validDataSet),
-                    authKey : 'userId',
-                    role : 'User'
-                },
-                remove : {
-                    authKey : 'userId',
-                    role : 'User'
-                }
-            }
+			methodConfig : {
+				create : {
+					valid : VALID(validDataSet),
+					// userId가 데이터의 authKey가 됩니다.
+					authKey : 'userId',
+					role : 'User'
+				},
+				update : {
+					valid : VALID(validDataSet),
+					authKey : 'userId',
+					role : 'User'
+				},
+				remove : {
+					authKey : 'userId',
+					role : 'User'
+				}
+			}
 		};
 	}
 });
 
 // 데이터를 생성합니다.
 TestBox.ArticleModel.create({
-    title : '오늘의 일기',
-    content : '날씨가 맑았습니다.',
-    userId : '5636e47415899c3c04b5e70f'
+	title : '오늘의 일기',
+	content : '날씨가 맑았습니다.',
+	userId : '5636e47415899c3c04b5e70f'
 });
 
 // 데이터를 생성한 이후, 수정 할 때
 TestBox.ArticleModel.update({
-    id : '5636e47415899c3c04b5e70f',
-    title : '오늘의 일기 (수정)'
+	id : '5636e47415899c3c04b5e70f',
+	title : '오늘의 일기 (수정)'
 }, {
-    // clientInfo.authKey가 데이터의 userId 값인 '5636e47415899c3c04b5e70f'와 다른 경우
-    notAuthed : () => {
-        console.log('본인이 작성한 글만 수정 가능합니다.');
-    }
+	// clientInfo.authKey가 데이터의 userId 값인 '5636e47415899c3c04b5e70f'와 다른 경우
+	notAuthed : () => {
+		console.log('본인이 작성한 글만 수정 가능합니다.');
+	}
 });
 ```
 
@@ -835,7 +835,7 @@ TestBox.ArticleModel = OBJECT({
 
 	params : () => {
 	
-	    let validDataSet = {
+		let validDataSet = {
 			title : {
 				notEmpty : true,
 				size : {
@@ -856,32 +856,32 @@ TestBox.ArticleModel = OBJECT({
 		
 		return {
 			name : 'Article',
-            methodConfig : {
-                create : {
-                    valid : VALID(validDataSet),
-                    authKey : 'userId',
-                    role : 'User'
-                },
-                update : {
-                    valid : VALID(validDataSet),
-                    authKey : 'userId',
-                    role : 'User',
-                    adminRole : 'Admin'
-                },
-                remove : {
-                    authKey : 'userId',
-                    role : 'User',
-                    adminRole : 'Admin'
-                }
-            }
+			methodConfig : {
+				create : {
+					valid : VALID(validDataSet),
+					authKey : 'userId',
+					role : 'User'
+				},
+				update : {
+					valid : VALID(validDataSet),
+					authKey : 'userId',
+					role : 'User',
+					adminRole : 'Admin'
+				},
+				remove : {
+					authKey : 'userId',
+					role : 'User',
+					adminRole : 'Admin'
+				}
+			}
 		};
 	}
 });
 
 // clientInfo.roles에 'Admin' 롤이 포함되어 있으면 'role' 및 'authKey' 설정을 무시하고 실행합니다.
 TestBox.ArticleModel.update({
-    id : '5636e47415899c3c04b5e70f',
-    content : '글 내용이 적절하지 못하여 운영자가 수정하였습니다.'
+	id : '5636e47415899c3c04b5e70f',
+	content : '글 내용이 적절하지 못하여 운영자가 수정하였습니다.'
 });
 ```
 
@@ -896,7 +896,7 @@ TestBox.ArticleModel.update({
 ```javascript
 OVERRIDE(TestBox.TestModel, (origin) => {
 
-    TestBox.TestModel = OBJECT({
+	TestBox.TestModel = OBJECT({
 
 		preset : () => {
 			return origin;
@@ -904,10 +904,10 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 
 		init : (inner, self, params) => {
 		
-		    // 아래와 같이 모델이 사용하는 DB 객체를 가져와 직접 데이터베이스를 다룰 수 있습니다.
-		    let db = self.getDB();
-		    
-		    ...
+			// 아래와 같이 모델이 사용하는 DB 객체를 가져와 직접 데이터베이스를 다룰 수 있습니다.
+			let db = self.getDB();
+			
+			...
 		}
 	});
 });
@@ -921,7 +921,7 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 ```javascript
 OVERRIDE(TestBox.TestModel, (origin) => {
 
-    TestBox.TestModel = OBJECT({
+	TestBox.TestModel = OBJECT({
 
 		preset : () => {
 			return origin;
@@ -936,11 +936,11 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 					
 					// ret 함수는 클라이언트에 직접 데이터를 전달할 때 사용합니다.
 					ret({
-					    validErrors : {
-					        username : {
+						validErrors : {
+							username : {
 								type : 'existed'
 							}
-					    }
+						}
 					});
 					
 					// clientInfo는 클라이언트의 정보를 가지고 있습니다. Node.js 환경에서 create 메소드를 실행하는 경우에는 undefined입니다. 주의하시기 바랍니다.
@@ -959,7 +959,7 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 ```javascript
 OVERRIDE(TestBox.TestModel, (origin) => {
 
-    TestBox.TestModel = OBJECT({
+	TestBox.TestModel = OBJECT({
 
 		preset : () => {
 			return origin;
@@ -971,14 +971,14 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 			inner.on('get', {
 			
 				after : (savedData, next, ret, clientInfo) => {
-				    
+					
 					// ret 함수는 클라이언트에 직접 데이터를 전달할 때 사용합니다.
 					ret({
-					    validErrors : {
-					        username : {
+						validErrors : {
+							username : {
 								type : 'existed'
 							}
-					    }
+						}
 					});
 					
 					// clientInfo는 클라이언트의 정보를 가지고 있습니다. Node.js 환경에서 create 메소드를 실행하는 경우에는 undefined입니다. 주의하시기 바랍니다.
@@ -1003,7 +1003,7 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 ```javascript
 OVERRIDE(TestBox.TestModel, (origin) => {
 
-    TestBox.TestModel = OBJECT({
+	TestBox.TestModel = OBJECT({
 
 		preset : () => {
 			return origin;
@@ -1029,7 +1029,7 @@ OVERRIDE(TestBox.TestModel, (origin) => {
 ```javascript
 OVERRIDE(TestBox.TestModel, (origin) => {
 
-    TestBox.TestModel = OBJECT({
+	TestBox.TestModel = OBJECT({
 
 		preset : () => {
 			return origin;

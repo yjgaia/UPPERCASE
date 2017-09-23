@@ -29,19 +29,19 @@ sroute('secure.site.com', 8887, '/home/site/privkey.pem', '/home/site/cert.pem')
 [Let's Encrypt](https://letsencrypt.org)는 90일 이내에 갱신을 해야만 계속해서 사용할 수 있다는 제한이 있습니다. Certbot으로 인증서를 발급받은 경우 아래 방법에 따라 자동갱신을 설정하면 계속해서 인증서를 사용할 수 있습니다. (단, 서버를 이전하는 경우에는 인증서를 새로 발급받아야 합니다.)
 
 1. UPPERCASE-CORE-NODE의 `RUN_SCHEDULE_DAEMON` 기능을 이용해 아래와 같이 인증서를 30일에 한번씩 자동으로 갱신하는 코드를 작성합니다.
-    ```javascript
-    require(process.env.UPPERCASE_PATH + '/UPPERCASE-CORE/NODE.js');
-    
-    RUN_SCHEDULE_DAEMON([{
-    	// 30일에 한번씩 갱신
-    	hour : 30 * 24,
-    	commands : [
-    		'certbot renew --quiet'
-    	]
-    }]);
-    ```
+	```javascript
+	require(process.env.UPPERCASE_PATH + '/UPPERCASE-CORE/NODE.js');
+	
+	RUN_SCHEDULE_DAEMON([{
+		// 30일에 한번씩 갱신
+		hour : 30 * 24,
+		commands : [
+			'certbot renew --quiet'
+		]
+	}]);
+	```
 
 2. `forever` 모듈로 위 코드를 실행합니다.
-    ```
-    forever start RUN_SCHEDULE_DAEMON_RENEW_SSL.js
-    ```
+	```
+	forever start RUN_SCHEDULE_DAEMON_RENEW_SSL.js
+	```

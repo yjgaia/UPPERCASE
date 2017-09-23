@@ -30,6 +30,7 @@ MODEL 클래스
 * `OPTIONAL` *params.methodConfig.checkExists.role*
 * `OPTIONAL` *params.isNotUsingObjectId*
 * `OPTIONAL` *params.isNotUsingHistory*
+* `OPTIONAL` *params.isNotToInitialize*
 
 ## Public Members
 

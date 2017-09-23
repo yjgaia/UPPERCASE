@@ -1,6 +1,6 @@
 {
 	"name": "uppercase-model",
-	"version": "1.0.0",
+	"version": "1.0.5",
 	"dependencies": {
 		"uppercase-room": "latest",
 		"uppercase-db": "latest"

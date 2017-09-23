@@ -100,13 +100,13 @@ mongod --port 27018 --fork --logpath /var/log/mongodb.log --logappend --auth
 	
 	BOOT({
 		CONFIG : {
-	        isDevMode : true,
+			isDevMode : true,
 			defaultBoxName : 'Sample',
-	        title : 'Sample',
+			title : 'Sample',
 			webServerPort : 8888
 		},
 		NODE_CONFIG : {
-		    // 데이터베이스 설정
+			// 데이터베이스 설정
 			// 데이터베이스 이름은 Sample 입니다.
 			dbName : 'Sample',
 			// 데이터베이스 접속 username은 test입니다.

@@ -10,45 +10,45 @@ UPPERCASE 기반 프로젝트를 작성할 때, [`CLASS`](UPPERCASE-CORE-COMMON.
 
 ```javascript
 let Car = CLASS({
-    
-    init : (inner, self) => {
-        
-        let year;
-        let maker;
-        
-        let engine;
-        
-        let ecu;
-        let color;
-        
-        // year와 maker는 외부 접근 허용
-        let getYear = self.getYear = () => {
-            return year;
-        };
-        
-        let setYear = self.setYear = (_year) => {
-            year = _year;
-        };
-        
-        let getMaker = self.getMaker = () => {
-            return maker;
-        };
-        
-        let setMaker = self.setMaker = (_maker) => {
-            maker = _maker;
-        };
-        
-        // engine은 상속 클래스에서만 접근 허용
-        let getEngine = inner.getEngine = () => {
-            return engine;
-        };
-        
-        let setEngine = inner.setEngine = (_engine) => {
-            engine = _engine;
-        };
-        
-        // ecu와 color는 자기 클래스에서만 접근 허용
-    }
+	
+	init : (inner, self) => {
+		
+		let year;
+		let maker;
+		
+		let engine;
+		
+		let ecu;
+		let color;
+		
+		// year와 maker는 외부 접근 허용
+		let getYear = self.getYear = () => {
+			return year;
+		};
+		
+		let setYear = self.setYear = (_year) => {
+			year = _year;
+		};
+		
+		let getMaker = self.getMaker = () => {
+			return maker;
+		};
+		
+		let setMaker = self.setMaker = (_maker) => {
+			maker = _maker;
+		};
+		
+		// engine은 상속 클래스에서만 접근 허용
+		let getEngine = inner.getEngine = () => {
+			return engine;
+		};
+		
+		let setEngine = inner.setEngine = (_engine) => {
+			engine = _engine;
+		};
+		
+		// ecu와 color는 자기 클래스에서만 접근 허용
+	}
 });
 ```
 
@@ -59,14 +59,14 @@ let Car = CLASS({
 
 ```javascript
 let Car = CLASS({
-    
-    init : (inner, self) => {
-        
-        let ecu;
-        let color;
-        
-        // ecu와 color는 자기 클래스에서만 접근 허용
-    }
+	
+	init : (inner, self) => {
+		
+		let ecu;
+		let color;
+		
+		// ecu와 color는 자기 클래스에서만 접근 허용
+	}
 });
 ```
 
@@ -75,20 +75,20 @@ let Car = CLASS({
 
 ```javascript
 let Car = CLASS({
-    
-    init : (inner, self) => {
-        
-        let engine;
-        
-        // engine은 상속 클래스에서만 접근 허용
-        let getEngine = inner.getEngine = () => {
-            return engine;
-        };
-        
-        let setEngine = inner.setEngine = (_engine) => {
-            engine = _engine;
-        };
-    }
+	
+	init : (inner, self) => {
+		
+		let engine;
+		
+		// engine은 상속 클래스에서만 접근 허용
+		let getEngine = inner.getEngine = () => {
+			return engine;
+		};
+		
+		let setEngine = inner.setEngine = (_engine) => {
+			engine = _engine;
+		};
+	}
 });
 ```
 
@@ -97,29 +97,29 @@ let Car = CLASS({
 
 ```javascript
 let Car = CLASS({
-    
-    init : (inner, self) => {
-        
-        let year;
-        let maker;
-        
-        // year와 maker는 외부 접근 허용
-        let getYear = self.getYear = () => {
-            return year;
-        };
-        
-        let setYear = self.setYear = (_year) => {
-            year = _year;
-        };
-        
-        let getMaker = self.getMaker = () => {
-            return maker;
-        };
-        
-        let setMaker = self.setMaker = (_maker) => {
-            maker = _maker;
-        };
-    }
+	
+	init : (inner, self) => {
+		
+		let year;
+		let maker;
+		
+		// year와 maker는 외부 접근 허용
+		let getYear = self.getYear = () => {
+			return year;
+		};
+		
+		let setYear = self.setYear = (_year) => {
+			year = _year;
+		};
+		
+		let getMaker = self.getMaker = () => {
+			return maker;
+		};
+		
+		let setMaker = self.setMaker = (_maker) => {
+			maker = _maker;
+		};
+	}
 });
 ```
 
@@ -133,21 +133,21 @@ let Car = CLASS({
 ```javascript
 let Car = CLASS({
 
-    init : (inner, self) => {
-        ...
-    }
+	init : (inner, self) => {
+		...
+	}
 });
 
 let Bus = CLASS({
 
-    preset : () => {
-        // Bus는 Car를 상속합니다.
+	preset : () => {
+		// Bus는 Car를 상속합니다.
 		return Car;
 	},
 	
-    init : (inner, self) => {
-        ...
-    }
+	init : (inner, self) => {
+		...
+	}
 });
 ```
 
@@ -157,32 +157,32 @@ let Bus = CLASS({
 ```javascript
 let Car = CLASS({
 
-    init : (inner, self) => {
-        
-        let maker;
-        
-        let getMaker = self.getMaker = () => {
-            return maker;
-        };
-    }
+	init : (inner, self) => {
+		
+		let maker;
+		
+		let getMaker = self.getMaker = () => {
+			return maker;
+		};
+	}
 });
 
 let Bus = CLASS({
 
-    preset : () => {
+	preset : () => {
 		return Car;
 	},
 	
-    init : (inner, self) => {
-        
-        let getMaker;
-        OVERRIDE(self.getMaker, (origin) => {
-        
-            getMaker = self.getMaker = () => {
-                return origin() + ' Bus';
-            };
-        });
-    }
+	init : (inner, self) => {
+		
+		let getMaker;
+		OVERRIDE(self.getMaker, (origin) => {
+		
+			getMaker = self.getMaker = () => {
+				return origin() + ' Bus';
+			};
+		});
+	}
 });
 ```
 
@@ -192,31 +192,31 @@ let Bus = CLASS({
 ```javascript
 let Mathematics = CLASS({
 
-    init : (inner, self) => {
-        
-        // 파라미터 중 exponent는 있을수도, 없을수도 있습니다.
-        let pow = self.pow = (params) => {
-            //REQUIRED: params
-            //REQUIRED: params.base
-            //OPTIONAL: params.exponent
-            
-            let base = params.base;
-            let exponent = params.exponent;
-            
-            if (exponent === undefined) {
-                exponent = 2;
-            }
-            
-            let result = base;
-            
-            REPEAT(exponent, () => {
-                result *= base;
-            });
-            
-            return result;
-        };
-    }
+	init : (inner, self) => {
+		
+		// 파라미터 중 exponent는 있을수도, 없을수도 있습니다.
+		let pow = self.pow = (params) => {
+			//REQUIRED: params
+			//REQUIRED: params.base
+			//OPTIONAL: params.exponent
+			
+			let base = params.base;
+			let exponent = params.exponent;
+			
+			if (exponent === undefined) {
+				exponent = 2;
+			}
+			
+			let result = base;
+			
+			REPEAT(exponent, () => {
+				result *= base;
+			});
+			
+			return result;
+		};
+	}
 });
 ```
 
-메소드 오버로딩에 대한 자세한 내용은 [UPPERCASE 코드 컨벤션 규칙의 메소드 오버로딩 항목](CONVENTION.md#메소드-오버로딩)을 참고해주시기 바랍니다.
+메소드 오버로딩에 대한 자세한 내용은 [UPPERCASE 코드 컨벤션 규칙의 메소드의 형태 항목](CONVENTION.md#메소드의-형태)을 참고해주시기 바랍니다.

@@ -1,6 +1,6 @@
 {
 	"name": "uppercase-db",
-	"version": "1.0.0",
+	"version": "1.0.5",
 	"dependencies": {
 		"mongodb": "latest",
 		"uppercase-core": "latest"
