@@ -126,6 +126,8 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 						if (error !== TO_DELETE) {
 							
 							SHOW_ERROR('CONNECT_TO_DB_SERVER (BACKUP DB)', error.toString());
+							
+							next(nativeDB);
 		
 						} else {
 							
