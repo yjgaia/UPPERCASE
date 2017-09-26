@@ -204,25 +204,25 @@ mongod --configsvr --replSet csReplSet --port 40003 --fork --keyFile /srv/mongod
 mongo --port 40001
 ```
 
-아래 설정은 모든 공유된 서버끼리 공유하는 것이므로, localhost가 아닌 IP를 반드시 지정해주시기 바랍니다.
+아래 설정은 모든 공유된 서버끼리 공유하는 것이므로, `localhost`가 아닌 IP를 반드시 지정해주시기 바랍니다.
 ```
 rs.initiate(
   {
 	_id: "csReplSet",
 	configsvr: true,
 	members: [
-	  { _id : 0, host : "11.22.33.44:40001" },
-	  { _id : 1, host : "11.22.33.44:40002" },
-	  { _id : 2, host : "11.22.33.44:40003" }
+	  { _id : 0, host : "{{DB 서버 IP}}:40001" },
+	  { _id : 1, host : "{{DB 서버 IP}}:40002" },
+	  { _id : 2, host : "{{DB 서버 IP}}:40003" }
 	]
   }
 );
 ```
 
 ### `mongos` 실행
-이제 `mongos`를 실행합니다. `--configdb` 옵션으로 위에서 생성한 설정 데몬을 가리킵니다. 11.22.33.44는 해당하는 ip로 변경해주시기 바랍니다.
+이제 `mongos`를 실행합니다. `--configdb` 옵션으로 위에서 생성한 설정 데몬을 가리킵니다. `{{DB 서버 IP}}`는 데이터베이스 서버의 IP로 변경해주시기 바랍니다.
 ```
-mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/11.22.33.44:40001,11.22.33.44:40002,11.22.33.44:40003
+mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/{{DB 서버 IP}}:40001,{{DB 서버 IP}}:40002,{{DB 서버 IP}}:40003
 ```
 
 모든 config db가 localhost인 경우
@@ -246,16 +246,16 @@ db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', role
 db.auth('{{root 유저명}}', '{{root 비밀번호}}');
 ```
 
-`shard` 할 데몬의 접속 경로를 지정합니다. 11.22.33.44는 서버의 IP로 변경합니다.
+`shard` 할 데몬의 접속 경로를 지정합니다. `{{DB 서버 IP}}`는 데이터베이스 서버의 IP로 변경합니다.
 ```
-sh.addShard('11.22.33.44:30001');
-sh.addShard('11.22.33.44:30002');
-sh.addShard('11.22.33.44:30003');
-sh.addShard('11.22.33.44:30004');
-sh.addShard('11.22.33.44:30005');
-sh.addShard('11.22.33.44:30006');
-sh.addShard('11.22.33.44:30007');
-sh.addShard('11.22.33.44:30008');
+sh.addShard('{{DB 서버 IP}}:30001');
+sh.addShard('{{DB 서버 IP}}:30002');
+sh.addShard('{{DB 서버 IP}}:30003');
+sh.addShard('{{DB 서버 IP}}:30004');
+sh.addShard('{{DB 서버 IP}}:30005');
+sh.addShard('{{DB 서버 IP}}:30006');
+sh.addShard('{{DB 서버 IP}}:30007');
+sh.addShard('{{DB 서버 IP}}:30008');
 ```
 
 샤딩 할 데이터베이스를 지정합니다.
@@ -300,7 +300,7 @@ db.auth('{{root 유저명}}', '{{root 비밀번호}}');
 db.shutdownServer();
 ```
 
-`mongos`에 접속합니다.
+각 config db에 접속합니다.
 ```
 mongo --port 40001
 mongo --port 40002
