@@ -154,7 +154,10 @@ rdate -s time.bora.net
 ## MongoDB 분산 서버 설정
 *아래 설명은 독자가 리눅스 환경을 사용하며, `root` 유저로 로그인 한 상태라고 가정하여 설명합니다. `root` 유저가 아니거나 [AWS](https://aws.amazon.com)와 같은 클라우드 서버를 사용하는 경우에는 모든 명령어 앞에 `sudo`를 붙혀주시기 바랍니다.*
 
-### 1. 키 파일 생성
+### 1. 서버 설정
+[최대 동시에 열 수 있는 파일 개수 조절](DEPLOY.md#최대-동시에-열-수-있는-파일-개수-조절) 설정을 반드시 수행합니다.
+
+### 2. 키 파일 생성
 인증을 위한 키 파일을 생성합니다. ***이 키는 모든 분산 서버에 동일하게 복사되어야 합니다.***
 ```
 mkdir /srv/mongodb
@@ -162,7 +165,7 @@ openssl rand -base64 741 > /srv/mongodb/mongodb-shard-keyfile
 chmod 600 /srv/mongodb/mongodb-shard-keyfile
 ```
 
-### 2. 몽고 DB 데몬 생성
+### 3. 몽고 DB 데몬 생성
 몽고 DB 데몬을 원하는 수(CPU 개수 등) 만큼 생성합니다. 여기서 중요한 점은 `--shardsvr` 옵션을 붙혀야 한다는 것입니다. 또한 선택사항이었던 `--logpath`와 `--dbpath`도 반드시 붙혀야 합니다. 이 경우 `--dbpath`에 해당하는 폴더가 존재하여야만 데몬이 실행됩니다.
 ```
 mkdir /data
