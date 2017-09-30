@@ -453,7 +453,7 @@ global.NODE = CLASS({
 		let fireEvent = self.fireEvent = (eventName) => {
 			//REQUIRED: eventName
 			
-			EVENT.fireAll({
+			return EVENT.fireAll({
 				node : self,
 				name : eventName
 			});
