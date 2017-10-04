@@ -30,6 +30,9 @@ global.INPUT = CLASS((cls) => {
 			//OPTIONAL: params.type
 			//OPTIONAL: params.placeholder
 			//OPTIONAL: params.value
+			//OPTIONAL: params.min
+			//OPTIONAL: params.max
+			//OPTIONAL: params.step
 			//OPTIONAL: params.accept
 			//OPTIONAL: params.isMultiple
 			//OPTIONAL: params.isOffAutocomplete
@@ -39,6 +42,9 @@ global.INPUT = CLASS((cls) => {
 			let name;
 			let type;
 			let placeholder;
+			let min;
+			let max;
+			let step;
 			let accept;
 			let isMultiple;
 			let isOffAutocomplete;
@@ -58,6 +64,9 @@ global.INPUT = CLASS((cls) => {
 				name = params.name;
 				type = params.type;
 				placeholder = params.placeholder;
+				min = params.min;
+				max = params.max;
+				step = params.step;
 				accept = params.accept;
 				isMultiple = params.isMultiple;
 				isOffAutocomplete = params.isOffAutocomplete;
@@ -171,6 +180,30 @@ global.INPUT = CLASS((cls) => {
 								});
 							});
 						}
+					});
+				}
+			}
+			
+			if (type === 'range') {
+				
+				if (min !== undefined) {
+					inner.setAttr({
+						name : 'min',
+						value : min
+					});
+				}
+				
+				if (max !== undefined) {
+					inner.setAttr({
+						name : 'max',
+						value : max
+					});
+				}
+				
+				if (step !== undefined) {
+					inner.setAttr({
+						name : 'step',
+						value : step
 					});
 				}
 			}

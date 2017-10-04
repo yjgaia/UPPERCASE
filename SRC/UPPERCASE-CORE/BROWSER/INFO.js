@@ -19,13 +19,19 @@ global.INFO = OBJECT({
 			return lang;
 		};
 
-		let changeLang = self.changeLang = (lang) => {
+		let setLang = self.setLang = (lang) => {
 			//REQUIRED: lang
 
 			STORE('__INFO').save({
 				name : 'lang',
 				value : lang
 			});
+		};
+
+		let changeLang = self.changeLang = (lang) => {
+			//REQUIRED: lang
+
+			setLang(lang);
 
 			location.reload();
 		};

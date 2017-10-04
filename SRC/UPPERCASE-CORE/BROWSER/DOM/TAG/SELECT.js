@@ -145,7 +145,12 @@ global.SELECT = CLASS({
 		}
 
 		if (value !== undefined) {
-			self.setValue(value);
+			
+			if (self.getEl().value !== value) {
+				self.getEl().value = value;
+			} else {
+				self.getEl().value = value;
+			}
 		}
 	}
 });
