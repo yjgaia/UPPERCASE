@@ -1,7 +1,16 @@
 작성중
 
 # 프로젝트 배포하기
-UPPERCASE를 기반으로 개발된 프로젝트를 배포하기 위해서는 다음과 순서를 따릅니다.
+
+## 목차
+* [프로젝트 배포](#프로젝트-배포)
+* [MongoDB 최초 실행](#mongodb-최초-실행)
+* [VERSION 파일](#version-파일)
+* [서버 이전](#서버-이전)
+* [리눅스 서버 설정](#리눅스-서버-설정)
+
+## 프로젝트 배포
+UPPERCASE를 기반으로 개발된 프로젝트를 배포하기 위해서는 다음의 순서를 따릅니다.
 
 1. 프로젝트를 배포할 서버를 준비합니다.
 
@@ -31,89 +40,84 @@ forever start -c "node --max-old-space-size=16384" {{프로젝트 명.js}}
 forever restart {{프로젝트 명.js}}
 ```
 
-이제 프로젝트 배포가 완료되었습니다.
-
 ## MongoDB 최초 실행
-MongoDB를 최초로 실행하기 전, 데이터베이스를 저장할 폴더를 생성합니다.
+MongoDB를 최초로 실행할 때는 다음의 순서를 따릅니다.
+
+1. 데이터를 저장할 폴더를 생성합니다.
 ```
 mkdir /data
 mkdir /data/db
 ```
 
-MongoDB를 외부에서 접속 가능하게 설정합니다. `mongodb.conf`에서 `bindIp: 127.0.0.1`를 `bindIp: 0.0.0.0`로 변경합니다. 또한, 리눅스 환경의 경우 외부에서 접속이 가능하게 하려면 방화벽을 꺼야 합니다. (맨 하단 방화벽 설정 항목 참고)
+2. MongoDB를 외부에서 접속 가능하게 설정합니다. `mongodb.conf`에서 `bindIp: 127.0.0.1`를 `bindIp: 0.0.0.0`로 변경합니다. 또한, 리눅스 환경의 경우 외부에서 접속이 가능하게 하려면 방화벽을 꺼야 합니다. (하단의 [방화벽 끄기](#방화벽-끄기) 항목을 참고하세요.)
 ```
 vi /etc/mongod.conf
 ```
 
-MongoDB를 아래 명령어로 실행합니다. 보안을 위해 기본 포트가 아닌 `27018` 포트로 실행합니다.
+3. MongoDB를 아래 명령어로 실행합니다. 보안을 위해 기본 포트가 아닌 `27018` 포트로 실행합니다.
 ```
 mongod --port 27018 --fork --logpath /var/log/mongodb.log --logappend
 ```
 
-`mongo`로 접속합니다.
+4. `mongo`로 접속합니다.
 ```
 mongo --port 27018
 ```
 
-관리자 계정을 생성합니다.
+5. 아래와 같이 관리자 계정을 생성합니다.
 ```javascript
 use admin
 db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', roles : ['root'] });
 ```
 
-MongoDB 서버를 종료합니다.
+6. MongoDB 서버를 종료합니다.
 ```javascript
 db.shutdownServer();
 ```
 
-이제, 인증 모드로 MongoDB를 실행합니다.
+7. `--auth` 플래그를 붙혀 인증 모드로 MongoDB를 다시 실행합니다.
 ```
 mongod --port 27018 --fork --logpath /var/log/mongodb.log --logappend --auth
 ```
 
 ## MongoDB 유저 추가
-인증 모드로 MongoDB를 실행한 후 데이터베이스에 접근하기 위해서는 해당 데이터베이스에 유저가 존재해야 합니다. 유저를 추가하기 위한 방법은 다음과 같습니다.
+[MongoDB를 실행](#mongodb-최초-실행)한 후 데이터베이스에 접근하기 위해서는 사용할 데이터베이스에 유저가 존재해야 합니다. 유저를 추가하기 위한 방법은 다음과 같습니다.
 
-1. 우선 관리자로 로그인합니다.
-	```javascript
-	use admin
-	db.auth('root 유저명', 'root 비밀번호')
-	```
-	
-	* 만약 관리자 계정이 없다면 생성합니다.
-	```javascript
-	use admin
-	db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', roles : ['root'] });
-	```
+1. 관리자로 로그인합니다.
+```javascript
+use admin
+db.auth('root 유저명', 'root 비밀번호')
+```
 
-2. 데이터베이스에 유저를 생성합니다.
-	```javascript
-	use DB명
-	db.createUser({ user : '{{유저명}}', pwd : '{{비밀번호}}', roles : ['readWrite', 'dbAdmin'] });
-	```
+2. 사용할 데이터베이스에 유저를 생성합니다.
+```javascript
+use DB명
+db.createUser({ user : '{{유저명}}', pwd : '{{비밀번호}}', roles : ['readWrite', 'dbAdmin'] });
+```
 
-3. 다음과 같이 프로젝트 실행을 위한 설정 파일(프로젝트 명.js)에 MongoDB 접속에 필요한 `유저명`과 `비밀번호`를 추가합니다.
-	```javascript
-	require(process.env.UPPERCASE_PATH + '/BOOT.js');
-	
-	BOOT({
-		CONFIG : {
-			isDevMode : true,
-			defaultBoxName : 'Sample',
-			title : 'Sample',
-			webServerPort : 8888
-		},
-		NODE_CONFIG : {
-			// 데이터베이스 설정
-			// 데이터베이스 이름은 Sample 입니다.
-			dbName : 'Sample',
-			// 데이터베이스 접속 username은 test입니다.
-			dbUsername : 'test',
-			// 데이터베이스 접속 password는 1234입니다.
-			dbPassword : '1234'
-		}
-	});
-	```
+3. [프로젝트 실행을 위한 코드](CREATE_PROJECT.md#프로젝트-실행을-위한-코드-작성)에 MongoDB 접속에 필요한 `유저명`과 `비밀번호`를 추가합니다.
+```javascript
+require(process.env.UPPERCASE_PATH + '/BOOT.js');
+
+BOOT({
+	CONFIG : {
+		isDevMode : true,
+		defaultBoxName : 'Sample',
+		title : 'Sample',
+		webServerPort : 8888
+	},
+	NODE_CONFIG : {
+		// 데이터베이스 설정
+		dbPort : 27018,
+		// 데이터베이스 이름은 Sample 입니다.
+		dbName : 'Sample',
+		// 데이터베이스 접속 username은 test입니다.
+		dbUsername : 'test',
+		// 데이터베이스 접속 password는 1234입니다.
+		dbPassword : '1234'
+	}
+});
+```
 
 ## VERSION 파일
 **프로젝트 폴더 내의 VERSION 파일은 매우 중요합니다.**
@@ -124,7 +128,7 @@ VERSION 파일은 버전 문자열을 저장하고 있는 파일로써, 이를 �
 * 버전 정보를 담고 있는 V 파일을 배포시 잘 설정해주시기 바랍니다. 만약 분산 서버가 구성되어 있다면 모든 서버의 V 파일이 동일해야합니다.
 * Git 등의 소스코드 버젼 관리 시에는 .gitignore 등의 설정으로 V 파일을 제외시킵니다.
 
-## 서버 이전하기
+## 서버 이전
 1. 기존 프로젝트를 중단합니다. 만약 `forever`를 사용한다면 다음과 같이 입력합니다.
 ```
 cd {{프로젝트 폴더 명}}

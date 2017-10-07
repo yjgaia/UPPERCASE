@@ -170,7 +170,7 @@ SampleProject
 * `SampleProject/Sample/BROWSER/DISCONNECTED.js` [아래의 특수 파일 설명](#특수-파일)을 참고하시기 바랍니다.
 * `SampleProject/Sample/R` 웹 애플리케이션이 제공할 리소스(이미지, 사운드 등)들을 저장할 폴더입니다.
 * `SampleProject/Sample.js` 프로젝트의 각종 설정을 지정하고, 프로젝트를 실행하는 코드입니다.
-* `SampleProject/VERSION` 프로젝트의 버전 문자열을 저장하는 파일입니다.
+* `SampleProject/VERSION` 프로젝트의 버전 문자열을 저장하는 [VERSION 파일](DEPLOY.md#version-파일)입니다.
 * `SampleProject/DEPENDENCY` 프로젝트가 의존하고 있는 BOX들의 목록을 작성하는 파일입니다.
 
 ### 특수 파일
