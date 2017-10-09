@@ -1100,21 +1100,24 @@ global.CHECK_IS_ALLOWED_FOLDER_NAME = METHOD({
 global.CHECK_STILL_ALIVE = OBJECT({
 
 	init : () => {
-
-		UPPERCASE.ROOM('checkStillAliveRoom', (clientInfo, on, off, send) => {
+		
+		if (global.UPPERCASE !== undefined) {
 			
-			// I'm still alive!!
-			on('check', (notUsing, ret) => {
-				ret('__ALIVE');
-			});
-			
-			// I'm still alive!! (string mode)
-			on('checkStr', (notUsing, ret) => {
-				send({
-					str : '__ALIVE'
+			global.UPPERCASE.ROOM('checkStillAliveRoom', (clientInfo, on, off, send) => {
+				
+				// I'm still alive!!
+				on('check', (notUsing, ret) => {
+					ret('__ALIVE');
+				});
+				
+				// I'm still alive!! (string mode)
+				on('checkStr', (notUsing, ret) => {
+					send({
+						str : '__ALIVE'
+					});
 				});
 			});
-		});
+		}
 	}
 });
 
@@ -1339,12 +1342,15 @@ global.SYNC_TIME = OBJECT({
 
 	init : () => {
 		
-		UPPERCASE.ROOM('timeSyncRoom', (clientInfo, on) => {
+		if (global.UPPERCASE !== undefined) {
+			
+			global.UPPERCASE.ROOM('timeSyncRoom', (clientInfo, on) => {
 
-			// return diff. (diff: client time - server time)
-			on('sync', (clientNow, ret) => {
-				ret(clientNow - new Date());
+				// return diff. (diff: client time - server time)
+				on('sync', (clientNow, ret) => {
+					ret(clientNow - new Date());
+				});
 			});
-		});
+		}
 	}
 });

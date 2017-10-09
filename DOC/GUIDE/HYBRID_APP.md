@@ -38,39 +38,38 @@ Apache Cordova와 Crosswalk를 사용하여 하이브리드 앱을 만드는 방
 ## Apache Cordova
 
 1. Cordova 설치
-
-###### Mac or Linux
-```
-sudo npm install -g cordova
-```
-
-###### Windows
 ```
 npm install -g cordova
 ```
 
 2. 프로젝트 생성
-
 ```
 cordova create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
 ```
 
-ex)
+3. 폴더로 이동
 ```
-cordova create Sample com.sample.Sample Sample
+cd {{폴더 이름}}
 ```
 
-3. 컴파일 할 플랫폼 추가
+4. 컴파일 할 플랫폼 추가
 ```
 cordova platform add ios
 cordova platform add android
 ```
 
-4. 코드 작성
-
-5. 실행하기
+5. 프로젝트 풀 패키지 추가
+[`ubm`](https://www.npmjs.com/package/ubm)을 이용해 [프로젝트를 풀 패키징](ubm#하이브리드-앱을-위한-프로젝트-풀-패키징)하여 추가합니다.
 ```
-cordova run
+ubm fullpack {{프로젝트 실행을 위한 코드.js}} {{프로젝트를 저장할 경로}}
+```
+
+6. 실행하기
+```
+cordova run ios
+```
+```
+cordova run android
 ```
 
 ### 플러그인 설치

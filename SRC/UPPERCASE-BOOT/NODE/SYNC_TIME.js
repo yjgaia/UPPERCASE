@@ -5,12 +5,15 @@ global.SYNC_TIME = OBJECT({
 
 	init : () => {
 		
-		UPPERCASE.ROOM('timeSyncRoom', (clientInfo, on) => {
+		if (global.UPPERCASE !== undefined) {
+			
+			global.UPPERCASE.ROOM('timeSyncRoom', (clientInfo, on) => {
 
-			// return diff. (diff: client time - server time)
-			on('sync', (clientNow, ret) => {
-				ret(clientNow - new Date());
+				// return diff. (diff: client time - server time)
+				on('sync', (clientNow, ret) => {
+					ret(clientNow - new Date());
+				});
 			});
-		});
+		}
 	}
 });

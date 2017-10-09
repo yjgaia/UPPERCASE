@@ -138,10 +138,10 @@ global.BOOT = (params) => {
 
 		// set version.
 		CONFIG.version = version;
-		addContentToBrowserScript('CONFIG.version = \'' + version + '\'\n');
+		addContentToBrowserScript('CONFIG.version = \'' + version + '\';\n');
 		
 		if (CONFIG.isUsingProxy === true) {
-			addContentToBrowserScript('CONFIG.webServerPort = BROWSER_CONFIG.port\n');
+			addContentToBrowserScript('CONFIG.webServerPort = BROWSER_CONFIG.port;\n');
 		}
 
 		// override NODE_CONFIG.
@@ -617,7 +617,7 @@ global.BOOT = (params) => {
 					// serve base style css.
 					else if (uri === '__CSS') {
 						replaceRootPath(UPPERCASE_PATH);
-						requestInfo.uri = 'UPPERCASE-BOOT/R/BASE_STYLE.css';
+						requestInfo.uri = CONFIG.isDevMode === true ? 'UPPERCASE-BOOT/R/BASE_STYLE.css' : 'UPPERCASE-BOOT/R/BASE_STYLE.MIN.css';
 					}
 
 					// serve upload server host.

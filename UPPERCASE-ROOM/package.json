@@ -1,6 +1,6 @@
 {
 	"name": "uppercase-room",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"dependencies": {
 		"uppercase-core": "latest"
 	},
