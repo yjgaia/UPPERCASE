@@ -252,7 +252,7 @@ db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', role
 db.auth('{{root 유저명}}', '{{root 비밀번호}}');
 ```
 
-3번 과정에서 생성했던 MongoDB 데몬들의 접속 경로를 지정합니다. `{{데이터베이스 서버 IP}}`는 데이터베이스 서버의 IP로 변경합니다.
+[3번 과정](#3-mongodb-데몬-생성)에서 생성했던 MongoDB 데몬들의 접속 경로를 지정합니다. `{{데이터베이스 서버 IP}}`는 데이터베이스 서버의 IP로 변경합니다.
 ```
 sh.addShard('{{데이터베이스 서버 IP}}:30001');
 sh.addShard('{{데이터베이스 서버 IP}}:30002');
@@ -334,4 +334,4 @@ mongod --dbpath /data/shard_db7 --shutdown
 mongod --dbpath /data/shard_db8 --shutdown
 ```
 
-이제 서버를 재시작한 후, 3번 과정부터 다시 수행합니다.
+이제 서버를 재시작한 후, [3번 과정](#3-mongodb-데몬-생성)부터 다시 수행합니다.
