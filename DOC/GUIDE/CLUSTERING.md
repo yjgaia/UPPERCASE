@@ -39,7 +39,7 @@ CPU_CLUSTERING(() => {
 ## 서버 클러스터링
 UPPERCASE를 이용하면 CPU간 클러스터링을 넘어, 다른 하드웨어(서버) 간 클러스터링이 가능합니다. UPPERCASE에서는 [`SERVER_CLUSTERING 기능`](UPPERCASE-CORE-NODE.md#server_clusteringhosts-thisservername-port-work)을 통해 분산된 서버에서 각각 프로세스를 실행시키는 방법으로 서버 클러스터링을 지원하고 있습니다.
 
-다음은 두 서버 간의 클러스터링 예시입니다.
+다음은 두 서버 간 클러스터링 예시입니다.
 
 ```javascript
 SERVER_CLUSTERING({
@@ -79,7 +79,7 @@ SERVER_CLUSTERING({
 });
 ```
 
-UPPERCASE를 이용한 다양한 분산 서버 설계 전략을 아래 [분산 서버 설계 전략 항목](#UPPERCASE를-이용한-분산-서버-설계-전략)에서 다루고 있습니다.
+UPPERCASE를 이용한 다양한 분산 서버 설계 전략을 아래 [분산 서버 설계 전략 항목](#uppercase를-이용한-분산-서버-설계-전략)에서 다루고 있습니다.
 
 ## 프로세스간 데이터 공유
 Node.js 프로세스들은 각자 고유한 메모리 영역을 가지며, 공유 메모리 영역은 존재하지 않습니다. 따라서 프로세스들은 [메시지 전달 방식](https://en.wikipedia.org/wiki/Message_passing)을 통해 데이터를 공유해야 합니다. 이러한 과정을 추상화하여, 마치 공유 저장소가 존재하는 것처럼 구현한 것이 UPPERCASE에서 제공하는 [`SHARED_STORE` 기능](UPPERCASE-CORE-NODE.md#shared_storestorename)입니다.
