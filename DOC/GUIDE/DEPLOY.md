@@ -1,3 +1,5 @@
+작성중
+
 # 프로젝트 배포하기
 
 ## 목차
@@ -218,6 +220,33 @@ root soft nproc 65535
 
 4. 이후 터미널을 종료한 후 다시 서버에 접속한 뒤, 프로젝트를 재시작하면 설정한 내용이 반영됩니다.
 
+### 서버 시간 설정
+아래와 같이 서버가 위치한 지역의 시간대로 서버 시간을 맞추어 줍니다.
+```
+mv /etc/localtime /etc/localtime_old
+ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+rdate -p time.bora.net
+rdate -s time.bora.net
+```
+
+### 방화벽 포트 설정
+리눅스 설치 후 초기에 설정되어 있는 방화벽으로 인해, SSH 포트(22)를 제외한 모든 포트가 막혀 있습니다. 아래 명령어로 모든 포트를 사용 가능하도록 설정합니다.
+```
+firewall-cmd --zone=public --add-port=0-65535/tcp --permanent
+firewall-cmd --zone=public --add-port=0-65535/udp --permanent
+firewall-cmd --reload
+```
+
+### SSH 무작위 로그인 시도 차단
+서버를 운영하다 보면 SSH 무작위 로그인 시도가 수없이 발생하는 것을 확인할 수 있습니다. 따라서 [Fail2ban](https://www.fail2ban.org)을 설치하여 SSH 무작위 로그인 시도 공격을 차단하는 것이 좋습니다.
+
+작성중
+
+### 중국발 IP 차단
+중국에서 서비스를 운영하는 것이 아니라면 보안을 위해 중국발 IP를 차단하는 것이 좋습니다. 대부분의 해킹 시도가 중국에서 이루어지기 때문입니다.
+
+작성중- 프로그램 개발하기
+
 ### 모든 Node.js 프로세스 종료
 종종 오류로 인해 꺼지지 않는 Node.js 프로세스가 있을 때가 있습니다. 그런 경우에는 다음 명령어를 입력하여 모든 Node.js 프로세스를 강제종료 합니다.
 ```
@@ -227,24 +256,4 @@ pkill node
 혹은 다음과 같이 커맨드 라인을 지정하여 특정한 프로세스만 종료할 수도 있습니다.
 ```
 pkill -f "node --max-old-space-size=16384 /root/SampleService/Project/Project.js"
-```
-
-### 방화벽 끄기
-아래 명령어로 방화벽을 해제합니다.
-```
-systemctl stop firewalld
-```
-
-또한 아래 명령을 실행하여 리눅스 서버가 재부팅 되어도 방화벽이 실행되지 않도록 합니다.
-```
-systemctl disable firewalld
-```
-
-### 서버 시간 설정
-아래와 같이 서버가 위치한 지역의 시간대로 서버 시간을 맞추어 줍니다.
-```
-mv /etc/localtime /etc/localtime_old
-ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
-rdate -p time.bora.net
-rdate -s time.bora.net
 ```
