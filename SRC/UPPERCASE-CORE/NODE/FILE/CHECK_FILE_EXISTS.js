@@ -27,9 +27,10 @@ global.CHECK_FILE_EXISTS = METHOD(() => {
 
 			// when normal mode
 			if (isSync !== true) {
-				FS.exists(path, (exists) => {
+				
+				FS.access(path, (error) => {
 					
-					if (exists !== true) {
+					if (error !== TO_DELETE) {
 						callback(false);
 					}
 					
@@ -56,16 +57,9 @@ global.CHECK_FILE_EXISTS = METHOD(() => {
 			// when sync mode
 			else {
 				
-				if (FS.existsSync(path) !== true) {
-					
-					if (callback !== undefined) {
-						callback(false);
-					}
-					
-					return false;
-				}
-				
-				else {
+				try {
+
+					FS.accessSync(path);
 					
 					let result = CHECK_IS_IN({
 						array : FS.readdirSync(Path.dirname(path)),
@@ -77,6 +71,14 @@ global.CHECK_FILE_EXISTS = METHOD(() => {
 					}
 					
 					return result;
+
+				} catch(error) {
+					
+					if (callback !== undefined) {
+						callback(false);
+					}
+					
+					return false;
 				}
 			}
 		}

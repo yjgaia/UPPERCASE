@@ -67,9 +67,9 @@ RUN(() => {
 	require('./NODE/FILE/READ_FILE.js');
 	require('./NODE/FILE/GET_FILE_INFO.js');
 	require('./NODE/FILE/COPY_FILE.js');
-	require('./NODE/FILE/MOVE_FILE.js');
-	require('./NODE/FILE/CHECK_IS_FILE_EXISTS.js');
-	require('./NODE/FILE/CREATE_FOLDER.js');
+	require('./NODE/FILE/MOVE_FILE.js');*/
+	require('./NODE/FILE/CHECK_FILE_EXISTS.js');
+	/*require('./NODE/FILE/CREATE_FOLDER.js');
 	require('./NODE/FILE/CHECK_IS_FOLDER.js');
 	require('./NODE/FILE/FIND_FILE_NAMES.js');
 	require('./NODE/FILE/FIND_FOLDER_NAMES.js');
@@ -118,7 +118,7 @@ RUN(() => {
 	require('./NODE/ENCRYPTION/SHA512.js');*/
 	
 	// 코드 압축 기능
-	require('./NODE/MINIFY/MINIFY_JS.js');
+	//require('./NODE/MINIFY/MINIFY_JS.js');
 	//require('./NODE/MINIFY/MINIFY_CSS.js');
 	
 	// MSG
