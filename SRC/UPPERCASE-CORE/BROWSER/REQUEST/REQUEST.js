@@ -93,7 +93,9 @@ global.REQUEST = METHOD({
 		})).then((response) => {
 			return response.text();
 		}).then((responseText) => {
-			responseListener(responseText);
+			if (responseListener !== undefined) {
+				responseListener(responseText);
+			}
 		}).catch((error) => {
 			
 			let errorMsg = error.toString();
