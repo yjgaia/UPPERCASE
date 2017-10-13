@@ -5,6 +5,10 @@
 
 ### `getLang()`
 
+### `setLang(lang)`
+#### Parameters
+* `REQUIRED` *lang*
+
 ### `changeLang(lang)`
 #### Parameters
 * `REQUIRED` *lang*

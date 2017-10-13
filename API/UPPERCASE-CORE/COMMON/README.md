@@ -22,6 +22,7 @@
 * [UTIL/PARALLEL.md](UTIL/PARALLEL.md) 주어진 비동기 함수들을 병렬로 실행합니다.
 * [UTIL/PARSE_STR.md](UTIL/PARSE_STR.md) JSON 문자열을 원래 데이터나 배열, 값으로 변환합니다.
 * [UTIL/RANDOM_STR.md](UTIL/RANDOM_STR.md) 알파벳 대, 소문자와 숫자로 이루어진 임의의 문자열을 생성합니다.
+* [UTIL/SHA256.md](UTIL/SHA256.md) 비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
 * [UTIL/STRINGIFY.md](UTIL/STRINGIFY.md) 데이터나 배열, 값을 JSON 문자열로 변환합니다.
 * [UTIL/TEST.md](UTIL/TEST.md) 테스트용 메소드입니다.  테스트에 성공하거나 실패하면 콘솔에 메시지를 출력합니다.
 * [UTIL/URI_MATCHER.md](UTIL/URI_MATCHER.md) URI가 주어진 포맷에 맞는지 확인하는 URI_MATCHER 클래스  포맷에 파라미터 구간을 지정할 수 있어 URI로부터 파라미터 값을 가져올 수 있습니다.

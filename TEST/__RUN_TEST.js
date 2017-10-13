@@ -1,7 +1,7 @@
 const PORT = 8810;
 
-//const IS_TO_CREATE_SERVER = true;
-const IS_TO_CREATE_SERVER = false;
+const IS_TO_CREATE_SERVER = true;
+//const IS_TO_CREATE_SERVER = false;
 
 // 모듈 로드
 require('../UPPERCASE-CORE/NODE.js');

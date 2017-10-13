@@ -11,8 +11,9 @@ global.SHA256 = METHOD({
 		let password = params.password;
 		let key = params.key;
 		
-		let crypto = require('crypto');
+		let hash = __SHA256_LIB.hmac.create(key);
+		hash.update(password);
 
-		return crypto.createHmac('sha256', key).update(password).digest('hex');
+		return hash.hex();
 	}
 });

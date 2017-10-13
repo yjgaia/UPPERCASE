@@ -13,6 +13,9 @@ HTML input 태그와 대응되는 클래스
 * `OPTIONAL` *params.type*
 * `OPTIONAL` *params.placeholder*
 * `OPTIONAL` *params.value*
+* `OPTIONAL` *params.min*
+* `OPTIONAL` *params.max*
+* `OPTIONAL` *params.step*
 * `OPTIONAL` *params.accept*
 * `OPTIONAL` *params.isMultiple*
 * `OPTIONAL` *params.isOffAutocomplete*

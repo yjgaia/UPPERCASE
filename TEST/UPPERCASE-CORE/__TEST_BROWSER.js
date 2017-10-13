@@ -61,13 +61,15 @@ RUN(() => {
 	
 	// Callback Hell 보완 기능
 	require('./COMMON/UTIL/NEXT.js');
-	require('./COMMON/UTIL/PARALLEL.js');
+	require('./COMMON/UTIL/PARALLEL.js');*/
 	
 	// 기타 기능
 	require('./COMMON/UTIL/OVERRIDE.js');
+	require('./COMMON/UTIL/SHA256.js');
 	require('./COMMON/UTIL/RANDOM_STR.js');
 	require('./COMMON/UTIL/URI_MATCHER.js');
 	
+	/*
 	// BROWSER 테스트
 	// INFO
 	require('./BROWSER/INFO.js');
@@ -140,7 +142,7 @@ RUN(() => {
 	require('./BROWSER/CONSOLE/SHOW_WARNING.js');*/
 	
 	// SOUND
-	require('./BROWSER/SOUND.js');
+	//require('./BROWSER/SOUND.js');
 	
 	//require('./BROWSER/ADD_FONT.js');
 });

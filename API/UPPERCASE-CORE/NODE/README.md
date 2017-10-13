@@ -17,10 +17,6 @@
 * [CONSOLE/SHOW_ERROR.md](CONSOLE/SHOW_ERROR.md) 콘솔에 오류 메시지를 출력합니다.
 * [CONSOLE/SHOW_WARNING.md](CONSOLE/SHOW_WARNING.md) 콘솔에 경고 메시지를 출력합니다.
 
-## [ENCRYPTION](ENCRYPTION/README.md)
-* [ENCRYPTION/SHA256.md](ENCRYPTION/SHA256.md) 비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
-* [ENCRYPTION/SHA512.md](ENCRYPTION/SHA512.md) 비밀번호를 주어진 키를 이용하여 HMAC SHA512 알고리즘으로 암호화 합니다.
-
 ## [FILE](FILE/README.md)
 * [FILE/CHECK_FILE_EXISTS.md](FILE/CHECK_FILE_EXISTS.md) 지정된 경로에 파일이나 폴더가 존재하는지 확인합니다.
 * [FILE/CHECK_IS_FOLDER.md](FILE/CHECK_IS_FOLDER.md) 지정된 경로가 (파일이 아닌) 폴더인지 확인합니다.

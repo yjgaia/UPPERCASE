@@ -1535,6 +1535,16 @@ calculate(2, 3); // 10
 RANDOM_STR(10); // 예) b9hSosKhvl
 ```
 
+### `SHA256({password:, key})`
+비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
+
+```javascript
+SHA256({
+	password : '1234',
+	key : 'test'
+}); // '5471d39e681ffc00128c11b573f4a3356ceba766956bb928d562d2c7c0c2db6a'
+```
+
 ### `URI_MATCHER(format)`
 URI가 주어진 포맷에 맞는지 확인하는 `URI_MATCHER` 클래스로, 포맷에 파라미터 구간을 지정할 수 있어 URI로부터 파라미터 값을 가져올 수 있습니다.
 
