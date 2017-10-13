@@ -1295,8 +1295,8 @@ global.SHA256 = METHOD({
 		//REQUIRED: params.password
 		//REQUIRED: params.key
 
-		let password = params.password;
-		let key = params.key;
+		let password = String(params.password);
+		let key = String(params.key);
 		
 		let hash = __SHA256_LIB.hmac.create(key);
 		hash.update(password);
