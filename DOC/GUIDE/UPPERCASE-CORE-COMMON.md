@@ -1535,7 +1535,7 @@ calculate(2, 3); // 10
 RANDOM_STR(10); // 예) b9hSosKhvl
 ```
 
-### `SHA256({password:, key})`
+### `SHA256({password:, key:})`
 비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
 
 ```javascript
