@@ -240,7 +240,34 @@ firewall-cmd --reload
 ### SSH 무작위 로그인 시도 차단
 서버를 운영하다 보면 SSH 무작위 로그인 시도가 수없이 발생하는 것을 확인할 수 있습니다. 따라서 [Fail2ban](https://www.fail2ban.org)을 설치하여 SSH 무작위 로그인 시도 공격을 차단하는 것이 좋습니다.
 
-작성중
+1. Fail2ban 설치
+```
+yum install epel-release
+yum install fail2ban fail2ban-systemd
+```
+
+2. 설정 파일 작성
+```
+vi /etc/fail2ban/jail.d/local.conf
+```
+아래 내용을 붙혀넣습니다.
+```
+[DEFAULT]
+ignoreip  = 127.0.0.1/8 192.168.0.0/24
+bantime   = 86400
+findtime  = 86400
+maxretry  = 3
+banaction = firewallcmd-new
+
+[sshd]
+enabled = true
+```
+
+3. Fail2ban 실행 및 재부팅 시 자동으로 실행되도록 설정
+```
+systemctl start fail2ban
+systemctl enable fail2ban
+```
 
 ### 모든 Node.js 프로세스 종료
 종종 오류로 인해 꺼지지 않는 Node.js 프로세스가 있을 때가 있습니다. 그런 경우에는 다음 명령어를 입력하여 모든 Node.js 프로세스를 강제종료 합니다.
