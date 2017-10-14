@@ -1,5 +1,3 @@
-작성중
-
 # 프로젝트 배포하기
 
 ## 목차
@@ -238,7 +236,7 @@ firewall-cmd --reload
 ```
 
 ### SSH 무작위 로그인 시도 차단
-서버를 운영하다 보면 SSH 무작위 로그인 시도가 수없이 발생하는 것을 확인할 수 있습니다. 따라서 [Fail2ban](https://www.fail2ban.org)을 설치하여 SSH 무작위 로그인 시도 공격을 차단하는 것이 좋습니다.
+서버를 운영하다보면 중국으로부터 SSH 무작위 로그인 시도가 수없이 발생하는 것을 볼 수 있습니다.  [Fail2ban](https://www.fail2ban.org)을 설치하여 SSH 무작위 로그인 시도 공격을 차단해 봅시다.
 
 1. Fail2ban 설치
 ```
@@ -250,7 +248,7 @@ yum install fail2ban fail2ban-systemd
 ```
 vi /etc/fail2ban/jail.d/local.conf
 ```
-아래 내용을 붙혀넣습니다.
+설정 파일에 아래 내용을 붙혀넣습니다.
 ```
 [DEFAULT]
 ignoreip  = 127.0.0.1/8 192.168.0.0/24
