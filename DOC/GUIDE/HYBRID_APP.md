@@ -64,7 +64,31 @@ cordova platform add android
 ubm fullpack {{프로젝트 실행을 위한 코드.js}} {{프로젝트를 저장할 경로}}
 ```
 
-6. 실행하기
+6. `index.html` 파일 생성
+[UPPERCASE의 `index.html` 파일](UPPERCASE-BOOT.md#indexhtml-수정하기)과 비슷한 `index.html` 파일을 생성합니다. 특이사항은 리소스의 경로를 상대 경로로 지정해야 한다는 것과, `cordova.js` 파일을 포함해야 하며, `deviceready` 이벤트에 Cordova 플러그인 실행 코드를 작성해야 한다는 것입니다.
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">
+		<title>샘플 페이지</title>
+		<link rel="stylesheet" type="text/css" href="__CSS" />
+	</head>
+	<body>
+        <script src="cordova.js"></script>
+		<script src="__SCRIPT"></script>
+		<script>
+			EVENT('deviceready', () => {
+				// Cordova 플러그인 실행 코드 작성
+			});
+		</script>
+	</body>
+</html>
+```
+
+7. 실행하기
 ```
 cordova run ios
 ```
