@@ -33,7 +33,7 @@ https://nwjs.io/
 
 ## Apache Cordova를 이용한 모바일 애플리케이션 개발
 
-Apache Cordova와 Crosswalk를 사용하여 하이브리드 앱을 만드는 방법입니다.
+Apache Cordova를 사용하여 하이브리드 앱을 만드는 방법입니다.
 
 ## Apache Cordova
 
@@ -58,14 +58,12 @@ cordova platform add ios
 cordova platform add android
 ```
 
-5. 프로젝트 풀 패키지 추가
-[`ubm`](https://www.npmjs.com/package/ubm)을 이용해 [프로젝트를 풀 패키징](ubm#하이브리드-앱을-위한-프로젝트-풀-패키징)하여 추가합니다.
+5. [`ubm`](https://www.npmjs.com/package/ubm)을 이용해 [프로젝트를 풀 패키징](ubm#하이브리드-앱을-위한-프로젝트-풀-패키징)하여 추가합니다.
 ```
 ubm fullpack {{프로젝트 실행을 위한 코드.js}} {{프로젝트를 저장할 경로}}
 ```
 
-6. `index.html` 파일 생성
-[UPPERCASE의 `index.html` 파일](UPPERCASE-BOOT.md#indexhtml-수정하기)과 비슷한 `index.html` 파일을 생성합니다. 특이사항은 리소스의 경로를 상대 경로로 지정해야 한다는 것과, `cordova.js` 파일을 포함해야 하며, `deviceready` 이벤트에 Cordova 플러그인 실행 코드를 작성해야 한다는 것입니다.
+6. [UPPERCASE의 `index.html` 파일](UPPERCASE-BOOT.md#indexhtml-수정하기)과 비슷한 `index.html` 파일을 생성합니다. 특이사항은 리소스의 경로를 상대 경로로 지정해야 한다는 것과, `cordova.js` 파일을 포함해야 하며, `deviceready` 이벤트에 Cordova 플러그인 실행 코드를 작성해야 한다는 것입니다.
 ```html
 <!DOCTYPE html>
 <html>
@@ -96,51 +94,14 @@ cordova run ios
 cordova run android
 ```
 
-### 플러그인 설치
+### 플러그인 설치 및 삭제
 ```
 cordova plugin add {{플러그인의 주소}}
 ```
 
-### 배포하기
-
-
-## Crosswalk
-### Crosswalk을 사용해야 하는 이유
-* Chromium 기반이 아닌 안드로이드 4.x 이전 버젼에서의 웹뷰는 웹 표준을 제대로 지원하지 않고, 온갖 버그가 산재합니다.
-* 안드로이드 4.x 버젼까지의 웹뷰는 하드웨어 가속을 사용하지 않아 매우 느립니다.
-* 안드로이드 4.4의 웹뷰에서 파일 업로드 시 input을 눌러도 작동을 하지 않는 버그가 있습니다.
-
-1. Crosswalk 설치
-https://crosswalk-project.org 에 방문하여 `Cordova Android (ARM)`를 다운로드 하여 적당한 폴더에 풀어줍니다.
-
-2. 프로젝트 생성
-
-Mac or Linux
 ```
-crosswalk-cordova-15.44.384.12-arm/bin/create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
-```
-
-Windows
-```
-crosswalk-cordova-15.44.384.12-arm\bin\create {{폴더 이름}} com.sample.Sample {{프로젝트 이름}}
-```
-
-3. 코드 작성
-
-4. 실행하기
-```
-cd Sample
-./cordova/run
-```
-
-### 플러그인 설치
-```
-plugman install --platform android --project . --plugin {{플러그인의 주소}}
-```
-
-### 플러그인 삭제
-```
-plugman uninstall --platform android --project . --plugin {{플러그인의 패키지 명}}
+cordova plugin list
+cordova plugin add {{플러그인의 이름}}
 ```
 
 ### 배포하기
