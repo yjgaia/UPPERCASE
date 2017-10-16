@@ -240,8 +240,8 @@ firewall-cmd --reload
 
 1. Fail2ban 설치
 ```
-yum install epel-release
-yum install fail2ban fail2ban-systemd
+yum install -y epel-release
+yum install -y fail2ban fail2ban-systemd
 ```
 
 2. 설정 파일 작성
