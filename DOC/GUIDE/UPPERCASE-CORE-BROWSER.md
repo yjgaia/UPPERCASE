@@ -1247,11 +1247,19 @@ MATCH_VIEW({
 ### `HREF(uri)` `Box.HREF(uri)`
 URI로부터 주소를 생성하여 반환합니다.
 
-### `GO(uri)` `Box.GO(uri)`
-URI를 변경하여 다른 뷰로 이동합니다.
+### `GO(uri)` `Box.GO(uri)` `GO({uri:, data:})` `Box.GO({uri:, data:})`
+URI를 변경하여 다른 뷰로 이동합니다. `data` 파라미터를 입력하면, 뷰의 파라미터로 `data`를 전달할 수 있습니다.
 
 ```javascript
 GO('main');
+```
+```javascript
+GO({
+	uri : 'login',
+	data : {
+		nextURI : 'write'
+	}
+});
 ```
 
 ### `GO_NEW_WIN(uri)` `Box.GO_NEW_WIN(uri)`

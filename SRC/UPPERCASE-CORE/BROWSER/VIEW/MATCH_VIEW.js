@@ -4,11 +4,16 @@
 global.MATCH_VIEW = METHOD((m) => {
 	
 	let changeURIHandlers = [];
+	let uriData;
 	
 	let checkAll = m.checkAll = () => {
 		EACH(changeURIHandlers, (changeURIHandler) => {
 			changeURIHandler();
 		});
+	};
+	
+	let setURIData = m.setURIData = (_uriData) => {
+		uriData = _uriData;
 	};
 	
 	return {
@@ -45,7 +50,7 @@ global.MATCH_VIEW = METHOD((m) => {
 					// when before view not exists, create view.
 					if (view === undefined) {
 	
-						view = target();
+						view = target(uriData);
 						view.changeParams(uriParams);
 						target.lastView = view;
 	
@@ -60,6 +65,8 @@ global.MATCH_VIEW = METHOD((m) => {
 					}
 					
 					view.runURIChangeHandlers(uri);
+					
+					uriData = undefined;
 				}
 	
 				// when view not founded, close before view

@@ -8742,8 +8742,20 @@ global.GO = METHOD((m) => {
 
 	return {
 		
-		run : (uri) => {
-			//REQUIRED: uri
+		run : (uriOrParams) => {
+			//REQUIRED: uriOrParams
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.data
+			
+			let uri;
+			let data;
+			
+			if (CHECK_IS_DATA(uriOrParams) !== true) {
+				uri = uriOrParams;
+			} else {
+				uri = uriOrParams.uri;
+				data = uriOrParams.data;
+			}
 			
 			if (isCTRLKeyDown === undefined) {
 				isCTRLKeyDown = false;
@@ -8770,6 +8782,8 @@ global.GO = METHOD((m) => {
 			
 			else {
 				
+				MATCH_VIEW.setURIData(data);
+				
 				// when protocol is 'file:', use hashbang.
 				if (location.protocol === 'file:') {
 					location.href = HREF(uri);
@@ -8787,10 +8801,25 @@ FOR_BOX((box) => {
 
 	box.GO = METHOD({
 
-		run : (uri) => {
-			//REQUIRED: uri
+		run : (uriOrParams) => {
+			//REQUIRED: uriOrParams
+			//REQUIRED: uriOrParams.uri
+			//OPTIONAL: uriOrParams.data
+			
+			let uri;
+			let data;
+			
+			if (CHECK_IS_DATA(uriOrParams) !== true) {
+				uri = uriOrParams;
+			} else {
+				uri = uriOrParams.uri;
+				data = uriOrParams.data;
+			}
 
-			GO((box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri);
+			GO({
+				uri : (box.boxName === CONFIG.defaultBoxName ? '' : box.boxName + '/') + uri,
+				data : data
+			});
 		}
 	});
 });
@@ -8854,11 +8883,16 @@ FOR_BOX((box) => {
 global.MATCH_VIEW = METHOD((m) => {
 	
 	let changeURIHandlers = [];
+	let uriData;
 	
 	let checkAll = m.checkAll = () => {
 		EACH(changeURIHandlers, (changeURIHandler) => {
 			changeURIHandler();
 		});
+	};
+	
+	let setURIData = m.setURIData = (_uriData) => {
+		uriData = _uriData;
 	};
 	
 	return {
@@ -8895,7 +8929,7 @@ global.MATCH_VIEW = METHOD((m) => {
 					// when before view not exists, create view.
 					if (view === undefined) {
 	
-						view = target();
+						view = target(uriData);
 						view.changeParams(uriParams);
 						target.lastView = view;
 	
@@ -8910,6 +8944,8 @@ global.MATCH_VIEW = METHOD((m) => {
 					}
 					
 					view.runURIChangeHandlers(uri);
+					
+					uriData = undefined;
 				}
 	
 				// when view not founded, close before view
