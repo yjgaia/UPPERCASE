@@ -6339,6 +6339,22 @@ global.DIV = CLASS({
 });
 
 /*
+ * HTML footer 태그와 대응되는 클래스
+ */
+global.FOOTER = CLASS({
+
+	preset : () => {
+		return DOM;
+	},
+
+	params : () => {
+		return {
+			tag : 'footer'
+		};
+	}
+});
+
+/*
  * Form class
  */
 global.FORM = CLASS({
@@ -6581,6 +6597,22 @@ global.H6 = CLASS({
 	params : () => {
 		return {
 			tag : 'h6'
+		};
+	}
+});
+
+/*
+ * HTML header 태그와 대응되는 클래스
+ */
+global.HEADER = CLASS({
+
+	preset : () => {
+		return DOM;
+	},
+
+	params : () => {
+		return {
+			tag : 'header'
 		};
 	}
 });
