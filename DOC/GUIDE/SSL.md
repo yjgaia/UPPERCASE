@@ -14,7 +14,7 @@ UPPERCASE 기반 프로젝트에서 SSL 인증서를 적용하기 위해서는 �
 ## [SkyProxy](https://github.com/Hanul/SkyProxy) 사용하여 SSL 인증서 설정
 [SkyProxy](https://github.com/Hanul/SkyProxy)를 사용하여 SSL 인증서를 설정한 경우, UPPERCASE 기반 프로젝트에서는 SSL 인승서 관련 설정을 하지 않아도 됩니다.
 ```javascript
-sroute('secure.site.com', 8887, '/home/site/privkey.pem', '/home/site/cert.pem');
+sroute('{{도메인}}', 8887, '/etc/letsencrypt/live/{{도메인}}/privkey.pem', '/etc/letsencrypt/live/{{도메인}}/fullchain.pem');
 ```
 
 ## [Let's Encrypt](https://letsencrypt.org) 사용하기

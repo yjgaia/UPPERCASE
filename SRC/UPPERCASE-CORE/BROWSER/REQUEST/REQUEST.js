@@ -42,6 +42,10 @@ global.REQUEST = METHOD({
 				url = url.substring(0, url.indexOf('?'));
 			}
 			
+			isSecure = undefined;
+			host = undefined;
+			port = undefined;
+			
 		} else {
 			
 			if (uri !== undefined && uri.indexOf('?') !== -1) {
