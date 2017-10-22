@@ -5,7 +5,7 @@ global.INFO = OBJECT({
 
 	init : (inner, self) => {
 
-		let isTouchMode = global.ontouchstart !== undefined;
+		let isTouchMode = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
 		let isTouching;
 
 		let getLang = self.getLang = () => {

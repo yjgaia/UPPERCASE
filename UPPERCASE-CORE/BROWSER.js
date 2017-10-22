@@ -3818,7 +3818,7 @@ global.INFO = OBJECT({
 
 	init : (inner, self) => {
 
-		let isTouchMode = global.ontouchstart !== undefined;
+		let isTouchMode = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
 		let isTouching;
 
 		let getLang = self.getLang = () => {
@@ -5336,49 +5336,26 @@ global.E = CLASS({
 
 		let getLeft = self.getLeft = () => {
 			
-			// if is touch mode
-			if (INFO.checkIsTouchMode() === true) {
+			if (
+			INFO.checkIsTouchMode() === true &&
+			e.changedTouches !== undefined &&
+			e.changedTouches[0] !== undefined) {
 				
 				let touchPageX;
 
-				if (e.touches !== undefined && e.touches[0] !== undefined) {
-
-					// first touch position.
-
-					EACH(e.touches, (touch) => {
-						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
-							touchPageX = touch.pageX;
-							return false;
-						}
-					});
-
-					if (touchPageX === undefined) {
-						touchPageX = e.touches[0].pageX;
+				EACH(e.changedTouches, (touch) => {
+					if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+						touchPageX = touch.pageX;
+						return false;
 					}
+				});
 
-					if (touchPageX !== undefined) {
-						return touchPageX;
-					}
+				if (touchPageX === undefined) {
+					touchPageX = e.changedTouches[0].pageX;
 				}
 
-				if (e.changedTouches !== undefined && e.changedTouches[0] !== undefined) {
-
-					// first touch position.
-
-					EACH(e.changedTouches, (touch) => {
-						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
-							touchPageX = touch.pageX;
-							return false;
-						}
-					});
-
-					if (touchPageX === undefined) {
-						touchPageX = e.changedTouches[0].pageX;
-					}
-
-					if (touchPageX !== undefined) {
-						return touchPageX;
-					}
+				if (touchPageX !== undefined) {
+					return touchPageX;
 				}
 			}
 
@@ -5387,53 +5364,55 @@ global.E = CLASS({
 
 		let getTop = self.getTop = () => {
 
-			// if is touch mode
-			if (INFO.checkIsTouchMode() === true) {
+			if (
+			INFO.checkIsTouchMode() === true &&
+			e.changedTouches !== undefined &&
+			e.changedTouches[0] !== undefined) {
 				
 				let touchPageY;
 
-				if (e.touches !== undefined && e.touches[0] !== undefined) {
-
-					// first touch position.
-
-					EACH(e.touches, (touch) => {
-						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
-							touchPageY = touch.pageY;
-							return false;
-						}
-					});
-
-					if (touchPageY === undefined) {
-						touchPageY = e.touches[0].pageY;
+				EACH(e.changedTouches, (touch) => {
+					if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
+						touchPageY = touch.pageY;
+						return false;
 					}
+				});
 
-					if (touchPageY !== undefined) {
-						return touchPageY;
-					}
+				if (touchPageY === undefined) {
+					touchPageY = e.changedTouches[0].pageY;
 				}
 
-				if (e.changedTouches !== undefined && e.changedTouches[0] !== undefined) {
-
-					// first touch position.
-
-					EACH(e.changedTouches, (touch) => {
-						if (touch.target !== undefined && checkIsDescendant(el, touch.target) === true) {
-							touchPageY = touch.pageY;
-							return false;
-						}
-					});
-
-					if (touchPageY === undefined) {
-						touchPageY = e.changedTouches[0].pageY;
-					}
-
-					if (touchPageY !== undefined) {
-						return touchPageY;
-					}
+				if (touchPageY !== undefined) {
+					return touchPageY;
 				}
 			}
 
 			return e.pageY;
+		};
+		
+		let getPositions = self.getPositions = () => {
+			
+			if (
+			INFO.checkIsTouchMode() === true &&
+			e.changedTouches !== undefined &&
+			e.changedTouches[0] !== undefined) {
+				
+				let positions = [];
+				
+				EACH(e.changedTouches, (touch) => {
+					positions.push({
+						left : touch.pageX,
+						top : touch.pageY
+					});
+				});
+				
+				return positions;
+			}
+			
+			return [{
+				left : e.pageX,
+				top : e.pageY
+			}];
 		};
 
 		let getKey = self.getKey = () => {
@@ -5475,6 +5454,10 @@ global.EMPTY_E = CLASS({
 
 		let getTop = self.getTop = () => {
 			return -Infinity;
+		};
+		
+		let getPositions = self.getPositions = () => {
+			return [];
 		};
 
 		let getKey = self.getKey = () => {

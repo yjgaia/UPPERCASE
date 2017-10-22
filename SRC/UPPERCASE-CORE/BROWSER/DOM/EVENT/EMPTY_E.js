@@ -24,6 +24,10 @@ global.EMPTY_E = CLASS({
 		let getTop = self.getTop = () => {
 			return -Infinity;
 		};
+		
+		let getPositions = self.getPositions = () => {
+			return [];
+		};
 
 		let getKey = self.getKey = () => {
 			return '';
