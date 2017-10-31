@@ -7176,7 +7176,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(() => {
 			}
 			
 			ImageMagick.readMetadata(path, (error, metadata) => {
-
+				
 				if (error !== TO_DELETE) {
 
 					let errorMsg = error.toString();
