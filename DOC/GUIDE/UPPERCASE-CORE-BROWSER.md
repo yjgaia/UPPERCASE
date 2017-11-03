@@ -1603,7 +1603,7 @@ ADD_FONT({
 	weight : 400,
 	woff2 : '//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2',
 	woff : '//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff',
-	opentype : '//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf'
+	otf : '//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf'
 });
 
 DIV({
