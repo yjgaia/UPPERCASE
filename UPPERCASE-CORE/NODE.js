@@ -54,6 +54,26 @@ global.METHOD = (define) => {
 };
 
 /*
+ * BROWSER, NODE 에서 확장해서 사용해야 합니다.
+ */
+global.MSG = METHOD({
+
+	run : (msgs) => {
+		//REQUIRED: msgs
+
+		let msg;
+		
+		// get first msg.
+		EACH(msgs, (_msg) => {
+			msg = _msg;
+			return false;
+		});
+
+		return msg;
+	}
+});
+
+/*
  * DB의 update 기능을 사용할 때, 데이터의 특정 값에 TO_DELETE를 지정하게 되면 해당 값이 삭제됩니다.
  * 자세한 것은 DB의 update 예제를 살펴보시기 바랍니다.
  *
@@ -3358,45 +3378,47 @@ OVERRIDE(BOX, (origin) => {
  * 
  * 만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
  */
-global.MSG = METHOD((m) => {
+OVERRIDE(MSG, (origin) => {
 	
-	const OSLocale = require('os-locale');
-	
-	let lang;
-	
-	OSLocale().then(locale => {
-		lang = locale.toLowerCase();
-	});
-	
-	return {
-	
-		run : (msgs) => {
-			//REQUIRED: msgs
-	
-			let msg;
-	
-			if (lang !== undefined) {
-				msg = msgs[lang];
+	global.MSG = METHOD((m) => {
+		
+		const OSLocale = require('os-locale');
+		
+		let lang;
+		
+		OSLocale().then(locale => {
+			lang = locale.toLowerCase();
+		});
+		
+		return {
+		
+			run : (msgs) => {
+				//REQUIRED: msgs
+		
+				let msg;
+		
+				if (lang !== undefined) {
+					msg = msgs[lang];
+					
+					if (msg === undefined) {
+						msg = msgs[lang.substring(0, 2)];
+					}
+				}
 				
 				if (msg === undefined) {
-					msg = msgs[lang.substring(0, 2)];
+					
+					// get first msg.
+					EACH(msgs, (_msg) => {
+						msg = _msg;
+						return false;
+					});
 				}
+		
+				return msg;
 			}
-			
-			if (msg === undefined) {
-				
-				// get first msg.
-				EACH(msgs, (_msg) => {
-					msg = _msg;
-					return false;
-				});
-			}
-	
-			return msg;
-		}
-	};
+		};
+	});
 });
-
 /*
  * Node.js 환경에서의 기본 설정
  */

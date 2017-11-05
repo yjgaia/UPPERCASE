@@ -57,6 +57,26 @@ global.METHOD = (define) => {
 };
 
 /*
+ * BROWSER, NODE 에서 확장해서 사용해야 합니다.
+ */
+global.MSG = METHOD({
+
+	run : (msgs) => {
+		//REQUIRED: msgs
+
+		let msg;
+		
+		// get first msg.
+		EACH(msgs, (_msg) => {
+			msg = _msg;
+			return false;
+		});
+
+		return msg;
+	}
+});
+
+/*
  * DB의 update 기능을 사용할 때, 데이터의 특정 값에 TO_DELETE를 지정하게 되면 해당 값이 삭제됩니다.
  * 자세한 것은 DB의 update 예제를 살펴보시기 바랍니다.
  *
@@ -4069,29 +4089,32 @@ OVERRIDE(LOOP, (origin) => {
  * 
  * 만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
  */
-global.MSG = METHOD({
-
-	run : (msgs) => {
-		//REQUIRED: msgs
-
-		let msg = msgs[INFO.getLang()];
-
-		if (msg === undefined) {
-			
-			msg = msgs[INFO.getLang().substring(0, 2)];
-			
+OVERRIDE(MSG, (origin) => {
+	
+	global.MSG = METHOD({
+	
+		run : (msgs) => {
+			//REQUIRED: msgs
+	
+			let msg = msgs[INFO.getLang()];
+	
 			if (msg === undefined) {
 				
-				// get first msg.
-				EACH(msgs, (_msg) => {
-					msg = _msg;
-					return false;
-				});
+				msg = msgs[INFO.getLang().substring(0, 2)];
+				
+				if (msg === undefined) {
+					
+					// get first msg.
+					EACH(msgs, (_msg) => {
+						msg = _msg;
+						return false;
+					});
+				}
 			}
+	
+			return msg;
 		}
-
-		return msg;
-	}
+	});
 });
 
 /*
