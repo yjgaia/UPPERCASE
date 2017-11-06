@@ -20,6 +20,8 @@
 
 ### `getTop()`
 
+### `getPositions()`
+
 ### `getKey()`
 
 ### `getWheelDelta()`

@@ -19,6 +19,7 @@
 * [TAG/BR.md](TAG/BR.md) HTML br 태그와 대응되는 클래스
 * [TAG/CANVAS.md](TAG/CANVAS.md) HTML canvas 태그와 대응되는 클래스
 * [TAG/DIV.md](TAG/DIV.md) HTML div 태그와 대응되는 클래스
+* [TAG/FOOTER.md](TAG/FOOTER.md) HTML footer 태그와 대응되는 클래스
 * [TAG/FORM.md](TAG/FORM.md) Form class
 * [TAG/H1.md](TAG/H1.md) HTML h1 태그와 대응되는 클래스
 * [TAG/H2.md](TAG/H2.md) HTML h2 태그와 대응되는 클래스
@@ -26,6 +27,7 @@
 * [TAG/H4.md](TAG/H4.md) HTML h4 태그와 대응되는 클래스
 * [TAG/H5.md](TAG/H5.md) HTML h5 태그와 대응되는 클래스
 * [TAG/H6.md](TAG/H6.md) HTML h6 태그와 대응되는 클래스
+* [TAG/HEADER.md](TAG/HEADER.md) HTML header 태그와 대응되는 클래스
 * [TAG/IFRAME.md](TAG/IFRAME.md) HTML iframe 태그와 대응되는 클래스
 * [TAG/IMG.md](TAG/IMG.md) HTML img 태그와 대응되는 클래스
 * [TAG/INPUT.md](TAG/INPUT.md) HTML input 태그와 대응되는 클래스

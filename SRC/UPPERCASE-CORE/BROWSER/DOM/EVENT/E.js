@@ -50,7 +50,7 @@ global.E = CLASS({
 		let getLeft = self.getLeft = () => {
 			
 			if (
-			INFO.checkIsTouchMode() === true &&
+			INFO.checkIsTouchDevice() === true &&
 			e.changedTouches !== undefined &&
 			e.changedTouches[0] !== undefined) {
 				
@@ -78,7 +78,7 @@ global.E = CLASS({
 		let getTop = self.getTop = () => {
 
 			if (
-			INFO.checkIsTouchMode() === true &&
+			INFO.checkIsTouchDevice() === true &&
 			e.changedTouches !== undefined &&
 			e.changedTouches[0] !== undefined) {
 				
@@ -106,7 +106,7 @@ global.E = CLASS({
 		let getPositions = self.getPositions = () => {
 			
 			if (
-			INFO.checkIsTouchMode() === true &&
+			INFO.checkIsTouchDevice() === true &&
 			e.changedTouches !== undefined &&
 			e.changedTouches[0] !== undefined) {
 				

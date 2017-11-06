@@ -52,11 +52,11 @@ INFO.getLang(); // 'ko'
 INFO.changeLang('ko');
 ```
 
-### `INFO.checkIsTouchMode()`
-터치 모드인지 확인합니다. 터치로만 조작이 가능한 기기에서는 항상 `true`를 반환하고, 마우스로만 조작이 가능한 기기에서는 항상 `false`를 반환합니다. 터치와 마우스 조작 둘 다 가능한 기기에서는 터치를 하는 순간 혹은 마우스를 조작하는 순간 변경됩니다.
+### `INFO.checkIsTouchDevice()`
+터치 기기인지 확인합니다. 터치로만 조작이 가능한 기기에서는 `true`를 반환하고, 마우스로만 조작이 가능한 기기에서는 `false`를 반환합니다.
 
 ```javascript
-INFO.checkIsTouchMode(); // 스마트폰에서는 true, PC에서는 false
+INFO.checkIsTouchDevice(); // 스마트폰에서는 true, PC에서는 false
 ```
 
 ### `INFO.getBrowserInfo()`

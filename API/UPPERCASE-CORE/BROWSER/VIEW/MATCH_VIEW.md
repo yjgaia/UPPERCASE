@@ -10,3 +10,5 @@
 ## Static Members
 
 ### `checkAll()`
+
+### `setURIData(uriData)`

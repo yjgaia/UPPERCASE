@@ -266,7 +266,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'touchstart'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() === true) {
+					if (INFO.checkIsTouchDevice() === true) {
 						eventHandler(e, node);
 					}
 				}));
@@ -277,7 +277,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'mousedown'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() !== true) {
+					if (INFO.checkIsTouchDevice() !== true) {
 						eventHandler(e, node);
 					}
 				}));
@@ -292,7 +292,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'touchmove'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() === true) {
+					if (INFO.checkIsTouchDevice() === true) {
 						eventHandler(e, node);
 					}
 				}));
@@ -303,7 +303,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'mousemove'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() !== true) {
+					if (INFO.checkIsTouchDevice() !== true) {
 						eventHandler(e, node);
 					}
 				}));
@@ -318,7 +318,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'touchend'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() === true) {
+					if (INFO.checkIsTouchDevice() === true) {
 						eventHandler(e, node);
 					}
 				}));
@@ -329,7 +329,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'mouseup'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() !== true) {
+					if (INFO.checkIsTouchDevice() !== true) {
 						eventHandler(e, node);
 					}
 				}));
@@ -344,7 +344,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'touchstart'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() === true) {
+					if (INFO.checkIsTouchDevice() === true) {
 						eventHandler(e, node);
 					}
 				}));
@@ -355,7 +355,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'mouseover'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() !== true) {
+					if (INFO.checkIsTouchDevice() !== true) {
 						eventHandler(e, node);
 					}
 				}));
@@ -370,7 +370,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'touchend'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() === true) {
+					if (INFO.checkIsTouchDevice() === true) {
 						eventHandler(e, node);
 					}
 				}));
@@ -381,7 +381,7 @@ global.EVENT = CLASS((cls) => {
 					lowNode : lowNode,
 					name : 'mouseout'
 				}, (e, node) => {
-					if (INFO.checkIsTouchMode() !== true) {
+					if (INFO.checkIsTouchDevice() !== true) {
 						eventHandler(e, node);
 					}
 				}));

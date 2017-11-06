@@ -6,7 +6,7 @@
 * [COOKIE_STORE.md](COOKIE_STORE.md) 쿠키 저장소 클래스  쿠키에 데이터를 저장할 수 있는 클래스 입니다. domain 파라미터를 통해 쿠키를 불러 올 수 있는 도메인 범위를 지정할 수 있습니다. 웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
 * [INFO.md](INFO.md) 웹 브라우저 정보를 담고 있는 객체
 * [LOOP.md](LOOP.md) 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
-* [MSG.md](MSG.md) INFO의 웹 애플리케이션 언어 설정 코드에 해당하는 문자열을 반환합니다.  만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
+* [MSG.md](MSG.md)
 * [SOUND.md](SOUND.md) 사운드 파일을 재생하는 SOUND 클래스
 * [SOUND_ONCE.md](SOUND_ONCE.md) 사운드 파일을 한번 재생하는 SOUND_ONCE 클래스
 * [STORE.md](STORE.md) 저장소 클래스  웹 브라우저가 종료되어도 저장된 값들이 보존됩니다.
@@ -36,6 +36,7 @@
 * [DOM/TAG/BR.md](DOM/TAG/BR.md) HTML br 태그와 대응되는 클래스
 * [DOM/TAG/CANVAS.md](DOM/TAG/CANVAS.md) HTML canvas 태그와 대응되는 클래스
 * [DOM/TAG/DIV.md](DOM/TAG/DIV.md) HTML div 태그와 대응되는 클래스
+* [DOM/TAG/FOOTER.md](DOM/TAG/FOOTER.md) HTML footer 태그와 대응되는 클래스
 * [DOM/TAG/FORM.md](DOM/TAG/FORM.md) Form class
 * [DOM/TAG/H1.md](DOM/TAG/H1.md) HTML h1 태그와 대응되는 클래스
 * [DOM/TAG/H2.md](DOM/TAG/H2.md) HTML h2 태그와 대응되는 클래스
@@ -43,6 +44,7 @@
 * [DOM/TAG/H4.md](DOM/TAG/H4.md) HTML h4 태그와 대응되는 클래스
 * [DOM/TAG/H5.md](DOM/TAG/H5.md) HTML h5 태그와 대응되는 클래스
 * [DOM/TAG/H6.md](DOM/TAG/H6.md) HTML h6 태그와 대응되는 클래스
+* [DOM/TAG/HEADER.md](DOM/TAG/HEADER.md) HTML header 태그와 대응되는 클래스
 * [DOM/TAG/IFRAME.md](DOM/TAG/IFRAME.md) HTML iframe 태그와 대응되는 클래스
 * [DOM/TAG/IMG.md](DOM/TAG/IMG.md) HTML img 태그와 대응되는 클래스
 * [DOM/TAG/INPUT.md](DOM/TAG/INPUT.md) HTML input 태그와 대응되는 클래스

@@ -13,6 +13,6 @@
 #### Parameters
 * `REQUIRED` *lang*
 
-### `checkIsTouchMode()`
+### `checkIsTouchDevice()`
 
 ### `getBrowserInfo()`
