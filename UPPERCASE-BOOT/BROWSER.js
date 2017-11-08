@@ -98,7 +98,7 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 		}
 		
 		if (webServerPort === undefined) {
-			webServerPort = CONFIG.webServerPort;
+			webServerPort = BROWSER_CONFIG.port;
 		}
 		
 		if (isSecure === undefined) {
