@@ -290,9 +290,11 @@ UPPERCASE-BOOT는 웹 브라우저마다의 스타일 차이를 없애주고 같
 		<link rel="stylesheet" type="text/css" href="/__CSS" />
 	</head>
 	<body>
-		<noscript>
-			<p style="padding:15px;">JavaScript is disabled. Please enable JavaScript in your browser.</p>
-		</noscript>
+		<p id="__ES6_NOT_SUPPORTED" style="padding:15px;">
+			JavaScript is disabled or ECMAScript 6 is not supported in your web browser.<br>
+			Please update your web browser or use the latest version of any web browser.
+		</p>
+		<script>const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector('#__ES6_NOT_SUPPORTED');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()</script>
 		<script src="/__SCRIPT"></script>
 	</body>
 </html>

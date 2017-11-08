@@ -305,14 +305,13 @@ global.BOOT = (params) => {
 			
 			indexPageContent += '</head>';
 			indexPageContent += '<body>';
-	
+			
 			// show please enable JavaScript msg.
-			indexPageContent += '<noscript>';
-			indexPageContent += '<p style="padding:15px;">';
-			indexPageContent += 'JavaScript is disabled. Please enable JavaScript in your browser.';
+			indexPageContent += '<p id="__ES6_NOT_SUPPORTED" style="padding:15px;">';
+			indexPageContent += 'JavaScript is disabled or ECMAScript 6 is not supported in your web browser.<br>Please update your web browser or use the latest version of any web browser.';
 			indexPageContent += '</p>';
-			indexPageContent += '</noscript>';
-	
+			indexPageContent += '<script>const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()</script>';
+			
 			// load script.
 			indexPageContent += '<script src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
 			indexPageContent += '</body>';
