@@ -3838,7 +3838,8 @@ global.INFO = OBJECT({
 
 	init : (inner, self) => {
 
-		let isTouchDevice = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
+		let isTouchMode = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
+		let isTouching;
 
 		let getLang = self.getLang = () => {
 
@@ -3868,17 +3869,41 @@ global.INFO = OBJECT({
 			location.reload();
 		};
 
-		let checkIsTouchDevice = self.checkIsTouchDevice = () => {
-			return isTouchDevice;
+		let checkIsTouchMode = self.checkIsTouchMode = () => {
+			return isTouchMode;
 		};
 
-		let getBrowserInfo = self.getBrowserInfo = () => {
+		let getOSName = self.getOSName = () => {
 			// using bowser. (https://github.com/ded/bowser)
-			return {
-				name : bowser.name,
-				version : REAL(bowser.version)
-			};
+			return bowser.osname;
 		};
+
+		let getBrowserName = self.getBrowserName = () => {
+			// using bowser. (https://github.com/ded/bowser)
+			return bowser.name;
+		};
+
+		let getBrowserVersion = self.getBrowserVersion = () => {
+			// using bowser. (https://github.com/ded/bowser)
+			return REAL(bowser.version);
+		};
+		
+		EVENT_LOW('mousemove', () => {
+			if (isTouching !== true) {
+				isTouchMode = false;
+			}
+		});
+		
+		EVENT_LOW('touchstart', () => {
+			isTouchMode = true;
+			isTouching = true;
+		});
+		
+		EVENT_LOW('touchend', () => {
+			DELAY(() => {
+				isTouching = false;
+			});
+		});
 	}
 });
 
@@ -7866,7 +7891,7 @@ global.VIDEO = CLASS({
       , linux = !android && !sailfish && !tizen && !webos && /linux/i.test(ua)
       , edgeVersion = getFirstMatch(/edge\/(\d+(\.\d+)?)/i)
       , versionIdentifier = getFirstMatch(/version\/(\d+(\.\d+)?)/i)
-      , tablet = /tablet/i.test(ua)
+      , tablet = /tablet/i.test(ua) && !/tablet pc/i.test(ua)
       , mobile = !tablet && /[^-]mobi/i.test(ua)
       , xbox = /xbox/i.test(ua)
       , result
@@ -7878,7 +7903,7 @@ global.VIDEO = CLASS({
       , opera: t
       , version: versionIdentifier || getFirstMatch(/(?:opera|opr|opios)[\s\/](\d+(\.\d+)?)/i)
       }
-    } else if (/opr|opios/i.test(ua)) {
+    } else if (/opr\/|opios/i.test(ua)) {
       // a new Opera
       result = {
         name: 'Opera'
@@ -7952,6 +7977,7 @@ global.VIDEO = CLASS({
     else if (windowsphone) {
       result = {
         name: 'Windows Phone'
+      , osname: 'Windows Phone'
       , windowsphone: t
       }
       if (edgeVersion) {
@@ -7972,6 +7998,7 @@ global.VIDEO = CLASS({
     } else if (chromeos) {
       result = {
         name: 'Chrome'
+      , osname: 'Chrome OS'
       , chromeos: t
       , chromeBook: t
       , chrome: t
@@ -7994,6 +8021,7 @@ global.VIDEO = CLASS({
     else if (sailfish) {
       result = {
         name: 'Sailfish'
+      , osname: 'Sailfish OS'
       , sailfish: t
       , version: getFirstMatch(/sailfish\s?browser\/(\d+(\.\d+)?)/i)
       }
@@ -8013,6 +8041,7 @@ global.VIDEO = CLASS({
       }
       if (/\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(ua)) {
         result.firefoxos = t
+        result.osname = 'Firefox OS'
       }
     }
     else if (silk) {
@@ -8039,6 +8068,7 @@ global.VIDEO = CLASS({
     else if (/blackberry|\bbb\d+/i.test(ua) || /rim\stablet/i.test(ua)) {
       result = {
         name: 'BlackBerry'
+      , osname: 'BlackBerry OS'
       , blackberry: t
       , version: versionIdentifier || getFirstMatch(/blackberry[\d]+\/(\d+(\.\d+)?)/i)
       }
@@ -8046,6 +8076,7 @@ global.VIDEO = CLASS({
     else if (webos) {
       result = {
         name: 'WebOS'
+      , osname: 'WebOS'
       , webos: t
       , version: versionIdentifier || getFirstMatch(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)
       };
@@ -8054,6 +8085,7 @@ global.VIDEO = CLASS({
     else if (/bada/i.test(ua)) {
       result = {
         name: 'Bada'
+      , osname: 'Bada'
       , bada: t
       , version: getFirstMatch(/dolfin\/(\d+(\.\d+)?)/i)
       };
@@ -8061,6 +8093,7 @@ global.VIDEO = CLASS({
     else if (tizen) {
       result = {
         name: 'Tizen'
+      , osname: 'Tizen'
       , tizen: t
       , version: getFirstMatch(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i) || versionIdentifier
       };
@@ -8145,23 +8178,50 @@ global.VIDEO = CLASS({
     // set OS flags for platforms that have multiple browsers
     if (!result.windowsphone && !result.msedge && (android || result.silk)) {
       result.android = t
+      result.osname = 'Android'
     } else if (!result.windowsphone && !result.msedge && iosdevice) {
       result[iosdevice] = t
       result.ios = t
+      result.osname = 'iOS'
     } else if (mac) {
       result.mac = t
+      result.osname = 'macOS'
     } else if (xbox) {
       result.xbox = t
+      result.osname = 'Xbox'
     } else if (windows) {
       result.windows = t
+      result.osname = 'Windows'
     } else if (linux) {
       result.linux = t
+      result.osname = 'Linux'
+    }
+
+    function getWindowsVersion (s) {
+      switch (s) {
+        case 'NT': return 'NT'
+        case 'XP': return 'XP'
+        case 'NT 5.0': return '2000'
+        case 'NT 5.1': return 'XP'
+        case 'NT 5.2': return '2003'
+        case 'NT 6.0': return 'Vista'
+        case 'NT 6.1': return '7'
+        case 'NT 6.2': return '8'
+        case 'NT 6.3': return '8.1'
+        case 'NT 10.0': return '10'
+        default: return undefined
+      }
     }
 
     // OS version extraction
     var osVersion = '';
-    if (result.windowsphone) {
+    if (result.windows) {
+      osVersion = getWindowsVersion(getFirstMatch(/Windows ((NT|XP)( \d\d?.\d)?)/i))
+    } else if (result.windowsphone) {
       osVersion = getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i);
+    } else if (result.mac) {
+      osVersion = getFirstMatch(/Mac OS X (\d+([_\.\s]\d+)*)/i);
+      osVersion = osVersion.replace(/[_\s]/g, '.');
     } else if (iosdevice) {
       osVersion = getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i);
       osVersion = osVersion.replace(/[_\s]/g, '.');
@@ -8181,7 +8241,7 @@ global.VIDEO = CLASS({
     }
 
     // device type extraction
-    var osMajorVersion = osVersion.split('.')[0];
+    var osMajorVersion = !result.windows && osVersion.split('.')[0];
     if (
          tablet
       || nexusTablet
@@ -8400,6 +8460,7 @@ global.VIDEO = CLASS({
 
   return bowser
 });
+
 /*!
 audiocontext-polyfill.js v0.1.1
 (c) 2013 - 2014 Shinnosuke Watanabe

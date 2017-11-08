@@ -5,7 +5,8 @@ global.INFO = OBJECT({
 
 	init : (inner, self) => {
 
-		let isTouchDevice = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
+		let isTouchMode = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
+		let isTouching;
 
 		let getLang = self.getLang = () => {
 
@@ -35,16 +36,40 @@ global.INFO = OBJECT({
 			location.reload();
 		};
 
-		let checkIsTouchDevice = self.checkIsTouchDevice = () => {
-			return isTouchDevice;
+		let checkIsTouchMode = self.checkIsTouchMode = () => {
+			return isTouchMode;
 		};
 
-		let getBrowserInfo = self.getBrowserInfo = () => {
+		let getOSName = self.getOSName = () => {
 			// using bowser. (https://github.com/ded/bowser)
-			return {
-				name : bowser.name,
-				version : REAL(bowser.version)
-			};
+			return bowser.osname;
 		};
+
+		let getBrowserName = self.getBrowserName = () => {
+			// using bowser. (https://github.com/ded/bowser)
+			return bowser.name;
+		};
+
+		let getBrowserVersion = self.getBrowserVersion = () => {
+			// using bowser. (https://github.com/ded/bowser)
+			return REAL(bowser.version);
+		};
+		
+		EVENT_LOW('mousemove', () => {
+			if (isTouching !== true) {
+				isTouchMode = false;
+			}
+		});
+		
+		EVENT_LOW('touchstart', () => {
+			isTouchMode = true;
+			isTouching = true;
+		});
+		
+		EVENT_LOW('touchend', () => {
+			DELAY(() => {
+				isTouching = false;
+			});
+		});
 	}
 });

@@ -59,11 +59,25 @@ INFO.changeLang('ko');
 INFO.checkIsTouchDevice(); // 스마트폰에서는 true, PC에서는 false
 ```
 
-### `INFO.getBrowserInfo()`
-웹 브라우저의 정보를 반환합니다.
+### `INFO.getOSName()`
+운영체제의 이름을 반환합니다.
 
 ```javascript
-INFO.getBrowserInfo(); // ex) {name : "Chrome", version : 53}
+INFO.getOSName(); // ex) Windows
+```
+
+### `INFO.getBrowserName()`
+웹 브라우저의 이름을 반환합니다.
+
+```javascript
+INFO.getBrowserName(); // ex) Chrome
+```
+
+### `INFO.getBrowserVersion()`
+웹 브라우저의 버전을 반환합니다.
+
+```javascript
+INFO.getBrowserVersion(); // ex) 53
 ```
 
 ## 창 관련 기능
