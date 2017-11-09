@@ -11,6 +11,7 @@ global.SOUND_ONCE = CLASS({
 		//REQUIRED: params
 		//OPTIONAL: params.ogg
 		//OPTIONAL: params.mp3
+		//OPTIONAL: params.wav
 		//OPTIONAL: params.isLoop
 		//OPTIONAL: params.gain
 

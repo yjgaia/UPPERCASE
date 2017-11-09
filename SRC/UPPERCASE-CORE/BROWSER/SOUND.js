@@ -11,11 +11,13 @@ global.SOUND = CLASS((cls) => {
 			//REQUIRED: params
 			//OPTIONAL: params.ogg
 			//OPTIONAL: params.mp3
+			//OPTIONAL: params.wav
 			//OPTIONAL: params.isLoop
 			//OPTIONAL: params.gain
 
 			let ogg = params.ogg;
 			let mp3 = params.mp3;
+			let wav = params.wav;
 			let isLoop = params.isLoop;
 			let gain = params.gain;
 			
@@ -37,8 +39,13 @@ global.SOUND = CLASS((cls) => {
 				audioContext = new AudioContext();
 			}
 			
+			let src = new Audio().canPlayType('audio/ogg') !== '' ? ogg : mp3;
+			if (src === undefined) {
+				src = wav;
+			}
+			
 			let request = new XMLHttpRequest();
-			request.open('GET', new Audio().canPlayType('audio/ogg') !== '' ? ogg : mp3, true);
+			request.open('GET', src, true);
 			request.responseType = 'arraybuffer';
 
 			request.onload = () => {
