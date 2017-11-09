@@ -104,24 +104,26 @@ cordova plugin list
 cordova plugin add {{플러그인의 이름}}
 ```
 
-### 배포하기
-우선은 배포를 위한 키 저장소를 만듭니다. 이 저장소는 여러 앱에서 사용될 수 있습니다.
+### 안드로이드 버전 배포하기
+배포를 위한 키 저장소를 만듭니다.
 ```
 keytool -genkey -v -keystore {{키 저장소 파일명}} -alias {{alias 이름}} -keyalg {{암호화 방식}} -keysize {{key 크기}} -validity {{유효기간 (일)}}
 ```
 
 예시)
 ```
-keytool -genkey -v -keystore sample-keystore.keystore -alias sample-01 -keyalg RSA -keysize 2048 -validity 18250
+keytool -genkey -v -keystore sample.keystore -alias sample -keyalg RSA -keysize 2048 -validity 18250
 ```
 
 그리고 아래 명령어들을 순서대로 입력하여 최종 배포판 apk 파일을 만듭니다. 그 전에, `jdk`에서 제공하는 `jarsigner`와 `Android build-tools`가 제공하는 `zipalign`를 사용할 수 있도록 `PATH`가 등록되어 있는지 확인합니다.
 ```
-cordova\build --release
-mv bin\{{프로젝트 이름}}-release-unsigned.apk {{프로젝트 이름}}-release-unsigned.apk
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore {{keystore 경로}} {{프로젝트 이름}}-release-unsigned.apk {{alias 이름}}
-zipalign -v 4 {{프로젝트 이름}}-release-unsigned.apk {{프로젝트 이름}}.apk
+cordova build android --release
+move platforms\android\build\outputs\apk\android-release-unsigned.apk android-release-unsigned.apk
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore {{keystore 경로}} android-release-unsigned.apk {{alias 이름}}
+zipalign -v 4 android-release-unsigned.apk android-release-signed.apk
 ```
+
+`android-release-signed.apk`을 Play Store에 업로드 합니다.
 
 ## BROWSER-PACK
 
