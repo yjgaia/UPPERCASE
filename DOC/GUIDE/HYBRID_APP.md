@@ -28,6 +28,8 @@ electron-packager . SampleApp --platform win32 --arch x64 --out dist/ --electron
 
 이후 node_modules 폴더를 dist/SampleApp-win32-x64/resources/app 폴더에 복사해줍니다.
 
+Cordova 내용 빼기
+
 ## NW.js를 이용한 데스크톱 애플리케이션 개발
 https://nwjs.io/
 
