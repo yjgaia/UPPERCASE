@@ -8759,11 +8759,7 @@ global.REQUEST = METHOD({
 			headers : new Headers(headers === undefined ? {} : headers)
 		})).then((response) => {
 			return response.text();
-		}).then((responseText) => {
-			if (responseListener !== undefined) {
-				responseListener(responseText);
-			}
-		}).catch((error) => {
+		}, (error) => {
 			
 			let errorMsg = error.toString();
 
@@ -8771,6 +8767,10 @@ global.REQUEST = METHOD({
 				errorListener(errorMsg);
 			} else {
 				SHOW_ERROR('REQUEST', errorMsg, params);
+			}
+		}).then((responseText) => {
+			if (responseListener !== undefined) {
+				responseListener(responseText);
 			}
 		});
 	}
