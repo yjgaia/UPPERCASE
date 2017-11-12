@@ -8757,7 +8757,8 @@ global.REQUEST = METHOD({
 			body : paramStr,
 			credentials : host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : new Headers(headers === undefined ? {} : headers)
-		})).then((response) => {
+		}))
+		.then((response) => {
 			return response.text();
 		}, (error) => {
 			
@@ -8768,8 +8769,11 @@ global.REQUEST = METHOD({
 			} else {
 				SHOW_ERROR('REQUEST', errorMsg, params);
 			}
-		}).then((responseText) => {
-			if (responseListener !== undefined) {
+			
+			responseListener = undefined;
+		})
+		.then((responseText) => {
+			if (responseText !== undefined && responseListener !== undefined) {
 				responseListener(responseText);
 			}
 		});
