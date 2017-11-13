@@ -33,7 +33,11 @@ global.EVENT_LOW = CLASS({
 		
 		if (lowNode !== undefined) {
 			el = lowNode.getWrapperEl();
-		} else if (global['on' + name] === undefined) {
+		} else if (
+			global['on' + name] === undefined &&
+			name !== 'gamepadconnected' &&
+			name !== 'gamepaddisconnected'
+		) {
 			el = document;
 		} else {
 			el = global;

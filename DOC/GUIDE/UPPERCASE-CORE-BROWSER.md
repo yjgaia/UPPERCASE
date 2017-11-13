@@ -958,6 +958,8 @@ EVENT({
 - `e.getPositions()` 멀티 터치 기기에서 터치 관련 이벤트(`'tab'`, `'touchstart'`, `'touchend'` 등)가 발생한 경우 모든 터치 위치를 가져옵니다.
 - `e.getKey()` 키보드 관련 이벤트(`'keydown'`, `'keyup'` 등)가 발생한 경우 입력된 키를 가져옵니다.
 - `e.getWheelDelta()` 마우스 휠 이벤트(`'wheel'`)가 발생한 경우 얼마나 휠이 돌아갔는지에 대한 값을 가져옵니다.
+- `e.getFileDataSet()` 파일을 끌어다 놓는 이벤트(`'drop'`)가 발생한 경우 파일들의 데이터를 가져옵니다.
+- `e.getGamePadData()` 게임 패드가 연결되거나(`'gamepadconnected'`), 연결이 끊어지는 이벤트(`'gamepaddisconnected'`)가 발생한 경우 게임 패드의 데이터를 가져옵니다.
 
 ### `EVENT_ONCE(params, eventHandler)`
 이벤트가 한번 발생하면 자동으로 제거되는 `EVENT_ONCE` 클래스

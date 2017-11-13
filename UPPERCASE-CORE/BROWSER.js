@@ -5442,8 +5442,12 @@ global.E = CLASS({
 			return e.deltaY;
 		};
 		
-		let getFiles = self.getFiles = () => {
+		let getFileDataSet = self.getFileDataSet = () => {
 			return e.dataTransfer === undefined ? undefined : e.dataTransfer.files;
+		};
+		
+		let getGamePadData = self.getGamePadData = () => {
+			return e.gamepad;
 		};
 	}
 });
@@ -5967,7 +5971,11 @@ global.EVENT_LOW = CLASS({
 		
 		if (lowNode !== undefined) {
 			el = lowNode.getWrapperEl();
-		} else if (global['on' + name] === undefined) {
+		} else if (
+			global['on' + name] === undefined &&
+			name !== 'gamepadconnected' &&
+			name !== 'gamepaddisconnected'
+		) {
 			el = document;
 		} else {
 			el = global;
