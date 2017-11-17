@@ -1,5 +1,5 @@
 # UPPERCASE-CORE-NODE
-UPPERCASE-CORE-NODE는 Node.js 환경에서 사용할 수 있는 모듈입니다. [UPPERCASE-COMMON-CORE](UPPERCASE-COMMON-CORE.md)를 포함하고 있습니다.
+UPPERCASE-CORE-NODE는 Node.js 환경에서 사용할 수 있는 모듈입니다. [UPPERCASE-CORE-COMMON](UPPERCASE-CORE-COMMON.md)를 포함하고 있습니다.
 * [API 문서](../../API/UPPERCASE-CORE/NODE/README.md)
 
 ## 목차
