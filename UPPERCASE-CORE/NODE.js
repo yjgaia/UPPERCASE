@@ -7700,8 +7700,9 @@ global.REQUEST = METHOD((m) => {
 						});
 						
 						httpResponse.destroy();
-						
-					} else {
+					}
+					
+					else if (httpResponse.statusCode === 200) {
 						
 						let content = '';
 
@@ -7714,6 +7715,16 @@ global.REQUEST = METHOD((m) => {
 								responseListener(content, httpResponse.headers);
 							}
 						});
+					}
+					
+					else {
+						let errorMsg = 'HTTP RESPONSE STATUS CODE: ' + httpResponse.statusCode;
+		
+						if (errorListener !== undefined) {
+							errorListener(errorMsg);
+						} else {
+							SHOW_ERROR('REQUEST', errorMsg, params);
+						}
 					}
 				});
 			}
@@ -7729,18 +7740,31 @@ global.REQUEST = METHOD((m) => {
 					method : method,
 					headers : headers
 				}, (httpResponse) => {
-
-					let content = '';
-
-					httpResponse.setEncoding('utf-8');
-					httpResponse.on('data', (str) => {
-						content += str;
-					});
-					httpResponse.on('end', () => {
-						if (responseListener !== undefined) {
-							responseListener(content, httpResponse.headers);
+					
+					if (httpResponse.statusCode === 200) {
+						
+						let content = '';
+	
+						httpResponse.setEncoding('utf-8');
+						httpResponse.on('data', (str) => {
+							content += str;
+						});
+						httpResponse.on('end', () => {
+							if (responseListener !== undefined) {
+								responseListener(content, httpResponse.headers);
+							}
+						});
+					}
+					
+					else {
+						let errorMsg = 'HTTP RESPONSE STATUS CODE: ' + httpResponse.statusCode;
+		
+						if (errorListener !== undefined) {
+							errorListener(errorMsg);
+						} else {
+							SHOW_ERROR('REQUEST', errorMsg, params);
 						}
-					});
+					}
 				});
 
 				if (method !== 'DELETE') {

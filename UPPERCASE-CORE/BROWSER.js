@@ -8767,7 +8767,17 @@ global.REQUEST = METHOD({
 			headers : new Headers(headers === undefined ? {} : headers)
 		}))
 		.then((response) => {
-			return response.text();
+			if (response.status === 200) {
+				return response.text();
+			} else {
+				let errorMsg = 'HTTP RESPONSE STATUS CODE: ' + response.status;
+
+				if (errorListener !== undefined) {
+					errorListener(errorMsg);
+				} else {
+					SHOW_ERROR('REQUEST', errorMsg, params);
+				}
+			}
 		}, (error) => {
 			
 			let errorMsg = error.toString();
