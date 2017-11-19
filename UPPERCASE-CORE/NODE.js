@@ -4276,7 +4276,12 @@ global.SHARED_STORE = CLASS((cls) => {
 		}
 
 		if (removeAfterSeconds !== undefined) {
-			removeDelays[id] = DELAY(removeAfterSeconds, remove);
+			removeDelays[id] = DELAY(removeAfterSeconds, () => {
+				remove({
+					storeName : storeName,
+					id : id
+				});
+			});
 		}
 		
 		if (callback !== undefined) {
@@ -4422,7 +4427,12 @@ global.SHARED_STORE = CLASS((cls) => {
 			}
 	
 			if (removeAfterSeconds !== undefined) {
-				removeDelays[id] = DELAY(removeAfterSeconds, remove);
+				removeDelays[id] = DELAY(removeAfterSeconds, () => {
+					remove({
+						storeName : storeName,
+						id : id
+					});
+				});
 			}
 		}
 		
