@@ -17,9 +17,11 @@ TEST('READ_FILE', (check) => {
 			check(buffer.toString() === 'this is test file.');
 		}
 	});
-
-	check(buffer.toString() === 'this is test file.');
-
+	
+	if (buffer !== undefined) {
+		check(buffer.toString() === 'this is test file.');
+	}
+	
 	READ_FILE({
 		path : 'UPPERCASE-CORE/test.txt',
 		isSync : true

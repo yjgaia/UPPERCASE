@@ -57,16 +57,16 @@ RUN(() => {
 	require('./COMMON/UTIL/PARALLEL.js');*/
 	
 	// 기타 기능
-	require('./COMMON/UTIL/OVERRIDE.js');
+	/*require('./COMMON/UTIL/OVERRIDE.js');
 	require('./COMMON/UTIL/RANDOM_STR.js');
 	require('./COMMON/UTIL/SHA256.js');
-	require('./COMMON/UTIL/URI_MATCHER.js');
+	require('./COMMON/UTIL/URI_MATCHER.js');*/
 	
 	// NODE 테스트
 	// 파일 처리 기능
-	/*require('./NODE/FILE/WRITE_FILE.js');
+	//require('./NODE/FILE/WRITE_FILE.js');
 	require('./NODE/FILE/READ_FILE.js');
-	require('./NODE/FILE/GET_FILE_INFO.js');
+	/*require('./NODE/FILE/GET_FILE_INFO.js');
 	require('./NODE/FILE/COPY_FILE.js');
 	require('./NODE/FILE/MOVE_FILE.js');*/
 	//require('./NODE/FILE/CHECK_FILE_EXISTS.js');

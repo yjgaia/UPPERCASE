@@ -941,6 +941,10 @@ global.BOOT = (params) => {
 											
 											READ_FILE(rootPath + '/BOX/' + boxName + '/VERSION', {
 												
+												error : () => {
+													next(undefined, boxData.version);
+												},
+												
 												notExists : () => {
 													next(undefined, boxData.version);
 												},
