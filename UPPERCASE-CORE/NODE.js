@@ -56,20 +56,54 @@ global.METHOD = (define) => {
 /*
  * BROWSER, NODE 에서 확장해서 사용해야 합니다.
  */
-global.MSG = METHOD({
-
-	run : (msgs) => {
-		//REQUIRED: msgs
-
-		let msg;
-		
-		// get first msg.
-		EACH(msgs, (_msg) => {
-			msg = _msg;
-			return false;
+global.MSG = METHOD((m) => {
+	
+	let msgData = {};
+	
+	let addData = m.addData = (data) => {
+		EXTEND({
+			origin : msgData,
+			extend : data
 		});
-
-		return msg;
+	};
+	
+	return {
+		
+		run : (keyOrMsgs) => {
+			//REQUIRED: keyOrMsgs
+			
+			let key;
+			let msgs;
+			
+			if (CHECK_IS_DATA(keyOrMsgs) !== true) {
+				key = keyOrMsgs;
+			} else {
+				msgs = keyOrMsgs;
+			}
+			
+			if (key !== undefined) {
+				msgs = msgData[key];
+			}
+			
+			let msg;
+			
+			// get first msg.
+			EACH(msgs, (_msg) => {
+				msg = _msg;
+				return false;
+			});
+			
+			if (msg !== undefined && CHECK_IS_DATA(msg) === true) {
+				
+				// get first msg.
+				EACH(msg, (_msg) => {
+					msg = _msg;
+					return false;
+				});
+			}
+	
+			return msg;
+		}
 	}
 });
 
@@ -3384,24 +3418,72 @@ OVERRIDE(MSG, (origin) => {
 		
 		const OSLocale = require('os-locale');
 		
-		let lang;
+		let osLang;
 		
-		OSLocale().then(locale => {
-			lang = locale.toLowerCase();
+		OSLocale().then((_osLang) => {
+			osLang = _osLang;
 		});
+		
+		let msgData = {};
+		
+		let addData = m.addData = (data) => {
+			EXTEND({
+				origin : msgData,
+				extend : data
+			});
+		};
 		
 		return {
 		
-			run : (msgs) => {
-				//REQUIRED: msgs
+			run : (keyOrMsgs) => {
+				//REQUIRED: keyOrMsgs
+				
+				let key;
+				let msgs;
+				
+				if (CHECK_IS_DATA(keyOrMsgs) !== true) {
+					key = keyOrMsgs;
+				} else {
+					msgs = keyOrMsgs;
+				}
+				
+				if (key !== undefined) {
+					msgs = msgData[key];
+				}
 		
 				let msg;
-		
-				if (lang !== undefined) {
-					msg = msgs[lang];
+				
+				if (osLang !== undefined) {
+					msg = msgs[osLang];
 					
 					if (msg === undefined) {
-						msg = msgs[lang.substring(0, 2)];
+						
+						let lang;
+						let locale;
+						
+						if (osLang.length == 2) {
+							lang = osLang.toLowerCase();
+						} else {
+							lang = osLang.substring(0, 2).toLowerCase();
+							locale = osLang.substring(3).toLowerCase();
+						}
+						
+						msg = msgs[lang];
+						
+						if (msg !== undefined) {
+							
+							if (CHECK_IS_DATA(msg) === true) {
+								if (msg[locale] !== undefined) {
+									msg = msg[locale];
+								} else {
+									// get first msg.
+									EACH(msg, (_msg) => {
+										msg = _msg;
+										return false;
+									});
+								}
+							}
+						}
 					}
 				}
 				
@@ -3409,6 +3491,15 @@ OVERRIDE(MSG, (origin) => {
 					
 					// get first msg.
 					EACH(msgs, (_msg) => {
+						msg = _msg;
+						return false;
+					});
+				}
+				
+				if (msg !== undefined && CHECK_IS_DATA(msg) === true) {
+					
+					// get first msg.
+					EACH(msg, (_msg) => {
 						msg = _msg;
 						return false;
 					});

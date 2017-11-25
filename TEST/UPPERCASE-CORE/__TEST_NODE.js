@@ -116,8 +116,8 @@ RUN(() => {
 	
 	/*// 코드 압축 기능
 	//require('./NODE/MINIFY/MINIFY_JS.js');
-	//require('./NODE/MINIFY/MINIFY_CSS.js');
+	//require('./NODE/MINIFY/MINIFY_CSS.js');*/
 	
 	// MSG
-	//require('./NODE/MSG.js');*/
+	require('./NODE/MSG.js');
 });

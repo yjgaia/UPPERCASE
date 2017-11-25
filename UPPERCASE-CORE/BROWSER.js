@@ -59,20 +59,54 @@ global.METHOD = (define) => {
 /*
  * BROWSER, NODE 에서 확장해서 사용해야 합니다.
  */
-global.MSG = METHOD({
-
-	run : (msgs) => {
-		//REQUIRED: msgs
-
-		let msg;
-		
-		// get first msg.
-		EACH(msgs, (_msg) => {
-			msg = _msg;
-			return false;
+global.MSG = METHOD((m) => {
+	
+	let msgData = {};
+	
+	let addData = m.addData = (data) => {
+		EXTEND({
+			origin : msgData,
+			extend : data
 		});
-
-		return msg;
+	};
+	
+	return {
+		
+		run : (keyOrMsgs) => {
+			//REQUIRED: keyOrMsgs
+			
+			let key;
+			let msgs;
+			
+			if (CHECK_IS_DATA(keyOrMsgs) !== true) {
+				key = keyOrMsgs;
+			} else {
+				msgs = keyOrMsgs;
+			}
+			
+			if (key !== undefined) {
+				msgs = msgData[key];
+			}
+			
+			let msg;
+			
+			// get first msg.
+			EACH(msgs, (_msg) => {
+				msg = _msg;
+				return false;
+			});
+			
+			if (msg !== undefined && CHECK_IS_DATA(msg) === true) {
+				
+				// get first msg.
+				EACH(msg, (_msg) => {
+					msg = _msg;
+					return false;
+				});
+			}
+	
+			return msg;
+		}
 	}
 });
 
@@ -3845,7 +3879,7 @@ global.INFO = OBJECT({
 			let lang = STORE('__INFO').get('lang');
 
 			if (lang === undefined) {
-				lang = navigator.language.toLowerCase();
+				lang = navigator.language;
 			}
 
 			return lang;
@@ -4079,16 +4113,66 @@ OVERRIDE(LOOP, (origin) => {
  */
 OVERRIDE(MSG, (origin) => {
 	
-	global.MSG = METHOD({
-	
-		run : (msgs) => {
-			//REQUIRED: msgs
-	
-			let msg = msgs[INFO.getLang()];
-	
-			if (msg === undefined) {
+	global.MSG = METHOD((m) => {
+		
+		let msgData = {};
+		
+		let addData = m.addData = (data) => {
+			EXTEND({
+				origin : msgData,
+				extend : data
+			});
+		};
+		
+		return {
+			
+			run : (keyOrMsgs) => {
+				//REQUIRED: keyOrMsgs
 				
-				msg = msgs[INFO.getLang().substring(0, 2)];
+				let key;
+				let msgs;
+				
+				if (CHECK_IS_DATA(keyOrMsgs) !== true) {
+					key = keyOrMsgs;
+				} else {
+					msgs = keyOrMsgs;
+				}
+				
+				if (key !== undefined) {
+					msgs = msgData[key];
+				}
+				
+				let msg = msgs[INFO.getLang()];
+		
+				if (msg === undefined) {
+					
+					let lang;
+					let locale;
+					
+					if (INFO.getLang().length == 2) {
+						lang = INFO.getLang().toLowerCase();
+					} else {
+						lang = INFO.getLang().substring(0, 2).toLowerCase();
+						locale = INFO.getLang().substring(3).toLowerCase();
+					}
+					
+					msg = msgs[lang];
+					
+					if (msg !== undefined) {
+						
+						if (CHECK_IS_DATA(msg) === true) {
+							if (msg[locale] !== undefined) {
+								msg = msg[locale];
+							} else {
+								// get first msg.
+								EACH(msg, (_msg) => {
+									msg = _msg;
+									return false;
+								});
+							}
+						}
+					}
+				}
 				
 				if (msg === undefined) {
 					
@@ -4098,10 +4182,19 @@ OVERRIDE(MSG, (origin) => {
 						return false;
 					});
 				}
+				
+				if (msg !== undefined && CHECK_IS_DATA(msg) === true) {
+					
+					// get first msg.
+					EACH(msg, (_msg) => {
+						msg = _msg;
+						return false;
+					});
+				}
+		
+				return msg;
 			}
-	
-			return msg;
-		}
+		};
 	});
 });
 

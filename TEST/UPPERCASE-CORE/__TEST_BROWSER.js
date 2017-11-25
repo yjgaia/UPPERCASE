@@ -64,10 +64,10 @@ RUN(() => {
 	require('./COMMON/UTIL/PARALLEL.js');*/
 	
 	// 기타 기능
-	require('./COMMON/UTIL/OVERRIDE.js');
+	/*require('./COMMON/UTIL/OVERRIDE.js');
 	require('./COMMON/UTIL/SHA256.js');
 	require('./COMMON/UTIL/RANDOM_STR.js');
-	require('./COMMON/UTIL/URI_MATCHER.js');
+	require('./COMMON/UTIL/URI_MATCHER.js');*/
 	
 	/*
 	// BROWSER 테스트
@@ -132,12 +132,12 @@ RUN(() => {
 	//require('./BROWSER/CONNECT_TO_WEB_SOCKET_SERVER.js');
 	
 	// STORE
-	require('./BROWSER/STORE.js');
+	require('./BROWSER/STORE.js');*/
 	
 	// MSG
 	require('./BROWSER/MSG.js');
 	
-	// 콘솔 로그 관련 기능
+	/*// 콘솔 로그 관련 기능
 	require('./BROWSER/CONSOLE/SHOW_ERROR.js');
 	require('./BROWSER/CONSOLE/SHOW_WARNING.js');*/
 	
