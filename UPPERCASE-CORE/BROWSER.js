@@ -6183,6 +6183,10 @@ global.A = CLASS({
 				name : 'tap'
 			});
 		};
+		
+		let getHref = self.getHref = () => {
+			return href;
+		};
 	},
 
 	afterInit : (inner, self, params) => {
