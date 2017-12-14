@@ -23,6 +23,8 @@ global.NODE = CLASS({
 		
 		let originDisplay;
 		let data;
+		
+		let isRemoved = false;
 
 		let setWrapperDom = inner.setWrapperDom = (dom) => {
 			//REQUIRED: dom
@@ -418,6 +420,12 @@ global.NODE = CLASS({
 			
 			// free memory.
 			data = undefined;
+			
+			isRemoved = true;
+		};
+		
+		let checkIsRemoved = self.checkIsRemoved = () => {
+			return isRemoved;
 		};
 
 		let on = self.on = (eventName, eventHandler) => {

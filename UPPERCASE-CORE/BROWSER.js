@@ -4617,9 +4617,11 @@ global.ANIMATE = METHOD((m) => {
 			node.addStyle(keyframesFinalStyle);
 	
 			if (animationEndHandler !== undefined && iterationCount === 1) {
-	
+				
 				DELAY(duration, () => {
-					animationEndHandler(node);
+					if (node.checkIsRemoved() !== true) {
+						animationEndHandler(node);
+					}
 				});
 			}
 		}
@@ -4754,6 +4756,8 @@ global.NODE = CLASS({
 		
 		let originDisplay;
 		let data;
+		
+		let isRemoved = false;
 
 		let setWrapperDom = inner.setWrapperDom = (dom) => {
 			//REQUIRED: dom
@@ -5149,6 +5153,12 @@ global.NODE = CLASS({
 			
 			// free memory.
 			data = undefined;
+			
+			isRemoved = true;
+		};
+		
+		let checkIsRemoved = self.checkIsRemoved = () => {
+			return isRemoved;
 		};
 
 		let on = self.on = (eventName, eventHandler) => {

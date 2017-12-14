@@ -244,6 +244,7 @@ div.prepend(H1({
 - `getParent()` 현재 노드의 부모 노드를 반환합니다.
 - `empty()` 현재 노드의 모든 자식 노드들을 지웁니다.
 - `remove()` 현재 노드를 지웁니다.
+- `checkIsRemoved()` 현재 노드가 지워졌는지 확인합니다.
 
 ### 이벤트 관련
 ```javascript

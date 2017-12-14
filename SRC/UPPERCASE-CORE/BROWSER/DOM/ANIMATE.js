@@ -71,9 +71,11 @@ global.ANIMATE = METHOD((m) => {
 			node.addStyle(keyframesFinalStyle);
 	
 			if (animationEndHandler !== undefined && iterationCount === 1) {
-	
+				
 				DELAY(duration, () => {
-					animationEndHandler(node);
+					if (node.checkIsRemoved() !== true) {
+						animationEndHandler(node);
+					}
 				});
 			}
 		}
