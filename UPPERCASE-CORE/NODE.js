@@ -9095,35 +9095,39 @@ global.WEB_SERVER = CLASS((cls) => {
 												let startPosition = INTEGER(positions[0]);
 												let endPosition = positions[1] === undefined || positions[1] === '' ? totalSize - 1 : INTEGER(positions[1]);
 												
-												let stream = FS.createReadStream(rootPath + '/' + uri, {
-													start : startPosition,
-													end : endPosition
-												}).on('open', () => {
+												// "start" option must be <= "end" option
+												if (startPosition <= endPosition) {
 													
-													response(EXTEND({
-														origin : {
-															contentType : getContentTypeFromExtension(Path.extname(uri).substring(1)),
-															totalSize : totalSize,
-															startPosition : startPosition,
-															endPosition : endPosition,
-															stream : stream
-														},
-														extend : overrideResponseInfo
-													}));
-													
-												}).on('error', (error) => {
-													
-													response(EXTEND({
-														origin : {
-															contentType : getContentTypeFromExtension(Path.extname(uri).substring(1)),
-															totalSize : totalSize,
-															startPosition : startPosition,
-															endPosition : endPosition,
-															content : error.toString()
-														},
-														extend : overrideResponseInfo
-													}));
-												});
+													let stream = FS.createReadStream(rootPath + '/' + uri, {
+														start : startPosition,
+														end : endPosition
+													}).on('open', () => {
+														
+														response(EXTEND({
+															origin : {
+																contentType : getContentTypeFromExtension(Path.extname(uri).substring(1)),
+																totalSize : totalSize,
+																startPosition : startPosition,
+																endPosition : endPosition,
+																stream : stream
+															},
+															extend : overrideResponseInfo
+														}));
+														
+													}).on('error', (error) => {
+														
+														response(EXTEND({
+															origin : {
+																contentType : getContentTypeFromExtension(Path.extname(uri).substring(1)),
+																totalSize : totalSize,
+																startPosition : startPosition,
+																endPosition : endPosition,
+																content : error.toString()
+															},
+															extend : overrideResponseInfo
+														}));
+													});
+												}
 											}
 										});
 									}
