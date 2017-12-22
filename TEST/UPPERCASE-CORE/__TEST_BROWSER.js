@@ -63,9 +63,12 @@ RUN(() => {
 	require('./COMMON/UTIL/NEXT.js');
 	require('./COMMON/UTIL/PARALLEL.js');*/
 	
+	// 문자열 암호화 기능
+	require('./COMMON/UTIL/ENCRYPTION/SHA256.js');
+	require('./COMMON/UTIL/ENCRYPTION/SHA512.js');
+	
 	// 기타 기능
 	/*require('./COMMON/UTIL/OVERRIDE.js');
-	require('./COMMON/UTIL/SHA256.js');
 	require('./COMMON/UTIL/RANDOM_STR.js');
 	require('./COMMON/UTIL/URI_MATCHER.js');*/
 	
@@ -135,7 +138,7 @@ RUN(() => {
 	require('./BROWSER/STORE.js');*/
 	
 	// MSG
-	require('./BROWSER/MSG.js');
+	//require('./BROWSER/MSG.js');
 	
 	/*// 콘솔 로그 관련 기능
 	require('./BROWSER/CONSOLE/SHOW_ERROR.js');
