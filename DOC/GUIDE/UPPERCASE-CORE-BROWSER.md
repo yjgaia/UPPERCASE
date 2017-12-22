@@ -577,8 +577,11 @@ let form = FORM({
 			c : '여자'
 		})]
 	}), TEXTAREA({
-		name : 'introduce',
-		placeholder : '소개'
+		name : 'introduce.ko',
+		placeholder : '소개 (한글)'
+	}), TEXTAREA({
+		name : 'introduce.en',
+		placeholder : '소개 (영문)'
 	}), INPUT({
 		type : 'submit',
 		value : '가입 완료'
@@ -589,7 +592,10 @@ form.setData({
 	name : 'YJ Sim',
 	age : 29,
 	sex : 'male',
-	introduce : '안녕하세요.'
+	introduce : {
+		ko : '안녕하세요.',
+		en : 'Hello.'
+	}
 });
 
 form.getData();

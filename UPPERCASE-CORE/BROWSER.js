@@ -6564,7 +6564,27 @@ global.FORM = CLASS({
 					EACH(node.getChildren(), (child) => {
 	
 						if (child.getValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
-							data[child.getName()] = child.getValue();
+							
+							let f2 = (data, name) => {
+								
+								if (name.indexOf('.') !== -1) {
+									
+									let subName = name.substring(name.indexOf('.') + 1);
+									name = name.substring(0, name.indexOf('.'));
+									
+									if (data[name] === undefined) {
+										data[name] = {};
+									}
+									
+									f2(data[name], subName);
+								}
+								
+								else {
+									data[name] = child.getValue();
+								}
+							};
+							
+							f2(data, child.getName());
 						}
 	
 						f(child);
@@ -6590,12 +6610,29 @@ global.FORM = CLASS({
 					//REQUIRED: node
 	
 					EACH(node.getChildren(), (child) => {
-	
-						let value;
-	
+						
 						if (child.setValue !== undefined && child.getName !== undefined && child.getName() !== undefined) {
-							value = data[child.getName()];
-							child.setValue(value === undefined ? '' : value);
+							
+							let f2 = (data, name) => {
+								
+								if (name.indexOf('.') !== -1) {
+									
+									let subName = name.substring(name.indexOf('.') + 1);
+									name = name.substring(0, name.indexOf('.'));
+									
+									if (data[name] === undefined) {
+										data[name] = {};
+									}
+									
+									f2(data[name], subName);
+								}
+								
+								else {
+									child.setValue(data[name] === undefined ? '' : data[name]);
+								}
+							};
+							
+							f2(data, child.getName());
 						}
 	
 						f(child);
