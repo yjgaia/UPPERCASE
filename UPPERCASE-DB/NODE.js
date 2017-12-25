@@ -121,6 +121,11 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 						backupPort + '/' +
 						backupName,
 						
+						{
+							connectTimeoutMS : 600000,
+							socketTimeoutMS : 0
+						},
+						
 						(error, backupDB) => {
 		
 						if (error !== TO_DELETE) {
