@@ -82,7 +82,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 					{
 						poolSize : 16,
 						connectTimeoutMS : 600000,
-						socketTimeoutMS : 0
+						socketTimeoutMS : 6000000
 					},
 					
 					(error, nativeDB) => {
@@ -117,7 +117,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 						
 						{
 							connectTimeoutMS : 600000,
-							socketTimeoutMS : 0
+							socketTimeoutMS : 6000000
 						},
 						
 						(error, backupDB) => {
