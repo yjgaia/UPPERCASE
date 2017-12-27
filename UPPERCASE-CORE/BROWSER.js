@@ -8931,9 +8931,9 @@ global.VIDEO = CLASS({
  */
 
 !function (root, name, definition) {
-  if (typeof module != 'undefined' && module.exports) module.exports = definition()
+  /*if (typeof module != 'undefined' && module.exports) module.exports = definition()
   else if (typeof define == 'function' && define.amd) define(name, definition)
-  else root[name] = definition()
+  else */root[name] = definition()
 }(this, 'bowser', function () {
   /**
     * See useragents.js for examples of navigator.userAgent
