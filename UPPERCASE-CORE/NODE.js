@@ -8028,30 +8028,31 @@ global.REMOVE_FOLDER = METHOD(() => {
 });
 
 /*
- * 파일이 수정되는 것을 확인합니다.
+ * 파일 내용의 변경 사항을 감지합니다.
  */
-global.WATCH_FILE_CHANGE = CLASS(() => {
+global.WATCH_FILE_CHANGE = CLASS((cls) => {
 
 	let FS = require('fs');
 
 	return {
 
-		init : (inner, self, path, callbackOrHandlers) => {
+		init : (inner, self, path, changeListenerOrHandlers) => {
 			//REQUIRED: path	수정을 감지할 파일의 경로
-			//REQUIRED: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.notExists
-			//REQUIRED: callbackOrHandlers.change
+			//REQUIRED: changeListenerOrHandlers
+			//OPTIONAL: changeListenerOrHandlers.notExists
+			//OPTIONAL: changeListenerOrHandlers.error
+			//REQUIRED: changeListenerOrHandlers.change
 			
 			let notExistsHandler;
+			let errorHandler;
 			let changeListener;
-
-			if (callbackOrHandlers !== undefined) {
-				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-					changeListener = callbackOrHandlers;
-				} else {
-					notExistsHandler = callbackOrHandlers.notExists;
-					changeListener = callbackOrHandlers.change;
-				}
+			
+			if (CHECK_IS_DATA(changeListenerOrHandlers) !== true) {
+				changeListener = changeListenerOrHandlers;
+			} else {
+				notExistsHandler = changeListenerOrHandlers.notExists;
+				errorHandler = changeListenerOrHandlers.error;
+				changeListener = changeListenerOrHandlers.change;
 			}
 			
 			let watcher;
@@ -8060,13 +8061,18 @@ global.WATCH_FILE_CHANGE = CLASS(() => {
 
 				if (exists === true) {
 					
-					watcher = FS.watch(path, (eventType, fileName) => {
+					watcher = FS.watch(path, (eventType) => {
 						
-						console.log(eventType);
-						
+						// 파일의 위치가 달라지거나, 삭제된 경우 exit
 						if (eventType === 'rename') {
-							
-							changeListener();
+							exit();
+						}
+						
+						if (eventType === 'change') {
+							READ_FILE(path, {
+								error : errorHandler,
+								success : changeListener
+							});
 						}
 					});
 					
@@ -8085,7 +8091,6 @@ global.WATCH_FILE_CHANGE = CLASS(() => {
 			});
 			
 			let exit = self.exit = () => {
-				
 				if (watcher !== undefined) {
 					watcher.close();
 					watcher = undefined;
