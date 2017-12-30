@@ -372,18 +372,18 @@ FIND_FOLDER_NAMES('SomeFolder', {
 사용 가능한 형태들은 다음과 같습니다.
 * `WATCH_FILE_CHANGE(path, (buffer) => {})`
 * `WATCH_FILE_CHANGE(path, {notExists:, change:})`
-* `WATCH_FILE_CHANGE(path, {notExists:, error:, change:})`
 
 ```javascript
 WATCH_FILE_CHANGE('some.txt', {
 	notExists : () => {
 		console.log('파일이 존재하지 않습니다.');
 	},
-	error : (errorMsg, pathOrParams) => {
-		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
-	},
-	success : (buffer) => {
-		console.log('파일 내용이 변경되었습니다. 변경된 파일의 내용: ' + buffer.toString());
+	success : () => {
+		console.log('파일 내용이 변경되었습니다.');
+		
+		READ_FILE('some.txt', (buffer) => {
+			console.log('변경된 파일의 내용: ' + buffer.toString());
+		});
 	}
 });
 ```

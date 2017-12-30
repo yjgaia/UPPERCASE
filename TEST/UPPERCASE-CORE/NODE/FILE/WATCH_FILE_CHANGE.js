@@ -8,8 +8,12 @@ TEST('WATCH_FILE_CHANGE', (check) => {
 		isSync : true
 	});
 	
-	WATCH_FILE_CHANGE('UPPERCASE-CORE/test.txt', (buffer) => {
-		console.log('파일 내용이 변경되었습니다. 변경된 파일의 내용: ' + buffer.toString());
+	WATCH_FILE_CHANGE('UPPERCASE-CORE/test.txt', () => {
+		console.log('파일 내용이 변경되었습니다.');
+		
+		READ_FILE(path, (buffer) => {
+			console.log('변경된 파일의 내용: ' + buffer.toString());
+		});
 	});
 	
 	DELAY(1, () => {

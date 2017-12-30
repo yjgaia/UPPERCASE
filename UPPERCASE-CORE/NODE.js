@@ -8040,18 +8040,15 @@ global.WATCH_FILE_CHANGE = CLASS((cls) => {
 			//REQUIRED: path	수정을 감지할 파일의 경로
 			//REQUIRED: changeListenerOrHandlers
 			//OPTIONAL: changeListenerOrHandlers.notExists
-			//OPTIONAL: changeListenerOrHandlers.error
 			//REQUIRED: changeListenerOrHandlers.change
 			
 			let notExistsHandler;
-			let errorHandler;
 			let changeListener;
 			
 			if (CHECK_IS_DATA(changeListenerOrHandlers) !== true) {
 				changeListener = changeListenerOrHandlers;
 			} else {
 				notExistsHandler = changeListenerOrHandlers.notExists;
-				errorHandler = changeListenerOrHandlers.error;
 				changeListener = changeListenerOrHandlers.change;
 			}
 			
@@ -8069,10 +8066,7 @@ global.WATCH_FILE_CHANGE = CLASS((cls) => {
 						}
 						
 						if (eventType === 'change') {
-							READ_FILE(path, {
-								error : errorHandler,
-								success : changeListener
-							});
+							changeListener();
 						}
 					});
 					
