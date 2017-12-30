@@ -15,7 +15,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [HTTP 요청 기능](#http-요청-기능)
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
 * [`STORE`](#store)
-* [`MSG({ko:, en:, ...})`](#msg)
+* [`MSG`](#msgko-en--msgkey)
 * [`SOUND`](#sound)
 * [`ADD_FONT`](#add_font)
 
@@ -51,7 +51,7 @@ INFO.getLang(); // 'zh-TW' or 'zh-CN'
 ```
 
 ### `INFO.changeLang(lang)`
-현재 웹 애플리케이션의 언어 설정을 변경합니다. 이는 [`MSG`](#msg)에 영향을 끼칩니다.
+현재 웹 애플리케이션의 언어 설정을 변경합니다. 이는 [`MSG` 함수](#msgko-en--msgkey)에 영향을 끼칩니다.
 
 ```javascript
 INFO.changeLang('ko');
