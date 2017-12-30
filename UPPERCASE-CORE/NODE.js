@@ -8028,6 +8028,74 @@ global.REMOVE_FOLDER = METHOD(() => {
 });
 
 /*
+ * 파일이 수정되는 것을 확인합니다.
+ */
+global.WATCH_FILE_CHANGE = CLASS(() => {
+
+	let FS = require('fs');
+
+	return {
+
+		init : (inner, self, path, callbackOrHandlers) => {
+			//REQUIRED: path	수정을 감지할 파일의 경로
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.notExists
+			//REQUIRED: callbackOrHandlers.change
+			
+			let notExistsHandler;
+			let changeListener;
+
+			if (callbackOrHandlers !== undefined) {
+				if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+					changeListener = callbackOrHandlers;
+				} else {
+					notExistsHandler = callbackOrHandlers.notExists;
+					changeListener = callbackOrHandlers.change;
+				}
+			}
+			
+			let watcher;
+			
+			CHECK_FILE_EXISTS(path, (exists) => {
+
+				if (exists === true) {
+					
+					watcher = FS.watch(path, (eventType, fileName) => {
+						
+						console.log(eventType);
+						
+						if (eventType === 'rename') {
+							
+							changeListener();
+						}
+					});
+					
+				} else {
+
+					if (notExistsHandler !== undefined) {
+						notExistsHandler(path);
+					} else {
+						SHOW_WARNING('WATCH_FILE_CHANGE', MSG({
+							ko : '파일이 존재하지 않습니다.'
+						}), {
+							path : path
+						});
+					}
+				}
+			});
+			
+			let exit = self.exit = () => {
+				
+				if (watcher !== undefined) {
+					watcher.close();
+					watcher = undefined;
+				}
+			};
+		}
+	};
+});
+
+/*
  * 파일을 작성합니다.
  * 
  * 파일이 없으면 파일을 생성하고, 파일이 이미 있으면 내용을 덮어씁니다.

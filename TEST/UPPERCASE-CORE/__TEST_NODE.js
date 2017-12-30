@@ -57,8 +57,8 @@ RUN(() => {
 	require('./COMMON/UTIL/PARALLEL.js');*/
 	
 	// 문자열 암호화 기능
-	require('./COMMON/UTIL/ENCRYPTION/SHA256.js');
-	require('./COMMON/UTIL/ENCRYPTION/SHA512.js');
+	//require('./COMMON/UTIL/ENCRYPTION/SHA256.js');
+	//require('./COMMON/UTIL/ENCRYPTION/SHA512.js');
 	
 	// 기타 기능
 	/*require('./COMMON/UTIL/OVERRIDE.js');
@@ -79,6 +79,7 @@ RUN(() => {
 	require('./NODE/FILE/FIND_FOLDER_NAMES.js');
 	require('./NODE/FILE/REMOVE_FILE.js');
 	require('./NODE/FILE/REMOVE_FOLDER.js');*/
+	require('./NODE/FILE/WATCH_FILE_CHANGE.js');
 	
 	// 이미지 처리 기능
 	/*require('./NODE/IMAGEMAGICK/IMAGEMAGICK_CONVERT.js');
