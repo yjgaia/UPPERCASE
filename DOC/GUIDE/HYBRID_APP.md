@@ -16,14 +16,5 @@ electron 패키지를 설치합니다.
 npm install electron
 ```
 
-electron-packager를 설치합니다.
-```
-npm install -g electron-packager
-```
-
-패키징을 합니다.
-```
-electron-packager . SampleApp --platform win32 --arch x64 --out dist/ --electron-version=1.7.6
-```
-
-이후 node_modules 폴더를 dist/SampleApp-win32-x64/resources/app 폴더에 복사해줍니다.
+### 앱 배포
+resources/app 폴더에 복사합니다.
