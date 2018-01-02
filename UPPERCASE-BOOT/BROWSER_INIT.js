@@ -16,7 +16,6 @@ RUN(() => {
 		}
 	});
 
-	// init objects.
 	INIT_OBJECTS();
 
 	FOR_BOX((box) => {

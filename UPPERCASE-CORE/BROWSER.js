@@ -6780,18 +6780,18 @@ global.EVENT = CLASS((cls) => {
 					name : 'tap'
 				}, (e) => {
 
-					if (lastTapTime === undefined) {
-						lastTapTime = Date.now();
-					} else {
-
-						if (Date.now() - lastTapTime < 600) {
-							eventHandler(e, node);
-						}
-
-						lastTapTime = undefined;
-
+					if (lastTapTime !== undefined && Date.now() - lastTapTime < 600) {
+						
+						eventHandler(e, node);
+						
 						// clear text selections.
 						getSelection().removeAllRanges();
+						
+						lastTapTime = undefined;
+					}
+					
+					else {
+						lastTapTime = Date.now();
 					}
 				});
 			}
