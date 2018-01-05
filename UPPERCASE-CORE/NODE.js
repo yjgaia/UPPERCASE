@@ -4761,7 +4761,7 @@ global.CPU_CLUSTERING = METHOD((m) => {
 					work();
 	
 					console.log('[CPU_CLUSTERING] ' + MSG({
-						ko : '클러스터링 워커가 실행중입니다. (워커 ID:' + thisWorkerId + ')'
+						ko : '클러스터링 워커가 실행중입니다. (PID: ' + process.pid + ' / 워커 ID:' + thisWorkerId + ')'
 					}));
 				}
 			}
@@ -4780,9 +4780,15 @@ global.DISTRIBUTE_PROCESS = METHOD((m) => {
 
 	return {
 
-		run : (complexity, work) => {
+		run : (tag, complexity, work) => {
+			//OPTIONAL: tag
 			//OPTIONAL: complexity
 			//REQUIRED: work
+			
+			if (complexity === undefined) {
+				complexity = tag;
+				tag = undefined;
+			}
 			
 			if (work === undefined) {
 				work = complexity;
@@ -4833,6 +4839,9 @@ global.DISTRIBUTE_PROCESS = METHOD((m) => {
 				
 				// 최종적으로 선택된 CPU에서 작업 수행
 				if (CPU_CLUSTERING.getWorkerId() === selectedWorkerId) {
+					console.log('[DISTRIBUTE_PROCESS] ' + (tag === undefined ? '' : '[' + tag + '] ') + MSG({
+						ko : '프로세스를 분산합니다. (PID: ' + process.pid + ')'
+					}));
 					work();
 				}
 			}

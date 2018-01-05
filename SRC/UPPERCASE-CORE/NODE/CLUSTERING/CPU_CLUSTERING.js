@@ -306,7 +306,7 @@ global.CPU_CLUSTERING = METHOD((m) => {
 					work();
 	
 					console.log('[CPU_CLUSTERING] ' + MSG({
-						ko : '클러스터링 워커가 실행중입니다. (워커 ID:' + thisWorkerId + ')'
+						ko : '클러스터링 워커가 실행중입니다. (PID: ' + process.pid + ' / 워커 ID:' + thisWorkerId + ')'
 					}));
 				}
 			}
