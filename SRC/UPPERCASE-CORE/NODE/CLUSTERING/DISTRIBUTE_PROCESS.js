@@ -18,6 +18,11 @@ global.DISTRIBUTE_PROCESS = METHOD((m) => {
 			let tag;
 			let complexity;
 			
+			if (work === undefined) {
+				work = paramsOrComplexity;
+				paramsOrComplexity = undefined;
+			}
+			
 			if (CHECK_IS_DATA(paramsOrComplexity) !== true) {
 				complexity = paramsOrComplexity;
 			} else {
@@ -25,8 +30,7 @@ global.DISTRIBUTE_PROCESS = METHOD((m) => {
 				complexity = paramsOrComplexity.complexity;
 			}
 			
-			if (work === undefined) {
-				work = complexity;
+			if (complexity === undefined) {
 				complexity = 1;
 			}
 			
