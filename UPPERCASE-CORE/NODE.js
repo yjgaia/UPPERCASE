@@ -4780,14 +4780,20 @@ global.DISTRIBUTE_PROCESS = METHOD((m) => {
 
 	return {
 
-		run : (tag, complexity, work) => {
-			//OPTIONAL: tag
-			//OPTIONAL: complexity
+		run : (paramsOrComplexity, work) => {
+			//OPTIONAL: paramsOrComplexity
+			//OPTIONAL: paramsOrComplexity.tag
+			//OPTIONAL: paramsOrComplexity.complexity
 			//REQUIRED: work
 			
-			if (complexity === undefined) {
-				complexity = tag;
-				tag = undefined;
+			let tag;
+			let complexity;
+			
+			if (CHECK_IS_DATA(paramsOrComplexity) !== true) {
+				complexity = paramsOrComplexity;
+			} else {
+				tag = paramsOrComplexity.tag;
+				complexity = paramsOrComplexity.complexity;
 			}
 			
 			if (work === undefined) {
