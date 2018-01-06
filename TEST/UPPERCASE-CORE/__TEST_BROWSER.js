@@ -64,8 +64,8 @@ RUN(() => {
 	require('./COMMON/UTIL/PARALLEL.js');*/
 	
 	// 문자열 암호화 기능
-	require('./COMMON/UTIL/ENCRYPTION/SHA256.js');
-	require('./COMMON/UTIL/ENCRYPTION/SHA512.js');
+	//require('./COMMON/UTIL/ENCRYPTION/SHA256.js');
+	//require('./COMMON/UTIL/ENCRYPTION/SHA512.js');
 	
 	// 기타 기능
 	/*require('./COMMON/UTIL/OVERRIDE.js');
@@ -145,7 +145,7 @@ RUN(() => {
 	require('./BROWSER/CONSOLE/SHOW_WARNING.js');*/
 	
 	// SOUND
-	//require('./BROWSER/SOUND.js');
+	require('./BROWSER/SOUND.js');
 	
 	//require('./BROWSER/ADD_FONT.js');
 });

@@ -5142,6 +5142,7 @@ OVERRIDE(MSG, (origin) => {
 global.SOUND = CLASS((cls) => {
 
 	let audioContext;
+	let isCanPlayOGG = new Audio().canPlayType('audio/ogg') !== '';
 
 	return {
 
@@ -5177,32 +5178,43 @@ global.SOUND = CLASS((cls) => {
 				audioContext = new AudioContext();
 			}
 			
-			let src = new Audio().canPlayType('audio/ogg') !== '' ? ogg : mp3;
+			let src = isCanPlayOGG === true ? ogg : mp3;
 			if (src === undefined) {
 				src = wav;
 			}
 			
-			let request = new XMLHttpRequest();
-			request.open('GET', src, true);
-			request.responseType = 'arraybuffer';
-
-			request.onload = () => {
-
-				audioContext.decodeAudioData(request.response, (_buffer) => {
-
-					gainNode = audioContext.createGain();
-
-					buffer = _buffer;
-					
-					gainNode.connect(audioContext.destination);
-					gainNode.gain.value = gain;
-
-					if (delayed !== undefined) {
-						delayed();
-					}
-				});
+			let request;
+			
+			let ready = () => {
+				
+				if (request !== undefined) {
+					request.abort();
+				}
+				
+				request = new XMLHttpRequest();
+				request.open('GET', src, true);
+				request.responseType = 'arraybuffer';
+	
+				request.onload = () => {
+	
+					audioContext.decodeAudioData(request.response, (_buffer) => {
+	
+						gainNode = audioContext.createGain();
+	
+						buffer = _buffer;
+						
+						gainNode.connect(audioContext.destination);
+						gainNode.gain.setTargetAtTime(gain, 0, 0.01);
+	
+						if (delayed !== undefined) {
+							delayed();
+						}
+					});
+				};
+				request.send();
 			};
-			request.send();
+			
+			ready();
 
 			let play = self.play = () => {
 
@@ -5217,9 +5229,17 @@ global.SOUND = CLASS((cls) => {
 					source.start(0, pausedAt / 1000);
 					
 					delayed = undefined;
+					
+					if (isLoop !== true) {
+						source.onended = () => {
+							stop();
+						};
+					}
 				};
 
-				if (buffer !== undefined) {
+				if (buffer === undefined) {
+					ready();
+				} else {
 					delayed();
 				}
 
@@ -5230,6 +5250,9 @@ global.SOUND = CLASS((cls) => {
 				
 				if (source !== undefined) {
 					source.stop(0);
+					source.disconnect();
+					source = undefined;
+					
 					pausedAt = Date.now() - startedAt;
 				}
 				
@@ -5240,11 +5263,18 @@ global.SOUND = CLASS((cls) => {
 				
 				if (source !== undefined) {
 					source.stop(0);
-					pausedAt = 0;
-					
+					source.disconnect();
 					source = undefined;
+					
+					pausedAt = 0;
 				}
 				
+				if (gainNode !== undefined) {
+					gainNode.disconnect();
+					gainNode = undefined;
+				}
+				
+				buffer = undefined;
 				delayed = undefined;
 			};
 			
@@ -5252,7 +5282,7 @@ global.SOUND = CLASS((cls) => {
 				gain = _gain;
 				
 				if (gainNode !== undefined) {
-					gainNode.gain.value = gain;
+					gainNode.gain.setTargetAtTime(gain, 0, 0.01);
 				}
 			};
 		}
