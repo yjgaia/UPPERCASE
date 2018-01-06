@@ -23,7 +23,7 @@ global.SOUND = CLASS((cls) => {
 			let gain = params.gain;
 			
 			if (gain === undefined) {
-				gain = 0.5;
+				gain = 0.8;
 			}
 			
 			let buffer;
