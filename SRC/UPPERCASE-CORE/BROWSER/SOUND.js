@@ -66,7 +66,7 @@ global.SOUND = CLASS((cls) => {
 						buffer = _buffer;
 						
 						gainNode.connect(audioContext.destination);
-						gainNode.gain.setTargetAtTime(gain, 0, 0.01);
+						gainNode.gain.setTargetAtTime(gain, 0, 0);
 	
 						if (delayed !== undefined) {
 							delayed();
@@ -144,7 +144,7 @@ global.SOUND = CLASS((cls) => {
 				gain = _gain;
 				
 				if (gainNode !== undefined) {
-					gainNode.gain.setTargetAtTime(gain, 0, 0.01);
+					gainNode.gain.setTargetAtTime(gain, 0, 0);
 				}
 			};
 		}
