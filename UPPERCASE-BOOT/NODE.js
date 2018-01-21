@@ -940,7 +940,7 @@ global.BOOT = (params) => {
 						
 						box = box.trim();
 						
-						if (box !== '' && box.indexOf('/') !== -1) {
+						if (box !== '' && box[0] !== '/' && box.indexOf('/') !== -1) {
 							
 							let username = box.substring(0, box.indexOf('/'));
 							let boxName = box.substring(box.indexOf('/') + 1);

@@ -1,6 +1,6 @@
 {
 	"name": "uppercase-boot",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"dependencies": {
 		"ubm": "latest",
 		"uppercase-model": "latest"
