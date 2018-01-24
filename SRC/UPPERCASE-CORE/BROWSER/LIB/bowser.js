@@ -8,7 +8,7 @@
   /*if (typeof module != 'undefined' && module.exports) module.exports = definition()
   else if (typeof define == 'function' && define.amd) define(name, definition)
   else */root[name] = definition()
-}(this, 'bowser', function () {
+}(global, 'bowser', function () {
   /**
     * See useragents.js for examples of navigator.userAgent
     */
