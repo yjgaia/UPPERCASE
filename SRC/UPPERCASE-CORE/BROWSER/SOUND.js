@@ -141,10 +141,20 @@ global.SOUND = CLASS((cls) => {
 			};
 			
 			let setGain = self.setGain = (_gain) => {
+				//REQUIRED: gain
+				
 				gain = _gain;
 				
 				if (gainNode !== undefined) {
 					gainNode.gain.setTargetAtTime(gain, 0, 0);
+				}
+			};
+			
+			let setPlaybackRate = self.setPlaybackRate = (playbackRate) => {
+				//REQUIRED: playbackRate
+				
+				if (source !== undefined) {
+					source.playbackRate.value = playbackRate;
 				}
 			};
 		}
