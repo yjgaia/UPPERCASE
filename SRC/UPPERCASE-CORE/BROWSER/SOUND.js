@@ -88,7 +88,7 @@ global.SOUND = CLASS((cls) => {
 					source.loop = isLoop;
 					
 					startedAt = Date.now() - pausedAt;
-					source.start(0, pausedAt / 1000);
+					source.start(0, (pausedAt / 1000) % buffer.duration);
 					
 					delayed = undefined;
 					
