@@ -5152,16 +5152,16 @@ global.SOUND = CLASS((cls) => {
 			//OPTIONAL: params.mp3
 			//OPTIONAL: params.wav
 			//OPTIONAL: params.isLoop
-			//OPTIONAL: params.gain
+			//OPTIONAL: params.volume
 
 			let ogg = params.ogg;
 			let mp3 = params.mp3;
 			let wav = params.wav;
 			let isLoop = params.isLoop;
-			let gain = params.gain;
+			let volume = params.volume;
 			
-			if (gain === undefined) {
-				gain = 0.8;
+			if (volume === undefined) {
+				volume = 0.8;
 			}
 			
 			let buffer;
@@ -5204,7 +5204,7 @@ global.SOUND = CLASS((cls) => {
 						buffer = _buffer;
 						
 						gainNode.connect(audioContext.destination);
-						gainNode.gain.setTargetAtTime(gain, 0, 0);
+						gainNode.gain.setTargetAtTime(volume, 0, 0);
 	
 						if (delayed !== undefined) {
 							delayed();
@@ -5278,13 +5278,13 @@ global.SOUND = CLASS((cls) => {
 				delayed = undefined;
 			};
 			
-			let setGain = self.setGain = (_gain) => {
-				//REQUIRED: gain
+			let setVolume = self.setVolume = (_volume) => {
+				//REQUIRED: _volume
 				
-				gain = _gain;
+				volume = _volume;
 				
 				if (gainNode !== undefined) {
-					gainNode.gain.setTargetAtTime(gain, 0, 0);
+					gainNode.gain.setTargetAtTime(volume, 0, 0);
 				}
 			};
 			
@@ -5314,7 +5314,7 @@ global.SOUND_ONCE = CLASS({
 		//OPTIONAL: params.mp3
 		//OPTIONAL: params.wav
 		//OPTIONAL: params.isLoop
-		//OPTIONAL: params.gain
+		//OPTIONAL: params.volume
 
 		self.play();
 	}

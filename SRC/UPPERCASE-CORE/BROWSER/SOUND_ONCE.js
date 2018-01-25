@@ -13,7 +13,7 @@ global.SOUND_ONCE = CLASS({
 		//OPTIONAL: params.mp3
 		//OPTIONAL: params.wav
 		//OPTIONAL: params.isLoop
-		//OPTIONAL: params.gain
+		//OPTIONAL: params.volume
 
 		self.play();
 	}
