@@ -5292,7 +5292,7 @@ global.SOUND = CLASS((cls) => {
 				//REQUIRED: playbackRate
 				
 				if (source !== undefined) {
-					source.playbackRate.value = playbackRate;
+					source.playbackRate.setValueAtTime(playbackRate, 0);
 				}
 			};
 		}
