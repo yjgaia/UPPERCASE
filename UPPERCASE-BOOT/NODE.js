@@ -832,7 +832,7 @@ global.BOOT = (params) => {
 							boxName = uri.substring(0, i);
 
 							if (BOX.getAllBoxes()[boxName] !== undefined) {
-								uri = uri.substring(i + 1);
+								requestInfo.uri = uri = uri.substring(i + 1);
 							} else {
 								boxName = CONFIG.defaultBoxName;
 							}
