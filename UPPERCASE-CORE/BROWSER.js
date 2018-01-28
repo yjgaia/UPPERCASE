@@ -4867,7 +4867,6 @@ OVERRIDE(LOOP, (origin) => {
 	 */
 	global.LOOP = CLASS((cls) => {
 		
-		let beforeTime;
 		let animationInterval;
 		
 		let loopInfos = [];
@@ -4876,11 +4875,10 @@ OVERRIDE(LOOP, (origin) => {
 		let fire = () => {
 			
 			if (animationInterval === undefined) {
+	
+				let beforeTime = performance.now() / 1000;
 				
 				let step;
-	
-				beforeTime = performance.now() / 1000;
-				
 				animationInterval = requestAnimationFrame(step = (now) => {
 					
 					let time = now / 1000;
