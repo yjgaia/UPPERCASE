@@ -9,6 +9,7 @@ UPPERCASE-MODEL은 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8
 
 ## 목차
 * [사용방법](#사용방법)
+* [`NODE_CONFIG`](#node_config)
 * [`Box.MODEL`](#model)
 * [초기 데이터 설정](#초기-데이터-설정)
 * [메소드별 설정](#메소드별-설정)
@@ -35,6 +36,9 @@ require('uppercase-model');
 ```
 
 UPPERCASE-MODEL은 UPPERCASE-ROOM을 기반으로 하기 때문에 룸 서버 설정을 완료한 후에 사용이 가능합니다. 룸 서버 설정에 대한 자세한 내용은 [UPPERCASE-ROOM 문서](UPPERCASE-ROOM.md)를 살펴보시기 바랍니다.
+
+## `NODE_CONFIG`
+* `maxDataCount` [`find` 메소드](#find)를 수행할 때 최대로 가져올 데이터의 개수. 기본값은 `1000` 입니다.
 
 ## `Box.MODEL`
 `Box.MODEL` 클래스

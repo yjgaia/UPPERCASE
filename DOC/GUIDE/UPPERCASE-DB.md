@@ -29,7 +29,7 @@ require('uppercase-db');
 ```
 
 ## `NODE_CONFIG`
-* `maxDataCount` [`find` 메소드]('#find')를 수행할 때 최대로 가져올 데이터의 개수. 기본값은 `1000` 입니다.
+* `maxDataCount` [`find` 메소드](#find)를 수행할 때 최대로 가져올 데이터의 개수. 기본값은 `1000` 입니다.
 
 ## `CONNECT_TO_DB_SERVER`
 MongoDB 서버에 연결합니다.
