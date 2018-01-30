@@ -1,4 +1,8 @@
 # `METHOD` MSG
 
 ## Parameters
-* `REQUIRED` *msgs*
+* `REQUIRED` *keyOrMsgs*
+
+## Static Members
+
+### `addData(data)`

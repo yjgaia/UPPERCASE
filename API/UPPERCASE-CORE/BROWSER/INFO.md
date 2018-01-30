@@ -15,4 +15,8 @@
 
 ### `checkIsTouchDevice()`
 
-### `getBrowserInfo()`
+### `getOSName()`
+
+### `getBrowserName()`
+
+### `getBrowserVersion()`

@@ -4,5 +4,7 @@
 complexity를 입력하지 않으면 기본적으로 1로 인식합니다.
 
 ## Parameters
-* `OPTIONAL` *complexity*
+* `OPTIONAL` *paramsOrComplexity*
+* `OPTIONAL` *paramsOrComplexity.tag*
+* `OPTIONAL` *paramsOrComplexity.complexity*
 * `REQUIRED` *work*

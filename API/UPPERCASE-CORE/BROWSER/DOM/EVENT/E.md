@@ -26,4 +26,6 @@
 
 ### `getWheelDelta()`
 
-### `getFiles()`
+### `getFileDataSet()`
+
+### `getGamePadData()`

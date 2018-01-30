@@ -112,7 +112,6 @@
 * [COMMON/UTIL/PARALLEL.md](COMMON/UTIL/PARALLEL.md) 주어진 비동기 함수들을 병렬로 실행합니다.
 * [COMMON/UTIL/PARSE_STR.md](COMMON/UTIL/PARSE_STR.md) JSON 문자열을 원래 데이터나 배열, 값으로 변환합니다.
 * [COMMON/UTIL/RANDOM_STR.md](COMMON/UTIL/RANDOM_STR.md) 알파벳 대, 소문자와 숫자로 이루어진 임의의 문자열을 생성합니다.
-* [COMMON/UTIL/SHA256.md](COMMON/UTIL/SHA256.md) 비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
 * [COMMON/UTIL/STRINGIFY.md](COMMON/UTIL/STRINGIFY.md) 데이터나 배열, 값을 JSON 문자열로 변환합니다.
 * [COMMON/UTIL/TEST.md](COMMON/UTIL/TEST.md) 테스트용 메소드입니다.  테스트에 성공하거나 실패하면 콘솔에 메시지를 출력합니다.
 * [COMMON/UTIL/URI_MATCHER.md](COMMON/UTIL/URI_MATCHER.md) URI가 주어진 포맷에 맞는지 확인하는 URI_MATCHER 클래스  포맷에 파라미터 구간을 지정할 수 있어 URI로부터 파라미터 값을 가져올 수 있습니다.
@@ -145,6 +144,10 @@
 * [COMMON/UTIL/DELAY/DELAY.md](COMMON/UTIL/DELAY/DELAY.md) 주어진 초가 흐른 뒤에 함수를 실행하는 DELAY 클래스
 * [COMMON/UTIL/DELAY/INTERVAL.md](COMMON/UTIL/DELAY/INTERVAL.md) 주어진 초 마다 함수를 반복해서 실행하는 INTERVAL 클래스
 * [COMMON/UTIL/DELAY/LOOP.md](COMMON/UTIL/DELAY/LOOP.md) 아주 짧은 시간동안 반복해서 실행하는 로직을 작성할때 사용하는 LOOP 클래스
+
+#### [COMMON/UTIL/ENCRYPTION](COMMON/UTIL/ENCRYPTION/README.md)
+* [COMMON/UTIL/ENCRYPTION/SHA256.md](COMMON/UTIL/ENCRYPTION/SHA256.md) 비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
+* [COMMON/UTIL/ENCRYPTION/SHA512.md](COMMON/UTIL/ENCRYPTION/SHA512.md) 비밀번호를 주어진 키를 이용하여 HMAC SHA512 알고리즘으로 암호화 합니다.
 
 #### [COMMON/UTIL/FUNCTION](COMMON/UTIL/FUNCTION/README.md)
 * [COMMON/UTIL/FUNCTION/RAR.md](COMMON/UTIL/FUNCTION/RAR.md) 주어진 함수를 즉시 실행하고, 함수를 반환합니다.  선언과 동시에 실행되어야 하는 함수를 선언할 때 유용합니다.
@@ -192,6 +195,7 @@
 * [NODE/FILE/READ_FILE.md](NODE/FILE/READ_FILE.md) 파일의 내용을 불러옵니다.  내용을 Buffer형으로 불러오기 때문에, 내용을 문자열로 불러오려면 toString 메소드를 이용하시기 바랍니다.
 * [NODE/FILE/REMOVE_FILE.md](NODE/FILE/REMOVE_FILE.md) 파일을 삭제합니다.
 * [NODE/FILE/REMOVE_FOLDER.md](NODE/FILE/REMOVE_FOLDER.md) 폴더를 삭제합니다.  폴더 내의 모든 파일 및 폴더를 삭제하므로, 주의해서 사용해야 합니다.
+* [NODE/FILE/WATCH_FILE_CHANGE.md](NODE/FILE/WATCH_FILE_CHANGE.md) 파일 내용의 변경 사항을 감지합니다.
 * [NODE/FILE/WRITE_FILE.md](NODE/FILE/WRITE_FILE.md) 파일을 작성합니다.  파일이 없으면 파일을 생성하고, 파일이 이미 있으면 내용을 덮어씁니다.
 
 ### [NODE/IMAGEMAGICK](NODE/IMAGEMAGICK/README.md)

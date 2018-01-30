@@ -8,5 +8,6 @@
 * `REQUIRED` *params*
 * `OPTIONAL` *params.ogg*
 * `OPTIONAL` *params.mp3*
+* `OPTIONAL` *params.wav*
 * `OPTIONAL` *params.isLoop*
-* `OPTIONAL` *params.gain*
+* `OPTIONAL` *params.volume*

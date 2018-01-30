@@ -19,3 +19,5 @@ A class
 ### `setHref(href)`
 
 ### `tap()`
+
+### `getHref()`

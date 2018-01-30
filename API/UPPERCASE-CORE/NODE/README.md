@@ -30,6 +30,7 @@
 * [FILE/READ_FILE.md](FILE/READ_FILE.md) 파일의 내용을 불러옵니다.  내용을 Buffer형으로 불러오기 때문에, 내용을 문자열로 불러오려면 toString 메소드를 이용하시기 바랍니다.
 * [FILE/REMOVE_FILE.md](FILE/REMOVE_FILE.md) 파일을 삭제합니다.
 * [FILE/REMOVE_FOLDER.md](FILE/REMOVE_FOLDER.md) 폴더를 삭제합니다.  폴더 내의 모든 파일 및 폴더를 삭제하므로, 주의해서 사용해야 합니다.
+* [FILE/WATCH_FILE_CHANGE.md](FILE/WATCH_FILE_CHANGE.md) 파일 내용의 변경 사항을 감지합니다.
 * [FILE/WRITE_FILE.md](FILE/WRITE_FILE.md) 파일을 작성합니다.  파일이 없으면 파일을 생성하고, 파일이 이미 있으면 내용을 덮어씁니다.
 
 ## [IMAGEMAGICK](IMAGEMAGICK/README.md)
