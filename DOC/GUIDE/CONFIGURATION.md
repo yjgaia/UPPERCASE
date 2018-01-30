@@ -20,7 +20,7 @@
 * `BROWSER` 폴더 및 `COMMON` 폴더에 새 소스코드 파일이 생겼거나 기존 파일이 변경된 경우, 웹 브라우저에서 새로고침을 하면 변경된 파일들이 즉시 반영됩니다. 단, Node.js 환경에서의 `COMMON`이나 `NODE`의 변경사항은 서버 애플리케이션을 재시작해야 반영됩니다.
 
 ### 운영 모드
-운영 모드일 때는 다음과 같은 기능들이 작동합니다.
+운영 모드일 때는 다음과 같은 기능들이 작동됩니다.
 * 웹 브라우저에 JavaScript 파일들을 압축하여 제공합니다.
 * 웹 브라우저에 모든 리소스를 캐싱하여 재접속시 빠르게 로딩합니다.
 
@@ -78,14 +78,14 @@ NODE_CONFIG : {
 * `port` 현재 접속한 URL의 포트 번호
 
 ### 접속 관련 설정
-* `isNotConnectToServer` UPPERCASE 기반 웹 애플리케이션은 페이지를 띄우면 웹소켓을 통해 자동으로 서버에 연결됩니다. 이 설정을 `true`로 지정하면 서버에 자동으로 연결되지 않습니다. 이후 서버에 연결하기 위해서는 [`CONNECT_TO_UPPERCASE_SERVER`](#connect_to_uppercase_server)를 사용하여 연결 부분을 직접 개발해야 합니다. 기본값은 `false`입니다.
+* `isNotConnectToServer` UPPERCASE 기반 웹 애플리케이션은 페이지를 띄우면 웹소켓을 통해 자동으로 서버에 연결됩니다. 이 설정을 `true`로 지정하면 서버에 자동으로 연결되지 않습니다. 이후 서버에 연결하기 위해서는 [`CONNECT_TO_UPPERCASE_SERVER`](UPPERCASE-BOOT.md#connect_to_uppercase_server)를 사용하여 연결 부분을 직접 개발해야 합니다. 기본값은 `false`입니다.
 * `beforeUnloadMessage` `INPUT`이나 `TEXTAREA`에 포커스가 있을 때 페이지를 이동하려 하면 설정한 메시지를 띄웁니다. 이후 확인을 누르면 페이지를 이동하고, 취소를 누르면 이동하지 않습니다.
 * `reconnect` 재접속 함수를 설정합니다. 이 함수는 서버와 연결이 끊어진 이후 서버에 다시 접속하려 할 때 실행됩니다. `false`를 `return`하면 서버에 자동으로 재접속하지 않습니다. 이후 서버에 재접속하기 위해서는 명시적으로 재접속 코드를 작성해야 합니다.
 	```javascript
 	BROWSER_CONFIG : {
 		
 		reconnect : (isVersionSame, reconnect) => {
-			// 서버의 버전(CONFIG.version)이 달라지면 `isVersionSame` 파라미터가 `false`로 설정됩니다.
+			// 서버의 버전(CONFIG.version)이 달라지면 isVersionSame 파라미터가 false로 설정됩니다.
 			// false를 return 하여 서버에 자동으로 재접속하지 않는 경우 reconnect 함수를 사용하여 서버에 접속할 수 있습니다.
 			
 			// 버전이 같으면 코드가 변경된 부분이 없으므로, 화면만 다시 새로고침합니다.
@@ -141,9 +141,9 @@ NODE_CONFIG : {
 - `favicon.ico` 일반적인 웹 브라우저에 지정되는 favicon입니다.
 - `apple-touch-icon.png` 애플사의 기기에서 지정되는 아이콘입니다.
 
-## 404 페이지 설정
+## [404](https://ko.wikipedia.org/wiki/HTTP_404) 페이지 설정
 UPPERCASE는 기본적으로 404 페이지를 제공하나, `defaultBoxName`로 설정된 기본 BOX에 404.html 파일이 있으면 해당 파일로 대체됩니다.
 
 ## index 페이지 설정
-UPPERCASE는 기본적으로 index 페이지를 제공하나, `defaultBoxName`로 설정된 기본 BOX에 index.html 파일이 있으면 해당 파일로 대체됩니다.
+UPPERCASE는 기본적으로 index 페이지를 제공하나, `defaultBoxName`로 설정된 기본 BOX에 index.html 파일이 있으면 해당 파일로 대체됩니다. 자세한 내용은 [`index.html` 교체하기](UPPERCASE-BOOT.md#indexhtml-교체하기)를 참고해 주시기 바랍니다.
 

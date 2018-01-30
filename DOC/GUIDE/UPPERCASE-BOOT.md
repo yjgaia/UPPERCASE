@@ -13,7 +13,7 @@ UPPERCASE-BOOT는 UPPERCASE의 모든 내장 모듈들을 불러들이고, 프�
 * [`SERVER_TIME(date)`](#server_timedate)
 * [`CONNECT_TO_UPPERCASE_SERVER`](#connect_to_uppercase_server)
 * [UPPERCASE의 기본 스타일](#uppercase의-기본-스타일)
-* [`index.html` 수정하기](#indexhtml-수정하기)
+* [`index.html` 교체하기](#indexhtml-교체하기)
 
 ## 사용방법
 [UPPERCASE를 설치](../INSTALL.md)하였다면, 다음과 같이 프로젝트를 실행할 수 있습니다.
@@ -105,7 +105,7 @@ NODE_CONFIG : {
 	BROWSER_CONFIG : {
 		
 		reconnect : (isVersionSame, reconnect) => {
-			// 서버의 버전(CONFIG.version)이 달라지면 `isVersionSame` 파라미터가 `false`로 설정됩니다.
+			// 서버의 버전(CONFIG.version)이 달라지면 isVersionSame 파라미터가 false로 설정됩니다.
 			// false를 return 하여 서버에 자동으로 재접속하지 않는 경우 reconnect 함수를 사용하여 서버에 접속할 수 있습니다.
 			
 			// 버전이 같으면 코드가 변경된 부분이 없으므로, 화면만 다시 새로고침합니다.
@@ -285,7 +285,7 @@ UPPERCASE-BOOT는 웹 브라우저마다의 스타일 차이를 없애주고 같
 
 기본 스타일의 자세한 내용은 [UPPERCASE의 기본 스타일](BASE_STYLE.md)을 참고하시기 바랍니다.
 
-## `index.html` 수정하기
+## `index.html` 교체하기
 기본적으로 UPPERCASE-BOOT가 `index.html`을 생성하기 때문에 일반적으로 이 내용이 필요하지는 않습니다. 그러나 특별한 이유로 인해 `index.html`을 수정하고 싶을 수 있습니다. 그럴 때는 프로젝트 BOX 폴더에 `index.html`을 만들면 UPPERCASE-BOOT가 이를 인식하여 사용하게 됩니다. 기본적인 `index.html`의 코드는 다음과 같습니다. 수정하여 사용하시기 바랍니다.
 
 ```html
