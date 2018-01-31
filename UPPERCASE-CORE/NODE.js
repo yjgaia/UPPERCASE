@@ -8768,11 +8768,20 @@ global.REQUEST = METHOD((m) => {
 			if (url !== undefined) {
 				urlData = URL.parse(url);
 				
-				host = urlData.hostname === TO_DELETE ? undefined : urlData.hostname,
-				port = urlData.port === TO_DELETE ? undefined : INTEGER(urlData.port),
-				isSecure = urlData.protocol === 'https:',
-				uri = urlData.pathname === TO_DELETE ? undefined : urlData.pathname.substring(1),
-				paramStr = urlData.query === TO_DELETE ? undefined : urlData.query
+				host = urlData.hostname === TO_DELETE ? undefined : urlData.hostname;
+				port = urlData.port === TO_DELETE ? undefined : INTEGER(urlData.port);
+				isSecure = urlData.protocol === 'https:';
+				uri = urlData.pathname === TO_DELETE ? undefined : urlData.pathname.substring(1);
+				
+				let urlParamStr = urlData.query === TO_DELETE ? undefined : urlData.query;
+				
+				if (urlParamStr !== undefined) {
+					if (paramStr === undefined) {
+						paramStr = urlParamStr;
+					} else {
+						paramStr = urlParamStr + '&' + paramStr;
+					}
+				}
 			}
 			
 			if (port === undefined) {
