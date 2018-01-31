@@ -95,6 +95,16 @@ BOOT({
 		
 		// 웹 서버 포트를 8888로 지정합니다.
 		webServerPort : 8888
+	},
+	
+	// 웹 브라우저 환경에서 사용하는 설정
+	BROWSER_CONFIG : {
+		...
+	},
+	
+	// Node.js 환경에서 사용하는 설정
+	NODE_CONFIG : {
+		...
 	}
 });
 ```
