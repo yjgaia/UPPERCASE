@@ -1058,7 +1058,7 @@ delay.resume();
 
 아래와 같이 코드를 작성하게 되면, 함수가 3초마다 실행됩니다.
 ```javascript
-let interval = DELAY(3, (interval) => {
+let interval = INTERVAL(3, (interval) => {
 	// 3초마다 실행됩니다.
 });
 ```
