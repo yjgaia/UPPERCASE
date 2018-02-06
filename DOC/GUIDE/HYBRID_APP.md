@@ -13,7 +13,7 @@ ubm fullpack Sample.js SampleApp/android/www
 ```
 
 2. `index.html` 파일을 다음과 같이 작성합니다. 가장 하단의 스크립트는 [UPPERCASE-BOOT의 `BROWSER_INIT.js` 파일](https://github.com/Hanul/UPPERCASE/blob/master/UPPERCASE-BOOT/BROWSER_INIT.js)을 참고하여 애플리케이션의 성격에 맞게 작성합니다.
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -123,7 +123,7 @@ ubm fullpack Sample.js SampleApp/android/www
 	</body>
 </html>
 ```
-`index.html` 작성시 추가해야 할 설정은 다음과 같습니다. 원래 이 값들은 서버에서 실행되는 애플리케이션의 경우에는 자동으로 설정되지만, 웹 페이지가 애플리케이션에 내장되는 하이브리드 앱의 경우에는 기본값이 지정되어 있지 않습니다. 따라서 반드시 서버 정보를 작성해주어야 합니다. 그러나 서버 기술을 전혀 사용하지 않는 경우에는 작성하지 않아도 무관합니다.
+	`index.html` 작성시 추가해야 할 설정은 다음과 같습니다. 원래 이 값들은 서버에서 실행되는 애플리케이션의 경우에는 자동으로 설정되지만, 웹 페이지가 애플리케이션에 내장되는 하이브리드 앱의 경우에는 기본값이 지정되어 있지 않습니다. 따라서 반드시 서버 정보를 작성해주어야 합니다. 그러나 서버 기술을 전혀 사용하지 않는 경우에는 작성하지 않아도 무관합니다.
 	* `BROWSER_CONFIG.host` 서버의 호스트
 	* `BROWSER_CONFIG.port` 서버의 포트
 
