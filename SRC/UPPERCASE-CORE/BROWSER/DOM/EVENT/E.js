@@ -136,10 +136,6 @@ global.E = CLASS({
 			return e.deltaY;
 		};
 		
-		let getFileDataSet = self.getFileDataSet = () => {
-			return e.dataTransfer === undefined ? undefined : e.dataTransfer.files;
-		};
-		
 		let getGamePadData = self.getGamePadData = () => {
 			return e.gamepad;
 		};

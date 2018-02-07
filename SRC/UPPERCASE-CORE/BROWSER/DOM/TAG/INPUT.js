@@ -51,6 +51,7 @@ global.INPUT = CLASS((cls) => {
 
 			let getName;
 			let getValue;
+			let getFiles;
 			let setValue;
 			let select;
 			let focus;
@@ -125,6 +126,10 @@ global.INPUT = CLASS((cls) => {
 						return self.getEl().checked;
 					}
 					return self.getEl().value;
+				};
+
+				getFiles = self.getFiles = () => {
+					return self.getEl().files;
 				};
 
 				select = self.select = () => {
