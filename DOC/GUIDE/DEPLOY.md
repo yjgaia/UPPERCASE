@@ -46,35 +46,30 @@ mkdir /data
 mkdir /data/db
 ```
 
-2. MongoDB를 외부에서 접속 가능하게 설정합니다. `mongodb.conf`에서 `bindIp: 127.0.0.1`를 `bindIp: 0.0.0.0`로 변경합니다. 또한, 리눅스 환경의 경우 외부에서 접속이 가능하게 하려면 방화벽을 꺼야 합니다. (하단의 [방화벽 끄기](#방화벽-끄기) 항목을 참고하세요.)
-```
-vi /etc/mongod.conf
-```
-
-3. MongoDB를 아래 명령어로 실행합니다. 보안을 위해 기본 포트가 아닌 `27018` 포트로 실행합니다.
+2. MongoDB를 아래 명령어로 실행합니다. 보안을 위해 기본 포트가 아닌 `27018` 포트로 실행합니다.
 ```
 mongod --port 27018 --fork --logpath /var/log/mongodb.log --logappend
 ```
 
-4. `mongo`로 접속합니다.
+3. `mongo`로 접속합니다.
 ```
 mongo --port 27018
 ```
 
-5. 아래와 같이 관리자 계정을 생성합니다.
+4. 아래와 같이 관리자 계정을 생성합니다.
 ```javascript
 use admin
 db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', roles : ['root'] });
 ```
 
-6. MongoDB 서버를 종료합니다.
+5. MongoDB 서버를 종료합니다.
 ```javascript
 db.shutdownServer();
 ```
 
-7. `--auth` 플래그를 붙혀 인증 모드로 MongoDB를 다시 실행합니다.
+6. `--auth` 플래그를 붙혀 인증 모드로 MongoDB를 다시 실행합니다. 리눅스 환경의 경우 외부에서 접속이 가능하게 하려면 방화벽을 꺼야 합니다. (하단의 [방화벽 끄기](#방화벽-끄기) 항목을 참고하세요.)
 ```
-mongod --port 27018 --fork --logpath /var/log/mongodb.log --logappend --auth
+mongod --port 27018 --fork --logpath /var/log/mongodb.log --logappend --auth --bind_ip_all
 ```
 
 ## MongoDB 유저 추가

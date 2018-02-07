@@ -233,7 +233,7 @@ exit
 ### 5. `mongos` 실행
 이제 분산된 MongoDB 서버들을 종합적으로 관리하는 `mongos`를 실행합니다. 아래와 같이 `--configdb` 옵션으로 조금 전 생성한 설정 데몬들을 지정합니다.
 ```
-mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/localhost:40001,localhost:40002,localhost:40003
+mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/localhost:40001,localhost:40002,localhost:40003 --bind_ip_all
 ```
 
 이제 `mongos`에 접속합니다.
