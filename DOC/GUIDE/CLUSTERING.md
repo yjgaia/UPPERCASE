@@ -283,7 +283,7 @@ db.createUser({ user : '{{유저명}}', pwd : '{{비밀번호}}', roles : ['read
 mongodump --port {{기존 데이터베이스의 포트}} --db {{데이터베이스 이름}} --username {{데이터베이스 접속 username}} --password {{데이터베이스 접속 password}}
 ```
 ```
-mongorestore --port {{새 데이터베이스의 포트}} --db {{데이터베이스 이름}} --username {{데이터베이스 접속 username}} --password {{데이터베이스 접속 password}} dump/{{프로젝트 BOX 명}}
+mongorestore --port 27018 --db {{데이터베이스 이름}} --username {{데이터베이스 접속 username}} --password {{데이터베이스 접속 password}} dump/{{프로젝트 BOX 명}}
 ```
 
 이제 모든 설정이 끝났습니다.
