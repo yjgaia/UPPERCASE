@@ -210,28 +210,23 @@ mongod --configsvr --replSet csReplSet --port 40003 --fork --keyFile /srv/mongod
 mongo --port 40001
 ```
 
-아래와 같은 명령어를 입력하여 [`Replica Set`](https://docs.mongodb.com/manual/replication/)을 시작합니다. `{{설정 데이터베이스 서버 IP}}`에는 `localhost`가 아닌 서버 IP를 지정해야 합니다.
+아래와 같은 명령어를 입력하여 [`Replica Set`](https://docs.mongodb.com/manual/replication/)을 시작합니다.
 ```
 rs.initiate(
   {
 	_id: "csReplSet",
 	configsvr: true,
 	members: [
-	  { _id : 0, host : "{{설정 데이터베이스 서버 IP}}:40001" },
-	  { _id : 1, host : "{{설정 데이터베이스 서버 IP}}:40002" },
-	  { _id : 2, host : "{{설정 데이터베이스 서버 IP}}:40003" }
+	  { _id : 0, host : "localhost:40001" },
+	  { _id : 1, host : "localhost:40002" },
+	  { _id : 2, host : "localhost:40003" }
 	]
   }
 );
 ```
 
 ### 5. `mongos` 실행
-이제 분산된 MongoDB 서버들을 종합적으로 관리하는 `mongos`를 실행합니다. 아래와 같이 `--configdb` 옵션으로 조금 전 생성한 설정 데몬들을 지정합니다. `{{설정 데이터베이스 서버 IP}}`는 설정 데이터베이스 서버의 IP로 변경해주시기 바랍니다.
-```
-mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/{{설정 데이터베이스 서버 IP}}:40001,{{설정 데이터베이스 서버 IP}}:40002,{{설정 데이터베이스 서버 IP}}:40003
-```
-
-만약 `mongos`를 실행하는 서버가 설정 데이터베이스들이 실행된 서버와 같은 서버라면, `{{설정 데이터베이스 서버 IP}}`를 `localhost`로 설정합니다.
+이제 분산된 MongoDB 서버들을 종합적으로 관리하는 `mongos`를 실행합니다. 아래와 같이 `--configdb` 옵션으로 조금 전 생성한 설정 데몬들을 지정합니다.
 ```
 mongos --port 27018 --fork --keyFile /srv/mongodb/mongodb-shard-keyfile --logpath /var/log/mongo_shard_mongos.log --configdb csReplSet/localhost:40001,localhost:40002,localhost:40003
 ```
@@ -252,7 +247,7 @@ db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', role
 db.auth('{{root 유저명}}', '{{root 비밀번호}}');
 ```
 
-[3번 과정](#3-mongodb-데몬-생성)에서 생성했던 MongoDB 데몬들의 접속 경로를 지정합니다. `{{데이터베이스 서버 IP}}`는 데이터베이스 서버의 IP로 변경합니다.
+[3번 과정](#3-mongodb-데몬-생성)에서 생성했던 MongoDB 데몬들의 접속 경로를 지정합니다. `{{데이터베이스 서버 IP}}`는 데이터베이스 서버의 IP로 변경합니다. 같은 서버인 경우에는 `localhost`로 지정합니다.
 ```
 sh.addShard('{{데이터베이스 서버 IP}}:30001');
 sh.addShard('{{데이터베이스 서버 IP}}:30002');
