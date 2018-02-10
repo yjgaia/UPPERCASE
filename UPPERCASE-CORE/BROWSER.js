@@ -6805,29 +6805,40 @@ global.EVENT = CLASS((cls) => {
 					name : 'click'
 				}, eventHandler));
 			}
-
-			// double tap event (not exists, simulate.)
+			
+			// when is not touch mode, simulate
 			else if (name === 'doubletap') {
-
-				subEvent = EVENT({
-					node : node,
-					name : 'tap'
-				}, (e) => {
-
-					if (lastTapTime !== undefined && Date.now() - lastTapTime < 600) {
-						
-						eventHandler(e, node);
-						
-						// clear text selections.
-						getSelection().removeAllRanges();
-						
-						lastTapTime = undefined;
-					}
+				
+				if (INFO.checkIsTouchDevice() === true) {
 					
-					else {
-						lastTapTime = Date.now();
-					}
-				});
+					subEvent = EVENT({
+						node : node,
+						name : 'tap'
+					}, (e) => {
+	
+						if (lastTapTime !== undefined && Date.now() - lastTapTime < 600) {
+							
+							eventHandler(e, node);
+							
+							// clear text selections.
+							getSelection().removeAllRanges();
+							
+							lastTapTime = undefined;
+						}
+						
+						else {
+							lastTapTime = Date.now();
+						}
+					});
+				}
+				
+				else {
+					eventLows.push(EVENT_LOW({
+						node : node,
+						lowNode : lowNode,
+						name : 'dblclick'
+					}, eventHandler));
+				}
 			}
 
 			// when is not touch mode, touchmove link to mousedown event
