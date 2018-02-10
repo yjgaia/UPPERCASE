@@ -40,8 +40,12 @@ global.SOUND = CLASS((cls) => {
 				audioContext = new AudioContext();
 			}
 			
-			let src = isCanPlayOGG === true ? ogg : mp3;
-			if (src === undefined) {
+			let src;
+			if (ogg !== undefined && isCanPlayOGG === true) {
+				src = ogg;
+			} else if (mp3 !== undefined) {
+				src = mp3;
+			} else {
 				src = wav;
 			}
 			
