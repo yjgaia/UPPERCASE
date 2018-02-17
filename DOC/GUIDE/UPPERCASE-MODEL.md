@@ -658,7 +658,7 @@ TestBox.TestModel.create({
 ```
 
 ### `valid`
-`create`와 `update` 메소드에는 `valid` 설정을 지정할 수 있습니다. `valid` 설정을 지정하면 데이터를 생성하거나 수정할 때, 주어진 데이터를 검증하게 됩니다.
+`create`와 `update` 메소드에는 `valid` 설정을 지정할 수 있습니다. `valid` 설정을 지정하면 데이터를 생성하거나 수정할 때, 주어진 데이터를 검증하게 됩니다. `VALID`에 대한 자세한 내용은 [`VALID` 문서](UPPERCASE-CORE-COMMON.md#validvaliddataset)를 참고하시기 바랍니다.
 
 ```javascript
 TestBox.TestModel = OBJECT({
