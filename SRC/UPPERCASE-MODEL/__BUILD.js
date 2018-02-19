@@ -113,12 +113,20 @@ RUN(() => {
 					
 					if (fileName.substring(fileName.lastIndexOf('.')) === '.css') {
 						
+						let content = READ_FILE({
+							path : from + '/' + fileName,
+							isSync : true
+						});
+						
+						WRITE_FILE({
+							path : realTo + '/' + fileName.substring(0, fileName.lastIndexOf('.')) + '.css',
+							content : content,
+							isSync : true
+						});
+						
 						WRITE_FILE({
 							path : realTo + '/' + fileName.substring(0, fileName.lastIndexOf('.')) + '.MIN.css',
-							content : MINIFY_CSS(READ_FILE({
-								path : from + '/' + fileName,
-								isSync : true
-							})),
+							content : MINIFY_CSS(content),
 							isSync : true
 						});
 					}
