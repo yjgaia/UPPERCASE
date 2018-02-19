@@ -2633,12 +2633,21 @@ global.VALID = CLASS((cls) => {
 		//REQUIRED: params.data
 		//REQUIRED: params.validDataSet
 		//OPTIONAL: params.isToWash
+		//OPTIONAL: params.errors
 		
 		let data = params.data;
 		let valid = VALID(params.validDataSet);
 		let isToWash = params.isToWash;
+		let errors = params.errors;
 		
-		return (isToWash === true ? valid.checkAndWash : valid.check)(data).checkHasError() !== true;
+		let result = (isToWash === true ? valid.checkAndWash : valid.check)(data);
+		
+		EXTEND({
+			origin : errors,
+			extend : result.getErrors()
+		});
+		
+		return result.checkHasError() !== true;
 	};
 
 	let equal = cls.equal = (params) => {
@@ -2759,11 +2768,14 @@ global.VALID = CLASS((cls) => {
 
 								// detail
 								else if (name === 'detail') {
+									
+									let subErrors = {};
 
 									if (detail({
 										validDataSet : validParams,
 										data : value,
-										isToWash : isToWash
+										isToWash : isToWash,
+										errors : subErrors
 									}) === false) {
 
 										hasError = true;
@@ -2772,6 +2784,10 @@ global.VALID = CLASS((cls) => {
 											validDataSet : validParams,
 											data : value
 										};
+										
+										EACH(subErrors, (subError, subAttr) => {
+											errors[attr + '.' + subAttr] = subError;
+										});
 
 										// break.
 										return false;
