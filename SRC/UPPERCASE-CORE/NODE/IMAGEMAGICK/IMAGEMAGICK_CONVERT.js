@@ -31,6 +31,7 @@ global.IMAGEMAGICK_CONVERT = METHOD(() => {
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
+						errorHandler = undefined;
 					} else {
 						SHOW_ERROR('IMAGEMAGICK_CONVERT', errorMsg);
 					}

@@ -8257,6 +8257,7 @@ global.IMAGEMAGICK_CONVERT = METHOD(() => {
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
+						errorHandler = undefined;
 					} else {
 						SHOW_ERROR('IMAGEMAGICK_CONVERT', errorMsg);
 					}
@@ -8303,6 +8304,7 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(() => {
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
+						errorHandler = undefined;
 					} else {
 						SHOW_ERROR('IMAGEMAGICK_IDENTIFY', errorMsg);
 					}
@@ -8346,6 +8348,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(() => {
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
+						errorHandler = undefined;
 					} else {
 						SHOW_ERROR('IMAGEMAGICK_READ_METADATA', errorMsg);
 					}
@@ -10048,7 +10051,7 @@ global.WEB_SERVER = CLASS((cls) => {
 					
 													IMAGEMAGICK_READ_METADATA(path, {
 														error : () => {
-															next(fileData);
+															next();
 														},
 														success : (metadata) => {
 					

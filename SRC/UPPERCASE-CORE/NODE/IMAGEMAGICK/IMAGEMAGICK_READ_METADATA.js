@@ -29,6 +29,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(() => {
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
+						errorHandler = undefined;
 					} else {
 						SHOW_ERROR('IMAGEMAGICK_READ_METADATA', errorMsg);
 					}

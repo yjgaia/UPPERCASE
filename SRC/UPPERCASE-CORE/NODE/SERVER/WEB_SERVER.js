@@ -590,7 +590,7 @@ global.WEB_SERVER = CLASS((cls) => {
 					
 													IMAGEMAGICK_READ_METADATA(path, {
 														error : () => {
-															next(fileData);
+															next();
 														},
 														success : (metadata) => {
 					

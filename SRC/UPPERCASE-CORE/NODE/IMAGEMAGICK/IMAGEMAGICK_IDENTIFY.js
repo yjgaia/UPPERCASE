@@ -29,6 +29,7 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(() => {
 
 					if (errorHandler !== undefined) {
 						errorHandler(errorMsg);
+						errorHandler = undefined;
 					} else {
 						SHOW_ERROR('IMAGEMAGICK_IDENTIFY', errorMsg);
 					}
