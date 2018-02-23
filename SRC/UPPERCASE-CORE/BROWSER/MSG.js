@@ -58,8 +58,8 @@ OVERRIDE(MSG, (origin) => {
 							} else {
 								
 								// 영어가 있는 경우 영어를, 아닌 경우 첫번째 문자열을 반환
-								if (msg['en'] !== undefined) {
-									msg = msg['en'];
+								if (msg.en !== undefined) {
+									msg = msg.en;
 								} else {
 									EACH(msg, (_msg) => {
 										msg = _msg;
@@ -74,10 +74,10 @@ OVERRIDE(MSG, (origin) => {
 				if (msg === undefined) {
 					
 					// 영어가 있는 경우 영어를, 아닌 경우 첫번째 문자열을 반환
-					if (msg['en'] !== undefined) {
-						msg = msg['en'];
+					if (msgs.en !== undefined) {
+						msg = msgs.en;
 					} else {
-						EACH(msg, (_msg) => {
+						EACH(msgs, (_msg) => {
 							msg = _msg;
 							return false;
 						});
@@ -87,8 +87,8 @@ OVERRIDE(MSG, (origin) => {
 				if (msg !== undefined && CHECK_IS_DATA(msg) === true) {
 					
 					// 영어가 있는 경우 영어를, 아닌 경우 첫번째 문자열을 반환
-					if (msg['en'] !== undefined) {
-						msg = msg['en'];
+					if (msg.en !== undefined) {
+						msg = msg.en;
 					} else {
 						EACH(msg, (_msg) => {
 							msg = _msg;
