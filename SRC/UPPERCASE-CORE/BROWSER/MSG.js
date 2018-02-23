@@ -1,7 +1,7 @@
 /*
  * INFO의 웹 애플리케이션 언어 설정 코드에 해당하는 문자열을 반환합니다.
  * 
- * 만약 알 수 없는 언어 설정 코드라면, 첫 문자열을 반환합니다.
+ * 만약 알 수 없는 언어 설정 코드라면, 영어가 있는 경우에는 영어를, 아니라면 첫번째 문자열을 반환합니다.
  */
 OVERRIDE(MSG, (origin) => {
 	
@@ -56,11 +56,16 @@ OVERRIDE(MSG, (origin) => {
 							if (msg[locale] !== undefined) {
 								msg = msg[locale];
 							} else {
-								// get first msg.
-								EACH(msg, (_msg) => {
-									msg = _msg;
-									return false;
-								});
+								
+								// 영어가 있는 경우 영어를, 아닌 경우 첫번째 문자열을 반환
+								if (msg['en'] !== undefined) {
+									msg = msg['en'];
+								} else {
+									EACH(msg, (_msg) => {
+										msg = _msg;
+										return false;
+									});
+								}
 							}
 						}
 					}
@@ -68,20 +73,28 @@ OVERRIDE(MSG, (origin) => {
 				
 				if (msg === undefined) {
 					
-					// get first msg.
-					EACH(msgs, (_msg) => {
-						msg = _msg;
-						return false;
-					});
+					// 영어가 있는 경우 영어를, 아닌 경우 첫번째 문자열을 반환
+					if (msg['en'] !== undefined) {
+						msg = msg['en'];
+					} else {
+						EACH(msg, (_msg) => {
+							msg = _msg;
+							return false;
+						});
+					}
 				}
 				
 				if (msg !== undefined && CHECK_IS_DATA(msg) === true) {
 					
-					// get first msg.
-					EACH(msg, (_msg) => {
-						msg = _msg;
-						return false;
-					});
+					// 영어가 있는 경우 영어를, 아닌 경우 첫번째 문자열을 반환
+					if (msg['en'] !== undefined) {
+						msg = msg['en'];
+					} else {
+						EACH(msg, (_msg) => {
+							msg = _msg;
+							return false;
+						});
+					}
 				}
 		
 				return msg;
