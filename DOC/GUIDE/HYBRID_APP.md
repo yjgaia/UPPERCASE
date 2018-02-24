@@ -97,17 +97,8 @@ ubm fullpack Sample.js SampleApp/android/www
 											|| confirm(BROWSER_CONFIG.beforeUnloadMessage) === true) {
 												
 												if (BROWSER_CONFIG.reconnect === undefined || BROWSER_CONFIG.reconnect(CONFIG.version === version, connect) !== false) {
-													
-													// 버전이 같으면 코드가 변경된 부분이 없으므로, 화면만 다시 새로고침합니다.
-													if (CONFIG.version === version) {
-														REFRESH();
-														connect();
-													}
-													
-													// 버전이 다르면 코드가 변경되었을 수 있으므로, 페이지 자체를 새로고침하여 코드를 새로 불러옵니다.
-													else {
-														location.reload();
-													}
+													REFRESH();
+													connect();
 												}
 											}
 										}
