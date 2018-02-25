@@ -22,7 +22,7 @@ global.REQUEST = METHOD({
 		let method = params.method;
 		let isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure;
 		let host = params.host === undefined ? BROWSER_CONFIG.host : params.host;
-		let port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port;
+		let port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : (isSecure !== true ? 80 : 443)) : params.port;
 		let uri = params.uri;
 		let url = params.url;
 		let paramStr = params.paramStr;

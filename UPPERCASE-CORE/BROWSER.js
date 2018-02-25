@@ -5117,15 +5117,11 @@ OVERRIDE(MSG, (origin) => {
 								msg = msg[locale];
 							} else {
 								
-								// 영어가 있는 경우 영어를, 아닌 경우 첫번째 문자열을 반환
-								if (msg.en !== undefined) {
-									msg = msg.en;
-								} else {
-									EACH(msg, (_msg) => {
-										msg = _msg;
-										return false;
-									});
-								}
+								// 못 찾은 경우 첫번째 문자열을 반환
+								EACH(msg, (_msg) => {
+									msg = _msg;
+									return false;
+								});
 							}
 						}
 					}
@@ -5146,15 +5142,11 @@ OVERRIDE(MSG, (origin) => {
 				
 				if (msg !== undefined && CHECK_IS_DATA(msg) === true) {
 					
-					// 영어가 있는 경우 영어를, 아닌 경우 첫번째 문자열을 반환
-					if (msg.en !== undefined) {
-						msg = msg.en;
-					} else {
-						EACH(msg, (_msg) => {
-							msg = _msg;
-							return false;
-						});
-					}
+					// 못 찾은 경우 첫번째 문자열을 반환
+					EACH(msg, (_msg) => {
+						msg = _msg;
+						return false;
+					});
 				}
 		
 				return msg;
@@ -9864,7 +9856,7 @@ global.REQUEST = METHOD({
 		let method = params.method;
 		let isSecure = params.isSecure === undefined ? BROWSER_CONFIG.isSecure : params.isSecure;
 		let host = params.host === undefined ? BROWSER_CONFIG.host : params.host;
-		let port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : 80) : params.port;
+		let port = params.port === undefined ? (params.host === undefined ? BROWSER_CONFIG.port : (isSecure !== true ? 80 : 443)) : params.port;
 		let uri = params.uri;
 		let url = params.url;
 		let paramStr = params.paramStr;

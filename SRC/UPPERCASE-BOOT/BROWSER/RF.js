@@ -8,7 +8,11 @@ FOR_BOX((box) => {
 		run : (path) => {
 			//REQUIRED: path
 			
-			return '/__RF/' + box.boxName + '/' + path;
+			if (location.protocol === 'file:') {
+				return (BROWSER_CONFIG.isSecure === true ? 'https://' : 'http://') + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/__RF/' + box.boxName + '/' + path;
+			} else {
+				return '/__RF/' + box.boxName + '/' + path;
+			}
 		}
 	});
 });

@@ -202,11 +202,14 @@ FOR_BOX((box) => {
 		run : (path) => {
 			//REQUIRED: path
 			
-			return '/__RF/' + box.boxName + '/' + path;
+			if (location.protocol === 'file:') {
+				return (BROWSER_CONFIG.isSecure === true ? 'https://' : 'http://') + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/__RF/' + box.boxName + '/' + path;
+			} else {
+				return '/__RF/' + box.boxName + '/' + path;
+			}
 		}
 	});
 });
-
 /*
  * TIME과 반대 역할을 합니다. 웹 브라우저에서 생성된 시간을 서버 시간대의 시간으로 변경합니다.
  */
