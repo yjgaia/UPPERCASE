@@ -80,6 +80,14 @@ RUN(() => {
 			isSync : true
 		});
 		
+		if (path === 'COMMON') {
+			WRITE_FILE({
+				path : '../../' + TITLE + '-COMMON/' + path + '.js',
+				content : content,
+				isSync : true
+			});
+		}
+		
 		if (isToSaveMin === true) {
 			
 			content = '';
@@ -100,6 +108,14 @@ RUN(() => {
 				content : content,
 				isSync : true
 			});
+			
+			if (path === 'COMMON') {
+				WRITE_FILE({
+					path : '../../' + TITLE + '-COMMON/' + path + '.MIN.js',
+					content : content,
+					isSync : true
+				});
+			}
 		}
 		
 		return content;

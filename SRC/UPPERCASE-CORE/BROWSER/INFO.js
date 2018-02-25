@@ -14,6 +14,10 @@ global.INFO = OBJECT({
 			if (lang === undefined) {
 				lang = navigator.language;
 			}
+			
+			if (lang !== 'zh-TW' && lang !== 'zh-CN') {
+				lang = lang.substring(0, 2);
+			}
 
 			return lang;
 		};
