@@ -45,9 +45,9 @@ UPPERCASE 기반 프로젝트에서 웹 브라우저 환경 전용 설정값들�
 INFO.getLang(); // 'ko'
 ```
 
-중국 및 대만의 경우 다음과 같이 5글자로 표현되니 주의하시기 바랍니다.
+모바일 웹 브라우저나 중국 및 대만의 경우 다음과 같이 5글자로 표현되니 주의하시기 바랍니다.
 ```javascript
-INFO.getLang(); // 'zh-TW' or 'zh-CN'
+INFO.getLang(); // 'ko-KR' or zh-TW' or 'zh-CN'
 ```
 
 ### `INFO.changeLang(lang)`
