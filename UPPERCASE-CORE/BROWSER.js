@@ -10176,7 +10176,9 @@ global.MATCH_VIEW = METHOD((m) => {
 					
 					view.runURIChangeHandlers(uri);
 					
-					uriData = undefined;
+					DELAY(() => {
+						uriData = undefined;
+					});
 				}
 	
 				// when view not founded, close before view

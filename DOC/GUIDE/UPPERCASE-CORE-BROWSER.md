@@ -1162,7 +1162,7 @@ MATCH_VIEW({
 			return VIEW;
 		},
 		
-		init : (inner, self) => {
+		init : (inner, self, uriData) => {
 
 			let page = DIV({
 				c : 'Hello!'
