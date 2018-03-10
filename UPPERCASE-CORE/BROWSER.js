@@ -119,6 +119,8 @@ global.MSG = METHOD((m) => {
  */
 global.TO_DELETE = null;
 
+global._ = undefined;
+
 /*
  * BOX를 생성합니다.
  */
