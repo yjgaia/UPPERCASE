@@ -5,6 +5,7 @@ UPPERCASE-CORE-COMMON은 모든 JavaScript 환경에서 사용할 수 있는 모
 ## 목차
 * [사용방법](#사용방법)
 * [`TO_DELETE`](#to_delete)
+* [`_`](#_)
 * [`METHOD`](#method)
 * [객체지향 관련 기능](#객체지향-관련-기능)
 * [`CONFIG`](#config)
@@ -47,6 +48,9 @@ require('uppercase-core');
 [UPPERCASE 코드 컨벤션 규칙](CONVENTION.md)에서 밝힌 바와 같이 UPPERCASE에서는 `값이 없음`을 표현하기 위해 `null`을 사용하지 않고 `undefined`를 사용합니다. 그러나 유일하게 `null` 값을 갖고 있는 변수가 있는데, 바로 `TO_DELETE`입니다.
 [MongoDB](http://www.mongodb.org)와 같은 시스템에서는 `update` 명령을 수행할 때 `null`을 대입하면 해당 값을 삭제합니다. 이런 경우에 **삭제될 값**을 표현하는데 있어 `null` 보다는 `TO_DELETE` 같은 변수명이 더욱 명시적입니다.
 따라서 이런 경우에 `null`을 사용하지 말고, `TO_DELETE`를 사용하시기 바랍니다.
+
+## `_`
+`_`는 `undefined`의 축약형입니다.
 
 ## `METHOD`
 UPPERCASE 기반 메소드를 생성합니다.
