@@ -671,7 +671,7 @@ FOR_BOX((box) => {
 						//OPTIONAL: callbackOrHandlers.error
 						//OPTIONAL: callbackOrHandlers.success
 	
-						let filter = params.filter;
+						let filter = COPY(params.filter);
 						let sort = params.sort;
 						
 						let notExistsHandler;
@@ -1335,6 +1335,8 @@ FOR_BOX((box) => {
 	
 							if (filter === undefined) {
 								filter = {};
+							} else {
+								filter = COPY(filter);
 							}
 	
 							if (sort === undefined) {
@@ -1456,6 +1458,8 @@ FOR_BOX((box) => {
 	
 							if (filter === undefined) {
 								filter = {};
+							} else {
+								filter = COPY(filter);
 							}
 	
 							makeUpFilter(filter);
@@ -1584,6 +1588,8 @@ FOR_BOX((box) => {
 	
 							if (filter === undefined) {
 								filter = {};
+							} else {
+								filter = COPY(filter);
 							}
 	
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
@@ -1663,6 +1669,10 @@ FOR_BOX((box) => {
 								filter = {
 									_id : gen_id(filter)
 								};
+							}
+							
+							else {
+								filter = COPY(filter);
 							}
 	
 							if (CHECK_IS_DATA(callbackOrHandlers) !== true) {

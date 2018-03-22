@@ -119,6 +119,9 @@ global.MSG = METHOD((m) => {
  */
 global.TO_DELETE = null;
 
+/*
+ * _는 undefined의 축약형입니다.
+ */
 global._ = undefined;
 
 /*
