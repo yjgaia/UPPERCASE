@@ -366,28 +366,6 @@ FIND_FOLDER_NAMES('SomeFolder', {
 });
 ```
 
-### `WATCH_FILE_CHANGE`
-파일 내용의 변경 사항을 감지합니다.
-
-사용 가능한 형태들은 다음과 같습니다.
-* `WATCH_FILE_CHANGE(path, (buffer) => {})`
-* `WATCH_FILE_CHANGE(path, {notExists:, change:})`
-
-```javascript
-WATCH_FILE_CHANGE('some.txt', {
-	notExists : () => {
-		console.log('파일이 존재하지 않습니다.');
-	},
-	success : () => {
-		console.log('파일 내용이 변경되었습니다.');
-		
-		READ_FILE('some.txt', (buffer) => {
-			console.log('변경된 파일의 내용: ' + buffer.toString());
-		});
-	}
-});
-```
-
 ## 이미지 처리 기능
 UPPERCASE-CORE-NODE에는 성능과 안정성이 보장된 [ImageMagick](http://www.imagemagick.org)을 사용하여 이미지를 쉽게 처리할 수 있도록 도와주는 기능들이 있습니다. 이미지 처리 기능을 사용하기 전에, [ImageMagick 설치하기](INSTALL_IMAGEMAGICK.md)를 참고하시어 ImageMagick을 먼저 설치해주시기 바랍니다.
 
