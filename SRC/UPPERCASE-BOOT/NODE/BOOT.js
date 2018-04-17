@@ -656,70 +656,74 @@ global.BOOT = (params) => {
 						uri = uri.substring(5);
 
 						let i = uri.indexOf('/');
-
-						if (i !== -1) {
-
-							let boxName = uri.substring(0, i);
-
-							if (boxName === 'UPPERCASE' || BOX.getAllBoxes()[boxName] !== undefined) {
-								uri = uri.substring(i + 1);
-							} else {
-								boxName = CONFIG.defaultBoxName;
-							}
-
-							let uploadFileDB = BOX.getAllBoxes()[boxName].DB('__UPLOAD_FILE');
-
-							uploadFileDB.get(uri.lastIndexOf('/') === -1 ? uri : uri.substring(uri.lastIndexOf('/') + 1), {
-
-								error : () => {
-
-									next({
-										isFinal : true
-									});
-								},
-
-								notExists : () => {
-
-									next({
-										isFinal : true
-									});
-								},
-
-								success : (savedData) => {
-
-									if (savedData.serverName === NODE_CONFIG.thisServerName) {
-
-										next({
-											contentType : savedData.type,
-											headers : {
-												'Content-Disposition' : 'filename="' + encodeURIComponent(savedData.name) + '"',
-												'Access-Control-Allow-Origin' : '*'
-											},
-											isFinal : true
-										});
-
-										uploadFileDB.updateNoHistory({
-											id : savedData.id,
-											$inc : {
-												downloadCount : 1
-											}
-										});
-
-									} else if (NODE_CONFIG.uploadServerHosts !== undefined) {
-
-										response({
-											statusCode : 302,
-											headers : {
-												'Location' : isSecure === true ?
-													'https://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.securedWebServerPort + '/__RF/' + boxName + '/' + uri :
-													'http://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.webServerPort + '/__RF/' + boxName + '/' + uri
-											}
-										});
-									}
-								}
-							});
+						
+						let boxName;
+						
+						if (i === -1) {
+							boxName = CONFIG.defaultBoxName;
+							requestInfo.uri = '__RF/' + boxName + '/' + uri;
+						} else {
+							boxName = uri.substring(0, i);
+						}
+						
+						if (boxName === 'UPPERCASE' || BOX.getAllBoxes()[boxName] !== undefined) {
+							uri = uri.substring(i + 1);
+						} else {
+							boxName = CONFIG.defaultBoxName;
 						}
 
+						let uploadFileDB = BOX.getAllBoxes()[boxName].DB('__UPLOAD_FILE');
+						
+						uploadFileDB.get(uri.lastIndexOf('/') === -1 ? uri : uri.substring(uri.lastIndexOf('/') + 1), {
+
+							error : () => {
+
+								next({
+									isFinal : true
+								});
+							},
+
+							notExists : () => {
+
+								next({
+									isFinal : true
+								});
+							},
+
+							success : (savedData) => {
+
+								if (savedData.serverName === NODE_CONFIG.thisServerName) {
+
+									next({
+										contentType : savedData.type,
+										headers : {
+											'Content-Disposition' : 'filename="' + encodeURIComponent(savedData.name) + '"',
+											'Access-Control-Allow-Origin' : '*'
+										},
+										isFinal : true
+									});
+
+									uploadFileDB.updateNoHistory({
+										id : savedData.id,
+										$inc : {
+											downloadCount : 1
+										}
+									});
+
+								} else if (NODE_CONFIG.uploadServerHosts !== undefined) {
+
+									response({
+										statusCode : 302,
+										headers : {
+											'Location' : isSecure === true ?
+												'https://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.securedWebServerPort + '/__RF/' + boxName + '/' + uri :
+												'http://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.webServerPort + '/__RF/' + boxName + '/' + uri
+										}
+									});
+								}
+							}
+						});
+						
 						return false;
 					}
 
