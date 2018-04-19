@@ -11,6 +11,9 @@ RUN(() => {
 	TITLE(title);
 	
 	DIV({
+		style : {
+			padding : 15
+		},
 		c : title
 	}).appendTo(BODY);
 });

@@ -245,12 +245,11 @@ global.BOOT = (params) => {
 			_404PageContent += '</head>';
 			_404PageContent += '<body>';
 			
-			// show please enable JavaScript msg.
-			_404PageContent += '<noscript>';
-			_404PageContent += '<p style="padding:15px;">';
-			_404PageContent += 'JavaScript is disabled. Please enable JavaScript in your browser.';
+			// show please enable ECMAScript 6 msg.
+			_404PageContent += '<p id="__ES6_NOT_SUPPORTED" style="padding:15px;">';
+			_404PageContent += 'JavaScript is disabled or ECMAScript 6 is not supported in your web browser.<br>Please update your web browser or use the latest version of any web browser.';
 			_404PageContent += '</p>';
-			_404PageContent += '</noscript>';
+			_404PageContent += '<script>const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()</script>';
 			
 			// load script.
 			_404PageContent += '<script src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
@@ -306,7 +305,7 @@ global.BOOT = (params) => {
 			indexPageContent += '</head>';
 			indexPageContent += '<body>';
 			
-			// show please enable JavaScript msg.
+			// show please enable ECMAScript 6 msg.
 			indexPageContent += '<p id="__ES6_NOT_SUPPORTED" style="padding:15px;">';
 			indexPageContent += 'JavaScript is disabled or ECMAScript 6 is not supported in your web browser.<br>Please update your web browser or use the latest version of any web browser.';
 			indexPageContent += '</p>';
