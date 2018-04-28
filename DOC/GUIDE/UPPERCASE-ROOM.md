@@ -102,7 +102,7 @@ CONNECT_TO_ROOM_SERVER({
 TestBox.ROOM('testRoom', (clientInfo, on, off, send, broadcastExceptMe) => {
 	// clientInfo는 클라이언트의 정보를 가지고 있습니다.
 	// send는 현재 접속한 클라이언트에게 데이터를 전송합니다.
-	// broadcastExceptMe는 현재 접속한 클라이언트를 제외하고 해당 룸에 접속한 모든 클라이언트들에게 데이터를 전송합니다.
+	// broadcastExceptMe는 현재 접속한 클라이언트를 제외하고 해당 룸에 접속한 모든 클라이언트들에게 데이터를 전송합니다. - broadcastExceptMe({methodName:, data:})
 	
 	// 특정 method name으로 클라이언트에서 데이터를 보내게 되면, 여기에서 받게 됩니다.
 	on(methodName, (data, ret) => {
