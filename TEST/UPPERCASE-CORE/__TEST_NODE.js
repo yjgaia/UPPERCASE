@@ -79,7 +79,6 @@ RUN(() => {
 	require('./NODE/FILE/FIND_FOLDER_NAMES.js');
 	require('./NODE/FILE/REMOVE_FILE.js');
 	require('./NODE/FILE/REMOVE_FOLDER.js');*/
-	require('./NODE/FILE/WATCH_FILE_CHANGE.js');
 	
 	// 이미지 처리 기능
 	/*require('./NODE/IMAGEMAGICK/IMAGEMAGICK_CONVERT.js');
@@ -97,7 +96,7 @@ RUN(() => {
 	
 	// 손쉬운 서버 생성
 	//require('./NODE/SERVER/WEB_SERVER.js');
-	//require('./NODE/SERVER/SOCKET_SERVER.js');
+	require('./NODE/SERVER/SOCKET_SERVER.js');
 	//require('./NODE/SERVER/CONNECT_TO_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/WEB_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js');
