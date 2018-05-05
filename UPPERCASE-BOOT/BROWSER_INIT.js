@@ -28,7 +28,7 @@ RUN(() => {
 		
 		// TIME 및 SERVER_TIME 메소드를 사용하기 위해 서버의 시간을 가져옵니다.
 		SYNC_TIME();
-	
+		
 		let connect = RAR(() => {
 			
 			if (isConnecting !== true) {
@@ -41,7 +41,7 @@ RUN(() => {
 							box.CONNECTED();
 						}
 					});
-				
+					
 					on('__DISCONNECTED', () => {
 						
 						FOR_BOX((box) => {

@@ -23,6 +23,7 @@ EVENT({
 - `remove` 현재 DOM이 제거될 때 발생하는 이벤트
 - `load` `IMG`나 `IFRAME`에서 로딩이 완료되었을 때 발생하는 이벤트
 - `scroll` `overflow` 스타일이 `scroll`로 지정되어 DOM 내 스크롤 바가 생긴 경우 스크롤할 때 발생하는 이벤트
+- `drop` 외부 파일을 드래그하여 DOM 내에 드롭 할 때 발생하는 이벤트
 
 ## 마우스 관련 이벤트
 ```javascript

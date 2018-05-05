@@ -6561,6 +6561,10 @@ global.E = CLASS({
 		let getGamePadData = self.getGamePadData = () => {
 			return e.gamepad;
 		};
+		
+		let getFiles = self.getFiles = () => {
+			return e.dataTransfer.files;
+		};
 	}
 });
 

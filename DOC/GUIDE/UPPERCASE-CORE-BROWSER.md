@@ -972,6 +972,7 @@ EVENT({
 - `e.getWheelDelta()` 마우스 휠 이벤트(`'wheel'`)가 발생한 경우 얼마나 휠이 돌아갔는지에 대한 값을 가져옵니다.
 - `e.getFileDataSet()` 파일을 끌어다 놓는 이벤트(`'drop'`)가 발생한 경우 파일들의 데이터를 가져옵니다.
 - `e.getGamePadData()` 게임 패드가 연결되거나(`'gamepadconnected'`), 연결이 끊어지는 이벤트(`'gamepaddisconnected'`)가 발생한 경우 게임 패드의 데이터를 가져옵니다.
+- `e.getFiles()` 외부 파일들을 현재 노드에 드래그 앤 드롭(`'drop'` 이벤트)했을 때, 파일들의 정보를 가져옵니다.
 
 ### `EVENT_ONCE(params, eventHandler)`
 이벤트가 한번 발생하면 자동으로 제거되는 `EVENT_ONCE` 클래스
