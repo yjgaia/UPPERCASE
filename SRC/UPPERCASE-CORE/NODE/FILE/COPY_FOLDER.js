@@ -62,13 +62,13 @@ global.COPY_FOLDER = METHOD(() => {
 									},
 									
 									() => {
-										next();
+										next(fileNames.length);
 									}]);
 								});
 							},
 							
-							() => {
-								return () => {
+							(next) => {
+								return (count) => {
 									
 									FIND_FOLDER_NAMES(from, (folderNames) => {
 										
@@ -81,12 +81,27 @@ global.COPY_FOLDER = METHOD(() => {
 										},
 										
 										() => {
-											
+											next(count + folderNames.length);
+										}]);
+									});
+								};
+							},
+							
+							() => {
+								return (count) => {
+									
+									// 빈 폴더면 폴더 생성
+									if (count === 0) {
+										CREATE_FOLDER(to, () => {
 											if (callback !== undefined) {
 												callback();
 											}
-										}]);
-									});
+										});
+									}
+									
+									else if (callback !== undefined) {
+										callback();
+									}
 								};
 							}]);
 	
@@ -117,6 +132,8 @@ global.COPY_FOLDER = METHOD(() => {
 								isSync : true
 							}) === true) {
 								
+								let count = 0;
+								
 								FIND_FILE_NAMES({
 									path : from,
 									isSync : true
@@ -127,6 +144,8 @@ global.COPY_FOLDER = METHOD(() => {
 										to : to + '/' + fileName,
 										isSync : true
 									});
+									
+									count += 1;
 								}));
 								
 								FIND_FOLDER_NAMES({
@@ -139,8 +158,18 @@ global.COPY_FOLDER = METHOD(() => {
 										to : to + '/' + folderName,
 										isSync : true
 									});
+									
+									count += 1;
 								}));
-	
+								
+								// 빈 폴더면 폴더 생성
+								if (count === 0) {
+									CREATE_FOLDER({
+										path : to,
+										isSync : true
+									});
+								}
+								
 							} else {
 	
 								if (notExistsHandler !== undefined) {
