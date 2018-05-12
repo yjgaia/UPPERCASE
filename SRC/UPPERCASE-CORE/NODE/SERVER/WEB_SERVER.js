@@ -404,95 +404,102 @@ global.WEB_SERVER = CLASS((cls) => {
 							let encoding;
 							let version;
 							let isFinal;
-
-							if (requestInfo.isResponsed !== true) {
-
-								if (CHECK_IS_DATA(contentOrParams) !== true) {
-									content = contentOrParams;
-								} else {
+							
+							// writeHead에서 오류 발생 여지 있음
+							try {
+							
+								if (requestInfo.isResponsed !== true) {
 									
-									statusCode = contentOrParams.statusCode;
-									cookies = contentOrParams.cookies;
-									headers = contentOrParams.headers;
-									contentType = contentOrParams.contentType;
-									content = contentOrParams.content;
-									buffer = contentOrParams.buffer;
-									
-									stream = contentOrParams.stream;
-									totalSize = contentOrParams.totalSize;
-									startPosition = contentOrParams.startPosition;
-									endPosition = contentOrParams.endPosition;
-									
-									encoding = contentOrParams.encoding;
-									version = contentOrParams.version;
-									isFinal = contentOrParams.isFinal;
-								}
-
-								if (headers === undefined) {
-									headers = {};
-								}
-								
-								if (cookies !== undefined) {
-									headers['Set-Cookie'] = createCookieStrArray(cookies);
-								}
-
-								if (contentType !== undefined) {
-
-									if (encoding === undefined) {
-										encoding = getEncodingFromContentType(contentType);
+									if (CHECK_IS_DATA(contentOrParams) !== true) {
+										content = contentOrParams;
+									} else {
+										
+										statusCode = contentOrParams.statusCode;
+										cookies = contentOrParams.cookies;
+										headers = contentOrParams.headers;
+										contentType = contentOrParams.contentType;
+										content = contentOrParams.content;
+										buffer = contentOrParams.buffer;
+										
+										stream = contentOrParams.stream;
+										totalSize = contentOrParams.totalSize;
+										startPosition = contentOrParams.startPosition;
+										endPosition = contentOrParams.endPosition;
+										
+										encoding = contentOrParams.encoding;
+										version = contentOrParams.version;
+										isFinal = contentOrParams.isFinal;
 									}
-
-									headers['Content-Type'] = contentType + '; charset=' + encoding;
-								}
-
-								if (stream !== undefined) {
-									
-									headers['Content-Range'] = 'bytes ' + startPosition + '-' + endPosition + '/' + totalSize;
-									headers['Accept-Ranges'] = 'bytes';
-									headers['Content-Length'] = endPosition - startPosition + 1;
-									
-									nativeRes.writeHead(206, headers);
-									
-									stream.pipe(nativeRes);
-								}
-								
-								else {
-									
-									if (content === undefined) {
-										content = '';
+	
+									if (headers === undefined) {
+										headers = {};
 									}
 									
-									if (statusCode === undefined) {
-										statusCode = 200;
+									if (cookies !== undefined) {
+										headers['Set-Cookie'] = createCookieStrArray(cookies);
+									}
+	
+									if (contentType !== undefined) {
+	
+										if (encoding === undefined) {
+											encoding = getEncodingFromContentType(contentType);
+										}
+	
+										headers['Content-Type'] = contentType + '; charset=' + encoding;
+									}
+	
+									if (stream !== undefined) {
+										
+										headers['Content-Range'] = 'bytes ' + startPosition + '-' + endPosition + '/' + totalSize;
+										headers['Accept-Ranges'] = 'bytes';
+										headers['Content-Length'] = endPosition - startPosition + 1;
+										
+										nativeRes.writeHead(206, headers);
+										
+										stream.pipe(nativeRes);
 									}
 									
-									if (CONFIG.isDevMode !== true) {
-										if (isFinal === true) {
-											headers['ETag'] = 'FINAL';
-										} else if (version !== undefined) {
-											headers['ETag'] = version;
+									else {
+										
+										if (content === undefined) {
+											content = '';
+										}
+										
+										if (statusCode === undefined) {
+											statusCode = 200;
+										}
+										
+										if (CONFIG.isDevMode !== true) {
+											if (isFinal === true) {
+												headers['ETag'] = 'FINAL';
+											} else if (version !== undefined) {
+												headers['ETag'] = version;
+											}
+										}
+										
+										// when gzip encoding
+										if (encoding === 'utf-8' && acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
+		
+											headers['Content-Encoding'] = 'gzip';
+	
+											ZLib.gzip(buffer !== undefined ? buffer : String(content), (error, buffer) => {
+												nativeRes.writeHead(statusCode, headers);
+												nativeRes.end(buffer, encoding);
+											});
+										}
+		
+										// when not encoding
+										else {
+											nativeRes.writeHead(statusCode, headers);
+											nativeRes.end(buffer !== undefined ? buffer : String(content), encoding);
 										}
 									}
-									
-									// when gzip encoding
-									if (encoding === 'utf-8' && acceptEncoding.match(/\bgzip\b/) !== TO_DELETE) {
 	
-										headers['Content-Encoding'] = 'gzip';
-
-										ZLib.gzip(buffer !== undefined ? buffer : String(content), (error, buffer) => {
-											nativeRes.writeHead(statusCode, headers);
-											nativeRes.end(buffer, encoding);
-										});
-									}
-	
-									// when not encoding
-									else {
-										nativeRes.writeHead(statusCode, headers);
-										nativeRes.end(buffer !== undefined ? buffer : String(content), encoding);
-									}
+									requestInfo.isResponsed = true;
 								}
-
-								requestInfo.isResponsed = true;
+								
+							} catch (error) {
+								SHOW_ERROR('WEB_SERVER', error.toString());
 							}
 						};
 						
@@ -859,15 +866,22 @@ global.WEB_SERVER = CLASS((cls) => {
 				
 				nativeServer = HTTP.createServer((nativeReq, nativeRes) => {
 					
-					if (securedPort === undefined) {
-						serve(nativeReq, nativeRes, false);
-					}
-					
-					else {
-						nativeRes.writeHead(302, {
-							'Location' : 'https://' + nativeReq.headers.host + (securedPort === 443 ? '' : ':' + securedPort) + nativeReq.url
-						});
-						nativeRes.end();
+					// writeHead에서 오류 발생 여지 있음
+					try {
+						
+						if (securedPort === undefined) {
+							serve(nativeReq, nativeRes, false);
+						}
+						
+						else {
+							nativeRes.writeHead(302, {
+								'Location' : 'https://' + nativeReq.headers.host + (securedPort === 443 ? '' : ':' + securedPort) + nativeReq.url
+							});
+							nativeRes.end();
+						}
+						
+					} catch (error) {
+						SHOW_ERROR('WEB_SERVER', error.toString());
 					}
 					
 				}).listen(port);
