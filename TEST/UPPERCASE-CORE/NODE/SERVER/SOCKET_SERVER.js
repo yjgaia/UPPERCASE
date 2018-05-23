@@ -1,6 +1,8 @@
 TEST('SOCKET_SERVER', (check) => {
 
 	SOCKET_SERVER(8124, (clientInfo, on, off, send, disconnect) => {
+		
+		console.log('client connected.', clientInfo);
 
 		let roles = [];
 
@@ -47,7 +49,7 @@ TEST('SOCKET_SERVER', (check) => {
 
 		// when disconnected
 		on('__DISCONNECTED', () => {
-			console.log('DISCONNECTED!');
+			console.log('client disconnected.', clientInfo);
 		});
 	});
 });
