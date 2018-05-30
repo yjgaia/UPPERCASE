@@ -1549,6 +1549,23 @@ SHA256({
 }); // '5471d39e681ffc00128c11b573f4a3356ceba766956bb928d562d2c7c0c2db6a'
 ```
 
+### `SHA512({password:, key:})`
+비밀번호를 주어진 키를 이용하여 HMAC SHA512 알고리즘으로 암호화 합니다.
+
+```javascript
+SHA512({
+	password : '1234',
+	key : 'test'
+}); // 'ae451e84ce797ab519f454e9e3c9220550a5119c1063f75837281e4157c91cf27ec3d7a38df3254cdbc4c108189ed4b8d904baf2320a23d5268b1e81c110343b'
+```
+
+### `UUID()`
+[범용 고유 식별자](https://ko.wikipedia.org/wiki/%EB%B2%94%EC%9A%A9_%EA%B3%A0%EC%9C%A0_%EC%8B%9D%EB%B3%84%EC%9E%90)를 생성합니다.
+
+```javascript
+UUID(); // '550e8400-e29b-41d4-a716-446655440000'
+```
+
 ### `URI_MATCHER(format)`
 URI가 주어진 포맷에 맞는지 확인하는 `URI_MATCHER` 클래스로, 포맷에 파라미터 구간을 지정할 수 있어 URI로부터 파라미터 값을 가져올 수 있습니다.
 
