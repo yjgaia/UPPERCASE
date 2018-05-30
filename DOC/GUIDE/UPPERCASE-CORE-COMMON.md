@@ -1540,7 +1540,7 @@ RANDOM_STR(10); // 예) b9hSosKhvl
 ```
 
 ### `SHA256({password:, key:})`
-비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화 합니다.
+비밀번호를 주어진 키를 이용하여 HMAC SHA256 알고리즘으로 암호화합니다.
 
 ```javascript
 SHA256({
@@ -1550,13 +1550,23 @@ SHA256({
 ```
 
 ### `SHA512({password:, key:})`
-비밀번호를 주어진 키를 이용하여 HMAC SHA512 알고리즘으로 암호화 합니다.
+비밀번호를 주어진 키를 이용하여 HMAC SHA512 알고리즘으로 암호화합니다.
 
 ```javascript
 SHA512({
 	password : '1234',
 	key : 'test'
 }); // 'ae451e84ce797ab519f454e9e3c9220550a5119c1063f75837281e4157c91cf27ec3d7a38df3254cdbc4c108189ed4b8d904baf2320a23d5268b1e81c110343b'
+```
+
+### `ENCRYPT({password:, key:})`
+비밀번호를 주어진 키를 암호화합니다. 같은 키로 한번 더 수행하면, 복호화됩니다.
+
+```javascript
+ENCRYPT({
+	password : '1234',
+	key : 'test'
+}); // 'EW@@'
 ```
 
 ### `UUID()`

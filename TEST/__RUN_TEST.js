@@ -21,10 +21,10 @@ RUN(() => {
 	INIT_OBJECTS();
 	
 	// Node.js 환경에서의 테스트 실행
-	//require('./UPPERCASE-CORE/__TEST_NODE.js');
-	require('./UPPERCASE-ROOM/__TEST_NODE.js');
-	require('./UPPERCASE-DB/__TEST_NODE.js');
-	require('./UPPERCASE-MODEL/__TEST_NODE.js');
+	require('./UPPERCASE-CORE/__TEST_NODE.js');
+	//require('./UPPERCASE-ROOM/__TEST_NODE.js');
+	//require('./UPPERCASE-DB/__TEST_NODE.js');
+	//require('./UPPERCASE-MODEL/__TEST_NODE.js');
 	
 	if (IS_TO_CREATE_SERVER === true) {
 		

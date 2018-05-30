@@ -59,6 +59,7 @@ RUN(() => {
 	// 문자열 암호화 기능
 	//require('./COMMON/UTIL/ENCRYPTION/SHA256.js');
 	//require('./COMMON/UTIL/ENCRYPTION/SHA512.js');
+	require('./COMMON/UTIL/ENCRYPTION/ENCRYPT.js');
 	
 	// 기타 기능
 	/*require('./COMMON/UTIL/OVERRIDE.js');
@@ -96,7 +97,7 @@ RUN(() => {
 	
 	// 손쉬운 서버 생성
 	//require('./NODE/SERVER/WEB_SERVER.js');
-	require('./NODE/SERVER/SOCKET_SERVER.js');
+	//require('./NODE/SERVER/SOCKET_SERVER.js');
 	//require('./NODE/SERVER/CONNECT_TO_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/WEB_SOCKET_SERVER.js');
 	//require('./NODE/SERVER/MULTI_PROTOCOL_SOCKET_SERVER.js');

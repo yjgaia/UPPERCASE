@@ -13,6 +13,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [노드에 애니메이션 지정](#노드에-애니메이션-지정)
 * [뷰 기능](#뷰-기능)
 * [HTTP 요청 기능](#http-요청-기능)
+* [암호화 HTTP 요청 기능](#암호화-http-요청-기능)
 * [`CONNECT_TO_WEB_SOCKET_SERVER`](#connect_to_web_socket_server)
 * [`STORE`](#store)
 * [`MSG`](#msgko-en--msgkey)
@@ -1445,6 +1446,24 @@ HTTP POST 요청을 보냅니다.
 * `params` 데이터 형태(`{...}`)로 표현한 파라미터 목록
 * `data` UPPERCASE 웹 서버로 보낼 데이터. 요청을 UPPERCASE기반 웹 서버로 보내는 경우 데이터를 직접 전송할 수 있습니다.
 * `headers` 요청 헤더
+
+## 암호화 HTTP 요청 기능
+[`CONFIG.requestEncryptionKey`](CONFIGURATION.md#config)에 설정된 키를 기반으로 데이터를 암호화하여 HTTP 요청을 보냅니다.
+
+### `ENCRYPTION_REQUEST`
+암호화된 HTTP 요청을 보냅니다. [`REQUEST`](#request)와 사용방법이 동일합니다.
+
+### `GET`
+암호화된 HTTP GET 요청을 보냅니다. [`GET`](#get)과 사용방법이 동일합니다.
+
+### `POST`
+암호화된 HTTP POST 요청을 보냅니다. [`POST`](#post)와 사용방법이 동일합니다.
+
+### `PUT`
+암호화된 HTTP POST 요청을 보냅니다. [`PUT`](#put)과 사용방법이 동일합니다.
+
+### `DELETE`
+암호화된 HTTP POST 요청을 보냅니다. [`DELETE`](#delete)와 사용방법이 동일합니다.
 
 ## `CONNECT_TO_WEB_SOCKET_SERVER`
 * `CONNECT_TO_WEB_SOCKET_SERVER(port, connectionListenerOrListeners)`

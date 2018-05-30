@@ -350,6 +350,18 @@ global.WEB_SERVER = CLASS((cls) => {
 						let isGoingOn;
 						let originalURI = uri;
 						let overrideResponseInfo = {};
+						let isEncrypted = false;
+						
+						// 암호화 되어 있는 경우 복호화
+						if (params.__ENCRYPT !== undefined) {
+							
+							params = Querystring.parse(ENCRYPT({
+								password : params.__ENCRYPT,
+								key : CONFIG.requestEncryptionKey
+							}));
+							
+							isEncrypted = true;
+						}
 						
 						EACH(params, (param, name) => {
 							if (CHECK_IS_ARRAY(param) === true) {
@@ -372,7 +384,8 @@ global.WEB_SERVER = CLASS((cls) => {
 							method : method,
 							params : params,
 							data : data,
-							ip : ip
+							ip : ip,
+							isEncrypted : isEncrypted
 						};
 						
 						let response = (contentOrParams) => {
