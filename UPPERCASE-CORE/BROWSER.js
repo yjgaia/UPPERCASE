@@ -5605,7 +5605,7 @@ global.ADD_STYLE = METHOD({
 						resizeEvent.remove();
 					});
 
-				} else {
+				} else if (el !== undefined) {
 					
 					// flt -> float
 					if (name === 'flt') {
