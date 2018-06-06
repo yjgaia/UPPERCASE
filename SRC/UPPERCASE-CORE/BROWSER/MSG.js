@@ -27,7 +27,7 @@ OVERRIDE(MSG, (origin) => {
 				let data = {};
 				
 				let langs;
-				EACH(Papa.parse(content).data, (texts, i) => {
+				EACH(__PAPA.parse(content).data, (texts, i) => {
 					
 					// 첫번째 줄은 언어 설정
 					if (i === 0) {
