@@ -24,6 +24,39 @@ OVERRIDE(MSG, (origin) => {
 			});
 		};
 		
+		let loadCSV = m.loadCSV = (url, callback) => {
+			//REQUIRED: url
+			//REQUIRED: callback
+			
+			GET(url, (content) => {
+				
+				let data = {};
+				
+				let langs;
+				EACH(__PAPA.parse(content).data, (texts, i) => {
+					
+					// 첫번째 줄은 언어 설정
+					if (i === 0) {
+						langs = texts;
+					}
+					
+					else {
+						let subData = {};
+						EACH(texts, (text, j) => {
+							if (j > 0) {
+								subData[langs[j]] = text;
+							}
+						});
+						data[texts[0]] = subData;
+					}
+				});
+				
+				addData(data);
+				
+				callback();
+			});
+		};
+		
 		return {
 		
 			run : (keyOrMsgs) => {
