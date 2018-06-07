@@ -113,7 +113,7 @@ global.ENCRYPTION_REQUEST = METHOD({
 				if (errorListener !== undefined) {
 					errorListener(errorMsg);
 				} else {
-					SHOW_ERROR('REQUEST', errorMsg, params);
+					SHOW_ERROR('ENCRYPTION_REQUEST', errorMsg, params);
 				}
 			}
 		}, (error) => {
@@ -123,7 +123,7 @@ global.ENCRYPTION_REQUEST = METHOD({
 			if (errorListener !== undefined) {
 				errorListener(errorMsg);
 			} else {
-				SHOW_ERROR('REQUEST', errorMsg, params);
+				SHOW_ERROR('ENCRYPTION_REQUEST', errorMsg, params);
 			}
 			
 			responseListener = undefined;

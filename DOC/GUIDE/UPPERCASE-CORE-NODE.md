@@ -8,6 +8,7 @@ UPPERCASE-CORE-NODE는 Node.js 환경에서 사용할 수 있는 모듈입니다
 * [파일 처리 기능](#파일-처리-기능)
 * [이미지 처리 기능](#이미지-처리-기능)
 * [HTTP 요청 기능](#http-요청-기능)
+* [암호화 HTTP 요청 기능](#암호화-http-요청-기능)
 * [손쉬운 서버 생성](#손쉬운-서버-생성)
 * [손쉬운 클러스터링](#손쉬운-클러스터링)
 * [시스템 관련 기능](#시스템-관련-기능)
@@ -654,6 +655,24 @@ DOWNLOAD({
 	path : 'UPPERCASE.zip'
 });
 ```
+
+## 암호화 HTTP 요청 기능
+[`CONFIG.requestEncryptionKey`](CONFIGURATION.md#config)에 설정된 키를 기반으로 데이터를 암호화하여 HTTP 요청을 보냅니다.
+
+### `ENCRYPTION_REQUEST`
+암호화된 HTTP 요청을 보냅니다. [`REQUEST`](#request)와 사용방법이 동일합니다.
+
+### `GET`
+암호화된 HTTP GET 요청을 보냅니다. [`GET`](#get)과 사용방법이 동일합니다.
+
+### `POST`
+암호화된 HTTP POST 요청을 보냅니다. [`POST`](#post)와 사용방법이 동일합니다.
+
+### `PUT`
+암호화된 HTTP POST 요청을 보냅니다. [`PUT`](#put)과 사용방법이 동일합니다.
+
+### `DELETE`
+암호화된 HTTP POST 요청을 보냅니다. [`DELETE`](#delete)와 사용방법이 동일합니다.
 
 ## 손쉬운 서버 생성
 UPPERCASE-CORE-NODE를 사용하게 되면 여러 종류의 서버들을 손쉽게 생성할 수 있습니다.

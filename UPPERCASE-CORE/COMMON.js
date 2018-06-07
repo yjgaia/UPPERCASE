@@ -251,43 +251,12 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 	https://github.com/mholt/PapaParse
 	License: MIT
 */
-(function(root, factory)
+(function(factory)
 {
-	/* globals define */
-	if (typeof define === 'function' && define.amd)
-	{
-		// AMD. Register as an anonymous module.
-		define([], factory);
-	}
-	else if (typeof module === 'object' && typeof exports !== 'undefined')
-	{
-		// Node. Does not work with strict CommonJS, but
-		// only CommonJS-like environments that support module.exports,
-		// like Node.
-		module.exports = factory();
-	}
-	else
-	{
-		// Browser globals (root is window)
-		root.Papa = factory();
-	}
-}(this, function()
+	global.__PAPA = factory();
+}(function()
 {
 	'use strict';
-
-	var global = (function() {
-		// alternative method, similar to `Function('return this')()`
-		// but without using `eval` (which is disabled when
-		// using Content Security Policy).
-
-		if (typeof self !== 'undefined') { return self; }
-		if (typeof window !== 'undefined') { return window; }
-		if (typeof global !== 'undefined') { return global; }
-
-		// When running tests none of the above have been defined
-		return {};
-	})();
-
 
 	var IS_WORKER = !global.document && !!global.postMessage,
 		IS_PAPA_WORKER = IS_WORKER && /(\?|&)papaworker(=|&|$)/.test(global.location.search),
