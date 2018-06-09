@@ -19,7 +19,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [`MSG`](#msgko-en--msgkey)
 * [`SOUND`](#sound)
 * [`ADD_FONT`](#add_font)
-* [`WORKER`](#worker)
+* [`WORKER(src)`](#workersrc)
 
 ## 사용방법
 UPPERCASE 프로젝트 내 `UPPERCASE-CORE` 폴더를 복사하여 사용합니다.
