@@ -19,6 +19,7 @@ UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모
 * [`MSG`](#msgko-en--msgkey)
 * [`SOUND`](#sound)
 * [`ADD_FONT`](#add_font)
+* [`WORKER`](#worker)
 
 ## 사용방법
 UPPERCASE 프로젝트 내 `UPPERCASE-CORE` 폴더를 복사하여 사용합니다.
@@ -1692,3 +1693,76 @@ DIV({
 	c : '웹 폰트가 적용되었습니다.'
 }).appendTo(BODY);
 ```
+
+## `WORKER(src)`
+[웹 워커](https://developer.mozilla.org/ko/docs/Web/API/Web_Workers_API) 및 클라이언트를 생성하고 생성된 워커에 연결합니다.
+
+```javascript
+let worker = WORKER('sample-worker.js');
+
+// 워커로부터 메시지를 수신합니다.
+worker.on('message', (data, ret) => {
+
+	console.log('CLIENT!', data);
+
+	ret('Thanks!');
+});
+
+// 워커로 메시지를 발송합니다.
+worker.send({
+	methodName : 'message',
+	data : {
+		msg : 'message from client.'
+	}
+}, (retMsg) => {
+
+	console.log('RETURN MESSAGE:', retMsg);
+});
+```
+
+워커 클라이언트에서 사용하는 메소드들은 다음과 같습니다.
+
+#### `on(methodName, method)`
+`on`은 워커 클라이언트에 메소드를 생성하며, 워커에서 `send`로 전송한 데이터를 받습니다.
+
+#### `off(methodName)` `off(methodName, method)`
+`off`는 워커 클라이언트에 생성된 메소드를 제거합니다.
+
+#### `send(params)` `send(params, callback)`
+`send`는 워커로 데이터를 전송하며, 워커에서 `on`으로 생성한 메소드가 데이터를 받습니다.
+
+사용 가능한 파라미터는 다음과 같습니다.
+* `methodName` 워커에 `on`으로 설정된 메소드 이름
+* `data` 전송할 데이터
+
+#### `remove()`
+워커를 제거합니다.
+
+또한 UPPERCASE-CORE에는 워커를 쉽게 생성할 수 있도록 돕는 헬퍼 스크립트가 포함되어 있습니다.
+
+UPPERCASE-CORE 폴더에 WORKER_HELPER.js 파일을 워커에 포함합니다.
+
+```js
+importScripts('UPPERCASE-CORE/WORKER_HELPER.js');
+
+// 워커 클라이언트로부터 메시지를 수신합니다.
+on('message', (data, ret) => {
+
+	console.log('WORKER!', data);
+
+	ret('Thanks!');
+});
+
+// 워커 클라이언트로 메시지를 발송합니다.
+send({
+	methodName : 'message',
+	data : {
+		msg : 'message from worker.'
+	}
+}, (retMsg) => {
+
+	console.log('RETURN MESSAGE:', retMsg);
+});
+```
+
+이제 워커에서 [UPPERCASE-CORE-COMMON의 기능들](UPPERCASE-CORE-COMMON.md)과 `on`, `off`, `send` 함수를 사용할 수 있습니다.

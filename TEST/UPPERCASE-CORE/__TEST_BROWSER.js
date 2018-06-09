@@ -145,7 +145,9 @@ RUN(() => {
 	require('./BROWSER/CONSOLE/SHOW_WARNING.js');*/
 	
 	// SOUND
-	require('./BROWSER/SOUND.js');
+	//require('./BROWSER/SOUND.js');
 	
+	// OTHERS
 	//require('./BROWSER/ADD_FONT.js');
+	require('./BROWSER/WORKER.js');
 });
