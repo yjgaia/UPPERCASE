@@ -6916,7 +6916,7 @@ OVERRIDE(MSG, (origin) => {
 						let subData = {};
 						EACH(texts, (text, j) => {
 							if (j > 0) {
-								subData[langs[j]] = text;
+								subData[langs[j]] = text.replace(/\\n/, '\n');
 							}
 						});
 						data[texts[0]] = subData;
