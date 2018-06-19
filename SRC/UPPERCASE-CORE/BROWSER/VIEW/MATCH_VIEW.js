@@ -125,6 +125,7 @@ FOR_BOX((box) => {
 				}
 
 				newURIs.push(box.boxName + '/' + uri);
+				newURIs.push(box.boxName.toLowerCase() + '/' + uri);
 			};
 
 			let pushExcludeURI = (uri) => {
@@ -134,6 +135,7 @@ FOR_BOX((box) => {
 				}
 
 				newExcludeURIs.push(box.boxName + '/' + uri);
+				newExcludeURIs.push(box.boxName.toLowerCase() + '/' + uri);
 			};
 
 			if (CHECK_IS_ARRAY(uri) === true) {
