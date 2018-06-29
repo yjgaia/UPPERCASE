@@ -12841,19 +12841,32 @@ global.DISK_USAGE = METHOD(() => {
 			
 			if (drive === undefined) {
 				if (process.platform === 'win32') {
-					drive = 'c:';
+					drive = 'C';
 				} else {
 					drive = '/';
 				}
 			}
 			
-			diskspace.check(drive, (err, total, free, status) => {
-				if (status === 'READY') {
-					callback((1 - free / total) * 100);
-				} else if (errorHandler !== undefined) {
-					errorHandler(status);
-				} else {
-					SHOW_ERROR('DISK_USAGE', status);
+			diskspace.check(drive, (error, result) => {
+				
+				if (error !== TO_DELETE) {
+					if (errorHandler !== undefined) {
+						errorHandler(error.toString());
+					} else {
+						SHOW_ERROR('DISK_USAGE', error.toString());
+					}
+				}
+				
+				else if (result.status === 'READY') {
+					callback((1 - result.free / result.total) * 100);
+				}
+				
+				else {
+					if (errorHandler !== undefined) {
+						errorHandler(status);
+					} else {
+						SHOW_ERROR('DISK_USAGE', status);
+					}
 				}
 			});
 		}
