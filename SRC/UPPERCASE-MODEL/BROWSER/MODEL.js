@@ -952,7 +952,7 @@ FOR_BOX((box) => {
 		
 									(roomForCreate = box.ROOM({
 										roomServerName : roomServerName,
-										name : name + '/' + propertyName + '/' + value + '/create'
+										name : value === TO_DELETE ? (name + '/create') : (name + '/' + propertyName + '/' + value + '/create')
 									})).on('create', (savedData) => {
 			
 										if (EACH(properties, (value, propertyName) => {
@@ -1109,7 +1109,7 @@ FOR_BOX((box) => {
 		
 									(roomForCreate = box.ROOM({
 										roomServerName : roomServerName,
-										name : name + '/' + propertyName + '/' + value + '/create'
+										name : value === TO_DELETE ? (name + '/create') : (name + '/' + propertyName + '/' + value + '/create')
 									})).on('create', (savedData) => {
 			
 										if (EACH(properties, (value, propertyName) => {
