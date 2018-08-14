@@ -243,8 +243,10 @@ FOR_BOX((box) => {
 					//REQUIRED: data
 	
 					// convert _id (object) to id (string).
-					if (data._id !== undefined) {
+					if (data._id !== undefined && typeof data._id === 'object') {
 						data.id = data._id.toString();
+					} else {
+						data.id = data._id;
 					}
 	
 					// delete _id.
@@ -822,7 +824,6 @@ FOR_BOX((box) => {
 									},
 									success : callback
 								});
-	
 							}
 							
 							else if (idOrParams === undefined) {
