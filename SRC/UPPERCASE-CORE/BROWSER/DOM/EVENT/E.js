@@ -143,5 +143,9 @@ global.E = CLASS({
 		let getFiles = self.getFiles = () => {
 			return e.dataTransfer.files;
 		};
+		
+		let getClipboardItems = self.getClipboardItems = () => {
+			return e.clipboardData === undefined || e.clipboardData.items === undefined ? [] : e.clipboardData.items;
+		};
 	}
 });

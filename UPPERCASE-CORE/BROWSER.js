@@ -8536,6 +8536,10 @@ global.E = CLASS({
 		let getFiles = self.getFiles = () => {
 			return e.dataTransfer.files;
 		};
+		
+		let getClipboardItems = self.getClipboardItems = () => {
+			return e.clipboardData === undefined || e.clipboardData.items === undefined ? [] : e.clipboardData.items;
+		};
 	}
 });
 
@@ -8576,6 +8580,10 @@ global.EMPTY_E = CLASS({
 		
 		let getWheelDelta = self.getWheelDelta = () => {
 			return 0;
+		};
+		
+		let getClipboardItems = self.getClipboardItems = () => {
+			return [];
 		};
 	}
 });

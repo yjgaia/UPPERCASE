@@ -36,5 +36,9 @@ global.EMPTY_E = CLASS({
 		let getWheelDelta = self.getWheelDelta = () => {
 			return 0;
 		};
+		
+		let getClipboardItems = self.getClipboardItems = () => {
+			return [];
+		};
 	}
 });
