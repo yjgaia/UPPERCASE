@@ -12216,7 +12216,7 @@ global.WEB_SERVER = CLASS((cls) => {
 												
 												fileData.ip = ip;
 												
-												if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
+												if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif' || fileType === 'image/svg+xml') {
 					
 													IMAGEMAGICK_READ_METADATA(path, {
 														error : () => {
