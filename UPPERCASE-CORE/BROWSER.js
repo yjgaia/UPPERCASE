@@ -7491,6 +7491,13 @@ global.ADD_STYLE = METHOD({
 							node : node,
 							style : value(WIN_WIDTH(), WIN_HEIGHT())
 						});
+						
+						DELAY(() => {
+							ADD_STYLE({
+								node : node,
+								style : value(WIN_WIDTH(), WIN_HEIGHT())
+							});
+						});
 					}));
 
 					// remove resize event when remove node.
