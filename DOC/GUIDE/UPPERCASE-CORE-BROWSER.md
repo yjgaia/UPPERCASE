@@ -1584,7 +1584,7 @@ store.get(name); // 'YJ Sim'
 ## `MSG({ko:, en:, ...})` `MSG(key)`
 [`INFO`](#info)의 [웹 애플리케이션 언어 설정 코드](#getlang)에 해당하는 문자열을 반환합니다. 만약 알 수 없는 언어 설정 코드라면, 영어가 있는 경우에는 영어를, 아니라면 첫번째 문자열을 반환합니다.
 
-```javascript
+```javascriptND*
 // 브라우저 언어 설정이 한국어일 경우, '안녕하세요'
 // 브라우저 언어 설정이 영어일 경우, 'Hello'
 // 브라우저 언어 설정이 일본어일 경우, 'こんにちは'
@@ -1642,6 +1642,14 @@ let sound = SOUND({
 	ogg : 'AMemoryAway.ogg',
 	mp3 : 'AMemoryAway.mp3'
 });
+
+// 사운드가 끝났을 때 실행할 함수를 지정할 수 있습니다.
+/*let sound = SOUND({
+	ogg : 'AMemoryAway.ogg',
+	mp3 : 'AMemoryAway.mp3'
+}, () => {
+	console.log('잘 들었다~!');
+});*/
 
 // 사운드 재생
 sound.play();

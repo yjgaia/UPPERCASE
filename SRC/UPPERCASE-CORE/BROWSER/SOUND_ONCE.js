@@ -7,13 +7,14 @@ global.SOUND_ONCE = CLASS({
 		return SOUND;
 	},
 
-	init : (inner, self, params) => {
+	init : (inner, self, params, onEndHandler) => {
 		//REQUIRED: params
 		//OPTIONAL: params.ogg
 		//OPTIONAL: params.mp3
 		//OPTIONAL: params.wav
 		//OPTIONAL: params.isLoop
 		//OPTIONAL: params.volume
+		//OPTIONAL: onEndHandler
 
 		self.play();
 	}

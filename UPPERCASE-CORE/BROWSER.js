@@ -7022,13 +7022,14 @@ global.SOUND = CLASS((cls) => {
 
 	return {
 
-		init : (inner, self, params) => {
+		init : (inner, self, params, onEndHandler) => {
 			//REQUIRED: params
 			//OPTIONAL: params.ogg
 			//OPTIONAL: params.mp3
 			//OPTIONAL: params.wav
 			//OPTIONAL: params.isLoop
 			//OPTIONAL: params.volume
+			//OPTIONAL: onEndHandler
 
 			let ogg = params.ogg;
 			let mp3 = params.mp3;
@@ -7113,6 +7114,9 @@ global.SOUND = CLASS((cls) => {
 					if (isLoop !== true) {
 						source.onended = () => {
 							stop();
+							if (onEndHandler !== undefined) {
+								onEndHandler();
+							}
 						};
 					}
 				};
@@ -7188,13 +7192,14 @@ global.SOUND_ONCE = CLASS({
 		return SOUND;
 	},
 
-	init : (inner, self, params) => {
+	init : (inner, self, params, onEndHandler) => {
 		//REQUIRED: params
 		//OPTIONAL: params.ogg
 		//OPTIONAL: params.mp3
 		//OPTIONAL: params.wav
 		//OPTIONAL: params.isLoop
 		//OPTIONAL: params.volume
+		//OPTIONAL: onEndHandler
 
 		self.play();
 	}
