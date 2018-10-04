@@ -36,6 +36,8 @@ global.SOUND = CLASS((cls) => {
 			
 			let delayed;
 			
+			let fadeInSeconds;
+			
 			// init audioContext.
 			if (audioContext === undefined) {
 				audioContext = new AudioContext();
@@ -71,7 +73,14 @@ global.SOUND = CLASS((cls) => {
 						buffer = _buffer;
 						
 						gainNode.connect(audioContext.destination);
-						gainNode.gain.setTargetAtTime(volume, 0, 0);
+						
+						if (fadeInSeconds === undefined) {
+							gainNode.gain.setTargetAtTime(volume, 0, 0);
+						} else {
+							gainNode.gain.setTargetAtTime(0, 0, 0);
+							gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + fadeInSeconds);
+							fadeInSeconds = undefined;
+						}
 	
 						if (delayed !== undefined) {
 							delayed();
@@ -164,6 +173,33 @@ global.SOUND = CLASS((cls) => {
 				if (source !== undefined) {
 					source.playbackRate.setValueAtTime(playbackRate, 0);
 				}
+			};
+			
+			let fadeIn = self.fadeIn = (seconds) => {
+				//REQUIRED: seconds
+				
+				if (gainNode !== undefined) {
+					gainNode.gain.setTargetAtTime(0, 0, 0);
+					gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + seconds);
+				}
+				
+				else {
+					fadeInSeconds = seconds;
+				}
+				
+				play();
+			};
+			
+			let fadeOut = self.fadeOut = (seconds) => {
+				//REQUIRED: seconds
+				
+				if (gainNode !== undefined) {
+					gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + seconds);
+				}
+				
+				DELAY(seconds, () => {
+					stop();
+				});
 			};
 		}
 	};

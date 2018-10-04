@@ -802,6 +802,12 @@ audio.pause();
 
 // 정지 및 처음으로 돌아가기
 audio.stop();
+
+// 2초간 페이드 인 하면서 사운드 재생
+audio.fadeIn(2);
+
+// 2초간 페이드 아웃 하면서 사운드 정지
+audio.fadeOut(2);
 ```
 
 ### `VIDEO`
