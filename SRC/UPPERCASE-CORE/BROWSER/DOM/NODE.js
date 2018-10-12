@@ -662,7 +662,9 @@ global.NODE = CLASS({
 
 		if (on !== undefined) {
 			EACH(on, (handler, name) => {
-				self.on(name, handler);
+				if (handler !== undefined) {
+					self.on(name, handler);
+				}
 			});
 		}
 
