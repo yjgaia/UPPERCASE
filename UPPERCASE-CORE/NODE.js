@@ -12145,8 +12145,18 @@ global.WEB_SERVER = CLASS((cls) => {
 							}
 						};
 						
+						// when OPTIONS request
+						if (method === 'OPTIONS') {
+							response({
+								headers : {
+									'Access-Control-Allow-Origin' : '*',
+									'Access-Control-Allow-Methods' : 'GET, PUT, POST, DELETE, OPTIONS'
+								}
+							});
+						}
+						
 						// when upload request
-						if (isUploadURI === true) {
+						else if (isUploadURI === true) {
 							
 							CREATE_FOLDER(uploadPath, () => {
 								
