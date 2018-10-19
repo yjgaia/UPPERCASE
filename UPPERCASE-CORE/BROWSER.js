@@ -12201,7 +12201,7 @@ global.REQUEST = METHOD({
 			errorListener = responseListenerOrListeners.error;
 		}
 		
-		(method === 'GET' || method === 'DELETE' ? fetch(url + '?' + paramStr, {
+		(method === 'GET' || method === 'DELETE' ? fetch(url.substring(0, 5) === 'data:' ? url : url + '?' + paramStr, {
 			method : method,
 			credentials : location.protocol !== 'file:' && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : new Headers(headers === undefined ? {} : headers)
