@@ -7089,9 +7089,9 @@ global.SOUND = CLASS((cls) => {
 						gainNode.connect(audioContext.destination);
 						
 						if (fadeInSeconds === undefined) {
-							gainNode.gain.setTargetAtTime(volume, 0, 0);
+							gainNode.gain.setValueAtTime(volume, 0);
 						} else {
-							gainNode.gain.setTargetAtTime(0, 0, 0);
+							gainNode.gain.setValueAtTime(0, 0);
 							gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + fadeInSeconds);
 							fadeInSeconds = undefined;
 						}
@@ -7177,7 +7177,7 @@ global.SOUND = CLASS((cls) => {
 				volume = _volume;
 				
 				if (gainNode !== undefined) {
-					gainNode.gain.setTargetAtTime(volume, 0, 0);
+					gainNode.gain.setValueAtTime(volume, 0);
 				}
 			};
 			
@@ -7193,7 +7193,7 @@ global.SOUND = CLASS((cls) => {
 				//REQUIRED: seconds
 				
 				if (gainNode !== undefined) {
-					gainNode.gain.setTargetAtTime(0, 0, 0);
+					gainNode.gain.setValueAtTime(0, 0);
 					gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + seconds);
 				}
 				
