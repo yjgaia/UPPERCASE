@@ -401,6 +401,8 @@ global.NODE = CLASS({
 
 				// empty children.
 				empty();
+				
+				wrapperDom.empty();
 
 				// remove from parent node.
 				wrapperEl.parentNode.removeChild(wrapperEl);
@@ -409,14 +411,18 @@ global.NODE = CLASS({
 
 				fireEvent('remove');
 
-				EVENT.removeAll({
-					node : self
-				});
-
 				// free memory.
 				wrapperEl = undefined;
 				contentEl = undefined;
 			}
+
+			EVENT.removeAll({
+				node : self
+			});
+
+			EVENT.removeAll({
+				node : wrapperDom
+			});
 			
 			// free memory.
 			data = undefined;
@@ -431,7 +437,7 @@ global.NODE = CLASS({
 		let on = self.on = (eventName, eventHandler) => {
 			//REQUIRED: eventName
 			//REQUIRED: eventHandler
-
+			
 			EVENT({
 				node : self,
 				name : eventName

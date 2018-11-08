@@ -189,7 +189,7 @@ global.EVENT = CLASS((cls) => {
 			} else {
 				nodeId = node.id;
 			}
-
+			
 			// push event to map.
 
 			if (eventMaps[nodeId] === undefined) {
