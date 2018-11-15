@@ -7094,31 +7094,34 @@ global.SOUND = CLASS((cls) => {
 				request.onload = () => {
 	
 					audioContext.decodeAudioData(request.response, (_buffer) => {
-	
-						gainNode = audioContext.createGain();
-	
-						buffer = _buffer;
 						
-						duration = buffer.duration;
-						
-						gainNode.connect(audioContext.destination);
-						
-						if (fadeInSeconds === undefined) {
-							gainNode.gain.setValueAtTime(volume, 0);
-						} else {
-							gainNode.gain.setValueAtTime(0, 0);
-							gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + fadeInSeconds);
-							fadeInSeconds = undefined;
+						if (buffer === undefined) {
+							
+							gainNode = audioContext.createGain();
+		
+							buffer = _buffer;
+							
+							duration = buffer.duration;
+							
+							gainNode.connect(audioContext.destination);
+							
+							if (fadeInSeconds === undefined) {
+								gainNode.gain.setValueAtTime(volume, 0);
+							} else {
+								gainNode.gain.setValueAtTime(0, 0);
+								gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + fadeInSeconds);
+								fadeInSeconds = undefined;
+							}
+		
+							if (delayed !== undefined) {
+								delayed();
+							}
+							
+							fireEvent('load');
+							off('load');
+							
+							isLoaded = true;
 						}
-	
-						if (delayed !== undefined) {
-							delayed();
-						}
-						
-						fireEvent('load');
-						off('load');
-						
-						isLoaded = true;
 					});
 				};
 				request.send();
