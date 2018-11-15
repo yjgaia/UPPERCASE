@@ -4243,7 +4243,13 @@ global.VALID = CLASS((cls) => {
 		//OPTIONAL: params.min
 		//REQUIRED: params.max
 		
-		let str = String(params.value);
+		let value = params.value;
+		
+		if (CHECK_IS_DATA(value) === true) {
+			return false;
+		}
+		
+		let str = String(value);
 		let min = params.min;
 		let max = params.max;
 		
