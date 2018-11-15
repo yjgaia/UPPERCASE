@@ -578,7 +578,7 @@ global.NODE = CLASS({
 			if (wrapperEl === document.body) {
 				return true;
 			} else {
-				return parentNode !== undefined && parentNode.checkIsShowing() === true && getStyle('display') !== 'none';
+				return getStyle('display') !== 'none';
 			}
 		};
 		

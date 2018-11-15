@@ -1672,7 +1672,14 @@ SOUND_ONCE({
 	ogg : 'ding.ogg',
 	mp3 : 'ding.mp3'
 });
+
+// 사운드 파일의 길이
+sound.on('load', () => {
+	console.log(sound.getDuration());
+});
 ```
+
+이 외에도 현재 사운드가 재생 중인지 확인하는 `checkIsPlaying` 함수 및 재생 시작 시간을 알려주는 `getStartAt` 함수가 있습니다.
 
 *iOS 기기에서는 페이지 접속 후 터치 이벤트가 한번 이상 발생해야 사운드가 재생됩니다. 처음부터 자동으로 재생되지 않습니다.*
 
