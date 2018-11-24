@@ -7926,6 +7926,11 @@ global.NODE = CLASS({
 							node : childNode,
 							name : 'show'
 						});
+
+						EVENT.removeAll({
+							node : childNode,
+							name : 'show'
+						});
 					}
 				});
 			});
@@ -7978,6 +7983,11 @@ global.NODE = CLASS({
 			if (checkIsShowing() === true) {
 
 				fireEvent('show');
+
+				EVENT.removeAll({
+					node : self,
+					name : 'show'
+				});
 			}
 
 			// run after wating after nodes.
@@ -8430,6 +8440,11 @@ global.NODE = CLASS({
 			if (checkIsShowing() === true) {
 
 				EVENT.fireAll({
+					node : self,
+					name : 'show'
+				});
+
+				EVENT.removeAll({
 					node : self,
 					name : 'show'
 				});
