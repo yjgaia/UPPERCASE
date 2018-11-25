@@ -7,7 +7,7 @@ UPPERCASE-CORE는 JavaScript 환경에 따라 아래와 같이 세부 모듈로 
 UPPERCASE-CORE-COMMON은 모든 JavaScript 환경에서 사용할 수 있는 모듈입니다.
 
 ## [UPPERCASE-CORE-BROWSER](UPPERCASE-CORE-BROWSER.md)
-UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모듈입니다. UPPERCASE-COMMON-CORE를 포함하고 있습니다.
+UPPERCASE-CORE-BROWSER는 웹 브라우저 환경에서 사용할 수 있는 모듈입니다. UPPERCASE-CORE-COMMON를 포함하고 있습니다.
 
 ## [UPPERCASE-CORE-NODE](UPPERCASE-CORE-NODE.md)
-UPPERCASE-CORE-NODE는 Node.js 환경에서 사용할 수 있는 모듈입니다. UPPERCASE-COMMON-CORE를 포함하고 있습니다.
+UPPERCASE-CORE-NODE는 Node.js 환경에서 사용할 수 있는 모듈입니다. UPPERCASE-CORE-COMMON를 포함하고 있습니다.
