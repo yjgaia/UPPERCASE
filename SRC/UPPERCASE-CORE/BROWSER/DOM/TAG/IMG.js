@@ -30,6 +30,9 @@ global.IMG = CLASS({
 
 		let el = self.getEl();
 		
+		// CORS 이슈 해결
+		el.crossOrigin = 'anonymous';
+		
 		//OVERRIDE: self.getWidth
 		let getWidth = self.getWidth = () => {
 			return el.width;
