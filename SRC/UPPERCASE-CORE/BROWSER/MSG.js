@@ -22,33 +22,48 @@ OVERRIDE(MSG, (origin) => {
 			//REQUIRED: url
 			//REQUIRED: callback
 			
-			GET(url, (content) => {
+			if (CHECK_IS_ARRAY(url) === true) {
 				
-				let data = {};
+				NEXT(url, [
+				(url, next) => {
+					loadCSV(url, next);
+				},
 				
-				let langs;
-				EACH(__PAPA.parse(content).data, (texts, i) => {
+				() => {
+					return callback;
+				}]);
+			}
+			
+			else {
+				
+				GET(url, (content) => {
 					
-					// 첫번째 줄은 언어 설정
-					if (i === 0) {
-						langs = texts;
-					}
+					let data = {};
 					
-					else {
-						let subData = {};
-						EACH(texts, (text, j) => {
-							if (j > 0) {
-								subData[langs[j]] = text.replace(/\\n/, '\n');
-							}
-						});
-						data[texts[0]] = subData;
-					}
+					let langs;
+					EACH(__PAPA.parse(content).data, (texts, i) => {
+						
+						// 첫번째 줄은 언어 설정
+						if (i === 0) {
+							langs = texts;
+						}
+						
+						else {
+							let subData = {};
+							EACH(texts, (text, j) => {
+								if (j > 0) {
+									subData[langs[j]] = text.replace(/\\n/, '\n');
+								}
+							});
+							data[texts[0]] = subData;
+						}
+					});
+					
+					addData(data);
+					
+					callback();
 				});
-				
-				addData(data);
-				
-				callback();
-			});
+			}
 		};
 		
 		return {

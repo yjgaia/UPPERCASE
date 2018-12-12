@@ -1595,7 +1595,7 @@ store.get(name); // 'YJ Sim'
 ## `MSG({ko:, en:, ...})` `MSG(key)`
 [`INFO`](#info)의 [웹 애플리케이션 언어 설정 코드](#getlang)에 해당하는 문자열을 반환합니다. 만약 알 수 없는 언어 설정 코드라면, 영어가 있는 경우에는 영어를, 아니라면 첫번째 문자열을 반환합니다.
 
-```javascriptND*
+```javascript
 // 브라우저 언어 설정이 한국어일 경우, '안녕하세요'
 // 브라우저 언어 설정이 영어일 경우, 'Hello'
 // 브라우저 언어 설정이 일본어일 경우, 'こんにちは'
@@ -1634,6 +1634,23 @@ MSG.addData({
 // 브라우저 언어 설정이 일본어일 경우, 'こんにちは'
 // 브라우저 언어 설정이 한국어나 영어, 일본어가 아닌 경우, 알 수 없는 언어 설정 코드이므로 영어인 'English, Hello!'
 MSG('HELLO');
+```
+
+마지막으로 CSV 파일을 통해 문자열 데이터를 가져오는 방법이 있습니다.
+```javascript
+// CSV 파일을 통해 문자열 데이터를 가져옵니다.
+MSG.loadCSV(ValkyrieMaker.R('text.csv'), () => {
+	MSG('HELLO');
+});
+
+// 여러 CSV 파일들에서 한번에 가져옵니다.
+MSG.loadCSV([
+	ValkyrieMaker.R('ingame.csv'),
+	ValkyrieMaker.R('questachievement.csv'),
+	ValkyrieMaker.R('tutorial.csv')
+], () => {
+	MSG('HELLO');
+});
 ```
 
 이를 통해 쉽게 문자열을 국제화 할 수 있습니다.
