@@ -1223,6 +1223,29 @@ global.LOAD_ALL_SCRIPTS = METHOD((m) => {
 			let env = params.env;
 			
 			let scanFolder = (folderPath, boxName) => {
+				
+				let folderNames = [];
+	
+				FIND_FOLDER_NAMES({
+					path : folderPath,
+					isSync : true
+				}, {
+	
+					notExists : () => {
+						// ignore.
+					},
+	
+					success : (_folderNames) => {
+						folderNames = _folderNames;
+					}
+				});
+				
+				if (CHECK_IS_IN({
+					array : folderNames,
+					value : 'LIB'
+				}) === true) {
+					scanFolder(folderPath + '/LIB', boxName);
+				}
 	
 				FIND_FILE_NAMES({
 					path : folderPath,
@@ -1247,23 +1270,10 @@ global.LOAD_ALL_SCRIPTS = METHOD((m) => {
 						});
 					}
 				});
-	
-				FIND_FOLDER_NAMES({
-					path : folderPath,
-					isSync : true
-				}, {
-	
-					notExists : () => {
-						// ignore.
-					},
-	
-					success : (folderNames) => {
-	
-						EACH(folderNames, (folderName) => {
-							if (CHECK_IS_ALLOWED_FOLDER_NAME(folderName) === true) {
-								scanFolder(folderPath + '/' + folderName, boxName);
-							}
-						});
+
+				EACH(folderNames, (folderName) => {
+					if (folderName !== 'LIB' && CHECK_IS_ALLOWED_FOLDER_NAME(folderName) === true) {
+						scanFolder(folderPath + '/' + folderName, boxName);
 					}
 				});
 			};
