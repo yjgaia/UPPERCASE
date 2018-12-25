@@ -26,6 +26,11 @@ global.UDP_SERVER = CLASS({
 			let ip = nativeRequestInfo.address;
 			let port = nativeRequestInfo.port;
 			
+			// IPv6 to IPv4
+			if (ip.substring(0, 7) === '::ffff:') {
+				ip = ip.substring(7);
+			}
+			
 			requestListener(
 			
 			// request info	

@@ -96,6 +96,11 @@ global.WEB_SOCKET_SERVER = METHOD({
 			if (ip === undefined) {
 				ip = req.connection.remoteAddress;
 			}
+			
+			// IPv6 to IPv4
+			if (ip.substring(0, 7) === '::ffff:') {
+				ip = ip.substring(7);
+			}
 
 			connectionListener(
 

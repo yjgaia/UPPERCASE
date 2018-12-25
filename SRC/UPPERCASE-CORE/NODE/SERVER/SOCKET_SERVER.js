@@ -102,13 +102,20 @@ global.SOCKET_SERVER = METHOD({
 					runMethods('__ERROR', errorMsg);
 				}
 			});
+			
+			let ip = conn.remoteAddress;
+			
+			// IPv6 to IPv4
+			if (ip.substring(0, 7) === '::ffff:') {
+				ip = ip.substring(7);
+			}
 
 			connectionListener(
 
 			// client info
 			clientInfo = {
 				
-				ip : conn.remoteAddress,
+				ip : ip,
 				
 				connectTime : new Date()
 			},

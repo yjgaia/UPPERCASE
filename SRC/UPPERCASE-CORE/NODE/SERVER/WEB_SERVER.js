@@ -294,6 +294,11 @@ global.WEB_SERVER = CLASS((cls) => {
 				if (ip === undefined) {
 					ip = nativeReq.connection.remoteAddress;
 				}
+				
+				// IPv6 to IPv4
+				if (ip.substring(0, 7) === '::ffff:') {
+					ip = ip.substring(7);
+				}
 
 				if (acceptEncoding === undefined) {
 					acceptEncoding = '';

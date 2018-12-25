@@ -11449,13 +11449,20 @@ global.SOCKET_SERVER = METHOD({
 					runMethods('__ERROR', errorMsg);
 				}
 			});
+			
+			let ip = conn.remoteAddress;
+			
+			// IPv6 to IPv4
+			if (ip.substring(0, 7) === '::ffff:') {
+				ip = ip.substring(7);
+			}
 
 			connectionListener(
 
 			// client info
 			clientInfo = {
 				
-				ip : conn.remoteAddress,
+				ip : ip,
 				
 				connectTime : new Date()
 			},
@@ -11595,6 +11602,11 @@ global.UDP_SERVER = CLASS({
 			
 			let ip = nativeRequestInfo.address;
 			let port = nativeRequestInfo.port;
+			
+			// IPv6 to IPv4
+			if (ip.substring(0, 7) === '::ffff:') {
+				ip = ip.substring(7);
+			}
 			
 			requestListener(
 			
@@ -11924,6 +11936,11 @@ global.WEB_SERVER = CLASS((cls) => {
 				
 				if (ip === undefined) {
 					ip = nativeReq.connection.remoteAddress;
+				}
+				
+				// IPv6 to IPv4
+				if (ip.substring(0, 7) === '::ffff:') {
+					ip = ip.substring(7);
 				}
 
 				if (acceptEncoding === undefined) {
@@ -12674,6 +12691,11 @@ global.WEB_SOCKET_SERVER = METHOD({
 
 			if (ip === undefined) {
 				ip = req.connection.remoteAddress;
+			}
+			
+			// IPv6 to IPv4
+			if (ip.substring(0, 7) === '::ffff:') {
+				ip = ip.substring(7);
 			}
 
 			connectionListener(
