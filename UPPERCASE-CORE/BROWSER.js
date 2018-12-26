@@ -8041,8 +8041,6 @@ global.NODE = CLASS({
 			wrapperDom = dom;
 			wrapperEl = dom.getEl();
 
-			originDisplay = getStyle('display');
-
 			on('show', () => {
 
 				EACH(childNodes, (childNode) => {
@@ -8552,6 +8550,8 @@ global.NODE = CLASS({
 		};
 
 		let hide = self.hide = () => {
+			
+			originDisplay = getStyle('display');
 
 			addStyle({
 				display : 'none'
