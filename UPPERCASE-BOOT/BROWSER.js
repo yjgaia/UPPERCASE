@@ -252,6 +252,8 @@ global.SYNC_TIME = METHOD({
 			
 			// The server time = The local time - diff (diff: client time - server time)
 			SERVER_TIME.setDiff(diff);
+			
+			timeSyncRoom.exit();
 		});
 	}
 });
