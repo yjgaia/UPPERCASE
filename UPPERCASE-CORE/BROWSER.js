@@ -7152,6 +7152,34 @@ global.SOUND = CLASS((cls) => {
 
 	let audioContext;
 	let isCanPlayOGG = new Audio().canPlayType('audio/ogg') !== '';
+	
+	let bufferCache = {};
+	
+	let loadBuffer = (src, callback) => {
+		
+		if (bufferCache[src] !== undefined) {
+			callback(bufferCache[src]);
+		}
+		
+		else {
+			
+			let request = new XMLHttpRequest();
+			request.open('GET', src, true);
+			request.responseType = 'arraybuffer';
+			
+			request.onload = () => {
+				
+				audioContext.decodeAudioData(request.response, (buffer) => {
+					
+					bufferCache[src] = buffer;
+					
+					callback(buffer);
+				});
+			};
+			
+			request.send();
+		}
+	};
 
 	return {
 
@@ -7206,91 +7234,81 @@ global.SOUND = CLASS((cls) => {
 				src = wav;
 			}
 			
-			let request;
-			
 			let ready = () => {
 				
-				if (request !== undefined) {
-					request.abort();
-				}
-				
-				request = new XMLHttpRequest();
-				request.open('GET', src, true);
-				request.responseType = 'arraybuffer';
-	
-				request.onload = () => {
-	
-					audioContext.decodeAudioData(request.response, (_buffer) => {
+				loadBuffer(src, (_buffer) => {
+					
+					if (buffer === undefined) {
 						
-						if (buffer === undefined) {
-							
-							gainNode = audioContext.createGain();
-		
-							buffer = _buffer;
-							
-							duration = buffer.duration;
-							
-							gainNode.connect(audioContext.destination);
-							
-							if (fadeInSeconds === undefined) {
-								gainNode.gain.setValueAtTime(volume, 0);
-							} else {
-								gainNode.gain.setValueAtTime(0, 0);
-								gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + fadeInSeconds);
-								fadeInSeconds = undefined;
-							}
-		
-							if (delayed !== undefined) {
-								delayed();
-							}
-							
-							fireEvent('load');
-							off('load');
-							
-							isLoaded = true;
+						gainNode = audioContext.createGain();
+	
+						buffer = _buffer;
+						
+						duration = buffer.duration;
+						
+						gainNode.connect(audioContext.destination);
+						
+						if (fadeInSeconds === undefined) {
+							gainNode.gain.setValueAtTime(volume, 0);
+						} else {
+							gainNode.gain.setValueAtTime(0, 0);
+							gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + fadeInSeconds);
+							fadeInSeconds = undefined;
 						}
-					});
-				};
-				request.send();
+	
+						if (delayed !== undefined) {
+							delayed();
+						}
+						
+						fireEvent('load');
+						off('load');
+						
+						isLoaded = true;
+					}
+				});
 			};
-			
-			ready();
 
 			let play = self.play = (at) => {
 				//OPTIONAL: at
 				
-				if (at !== undefined) {
-					pausedAt = at;
-				}
-
-				delayed = () => {
-
-					source = audioContext.createBufferSource();
-					source.buffer = buffer;
-					source.connect(gainNode);
-					source.loop = isLoop;
+				if (isPlaying !== true) {
 					
-					startedAt = Date.now() / 1000 - pausedAt;
-					source.start(0, pausedAt % buffer.duration);
-					
-					delayed = undefined;
-					
-					if (isLoop !== true) {
-						source.onended = () => {
-							stop();
-							if (onEndHandler !== undefined) {
-								onEndHandler();
-							}
-						};
+					if (at !== undefined) {
+						pausedAt = at;
 					}
-					
-					isPlaying = true;
-				};
-
-				if (buffer === undefined) {
-					ready();
-				} else {
-					delayed();
+	
+					delayed = () => {
+						
+						if (isPlaying !== true) {
+							
+							source = audioContext.createBufferSource();
+							source.buffer = buffer;
+							source.connect(gainNode);
+							source.loop = isLoop;
+							
+							startedAt = Date.now() / 1000 - pausedAt;
+							source.start(0, pausedAt % buffer.duration);
+							
+							delayed = undefined;
+							
+							if (isLoop !== true) {
+								source.onended = () => {
+									stop();
+									if (onEndHandler !== undefined) {
+										onEndHandler();
+									}
+								};
+							}
+							
+							isPlaying = true;
+						}
+					};
+	
+					if (buffer === undefined) {
+						ready();
+					} else {
+						delayed();
+					}
 				}
 
 				return self;
@@ -7459,6 +7477,8 @@ global.SOUND = CLASS((cls) => {
 					}
 				}
 			};
+			
+			ready();
 		}
 	};
 });
