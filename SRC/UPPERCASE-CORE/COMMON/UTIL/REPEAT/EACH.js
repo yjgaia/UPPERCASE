@@ -11,6 +11,7 @@ global.EACH = METHOD({
 			return false;
 		}
 
+		// when dataOrArrayOrString is data
 		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
 			for (let name in dataOrArrayOrString) {
@@ -22,6 +23,7 @@ global.EACH = METHOD({
 			}
 		}
 
+		// when dataOrArrayOrString is func
 		else if (func === undefined) {
 
 			func = dataOrArrayOrString;

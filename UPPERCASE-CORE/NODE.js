@@ -5976,6 +5976,7 @@ global.EACH = METHOD({
 			return false;
 		}
 
+		// when dataOrArrayOrString is data
 		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
 
 			for (let name in dataOrArrayOrString) {
@@ -5987,6 +5988,7 @@ global.EACH = METHOD({
 			}
 		}
 
+		// when dataOrArrayOrString is func
 		else if (func === undefined) {
 
 			func = dataOrArrayOrString;
@@ -6116,39 +6118,61 @@ global.REPEAT = METHOD({
  */
 global.REVERSE_EACH = METHOD({
 
-	run : (arrayOrString, func) => {
-		//OPTIONAL: arrayOrString
+	run : (dataOrArrayOrString, func) => {
+		//OPTIONAL: dataOrArrayOrString
 		//REQUIRED: func
 		
-		if (arrayOrString === undefined) {
+		if (dataOrArrayOrString === undefined) {
 			return false;
 		}
 
-		// when arrayOrString is func
+		// when dataOrArrayOrString is data
+		else if (CHECK_IS_DATA(dataOrArrayOrString) === true) {
+			
+			let reverseNames = [];
+
+			for (let name in dataOrArrayOrString) {
+				reverseNames.push(name);
+			}
+			
+			let length = reverseNames.length;
+
+			for (let i = length - 1; i >= 0; i -= 1) {
+				let name = reverseNames[i];
+				
+				if (dataOrArrayOrString.hasOwnProperty === undefined || dataOrArrayOrString.hasOwnProperty(name) === true) {
+					if (func(dataOrArrayOrString[name], name) === false) {
+						return false;
+					}
+				}
+			}
+		}
+
+		// when dataOrArrayOrString is func
 		else if (func === undefined) {
 
-			func = arrayOrString;
-			arrayOrString = undefined;
+			func = dataOrArrayOrString;
+			dataOrArrayOrString = undefined;
 
-			return (arrayOrString) => {
-				return REVERSE_EACH(arrayOrString, func);
+			return (dataOrArrayOrString) => {
+				return REVERSE_EACH(dataOrArrayOrString, func);
 			};
 		}
 
-		// when arrayOrString is array or string
+		// when dataOrArrayOrString is array or string
 		else {
 
-			let length = arrayOrString.length;
+			let length = dataOrArrayOrString.length;
 
 			for (let i = length - 1; i >= 0; i -= 1) {
 
-				if (func(arrayOrString[i], i) === false) {
+				if (func(dataOrArrayOrString[i], i) === false) {
 					return false;
 				}
 				
 				// when shrink
-				if (arrayOrString.length < length) {
-					i += length - arrayOrString.length;
+				if (dataOrArrayOrString.length < length) {
+					i += length - dataOrArrayOrString.length;
 				}
 			}
 		}
