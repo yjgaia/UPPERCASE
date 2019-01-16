@@ -6701,7 +6701,7 @@ global.INFO = OBJECT({
 
 			setLang(lang);
 
-			location.reload();
+			REFRESH();
 		};
 
 		let checkIsTouchDevice = self.checkIsTouchDevice = () => {
@@ -12871,6 +12871,8 @@ global.REFRESH = METHOD((m) => {
 					name : 'hashchange'
 				}, () => {
 					location.replace(savedHash === '' ? '#!/' : savedHash);
+					
+					history.back();
 				});
 		
 				location.href = '#!/' + getRefreshingURI();
@@ -12885,6 +12887,8 @@ global.REFRESH = METHOD((m) => {
 				
 				history.replaceState(undefined, undefined, '/' + savedURI);
 				MATCH_VIEW.checkAll();
+				
+				history.back();
 			}
 		}
 	};

@@ -36,7 +36,7 @@ global.INFO = OBJECT({
 
 			setLang(lang);
 
-			location.reload();
+			REFRESH();
 		};
 
 		let checkIsTouchDevice = self.checkIsTouchDevice = () => {
