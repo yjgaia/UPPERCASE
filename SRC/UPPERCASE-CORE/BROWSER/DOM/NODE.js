@@ -543,6 +543,10 @@ global.NODE = CLASS({
 		let hide = self.hide = () => {
 			
 			originDisplay = getStyle('display');
+			
+			if (originDisplay === 'none') {
+				originDisplay = undefined;
+			}
 
 			addStyle({
 				display : 'none'
