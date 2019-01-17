@@ -8635,7 +8635,7 @@ global.NODE = CLASS({
 			if (wrapperEl === document.body) {
 				return true;
 			} else {
-				return getStyle('display') !== 'none';
+				return getStyle('display') !== 'none' && getWidth() > 0;
 			}
 		};
 		
