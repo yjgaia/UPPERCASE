@@ -8488,57 +8488,76 @@ global.CHECK_FILE_EXISTS = METHOD(() => {
 			// when normal mode
 			if (isSync !== true) {
 				
-				FS.access(path, (error) => {
+				if (path === './') {
+					callback(true);
+				}
+				
+				else {
 					
-					if (error !== TO_DELETE) {
-						callback(false);
-					}
-					
-					else {
+					FS.access(path, (error) => {
 						
-						FS.readdir(Path.dirname(path), (error, names) => {
-
-							if (error !== TO_DELETE) {
-								callback(false);
-							}
+						if (error !== TO_DELETE) {
+							callback(false);
+						}
+						
+						else {
 							
-							else {
-
-								callback(CHECK_IS_IN({
-									array : names,
-									value : Path.basename(path)
-								}));
-							}
-						});
-					}
-				});
+							FS.readdir(Path.dirname(path), (error, names) => {
+	
+								if (error !== TO_DELETE) {
+									callback(false);
+								}
+								
+								else {
+	
+									callback(CHECK_IS_IN({
+										array : names,
+										value : Path.basename(path)
+									}));
+								}
+							});
+						}
+					});
+				}
 			}
 
 			// when sync mode
 			else {
 				
-				try {
-
-					FS.accessSync(path);
-					
-					let result = CHECK_IS_IN({
-						array : FS.readdirSync(Path.dirname(path)),
-						value : Path.basename(path)
-					});
+				if (path === './') {
 					
 					if (callback !== undefined) {
-						callback(result);
+						callback(true);
 					}
 					
-					return result;
-
-				} catch(error) {
+					return true;
+				}
+				
+				else {
 					
-					if (callback !== undefined) {
-						callback(false);
+					try {
+	
+						FS.accessSync(path);
+						
+						let result = CHECK_IS_IN({
+							array : FS.readdirSync(Path.dirname(path)),
+							value : Path.basename(path)
+						});
+						
+						if (callback !== undefined) {
+							callback(result);
+						}
+						
+						return result;
+	
+					} catch(error) {
+						
+						if (callback !== undefined) {
+							callback(false);
+						}
+						
+						return false;
 					}
-					
-					return false;
 				}
 			}
 		}
