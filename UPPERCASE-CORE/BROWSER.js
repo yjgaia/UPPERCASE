@@ -8550,19 +8550,19 @@ global.NODE = CLASS({
 		};
 
 		let getWidth = self.getWidth = () => {
-			return wrapperEl.offsetWidth;
+			return wrapperEl === undefined ? 0 : wrapperEl.offsetWidth;
 		};
 
 		let getInnerWidth = self.getInnerWidth = () => {
-			return wrapperEl.clientWidth;
+			return wrapperEl === undefined ? 0 : wrapperEl.clientWidth;
 		};
 
 		let getHeight = self.getHeight = () => {
-			return wrapperEl.offsetHeight;
+			return wrapperEl === undefined ? 0 : wrapperEl.offsetHeight;
 		};
 
 		let getInnerHeight = self.getInnerHeight = () => {
-			return wrapperEl.clientHeight;
+			return wrapperEl === undefined ? 0 : wrapperEl.clientHeight;
 		};
 
 		let getLeft = self.getLeft = () => {
