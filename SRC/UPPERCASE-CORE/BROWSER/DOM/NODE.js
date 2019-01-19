@@ -397,6 +397,8 @@ global.NODE = CLASS({
 
 			if (wrapperEl !== undefined && wrapperEl.parentNode !== TO_DELETE) {
 
+				fireEvent('beforeRemove');
+
 				// empty children.
 				empty();
 				
