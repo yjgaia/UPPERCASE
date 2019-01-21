@@ -5635,8 +5635,8 @@ global.INTERVAL = CLASS({
 global.LOOP = CLASS((cls) => {
 	
 	let animationInterval;
-	let loopInfos = [];
-	let runs = [];
+	
+	let infos = [];
 
 	let fire = () => {
 
@@ -5651,48 +5651,31 @@ global.LOOP = CLASS((cls) => {
 				
 				if (deltaTime > 0) {
 
-					for (let i = 0; i < loopInfos.length; i += 1) {
+					for (let i = 0; i < infos.length; i += 1) {
 
-						let loopInfo = loopInfos[i];
+						let info = infos[i];
 
-						if (loopInfo.fps !== undefined && loopInfo.fps > 0) {
+						if (info.fps !== undefined && info.fps > 0) {
 
-							if (loopInfo.timeSigma === undefined) {
-								loopInfo.timeSigma = 0;
-								loopInfo.countSigma = 0;
+							if (info.timeSigma === undefined) {
+								info.timeSigma = 0;
 							}
-
-							// calculate count.
-							let count = parseInt(loopInfo.fps * deltaTime * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
-
-							// start.
-							if (loopInfo.start !== undefined) {
-								loopInfo.start();
-							}
-
-							// run interval.
-							let interval = loopInfo.interval;
-							for (j = 0; j < count; j += 1) {
-								interval(loopInfo.fps);
-							}
-
-							// end.
-							if (loopInfo.end !== undefined) {
-								loopInfo.end(deltaTime);
-							}
-
-							loopInfo.countSigma += count;
-
-							loopInfo.timeSigma += deltaTime;
-							if (loopInfo.timeSigma > 1000) {
-								loopInfo.timeSigma = undefined;
+							
+							info.timeSigma += deltaTime;
+							
+							let frameSecond = 1 / info.fps;
+							
+							if (info.timeSigma >= frameSecond) {
+								
+								info.run(frameSecond);
+								
+								info.timeSigma -= frameSecond;
 							}
 						}
-					}
-
-					// run runs.
-					for (let i = 0; i < runs.length; i += 1) {
-						runs[i](deltaTime);
+						
+						else {
+							info.run(deltaTime);
+						}
 					}
 
 					beforeTime = time;
@@ -5703,7 +5686,7 @@ global.LOOP = CLASS((cls) => {
 	
 	let stop = () => {
 
-		if (loopInfos.length <= 0 && runs.length <= 0) {
+		if (infos.length <= 0) {
 
 			animationInterval.remove();
 			animationInterval = undefined;
@@ -5711,89 +5694,47 @@ global.LOOP = CLASS((cls) => {
 	};
 
 	return {
-
-		init : (inner, self, fpsOrRun, intervalOrFuncs) => {
-			//OPTIONAL: fpsOrRun
-			//OPTIONAL: intervalOrFuncs
-			//OPTIONAL: intervalOrFuncs.start
-			//REQUIRED: intervalOrFuncs.interval
-			//OPTIONAL: intervalOrFuncs.end
-
-			let run;
-			let start;
-			let interval;
-			let end;
-
-			let info;
-
-			if (intervalOrFuncs !== undefined) {
-
-				// init intervalOrFuncs.
-				if (CHECK_IS_DATA(intervalOrFuncs) !== true) {
-					interval = intervalOrFuncs;
-				} else {
-					start = intervalOrFuncs.start;
-					interval = intervalOrFuncs.interval;
-					end = intervalOrFuncs.end;
-				}
+		
+		init : (inner, self, fps, run) => {
+			//OPTIONAL: fps
+			//REQUIRED: run
 			
-				let resume = self.resume = RAR(() => {
-					
-					loopInfos.push( info = {
-						fps : fpsOrRun,
-						start : start,
-						interval : interval,
-						end : end
-					});
-					
-					fire();
-				});
-
-				let pause = self.pause = () => {
-
-					REMOVE({
-						array : loopInfos,
-						value : info
-					});
-
-					stop();
-				};
-
-				let changeFPS = self.changeFPS = (fps) => {
-					//REQUIRED: fps
-
-					info.fps = fps;
-				};
-
-				let remove = self.remove = () => {
-					pause();
-				};
+			if (run === undefined) {
+				run = fps;
+				fps = undefined;
 			}
-
-			// when fpsOrRun is run
-			else {
+			
+			let info;
+			
+			let resume = self.resume = RAR(() => {
 				
-				let resume = self.resume = RAR(() => {
-					
-					runs.push(run = fpsOrRun);
-					
-					fire();
+				infos.push(info = {
+					fps : fps,
+					run : run
 				});
-
-				let pause = self.pause = () => {
-
-					REMOVE({
-						array : runs,
-						value : run
-					});
-
-					stop();
-				};
-
-				let remove = self.remove = () => {
-					pause();
-				};
-			}
+				
+				fire();
+			});
+			
+			let pause = self.pause = () => {
+			
+				REMOVE({
+					array : infos,
+					value : info
+				});
+				
+				stop();
+			};
+			
+			let changeFPS = self.changeFPS = (fps) => {
+				//REQUIRED: fps
+				
+				info.fps = fps;
+			};
+			
+			let remove = self.remove = () => {
+				pause();
+			};
 		}
 	};
 });
@@ -6733,8 +6674,7 @@ OVERRIDE(LOOP, (origin) => {
 		
 		let animationInterval;
 		
-		let loopInfos = [];
-		let runs = [];
+		let infos = [];
 		
 		let fire = () => {
 			
@@ -6750,52 +6690,34 @@ OVERRIDE(LOOP, (origin) => {
 					
 					if (deltaTime > 0) {
 	
-						beforeTime = time;
-						
-						for (let i = 0; i < loopInfos.length; i += 1) {
-							
-							let loopInfo = loopInfos[i];
-							
-							if (loopInfo.fps !== undefined && loopInfo.fps > 0) {
+						for (let i = 0; i < infos.length; i += 1) {
 	
-								if (loopInfo.timeSigma === undefined) {
-									loopInfo.timeSigma = 0;
-									loopInfo.countSigma = 0;
+							let info = infos[i];
+	
+							if (info.fps !== undefined && info.fps > 0) {
+	
+								if (info.timeSigma === undefined) {
+									info.timeSigma = 0;
 								}
-	
-								// calculate count.
-								let count = parseInt(loopInfo.fps * deltaTime * (loopInfo.timeSigma / deltaTime + 1), 10) - loopInfo.countSigma;
-	
-								// start.
-								if (loopInfo.start !== undefined) {
-									loopInfo.start();
-								}
-	
-								// run interval.
-								let interval = loopInfo.interval;
 								
-								for (let j = 0; j < count; j += 1) {
-									interval(loopInfo.fps);
+								info.timeSigma += deltaTime;
+								
+								let frameSecond = 1 / info.fps;
+								
+								if (info.timeSigma >= frameSecond) {
+									
+									info.run(frameSecond);
+									
+									info.timeSigma -= frameSecond;
 								}
-	
-								// end.
-								if (loopInfo.end !== undefined) {
-									loopInfo.end(deltaTime);
-								}
-	
-								loopInfo.countSigma += count;
-	
-								loopInfo.timeSigma += deltaTime;
-								if (loopInfo.timeSigma > 1000) {
-									loopInfo.timeSigma = undefined;
-								}
+							}
+							
+							else {
+								info.run(deltaTime);
 							}
 						}
 	
-						// run runs.
-						for (let i = 0; i < runs.length; i += 1) {
-							runs[i](deltaTime);
-						}
+						beforeTime = time;
 					}
 					
 					animationInterval = requestAnimationFrame(step);
@@ -6805,7 +6727,7 @@ OVERRIDE(LOOP, (origin) => {
 		
 		let stop = () => {
 			
-			if (loopInfos.length <= 0 && runs.length <= 0) {
+			if (infos.length <= 0) {
 	
 				cancelAnimationFrame(animationInterval);
 				animationInterval = undefined;
@@ -6814,93 +6736,46 @@ OVERRIDE(LOOP, (origin) => {
 	
 		return {
 			
-			init : (inner, self, fpsOrRun, intervalOrFuncs) => {
-				//OPTIONAL: fpsOrRun
-				//OPTIONAL: intervalOrFuncs
-				//OPTIONAL: intervalOrFuncs.start
-				//REQUIRED: intervalOrFuncs.interval
-				//OPTIONAL: intervalOrFuncs.end
+			init : (inner, self, fps, run) => {
+				//OPTIONAL: fps
+				//REQUIRED: run
 				
-				let resume;
-				let pause;
-				let changeFPS;
-				let remove;
-	
-				if (intervalOrFuncs !== undefined) {
-					
-					let start;
-					let interval;
-					let end;
-					let info;
-					
-					// init intervalOrFuncs.
-					if (CHECK_IS_DATA(intervalOrFuncs) !== true) {
-						interval = intervalOrFuncs;
-					} else {
-						start = intervalOrFuncs.start;
-						interval = intervalOrFuncs.interval;
-						end = intervalOrFuncs.end;
-					}
+				if (run === undefined) {
+					run = fps;
+					fps = undefined;
+				}
 				
-					resume = self.resume = RAR(() => {
-						
-						loopInfos.push(info = {
-							fps : fpsOrRun,
-							start : start,
-							interval : interval,
-							end : end
-						});
-						
-						fire();
-					});
-	
-					pause = self.pause = () => {
-	
-						REMOVE({
-							array : loopInfos,
-							value : info
-						});
-	
-						stop();
-					};
-	
-					changeFPS = self.changeFPS = (fps) => {
-						//REQUIRED: fps
-	
-						info.fps = fps;
-					};
-	
-					remove = self.remove = () => {
-						pause();
-					};
-				}
-	
-				// when fpsOrRun is run
-				else {
+				let info;
+				
+				let resume = self.resume = RAR(() => {
 					
-					let run;
-					
-					resume = self.resume = RAR(() => {
-						
-						runs.push(run = fpsOrRun);
-						
-						fire();
+					infos.push(info = {
+						fps : fps,
+						run : run
 					});
-	
-					pause = self.pause = () => {
-	
-						REMOVE({
-							array : runs,
-							value : run
-						});
-	
-						stop();
-					};
-	
-					remove = self.remove = () => {
-						pause();
-					};
-				}
+					
+					fire();
+				});
+				
+				let pause = self.pause = () => {
+				
+					REMOVE({
+						array : infos,
+						value : info
+					});
+					
+					stop();
+				};
+				
+				let changeFPS = self.changeFPS = (fps) => {
+					//REQUIRED: fps
+					
+					info.fps = fps;
+				};
+				
+				let remove = self.remove = () => {
+					pause();
+				};
 			}
 		};
 	});
