@@ -212,7 +212,7 @@ global.SOUND = CLASS((cls) => {
 			};
 			
 			let setVolume = self.setVolume = (_volume) => {
-				//REQUIRED: _volume
+				//REQUIRED: volume
 				
 				volume = _volume;
 				

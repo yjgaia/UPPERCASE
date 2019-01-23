@@ -55,7 +55,7 @@ global.AUDIO = CLASS({
 		};
 		
 		let stop = self.stop = () => {
-			self.getEl().pause();
+			pause();
 			self.getEl().currentTime = 0;
 		};
 	}
