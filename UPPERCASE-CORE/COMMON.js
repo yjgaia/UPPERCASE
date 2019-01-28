@@ -3699,26 +3699,38 @@ global.OBJECT = METHOD((m) => {
  */
 global.NEXT = METHOD({
 
-	run : (countOrArray, funcOrFuncs) => {
-		//OPTIONAL: countOrArray
+	run : (dataOrArrayOrCount, funcOrFuncs) => {
+		//OPTIONAL: dataOrArrayOrCount
 		//REQUIRED: funcOrFuncs
 
-		let count;
+		let data;
+		let dataKeys;
 		let array;
+		let count;
 		
 		let f;
 		
 		if (funcOrFuncs === undefined) {
-			funcOrFuncs = countOrArray;
-			countOrArray = undefined;
+			funcOrFuncs = dataOrArrayOrCount;
+			dataOrArrayOrCount = undefined;
 		}
 
-		if (countOrArray !== undefined) {
-			if (CHECK_IS_ARRAY(countOrArray) !== true) {
-				count = countOrArray;
+		if (dataOrArrayOrCount !== undefined) {
+			if (CHECK_IS_DATA(dataOrArrayOrCount) === true) {
+				data = dataOrArrayOrCount;
+			} else if (CHECK_IS_ARRAY(dataOrArrayOrCount) === true) {
+				array = dataOrArrayOrCount;
 			} else {
-				array = countOrArray;
+				count = dataOrArrayOrCount;
 			}
+		}
+		
+		if (data !== undefined) {
+			dataKeys = [];
+			
+			EACH(data, (value, key) => {
+				dataKeys.push(key);
+			});
 		}
 		
 		let funcs;
@@ -3808,6 +3820,44 @@ global.NEXT = METHOD({
 
 							} else {
 								f(array[i], next, i);
+							}
+						});
+					}
+				}
+				
+				else if (data !== undefined) {
+
+					let length = dataKeys.length;
+
+					if (length === 0) {
+						next();
+					}
+					
+					else {
+						
+						let i = -1;
+
+						RUN((self) => {
+
+							i += 1;
+
+							if (i + 1 < length) {
+
+								// if shrink
+								if (dataKeys.length === length - 1) {
+									i -= 1;
+									length -= 1;
+								}
+								
+								let key = dataKeys[i];
+
+								f(data[key], self, key);
+
+							} else {
+								
+								let key = dataKeys[i];
+								
+								f(data[key], next, key);
 							}
 						});
 					}
