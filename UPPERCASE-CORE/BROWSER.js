@@ -7308,7 +7308,7 @@ global.SOUND = CLASS((cls) => {
 			};
 			
 			let setVolume = self.setVolume = (_volume) => {
-				//REQUIRED: _volume
+				//REQUIRED: volume
 				
 				volume = _volume;
 				
@@ -8442,12 +8442,26 @@ global.NODE = CLASS({
 			}
 		};
 		
-		let fireEvent = self.fireEvent = (eventName) => {
-			//REQUIRED: eventName
+		let fireEvent = self.fireEvent = (nameOrParams) => {
+			//REQUIRED: nameOrParams
+			//REQUIRED: nameOrParams.name	이벤트 이름
+			//OPTIONAL: nameOrParams.e
+			
+			let name;
+			let e;
+			
+			// init params.
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				name = nameOrParams;
+			} else {
+				name = nameOrParams.name;
+				e = nameOrParams.e;
+			}
 			
 			return EVENT.fireAll({
 				node : self,
-				name : eventName
+				name : name,
+				e : e
 			});
 		};
 
@@ -8874,9 +8888,11 @@ global.EVENT = CLASS((cls) => {
 		//REQUIRED: nameOrParams
 		//OPTIONAL: nameOrParams.node	이벤트가 등록된 노드
 		//REQUIRED: nameOrParams.name	이벤트 이름
+		//OPTIONAL: nameOrParams.e
 
 		let node;
 		let name;
+		let e;
 		
 		let nodeId;
 		
@@ -8890,6 +8906,7 @@ global.EVENT = CLASS((cls) => {
 		} else {
 			node = nameOrParams.node;
 			name = nameOrParams.name;
+			e = nameOrParams.e;
 		}
 
 		if (node === undefined) {
@@ -8908,7 +8925,7 @@ global.EVENT = CLASS((cls) => {
 
 				EACH(events, (evt) => {
 
-					if (evt.fire() === false) {
+					if (evt.fire(e) === false) {
 						
 						ret = false;
 					}
@@ -9305,10 +9322,11 @@ global.EVENT = CLASS((cls) => {
 				removeFromMap();
 			};
 
-			let fire = self.fire = () => {
+			let fire = self.fire = (e) => {
+				//OPTIONAL: e
 
 				// pass empty e object.
-				return eventHandler(EMPTY_E(), node);
+				return eventHandler(e !== undefined ? e : EMPTY_E(), node);
 			};
 
 			let getEventHandler = self.getEventHandler = () => {
@@ -9596,7 +9614,7 @@ global.AUDIO = CLASS({
 		};
 		
 		let stop = self.stop = () => {
-			self.getEl().pause();
+			pause();
 			self.getEl().currentTime = 0;
 		};
 	}

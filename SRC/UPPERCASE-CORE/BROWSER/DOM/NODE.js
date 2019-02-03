@@ -464,12 +464,26 @@ global.NODE = CLASS({
 			}
 		};
 		
-		let fireEvent = self.fireEvent = (eventName) => {
-			//REQUIRED: eventName
+		let fireEvent = self.fireEvent = (nameOrParams) => {
+			//REQUIRED: nameOrParams
+			//REQUIRED: nameOrParams.name	이벤트 이름
+			//OPTIONAL: nameOrParams.e
+			
+			let name;
+			let e;
+			
+			// init params.
+			if (CHECK_IS_DATA(nameOrParams) !== true) {
+				name = nameOrParams;
+			} else {
+				name = nameOrParams.name;
+				e = nameOrParams.e;
+			}
 			
 			return EVENT.fireAll({
 				node : self,
-				name : eventName
+				name : name,
+				e : e
 			});
 		};
 
