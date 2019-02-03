@@ -92,10 +92,6 @@ global.WEB_SOCKET_SERVER = METHOD({
 			});
 
 			ip = headers['x-forwarded-for'];
-
-			if (ip === undefined) {
-				ip = req.connection.remoteAddress;
-			}
 			
 			// IPv6 to IPv4
 			if (ip.substring(0, 7) === '::ffff:') {

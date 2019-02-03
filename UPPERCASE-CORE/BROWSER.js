@@ -7308,7 +7308,7 @@ global.SOUND = CLASS((cls) => {
 			};
 			
 			let setVolume = self.setVolume = (_volume) => {
-				//REQUIRED: _volume
+				//REQUIRED: volume
 				
 				volume = _volume;
 				
@@ -9596,7 +9596,7 @@ global.AUDIO = CLASS({
 		};
 		
 		let stop = self.stop = () => {
-			self.getEl().pause();
+			pause();
 			self.getEl().currentTime = 0;
 		};
 	}

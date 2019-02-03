@@ -11968,10 +11968,6 @@ global.WEB_SERVER = CLASS((cls) => {
 				let paramStr;
 				let isUploadURI;
 				
-				if (ip === undefined) {
-					ip = nativeReq.connection.remoteAddress;
-				}
-				
 				// IPv6 to IPv4
 				if (ip.substring(0, 7) === '::ffff:') {
 					ip = ip.substring(7);
@@ -12722,10 +12718,6 @@ global.WEB_SOCKET_SERVER = METHOD({
 			});
 
 			ip = headers['x-forwarded-for'];
-
-			if (ip === undefined) {
-				ip = req.connection.remoteAddress;
-			}
 			
 			// IPv6 to IPv4
 			if (ip.substring(0, 7) === '::ffff:') {
