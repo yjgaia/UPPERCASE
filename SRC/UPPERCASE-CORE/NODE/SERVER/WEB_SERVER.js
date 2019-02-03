@@ -291,6 +291,10 @@ global.WEB_SERVER = CLASS((cls) => {
 				let paramStr;
 				let isUploadURI;
 				
+				if (ip === undefined) {
+					ip = nativeReq.connection.remoteAddress;
+				}
+				
 				// IPv6 to IPv4
 				if (ip.substring(0, 7) === '::ffff:') {
 					ip = ip.substring(7);
