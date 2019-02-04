@@ -57,7 +57,7 @@ UPPERCASE 기반 메소드를 생성합니다.
 
 아래와 같이 메소드를 선언하고, 파일명 또한 메소드의 이름과 동일하게 `SomeMethod.js`로 저장합니다. 메소드에 어떤 파라미터가 필요한지 알기 위해 필수 파라미터는 `//REQUIRED: 파라미터명`, 필수가 아닌 파라미터는 `//OPTIONAL: 파라미터명`으로 주석을 작성합니다.
 ```javascript
-SomeMethod = METHOD({
+let SomeMethod = METHOD({
 
 	run : (params) => {
 		//REQUIRED: params
@@ -95,7 +95,7 @@ SomeMethod({
 또한 다음과 같이 메소드에 `static` 멤버들을 선언할 수 있습니다.
 
 ```javascript
-SomeMethod = METHOD((m) => {
+let SomeMethod = METHOD((m) => {
 	
 	let callCount = 0;
 	
@@ -154,7 +154,7 @@ UPPERCASE 기반 클래스를 생성합니다. 생성된 클래스는 상속이 
 아래와 같이 클래스를 선언하고, 파일명 또한 클래스의 이름과 동일하게 `SomeClass.js`로 저장합니다.
 
 ```javascript
-SomeClass = CLASS({
+let SomeClass = CLASS({
 	
 	init : (inner, self, params) => {
 		//REQUIRED: params
@@ -184,7 +184,7 @@ someObject.introduce(); // 하늘은(는) 29살입니다.
 아래와 같이 클래스를 선언할 때 다양한 설정들을 사용할 수 있습니다.
 
 ```javascript
-SomeClass = CLASS({
+let SomeClass = CLASS({
 
 	// 기본 생성자 파라미터를 지정합니다.
 	// 파라미터가 없더라도, 이를 이용해 파라미터를 지정해 객체를 생성할 수 있습니다.
@@ -230,7 +230,7 @@ SomeClass = CLASS({
 클래스 또한 메소드와 마찬가지로 `static` 멤버를 지정할 수 있습니다.
 
 ```javascript
-SomeClass = CLASS((cls) => {
+let SomeClass = CLASS((cls) => {
 	
 	let initCount = 0;
 	
@@ -280,7 +280,7 @@ SomeClass.getInitCount(); // 2
 
 아래와 같이 싱글톤 객체를 선언하고, 파일명 또한 객체의 이름과 동일하게 `SampleObject.js`로 저장합니다.
 ```javascript
-SomeObject = OBJECT({
+let SomeObject = OBJECT({
 
 	init : (inner, self) => {
 		
