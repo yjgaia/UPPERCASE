@@ -106,6 +106,14 @@ OVERRIDE(LOOP, (origin) => {
 					info.fps = fps;
 				};
 				
+				let clearFPS = self.clearFPS = () => {
+					delete info.fps;
+				};
+				
+				let getFPS = self.getFPS = () => {
+					return info.fps;
+				};
+				
 				let remove = self.remove = () => {
 					pause();
 				};

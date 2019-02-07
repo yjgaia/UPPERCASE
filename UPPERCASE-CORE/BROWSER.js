@@ -5782,6 +5782,14 @@ global.LOOP = CLASS((cls) => {
 				info.fps = fps;
 			};
 			
+			let clearFPS = self.clearFPS = () => {
+				delete info.fps;
+			};
+			
+			let getFPS = self.getFPS = () => {
+				return info.fps;
+			};
+			
 			let remove = self.remove = () => {
 				pause();
 			};
@@ -6821,6 +6829,14 @@ OVERRIDE(LOOP, (origin) => {
 					//REQUIRED: fps
 					
 					info.fps = fps;
+				};
+				
+				let clearFPS = self.clearFPS = () => {
+					delete info.fps;
+				};
+				
+				let getFPS = self.getFPS = () => {
+					return info.fps;
 				};
 				
 				let remove = self.remove = () => {
