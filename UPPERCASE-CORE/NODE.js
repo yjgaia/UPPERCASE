@@ -4841,6 +4841,10 @@ global.CHECK_ARE_SAME = METHOD({
 		let areSame = false;
 
 		let checkTwoSame = (a, b) => {
+			
+			if (a === b) {
+				return true;
+			}
 
 			// when a, b are date
 			if ( a instanceof Date === true && b instanceof Date === true) {
@@ -4854,11 +4858,6 @@ global.CHECK_ARE_SAME = METHOD({
 
 			// when a, b are data (JS object)
 			else if (CHECK_IS_DATA(a) === true && CHECK_IS_DATA(b) === true) {
-				
-				if (a === b) {
-					return true;
-				}
-				
 				return EACH(a, (value, name) => {
 					return checkTwoSame(value, b[name]);
 				});
@@ -4871,10 +4870,7 @@ global.CHECK_ARE_SAME = METHOD({
 				});
 			}
 
-			// when a, b are value
-			else {
-				return a === b;
-			}
+			return false;
 		};
 
 		if (array.length > 1) {
