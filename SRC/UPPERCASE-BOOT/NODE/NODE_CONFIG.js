@@ -4,7 +4,7 @@
 OVERRIDE(NODE_CONFIG, (origin) => {
 
 	global.NODE_CONFIG = COMBINE([{
-		isNotUsingCPUClustering : false
+		isSingleCoreMode : false
 		// maxUploadFileMB
 		// isNotToModelInitialize
 	}, origin]);

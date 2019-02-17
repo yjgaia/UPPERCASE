@@ -179,7 +179,7 @@ global.BOOT = (params) => {
 			}
 		};
 
-		if (NODE_CONFIG.isNotUsingCPUClustering !== true) {
+		if (NODE_CONFIG.isSingleCoreMode !== true) {
 			CPU_CLUSTERING(innerWork);
 		} else {
 			RUN(innerWork);
@@ -876,7 +876,7 @@ global.BOOT = (params) => {
 		let cal = CALENDAR();
 		
 		console.log(CONSOLE_GREEN('[BOOT] ' + MSG({
-			ko : '<' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> [' + CONFIG.title + '] 부팅 완료' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '') + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort))
+			ko : '<' + cal.getYear() + '-' + cal.getMonth() + '-' + cal.getDate() + ' ' + cal.getHour() + ':' + cal.getMinute() + ':' + cal.getSecond() + '> [' + CONFIG.title + '] 부팅 완료' + (NODE_CONFIG.isSingleCoreMode !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '') + (CONFIG.webServerPort === undefined ? '' : (' => http://localhost:' + CONFIG.webServerPort)) + (CONFIG.securedWebServerPort === undefined ? '' : (' => https://localhost:' + CONFIG.securedWebServerPort))
 		})));
 	};
 	
@@ -897,7 +897,7 @@ global.BOOT = (params) => {
 	NEXT([
 	(next) => {
 		
-		if (NODE_CONFIG.isNotUsingCPUClustering === true || CPU_CLUSTERING.checkIsMaster() === true) {
+		if (NODE_CONFIG.isSingleCoreMode === true || CPU_CLUSTERING.checkIsMaster() === true) {
 			
 			READ_FILE(rootPath + '/DEPENDENCY', {
 				
@@ -1024,7 +1024,7 @@ global.BOOT = (params) => {
 			clustering(() => {
 				
 				console.log('[BOOT] ' + MSG({
-					ko : '부팅중...' + (NODE_CONFIG.isNotUsingCPUClustering !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '')
+					ko : '부팅중...' + (NODE_CONFIG.isSingleCoreMode !== true ? ' (워커 ID:' + CPU_CLUSTERING.getWorkerId() + ')' : '')
 				}));
 				
 				connectToDatabase();
