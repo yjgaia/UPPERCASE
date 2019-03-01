@@ -8405,11 +8405,18 @@ global.NODE = CLASS({
 				setParent(undefined);
 
 				fireEvent('remove');
-
-				// free memory.
-				wrapperEl = undefined;
-				contentEl = undefined;
 			}
+			
+			if (wrapperEl !== undefined) {
+				wrapperEl.remove();
+			}
+			if (contentEl !== undefined) {
+				contentEl.remove();
+			}
+
+			// free memory.
+			wrapperEl = undefined;
+			contentEl = undefined;
 
 			EVENT.removeAll({
 				node : self
