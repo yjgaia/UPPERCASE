@@ -10,7 +10,4 @@ RUN yum install -y ImageMagick
 
 RUN yum install -y git
 RUN git clone https://github.com/Hanul/UPPERCASE.git
-RUN export UPPERCASE_PATH=/root/UPPERCASE
-
-EXPOSE 80
-EXPOSE 443
+ENV UPPERCASE_PATH /root/UPPERCASE
