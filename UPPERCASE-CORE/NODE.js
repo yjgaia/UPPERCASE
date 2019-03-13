@@ -12970,7 +12970,7 @@ global.DISK_USAGE = METHOD(() => {
 });
 
 /*
- * 기기의 IP들을 가져옵니다.
+ * 기기의 IP들을 반환합니다.
  */
 global.GET_IPS = METHOD(() => {
 
@@ -12985,10 +12985,7 @@ global.GET_IPS = METHOD(() => {
 			
 			EACH(interfaces, (infos) => {
 				EACH(infos, (info) => {
-					
-					if (info.internal !== true) {
-						ips.push(info.address);
-					}
+					ips.push(info.address);
 				});
 			});
 			

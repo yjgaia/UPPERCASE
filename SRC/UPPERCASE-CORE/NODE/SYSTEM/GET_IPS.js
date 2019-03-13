@@ -14,10 +14,7 @@ global.GET_IPS = METHOD(() => {
 			
 			EACH(interfaces, (infos) => {
 				EACH(infos, (info) => {
-					
-					if (info.internal !== true) {
-						ips.push(info.address);
-					}
+					ips.push(info.address);
 				});
 			});
 			

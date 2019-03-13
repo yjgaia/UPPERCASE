@@ -33,16 +33,16 @@ global.COOKIE_STORE = CLASS({
 			//REQUIRED: params.name
 			//REQUIRED: params.value
 			//OPTIONAL: params.isToSession
+			//OPTIONAL: params.expireTime
 
 			let name = params.name;
 			let value = params.value;
 			let isToSession = params.isToSession;
-
-			let expireTime;
+			let expireTime = params.expireTime;
 			
 			if (isToSession === true) {
 				expireTime = 0;
-			} else {
+			} else if (expireTime === undefined) {
 				// set expire time 1 year
 				expireTime = new Date();
 				expireTime.setDate(expireTime.getDate() + 356);

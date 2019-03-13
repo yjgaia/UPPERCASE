@@ -1565,7 +1565,7 @@ store.remove(name);
 ### `COOKIE_STORE`
 쿠키 저장소 클래스
 
-쿠키에 데이터를 저장할 수 있는 클래스 입니다. `domain` 파라미터를 통해 쿠키를 불러 올 수 있는 도메인 범위를 지정할 수 있습니다. 사용 방법은 [`STORE`](#store)와 동일합니다. 단 `save` 함수의 경우, `isToSession` 파라미터를 추가하여 웹 브라우저가 종료 될 때 데이터를 자동으로 지울 수 있습니다.
+쿠키에 데이터를 저장할 수 있는 클래스 입니다. `domain` 파라미터를 통해 쿠키를 불러 올 수 있는 도메인 범위를 지정할 수 있습니다. 사용 방법은 [`STORE`](#store)와 동일합니다. 단 `save` 함수의 경우, `isToSession` 파라미터를 추가하여 웹 브라우저가 종료 될 때 데이터를 자동으로 지울 수 있습니다. 데이터가 삭제될 시간을 정하려면 `expireTime`을 설정합니다.
 
 ```javascript
 let store = COOKIE_STORE('testStore');
@@ -1582,6 +1582,16 @@ store.save({
 	name : 'name',
 	value : 'YJ Sim',
 	isToSession : true
+});
+
+// 데이터가 삭제될 시간을 정합니다.
+let expireTime = new Date();
+expireTime.setDate(expireTime.getDate() + 3); // 3일 뒤
+
+store.save({
+	name : 'name',
+	value : 'YJ Sim',
+	expireTime : expireTime
 });
 
 store.get(name); // 'YJ Sim'
