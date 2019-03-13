@@ -12970,6 +12970,34 @@ global.DISK_USAGE = METHOD(() => {
 });
 
 /*
+ * 기기의 IP들을 가져옵니다.
+ */
+global.GET_IPS = METHOD(() => {
+
+	let OS = require('os');
+	
+	return {
+
+		run : () => {
+			
+			let interfaces = OS.networkInterfaces();
+			let ips = [];
+			
+			EACH(interfaces, (infos) => {
+				EACH(infos, (info) => {
+					
+					if (info.internal !== true) {
+						ips.push(info.address);
+					}
+				});
+			});
+			
+			return ips;
+		}
+	};
+});
+
+/*
  * 메모리 사용률을 반환합니다.
  */
 global.MEMORY_USAGE = METHOD((m) => {

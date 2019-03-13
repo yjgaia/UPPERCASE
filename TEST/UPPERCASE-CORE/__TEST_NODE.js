@@ -59,7 +59,7 @@ RUN(() => {
 	// 문자열 암호화 기능
 	//require('./COMMON/UTIL/ENCRYPTION/SHA256.js');
 	//require('./COMMON/UTIL/ENCRYPTION/SHA512.js');
-	require('./COMMON/UTIL/ENCRYPTION/ENCRYPT.js');
+	//require('./COMMON/UTIL/ENCRYPTION/ENCRYPT.js');
 	
 	// 기타 기능
 	/*require('./COMMON/UTIL/OVERRIDE.js');
@@ -111,10 +111,11 @@ RUN(() => {
 	// 시스템 관련 기능
 	/*require('./NODE/SYSTEM/CPU_USAGES.js');
 	require('./NODE/SYSTEM/MEMORY_USAGE.js');
-	require('./NODE/SYSTEM/DISK_USAGE.js');
+	require('./NODE/SYSTEM/DISK_USAGE.js');*/
+	require('./NODE/SYSTEM/GET_IPS.js');
 	
 	// 콘솔 로그 관련 기능
-	require('./NODE/CONSOLE/CONSOLE_COLOR.js');
+	/*require('./NODE/CONSOLE/CONSOLE_COLOR.js');
 	require('./NODE/CONSOLE/SHOW_ERROR.js');
 	require('./NODE/CONSOLE/SHOW_WARNING.js');*/
 	
