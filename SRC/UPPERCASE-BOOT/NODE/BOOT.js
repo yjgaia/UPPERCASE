@@ -909,9 +909,9 @@ global.BOOT = (params) => {
 					
 					let ubm = require('ubm')();
 					
-					NEXT(content.toString().split('\n'), [
+					PARALLEL(content.toString().split('\n'), [
 					
-					(box, next) => {
+					(box, done) => {
 						
 						box = box.trim();
 						
@@ -920,6 +920,15 @@ global.BOOT = (params) => {
 							let username = box.substring(0, box.indexOf('/'));
 							let boxName = box.substring(box.indexOf('/') + 1);
 							
+							// 5초 이상 기다리면 그냥 넘김
+							let isPassed = false;
+							DELAY(5, () => {
+								if (isPassed !== true) {
+									done();
+									isPassed = true;
+								}
+							});
+							
 							GET({
 								url : BOX_SITE_URL + '/_/info',
 								data : {
@@ -927,14 +936,22 @@ global.BOOT = (params) => {
 									boxName : boxName
 								}
 							}, {
-								error : next,
+								error : () => {
+									if (isPassed !== true) {
+										done();
+										isPassed = true;
+									}
+								},
 								
 								success : (result) => {
 									
 									result = PARSE_STR(result);
 									
 									if (result.boxData === undefined) {
-										next();
+										if (isPassed !== true) {
+											done();
+											isPassed = true;
+										}
 									} else {
 										
 										let boxData = result.boxData;
@@ -983,11 +1000,17 @@ global.BOOT = (params) => {
 														})));
 													}
 													
-													ubm.installBox(username, boxName, next);
+													ubm.installBox(username, boxName, () => {
+														if (isPassed !== true) {
+															done();
+															isPassed = true;
+														}
+													});
 												}
 												
-												else {
-													next();
+												else if (isPassed !== true) {
+													done();
+													isPassed = true;
 												}
 											};
 										}]);
@@ -997,14 +1020,12 @@ global.BOOT = (params) => {
 						}
 						
 						else {
-							next();
+							done();
 						}
 					},
 					
 					() => {
-						return () => {
-							next();
-						};
+						next();
 					}]);
 				}
 			});
