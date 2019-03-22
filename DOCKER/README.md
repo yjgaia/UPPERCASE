@@ -12,3 +12,9 @@ docker rm $(docker ps -a -q)
 for /F %c in ('docker ps -a -q') do (docker stop %c)
 for /F %c in ('docker ps -a -q') do (docker rm %c)
 ```
+
+## 도커 접속
+```
+docker ps
+docker exec -it {컨테이너 ID} /bin/bash
+```
