@@ -18,3 +18,9 @@ for /F %c in ('docker ps -a -q') do (docker rm %c)
 docker ps
 docker exec -it {컨테이너 ID} /bin/bash
 ```
+
+## 도커 로그 확인
+```
+docker ps
+docker logs {컨테이너 ID}
+```
