@@ -36,6 +36,7 @@ global.INPUT = CLASS((cls) => {
 			//OPTIONAL: params.accept
 			//OPTIONAL: params.isMultiple
 			//OPTIONAL: params.isOffAutocomplete
+			//OPTIONAL: params.isOffAutocapitalize
 			//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 			//OPTIONAL: params.on		이벤트
 			
@@ -48,6 +49,7 @@ global.INPUT = CLASS((cls) => {
 			let accept;
 			let isMultiple;
 			let isOffAutocomplete;
+			let isOffAutocapitalize;
 
 			let getName;
 			let getValue;
@@ -71,6 +73,7 @@ global.INPUT = CLASS((cls) => {
 				accept = params.accept;
 				isMultiple = params.isMultiple;
 				isOffAutocomplete = params.isOffAutocomplete;
+				isOffAutocapitalize = params.isOffAutocapitalize;
 			}
 
 			if (type !== undefined) {
@@ -113,6 +116,13 @@ global.INPUT = CLASS((cls) => {
 				if (isOffAutocomplete === true) {
 					inner.setAttr({
 						name : 'autocomplete',
+						value : 'off'
+					});
+				}
+				
+				if (isOffAutocapitalize === true) {
+					inner.setAttr({
+						name : 'autocapitalize',
 						value : 'off'
 					});
 				}
@@ -327,6 +337,7 @@ global.INPUT = CLASS((cls) => {
 			//OPTIONAL: params.accept
 			//OPTIONAL: params.isMultiple
 			//OPTIONAL: params.isOffAutocomplete
+			//OPTIONAL: params.isOffAutocapitalize
 			//OPTIONAL: params.c		자식 노드. 하나의 노드를 지정하거나, 노드들의 배열을 지정할 수 있습니다.
 			//OPTIONAL: params.on		이벤트
 			
