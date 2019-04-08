@@ -188,7 +188,7 @@ Model.get('5636e47415899c3c04b5e70f', {
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ```javascript
-let watchingRoom = Model.getWatching('5636e47415899c3c04b5e70f', {
+let exitWatching = Model.getWatching('5636e47415899c3c04b5e70f', {
 	notExists : () => {
 		console.log('데이터가 존재하지 않습니다.');
 	},
@@ -208,7 +208,7 @@ let watchingRoom = Model.getWatching('5636e47415899c3c04b5e70f', {
 });
 
 // 더 이상 변화를 감지하지 않고자 하는 경우 exit을 실행합니다.
-watchingRoom.exit();
+exitWatching();
 ```
 
 ### `update`
@@ -391,7 +391,7 @@ Model.find({
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ```javascript
-let watchingRoom = Model.findWatching({
+let exitWatching = Model.findWatching({
 	filter : {
 		number : 3
 	},
@@ -416,7 +416,7 @@ let watchingRoom = Model.findWatching({
 });
 
 // 더 이상 변화를 감지하지 않고자 하는 경우 exit을 실행합니다.
-watchingRoom.exit();
+exitWatching();
 ```
 
 ### `count`
@@ -468,12 +468,12 @@ Model.checkExists({
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ```javascript
-let watchingRoom = Model.onNew((savedData) => {
+let exitWatching = Model.onNew((savedData) => {
 	console.log('데이터가 생성되었습니다.', savedData);
 });
 
 // 더 이상 신규 데이터가 생성될 때를 감지하지 않고자 하는 경우 exit을 실행합니다.
-watchingRoom.exit();
+exitWatching();
 ```
 
 `properties`를 지정하면 생성되는 데이터가 `properties`의 값들과 일치하는 경우에만 감지할 수 있습니다.
@@ -495,7 +495,7 @@ Model.onNew({
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ```javascript
-let watchingRoom = Model.onNewWatching((savedData, addUpdateHandler, addRemoveHandler, exit) => {
+let exitWatching = Model.onNewWatching((savedData, addUpdateHandler, addRemoveHandler, exit) => {
 	console.log('데이터가 생성되었습니다.', savedData);
 	
 	addUpdateHandler((savedData) => {
@@ -509,7 +509,7 @@ let watchingRoom = Model.onNewWatching((savedData, addUpdateHandler, addRemoveHa
 });
 
 // 더 이상 신규 데이터가 생성될 때 및 데이터의 변화를 감지하지 않고자 하는 경우 exit을 실행합니다.
-watchingRoom.exit();
+exitWatching();
 ```
 
 ### `onNewAndFind`
@@ -540,7 +540,7 @@ Model.onNewAndFind({
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ```javascript
-let watchingRoom = Model.onNewAndFindWatching({
+let exitWatching = Model.onNewAndFindWatching({
 	age : 30
 }, (savedData, addUpdateHandler, addRemoveHandler, exit, isNewData) => {
 	
@@ -557,7 +557,7 @@ let watchingRoom = Model.onNewAndFindWatching({
 });
 
 // 더 이상 변화를 감지하지 않고자 하는 경우 exit을 실행합니다.
-watchingRoom.exit();
+exitWatching();
 ```
 
 ### `onRemove`
@@ -569,12 +569,12 @@ watchingRoom.exit();
 웹 브라우저 환경에서만 사용할 수 있습니다.
 
 ```javascript
-let watchingRoom = Model.onRemove((originData) => {
+let exitWatching = Model.onRemove((originData) => {
 	console.log('데이터가 삭제되었습니다.', originData);
 });
 
 // 더 이상 데이터가 삭제될 때를 감지하지 않고자 하는 경우 exit을 실행합니다.
-watchingRoom.exit();
+exitWatching();
 ```
 
 `properties`를 지정하면 삭제되는 데이터가 `properties`의 값들과 일치하는 경우에만 감지할 수 있습니다.
