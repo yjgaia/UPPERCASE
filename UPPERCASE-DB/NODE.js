@@ -11,7 +11,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 
 	const DEFAULT_DB_SERVER_NAME = '__';
 	
-	let MongoDB = require('mongodb');
+	let MongoClient = require('mongodb').MongoClient;
 	
 	let nativeDBs = {};
 	let backupDBs = {};
@@ -77,27 +77,35 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			NEXT([
 			(next) => {
 				
-				MongoDB.MongoClient.connect(
+				let client = new MongoClient(
+					
+					username !== undefined && password !== undefined ?
 					
 					'mongodb://' +
-					(username !== undefined && password !== undefined ? username + ':' + password.replace(/@/g, '%40') + '@' : '') +
+					username + ':' + password.replace(/@/g, '%40') + '@' +
 					host + ':' +
-					port + '/' +
-					name,
+					port + '?authMechanism=DEFAULT&authSource=db' :
 					
-					{
-						poolSize : 16,
-						connectTimeoutMS : 600000,
-						socketTimeoutMS : 6000000
-					},
+					'mongodb://' +
+					host + ':' +
+					port
 					
-					(error, nativeDB) => {
+				, {
+					poolSize : 16,
+					connectTimeoutMS : 600000,
+					socketTimeoutMS : 6000000,
+					useNewUrlParser : true
+				});
+				
+				client.connect((error) => {
 	
 					if (error !== TO_DELETE) {
 	
 						SHOW_ERROR('CONNECT_TO_DB_SERVER', error.toString());
 	
 					} else {
+						
+						let nativeDB = client.db(name);
 	
 						nativeDBs[dbServerName] = nativeDB;
 	
@@ -113,20 +121,26 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			(next) => {
 				return (nativeDB) => {
 					
-					MongoDB.MongoClient.connect(
+					let client = new MongoClient(
+						
+						backupUsername !== undefined && backupPassword !== undefined ?
 						
 						'mongodb://' +
-						(backupUsername !== undefined && backupPassword !== undefined ? backupUsername + ':' + backupPassword.replace(/@/g, '%40') + '@' : '') +
+						backupUsername + ':' + backupPassword.replace(/@/g, '%40') + '@' +
 						backupHost + ':' +
-						backupPort + '/' +
-						backupName,
+						backupPort + '?authMechanism=DEFAULT&authSource=db' :
 						
-						{
-							connectTimeoutMS : 600000,
-							socketTimeoutMS : 6000000
-						},
+						'mongodb://' +
+						backupHost + ':' +
+						backupPort
 						
-						(error, backupDB) => {
+					, {
+						connectTimeoutMS : 600000,
+						socketTimeoutMS : 6000000,
+						useNewUrlParser : true
+					});
+					
+					client.connect((error) => {
 		
 						if (error !== TO_DELETE) {
 							
@@ -135,6 +149,8 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 							next(nativeDB);
 		
 						} else {
+							
+							let backupDB = client.db(backupName);
 							
 							backupDBs[dbServerName] = backupDB;
 		

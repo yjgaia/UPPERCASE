@@ -429,20 +429,14 @@ FOR_BOX((box) => {
 								}
 							});
 		
-							return OBJECT({
-		
-								init : (inner, self) => {
-		
-									let exit = self.exit = () => {
-		
-										if (subRoom !== undefined) {
-											subRoom.exit();
-										}
-		
-										isExited = true;
-									};
+							return () => {
+
+								if (subRoom !== undefined) {
+									subRoom.exit();
 								}
-							});
+
+								isExited = true;
+							};
 						};
 					}
 		
@@ -828,20 +822,14 @@ FOR_BOX((box) => {
 								error : errorHandler
 							});
 		
-							return OBJECT({
-		
-								init : (inner, self) => {
-									
-									let exit = self.exit = () => {
-		
-										EACH(subRooms, (subRoom) => {
-											subRoom.exit();
-										});
-		
-										isExited = true;
-									};
-								}
-							});
+							return () => {
+
+								EACH(subRooms, (subRoom) => {
+									subRoom.exit();
+								});
+
+								isExited = true;
+							};
 						};
 					}
 		
@@ -1060,20 +1048,14 @@ FOR_BOX((box) => {
 							}
 						};
 		
-						return OBJECT({
-		
-							init : (inner, self) => {
-								
-								let exit = self.exit = () => {
-									
-									delete onNewInfos[infoId];
-									
-									if (roomForCreate !== undefined) {
-										roomForCreate.exit();
-									}
-								};
+						return () => {
+							
+							delete onNewInfos[infoId];
+							
+							if (roomForCreate !== undefined) {
+								roomForCreate.exit();
 							}
-						});
+						};
 					};
 		
 					let onNewWatching = self.onNewWatching = (properties, handler) => {
@@ -1217,24 +1199,18 @@ FOR_BOX((box) => {
 							}
 						};
 		
-						return OBJECT({
-		
-							init : (inner, self) => {
-								
-								let exit = self.exit = () => {
-									
-									delete onNewInfos[infoId];
-		
-									if (roomForCreate !== undefined) {
-										roomForCreate.exit();
-									}
-		
-									EACH(subRooms, (subRoom) => {
-										subRoom.exit();
-									});
-								};
+						return () => {
+							
+							delete onNewInfos[infoId];
+
+							if (roomForCreate !== undefined) {
+								roomForCreate.exit();
 							}
-						});
+
+							EACH(subRooms, (subRoom) => {
+								subRoom.exit();
+							});
+						};
 					};
 					
 					// on new and find.
@@ -1317,18 +1293,12 @@ FOR_BOX((box) => {
 								error : errorHandler
 							});
 							
-							return OBJECT({
-			
-								init : (inner, self) => {
-									
-									let exit = self.exit = () => {
-			
-										if (onNewRoom !== undefined) {
-											onNewRoom.exit();
-										}
-									};
+							return () => {
+								
+								if (onNewRoom !== undefined) {
+									onNewRoom.exit();
 								}
-							});
+							};
 						};
 						
 						onNewAndFindWatching = self.onNewAndFindWatching = (params, handlerOrHandlers) => {
@@ -1427,20 +1397,14 @@ FOR_BOX((box) => {
 								error : errorHandler
 							});
 							
-							return OBJECT({
-			
-								init : (inner, self) => {
-									
-									let exit = self.exit = () => {
-			
-										if (onNewWatchingRoom !== undefined) {
-											onNewWatchingRoom.exit();
-										}
-										
-										findWatchingRoom.exit();
-									};
+							return () => {
+								
+								if (onNewWatchingRoom !== undefined) {
+									onNewWatchingRoom.exit();
 								}
-							});
+								
+								findWatchingRoom.exit();
+							};
 						};
 					}
 		
@@ -1492,17 +1456,12 @@ FOR_BOX((box) => {
 							});
 						}
 		
-						return OBJECT({
-		
-							init : (inner, self) => {
-								
-								let exit = self.exit = () => {
-									if (roomForRemove !== undefined) {
-										roomForRemove.exit();
-									}
-								};
+						return () => {
+							
+							if (roomForRemove !== undefined) {
+								roomForRemove.exit();
 							}
-						});
+						};
 					};
 				}
 			};
