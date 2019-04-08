@@ -78,7 +78,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 					'mongodb://' +
 					username + ':' + password.replace(/@/g, '%40') + '@' +
 					host + ':' +
-					port + '?authMechanism=DEFAULT' :
+					port + '?authMechanism=DEFAULT&authSource=' + name :
 					
 					'mongodb://' +
 					host + ':' +
@@ -122,7 +122,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 						'mongodb://' +
 						backupUsername + ':' + backupPassword.replace(/@/g, '%40') + '@' +
 						backupHost + ':' +
-						backupPort + '?authMechanism=DEFAULT' :
+						backupPort + '?authMechanism=DEFAULT&authSource=' + backupName :
 						
 						'mongodb://' +
 						backupHost + ':' +
