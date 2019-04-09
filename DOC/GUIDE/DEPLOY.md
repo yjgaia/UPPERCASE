@@ -67,7 +67,7 @@ db.createUser({ user : '{{root 유저명}}', pwd : '{{root 비밀번호}}', role
 db.shutdownServer();
 ```
 
-6. `--auth` 플래그를 붙혀 인증 모드로 MongoDB를 다시 실행합니다. 리눅스 환경의 경우 외부에서 접속이 가능하게 하려면 방화벽을 꺼야 합니다. (하단의 [방화벽 끄기](#방화벽-끄기) 항목을 참고하세요.)
+6. `--auth` 플래그를 붙혀 인증 모드로 MongoDB를 다시 실행합니다. 리눅스 환경의 경우 외부에서 접속이 가능하게 하려면 방화벽으로부터 포트를 열어야 합니다. (하단의 [방화벽 포트 설정](#방화벽-포트-설정) 항목을 참고하세요.)
 ```
 mongod --port 27018 --fork --logpath /var/log/mongodb.log --logappend --auth --bind_ip_all
 ```
