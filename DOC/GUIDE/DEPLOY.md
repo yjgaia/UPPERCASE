@@ -242,7 +242,6 @@ tuned-adm profile no-thp
 4. 설정을 확인합니다.
 ```
 cat /sys/kernel/mm/transparent_hugepage/enabled
-cat /sys/kernel/mm/transparent_hugepage/defrag
 ```
 아래와 같이 출력되어야 합니다.
 ```
