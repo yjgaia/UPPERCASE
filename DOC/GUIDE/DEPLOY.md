@@ -213,6 +213,41 @@ root soft nproc 65535
 
 4. 이후 터미널을 종료한 후 다시 서버에 접속한 뒤, 프로젝트를 재시작하면 설정한 내용이 반영됩니다.
 
+### THP(Transparent Huge Pages) 끄기
+THP는 리눅스에서 대용량 메모리를 효율적으로 관리하기 위해 메모리 페이지 사이즈를 늘리는 기능입니다. 그러나 THP를 켜게 되면 MongoDB의 성능 저하가 발생하게 되어, 끄는 것이 좋습니다. THP를 끄는 방법은 다음과 같습니다.
+
+1. `no-thp` 폴더를 생성합니다.
+```
+mkdir /etc/tuned/no-thp
+```
+
+2. `tuned.conf` 파일을 생성합니다.
+```
+vi /etc/tuned/no-thp/tuned.conf
+```
+```
+[main]
+include=virtual-guest
+
+[vm]
+transparent_hugepages=never
+```
+
+3. 설정을 적용합니다.
+```
+tuned-adm profile no-thp
+```
+
+4. 설정을 확인합니다.
+```
+cat /sys/kernel/mm/transparent_hugepage/enabled
+cat /sys/kernel/mm/transparent_hugepage/defrag
+```
+아래와 같이 출력되어야 합니다.
+```
+always madvise [never]
+```
+
 ### 서버 시간 설정
 아래와 같이 서버가 위치한 지역의 시간대로 서버 시간을 맞추어 줍니다.
 ```
