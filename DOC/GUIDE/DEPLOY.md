@@ -225,6 +225,7 @@ mkdir /etc/tuned/no-thp
 ```
 vi /etc/tuned/no-thp/tuned.conf
 ```
+아래 내용을 작성합니다.
 ```
 [main]
 include=virtual-guest
