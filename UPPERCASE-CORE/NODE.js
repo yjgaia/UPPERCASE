@@ -11496,7 +11496,7 @@ global.SOCKET_SERVER = METHOD({
 			let ip = conn.remoteAddress;
 			
 			// IPv6 to IPv4
-			if (ip.substring(0, 7) === '::ffff:') {
+			if (ip !== undefined && ip.substring(0, 7) === '::ffff:') {
 				ip = ip.substring(7);
 			}
 
@@ -11647,7 +11647,7 @@ global.UDP_SERVER = CLASS({
 			let port = nativeRequestInfo.port;
 			
 			// IPv6 to IPv4
-			if (ip.substring(0, 7) === '::ffff:') {
+			if (ip !== undefined && ip.substring(0, 7) === '::ffff:') {
 				ip = ip.substring(7);
 			}
 			
@@ -11982,7 +11982,7 @@ global.WEB_SERVER = CLASS((cls) => {
 				}
 				
 				// IPv6 to IPv4
-				if (ip.substring(0, 7) === '::ffff:') {
+				if (ip !== undefined && ip.substring(0, 7) === '::ffff:') {
 					ip = ip.substring(7);
 				}
 
@@ -12737,7 +12737,7 @@ global.WEB_SOCKET_SERVER = METHOD({
 			}
 			
 			// IPv6 to IPv4
-			if (ip.substring(0, 7) === '::ffff:') {
+			if (ip !== undefined && ip.substring(0, 7) === '::ffff:') {
 				ip = ip.substring(7);
 			}
 
