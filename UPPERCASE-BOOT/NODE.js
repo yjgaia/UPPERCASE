@@ -309,6 +309,12 @@ global.BOOT = (params) => {
 			let es6SupportedScript = 'const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()';
 			
 			if (CONFIG.isToSupportIE11 === true) {
+				
+				_404PageContent += '<script>' + READ_FILE({
+					path : UPPERCASE_PATH + '/UPPERCASE-BOOT/polyfill-ie11.js',
+					isSync : true
+				}).toString() + '</script>';
+				
 				es6SupportedScript = transformScriptForSupportIE11(es6SupportedScript);
 			}
 			
@@ -383,6 +389,12 @@ global.BOOT = (params) => {
 			let es6SupportedScript = 'const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()';
 			
 			if (CONFIG.isToSupportIE11 === true) {
+				
+				indexPageContent += '<script>' + READ_FILE({
+					path : UPPERCASE_PATH + '/UPPERCASE-BOOT/polyfill-ie11.js',
+					isSync : true
+				}).toString() + '</script>';
+				
 				es6SupportedScript = transformScriptForSupportIE11(es6SupportedScript);
 			}
 			
@@ -961,6 +973,8 @@ global.BOOT = (params) => {
 	EACH(['CORE', 'ROOM', 'MODEL', 'BOOT'], (name, i) => {
 		
 		let isDevMode = (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true));
+		
+		CONFIG.isToSupportIE11 = (CONFIG.isToSupportIE11 === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isToSupportIE11 === true));
 		
 		if (isDevMode === true && i > 0) {
 			addContentToBrowserScript('\n\n');
