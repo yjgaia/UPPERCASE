@@ -20,11 +20,18 @@ global.BOOT = (params) => {
 	let browserScript = '';
 	let boxBrowserScripts = {};
 	
+	let scriptCachesForSupportIE11 = {};
+	
 	let _404PageContent;
 	let indexPageContent;
 	
 	let transformScriptForSupportIE11 = (script) => {
-		return Babel.transformSync(script, {
+		
+		if (scriptCachesForSupportIE11[script] !== undefined) {
+			return scriptCachesForSupportIE11[script];
+		}
+		
+		let scriptForSupportIE11 = Babel.transformSync(script, {
 			presets : [
 				[BabelEnvPreset, {
 					targets : {
@@ -33,6 +40,10 @@ global.BOOT = (params) => {
 				}]
 			]
 		}).code;
+		
+		scriptCachesForSupportIE11[script] = scriptForSupportIE11;
+		
+		return scriptForSupportIE11;
 	};
 	
 	let addContentToBrowserScript = (content) => {
@@ -281,14 +292,7 @@ global.BOOT = (params) => {
 			let es6SupportedScript = 'const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()';
 			
 			if (CONFIG.isToSupportIE11 === true) {
-				
-				// https://polyfill.io
-				_404PageContent += '<script>' + READ_FILE({
-					path : UPPERCASE_PATH + '/UPPERCASE-BOOT/polyfill.io-ie11.js',
-					isSync : true
-				}).toString() + '</script>';
-				
-				es6SupportedScript = transformScriptForSupportIE11(es6SupportedScript);
+				es6SupportedScript = transformScriptForSupportIE11('const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.parentNode.removeChild(__ES6_NOT_SUPPORTED_SENTENCE);})()');
 			}
 			
 			_404PageContent += '<script>' + es6SupportedScript + '</script>';
@@ -362,14 +366,7 @@ global.BOOT = (params) => {
 			let es6SupportedScript = 'const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()';
 			
 			if (CONFIG.isToSupportIE11 === true) {
-				
-				// https://polyfill.io
-				indexPageContent += '<script>' + READ_FILE({
-					path : UPPERCASE_PATH + '/UPPERCASE-BOOT/polyfill.io-ie11.js',
-					isSync : true
-				}).toString() + '</script>';
-				
-				es6SupportedScript = transformScriptForSupportIE11(es6SupportedScript);
+				es6SupportedScript = transformScriptForSupportIE11('const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.parentNode.removeChild(__ES6_NOT_SUPPORTED_SENTENCE);})()');
 			}
 			
 			indexPageContent += '<script>' + es6SupportedScript + '</script>';
@@ -959,7 +956,7 @@ global.BOOT = (params) => {
 	});
 	
 	if (CONFIG.isToSupportIE11 === true) {
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-BOOT/POLYFILL.js');
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-BOOT/POLYFILL-IE11.js');
 	}
 	
 	configuration();
