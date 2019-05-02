@@ -310,8 +310,9 @@ global.BOOT = (params) => {
 			
 			if (CONFIG.isToSupportIE11 === true) {
 				
+				// https://polyfill.io
 				_404PageContent += '<script>' + READ_FILE({
-					path : UPPERCASE_PATH + '/UPPERCASE-BOOT/polyfill-ie11.js',
+					path : UPPERCASE_PATH + '/UPPERCASE-BOOT/polyfill.io-ie11.js',
 					isSync : true
 				}).toString() + '</script>';
 				
@@ -390,8 +391,9 @@ global.BOOT = (params) => {
 			
 			if (CONFIG.isToSupportIE11 === true) {
 				
+				// https://polyfill.io
 				indexPageContent += '<script>' + READ_FILE({
-					path : UPPERCASE_PATH + '/UPPERCASE-BOOT/polyfill-ie11.js',
+					path : UPPERCASE_PATH + '/UPPERCASE-BOOT/polyfill.io-ie11.js',
 					isSync : true
 				}).toString() + '</script>';
 				
@@ -402,6 +404,7 @@ global.BOOT = (params) => {
 			
 			// load script.
 			indexPageContent += '<script src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
+			
 			indexPageContent += '</body>';
 			indexPageContent += '</html>';
 		}
@@ -969,12 +972,12 @@ global.BOOT = (params) => {
 		})));
 	};
 	
+	let isDevMode = (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true));
+	
+	CONFIG.isToSupportIE11 = (CONFIG.isToSupportIE11 === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isToSupportIE11 === true));
+	
 	// load all UPPERCASE modules for browser.
 	EACH(['CORE', 'ROOM', 'MODEL', 'BOOT'], (name, i) => {
-		
-		let isDevMode = (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true));
-		
-		CONFIG.isToSupportIE11 = (CONFIG.isToSupportIE11 === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isToSupportIE11 === true));
 		
 		if (isDevMode === true && i > 0) {
 			addContentToBrowserScript('\n\n');
@@ -982,6 +985,10 @@ global.BOOT = (params) => {
 		
 		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-' + name + '/BROWSER' + (isDevMode === true ? '' : '.MIN') + '.js');
 	});
+	
+	if (CONFIG.isToSupportIE11 === true) {
+		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-BOOT/POLYFILL.js');
+	}
 	
 	configuration();
 	
