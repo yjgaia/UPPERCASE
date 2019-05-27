@@ -12499,7 +12499,7 @@ global.REQUEST = METHOD({
 				let errorMsg = 'HTTP RESPONSE STATUS CODE: ' + response.status;
 
 				if (errorListener !== undefined) {
-					errorListener(errorMsg);
+					errorListener(errorMsg, response.status);
 				} else {
 					SHOW_ERROR('REQUEST', errorMsg, params);
 				}

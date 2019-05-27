@@ -144,7 +144,7 @@ global.ENCRYPTION_REQUEST = METHOD((m) => {
 						let errorMsg = 'HTTP RESPONSE STATUS CODE: ' + httpResponse.statusCode;
 		
 						if (errorListener !== undefined) {
-							errorListener(errorMsg);
+							errorListener(errorMsg, httpResponse.statusCode);
 						} else {
 							SHOW_ERROR('ENCRYPTION_REQUEST', errorMsg, params);
 						}
@@ -183,7 +183,7 @@ global.ENCRYPTION_REQUEST = METHOD((m) => {
 						let errorMsg = 'HTTP RESPONSE STATUS CODE: ' + httpResponse.statusCode;
 		
 						if (errorListener !== undefined) {
-							errorListener(errorMsg);
+							errorListener(errorMsg, httpResponse.statusCode);
 						} else {
 							SHOW_ERROR('ENCRYPTION_REQUEST', errorMsg, params);
 						}
