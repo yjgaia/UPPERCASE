@@ -4567,43 +4567,167 @@ if (window.AudioContext === undefined) {
 	 */
 	global.SOUND = CLASS({
 	
-		init : function(inner, self, params) {
+		init : function(inner, self, params, onEndHandler) {
 			//REQUIRED: params
 			//OPTIONAL: params.ogg
 			//OPTIONAL: params.mp3
 			//OPTIONAL: params.wav
 			//OPTIONAL: params.isLoop
 			//OPTIONAL: params.volume
+			//OPTIONAL: onEndHandler
+
+			var ogg = params.ogg;
+			var mp3 = params.mp3;
+			var wav = params.wav;
+			var isLoop = params.isLoop;
+			var volume = params.volume;
+			
+			if (volume === undefined) {
+				volume = 0.8;
+			}
+			
+			var eventMap = {};
+			
+			var audio = new Audio();
+			
+			if (ogg !== undefined && audio.canPlayType('audio/ogg') !== '') {
+				audio.src = ogg;
+			} else if (mp3 !== undefined) {
+				audio.src = mp3;
+			} else {
+				audio.src = wav;
+			}
+			
+			audio.volume = volume;
+			
+			var isPlaying = false;
 			
 			var play = self.play = function(at) {
 				//OPTIONAL: at
+				
+				audio.play();
+				
+				isPlaying = true;
 				
 				return self;
 			};
 			
 			var checkIsPlaying = self.checkIsPlaying = function() {
-				//TODO:
+				return isPlaying;
 			};
 			
 			var getStartAt = self.getStartAt = function() {
-				//TODO:
+				return 0;
 			};
 			
-			var pause = self.pause = function() {};
+			var pause = self.pause = function() {
+				audio.pause();
+				isPlaying = false;
+			};
 	
-			var stop = self.stop = function() {};
+			var stop = self.stop = function() {
+				pause();
+				audio.currentTime = 0;
+			};
 			
-			var setVolume = self.setVolume = function(volume) {};
+			var setVolume = self.setVolume = function(volume) {
+				//REQUIRED: volume
+				
+				audio.volume = volume;
+			};
 			
 			var getVolume = self.getVolume = function() {
-				//TODO:
+				return audio.volume;
 			};
 			
-			var setPlaybackRate = self.setPlaybackRate = function(volume) {};
+			var setPlaybackRate = self.setPlaybackRate = function(volume) {
+				//REQUIRED: volume
+				
+				// ignore.
+			};
 			
-			var fadeIn = self.fadeIn = function(volume) {};
+			var fadeIn = self.fadeIn = function(seconds) {
+				//REQUIRED: seconds
+				
+				play();
+			};
 			
-			var fadeOut = self.fadeOut = function(volume) {};
+			var fadeOut = self.fadeOut = function(seconds) {
+				//REQUIRED: seconds
+				
+				stop();
+			};
+			
+			var getDuration = self.getDuration = function() {
+				return audio.duration;
+			};
+			
+			var on = self.on = function(eventName, eventHandler) {
+				//REQUIRED: eventName
+				//REQUIRED: eventHandler
+				
+				if (eventMap[eventName] === undefined) {
+					eventMap[eventName] = [];
+				}
+				
+				eventMap[eventName].push(eventHandler);
+				
+				if (eventName === 'load') {
+					fireEvent('load');
+					off('load');
+				}
+			};
+			
+			var checkIsEventExists = self.checkIsEventExists = function(eventName) {
+				//REQUIRED: eventName
+				
+				return eventMap[eventName] !== undefined;
+			};
+			
+			var off = self.off = function(eventName, eventHandler) {
+				//REQUIRED: eventName
+				//OPTIONAL: eventHandler
+	
+				if (eventMap[eventName] !== undefined) {
+	
+					if (eventHandler !== undefined) {
+	
+						REMOVE({
+							array: eventMap[eventName],
+							value: eventHandler
+						});
+					}
+	
+					if (eventHandler === undefined || eventMap[eventName].length === 0) {
+						delete eventMap[eventName];
+					}
+				}
+			};
+			
+			var fireEvent = self.fireEvent = function(eventNameOrParams) {
+				//REQUIRED: eventNameOrParams
+				//REQUIRED: eventNameOrParams.eventName
+				//OPTIONAL: eventNameOrParams.e
+				
+				var eventName;
+				var e;
+				
+				if (CHECK_IS_DATA(eventNameOrParams) !== true) {
+					eventName = eventNameOrParams;
+				} else {
+					eventName = eventNameOrParams.eventName;
+					e = eventNameOrParams.e;
+				}
+				
+				var eventHandlers = eventMap[eventName];
+	
+				if (eventHandlers !== undefined) {
+					
+					for (var i = 0; i < eventHandlers.length; i += 1) {
+						eventHandlers[i](e === undefined ? EMPTY_E() : e, self);
+					}
+				}
+			};
 		}
 	});
 }
