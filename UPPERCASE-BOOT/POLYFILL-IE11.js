@@ -4575,8 +4575,18 @@ if (window.AudioContext === undefined) {
 			//OPTIONAL: params.isLoop
 			//OPTIONAL: params.volume
 			
-			var play = self.play = function() {
+			var play = self.play = function(at) {
+				//OPTIONAL: at
+				
 				return self;
+			};
+			
+			var checkIsPlaying = self.checkIsPlaying = function() {
+				//TODO:
+			};
+			
+			var getStartAt = self.getStartAt = function() {
+				//TODO:
 			};
 			
 			var pause = self.pause = function() {};
@@ -4585,7 +4595,15 @@ if (window.AudioContext === undefined) {
 			
 			var setVolume = self.setVolume = function(volume) {};
 			
+			var getVolume = self.getVolume = function() {
+				//TODO:
+			};
+			
 			var setPlaybackRate = self.setPlaybackRate = function(volume) {};
+			
+			var fadeIn = self.fadeIn = function(volume) {};
+			
+			var fadeOut = self.fadeOut = function(volume) {};
 		}
 	});
 }
