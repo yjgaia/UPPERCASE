@@ -4599,6 +4599,7 @@ if (window.AudioContext === undefined) {
 			}
 			
 			audio.volume = volume;
+			audio.onended = onEndHandler;
 			
 			var isPlaying = false;
 			
