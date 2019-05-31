@@ -378,7 +378,7 @@ FOR_BOX((box) => {
 						errorInfo.time = new Date();
 	
 						try {
-							errorLogCollection.insert(errorInfo);
+							errorLogCollection.insertOne(errorInfo);
 						}
 	
 						// if catch error
