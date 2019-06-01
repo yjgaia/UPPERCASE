@@ -24,7 +24,9 @@ global.REFRESH = METHOD((m) => {
 				}, () => {
 					location.replace(savedHash === '' ? '#!/' : savedHash);
 					
-					history.back();
+					if (savedHash !== '#!/' + uri) {
+						history.back();
+					}
 				});
 		
 				location.href = '#!/' + getRefreshingURI();
@@ -40,7 +42,9 @@ global.REFRESH = METHOD((m) => {
 				history.replaceState(undefined, undefined, '/' + savedURI);
 				MATCH_VIEW.checkAll();
 				
-				history.back();
+				if (savedURI !== uri) {
+					history.back();
+				}
 			}
 		}
 	};
