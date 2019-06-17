@@ -7288,6 +7288,12 @@ global.SHARED_STORE = CLASS((cls) => {
 				extend : data
 			});
 			
+			EACH(data, (value, name) => {
+				if (value === TO_DELETE) {
+					delete savedData[name];
+				}
+			});
+			
 			if ($inc !== undefined) {
 				EACH($inc, (value, name) => {
 					savedData[name] += value;
