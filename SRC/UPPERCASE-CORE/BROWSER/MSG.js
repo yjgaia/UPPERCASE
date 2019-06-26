@@ -51,7 +51,7 @@ OVERRIDE(MSG, (origin) => {
 						else {
 							let subData = {};
 							EACH(texts, (text, j) => {
-								if (j > 0) {
+								if (j > 0 && text !== '') {
 									subData[langs[j]] = text.replace(/\\n/, '\n');
 								}
 							});
