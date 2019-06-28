@@ -83,8 +83,8 @@ global.MATCH_VIEW = METHOD((m) => {
 			
 			changeURIHandlers.push(changeURIHandler);
 			
-			// when protocol is 'file:', use hashbang.
-			if (location.protocol === 'file:') {
+			// when protocol is 'file:' or extension, use hashbang.
+			if (location.protocol === 'file:' || location.protocol.indexOf('-extension:') !== -1) {
 				EVENT('hashchange', () => {
 					changeURIHandler();
 				});

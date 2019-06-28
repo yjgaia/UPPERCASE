@@ -87,12 +87,12 @@ global.REQUEST = METHOD({
 		
 		(method === 'GET' || method === 'DELETE' ? fetch(url.substring(0, 5) === 'data:' ? url : url + '?' + paramStr, {
 			method : method,
-			credentials : location.protocol !== 'file:' && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
+			credentials : location.protocol !== 'file:' && location.protocol.indexOf('-extension:') === -1 && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : new Headers(headers === undefined ? {} : headers)
 		}) : fetch(url, {
 			method : method,
 			body : paramStr,
-			credentials : location.protocol !== 'file:' && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
+			credentials : location.protocol !== 'file:' && location.protocol.indexOf('-extension:') === -1 && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : new Headers(headers === undefined ? {} : headers)
 		}))
 		.then((response) => {

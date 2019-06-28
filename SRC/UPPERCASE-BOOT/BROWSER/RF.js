@@ -8,7 +8,7 @@ FOR_BOX((box) => {
 		run : (path) => {
 			//REQUIRED: path
 			
-			if (location.protocol === 'file:') {
+			if (location.protocol === 'file:' || location.protocol.indexOf('-extension:') !== -1) {
 				return (BROWSER_CONFIG.isSecure === true ? 'https://' : 'http://') + BROWSER_CONFIG.host + ':' + BROWSER_CONFIG.port + '/__RF/' + box.boxName + '/' + path;
 			} else {
 				return '/__RF/' + box.boxName + '/' + path;

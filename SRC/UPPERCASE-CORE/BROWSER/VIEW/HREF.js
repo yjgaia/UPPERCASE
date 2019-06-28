@@ -6,8 +6,8 @@ global.HREF = METHOD({
 	run : (uri) => {
 		//REQUIRED: uri
 
-		// when protocol is 'file:', use hashbang.
-		if (location.protocol === 'file:') {
+		// when protocol is 'file:' or extension, use hashbang.
+		if (location.protocol === 'file:' || location.protocol.indexOf('-extension:') !== -1) {
 			return '#!/' + uri;
 		} else {
 			return '/' + uri;

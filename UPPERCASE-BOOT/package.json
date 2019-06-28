@@ -1,6 +1,6 @@
 {
 	"name": "uppercase-boot",
-	"version": "1.4.4",
+	"version": "1.4.7",
 	"dependencies": {
 		"@babel/core": "latest",
 		"@babel/preset-env": "latest",

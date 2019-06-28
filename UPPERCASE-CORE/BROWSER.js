@@ -11531,12 +11531,12 @@ global.ENCRYPTION_REQUEST = METHOD({
 		
 		(method === 'GET' || method === 'DELETE' ? fetch(url + '?' + paramStr, {
 			method : method,
-			credentials : location.protocol !== 'file:' && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
+			credentials : location.protocol !== 'file:' && location.protocol.indexOf('-extension:') === -1 && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : new Headers(headers === undefined ? {} : headers)
 		}) : fetch(url, {
 			method : method,
 			body : paramStr,
-			credentials : location.protocol !== 'file:' && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
+			credentials : location.protocol !== 'file:' && location.protocol.indexOf('-extension:') === -1 && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : new Headers(headers === undefined ? {} : headers)
 		}))
 		.then((response) => {
@@ -12484,12 +12484,12 @@ global.REQUEST = METHOD({
 		
 		(method === 'GET' || method === 'DELETE' ? fetch(url.substring(0, 5) === 'data:' ? url : url + '?' + paramStr, {
 			method : method,
-			credentials : location.protocol !== 'file:' && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
+			credentials : location.protocol !== 'file:' && location.protocol.indexOf('-extension:') === -1 && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : new Headers(headers === undefined ? {} : headers)
 		}) : fetch(url, {
 			method : method,
 			body : paramStr,
-			credentials : location.protocol !== 'file:' && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
+			credentials : location.protocol !== 'file:' && location.protocol.indexOf('-extension:') === -1 && host === BROWSER_CONFIG.host && port === BROWSER_CONFIG.port ? 'include' : undefined,
 			headers : new Headers(headers === undefined ? {} : headers)
 		}))
 		.then((response) => {
@@ -12574,8 +12574,8 @@ global.GO = METHOD((m) => {
 				
 				MATCH_VIEW.setURIData(data);
 				
-				// when protocol is 'file:', use hashbang.
-				if (location.protocol === 'file:') {
+				// when protocol is 'file:' or extension, use hashbang.
+				if (location.protocol === 'file:' || location.protocol.indexOf('-extension:') !== -1) {
 					location.href = HREF(uri);
 				} else {
 					history.pushState(undefined, undefined, HREF(uri));
@@ -12646,8 +12646,8 @@ global.HREF = METHOD({
 	run : (uri) => {
 		//REQUIRED: uri
 
-		// when protocol is 'file:', use hashbang.
-		if (location.protocol === 'file:') {
+		// when protocol is 'file:' or extension, use hashbang.
+		if (location.protocol === 'file:' || location.protocol.indexOf('-extension:') !== -1) {
 			return '#!/' + uri;
 		} else {
 			return '/' + uri;
@@ -12752,8 +12752,8 @@ global.MATCH_VIEW = METHOD((m) => {
 			
 			changeURIHandlers.push(changeURIHandler);
 			
-			// when protocol is 'file:', use hashbang.
-			if (location.protocol === 'file:') {
+			// when protocol is 'file:' or extension, use hashbang.
+			if (location.protocol === 'file:' || location.protocol.indexOf('-extension:') !== -1) {
 				EVENT('hashchange', () => {
 					changeURIHandler();
 				});
@@ -12846,8 +12846,8 @@ global.REFRESH = METHOD((m) => {
 		run : (uri) => {
 			//OPTIONAL: uri
 			
-			// when protocol is 'file:', use hashbang.
-			if (location.protocol === 'file:') {
+			// when protocol is 'file:' or extension, use hashbang.
+			if (location.protocol === 'file:' || location.protocol.indexOf('-extension:') !== -1) {
 				
 				let savedHash = uri !== undefined ? '#!/' + uri : location.hash;
 		
@@ -12901,8 +12901,8 @@ global.URI = METHOD({
 
 	run : () => {
 		
-		// when protocol is 'file:', use hashbang.
-		if (location.protocol === 'file:') {
+		// when protocol is 'file:' or extension, use hashbang.
+		if (location.protocol === 'file:' || location.protocol.indexOf('-extension:') !== -1) {
 			return location.hash.substring(3);
 		} else {
 			return decodeURIComponent(location.pathname.substring(1));

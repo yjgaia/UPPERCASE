@@ -14,8 +14,8 @@ global.REFRESH = METHOD((m) => {
 		run : (uri) => {
 			//OPTIONAL: uri
 			
-			// when protocol is 'file:', use hashbang.
-			if (location.protocol === 'file:') {
+			// when protocol is 'file:' or extension, use hashbang.
+			if (location.protocol === 'file:' || location.protocol.indexOf('-extension:') !== -1) {
 				
 				let savedHash = uri !== undefined ? '#!/' + uri : location.hash;
 		
