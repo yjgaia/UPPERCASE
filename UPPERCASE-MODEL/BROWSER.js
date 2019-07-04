@@ -1042,8 +1042,11 @@ FOR_BOX((box) => {
 											createTime : {
 												$gt : onNewInfos[infoId].lastCreateTime
 											}
+										},
+										sort : {
+											createTime : 1
 										}
-									}, REVERSE_EACH(handler));
+									}, EACH(handler));
 								}
 							}
 						};
@@ -1193,8 +1196,11 @@ FOR_BOX((box) => {
 											createTime : {
 												$gt : onNewInfos[infoId].lastCreateTime
 											}
+										},
+										sort : {
+											createTime : 1
 										}
-									}, REVERSE_EACH(innerHandler));
+									}, EACH(innerHandler));
 								}
 							}
 						};
@@ -1289,7 +1295,7 @@ FOR_BOX((box) => {
 											callback(savedDataSet);
 										}
 										
-										REVERSE_EACH(savedDataSet, (savedData) => {
+										EACH(savedDataSet, (savedData) => {
 											handler(savedData, false);
 										});
 									}
@@ -1383,7 +1389,7 @@ FOR_BOX((box) => {
 											callback(savedDataSet, addUpdateHandler, addRemoveHandler, exit);
 										}
 										
-										REVERSE_EACH(savedDataSet, (savedData) => {
+										EACH(savedDataSet, (savedData) => {
 											
 											handler(savedData,
 												
