@@ -1236,7 +1236,7 @@ FOR_BOX((box) => {
 							let start;
 							let count;
 							let isNotOnNew;
-							let onNewRoom;
+							let exitOnNewRoom;
 							
 							let errorHandler;
 							let notAuthedHandler;
@@ -1268,7 +1268,7 @@ FOR_BOX((box) => {
 							}
 							
 							if (isNotOnNew !== true) {
-								onNewRoom = onNew(properties, (savedData) => {
+								exitOnNewRoom = onNew(properties, (savedData) => {
 									handler(savedData, true);
 								});
 							}
@@ -1295,8 +1295,8 @@ FOR_BOX((box) => {
 							
 							return () => {
 								
-								if (onNewRoom !== undefined) {
-									onNewRoom.exit();
+								if (exitOnNewRoom !== undefined) {
+									exitOnNewRoom();
 								}
 							};
 						};
@@ -1327,8 +1327,8 @@ FOR_BOX((box) => {
 							let callback;
 							let handler;
 							
-							let onNewWatchingRoom;
-							let findWatchingRoom;
+							let exitOnNewWatchingRoom;
+							let exitFindWatchingRoom;
 		
 							// init params.
 							if (handlerOrHandlers === undefined) {
@@ -1355,12 +1355,12 @@ FOR_BOX((box) => {
 							}
 							
 							if (isNotOnNew !== true) {
-								onNewWatchingRoom = onNewWatching(properties, (savedData, addUpdateHandler, addRemoveHandler, exit) => {
+								exitOnNewWatchingRoom = onNewWatching(properties, (savedData, addUpdateHandler, addRemoveHandler, exit) => {
 									handler(savedData, addUpdateHandler, addRemoveHandler, exit, true);
 								});
 							}
 							
-							findWatchingRoom = findWatching({
+							exitFindWatchingRoom = findWatching({
 								filter : COMBINE([properties, filter]),
 								sort : sort,
 								start : start,
@@ -1399,11 +1399,11 @@ FOR_BOX((box) => {
 							
 							return () => {
 								
-								if (onNewWatchingRoom !== undefined) {
-									onNewWatchingRoom.exit();
+								if (exitOnNewWatchingRoom !== undefined) {
+									exitOnNewWatchingRoom();
 								}
 								
-								findWatchingRoom.exit();
+								exitFindWatchingRoom();
 							};
 						};
 					}
