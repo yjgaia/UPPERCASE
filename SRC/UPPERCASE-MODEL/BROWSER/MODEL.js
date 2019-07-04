@@ -1189,6 +1189,8 @@ FOR_BOX((box) => {
 							let notAuthedHandler;
 							let callback;
 							let handler;
+							
+							let isExited;
 		
 							// init params.
 							if (handlerOrHandlers === undefined) {
@@ -1228,13 +1230,16 @@ FOR_BOX((box) => {
 							}, {
 								success : (savedDataSet) => {
 									
-									if (callback !== undefined) {
-										callback(savedDataSet);
+									if (isExited !== true) {
+										
+										if (callback !== undefined) {
+											callback(savedDataSet);
+										}
+										
+										REVERSE_EACH(savedDataSet, (savedData) => {
+											handler(savedData, false);
+										});
 									}
-									
-									REVERSE_EACH(savedDataSet, (savedData) => {
-										handler(savedData, false);
-									});
 								},
 								notAuthed : notAuthedHandler,
 								error : errorHandler
@@ -1245,6 +1250,8 @@ FOR_BOX((box) => {
 								if (exitOnNewRoom !== undefined) {
 									exitOnNewRoom();
 								}
+								
+								isExited = true;
 							};
 						};
 						
@@ -1276,6 +1283,8 @@ FOR_BOX((box) => {
 							
 							let exitOnNewWatchingRoom;
 							let exitFindWatchingRoom;
+							
+							let isExited;
 		
 							// init params.
 							if (handlerOrHandlers === undefined) {
@@ -1315,30 +1324,33 @@ FOR_BOX((box) => {
 							}, {
 								success : (savedDataSet, addUpdateHandler, addRemoveHandler, exit) => {
 									
-									if (callback !== undefined) {
-										callback(savedDataSet, addUpdateHandler, addRemoveHandler, exit);
-									}
-									
-									REVERSE_EACH(savedDataSet, (savedData) => {
+									if (isExited !== true) {
 										
-										handler(savedData,
+										if (callback !== undefined) {
+											callback(savedDataSet, addUpdateHandler, addRemoveHandler, exit);
+										}
+										
+										REVERSE_EACH(savedDataSet, (savedData) => {
 											
-										(handler) => {
-											addUpdateHandler(savedData.id, handler);
-										},
-										
-										(handler) => {
-											addRemoveHandler(savedData.id, handler);
-										},
-	
-										// exit.
-										() => {
-											exit(savedData.id);
-										},
-										
-										// is new data
-										false);
-									});
+											handler(savedData,
+												
+											(handler) => {
+												addUpdateHandler(savedData.id, handler);
+											},
+											
+											(handler) => {
+												addRemoveHandler(savedData.id, handler);
+											},
+		
+											// exit.
+											() => {
+												exit(savedData.id);
+											},
+											
+											// is new data
+											false);
+										});
+									}
 								},
 								notAuthed : notAuthedHandler,
 								error : errorHandler
@@ -1351,6 +1363,8 @@ FOR_BOX((box) => {
 								}
 								
 								exitFindWatchingRoom();
+								
+								isExited = true;
 							};
 						};
 					}
