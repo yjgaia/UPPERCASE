@@ -109,10 +109,10 @@ RUN(() => {
 	//require('./NODE/CLUSTERING/SHARED_STORE.js');
 	
 	// 시스템 관련 기능
-	/*require('./NODE/SYSTEM/CPU_USAGES.js');
+	//require('./NODE/SYSTEM/CPU_USAGES.js');
 	require('./NODE/SYSTEM/MEMORY_USAGE.js');
-	require('./NODE/SYSTEM/DISK_USAGE.js');*/
-	require('./NODE/SYSTEM/GET_IPS.js');
+	//require('./NODE/SYSTEM/DISK_USAGE.js');
+	//require('./NODE/SYSTEM/GET_IPS.js');
 	
 	// 콘솔 로그 관련 기능
 	/*require('./NODE/CONSOLE/CONSOLE_COLOR.js');
