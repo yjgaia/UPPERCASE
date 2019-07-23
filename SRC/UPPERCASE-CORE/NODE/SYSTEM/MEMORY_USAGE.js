@@ -8,10 +8,23 @@ global.MEMORY_USAGE = METHOD((m) => {
 	
 	return {
 		
-		run : (callback) => {
-			//REQUIRED: callback
+		run : (callbackOrHandlers) => {
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
+			
+			let errorHandler;
+			let callback;
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
+			}
 			
 			if (process.platform === 'linux') {
+				
 				let proc = spawn('free', []);
 				proc.stdout.setEncoding('utf8');
 				proc.stdout.on('data', (data) => {
@@ -20,6 +33,12 @@ global.MEMORY_USAGE = METHOD((m) => {
 					// available / total
 					callback((1 - INTEGER(split[6]) / INTEGER(split[1])) * 100);
 				});
+				
+				if (errorHandler !== undefined) {
+					proc.on('error', (error) => {
+						errorHandler(error.toString());
+					});
+				}
 			}
 			
 			else {
