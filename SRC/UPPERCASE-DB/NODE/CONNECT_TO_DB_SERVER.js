@@ -38,6 +38,16 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 		}
 	};
 
+	let checkIsConnected = m.checkIsConnected = (dbServerName) => {
+		//OPTIONAL: dbServerName
+		
+		if (dbServerName === undefined) {
+			dbServerName = DEFAULT_DB_SERVER_NAME;
+		}
+		
+		return nativeDBs[dbServerName] !== undefined;
+	};
+
 	return {
 
 		run : (params, callback) => {

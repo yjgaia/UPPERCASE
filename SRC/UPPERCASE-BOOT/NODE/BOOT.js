@@ -241,6 +241,20 @@ global.BOOT = (params) => {
 				backupName : NODE_CONFIG.backupDBName,
 				backupUsername : NODE_CONFIG.backupDBUsername,
 				backupPassword : NODE_CONFIG.backupDBPassword
+			}, () => {
+				
+				let checkAliveDB = BOX.getAllBoxes()[CONFIG.defaultBoxName].DB({
+					name : '__CHECK_ALIVE',
+					isNotUsingHistory : true
+				});
+				
+				checkAliveDB.get({
+					notExists : () => {
+						checkAliveDB.create({
+							alive : true
+						});
+					}
+				});
 			});
 		}
 	};
@@ -478,10 +492,21 @@ global.BOOT = (params) => {
 					
 					let boxName = params.boxName;
 					let box = BOX.getAllBoxes()[boxName === undefined ? CONFIG.defaultBoxName : boxName];
+					
+					if (box === undefined || CONNECT_TO_DB_SERVER.checkIsConnected() !== true) {
+						
+						response({
+							statusCode : 404,
+							content : _404PageContent
+						});
+					}
+					
+					else {
 
-					if (box !== undefined) {
-
-						let uploadFileDB = box.DB('__UPLOAD_FILE');
+						let uploadFileDB = box.DB({
+							name : '__UPLOAD_FILE',
+							isNotUsingHistory : true
+						});
 
 						NEXT(fileDataSet, [
 						(fileData, next) => {
@@ -599,13 +624,46 @@ global.BOOT = (params) => {
 					};
 					
 					if (uri === '__CHECK_ALIVE') {
+						
+						if (CONNECT_TO_DB_SERVER.checkIsConnected() === true) {
+							
+							BOX.getAllBoxes()[CONFIG.defaultBoxName].DB({
+								name : '__CHECK_ALIVE',
+								isNotUsingHistory : true
+							}).get({
+								
+								error : () => {
+									SHOW_ERROR('MongoDB에 이상 현상이 발생했습니다.');
+									
+									response({
+										statusCode : 500,
+										headers : {
+											'Access-Control-Allow-Origin' : '*'
+										}
+									});
+								},
+								
+								success : () => {
+									
+									response({
+										content : '',
+										headers : {
+											'Access-Control-Allow-Origin' : '*'
+										}
+									});
+								}
+							});
+						}
+						
+						else {
 
-						response({
-							content : '',
-							headers : {
-								'Access-Control-Allow-Origin' : '*'
-							}
-						});
+							response({
+								content : '',
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
+							});
+						}
 
 						return false;
 					}
@@ -732,57 +790,71 @@ global.BOOT = (params) => {
 							boxName = CONFIG.defaultBoxName;
 						}
 
-						let uploadFileDB = BOX.getAllBoxes()[boxName].DB('__UPLOAD_FILE');
+						let uploadFileDB = BOX.getAllBoxes()[boxName].DB({
+							name : '__UPLOAD_FILE',
+							isNotUsingHistory : true
+						});
 						
-						uploadFileDB.get(uri.lastIndexOf('/') === -1 ? uri : uri.substring(uri.lastIndexOf('/') + 1), {
-
-							error : () => {
-
-								next({
-									isFinal : true
-								});
-							},
-
-							notExists : () => {
-
-								next({
-									isFinal : true
-								});
-							},
-
-							success : (savedData) => {
-
-								if (savedData.serverName === NODE_CONFIG.thisServerName) {
-
+						if (CONNECT_TO_DB_SERVER.checkIsConnected() !== true) {
+							
+							response({
+								statusCode : 404,
+								content : _404PageContent
+							});
+						}
+						
+						else {
+							
+							uploadFileDB.get(uri.lastIndexOf('/') === -1 ? uri : uri.substring(uri.lastIndexOf('/') + 1), {
+	
+								error : () => {
+	
 									next({
-										contentType : savedData.type,
-										headers : {
-											'Content-Disposition' : 'filename="' + encodeURIComponent(savedData.name) + '"',
-											'Access-Control-Allow-Origin' : '*'
-										},
 										isFinal : true
 									});
-
-									uploadFileDB.updateNoHistory({
-										id : savedData.id,
-										$inc : {
-											downloadCount : 1
-										}
+								},
+	
+								notExists : () => {
+	
+									next({
+										isFinal : true
 									});
-
-								} else if (NODE_CONFIG.uploadServerHosts !== undefined) {
-
-									response({
-										statusCode : 302,
-										headers : {
-											'Location' : isSecure === true ?
-												'https://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.securedWebServerPort + '/__RF/' + boxName + '/' + uri :
-												'http://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.webServerPort + '/__RF/' + boxName + '/' + uri
-										}
-									});
+								},
+	
+								success : (savedData) => {
+	
+									if (savedData.serverName === NODE_CONFIG.thisServerName) {
+	
+										next({
+											contentType : savedData.type,
+											headers : {
+												'Content-Disposition' : 'filename="' + encodeURIComponent(savedData.name) + '"',
+												'Access-Control-Allow-Origin' : '*'
+											},
+											isFinal : true
+										});
+	
+										uploadFileDB.update({
+											id : savedData.id,
+											$inc : {
+												downloadCount : 1
+											}
+										});
+	
+									} else if (NODE_CONFIG.uploadServerHosts !== undefined) {
+	
+										response({
+											statusCode : 302,
+											headers : {
+												'Location' : isSecure === true ?
+													'https://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.securedWebServerPort + '/__RF/' + boxName + '/' + uri :
+													'http://' + NODE_CONFIG.uploadServerHosts[savedData.serverName] + ':' + CONFIG.webServerPort + '/__RF/' + boxName + '/' + uri
+											}
+										});
+									}
 								}
-							}
-						});
+							});
+						}
 						
 						return false;
 					}
