@@ -271,18 +271,21 @@ global.BOOT = (params) => {
 				backupPassword : NODE_CONFIG.backupDBPassword
 			}, () => {
 				
-				let checkAliveDB = BOX.getAllBoxes()[CONFIG.defaultBoxName].DB({
-					name : '__CHECK_ALIVE',
-					isNotUsingHistory : true
-				});
-				
-				checkAliveDB.get({
-					notExists : () => {
-						checkAliveDB.create({
-							alive : true
-						});
-					}
-				});
+				if (BOX.getAllBoxes()[CONFIG.defaultBoxName] !== undefined) {
+					
+					let checkAliveDB = BOX.getAllBoxes()[CONFIG.defaultBoxName].DB({
+						name : '__CHECK_ALIVE',
+						isNotUsingHistory : true
+					});
+					
+					checkAliveDB.get({
+						notExists : () => {
+							checkAliveDB.create({
+								alive : true
+							});
+						}
+					});
+				}
 			});
 		}
 	};
@@ -653,7 +656,10 @@ global.BOOT = (params) => {
 					
 					if (uri === '__CHECK_ALIVE') {
 						
-						if (CONNECT_TO_DB_SERVER.checkIsConnected() === true) {
+						if (
+							CONNECT_TO_DB_SERVER.checkIsConnected() === true &&
+							BOX.getAllBoxes()[CONFIG.defaultBoxName] !== undefined
+						) {
 							
 							BOX.getAllBoxes()[CONFIG.defaultBoxName].DB({
 								name : '__CHECK_ALIVE',

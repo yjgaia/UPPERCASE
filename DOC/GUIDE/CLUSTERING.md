@@ -269,11 +269,12 @@ sh.addShard('{{데이터베이스 서버 IP}}:30008');
 sh.enableSharding('{{데이터베이스 명}}');
 ```
 
-데이터베이스에서 사용하는 콜렉션들을 지정합니다.
+데이터베이스에서 사용하는 콜렉션들을 지정합니다. 특별히 UPPERCASE의 내부적인 사용 목적으로 `__CHECK_ALIVE` 콜렉션을 추가합니다.
 ```
-sh.shardCollection('{{데이터베이스 명}}.{{콜렉션 명}}', {_id : 1});
-sh.shardCollection('{{데이터베이스 명}}.{{콜렉션 명}}', {_id : 1});
-sh.shardCollection('{{데이터베이스 명}}.{{콜렉션 명}}', {_id : 1});
+sh.shardCollection('{{데이터베이스 명}}.{{BOX 이름}}.__CHECK_ALIVE', {_id : 1});
+sh.shardCollection('{{데이터베이스 명}}.{{BOX 이름}}.{{콜렉션 명}}', {_id : 1});
+sh.shardCollection('{{데이터베이스 명}}.{{BOX 이름}}.{{콜렉션 명}}', {_id : 1});
+sh.shardCollection('{{데이터베이스 명}}.{{BOX 이름}}.{{콜렉션 명}}', {_id : 1});
 ...
 ```
 
