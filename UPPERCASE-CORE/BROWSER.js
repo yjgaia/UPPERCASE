@@ -8837,6 +8837,10 @@ global.E = CLASS({
 		let getKey = self.getKey = () => {
 			return e.key;
 		};
+
+		let getButtonIndex = self.getButtonIndex = () => {
+			return e.button;
+		};
 		
 		let getWheelDelta = self.getWheelDelta = () => {
 			return e.deltaY;
