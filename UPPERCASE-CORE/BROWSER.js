@@ -8843,7 +8843,7 @@ global.E = CLASS({
 		};
 		
 		let getWheelDelta = self.getWheelDelta = () => {
-			return e.deltaY;
+			return e.deltaY * (INFO.getBrowserName() === 'Firefox' ? 33 : 1);
 		};
 		
 		let getGamePadData = self.getGamePadData = () => {
