@@ -10309,6 +10309,7 @@ global.INPUT = CLASS((cls) => {
 			let select;
 			let focus;
 			let blur;
+			let setPlaceholder;
 			
 			let toggleCheck;
 			let checkIsChecked;
@@ -10447,6 +10448,20 @@ global.INPUT = CLASS((cls) => {
 							});
 						}
 					});
+				}
+				
+				else {
+					
+					setPlaceholder = self.setPlaceholder = (_placeholder) => {
+						//REQUIRED: placeholder
+						
+						placeholder = _placeholder;
+						
+						inner.setAttr({
+							name : 'placeholder',
+							value : placeholder
+						});
+					};
 				}
 			}
 			
@@ -11090,6 +11105,17 @@ global.TEXTAREA = CLASS({
 
 		let blur = self.blur = () => {
 			self.getEl().blur();
+		};
+		
+		let setPlaceholder = self.setPlaceholder = (_placeholder) => {
+			//REQUIRED: placeholder
+			
+			placeholder = _placeholder;
+			
+			inner.setAttr({
+				name : 'placeholder',
+				value : placeholder
+			});
 		};
 
 		EVENT({

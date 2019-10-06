@@ -85,6 +85,17 @@ global.TEXTAREA = CLASS({
 		let blur = self.blur = () => {
 			self.getEl().blur();
 		};
+		
+		let setPlaceholder = self.setPlaceholder = (_placeholder) => {
+			//REQUIRED: placeholder
+			
+			placeholder = _placeholder;
+			
+			inner.setAttr({
+				name : 'placeholder',
+				value : placeholder
+			});
+		};
 
 		EVENT({
 			node : self,
