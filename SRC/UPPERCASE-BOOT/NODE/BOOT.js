@@ -241,23 +241,6 @@ global.BOOT = (params) => {
 				backupName : NODE_CONFIG.backupDBName,
 				backupUsername : NODE_CONFIG.backupDBUsername,
 				backupPassword : NODE_CONFIG.backupDBPassword
-			}, () => {
-				
-				if (BOX.getAllBoxes()[CONFIG.defaultBoxName] !== undefined) {
-					
-					let checkAliveDB = BOX.getAllBoxes()[CONFIG.defaultBoxName].DB({
-						name : '__CHECK_ALIVE',
-						isNotUsingHistory : true
-					});
-					
-					checkAliveDB.get({
-						notExists : () => {
-							checkAliveDB.create({
-								alive : true
-							});
-						}
-					});
-				}
 			});
 		}
 	};
@@ -628,49 +611,13 @@ global.BOOT = (params) => {
 					
 					if (uri === '__CHECK_ALIVE') {
 						
-						if (
-							CONNECT_TO_DB_SERVER.checkIsConnected() === true &&
-							BOX.getAllBoxes()[CONFIG.defaultBoxName] !== undefined
-						) {
-							
-							BOX.getAllBoxes()[CONFIG.defaultBoxName].DB({
-								name : '__CHECK_ALIVE',
-								isNotUsingHistory : true
-							}).get({
-								
-								error : () => {
-									SHOW_ERROR('MongoDB에 이상 현상이 발생했습니다.');
-									
-									response({
-										statusCode : 500,
-										headers : {
-											'Access-Control-Allow-Origin' : '*'
-										}
-									});
-								},
-								
-								success : () => {
-									
-									response({
-										content : '',
-										headers : {
-											'Access-Control-Allow-Origin' : '*'
-										}
-									});
-								}
-							});
-						}
+						response({
+							content : '',
+							headers : {
+								'Access-Control-Allow-Origin' : '*'
+							}
+						});
 						
-						else {
-
-							response({
-								content : '',
-								headers : {
-									'Access-Control-Allow-Origin' : '*'
-								}
-							});
-						}
-
 						return false;
 					}
 					
