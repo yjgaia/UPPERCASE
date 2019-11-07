@@ -6395,8 +6395,7 @@ global.CPU_CLUSTERING = METHOD((m) => {
 		run : (work) => {
 			//REQUIRED: work
 			
-			// CPU 코어가 두개 미만이면 클러스터링을 하지 않는 편이 나음
-			if (CPU_COUNT <= 2) {
+			if (CPU_COUNT <= 1) {
 				work();
 			}
 			
@@ -6448,6 +6447,11 @@ global.CPU_CLUSTERING = METHOD((m) => {
 				
 				// 워커 개수 (CPU 코어 개수보다 하나 적음, 하나는 마스터에게 배분)
 				workerCount = CPU_COUNT - 1;
+				
+				// CPU 개수가 2개일 땐 워커 개수도 2개
+				if (CPU_COUNT === 2) {
+					workerCount = 2;
+				}
 				
 				// 최소한 한개의 워커는 필요
 				if (workerCount < 1) {
