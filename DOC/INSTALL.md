@@ -1,9 +1,9 @@
 # UPPERCASE 설치하기
 
-1. UPPERCASE의 기반 시스템들을 설치합니다. 기반 시스템들은 다음과 같습니다.
+1. UPPERCASE의 기반 시스템들을 설치합니다. 기반 시스템들은 다음과 같습니다. 이 페이지의 하단에 설치 방법을 각각 설명해 두었습니다.
 
 	* [Node.js](http://nodejs.org)
-	* [ImageMagick](http://www.imagemagick.org)
+	* [GraphicsMagick](http://www.graphicsmagick.org)
 	* [MongoDB](http://www.mongodb.org)
 
 2. `Git`을 이용하여 UPPERCASE를 적당한 곳에 `clone`합니다. `Git`에 대해서는 [Git 간편 안내서](http://rogerdudler.github.io/git-guide/index.ko.html)를 참고하시기 바랍니다.
@@ -47,3 +47,38 @@
 	```
 
 3. 실행중인 프로젝트가 있다면, 재시작 합니다.
+
+## Node.js 설치
+CentOS 8을 기준으로 설명합니다.
+
+`dnf`로 Node.js를 설치합니다.
+
+```
+dnf install nodejs
+```
+
+이후 `npm`을 이용해 `n` 모듈을 설치합니다.
+
+```
+npm install -g n
+```
+
+아래 명령어를 사용해 Node.js 최신 버전을 설치합니다.
+
+```
+n lts
+```
+
+## GraphicsMagick 설치
+CentOS 8을 기준으로 설명합니다.
+
+아래 명령과 같이 `dnf`로 설치합니다.
+
+```
+dnf install GraphicsMagick GraphicsMagick-devel GraphicsMagick-perl
+```
+
+## MongoDB 설치
+CentOS 8을 기준으로, 아래 문서를 따라 설치 과정을 수행합니다.
+
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/
