@@ -23,6 +23,7 @@
 	```
 	vi .profile
 	export UPPERCASE_PATH="{{clone 한 폴더 위치}}"
+	source .profile
 	```
 	
 	##### 운영체제가 Linux인 경우
@@ -31,7 +32,12 @@
 	vi .bash_profile
 	혹은
 	vi .profile
+	
 	export UPPERCASE_PATH="{{clone 한 폴더 위치}}"
+	
+	source .bash_profile
+	혹은
+	source .profile
 	```
 
 4. 모든 설치가 완료되었습니다.
@@ -54,7 +60,8 @@ CentOS 8을 기준으로 설명합니다.
 `dnf`로 Node.js를 설치합니다.
 
 ```
-dnf install nodejs
+dnf install -y epel-release
+dnf install -y nodejs
 ```
 
 이후 `npm`을 이용해 `n` 모듈을 설치합니다.
@@ -75,7 +82,8 @@ CentOS 8을 기준으로 설명합니다.
 아래 명령과 같이 `dnf`로 설치합니다.
 
 ```
-dnf install GraphicsMagick GraphicsMagick-devel GraphicsMagick-perl
+dnf install -y epel-release
+dnf install -y GraphicsMagick GraphicsMagick-devel GraphicsMagick-perl
 ```
 
 ## MongoDB 설치

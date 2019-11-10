@@ -270,13 +270,13 @@ firewall-cmd --reload
 
 1. Fail2ban 설치
 ```
-yum install -y epel-release
-yum install -y fail2ban fail2ban-systemd
+dnf install -y epel-release
+dnf install -y fail2ban fail2ban-systemd
 ```
 
 2. 설정 파일 작성
 ```
-vi /etc/fail2ban/jail.d/local.conf
+vi /etc/fail2ban/jail.local
 ```
 설정 파일에 아래 내용을 붙혀넣습니다.
 ```
