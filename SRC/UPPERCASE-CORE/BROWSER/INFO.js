@@ -6,6 +6,10 @@ global.INFO = OBJECT({
 	init : (inner, self) => {
 
 		let isTouchDevice = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
+		
+		if (isTouchDevice === undefined) {
+			isTouchDevice = false;
+		}
 
 		let getLang = self.getLang = () => {
 
