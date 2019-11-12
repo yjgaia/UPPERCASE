@@ -304,7 +304,7 @@ global.WEB_SERVER = CLASS((cls) => {
 					acceptEncoding = '';
 				}
 
-				if (uri.indexOf('?') != -1) {
+				if (uri.indexOf('?') !== -1) {
 					paramStr = uri.substring(uri.indexOf('?') + 1);
 					uri = uri.substring(0, uri.indexOf('?'));
 				}
