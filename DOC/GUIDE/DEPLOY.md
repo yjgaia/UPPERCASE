@@ -265,6 +265,15 @@ firewall-cmd --zone=public --add-port=0-65535/udp --permanent
 firewall-cmd --reload
 ```
 
+### htop 설치
+CPU와 메모리 사용률 등을 확인하기 위해 시스템 모니터링 툴인 htop을 설치합니다.
+```
+dnf install -y epel-release
+dnf install -y htop
+
+htop
+```
+
 ### SSH 무작위 로그인 시도 차단
 서버를 운영하다보면 중국으로부터 SSH 무작위 로그인 시도가 수없이 발생하는 것을 볼 수 있습니다.  [Fail2ban](https://www.fail2ban.org)을 설치하여 SSH 무작위 로그인 시도 공격을 차단해 봅시다.
 
