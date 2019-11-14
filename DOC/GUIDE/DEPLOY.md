@@ -285,7 +285,7 @@ dnf install -y fail2ban fail2ban-systemd
 
 2. 설정 파일 작성
 ```
-vi /etc/fail2ban/jail.local
+vi /etc/fail2ban/jail.d/local.conf
 ```
 설정 파일에 아래 내용을 붙혀넣습니다.
 ```
@@ -304,6 +304,12 @@ enabled = true
 ```
 systemctl start fail2ban
 systemctl enable fail2ban
+```
+
+작동하지 않는다면 `firewalld`가 실행중인지 확인합니다.
+```
+systemctl start firewalld
+systemctl enable firewalld
 ```
 
 ### 모든 Node.js 프로세스 종료
