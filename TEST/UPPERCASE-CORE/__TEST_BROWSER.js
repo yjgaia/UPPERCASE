@@ -72,11 +72,11 @@ RUN(() => {
 	require('./COMMON/UTIL/RANDOM_STR.js');
 	require('./COMMON/UTIL/URI_MATCHER.js');*/
 	
-	/*
 	// BROWSER 테스트
 	// INFO
 	require('./BROWSER/INFO.js');
 	
+	/*
 	// 창 관련 기능
 	require('./BROWSER/WINDOW/TITLE.js');
 	require('./BROWSER/WINDOW/WIN_WIDTH.js');
@@ -145,7 +145,7 @@ RUN(() => {
 	require('./BROWSER/CONSOLE/SHOW_WARNING.js');*/
 	
 	// SOUND
-	require('./BROWSER/SOUND.js');
+	//require('./BROWSER/SOUND.js');
 	
 	// OTHERS
 	//require('./BROWSER/ADD_FONT.js');
