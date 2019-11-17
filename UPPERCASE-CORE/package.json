@@ -9,7 +9,7 @@
 		"os-locale": "latest",
 		"sift": "latest",
 		"sqwish": "latest",
-		"ws": "^7.2.0"
+		"ws": "latest"
 	},
 	"main": "index.js"
 }
