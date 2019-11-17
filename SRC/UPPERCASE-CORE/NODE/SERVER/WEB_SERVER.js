@@ -629,9 +629,9 @@ global.WEB_SERVER = CLASS((cls) => {
 														},
 														success : (metadata) => {
 					
-															if (metadata.exif !== undefined) {
+															if (metadata.default !== undefined) {
 					
-																fileData.exif = metadata.exif;
+																fileData.exif = metadata.default;
 					
 																GRAPHICSMAGICK_CONVERT([path, '-auto-orient', path], {
 																	error : errorHandler,
