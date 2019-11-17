@@ -1,11 +1,11 @@
-FROM centos:7
+FROM centos:8
 
 MAINTAINER Hanul <hanul@hanul.me>
 
 WORKDIR /root
 
-COPY mongodb-org-4.0.repo /etc/yum.repos.d
-RUN yum install -y mongodb-org
+COPY mongodb-org-4.2.repo /etc/yum.repos.d
+RUN dnf install -y mongodb-org
 
 VOLUME /data/db
 

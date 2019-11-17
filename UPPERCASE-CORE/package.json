@@ -2,7 +2,7 @@
 	"name": "uppercase-core",
 	"version": "1.4.8",
 	"dependencies": {
-		"hanul-imagemagick": "latest",
+		"hanul-graphicsmagick": "latest",
 		"hanul-uglify-js": "latest",
 		"formidable": "latest",
 		"diskspace": "latest",

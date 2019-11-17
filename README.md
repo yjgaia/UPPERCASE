@@ -71,7 +71,6 @@ UPPERCASE는 이 외에도 업로드 기능, 각종 유틸리티 기능, 모든 
 * [튜토리얼](DOC/TUTORIAL.md)
 * [가이드](DOC/GUIDE.md)
 * [API 문서](API/README.md)
-* [릴리즈 노트](DOC/RELEASE.md)
 
 ## 클라이언트
 UPPERCASE가 공식 지원하는 클라이언트 목록은 다음과 같습니다.

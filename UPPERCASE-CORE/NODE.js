@@ -10448,11 +10448,11 @@ global.WRITE_FILE = METHOD(() => {
 });
 
 /*
- * ImageMagick의 convert 기능을 사용합니다.
+ * GraphicsMagick의 convert 기능을 사용합니다.
  */
-global.IMAGEMAGICK_CONVERT = METHOD(() => {
+global.GRAPHICSMAGICK_CONVERT = METHOD(() => {
 
-	let ImageMagick = require('hanul-imagemagick');
+	let GraphicsMagick = require('hanul-graphicsmagick');
 
 	return {
 
@@ -10472,7 +10472,7 @@ global.IMAGEMAGICK_CONVERT = METHOD(() => {
 				}
 			}
 			
-			ImageMagick.convert(params, (error) => {
+			GraphicsMagick.convert(params, (error) => {
 
 				if (error !== TO_DELETE) {
 
@@ -10482,7 +10482,7 @@ global.IMAGEMAGICK_CONVERT = METHOD(() => {
 						errorHandler(errorMsg);
 						errorHandler = undefined;
 					} else {
-						SHOW_ERROR('IMAGEMAGICK_CONVERT', errorMsg);
+						SHOW_ERROR('GRAPHICSMAGICK_CONVERT', errorMsg);
 					}
 
 				} else {
@@ -10497,11 +10497,11 @@ global.IMAGEMAGICK_CONVERT = METHOD(() => {
 });
 
 /*
- * ImageMagick의 identify 기능을 사용합니다.
+ * GraphicsMagick의 identify 기능을 사용합니다.
  */
-global.IMAGEMAGICK_IDENTIFY = METHOD(() => {
+global.GRAPHICSMAGICK_IDENTIFY = METHOD(() => {
 
-	let ImageMagick = require('hanul-imagemagick');
+	let GraphicsMagick = require('hanul-graphicsmagick');
 
 	return {
 
@@ -10519,7 +10519,7 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(() => {
 				errorHandler = callbackOrHandlers.error;
 			}
 			
-			ImageMagick.identify(path, (error, features) => {
+			GraphicsMagick.identify(path, (error, features) => {
 
 				if (error !== TO_DELETE) {
 
@@ -10529,7 +10529,7 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(() => {
 						errorHandler(errorMsg);
 						errorHandler = undefined;
 					} else {
-						SHOW_ERROR('IMAGEMAGICK_IDENTIFY', errorMsg);
+						SHOW_ERROR('GRAPHICSMAGICK_IDENTIFY', errorMsg);
 					}
 
 				} else {
@@ -10541,11 +10541,11 @@ global.IMAGEMAGICK_IDENTIFY = METHOD(() => {
 });
 
 /*
- * ImageMagick을 이용해 이미지의 메타데이터를 반한홥니다.
+ * GraphicsMagick을 이용해 이미지의 메타데이터를 반한홥니다.
  */
-global.IMAGEMAGICK_READ_METADATA = METHOD(() => {
+global.GRAPHICSMAGICK_READ_METADATA = METHOD(() => {
 
-	let ImageMagick = require('hanul-imagemagick');
+	let GraphicsMagick = require('hanul-graphicsmagick');
 
 	return {
 
@@ -10563,7 +10563,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(() => {
 				errorHandler = callbackOrHandlers.error;
 			}
 			
-			ImageMagick.readMetadata(path, (error, metadata) => {
+			GraphicsMagick.readMetadata(path, (error, metadata) => {
 				
 				if (error !== TO_DELETE) {
 
@@ -10573,7 +10573,7 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(() => {
 						errorHandler(errorMsg);
 						errorHandler = undefined;
 					} else {
-						SHOW_ERROR('IMAGEMAGICK_READ_METADATA', errorMsg);
+						SHOW_ERROR('GRAPHICSMAGICK_READ_METADATA', errorMsg);
 					}
 
 				} else {
@@ -10585,9 +10585,9 @@ global.IMAGEMAGICK_READ_METADATA = METHOD(() => {
 });
 
 /*
- * ImageMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
+ * GraphicsMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
  */
-global.IMAGEMAGICK_RESIZE = METHOD(() => {
+global.GRAPHICSMAGICK_RESIZE = METHOD(() => {
 
 	let Path = require('path');
 
@@ -10621,7 +10621,7 @@ global.IMAGEMAGICK_RESIZE = METHOD(() => {
 				error : errorHandler,
 				success : () => {
 
-					IMAGEMAGICK_IDENTIFY(srcPath, {
+					GRAPHICSMAGICK_IDENTIFY(srcPath, {
 						error : errorHandler,
 						success : (features) => {
 
@@ -10633,7 +10633,7 @@ global.IMAGEMAGICK_RESIZE = METHOD(() => {
 								height = width / features.width * features.height;
 							}
 
-							IMAGEMAGICK_CONVERT([srcPath, '-resize', width + 'x' + height + '\!', distPath], callbackOrHandlers);
+							GRAPHICSMAGICK_CONVERT([srcPath, '-resize', width + 'x' + height + '\!', distPath], callbackOrHandlers);
 						}
 					});
 				}
@@ -12517,7 +12517,7 @@ global.WEB_SERVER = CLASS((cls) => {
 												
 												if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
 					
-													IMAGEMAGICK_READ_METADATA(path, {
+													GRAPHICSMAGICK_READ_METADATA(path, {
 														error : () => {
 															next();
 														},
@@ -12527,7 +12527,7 @@ global.WEB_SERVER = CLASS((cls) => {
 					
 																fileData.exif = metadata.exif;
 					
-																IMAGEMAGICK_CONVERT([path, '-auto-orient', path], {
+																GRAPHICSMAGICK_CONVERT([path, '-auto-orient', path], {
 																	error : errorHandler,
 																	success : next
 																});

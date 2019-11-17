@@ -368,26 +368,26 @@ FIND_FOLDER_NAMES('SomeFolder', {
 ```
 
 ## 이미지 처리 기능
-UPPERCASE-CORE-NODE에는 성능과 안정성이 보장된 [ImageMagick](http://www.imagemagick.org)을 사용하여 이미지를 쉽게 처리할 수 있도록 도와주는 기능들이 있습니다. 이미지 처리 기능을 사용하기 전에, [ImageMagick 설치하기](INSTALL_IMAGEMAGICK.md)를 참고하시어 ImageMagick을 먼저 설치해주시기 바랍니다.
+UPPERCASE-CORE-NODE에는 성능과 안정성이 보장된 [GraphicsMagick](http://www.graphicsmagick.org)을 사용하여 이미지를 쉽게 처리할 수 있도록 도와주는 기능들이 있습니다. 이미지 처리 기능을 사용하기 전에, [설치하기](../INSTALL.md)를 참고하시어 GraphicsMagick을 먼저 설치해주시기 바랍니다.
 
-### `IMAGEMAGICK_CONVERT`
-ImageMagick의 `convert` 기능을 사용합니다.
+### `GRAPHICSMAGICK_CONVERT`
+GraphicsMagick의 `convert` 기능을 사용합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `IMAGEMAGICK_CONVERT(params)`
-* `IMAGEMAGICK_CONVERT(params, () => {})`
-* `IMAGEMAGICK_CONVERT(params, {error:, success:})`
+* `GRAPHICSMAGICK_CONVERT(params)`
+* `GRAPHICSMAGICK_CONVERT(params, () => {})`
+* `GRAPHICSMAGICK_CONVERT(params, {error:, success:})`
 
 ```javascript
-IMAGEMAGICK_CONVERT(['sample.png', '-resize', '100x100\!', 'sample-square.png']);
+GRAPHICSMAGICK_CONVERT(['sample.png', '-resize', '100x100\!', 'sample-square.png']);
 ```
 ```javascript
-IMAGEMAGICK_CONVERT(['sample.png', '-resize', '200x200\!', 'sample-square.png'], () => {
+GRAPHICSMAGICK_CONVERT(['sample.png', '-resize', '200x200\!', 'sample-square.png'], () => {
 	console.log('이미지 크기를 변경하였습니다.');
 });
 ```
 ```javascript
-IMAGEMAGICK_CONVERT(['sample.png', '-resize', '300x300\!', 'sample-square.png'], {
+GRAPHICSMAGICK_CONVERT(['sample.png', '-resize', '300x300\!', 'sample-square.png'], {
 	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
@@ -397,21 +397,21 @@ IMAGEMAGICK_CONVERT(['sample.png', '-resize', '300x300\!', 'sample-square.png'],
 });
 ```
 
-### `IMAGEMAGICK_IDENTIFY`
-ImageMagick의 `identify` 기능을 사용합니다.
+### `GRAPHICSMAGICK_IDENTIFY`
+GraphicsMagick의 `identify` 기능을 사용합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `IMAGEMAGICK_IDENTIFY(path, () => {})`
-* `IMAGEMAGICK_IDENTIFY(path, {error:, success:})`
+* `GRAPHICSMAGICK_IDENTIFY(path, () => {})`
+* `GRAPHICSMAGICK_IDENTIFY(path, {error:, success:})`
 
 ```javascript
-IMAGEMAGICK_IDENTIFY('image.png', (features) => {
+GRAPHICSMAGICK_IDENTIFY('image.png', (features) => {
 	console.log('이미지 정보: ' + STRINGIFY(features));
 	console.log('이미지 크기: ' + features.width + 'x' + features.height);
 });
 ```
 ```javascript
-IMAGEMAGICK_IDENTIFY('image.png', {
+GRAPHICSMAGICK_IDENTIFY('image.png', {
 	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
@@ -422,20 +422,20 @@ IMAGEMAGICK_IDENTIFY('image.png', {
 });
 ```
 
-### `IMAGEMAGICK_READ_METADATA`
-ImageMagick을 이용해 이미지의 메타데이터를 반한홥니다.
+### `GRAPHICSMAGICK_READ_METADATA`
+GraphicsMagick을 이용해 이미지의 메타데이터를 반한홥니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `IMAGEMAGICK_READ_METADATA(path, () => {})`
-* `IMAGEMAGICK_READ_METADATA(path, {error:, success:})`
+* `GRAPHICSMAGICK_READ_METADATA(path, () => {})`
+* `GRAPHICSMAGICK_READ_METADATA(path, {error:, success:})`
 
 ```javascript
-IMAGEMAGICK_READ_METADATA('image.png', (metadata) => {
+GRAPHICSMAGICK_READ_METADATA('image.png', (metadata) => {
 	console.log('이미지의 메타 데이터: ' + STRINGIFY(metadata));
 });
 ```
 ```javascript
-IMAGEMAGICK_READ_METADATA('image.png', {
+GRAPHICSMAGICK_READ_METADATA('image.png', {
 	error : (errorMsg) => {
 		console.log('오류가 발생했습니다. 오류 메시지: ' + errorMsg);
 	},
@@ -445,26 +445,26 @@ IMAGEMAGICK_READ_METADATA('image.png', {
 });
 ```
 
-### `IMAGEMAGICK_RESIZE`
-ImageMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
+### `GRAPHICSMAGICK_RESIZE`
+GraphicsMagick을 사용해 이미지의 크기를 조절하여 새 파일로 저장합니다.
 
 사용 가능한 형태들은 다음과 같습니다.
-* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:}, () => {})`
-* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, height:}, () => {})`
-* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, () => {})`
-* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:}, {error:, success:})`
-* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, height:}, {error:, success:})`
-* `IMAGEMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, {error:, success:})`
+* `GRAPHICSMAGICK_RESIZE({srcPath:, distPath:, width:}, () => {})`
+* `GRAPHICSMAGICK_RESIZE({srcPath:, distPath:, height:}, () => {})`
+* `GRAPHICSMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, () => {})`
+* `GRAPHICSMAGICK_RESIZE({srcPath:, distPath:, width:}, {error:, success:})`
+* `GRAPHICSMAGICK_RESIZE({srcPath:, distPath:, height:}, {error:, success:})`
+* `GRAPHICSMAGICK_RESIZE({srcPath:, distPath:, width:, height:}, {error:, success:})`
 
 ```javascript
-IMAGEMAGICK_RESIZE({
+GRAPHICSMAGICK_RESIZE({
 	srcPath : 'image.png',
 	distPath : 'image-width-100.png',
 	width : 100
 });
 ```
 ```javascript
-IMAGEMAGICK_RESIZE({
+GRAPHICSMAGICK_RESIZE({
 	srcPath : 'image.png',
 	distPath : 'image-height-100.png',
 	height : 100
@@ -473,7 +473,7 @@ IMAGEMAGICK_RESIZE({
 });
 ```
 ```javascript
-IMAGEMAGICK_RESIZE({
+GRAPHICSMAGICK_RESIZE({
 	srcPath : 'image.png',
 	distPath : 'image-square.png',
 	width : 100,

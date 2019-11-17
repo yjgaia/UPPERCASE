@@ -623,7 +623,7 @@ global.WEB_SERVER = CLASS((cls) => {
 												
 												if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/gif') {
 					
-													IMAGEMAGICK_READ_METADATA(path, {
+													GRAPHICSMAGICK_READ_METADATA(path, {
 														error : () => {
 															next();
 														},
@@ -633,7 +633,7 @@ global.WEB_SERVER = CLASS((cls) => {
 					
 																fileData.exif = metadata.exif;
 					
-																IMAGEMAGICK_CONVERT([path, '-auto-orient', path], {
+																GRAPHICSMAGICK_CONVERT([path, '-auto-orient', path], {
 																	error : errorHandler,
 																	success : next
 																});

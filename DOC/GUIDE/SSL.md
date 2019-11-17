@@ -25,7 +25,7 @@ sroute('{{도메인}}', 8887, '/etc/letsencrypt/live/{{도메인}}/privkey.pem',
 2. [https://certbot.eff.org](https://certbot.eff.org)에 접속하여 안내에 따라 인증서를 발급받습니다.
 3. `webroot` 방식으로 발급받습니다. 프로젝트 BOX 폴더의 `R` 폴더의 위치를 지정하면 됩니다. 아래는 예시입니다.
 	```
-	certbot certonly --webroot -w /root/SampleProject/Sample/R -d sample.com
+	/usr/local/bin/certbot-auto certonly --webroot -w /root/SampleProject/Sample/R -d sample.com
 	```
 4. 이후 UPPERCASE 기반 프로젝트 설정에 관련 설정을 추가하거나, SkyProxy를 사용하여 SSL 인증서를 설정하면 됩니다.
 
@@ -33,5 +33,5 @@ sroute('{{도메인}}', 8887, '/etc/letsencrypt/live/{{도메인}}/privkey.pem',
 [Let's Encrypt](https://letsencrypt.org)는 90일 이내에 갱신을 해야만 계속해서 사용할 수 있다는 제한이 있습니다. Certbot으로 인증서를 발급받은 경우 아래 명령어를 입력하여 갱신하면 계속해서 인증서를 사용할 수 있습니다. (단, 서버를 이전하는 경우에는 인증서를 새로 발급받아야 합니다.)
 
 ```
-certbot renew
+/usr/local/bin/certbot-auto renew
 ```

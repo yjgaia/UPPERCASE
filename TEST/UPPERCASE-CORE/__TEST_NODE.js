@@ -82,10 +82,10 @@ RUN(() => {
 	require('./NODE/FILE/REMOVE_FOLDER.js');*/
 	
 	// 이미지 처리 기능
-	/*require('./NODE/IMAGEMAGICK/IMAGEMAGICK_CONVERT.js');
-	require('./NODE/IMAGEMAGICK/IMAGEMAGICK_IDENTIFY.js');
-	require('./NODE/IMAGEMAGICK/IMAGEMAGICK_READ_METADATA.js');
-	require('./NODE/IMAGEMAGICK/IMAGEMAGICK_RESIZE.js');*/
+	require('./NODE/GRAPHICSMAGICK/GRAPHICSMAGICK_CONVERT.js');
+	require('./NODE/GRAPHICSMAGICK/GRAPHICSMAGICK_IDENTIFY.js');
+	require('./NODE/GRAPHICSMAGICK/GRAPHICSMAGICK_READ_METADATA.js');
+	require('./NODE/GRAPHICSMAGICK/GRAPHICSMAGICK_RESIZE.js');
 	
 	// HTTP 요청 기능
 	//require('./NODE/REQUEST/REQUEST.js');
@@ -110,7 +110,7 @@ RUN(() => {
 	
 	// 시스템 관련 기능
 	//require('./NODE/SYSTEM/CPU_USAGES.js');
-	require('./NODE/SYSTEM/MEMORY_USAGE.js');
+	//require('./NODE/SYSTEM/MEMORY_USAGE.js');
 	//require('./NODE/SYSTEM/DISK_USAGE.js');
 	//require('./NODE/SYSTEM/GET_IPS.js');
 	

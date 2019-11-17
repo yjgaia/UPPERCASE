@@ -551,7 +551,7 @@ global.BOOT = (params) => {
 										
 										let distPath = rootPath + '/__RF/' + boxName + '/THUMB/' + savedData.id;
 										
-										IMAGEMAGICK_IDENTIFY(toPath, {
+										GRAPHICSMAGICK_IDENTIFY(toPath, {
 											
 											// when error, just copy.
 											error : () => {
@@ -565,7 +565,7 @@ global.BOOT = (params) => {
 												
 												if (CONFIG.maxThumbWidth !== undefined && features.width !== undefined && features.width > CONFIG.maxThumbWidth) {
 					
-													IMAGEMAGICK_RESIZE({
+													GRAPHICSMAGICK_RESIZE({
 														srcPath : toPath,
 														distPath : distPath,
 														width : CONFIG.maxThumbWidth
@@ -573,7 +573,7 @@ global.BOOT = (params) => {
 					
 												} else if (CONFIG.maxThumbHeight !== undefined && features.height !== undefined && features.height > CONFIG.maxThumbHeight) {
 					
-													IMAGEMAGICK_RESIZE({
+													GRAPHICSMAGICK_RESIZE({
 														srcPath : toPath,
 														distPath : distPath,
 														height : CONFIG.maxThumbHeight
