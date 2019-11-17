@@ -2,14 +2,14 @@
 	"name": "uppercase-core",
 	"version": "1.4.8",
 	"dependencies": {
+		"diskspace": "latest",
+		"formidable": "latest",
 		"hanul-graphicsmagick": "latest",
 		"hanul-uglify-js": "latest",
-		"formidable": "latest",
-		"diskspace": "latest",
-		"sqwish": "latest",
-		"ws": "latest",
+		"os-locale": "latest",
 		"sift": "latest",
-		"os-locale": "latest"
+		"sqwish": "latest",
+		"ws": "^7.2.0"
 	},
 	"main": "index.js"
 }
