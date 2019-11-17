@@ -269,17 +269,10 @@ exports.readMetadata = function(path, callback) {
 				if (eq_p === -1) return;
 				var key = line.substr(0, eq_p).replace('/', '-'),
 					value = line.substr(eq_p + 1).trim(),
-					typekey = 'default';
-				var p = key.indexOf(':');
-				if (p !== -1) {
-					typekey = key.substr(0, p);
-					key = key.substr(p + 1);
-					if (typekey === 'exif') {
-						key = exifKeyName(key);
-						var converter = exifFieldConverters[key];
-						if (converter) value = converter(value);
-					}
-				}
+					typekey = 'exif';
+				key = exifKeyName(key);
+				var converter = exifFieldConverters[key];
+				if (converter) value = converter(value);
 				if (!(typekey in meta)) meta[typekey] = {
 					key: value
 				};
