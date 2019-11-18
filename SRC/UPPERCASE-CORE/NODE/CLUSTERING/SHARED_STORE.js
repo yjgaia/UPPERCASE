@@ -3,7 +3,7 @@
  */
 global.SHARED_STORE = CLASS((cls) => {
 	
-	let Sift = require('sift').default();
+	let Sift = require('sift').default;
 
 	let storages = {};
 	let removeDelayMap = {};
