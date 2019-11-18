@@ -7195,7 +7195,7 @@ global.SERVER_CLUSTERING = METHOD((m) => {
  */
 global.SHARED_STORE = CLASS((cls) => {
 	
-	let Sift = require('sift');
+	let Sift = require('sift').default();
 
 	let storages = {};
 	let removeDelayMap = {};
