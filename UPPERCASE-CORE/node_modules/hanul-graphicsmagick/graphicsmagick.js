@@ -176,7 +176,9 @@ exports.identify = function(pathOrArgs, callback) {
 				result = stdout;
 			} else {
 				result = parseIdentify(stdout);
-				result.format = result.format.match(/\S*/)[0]
+				if (result.format !== undefined) {
+					result.format = result.format.match(/\S*/)[0];
+				}
 				if (result.geometry !== undefined) {
 					geometry = result.geometry.split(/x/);
 					result.width = parseInt(geometry[0]);
