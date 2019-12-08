@@ -15,7 +15,7 @@ FOR_BOX((box) => {
 			let methodName = params.methodName;
 			let data = params.data;
 			
-			LAUNCH_ROOM_SERVER.broadcast({
+			LAUNCH_ROOM_SERVER.__broadcast({
 				roomName : roomName,
 				methodName : methodName,
 				data : data

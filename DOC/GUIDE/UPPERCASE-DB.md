@@ -72,11 +72,13 @@ CONNECT_TO_DB_SERVER({
 * `name` 데이터베이스 이름
 * `username` 인증 모드로 MongoDB 서버를 구동한 경우, 데이터베이스의 아이디
 * `password` 인증 모드로 MongoDB 서버를 구동한 경우, 데이터베이스의 비밀번호
+* `url` URL로 MongoDB에 접속하는 경우, 데이터베이스의 URL
 * `backupHost` 백업 서버의 호스트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
 * `backupPort` 백업 서버의 포트. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
 * `backupName` 백업 데이터베이스 이름. 자세한 내용은 [백업 서버 세팅하기](#백업-서버-세팅하기)를 참고하시기 바랍니다.
 * `backupUsername` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 아이디
 * `backupPassword` 인증 모드로 백업 서버를 구동한 경우, 백업 데이터베이스의 비밀번호
+* `backupURL` URL로 백업 서버의 MongoDB에 접속하는 경우, 백업 데이터베이스의 URL
 
 ## `Box.DB`
 MongoDB 컬렉션을 다루는 `DB` 클래스

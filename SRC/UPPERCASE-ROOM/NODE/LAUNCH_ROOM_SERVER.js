@@ -17,7 +17,7 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 		initRoomFuncMap[roomName].push(initRoomFunc);
 	};
 
-	let broadcast = cls.broadcast = (params, toExceptSend) => {
+	let __broadcast = cls.__broadcast = (params, toExceptSend) => {
 		//REQUIRED: params
 		//REQUIRED: params.roomName
 		//REQUIRED: params.methodName
@@ -52,14 +52,14 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 			
 			if (CPU_CLUSTERING.on !== undefined) {
 
-				CPU_CLUSTERING.on('__LAUNCH_ROOM_SERVER__MESSAGE', broadcast);
+				CPU_CLUSTERING.on('__LAUNCH_ROOM_SERVER__MESSAGE', __broadcast);
 			}
 
 			if (SERVER_CLUSTERING.on !== undefined) {
 
 				SERVER_CLUSTERING.on('__LAUNCH_ROOM_SERVER__MESSAGE', (params) => {
 
-					broadcast(params);
+					__broadcast(params);
 
 					if (CPU_CLUSTERING.broadcast !== undefined) {
 
@@ -161,7 +161,7 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 									let methodName = params.methodName;
 									let data = params.data;
 									
-									LAUNCH_ROOM_SERVER.broadcast({
+									__broadcast({
 										roomName : roomName,
 										methodName : methodName,
 										data : data

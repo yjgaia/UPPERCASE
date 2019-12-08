@@ -64,11 +64,13 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			//REQUIRED: params.name
 			//OPTIONAL: params.username
 			//OPTIONAL: params.password
+			//OPTIONAL: params.url
 			//OPTIONAL: params.backupHost
 			//OPTIONAL: params.backupPort
 			//OPTIONAL: params.backupName
 			//OPTIONAL: params.backupUsername
 			//OPTIONAL: params.backupPassword
+			//OPTIONAL: params.backupURL
 			//OPTIONAL: callback
 
 			let dbServerName = params.dbServerName === undefined ? DEFAULT_DB_SERVER_NAME : params.dbServerName;
@@ -77,17 +79,19 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			let name = params.name;
 			let username = params.username;
 			let password = params.password;
+			let url = params.url;
 			
 			let backupHost = params.backupHost === undefined ? '127.0.0.1' : params.backupHost;
 			let backupPort = params.backupPort === undefined ? 27017 : params.backupPort;
 			let backupName = params.backupName;
 			let backupUsername = params.backupUsername;
 			let backupPassword = params.backupPassword;
+			let backupURL = params.backupURL;
 			
 			NEXT([
 			(next) => {
 				
-				let client = new MongoClient(
+				let client = new MongoClient(url !== undefined ? url : (
 					
 					username !== undefined && password !== undefined ?
 					
@@ -100,7 +104,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 					host + ':' +
 					port
 					
-				, {
+				), {
 					poolSize : 16,
 					connectTimeoutMS : 600000,
 					socketTimeoutMS : 6000000,
@@ -131,7 +135,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			(next) => {
 				return (nativeDB) => {
 					
-					let client = new MongoClient(
+					let client = new MongoClient(backupURL !== undefined ? backupURL : (
 						
 						backupUsername !== undefined && backupPassword !== undefined ?
 						
@@ -144,7 +148,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 						backupHost + ':' +
 						backupPort
 						
-					, {
+					), {
 						connectTimeoutMS : 600000,
 						socketTimeoutMS : 6000000,
 						useNewUrlParser : true
