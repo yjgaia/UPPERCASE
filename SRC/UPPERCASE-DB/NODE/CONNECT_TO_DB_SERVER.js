@@ -85,6 +85,17 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			NEXT([
 			(next) => {
 				
+				let options = {
+					poolSize : 16,
+					connectTimeoutMS : 600000,
+					socketTimeoutMS : 6000000,
+					useNewUrlParser : true
+				};
+				
+				if (url !== undefined && url.indexOf('+srv://') !== -1) {
+					options.useUnifiedTopology = true;
+				}
+				
 				let client = new MongoClient(url !== undefined ? url : (
 					
 					username !== undefined && password !== undefined ?
@@ -98,12 +109,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 					host + ':' +
 					port
 					
-				), {
-					poolSize : 16,
-					connectTimeoutMS : 600000,
-					socketTimeoutMS : 6000000,
-					useNewUrlParser : true
-				});
+				), options);
 				
 				client.connect((error) => {
 	
@@ -129,6 +135,16 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 			(next) => {
 				return (nativeDB) => {
 					
+					let options = {
+						connectTimeoutMS : 600000,
+						socketTimeoutMS : 6000000,
+						useNewUrlParser : true
+					};
+					
+					if (backupURL !== undefined && backupURL.indexOf('+srv://') !== -1) {
+						options.useUnifiedTopology = true;
+					}
+					
 					let client = new MongoClient(backupURL !== undefined ? backupURL : (
 						
 						backupUsername !== undefined && backupPassword !== undefined ?
@@ -142,11 +158,7 @@ global.CONNECT_TO_DB_SERVER = METHOD((m) => {
 						backupHost + ':' +
 						backupPort
 						
-					), {
-						connectTimeoutMS : 600000,
-						socketTimeoutMS : 6000000,
-						useNewUrlParser : true
-					});
+					), options);
 					
 					client.connect((error) => {
 		
