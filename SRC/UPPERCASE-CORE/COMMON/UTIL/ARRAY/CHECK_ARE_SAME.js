@@ -33,7 +33,7 @@ global.CHECK_ARE_SAME = METHOD({
 
 			// when a, b are array
 			else if (CHECK_IS_ARRAY(a) === true && CHECK_IS_ARRAY(b) === true) {
-				return EACH(a, (value, i) => {
+				return a.length === b.length && EACH(a, (value, i) => {
 					return checkTwoSame(value, b[i]);
 				});
 			}
