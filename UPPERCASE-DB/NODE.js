@@ -639,19 +639,6 @@ FOR_BOX((box) => {
 									errorHandler = callbackOrHandlers.error;
 								}
 							}
-							
-							if (backupCollection !== undefined) {
-								backupCollection.insertOne(data, (error) => {
-									
-									if (error !== TO_DELETE) {
-										
-										SHOW_ERROR('BACKUP DB', error.toString(), {
-											boxName : box.boxName,
-											name : name
-										});
-									}
-								});
-							}
 	
 							collection.insertOne(data, {
 								w : 1
@@ -670,6 +657,19 @@ FOR_BOX((box) => {
 									
 									if (callback !== undefined) {
 										callback(savedData);
+									}
+									
+									if (backupCollection !== undefined) {
+										backupCollection.insertOne(savedData, (error) => {
+											
+											if (error !== TO_DELETE) {
+												
+												SHOW_ERROR('BACKUP DB', error.toString(), {
+													boxName : box.boxName,
+													name : name
+												});
+											}
+										});
 									}
 								}
 	
@@ -1036,19 +1036,6 @@ FOR_BOX((box) => {
 										}
 										
 									} else {
-										
-										if (backupCollection !== undefined) {
-											backupCollection.updateOne(filter, updateData, (error) => {
-												
-												if (error !== TO_DELETE) {
-													
-													SHOW_ERROR('BACKUP DB', error.toString(), {
-														boxName : box.boxName,
-														name : name
-													});
-												}
-											});
-										}
 	
 										collection.updateOne(filter, updateData, {
 											w : 1
@@ -1158,6 +1145,19 @@ FOR_BOX((box) => {
 														if (callback !== undefined) {
 															callback(savedData, originData);
 														}
+														
+														if (backupCollection !== undefined) {
+															backupCollection.updateOne(filter, savedData, (error) => {
+																
+																if (error !== TO_DELETE) {
+																	
+																	SHOW_ERROR('BACKUP DB', error.toString(), {
+																		boxName : box.boxName,
+																		name : name
+																	});
+																}
+															});
+														}
 													}
 												});
 											}
@@ -1260,19 +1260,6 @@ FOR_BOX((box) => {
 								},
 	
 								success : (originData) => {
-									
-									if (backupCollection !== undefined) {
-										backupCollection.deleteOne(filter, (error) => {
-											
-											if (error !== TO_DELETE) {
-												
-												SHOW_ERROR('BACKUP DB', error.toString(), {
-													boxName : box.boxName,
-													name : name
-												});
-											}
-										});
-									}
 	
 									collection.deleteOne(filter, {
 										w : 1
@@ -1306,6 +1293,19 @@ FOR_BOX((box) => {
 											
 											if (callback !== undefined) {
 												callback(originData);
+											}
+											
+											if (backupCollection !== undefined) {
+												backupCollection.deleteOne(filter, (error) => {
+													
+													if (error !== TO_DELETE) {
+														
+														SHOW_ERROR('BACKUP DB', error.toString(), {
+															boxName : box.boxName,
+															name : name
+														});
+													}
+												});
 											}
 										}
 									});
@@ -1543,19 +1543,6 @@ FOR_BOX((box) => {
 								removeEmptyValues($pull);
 								updateData.$pull = $pull;
 							}
-							
-							if (backupCollection !== undefined) {
-								backupCollection.updateMany(filter, updateData, (error) => {
-									
-									if (error !== TO_DELETE) {
-										
-										SHOW_ERROR('BACKUP DB', error.toString(), {
-											boxName : box.boxName,
-											name : name
-										});
-									}
-								});
-							}
 
 							collection.updateMany(filter, updateData, {
 								w : 1
@@ -1572,6 +1559,19 @@ FOR_BOX((box) => {
 								
 								else if (callback !== undefined) {
 									callback();
+								}
+								
+								if (backupCollection !== undefined) {
+									backupCollection.updateMany(filter, updateData, (error) => {
+										
+										if (error !== TO_DELETE) {
+											
+											SHOW_ERROR('BACKUP DB', error.toString(), {
+												boxName : box.boxName,
+												name : name
+											});
+										}
+									});
 								}
 							});
 						}

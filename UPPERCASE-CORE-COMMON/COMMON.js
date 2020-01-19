@@ -108,41 +108,6 @@ global.MSG = METHOD((m) => {
 });
 
 /*
- * 메시지의 특정 부분들을 바꿀 수 있는 템플릿 클래스
- */
-global.TEMPLATE = CLASS({
-
-	init : (inner, self, originMessage) => {
-		
-		let messages = [originMessage];
-		
-		let replace = self.replace = (key, message) => {
-			
-			EACH(messages, (m, i) => {
-				
-				if (typeof m === 'string') {
-					
-					let keyIndex = m.indexOf(key);
-					if (keyIndex !== -1) {
-						
-						let start = m.substring(0, keyIndex);
-						let end = m.substring(keyIndex + key.length);
-						
-						messages.splice(i, 1, end);
-						messages.splice(i, 0, message);
-						messages.splice(i, 0, start);
-					}
-				}
-			});
-		};
-		
-		let getMessages = self.getMessages = () => {
-			return messages;
-		};
-	}
-});
-
-/*
  * DB의 update 기능을 사용할 때, 데이터의 특정 값에 TO_DELETE를 지정하게 되면 해당 값이 삭제됩니다.
  * 자세한 것은 DB의 update 예제를 살펴보시기 바랍니다.
  *
@@ -4150,6 +4115,41 @@ global.STRINGIFY = METHOD({
 		else {
 			return JSON.stringify(data);
 		}
+	}
+});
+
+/*
+ * 메시지의 특정 부분들을 바꿀 수 있는 템플릿 클래스
+ */
+global.TEMPLATE = CLASS({
+
+	init : (inner, self, originMessage) => {
+		
+		let messages = [originMessage];
+		
+		let replace = self.replace = (key, message) => {
+			
+			EACH(messages, (m, i) => {
+				
+				if (typeof m === 'string') {
+					
+					let keyIndex = m.indexOf(key);
+					if (keyIndex !== -1) {
+						
+						let start = m.substring(0, keyIndex);
+						let end = m.substring(keyIndex + key.length);
+						
+						messages.splice(i, 1, end);
+						messages.splice(i, 0, message);
+						messages.splice(i, 0, start);
+					}
+				}
+			});
+		};
+		
+		let getMessages = self.getMessages = () => {
+			return messages;
+		};
 	}
 });
 

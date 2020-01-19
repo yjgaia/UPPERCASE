@@ -108,41 +108,6 @@ global.MSG = METHOD((m) => {
 });
 
 /*
- * 메시지의 특정 부분들을 바꿀 수 있는 템플릿 클래스
- */
-global.TEMPLATE = CLASS({
-
-	init : (inner, self, originMessage) => {
-		
-		let messages = [originMessage];
-		
-		let replace = self.replace = (key, message) => {
-			
-			EACH(messages, (m, i) => {
-				
-				if (typeof m === 'string') {
-					
-					let keyIndex = m.indexOf(key);
-					if (keyIndex !== -1) {
-						
-						let start = m.substring(0, keyIndex);
-						let end = m.substring(keyIndex + key.length);
-						
-						messages.splice(i, 1, end);
-						messages.splice(i, 0, message);
-						messages.splice(i, 0, start);
-					}
-				}
-			});
-		};
-		
-		let getMessages = self.getMessages = () => {
-			return messages;
-		};
-	}
-});
-
-/*
  * DB의 update 기능을 사용할 때, 데이터의 특정 값에 TO_DELETE를 지정하게 되면 해당 값이 삭제됩니다.
  * 자세한 것은 DB의 update 예제를 살펴보시기 바랍니다.
  *
@@ -4150,6 +4115,41 @@ global.STRINGIFY = METHOD({
 		else {
 			return JSON.stringify(data);
 		}
+	}
+});
+
+/*
+ * 메시지의 특정 부분들을 바꿀 수 있는 템플릿 클래스
+ */
+global.TEMPLATE = CLASS({
+
+	init : (inner, self, originMessage) => {
+		
+		let messages = [originMessage];
+		
+		let replace = self.replace = (key, message) => {
+			
+			EACH(messages, (m, i) => {
+				
+				if (typeof m === 'string') {
+					
+					let keyIndex = m.indexOf(key);
+					if (keyIndex !== -1) {
+						
+						let start = m.substring(0, keyIndex);
+						let end = m.substring(keyIndex + key.length);
+						
+						messages.splice(i, 1, end);
+						messages.splice(i, 0, message);
+						messages.splice(i, 0, start);
+					}
+				}
+			});
+		};
+		
+		let getMessages = self.getMessages = () => {
+			return messages;
+		};
 	}
 });
 
@@ -11934,13 +11934,13 @@ global.WEB_SERVER = CLASS((cls) => {
 
 	const DEFAULT_MAX_UPLOAD_FILE_MB = 10;
 	
-	let HTTP = require('http');
-	let HTTPS = require('https');
-	let FS = require('fs');
-	let Path = require('path');
-	let Querystring = require('querystring');
-	let ZLib = require('zlib');
-	let IncomingForm = require('formidable').IncomingForm;
+	const HTTP = require('http');
+	const HTTPS = require('https');
+	const FS = require('fs');
+	const Path = require('path');
+	const Querystring = require('querystring');
+	const ZLib = require('zlib');
+	const IncomingForm = require('formidable').IncomingForm;
 
 	let getContentTypeFromExtension = cls.getContentTypeFromExtension = (extension) => {
 		
@@ -12878,6 +12878,126 @@ global.WEB_SERVER = CLASS((cls) => {
 			}));
 		}
 	};
+});
+
+global.WEB_SERVER_HTTP2 = CLASS((cls) => {
+	
+	const HTTP2 = require('http2');
+	const FS = require('fs');
+	
+	return {
+
+		init : (inner, self, portOrParams, requestListenerOrHandlers) => {
+			
+			let port;
+			let securedPort;
+			let securedKeyFilePath;
+			let securedCertFilePath;
+			let uploadURI;
+			
+			let nativeServer;
+			
+			// init params.
+			if (CHECK_IS_DATA(portOrParams) !== true) {
+				port = portOrParams;
+			} else {
+				port = portOrParams.port;
+				securedPort = portOrParams.securedPort;
+				securedKeyFilePath = portOrParams.securedKeyFilePath;
+				securedCertFilePath = portOrParams.securedCertFilePath;
+				
+				uploadURI = portOrParams.uploadURI;
+			}
+			
+			let serve = (stream, headers, isSecure) => {
+				
+				let uri = headers[':path'];
+				let method = headers[':method'].toUpperCase();
+				let ip = headers.forwarded;
+				let acceptEncoding = headers['accept-encoding'];
+				
+				let paramStr;
+				let isUploadURI;
+				
+				if (ip === undefined) {
+					ip = stream.session.socket.remoteAddress;
+				}
+				
+				// IPv6 to IPv4
+				if (ip !== undefined && ip.substring(0, 7) === '::ffff:') {
+					ip = ip.substring(7);
+				}
+
+				if (acceptEncoding === undefined) {
+					acceptEncoding = '';
+				}
+
+				if (uri.indexOf('?') !== -1) {
+					paramStr = uri.substring(uri.indexOf('?') + 1);
+					uri = uri.substring(0, uri.indexOf('?'));
+				}
+
+				uri = uri.substring(1);
+				
+				isUploadURI = CHECK_IS_ARRAY(uploadURI) === true ? CHECK_IS_IN({
+					array : uploadURI,
+					value : uri
+				}) === true : uploadURI === uri;
+				
+				console.log(uri);
+				console.log(headers[':method']);
+				console.log(headers.forwarded, stream.session.socket.remoteAddress);
+				console.log(acceptEncoding);
+				console.log(paramStr);
+				console.log(isUploadURI);
+				
+			};
+
+			// init sever.
+			if (port !== undefined) {
+				
+				nativeServer = HTTP2.createServer();
+				
+				nativeServer.on('stream', (stream, headers) => {
+					
+					console.log(stream, headers);
+					
+					if (securedPort === undefined) {
+						serve(stream, headers, false);
+					}
+					
+					else {
+						stream.respond({
+							'location' : 'https://' + nativeReq.headers.host + (securedPort === 443 ? '' : ':' + securedPort) + nativeReq.url,
+							':status': 302,
+						});
+						stream.end();
+					}
+				});
+				
+				nativeServer.on('error', (error) => {
+					SHOW_ERROR('WEB_SERVER', error.toString());
+				});
+				
+				nativeServer.listen(port);
+			}
+
+			// init secured sever.
+			if (securedPort !== undefined) {
+				
+				nativeServer = HTTP2.createSecureServer({
+					key : FS.readFileSync(securedKeyFilePath),
+					cert : FS.readFileSync(securedCertFilePath)
+				});
+				
+				nativeServer.on('stream', (stream, headers) => {
+					serve(stream, headers, true);
+				});
+				
+				nativeServer.listen(securedPort);
+			}
+		}
+	}
 });
 
 /*

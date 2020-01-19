@@ -5,13 +5,13 @@ global.WEB_SERVER = CLASS((cls) => {
 
 	const DEFAULT_MAX_UPLOAD_FILE_MB = 10;
 	
-	let HTTP = require('http');
-	let HTTPS = require('https');
-	let FS = require('fs');
-	let Path = require('path');
-	let Querystring = require('querystring');
-	let ZLib = require('zlib');
-	let IncomingForm = require('formidable').IncomingForm;
+	const HTTP = require('http');
+	const HTTPS = require('https');
+	const FS = require('fs');
+	const Path = require('path');
+	const Querystring = require('querystring');
+	const ZLib = require('zlib');
+	const IncomingForm = require('formidable').IncomingForm;
 
 	let getContentTypeFromExtension = cls.getContentTypeFromExtension = (extension) => {
 		

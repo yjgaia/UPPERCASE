@@ -6,3 +6,7 @@ require('./UPPERCASE-ROOM/NODE.js');
 require('./UPPERCASE-DB/NODE.js');
 require('./UPPERCASE-MODEL/NODE.js');
 require('./UPPERCASE-BOOT/NODE.js');
+
+module.exports = (value) => {
+	return String(value).toUpperCase();
+};
