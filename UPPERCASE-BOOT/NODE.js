@@ -352,6 +352,11 @@ global.BOOT = (params) => {
 			value : CONFIG.defaultBoxName
 		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/index.html' : CONFIG.defaultBoxName + '/index.html';
 		
+		let customStylePath = rootPath + '/' + CHECK_IS_IN({
+			array : INIT_BOXES.getBoxNamesInBOXFolder(),
+			value : CONFIG.defaultBoxName
+		}) === true ? 'BOX/' + CONFIG.defaultBoxName + '/index.css' : CONFIG.defaultBoxName + '/index.css';
+		
 		if (CHECK_FILE_EXISTS({
 			path : customIndexPath,
 			isSync : true
@@ -384,6 +389,16 @@ global.BOOT = (params) => {
 	
 			// load css.
 			indexPageContent += '<link rel="stylesheet" type="text/css" href="/__CSS?version=' + CONFIG.version + '" />';
+			
+			if (CHECK_FILE_EXISTS({
+				path : customStylePath,
+				isSync : true
+			}) === true) {
+				indexPageContent += '<style>' + READ_FILE({
+					path : customStylePath,
+					isSync : true
+				}).toString() + '</style>'
+			}
 			
 			indexPageContent += '</head>';
 			indexPageContent += '<body>';
