@@ -7,7 +7,7 @@
 		"hanul-graphicsmagick": "latest",
 		"hanul-uglify-js": "latest",
 		"os-locale": "latest",
-		"sift": "latest",
+		"sift": "^11.1.6",
 		"sqwish": "latest",
 		"ws": "latest"
 	},

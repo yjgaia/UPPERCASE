@@ -2,8 +2,8 @@
 	"name": "uppercase-db",
 	"version": "1.4.4",
 	"dependencies": {
-		"mongodb": "latest",
-		"uppercase-core": "latest"
+		"mongodb": "^3.5.3",
+		"uppercase-core": "^1.4.13"
 	},
 	"main": "index.js"
 }

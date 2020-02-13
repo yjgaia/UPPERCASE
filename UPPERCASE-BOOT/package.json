@@ -2,10 +2,10 @@
 	"name": "uppercase-boot",
 	"version": "1.4.7",
 	"dependencies": {
-		"@babel/core": "latest",
-		"@babel/preset-env": "latest",
-		"ubm": "latest",
-		"uppercase-model": "latest"
+		"@babel/core": "^7.8.4",
+		"@babel/preset-env": "^7.8.4",
+		"ubm": "^1.5.1",
+		"uppercase-model": "^1.4.7"
 	},
 	"main": "index.js"
 }

@@ -2,7 +2,8 @@
 	"name": "uppercase-room",
 	"version": "1.4.4",
 	"dependencies": {
-		"uppercase-core": "latest"
+		"uppercase-core": "latest",
+		"ws": "^7.2.1"
 	},
 	"main": "index.js"
 }
