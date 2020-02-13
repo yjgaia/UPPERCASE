@@ -6405,10 +6405,10 @@ global.BROWSER_CONFIG = {
 global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 
 	run : (portOrParams, connectionListenerOrListeners) => {
-		//REQUIRED: portOrParams
+		//OPTIONAL: portOrParams
 		//OPTIONAL: portOrParams.isSecure
 		//OPTIONAL: portOrParams.host
-		//REQUIRED: portOrParams.port
+		//OPTIONAL: portOrParams.port
 		//REQUIRED: connectionListenerOrListeners
 		//REQUIRED: connectionListenerOrListeners.success
 		//OPTIONAL: connectionListenerOrListeners.error
@@ -6443,6 +6443,10 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		
 		if (host === undefined) {
 			host = BROWSER_CONFIG.host;
+		}
+		
+		if (port === undefined) {
+			port = BROWSER_CONFIG.port;
 		}
 
 		if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
