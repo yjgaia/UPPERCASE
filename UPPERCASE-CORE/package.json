@@ -2,6 +2,7 @@
 	"name": "uppercase-core",
 	"version": "1.4.13",
 	"dependencies": {
+		"bufferutil": "^4.0.1",
 		"diskspace": "latest",
 		"formidable": "latest",
 		"hanul-graphicsmagick": "latest",
@@ -9,6 +10,7 @@
 		"os-locale": "latest",
 		"sift": "^11.1.6",
 		"sqwish": "latest",
+		"utf-8-validate": "^5.0.2",
 		"ws": "latest"
 	},
 	"main": "index.js"

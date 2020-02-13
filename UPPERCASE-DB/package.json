@@ -2,8 +2,10 @@
 	"name": "uppercase-db",
 	"version": "1.4.4",
 	"dependencies": {
+		"bufferutil": "^4.0.1",
 		"mongodb": "^3.5.3",
-		"uppercase-core": "^1.4.13"
+		"uppercase-core": "^1.4.13",
+		"utf-8-validate": "^5.0.2"
 	},
 	"main": "index.js"
 }

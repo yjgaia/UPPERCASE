@@ -2,8 +2,10 @@
 	"name": "uppercase-model",
 	"version": "1.4.7",
 	"dependencies": {
+		"bufferutil": "^4.0.1",
+		"uppercase-db": "latest",
 		"uppercase-room": "latest",
-		"uppercase-db": "latest"
+		"utf-8-validate": "^5.0.2"
 	},
 	"main": "index.js"
 }

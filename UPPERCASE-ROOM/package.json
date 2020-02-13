@@ -2,7 +2,9 @@
 	"name": "uppercase-room",
 	"version": "1.4.4",
 	"dependencies": {
+		"bufferutil": "^4.0.1",
 		"uppercase-core": "latest",
+		"utf-8-validate": "^5.0.2",
 		"ws": "^7.2.1"
 	},
 	"main": "index.js"
