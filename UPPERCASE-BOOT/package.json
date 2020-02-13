@@ -2,12 +2,12 @@
 	"name": "uppercase-boot",
 	"version": "1.4.7",
 	"dependencies": {
-		"@babel/core": "^7.8.4",
-		"@babel/preset-env": "^7.8.4",
-		"bufferutil": "^4.0.1",
-		"ubm": "^1.5.1",
-		"uppercase-model": "^1.4.7",
-		"utf-8-validate": "^5.0.2"
+		"@babel/core": "latest",
+		"@babel/preset-env": "latest",
+		"bufferutil": "latest",
+		"ubm": "latest",
+		"uppercase-model": "latest",
+		"utf-8-validate": "latest"
 	},
 	"main": "index.js"
 }

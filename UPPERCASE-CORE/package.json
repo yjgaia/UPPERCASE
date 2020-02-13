@@ -2,15 +2,15 @@
 	"name": "uppercase-core",
 	"version": "1.4.13",
 	"dependencies": {
-		"bufferutil": "^4.0.1",
+		"bufferutil": "latest",
 		"diskspace": "latest",
 		"formidable": "latest",
 		"hanul-graphicsmagick": "latest",
 		"hanul-uglify-js": "latest",
 		"os-locale": "latest",
-		"sift": "^11.1.6",
+		"sift": "latest",
 		"sqwish": "latest",
-		"utf-8-validate": "^5.0.2",
+		"utf-8-validate": "latest",
 		"ws": "latest"
 	},
 	"main": "index.js"
