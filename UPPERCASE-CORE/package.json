@@ -1,6 +1,6 @@
 {
 	"name": "uppercase-core",
-	"version": "1.4.8",
+	"version": "1.4.10",
 	"dependencies": {
 		"diskspace": "latest",
 		"formidable": "latest",
