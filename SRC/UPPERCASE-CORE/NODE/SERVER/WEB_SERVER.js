@@ -204,16 +204,17 @@ global.WEB_SERVER = CLASS((cls) => {
 
 		init : (inner, self, portOrParams, requestListenerOrHandlers) => {
 			//REQUIRED: portOrParams
-			//OPTIONAL: portOrParams.port					HTTP 서버 포트
-			//OPTIONAL: portOrParams.securedPort			HTTPS 서버 포트
-			//OPTIONAL: portOrParams.securedKeyFilePath		SSL인증 .key 파일 경로
-			//OPTIONAL: portOrParams.securedCertFilePath	SSL인증 .cert 파일 경로
-			//OPTIONAL: portOrParams.rootPath				리소스 루트 폴더
-			//OPTIONAL: portOrParams.version				캐싱을 위한 버전. 입력하지 않으면 캐싱 기능이 작동하지 않습니다.
-			//OPTIONAL: portOrParams.preprocessors			프리프로세서들. 뷰 템플릿 등과 같이, 특정 확장자의 리소스를 응답하기 전에 내용을 변경하는 경우 사용합니다.
-			//OPTIONAL: portOrParams.uploadURI				업로드를 처리할 URI. URI 문자열 혹은 URI 문자열 배열로 입력합니다.
-			//OPTIONAL: portOrParams.uploadPath				업로드한 파일을 저장할 경로
-			//OPTIONAL: portOrParams.maxUploadFileMB		최대 업로드 파일 크기 (MB). 입력하지 않으면 10MB로 지정됩니다.
+			//OPTIONAL: portOrParams.port						HTTP 서버 포트
+			//OPTIONAL: portOrParams.securedPort				HTTPS 서버 포트
+			//OPTIONAL: portOrParams.securedKeyFilePath			SSL인증 .key 파일 경로
+			//OPTIONAL: portOrParams.securedCertFilePath		SSL인증 .cert 파일 경로
+			//OPTIONAL: portOrParams.rootPath					리소스 루트 폴더
+			//OPTIONAL: portOrParams.version					캐싱을 위한 버전. 입력하지 않으면 캐싱 기능이 작동하지 않습니다.
+			//OPTIONAL: portOrParams.preprocessors				프리프로세서들. 뷰 템플릿 등과 같이, 특정 확장자의 리소스를 응답하기 전에 내용을 변경하는 경우 사용합니다.
+			//OPTIONAL: portOrParams.uploadURI					업로드를 처리할 URI. URI 문자열 혹은 URI 문자열 배열로 입력합니다.
+			//OPTIONAL: portOrParams.uploadPath					업로드한 파일을 저장할 경로
+			//OPTIONAL: portOrParams.maxUploadFileMB			최대 업로드 파일 크기 (MB). 입력하지 않으면 10MB로 지정됩니다.
+			//OPTIONAL: portOrParams.isToNotUseResourceCache	true로 설정하면 리소스 캐시를 사용하지 않습니다.
 			//OPTIONAL: requestListenerOrHandlers
 			//OPTIONAL: requestListenerOrHandlers.notExistsResource		리소스가 존재하지 않는 경우
 			//OPTIONAL: requestListenerOrHandlers.error					오류가 발생한 경우
@@ -232,6 +233,7 @@ global.WEB_SERVER = CLASS((cls) => {
 			let uploadURI;
 			let uploadPath;
 			let maxUploadFileMB;
+			let isToNotUseResourceCache;
 			
 			let notExistsResourceHandler;
 			let errorHandler;
@@ -260,6 +262,12 @@ global.WEB_SERVER = CLASS((cls) => {
 				uploadURI = portOrParams.uploadURI;
 				uploadPath = portOrParams.uploadPath;
 				maxUploadFileMB = portOrParams.maxUploadFileMB;
+				
+				isToNotUseResourceCache = portOrParams.isToNotUseResourceCache;
+			}
+			
+			if (CONFIG.isDevMode === true) {
+				isToNotUseResourceCache = true;
 			}
 			
 			if (maxUploadFileMB === undefined) {
@@ -487,7 +495,7 @@ global.WEB_SERVER = CLASS((cls) => {
 											statusCode = 200;
 										}
 										
-										if (CONFIG.isDevMode !== true) {
+										if (isToNotUseResourceCache !== true) {
 											if (isFinal === true) {
 												headers['ETag'] = 'FINAL';
 											} else if (version !== undefined) {
@@ -759,7 +767,7 @@ global.WEB_SERVER = CLASS((cls) => {
 									}
 									
 									// check ETag.
-									else if (CONFIG.isDevMode !== true && (overrideResponseInfo.isFinal !== true ?
+									else if (isToNotUseResourceCache !== true && (overrideResponseInfo.isFinal !== true ?
 			
 									// check version.
 									(version !== undefined && headers['if-none-match'] === version) :
@@ -777,7 +785,7 @@ global.WEB_SERVER = CLASS((cls) => {
 									}
 			
 									// redirect correct version uri.
-									else if (CONFIG.isDevMode !== true && overrideResponseInfo.isFinal !== true && version !== undefined && originalURI !== '' && params.version !== version) {
+									else if (isToNotUseResourceCache !== true && overrideResponseInfo.isFinal !== true && version !== undefined && originalURI !== '' && params.version !== version) {
 			
 										response(EXTEND({
 											origin : {
@@ -855,7 +863,7 @@ global.WEB_SERVER = CLASS((cls) => {
 														contentType = getContentTypeFromExtension(extension);
 													}
 				
-													if (CONFIG.isDevMode !== true && overrideResponseInfo.isFinal !== true && resourceCaches[originalURI] === undefined) {
+													if (isToNotUseResourceCache !== true && overrideResponseInfo.isFinal !== true && resourceCaches[originalURI] === undefined) {
 														resourceCaches[originalURI] = {
 															buffer : buffer,
 															contentType : contentType
