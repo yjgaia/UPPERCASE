@@ -1,4 +1,4 @@
-LANG_NAMES = {
+global.LANG_NAMES = {
 	ach : 'Lwo',
 	ady : 'Адыгэбзэ',
 	af : 'Afrikaans',

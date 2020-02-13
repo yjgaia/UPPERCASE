@@ -255,7 +255,10 @@ global.WEB_SERVER = CLASS((cls) => {
 				securedCertFilePath = portOrParams.securedCertFilePath;
 				
 				originRootPath = portOrParams.rootPath;
-				version = String(portOrParams.version);
+				
+				if (portOrParams.version !== undefined) {
+					version = String(portOrParams.version);
+				}
 				
 				preprocessors = portOrParams.preprocessors;
 				
