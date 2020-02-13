@@ -27,6 +27,11 @@ global.CONNECT_TO_WEB_SOCKET_SERVER = METHOD({
 		let on;
 		let off;
 		let send;
+		
+		if (connectionListenerOrListeners === undefined) {
+			connectionListenerOrListeners = portOrParams;
+			portOrParams = undefined;
+		}
 
 		if (CHECK_IS_DATA(portOrParams) !== true) {
 			port = portOrParams;
