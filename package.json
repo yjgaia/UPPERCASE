@@ -1,5 +1,18 @@
 {
 	"name": "uppercase",
-	"version": "1.4.12",
+	"version": "1.4.13",
+	"dependencies": {
+		"uppercase-boot": "latest"
+	},
+	"files": [
+		"LOAD.js",
+		"LOGO.png",
+		"README.md",
+		"LICENSE",
+		"SRC/*",
+		"API/*",
+		"DOC/*",
+		"TEST/*"
+	],
 	"main": "LOAD.js"
 }
