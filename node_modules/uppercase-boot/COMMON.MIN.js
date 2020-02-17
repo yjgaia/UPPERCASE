@@ -1,0 +1,1 @@
+OVERRIDE(CONFIG,E=>{global.CONFIG=COMBINE([{defaultBoxName:"UPPERCASE",title:"UPPERCASE PROJECT"},E])});
