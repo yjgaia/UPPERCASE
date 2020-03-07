@@ -1,0 +1,1 @@
+FOR_BOX(n=>{n.MODEL=CLASS({init:(t,i,o)=>{i.getBoxName=(()=>{return n.boxName})}})});
