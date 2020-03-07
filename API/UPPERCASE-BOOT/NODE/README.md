@@ -1,9 +1,0 @@
-# NODE API
-* [BOOT.md](BOOT.md) UPPERCASE를 실행합니다.
-* [CHECK_IS_ALLOWED_FOLDER_NAME.md](CHECK_IS_ALLOWED_FOLDER_NAME.md)
-* [CHECK_STILL_ALIVE.md](CHECK_STILL_ALIVE.md) Check still alive object
-* [INIT_BOXES.md](INIT_BOXES.md)
-* [LOAD_ALL_SCRIPTS.md](LOAD_ALL_SCRIPTS.md)
-* [MODEL.md](MODEL.md) MODEL 클래스
-* [NODE_CONFIG.md](NODE_CONFIG.md)
-* [SYNC_TIME.md](SYNC_TIME.md) Sync time object (Server-side)

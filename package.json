@@ -1,18 +1,13 @@
 {
 	"name": "uppercase",
-	"version": "1.4.13",
+	"version": "2.0.0-beta.0",
 	"dependencies": {
-		"uppercase-boot": "latest"
+		"uppercase-model": "latest",
+		"@babel/core": "latest",
+		"@babel/preset-env": "latest",
+		"bufferutil": "latest",
+		"ubm": "latest",
+		"utf-8-validate": "latest"
 	},
-	"files": [
-		"LOAD.js",
-		"LOGO.png",
-		"README.md",
-		"LICENSE",
-		"SRC/*",
-		"API/*",
-		"DOC/*",
-		"TEST/*"
-	],
-	"main": "LOAD.js"
+	"main": "index.js"
 }

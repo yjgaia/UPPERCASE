@@ -1,0 +1,82 @@
+/* CSS RESET */
+body, div, ul, li, h1, h2, h3, h4, h5, h6, form, input, textarea, p, th, td {
+	margin: 0;
+	padding: 0;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+img {
+	border: 0;
+}
+ul {
+	list-style: none;
+}
+th {
+	font-style: normal;
+	font-weight: normal;
+	text-align: left;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font-weight: normal;
+}
+input, textarea, select {
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	/* to enable resizing for IE */
+	*font-size: 100%;
+}
+
+/* UPPERCASE STYLE */
+* {
+	-webkit-overflow-scrolling: touch;
+	-moz-overflow-scrolling: touch;
+	-o-overflow-scrolling: touch;
+	-ms-overflow-scrolling: touch;
+	overflow-scrolling: touch;
+}
+html, body {
+	/* 기본 배경 및 글 색 */
+	background-color: #333;
+	color: #fff;
+	/* Prevent font scaling in landscape */
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-o-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	text-size-adjust: none;
+	/* word-wrap은 모두 break */
+	word-wrap: break-word;
+	/* 폰트의 기본 family는 helvetica, 크기는 14px로 고정 */
+	font-family: helvetica;
+	font-size: 14px;
+}
+html {
+	overflow-y: scroll;
+}
+input[type="submit"] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-o-appearance: none;
+	-ms-appearance: none;
+	appearance: none;
+	border-radius: 0;
+}
+th, td {
+	border: 0;
+}
+textarea {
+	width: 15em;
+	height: 5em;
+}
+a {
+	/* 링크 기본 색상을 #fff로 고정 */
+	color: inherit;
+}
+p {
+	/* paragraph 기본 line-height를 1.5em으로 고정 */
+	line-height: 1.5em;
+}
