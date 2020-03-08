@@ -38,9 +38,6 @@ global.BOOT = (params) => {
 	const UPPERCASE_PATH = __dirname + '/..';
 	const BOX_SITE_URL = 'https://box.uppercase.io';
 	
-	const Babel = require("@babel/core");
-	const BabelEnvPreset = require("@babel/preset-env");
-
 	let version = 'V' + Date.now();
 	let rootPath = process.cwd();
 	
@@ -53,33 +50,7 @@ global.BOOT = (params) => {
 	let _404PageContent;
 	let indexPageContent;
 	
-	let transformScriptForSupportIE11 = (script) => {
-		
-		if (scriptCachesForSupportIE11[script] !== undefined) {
-			return scriptCachesForSupportIE11[script];
-		}
-		
-		let scriptForSupportIE11 = Babel.transformSync(script, {
-			presets : [
-				[BabelEnvPreset, {
-					targets : {
-						ie : 11
-					}
-				}]
-			]
-		}).code;
-		
-		scriptCachesForSupportIE11[script] = scriptForSupportIE11;
-		
-		return scriptForSupportIE11;
-	};
-	
 	let addContentToBrowserScript = (content) => {
-		
-		if (CONFIG.isToSupportIE11 === true) {
-			content = transformScriptForSupportIE11(content);
-		}
-		
 		browserScript += content + '\n';
 		browserScriptContents.push(content);
 	};
@@ -90,10 +61,6 @@ global.BOOT = (params) => {
 			path : path,
 			isSync : true
 		}).toString();
-		
-		if (CONFIG.isToSupportIE11 === true) {
-			content = transformScriptForSupportIE11(content);
-		}
 		
 		if (boxName === undefined) {
 			addContentToBrowserScript(content);
@@ -114,13 +81,9 @@ global.BOOT = (params) => {
 	let loadBrowserInit = () => {
 		
 		let content = READ_FILE({
-			path : UPPERCASE_PATH + '/UPPERCASE-BOOT/BROWSER_INIT' + (CONFIG.isDevMode === true ? '' : '.MIN') + '.js',
+			path : UPPERCASE_PATH + '/DIST/BROWSER_INIT' + (CONFIG.isDevMode === true ? '' : '.MIN') + '.js',
 			isSync : true
 		}).toString();
-		
-		if (CONFIG.isToSupportIE11 === true) {
-			content = transformScriptForSupportIE11(content);
-		}
 		
 		browserScript += content + '\n';
 		
@@ -192,7 +155,7 @@ global.BOOT = (params) => {
 			}, {
 				
 				notExists : () => {
-					SHOW_ERROR('BOOT', MSG({
+					SHOW_ERROR('UPPERCASE', MSG({
 						ko : 'VERSION 파일이 존재하지 않습니다.'
 					}));
 				},
@@ -319,25 +282,15 @@ global.BOOT = (params) => {
 			_404PageContent += 'JavaScript is disabled or ECMAScript 6 is not supported in your web browser.<br>Please update your web browser or use the latest version of any web browser.';
 			_404PageContent += '</p>';
 			
-			let es6SupportedScript = 'const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()';
-			
-			if (CONFIG.isToSupportIE11 === true) {
-				es6SupportedScript = transformScriptForSupportIE11('const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.parentNode.removeChild(__ES6_NOT_SUPPORTED_SENTENCE);})()');
-			}
-			
-			_404PageContent += '<script>' + es6SupportedScript + '</script>';
+			_404PageContent += '<script>const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()</script>';
 			
 			// load script.
 			_404PageContent += '<script src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
 			
 			let _404Script = READ_FILE({
-				path : UPPERCASE_PATH + '/UPPERCASE-BOOT/404.js',
+				path : UPPERCASE_PATH + '/DIST/404.js',
 				isSync : true
 			}).toString();
-			
-			if (CONFIG.isToSupportIE11 === true) {
-				_404Script = transformScriptForSupportIE11(_404Script);
-			}
 			
 			_404PageContent += '<script>' + _404Script + '</script>';
 			_404PageContent += '</body>';
@@ -408,13 +361,7 @@ global.BOOT = (params) => {
 			indexPageContent += 'JavaScript is disabled or ECMAScript 6 is not supported in your web browser.<br>Please update your web browser or use the latest version of any web browser.';
 			indexPageContent += '</p>';
 			
-			let es6SupportedScript = 'const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()';
-			
-			if (CONFIG.isToSupportIE11 === true) {
-				es6SupportedScript = transformScriptForSupportIE11('const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.parentNode.removeChild(__ES6_NOT_SUPPORTED_SENTENCE);})()');
-			}
-			
-			indexPageContent += '<script>' + es6SupportedScript + '</script>';
+			indexPageContent += '<script>const __ES6_NOT_SUPPORTED_SENTENCE=document.querySelector(\'#__ES6_NOT_SUPPORTED\');(()=>{__ES6_NOT_SUPPORTED_SENTENCE.remove();})()</script>';
 			
 			// load script.
 			indexPageContent += '<script src="/__SCRIPT?version=' + CONFIG.version + '"></script>';
@@ -732,7 +679,7 @@ global.BOOT = (params) => {
 					// serve base style css.
 					else if (uri === '__CSS') {
 						replaceRootPath(UPPERCASE_PATH);
-						requestInfo.uri = CONFIG.isDevMode === true ? 'UPPERCASE-BOOT/R/BASE_STYLE.css' : 'UPPERCASE-BOOT/R/BASE_STYLE.MIN.css';
+						requestInfo.uri = CONFIG.isDevMode === true ? 'R/BASE_STYLE.css' : 'R/BASE_STYLE.MIN.css';
 					}
 
 					// serve upload server host.
@@ -859,7 +806,7 @@ global.BOOT = (params) => {
 
 					// serve cors callback.
 					else if (uri === '__CORS_CALLBACK') {
-						replaceRootPath(UPPERCASE_PATH + '/UPPERCASE-BOOT/R');
+						replaceRootPath(UPPERCASE_PATH + '/R');
 						requestInfo.uri = 'CORS_CALLBACK.html';
 					}
 
@@ -1013,21 +960,21 @@ global.BOOT = (params) => {
 	
 	let isDevMode = (CONFIG.isDevMode === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isDevMode === true));
 	
-	CONFIG.isToSupportIE11 = (CONFIG.isToSupportIE11 === true || (params !== undefined && params.CONFIG !== undefined && params.CONFIG.isToSupportIE11 === true));
-	
 	// load all UPPERCASE modules for browser.
-	EACH(['CORE', 'ROOM', 'MODEL', 'BOOT'], (name, i) => {
+	EACH(['CORE', 'ROOM', 'MODEL'], (name, i) => {
 		
 		if (isDevMode === true && i > 0) {
 			addContentToBrowserScript('\n\n');
 		}
 		
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-' + name + '/BROWSER' + (isDevMode === true ? '' : '.MIN') + '.js');
+		loadForBrowser(UPPERCASE_PATH + '/node_modules/uppercase-' + name.toLowerCase() + '/DIST/BROWSER' + (isDevMode === true ? '' : '.MIN') + '.js');
 	});
 	
-	if (CONFIG.isToSupportIE11 === true) {
-		loadForBrowser(UPPERCASE_PATH + '/UPPERCASE-BOOT/POLYFILL-IE11.js');
+	if (isDevMode === true) {
+		addContentToBrowserScript('\n\n');
 	}
+	
+	loadForBrowser(UPPERCASE_PATH + '/DIST/BROWSER' + (isDevMode === true ? '' : '.MIN') + '.js');
 	
 	configuration();
 	

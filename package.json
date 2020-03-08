@@ -3,10 +3,8 @@
 	"version": "2.0.0-beta.0",
 	"dependencies": {
 		"uppercase-model": "latest",
-		"@babel/core": "latest",
-		"@babel/preset-env": "latest",
-		"bufferutil": "latest",
 		"ubm": "latest",
+		"bufferutil": "latest",
 		"utf-8-validate": "latest"
 	},
 	"main": "index.js"

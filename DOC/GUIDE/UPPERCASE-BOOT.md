@@ -38,7 +38,6 @@ BOOT({
 * `defaultBoxName` 기본 BOX의 이름을 설정합니다. 기본값은 `'UPPERCASE'` 입니다.
 * `title` 프로젝트 제목을 입력합니다. 기본값은 `'UPPERCASE PROJECT'` 입니다.
 * `description` 프로젝트 설명을 입력합니다. 기본값은 없습니다.
-* `isToSupportIE11` 프로젝트가 Internet Explorer 11을 지원하도록 설정합니다.
 
 ### 서버 설정
 * `webServerPort` 웹 서버 및 웹소켓 서버의 포트를 설정합니다. 설정하지 않으면 웹 서버 및 웹소켓 서버를 구동하지 않습니다.

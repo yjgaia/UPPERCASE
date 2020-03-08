@@ -1,1 +1,1 @@
-require('./NODE.js');
+require('./DIST/NODE.js');

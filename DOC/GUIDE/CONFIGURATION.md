@@ -14,7 +14,6 @@
 * `maxThumbWidth` 이미지 업로드 시 만들어지는 섬네일의 최대 가로 길이를 설정합니다.
 * `maxThumbHeight` 이미지 업로드 시 만들어지는 섬네일의 최대 세로 길이를 설정합니다.
 * `requestEncryptionKey` [암호화 HTTP 요청 기능](UPPERCASE-CORE-BROWSER.md#암호화-http-요청-기능)을 사용할 때 필요한 설정입니다. 데이터를 암호화하여 전달하고, 이후 서버에서 자동으로 복호화합니다.
-* `isToSupportIE11` 프로젝트가 Internet Explorer 11을 지원하도록 설정합니다.
 
 ### 개발 모드
 개발 모드일 때는 다음과 같은 기능들이 작동됩니다.
