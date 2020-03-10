@@ -1,10 +1,10 @@
 {
 	"name": "uppercase",
-	"version": "2.0.0-beta.1",
+	"version": "2.0.0-beta.3",
 	"dependencies": {
-		"uppercase-model": "latest",
-		"ubm": "latest",
+		"uppercase-model": "^2.0.0-beta.1",
 		"bufferutil": "latest",
+		"ubm": "latest",
 		"utf-8-validate": "latest"
 	},
 	"main": "index.js"

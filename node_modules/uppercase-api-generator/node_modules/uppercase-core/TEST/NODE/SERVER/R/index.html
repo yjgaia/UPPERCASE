@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>웹 서버 테스트</title>
+	</head>
+	<body>
+		<h1>웹 서버 테스트</h1>
+		<p>
+			테스트 이전에
+			<br>
+			TEST/UPPERCASE-CORE/NODE/SERVER/WEB_SERVER.js
+			<br>
+			를 먼저 실행해주시기 바랍니다.
+		</p>
+		<div>
+			<h2>업로드 테스트</h2>
+			<iframe name="__UPLOAD_FORM"></iframe>
+			<div>
+				<h4>UPLOAD 1</h4>
+				<form action="http://localhost:8123/__UPLOAD_1" target="__UPLOAD_FORM" method="POST" enctype="multipart/form-data">
+					<input name="file" type="file">
+					<input type="submit">
+				</form>
+			</div>
+			<div>
+				<h4>UPLOAD 2</h4>
+				<form action="http://localhost:8123/__UPLOAD_2" target="__UPLOAD_FORM" method="POST" enctype="multipart/form-data">
+					<input name="file" type="file" multiple="multiple">
+					<input type="submit">
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
