@@ -64,7 +64,7 @@ NODE_CONFIG : {
 }
 ```
 * `socketServerHosts` 소켓 서버들이 분산되어 있는 경우 소켓 서버들의 호스트를 배열로 설정합니다.
-* `webSocketServerHosts` 웹소켓 서버들이 분산되어 있는 경우 웹소켓 서버들의 호스트를 배열로 설정합니다.
+* `webServerHosts` 웹 서버들이 분산되어 있는 경우 웹 서버들의 호스트를 배열로 설정합니다.
 * `uploadServerHosts` 업로드 서버들이 분산되어 있는 경우 업로드 서버들의 호스트를 배열로 설정합니다.
 
 ### HTTPS 웹 서버 설정

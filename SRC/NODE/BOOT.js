@@ -347,11 +347,11 @@ global.BOOT = (params) => {
 
 		let uploadServerHosts;
 		let socketServerHosts;
-		let webSocketServerHosts;
+		let webServerHosts;
 		
 		let nextUploadServerHostIndex;
 		let nextSocketServerHostIndex;
-		let nextWebSocketServerHostIndex;
+		let nextWebServerHostIndex;
 		
 		let boxRequestListeners = {};
 		let boxPreprocessors = {};
@@ -378,13 +378,13 @@ global.BOOT = (params) => {
 			});
 		}
 
-		if (NODE_CONFIG.webSocketServerHosts !== undefined) {
+		if (NODE_CONFIG.webServerHosts !== undefined) {
 
-			webSocketServerHosts = [];
-			nextWebSocketServerHostIndex = 0;
+			webServerHosts = [];
+			nextWebServerHostIndex = 0;
 
-			EACH(NODE_CONFIG.webSocketServerHosts, (host) => {
-				webSocketServerHosts.push(host);
+			EACH(NODE_CONFIG.webServerHosts, (host) => {
+				webServerHosts.push(host);
 			});
 		}
 		
@@ -813,10 +813,10 @@ global.BOOT = (params) => {
 						return false;
 					}
 
-					// serve web socket server host.
-					else if (uri === '__WEB_SOCKET_SERVER_HOST') {
+					// serve web server host.
+					else if (uri === '__WEB_SERVER_HOST') {
 
-						if (webSocketServerHosts === undefined) {
+						if (webServerHosts === undefined) {
 
 							response({
 								content : wrapCallback(params.defaultHost),
@@ -828,16 +828,16 @@ global.BOOT = (params) => {
 						} else {
 
 							response({
-								content : wrapCallback(webSocketServerHosts[nextWebSocketServerHostIndex]),
+								content : wrapCallback(webServerHosts[nextWebServerHostIndex]),
 								headers : {
 									'Access-Control-Allow-Origin' : '*'
 								}
 							});
 
-							nextWebSocketServerHostIndex += 1;
+							nextWebServerHostIndex += 1;
 
-							if (nextWebSocketServerHostIndex === webSocketServerHosts.length) {
-								nextWebSocketServerHostIndex = 0;
+							if (nextWebServerHostIndex === webServerHosts.length) {
+								nextWebServerHostIndex = 0;
 							}
 						}
 

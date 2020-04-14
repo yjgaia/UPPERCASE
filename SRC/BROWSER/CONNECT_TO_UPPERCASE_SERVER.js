@@ -71,7 +71,7 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 			isSecure : isSecure,
 			host : webServerHost,
 			port : webServerPort,
-			uri : '__WEB_SOCKET_SERVER_HOST',
+			uri : '__WEB_SERVER_HOST',
 			paramStr : 'defaultHost=' + webServerHost
 		}, {
 			error : errorListener,

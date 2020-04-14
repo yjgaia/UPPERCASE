@@ -128,7 +128,7 @@ MongoDB는 그 자체로 분산 서버 기능을 제공하기 때문에, 이 항
 
 이 경우에는 대문 서버가 모든 유저들의 처음 접속을 맞이하며, [`index.html` 파일](UPPERCASE-BOOT.md#indexhtml-수정하기) 제공과 분산 서버들의 정보를 가져오는 데만 역할을 수행하고 기타 기능들은 모두 다른 서버들에 분산하게 됩니다. 따라서 대문 서버가 L4 스위치의 역할 또한 수행한다고 할 수 있습니다.
 
-대문 서버에는 [분산 서버 설정](CONFIGURATION.md#분산-서버-설정) 중 `socketServerHosts`, `webSocketServerHosts`를 설정하고, 각 애플리케이션 섭버에는 `clusteringPort`, `clusteringServerHosts`, `thisServerName`를 설정하여 분산 서버 구성을 완료합니다.
+대문 서버에는 [분산 서버 설정](CONFIGURATION.md#분산-서버-설정) 중 `socketServerHosts`, `webServerHosts`를 설정하고, 각 애플리케이션 서버에는 `clusteringPort`, `clusteringServerHosts`, `thisServerName`를 설정하여 분산 서버 구성을 완료합니다.
 
 ### 업로드 파일을 분산하여 저장하는 **업로드 서버**들이 따로 있는 경우
 ![업로드 서버](https://raw.githubusercontent.com/Hanul/UPPERCASE/master/DOC/GUIDE/CLUSTERING/upload.png)
