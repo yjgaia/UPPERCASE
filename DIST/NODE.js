@@ -598,7 +598,7 @@ global.BOOT = (params) => {
 					let params = requestInfo.params;
 
 					let wrapCallback = (str) => {
-						return params.callback !== undefined ? params.callback + '(\'' + str + '\')' : str;
+						return params.callback !== undefined ? params.callback + '(' + STRINGIFY(str) + ')' : str;
 					};
 					
 					if (uri === '__CHECK_ALIVE') {
@@ -871,6 +871,31 @@ global.BOOT = (params) => {
 
 						return false;
 					}
+
+					// serve web server hostsS.
+					else if (uri === '__WEB_SERVER_HOSTS') {
+
+						if (webServerHosts === undefined) {
+
+							response({
+								content : wrapCallback([params.defaultHost]),
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
+							});
+
+						} else {
+
+							response({
+								content : wrapCallback(webServerHosts),
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
+							});
+						}
+
+						return false;
+					}
 					
 					// serve others.
 					else {
@@ -932,11 +957,14 @@ global.BOOT = (params) => {
 				}
 			});
 		}
-
-		LAUNCH_ROOM_SERVER({
-			socketServerPort : CONFIG.socketServerPort,
-			webServer : webServer
-		});
+		
+		if (NODE_CONFIG.isNotUsingRoomServer !== true) {
+			
+			LAUNCH_ROOM_SERVER({
+				socketServerPort : CONFIG.socketServerPort,
+				webServer : webServer
+			});
+		}
 		
 		// run all MAINs.
 		FOR_BOX((box) => {
@@ -1430,9 +1458,16 @@ FOR_BOX((box) => {
 OVERRIDE(NODE_CONFIG, (origin) => {
 
 	global.NODE_CONFIG = COMBINE([{
-		isSingleCoreMode : false
+		
+		isSingleCoreMode : false,
+		
 		// maxUploadFileMB
+		
 		// isNotToModelInitialize
+		
+		// 룸 서버를 사용하지 않을지 여부 설정
+		isNotUsingRoomServer : false
+		
 	}, origin]);
 });
 

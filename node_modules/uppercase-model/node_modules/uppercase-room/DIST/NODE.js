@@ -21,34 +21,37 @@ FOR_BOX((box) => {
 			let methodName = params.methodName;
 			let data = params.data;
 			
-			LAUNCH_ROOM_SERVER.__broadcast({
-				roomName : roomName,
-				methodName : methodName,
-				data : data
-			});
-
-			if (CPU_CLUSTERING.broadcast !== undefined) {
-
-				CPU_CLUSTERING.broadcast({
-					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
-					data : {
-						roomName : roomName,
-						methodName : methodName,
-						data : data
-					}
+			if (LAUNCH_ROOM_SERVER.checkIsInited() === true) {
+				
+				LAUNCH_ROOM_SERVER.__broadcast({
+					roomName : roomName,
+					methodName : methodName,
+					data : data
 				});
-			}
-
-			if (SERVER_CLUSTERING.broadcast !== undefined) {
-
-				SERVER_CLUSTERING.broadcast({
-					methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
-					data : {
-						roomName : roomName,
-						methodName : methodName,
-						data : data
-					}
-				});
+	
+				if (CPU_CLUSTERING.broadcast !== undefined) {
+	
+					CPU_CLUSTERING.broadcast({
+						methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+						data : {
+							roomName : roomName,
+							methodName : methodName,
+							data : data
+						}
+					});
+				}
+	
+				if (SERVER_CLUSTERING.broadcast !== undefined) {
+	
+					SERVER_CLUSTERING.broadcast({
+						methodName : '__LAUNCH_ROOM_SERVER__MESSAGE',
+						data : {
+							roomName : roomName,
+							methodName : methodName,
+							data : data
+						}
+					});
+				}
 			}
 		}
 	});
@@ -502,6 +505,7 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 
 	let initRoomFuncMap = {};
 	let sendMap = {};
+	let isInited = false;
 	
 	let addInitRoomFunc = cls.addInitRoomFunc = (roomName, initRoomFunc) => {
 		//REQUIRED: roomName
@@ -538,6 +542,10 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 				}
 			});
 		}
+	};
+	
+	let checkIsInited = cls.checkIsInited = () => {
+		return isInited;
 	};
 
 	return {
@@ -755,6 +763,8 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 					methodMaps = undefined;
 				});
 			});
+			
+			isInited = true;
 		}
 	};
 });

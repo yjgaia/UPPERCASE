@@ -929,11 +929,14 @@ global.BOOT = (params) => {
 				}
 			});
 		}
-
-		LAUNCH_ROOM_SERVER({
-			socketServerPort : CONFIG.socketServerPort,
-			webServer : webServer
-		});
+		
+		if (NODE_CONFIG.isNotUsingRoomServer !== true) {
+			
+			LAUNCH_ROOM_SERVER({
+				socketServerPort : CONFIG.socketServerPort,
+				webServer : webServer
+			});
+		}
 		
 		// run all MAINs.
 		FOR_BOX((box) => {
