@@ -22,7 +22,13 @@ sroute('{{도메인}}', 8887, '/etc/letsencrypt/live/{{도메인}}/privkey.pem',
 
 ### 인증서 발급받기
 1. 프로젝트를 HTTP 프로토콜 방식으로 실행합니다.
-2. [https://certbot.eff.org](https://certbot.eff.org)에 접속하여 안내에 따라 인증서를 발급받습니다.
+2. [https://certbot.eff.org](https://certbot.eff.org)에 접속하여 안내에 따라 Certbot을 설치합니다. CentOS의 경우 아래와 같이 설치합니다.
+```
+wget https://dl.eff.org/certbot-auto
+sudo mv certbot-auto /usr/local/bin/certbot-auto
+sudo chown root /usr/local/bin/certbot-auto
+sudo chmod 0755 /usr/local/bin/certbot-auto
+```
 3. `webroot` 방식으로 발급받습니다. 프로젝트 BOX 폴더의 `R` 폴더의 위치를 지정하면 됩니다. 아래는 예시입니다.
 	```
 	/usr/local/bin/certbot-auto certonly --webroot -w /root/SampleProject/Sample/R -d sample.com

@@ -251,8 +251,6 @@ always madvise [never]
 ```
 mv /etc/localtime /etc/localtime_old
 ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
-rdate -p time.bora.net
-rdate -s time.bora.net
 ```
 
 ### 방화벽 포트 설정
