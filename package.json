@@ -1,6 +1,6 @@
 {
 	"name": "uppercase",
-	"version": "2.0.0-beta.6",
+	"version": "2.0.0-beta.7",
 	"dependencies": {
 		"uppercase-model": "^2.0.0-beta.6",
 		"bufferutil": "latest",

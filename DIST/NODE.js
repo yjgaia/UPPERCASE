@@ -598,7 +598,9 @@ global.BOOT = (params) => {
 					let params = requestInfo.params;
 
 					let wrapCallback = (str) => {
-						return params.callback !== undefined ? params.callback + '(' + STRINGIFY(str) + ')' : str;
+						return params.callback !== undefined ? params.callback + '(' + STRINGIFY(str) + ')' : (
+							typeof str === 'string' ? str : STRINGIFY(str)
+						);
 					};
 					
 					if (uri === '__CHECK_ALIVE') {
