@@ -12272,7 +12272,7 @@ global.WEB_SERVER = CLASS((cls) => {
 				originRootPath = portOrParams.rootPath;
 				
 				if (portOrParams.version !== undefined) {
-					version = String(portOrParams.version);
+					version = String(portOrParams.version).trim();
 				}
 				
 				preprocessors = portOrParams.preprocessors;
@@ -12472,6 +12472,11 @@ global.WEB_SERVER = CLASS((cls) => {
 										
 										encoding = contentOrParams.encoding;
 										version = contentOrParams.version;
+										
+										if (version !== undefined) {
+											version = version.trim();
+										}
+										
 										isFinal = contentOrParams.isFinal;
 									}
 	
