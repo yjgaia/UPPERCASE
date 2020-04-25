@@ -5,6 +5,7 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 
 	let initRoomFuncMap = {};
 	let sendMap = {};
+	let isInited = false;
 	
 	let addInitRoomFunc = cls.addInitRoomFunc = (roomName, initRoomFunc) => {
 		//REQUIRED: roomName
@@ -41,6 +42,10 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 				}
 			});
 		}
+	};
+	
+	let checkIsInited = cls.checkIsInited = () => {
+		return isInited;
 	};
 
 	return {
@@ -258,6 +263,8 @@ global.LAUNCH_ROOM_SERVER = CLASS((cls) => {
 					methodMaps = undefined;
 				});
 			});
+			
+			isInited = true;
 		}
 	};
 });

@@ -12517,7 +12517,7 @@ global.WEB_SERVER = CLASS((cls) => {
 											if (isFinal === true) {
 												headers['ETag'] = 'FINAL';
 											} else if (version !== undefined) {
-												headers['ETag'] = version;
+												headers['ETag'] = version.trim();
 											}
 										}
 										

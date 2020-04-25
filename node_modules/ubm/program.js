@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-require('uppercase-boot');
+require('uppercase');
 
 INIT_OBJECTS();
 
