@@ -512,8 +512,14 @@ global.WEB_SERVER = CLASS((cls) => {
 											headers['Content-Encoding'] = 'gzip';
 	
 											ZLib.gzip(buffer !== undefined ? buffer : String(content), (error, buffer) => {
-												nativeRes.writeHead(statusCode, headers);
-												nativeRes.end(buffer, encoding);
+												
+												// writeHead에서 오류 발생 여지 있음
+												try {
+													nativeRes.writeHead(statusCode, headers);
+													nativeRes.end(buffer, encoding);
+												} catch (error) {
+													SHOW_ERROR('WEB_SERVER', error.toString());
+												}
 											});
 										}
 		
@@ -795,7 +801,7 @@ global.WEB_SERVER = CLASS((cls) => {
 												statusCode : 302,
 												headers : {
 													'Location' : '/' + originalURI + '?' + Querystring.stringify(COMBINE([params, {
-														version : version
+														version : version.trim()
 													}]))
 												}
 											},

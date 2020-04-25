@@ -1,11 +1,11 @@
 {
 	"name": "uppercase",
-	"version": "2.0.0-beta.10",
+	"version": "2.0.0-beta.11",
 	"dependencies": {
-		"uppercase-core": "^2.0.0-beta.10",
-		"uppercase-db": "^2.0.0-beta.10",
-		"uppercase-room": "^2.0.0-beta.10",
-		"uppercase-model": "^2.0.0-beta.10",
+		"uppercase-core": "^2.0.0-beta.11",
+		"uppercase-db": "^2.0.0-beta.11",
+		"uppercase-room": "^2.0.0-beta.11",
+		"uppercase-model": "^2.0.0-beta.11",
 		"bufferutil": "latest",
 		"ubm": "latest",
 		"utf-8-validate": "latest"
