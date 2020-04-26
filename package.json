@@ -1,6 +1,6 @@
 {
 	"name": "uppercase",
-	"version": "2.0.0-beta.15",
+	"version": "2.0.0-beta.16",
 	"dependencies": {
 		"uppercase-core": "^2.0.0-beta.15",
 		"uppercase-db": "^2.0.0-beta.15",

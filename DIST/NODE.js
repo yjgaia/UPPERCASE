@@ -161,7 +161,7 @@ global.BOOT = (params) => {
 				},
 				
 				success : (buffer) => {
-					version = buffer.toString();
+					version = buffer.toString().trim();
 				}
 			});
 		}
@@ -596,6 +596,10 @@ global.BOOT = (params) => {
 					let method = requestInfo.method;
 					let headers = requestInfo.headers;
 					let params = requestInfo.params;
+					
+					if (params.version !== undefined) {
+						params.version = params.version.trim();
+					}
 
 					let wrapCallback = (str) => {
 						return params.callback !== undefined ? params.callback + '(' + STRINGIFY(str) + ')' : (
@@ -1085,7 +1089,7 @@ global.BOOT = (params) => {
 												
 												success : (versionContent) => {
 													
-													let nowVersion = versionContent.toString();
+													let nowVersion = versionContent.toString().trim();
 													
 													if (boxData.version !== nowVersion) {
 														next(nowVersion, boxData.version);
