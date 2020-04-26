@@ -65,7 +65,7 @@ global.DOWNLOAD = METHOD(() => {
 			}
 			
 			if (_params !== undefined) {
-				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params);
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params).trim();
 			}
 
 			if (data !== undefined) {

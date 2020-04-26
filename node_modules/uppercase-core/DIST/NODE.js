@@ -8453,7 +8453,7 @@ global.ENCRYPTION_REQUEST = METHOD((m) => {
 			}
 			
 			if (_params !== undefined) {
-				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params);
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params).trim();
 			}
 
 			if (data !== undefined) {
@@ -10912,7 +10912,7 @@ global.DOWNLOAD = METHOD(() => {
 			}
 			
 			if (_params !== undefined) {
-				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params);
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params).trim();
 			}
 
 			if (data !== undefined) {
@@ -11157,7 +11157,7 @@ global.REQUEST = METHOD((m) => {
 			}
 			
 			if (_params !== undefined) {
-				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params);
+				paramStr = (paramStr === undefined ? '' : paramStr + '&') + Querystring.stringify(_params).trim();
 			}
 
 			if (data !== undefined) {
@@ -12834,7 +12834,7 @@ global.WEB_SERVER = CLASS((cls) => {
 												headers : {
 													'Location' : '/' + originalURI + '?' + Querystring.stringify(COMBINE([params, {
 														version : version
-													}]))
+													}])).trim()
 												}
 											},
 											extend : overrideResponseInfo

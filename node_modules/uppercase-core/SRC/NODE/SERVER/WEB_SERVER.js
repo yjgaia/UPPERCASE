@@ -819,7 +819,7 @@ global.WEB_SERVER = CLASS((cls) => {
 												headers : {
 													'Location' : '/' + originalURI + '?' + Querystring.stringify(COMBINE([params, {
 														version : version
-													}]))
+													}])).trim()
 												}
 											},
 											extend : overrideResponseInfo
