@@ -49,19 +49,19 @@ UPPERCASE는 동적인 웹 애플리케이션을 개발하기 위해 필요한 �
 
 #### 여러가지 통신 프로토콜 서버
 TCP/UDP 소켓 서버 및 웹 서버(HTTP/HTTPS), 웹 소켓 서버가 구현되어 있으며, TCP 소켓과 웹 소켓 프로토콜이 통합된 멀티 프로토콜 소켓 서버를 제공하고 있습니다.
-* [손쉬운 서버 생성 문서](DOC/GUIDE/UPPERCASE-CORE-NODE.md#손쉬운-서버-생성) 참고
+* [손쉬운 서버 생성 문서](https://github.com/Hanul/UPPERCASE-CORE/blob/master/DOC/NODE.md#손쉬운-서버-생성) 참고
 
 #### 실시간 통신을 좀 더 쉽게 도와주는 룸 기능
 룸이라는 개념을 도입하여 상황에 맞는 여러 룸들을 만들면, 룸에 접속한 유저들에게만 필요한 메시지를 전달하는 구조를 쉽게 구현할 수 있습니다.
-* [UPPERCASE-ROOM 문서](DOC/GUIDE/UPPERCASE-ROOM.md) 참고
+* [UPPERCASE-ROOM 문서](https://github.com/Hanul/UPPERCASE-ROOM/blob/master/DOC/UPPERCASE-ROOM.md) 참고
 
 #### 데이터베이스 관련 기능
 Node.js 환경에서 MongoDB 기반 데이터베이스를 쉽게 다룰 수 있습니다.
-* [UPPERCASE-DB 문서](DOC/GUIDE/UPPERCASE-DB.md) 참고
+* [UPPERCASE-DB 문서](https://github.com/Hanul/UPPERCASE-DB/blob/master/DOC/UPPERCASE-DB.md) 참고
 
 #### [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8-%EB%B7%B0-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC)에서의 Model 관련 기능
 UPPERCASE 기반 프로젝트는 자연스럽게 [MVC 패턴](https://ko.wikipedia.org/wiki/%EB%AA%A8%EB%8D%B8-%EB%B7%B0-%EC%BB%A8%ED%8A%B8%EB%A1%A4%EB%9F%AC)을 따르게 됩니다. UPPERCASE는 자체적으로 MVC 패턴에서의 Model에 대한 여러가지 기능들을 제공하고, Model에 복잡한 Business Logic을 추가하여 확장시킬 수 있습니다.
-* [UPPERCASE-MODEL 문서](DOC/GUIDE/UPPERCASE-MODEL.md) 참고
+* [UPPERCASE-MODEL 문서](https://github.com/Hanul/UPPERCASE-MODEL/blob/master/DOC/UPPERCASE-MODEL.md) 참고
 
 UPPERCASE는 이 외에도 업로드 기능, 각종 유틸리티 기능, 모든 브라우저 통합 기본 스타일 등을 제공하고 있습니다. 자세한 내용은 아래 문서들을 참고하시기 바랍니다.
 
