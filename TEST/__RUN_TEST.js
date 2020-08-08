@@ -4,11 +4,7 @@ const IS_TO_CREATE_SERVER = true;
 //const IS_TO_CREATE_SERVER = false;
 
 // 모듈 로드
-require('../UPPERCASE-CORE/NODE.js');
-require('../UPPERCASE-ROOM/NODE.js');
-require('../UPPERCASE-DB/NODE.js');
-require('../UPPERCASE-MODEL/NODE.js');
-require('../UPPERCASE-BOOT/NODE.js');
+require('uppercase');
 
 RUN(() => {
 	
@@ -28,10 +24,14 @@ RUN(() => {
 	
 	if (IS_TO_CREATE_SERVER === true) {
 		
-		WEB_SERVER_HTTP2({
+		/*WEB_SERVER_HTTP2({
 			securedPort : PORT,
 			securedKeyFilePath : './UPPERCASE-CORE/localhost.key',
 			securedCertFilePath : './UPPERCASE-CORE/localhost.crt',
+			rootPath : __dirname
+		}, (requestInfo, response, replaceRootPath, next) => {*/
+		WEB_SERVER({
+			port : PORT,
 			rootPath : __dirname
 		}, (requestInfo, response, replaceRootPath, next) => {
 			

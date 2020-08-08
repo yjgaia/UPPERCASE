@@ -10,6 +10,8 @@ global.INFO = OBJECT({
 		if (isTouchDevice === undefined) {
 			isTouchDevice = false;
 		}
+		
+		let bowserParser = bowser.getParser(window.navigator.userAgent);
 
 		let getLang = self.getLang = () => {
 
@@ -48,18 +50,15 @@ global.INFO = OBJECT({
 		};
 
 		let getOSName = self.getOSName = () => {
-			// using bowser. (https://github.com/ded/bowser)
-			return bowser.osname;
+			return bowserParser.getOSName();
 		};
 
 		let getBrowserName = self.getBrowserName = () => {
-			// using bowser. (https://github.com/ded/bowser)
-			return bowser.name;
+			return bowserParser.getBrowserName();
 		};
 
 		let getBrowserVersion = self.getBrowserVersion = () => {
-			// using bowser. (https://github.com/ded/bowser)
-			return REAL(bowser.version);
+			return REAL(bowserParser.getBrowserVersion());
 		};
 	}
 });

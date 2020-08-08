@@ -10,4 +10,6 @@ RUN(() => {
 	require('./BROWSER/R.js');
 	require('./BROWSER/RF.js');
 	require('./BROWSER/TIME.js');
+	
+	alert(INFO.getOSName());
 });
