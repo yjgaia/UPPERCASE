@@ -1,19 +1,8 @@
 /*
- * Configuration
+ * 기본 설정
  */
-OVERRIDE(CONFIG, (origin) => {
+global.CONFIG = {
 
-	global.CONFIG = COMBINE([{
-		
-		defaultBoxName : 'UPPERCASE',
-		
-		title : 'UPPERCASE PROJECT'
-		
-		// description
-		
-		// maxThumbWidth
-		// or
-		// maxThumbHeight
-		
-	}, origin]);
-});
+	// 개발 모드 설정
+	isDevMode: false
+};
