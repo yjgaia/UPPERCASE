@@ -54,22 +54,16 @@ global.CPU_CLUSTERING = METHOD((m) => {
 						if (methods !== undefined) {
 
 							EACH(methods, (method) => {
+								method(data, (retData) => {
 
-								// run method.
-								method(data,
-
-									// ret.
-									(retData) => {
-
-										if (sendKey !== undefined) {
-
-											send({
-												workerId: fromWorkerId,
-												methodName: '__CALLBACK_' + sendKey,
-												data: retData
-											});
-										}
-									});
+									if (sendKey !== undefined) {
+										send({
+											workerId: fromWorkerId,
+											methodName: '__CALLBACK_' + sendKey,
+											data: retData
+										});
+									}
+								});
 							});
 						}
 					}

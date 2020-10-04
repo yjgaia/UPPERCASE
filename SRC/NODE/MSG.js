@@ -31,13 +31,15 @@ OVERRIDE(MSG, (origin) => {
 			if (CHECK_IS_ARRAY(url) === true) {
 
 				NEXT(url, [
+
 					(url, next) => {
 						loadCSV(url, next);
 					},
 
 					() => {
 						return callback;
-					}]);
+					}
+				]);
 			}
 
 			else {
