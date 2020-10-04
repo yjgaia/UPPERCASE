@@ -5,49 +5,49 @@
  */
 global.TEST = METHOD((m) => {
 
-    let errorCount = 0;
+	let errorCount = 0;
 
-    return {
+	return {
 
-        run: (name, test) => {
-            //REQUIRED: name
-            //REQUIRED: test
+		run: (name, test) => {
+			//REQUIRED: name
+			//REQUIRED: test
 
-            test((bool) => {
-                //REQUIRED: bool
+			test((bool) => {
+				//REQUIRED: bool
 
-                let temp = {};
-                let line;
+				let temp = {};
+				let line;
 
-                if (bool === true) {
-                    console.log(MSG({
-                        ko: '[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
-                    }));
-                } else {
+				if (bool === true) {
+					console.log(MSG({
+						ko: '[' + name + ' 테스트] 테스트를 통과하였습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
+					}));
+				} else {
 
-                    temp.__THROW_ERROR_$$$ = () => {
-                        try {
-                            throw Error();
-                        } catch (error) {
-                            return error;
-                        }
-                    };
+					temp.__THROW_ERROR_$$$ = () => {
+						try {
+							throw Error();
+						} catch (error) {
+							return error;
+						}
+					};
 
-                    line = temp.__THROW_ERROR_$$$().stack;
+					line = temp.__THROW_ERROR_$$$().stack;
 
-                    if (line !== undefined) {
-                        line = line.substring(line.indexOf('__THROW_ERROR_$$$'));
-                        line = line.split('\n')[2];
-                        line = line.substring(line.indexOf('at '));
-                    }
+					if (line !== undefined) {
+						line = line.substring(line.indexOf('__THROW_ERROR_$$$'));
+						line = line.split('\n')[2];
+						line = line.substring(line.indexOf('at '));
+					}
 
-                    errorCount += 1;
+					errorCount += 1;
 
-                    console.log(MSG({
-                        ko: '[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
-                    }));
-                }
-            });
-        }
-    };
+					console.log(MSG({
+						ko: '[' + name + ' 테스트] ' + line + '에서 오류가 발견되었습니다. 총 ' + errorCount + '개의 오류가 있습니다.'
+					}));
+				}
+			});
+		}
+	};
 });
