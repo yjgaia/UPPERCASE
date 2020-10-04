@@ -3,7 +3,7 @@
  */
 global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 
-	run : (params, connectionListenerOrListeners) => {
+	run: (params, connectionListenerOrListeners) => {
 		//OPTIONAL: params
 		//OPTIONAL: params.roomServerName
 		//OPTIONAL: params.isSecure
@@ -17,14 +17,14 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 		let webServerHost;
 		let webServerPort;
 		let isSecure;
-		
+
 		let connectionListener;
 		let errorListener;
-		
+
 		if (connectionListenerOrListeners === undefined) {
-			
+
 			if (params !== undefined) {
-				
+
 				if (CHECK_IS_DATA(params) !== true) {
 					connectionListener = params;
 				} else {
@@ -37,16 +37,16 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 				}
 			}
 		}
-		
+
 		else {
-			
+
 			if (params !== undefined) {
 				roomServerName = params.roomServerName;
 				webServerHost = params.webServerHost;
 				webServerPort = params.webServerPort;
 				isSecure = params.isSecure;
 			}
-			
+
 			if (CHECK_IS_DATA(connectionListenerOrListeners) !== true) {
 				connectionListener = connectionListenerOrListeners;
 			} else {
@@ -54,42 +54,42 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 				errorListener = connectionListenerOrListeners.error;
 			}
 		}
-		
+
 		if (webServerHost === undefined) {
 			webServerHost = BROWSER_CONFIG.host;
 		}
-		
+
 		if (webServerPort === undefined) {
 			webServerPort = BROWSER_CONFIG.port;
 		}
-		
+
 		if (isSecure === undefined) {
 			isSecure = BROWSER_CONFIG.isSecure;
 		}
-		
+
 		GET({
-			isSecure : isSecure,
-			host : webServerHost,
-			port : webServerPort,
-			uri : '__WEB_SERVER_HOST',
-			paramStr : 'defaultHost=' + webServerHost
+			isSecure: isSecure,
+			host: webServerHost,
+			port: webServerPort,
+			uri: '__WEB_SERVER_HOST',
+			paramStr: 'defaultHost=' + webServerHost
 		}, {
-			error : errorListener,
-			success : (host) => {
+			error: errorListener,
+			success: (host) => {
 
 				CONNECT_TO_ROOM_SERVER({
-					roomServerName : roomServerName,
-					isSecure : isSecure,
-					host : host,
-					port : webServerPort
+					roomServerName: roomServerName,
+					isSecure: isSecure,
+					host: host,
+					port: webServerPort
 				}, (on, off, send) => {
-					
+
 					FOR_BOX((box) => {
 						EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
 							onNewInfo.findMissingDataSet();
 						});
 					});
-					
+
 					on('__DISCONNECTED', () => {
 						FOR_BOX((box) => {
 							EACH(box.MODEL.getOnNewInfos(), (onNewInfo) => {
@@ -97,7 +97,7 @@ global.CONNECT_TO_UPPERCASE_SERVER = METHOD({
 							});
 						});
 					});
-					
+
 					if (connectionListener !== undefined) {
 						connectionListener(on, off, send);
 					}

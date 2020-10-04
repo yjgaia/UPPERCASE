@@ -11,6 +11,12 @@ FOR_BOX((box) => {
 				return origin;
 			},
 
+			params: () => {
+				return {
+					isNotToInitialize: NODE_CONFIG.isNotToModelInitialize
+				};
+			},
+
 			init: (inner, self, params) => {
 				//REQUIRED: params
 				//REQUIRED: params.name

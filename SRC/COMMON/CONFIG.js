@@ -4,5 +4,14 @@
 global.CONFIG = {
 
 	// 개발 모드 설정
-	isDevMode: false
+	isDevMode: false,
+
+	defaultBoxName: 'UPPERCASE',
+	title: 'UPPERCASE PROJECT'
+
+	// description
+
+	// maxThumbWidth
+	// or
+	// maxThumbHeight
 };

@@ -3,10 +3,10 @@
  */
 global.SYNC_TIME = OBJECT({
 
-	init : () => {
-		
+	init: () => {
+
 		if (global.UPPERCASE !== undefined) {
-			
+
 			global.UPPERCASE.ROOM('timeSyncRoom', (clientInfo, on) => {
 
 				// return diff. (diff: client time - server time)
