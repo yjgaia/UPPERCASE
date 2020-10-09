@@ -49,7 +49,7 @@ RUN(() => {
 
 			success: (folderNames) => {
 				EACH(folderNames, (folderName) => {
-					scripts = scripts.concat(collect(path + '/' + folderName));
+					scripts = scripts.concat(collect(path + '/' + folderName, pre));
 				});
 			}
 		});
