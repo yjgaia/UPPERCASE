@@ -14,6 +14,8 @@ global.SHOW_ERROR = (tag, errorMsg, params) => {
 		console.error(CONSOLE_RED('다음은 오류를 발생시킨 파라미터입니다.'));
 		console.error(CONSOLE_RED(JSON.stringify(params, TO_DELETE, 4)));
 	}
+
+	console.trace();
 };
 
 FOR_BOX((box) => {
