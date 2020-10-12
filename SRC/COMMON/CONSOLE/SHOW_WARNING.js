@@ -15,5 +15,5 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 		console.warn(JSON.stringify(params, TO_DELETE, 4));
 	}
 
-	console.trace();
+	console.log(new Error().stack);
 };

@@ -15,7 +15,7 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 		console.error(CONSOLE_YELLOW(JSON.stringify(params, TO_DELETE, 4)));
 	}
 
-	console.trace();
+	console.log(new Error().stack);
 };
 
 FOR_BOX((box) => {

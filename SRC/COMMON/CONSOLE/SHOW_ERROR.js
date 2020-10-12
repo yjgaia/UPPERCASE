@@ -15,5 +15,5 @@ global.SHOW_ERROR = (tag, errorMsg, params) => {
 		console.error(JSON.stringify(params, TO_DELETE, 4));
 	}
 
-	console.trace();
+	console.log(new Error().stack);
 };
