@@ -1,0 +1,14 @@
+{
+	"name": "uppercase",
+	"version": "2.0.0-beta.16",
+	"dependencies": {
+		"uppercase-core": "^2.0.0-beta.17",
+		"uppercase-db": "^2.0.0-beta.15",
+		"uppercase-room": "^2.0.0-beta.15",
+		"uppercase-model": "^2.0.0-beta.15",
+		"bufferutil": "latest",
+		"ubm": "latest",
+		"utf-8-validate": "latest"
+	},
+	"main": "index.js"
+}

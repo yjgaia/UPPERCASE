@@ -1,0 +1,19 @@
+<script>
+	let splits = location.search.substring(1).split('&');
+
+	for (let i = 0; i < splits.length; i += 1) {
+
+		let pair = splits[i].split('=');
+
+		let name = decodeURIComponent(pair[0]);
+		let value = decodeURIComponent(pair[1]);
+
+		if (window[name] === undefined) {
+			window[name] = value;
+		} else if (typeof window[name] === 'string') {
+			window[name] = [window[name], value];
+		} else {
+			window[name].push(value);
+		}
+	}
+</script>

@@ -13,5 +13,6 @@ global.SHOW_ERROR = (tag, errorMsg, params) => {
 	if (params !== undefined) {
 		console.error('다음은 오류를 발생시킨 파라미터입니다.');
 		console.error(JSON.stringify(params, TO_DELETE, 4));
+		console.trace();
 	}
 };

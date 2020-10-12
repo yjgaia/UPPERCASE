@@ -13,5 +13,6 @@ global.SHOW_WARNING = (tag, warningMsg, params) => {
 	if (params !== undefined) {
 		console.warn('다음은 경고를 발생시킨 파라미터입니다.');
 		console.warn(JSON.stringify(params, TO_DELETE, 4));
+		console.trace();
 	}
 };

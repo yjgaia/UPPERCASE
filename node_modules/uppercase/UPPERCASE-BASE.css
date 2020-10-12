@@ -1,0 +1,123 @@
+/*
+	UPPERCASE BASE STYLE
+	
+	http://uppercase.io
+*/
+
+/* CSS RESET */
+body,
+div,
+ul,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+form,
+input,
+textarea,
+p,
+th,
+td {
+	margin : 0;
+	padding: 0;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing : 0;
+}
+
+img {
+	border: 0;
+}
+
+ul {
+	list-style: none;
+}
+
+th {
+	font-style : normal;
+	font-weight: normal;
+	text-align : left;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-size  : 100%;
+	font-weight: normal;
+}
+
+input,
+textarea,
+select {
+	font-family: inherit;
+	font-size  : inherit;
+	font-weight: inherit;
+	outline    : none;
+}
+
+/* UPPERCASE BASE STYLE */
+* {
+	-webkit-overflow-scrolling: touch;
+	-moz-overflow-scrolling   : touch;
+	-o-overflow-scrolling     : touch;
+	-ms-overflow-scrolling    : touch;
+	overflow-scrolling        : touch;
+
+	-webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+	background-color        : #000;
+	color                   : #fff;
+	word-wrap               : break-word;
+	font-family             : 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, freesans, sans-serif;
+	font-size               : 14px;
+	/* Prevent font scaling in landscape */
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust   : none;
+	-o-text-size-adjust     : none;
+	-ms-text-size-adjust    : none;
+	text-size-adjust        : none;
+}
+
+input[type='submit'] {
+	-webkit-appearance: none;
+	-moz-appearance   : none;
+	-o-appearance     : none;
+	-ms-appearance    : none;
+	appearance        : none;
+	border-radius     : 0;
+}
+
+table {
+	width: 100%;
+}
+
+th,
+td {
+	border: 0;
+}
+
+textarea {
+	width : 15em;
+	height: 5em;
+}
+
+a {
+	color          : inherit;
+	cursor         : pointer;
+	text-decoration: none;
+}
+
+p {
+	line-height: 1.5em;
+}

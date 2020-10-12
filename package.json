@@ -12,7 +12,8 @@
 		"sift": "^12.0.1",
 		"sqwish": "latest",
 		"utf-8-validate": "latest",
-		"ws": "^7.2.3"
+		"ws": "^7.2.3",
+		"ubm": "^1.6.0"
 	},
 	"main": "node.index.js"
 }
