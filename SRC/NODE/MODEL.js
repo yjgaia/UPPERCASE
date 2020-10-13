@@ -1242,7 +1242,7 @@ FOR_BOX((box) => {
 						callback = callbackOrHandlers.success;
 					}
 
-					let callStack = errorHandler === undefined && notExistsHandler === undefined ? undefined : (new Error()).stack;
+					let callStack = errorHandler !== undefined || notExistsHandler !== undefined ? undefined : (new Error()).stack;
 					let showCallStack = () => {
 						console.log(callStack);
 					};
