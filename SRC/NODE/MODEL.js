@@ -1241,9 +1241,10 @@ FOR_BOX((box) => {
 						notExistsHandler = callbackOrHandlers.notExists;
 						callback = callbackOrHandlers.success;
 					}
-					
-					let showTrace = () => {
-						console.trace();
+
+					let callStack = errorHandler === undefined && notExistsHandler === undefined ? undefined : (new Error()).stack;
+					let showCallStack = () => {
+						console.log(callStack);
 					};
 
 					innerGet(idOrParams, (result) => {
@@ -1263,7 +1264,7 @@ FOR_BOX((box) => {
 								errorHandler(errorMsg);
 							} else {
 								SHOW_ERROR(box.boxName + '.' + name + 'Model.get', errorMsg, errorInfo);
-								showTrace();
+								showCallStack();
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {
@@ -1272,7 +1273,7 @@ FOR_BOX((box) => {
 								SHOW_WARNING(box.boxName + '.' + name + 'Model.get', MSG({
 									ko: '데이터가 존재하지 않습니다.'
 								}), idOrParams);
-								showTrace();
+								showCallStack();
 							}
 						} else if (callback !== undefined) {
 							callback(savedData);
