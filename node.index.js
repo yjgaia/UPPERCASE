@@ -580,6 +580,7 @@ require('./SRC/NODE/SERVER/WEB_SOCKET_SERVER.js');
 require('./SRC/NODE/SYSTEM/CPU_USAGES.js');
 require('./SRC/NODE/SYSTEM/DISK_USAGE.js');
 require('./SRC/NODE/SYSTEM/GET_IPS.js');
+require('./SRC/NODE/SYSTEM/HEAPDUMP.js');
 require('./SRC/NODE/SYSTEM/MEMORY_USAGE.js');
 require('./SRC/NODE/SYSTEM/RUN_SCHEDULE_DAEMON.js');
 
