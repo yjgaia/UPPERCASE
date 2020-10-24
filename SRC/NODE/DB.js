@@ -1202,12 +1202,6 @@ FOR_BOX((box) => {
 
 							let proc = (error, savedDataSet) => {
 
-								if (savedDataSet.length >= 100000) {
-									SHOW_WARNING(box.boxName + '.' + name + 'DB.find', MSG({
-										ko: '불러온 데이터의 개수가 너무 많습니다. (' + savedDataSet.length + '개)'
-									}));
-								}
-
 								if (error === TO_DELETE) {
 
 									// clean saved data before callback.
@@ -1220,6 +1214,12 @@ FOR_BOX((box) => {
 
 								// if error is not TO_DELETE
 								else {
+
+									if (savedDataSet.length >= 100000) {
+										SHOW_WARNING(box.boxName + '.' + name + 'DB.find', MSG({
+											ko: '불러온 데이터의 개수가 너무 많습니다. (' + savedDataSet.length + '개)'
+										}));
+									}
 
 									logError({
 										method: 'find',
