@@ -1,21 +1,19 @@
 {
 	"name": "uppercase",
-    "author": "Young Jae Sim",
-    "homepage": "https://uppercase.io/",
+	"author": "Young Jae Sim",
+	"homepage": "https://uppercase.io/",
 	"version": "2.0.0-beta.20",
 	"dependencies": {
-		"bufferutil": "latest",
-		"diskspace": "latest",
-		"formidable": "latest",
-		"hanul-graphicsmagick": "latest",
-		"hanul-uglify-js": "latest",
-		"mongodb": "^3.6.2",
+		"diskspace": "^2.0.0",
+		"formidable": "^1.2.2",
+		"hanul-graphicsmagick": "^1.0.3",
+		"hanul-uglify-js": "^2.7.5",
+		"mongodb": "^3.6.3",
 		"os-locale": "^5.0.0",
-		"sift": "^12.0.1",
-		"sqwish": "latest",
+		"sift": "^13.4.0",
+		"sqwish": "^0.2.2",
 		"ubm": "^1.6.0",
-		"utf-8-validate": "latest",
-		"ws": "^7.2.3"
+		"ws": "^7.4.1"
 	},
 	"main": "node.index.js"
 }
