@@ -1306,6 +1306,11 @@ FOR_BOX((box) => {
 						}
 					}
 
+					let callStack = errorHandler !== undefined || notExistsHandler !== undefined ? undefined : (new Error()).stack;
+					let showCallStack = () => {
+						console.log(callStack);
+					};
+
 					innerUpdate(data, (result) => {
 
 						let errorMsg;
@@ -1338,6 +1343,7 @@ FOR_BOX((box) => {
 									data: data,
 									validErrors: validErrors
 								});
+								showCallStack();
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {
@@ -1378,6 +1384,11 @@ FOR_BOX((box) => {
 						}
 					}
 
+					let callStack = errorHandler !== undefined || notExistsHandler !== undefined ? undefined : (new Error()).stack;
+					let showCallStack = () => {
+						console.log(callStack);
+					};
+
 					innerUpdate(data, (result) => {
 
 						let errorMsg;
@@ -1410,6 +1421,7 @@ FOR_BOX((box) => {
 									data: data,
 									validErrors: validErrors
 								});
+								showCallStack();
 							}
 						} else if (savedData === undefined) {
 							if (notExistsHandler !== undefined) {
