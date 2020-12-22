@@ -68793,7 +68793,8 @@ global.REPEAT = METHOD({
 		// count mode
 		if (count !== undefined) {
 
-			for (let i = 0; i < parseInt(count, 10); i += 1) {
+			let intCount = parseInt(count, 10);
+			for (let i = 0; i < intCount; i += 1) {
 				if (func(i) === false) {
 					return false;
 				}
