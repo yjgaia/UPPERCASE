@@ -847,7 +847,7 @@ global.BOOT = (params) => {
 						return false;
 					}
 
-					// serve web server hostsS.
+					// serve web server hosts.
 					else if (uri === '__WEB_SERVER_HOSTS') {
 
 						if (webServerHosts === undefined) {
