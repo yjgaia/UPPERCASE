@@ -309,6 +309,11 @@ systemctl start firewalld
 systemctl enable firewalld
 ```
 
+#### 잘못 차단된 IP 다시 열기
+```
+fail2ban-client set sshd unbanip {{IP 주소}}
+```
+
 ### 모든 Node.js 프로세스 종료
 종종 오류로 인해 꺼지지 않는 Node.js 프로세스가 있을 때가 있습니다. 그런 경우에는 다음 명령어를 입력하여 모든 Node.js 프로세스를 강제종료 합니다.
 ```
