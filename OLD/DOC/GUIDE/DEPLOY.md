@@ -247,11 +247,17 @@ cat /sys/kernel/mm/transparent_hugepage/enabled
 always madvise [never]
 ```
 
-### 서버 시간 설정
+### 서버 시간대 설정
 아래와 같이 서버가 위치한 지역의 시간대로 서버 시간을 맞추어 줍니다.
 ```
 mv /etc/localtime /etc/localtime_old
 ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+```
+
+### 서버 시간 강제 설정
+```
+timedatectl set-ntp 0
+timedatectl set-time hh:mm:ss
 ```
 
 ### 방화벽 포트 설정
