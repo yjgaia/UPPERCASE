@@ -91,6 +91,8 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 								SHOW_ERROR('SERVER_CLUSTERING', MSG({
 									ko: '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')'
 								}));
+
+								connectToClusteringServer(serverName);
 							});
 
 							console.log('[SERVER_CLUSTERING] ' + MSG({
@@ -158,6 +160,8 @@ global.SERVER_CLUSTERING = METHOD((m) => {
 					SHOW_ERROR('SERVER_CLUSTERING', MSG({
 						ko: '클러스터링 서버와의 연결이 끊어졌습니다. (끊어진 서버 이름:' + serverName + ')'
 					}));
+
+					connectToClusteringServer(serverName);
 				});
 			});
 

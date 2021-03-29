@@ -524,7 +524,9 @@ global.WEB_SERVER = CLASS((cls) => {
 
 														// 줄바꿈 제거
 														EACH(headers, (value, name) => {
-															headers[name] = value.trim();
+															if (typeof value === 'string') {
+																headers[name] = value.trim();
+															}
 														});
 
 														nativeRes.writeHead(statusCode, headers);
@@ -540,7 +542,9 @@ global.WEB_SERVER = CLASS((cls) => {
 
 												// 줄바꿈 제거
 												EACH(headers, (value, name) => {
-													headers[name] = value.trim();
+													if (typeof value === 'string') {
+														headers[name] = value.trim();
+													}
 												});
 
 												nativeRes.writeHead(statusCode, headers);

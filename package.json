@@ -8,7 +8,7 @@
 		"formidable": "^1.2.2",
 		"hanul-graphicsmagick": "^1.0.3",
 		"hanul-uglify-js": "^2.7.5",
-		"mongodb": "^3.6.3",
+		"mongodb": "^3.6.5",
 		"os-locale": "^5.0.0",
 		"sift": "^13.4.0",
 		"sqwish": "^0.2.2",
